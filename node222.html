@@ -1,0 +1,370 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Código Completo del TicTacToe</TITLE>
+<META NAME="description" CONTENT="Código Completo del TicTacToe">
+<META NAME="keywords" CONTENT="perlexamples">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="mystyle.css">
+
+<LINK REL="previous" HREF="node221.html">
+<LINK REL="up" HREF="node215.html">
+<LINK REL="next" HREF="node223.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html6391"
+  HREF="node223.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html6385"
+  HREF="node215.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html6381"
+  HREF="node221.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html6387"
+  HREF="node727.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html6389"
+  HREF="node730.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html6392"
+  HREF="node223.html">Reflexión y Metaprogramación</A>
+<B> Subir:</B> <A NAME="tex2html6386"
+  HREF="node215.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6382"
+  HREF="node221.html">La Clase Row</A>
+ &nbsp; <B>  <A NAME="tex2html6388"
+  HREF="node727.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6390"
+  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION027177000000000000000">
+Código Completo del TicTacToe</A>
+</H2>
+<PRE>
+#!/usr/bin/env ruby
+#---
+# Visit http://www.pragmaticprogrammer.com/titles/fr_quiz 
+#---
+
+
+module TicTacToe
+  module SquaresContainer
+    def []( index ) @squares[index] end
+
+    def blanks()  @squares.find_all { |s| s == " " }.size end
+    def os()      @squares.find_all { |s| s == "O" }.size end
+    def xs()      @squares.find_all { |s| s == "X" }.size end
+  end
+  
+  class Board
+    class Row
+      def initialize( squares, names )
+        @squares  = squares
+        @names    = names
+      end
+      
+      include SquaresContainer
+      
+      def to_board_name( index ) 
+        Board.index_to_name(@names[index]) 
+      end
+    end
+    
+    MOVES = %w{a1    a2   a3   b1   b2   b3   c1   c2   c3}
+    # Define constant INDICES
+    INDICES = Hash.new { |h, k| h[k] = MOVES.find_index(k) }
+
+    def self.name_to_index( name )# Receives "b2" and returns 4
+      INDICES[name]
+    end
+    
+    def self.index_to_name( index ) # Receives the index, like 4 and returns "b2"
+      MOVES[index]
+    end
+    
+    def initialize( squares )
+      @squares = squares # An array of Strings: [ " ", " ", " ", " ", "X", " ", " ", " ", "O"]
+    end
+      
+    include SquaresContainer
+    
+    def []( *indices )
+      if indices.size == 2                  # board[1,2] is @squares[7]
+        super indices[0] + indices[1] * 3   # calls SquaresContainer [] method
+      elsif indices[0].is_a? Fixnum         # board[7]
+        super indices[0]
+      else                                  # board["b2"]
+        super Board.name_to_index(indices[0].to_s)
+      end
+    end
+
+    def []=(indice, value)                  # board["b2"] = "X"
+      m = Board.name_to_index(indice)
+      @squares[m] = value
+    end
+    
+    HORIZONTALS = [ [0, 1, 2], [3, 4, 5], [6, 7, 8] ]
+    COLUMNS     = [ [0, 3, 6], [1, 4, 7], [2, 5, 8] ]
+    DIAGONALS   = [ [0, 4, 8], [2, 4, 6] ]
+    ROWS = HORIZONTALS + COLUMNS + DIAGONALS
+
+    def each_row
+      ROWS.each do |e|
+        yield Row.new(@squares.values_at(*e), e)
+      end
+    end
+    
+    def moves
+      moves = [ ]
+      @squares.each_with_index do |s, i|
+        moves &lt;&lt; Board.index_to_name(i) if s == " "
+      end
+      moves # returns the set of feasible moves [ "b3", "c2", ... ]
+    end
+    
+    def won?
+      each_row do |row|
+        return "X" if row.xs == 3 # "X" wins
+        return "O" if row.os == 3 # "O" wins
+      end
+      return " " if blanks == 0   # tie
+      false
+    end
+    
+    BOARD =&lt;&lt;EOS
+
+  +---+---+---+
+a | 0 | 1 | 2 |
+  +---+---+---+
+b | 3 | 4 | 5 |
+  +---+---+---+
+c | 6 | 7 | 8 |
+  +---+---+---+
+    1   2   3
+
+EOS
+    def to_s
+      BOARD.gsub(/(\d)(?= \|)/) { |i| @squares[i.to_i] }
+    end
+
+  end
+end
+
+module TicTacToe
+  class Player
+    def initialize( mark )
+      @mark = mark # "X" or "O" or " "
+    end
+    
+    attr_reader :mark
+    
+    def move( board )
+      raise NotImplementedError, "Player subclasses must define move()."
+    end
+    
+    def finish( final_board )  
+    end
+  end
+end
+
+module TicTacToe
+  class HumanPlayer &lt; Player
+    def move( board )
+      print board
+      
+      moves = board.moves
+      print "Your move?  (format: b3)  "
+      move = $stdin.gets
+      until moves.include?(move.chomp.downcase)
+        print "Invalid move.  Try again.  "
+        move = $stdin.gets
+      end
+      move.chomp
+    end
+    
+    def finish( final_board )
+      print final_board
+      
+      if final_board.won? == @mark
+        print "Congratulations, you win.\n\n"
+      elsif final_board.won? == " "
+        print "Tie game.\n\n"
+      else
+        print "You lost tic-tac-toe?!\n\n"
+      end
+    end
+    
+  end
+end
+
+module TicTacToe
+  class DumbPlayer &lt; Player
+    def move( board )
+      moves = board.moves
+      moves[rand(moves.size)]
+    end
+  end
+  
+  class SmartPlayer &lt; Player
+    def move( board )
+      moves = board.moves
+      
+      # If I have a win, take it.  If he is threatening to win, stop it.
+      board.each_row do |row|
+        if row.blanks == 1 and (row.xs == 2 or row.os == 2)
+          (0..2).each do |e|
+            return row.to_board_name(e) if row[e] == " "
+          end
+        end
+      end
+
+      # Take the center if open.
+      return "b2" if moves.include? "b2"
+
+      # Defend opposite corners.
+      if board[0] != @mark and board[0] != " " and board[8] == " "
+        return "c3"
+      elsif board[8] != @mark and board[8] != " " and board[0] == " "
+        return "a1"
+      elsif board[2] != @mark and board[2] != " " and board[6] == " "
+        return "c1"
+      elsif board[6] != @mark and board[6] != " " and board[2] == " "
+        return "a3"
+      end
+      
+      # Defend against the special case XOX on a diagonal.
+      if board.xs == 2 and board.os == 1 and board[4] == "O" and
+         (board[0] == "X" and board[8] == "X") or
+         (board[2] == "X" and board[6] == "X")
+        return %w{a2 b1 b3 c2}[rand(4)]
+      end
+      
+      # Or make a random move.
+      moves[rand(moves.size)]
+    end
+  end
+end
+
+module TicTacToe
+  class Game
+    def initialize( player1, player2, random = true )
+      if random and rand(2) == 1
+        @x_player = player2.new("X")
+        @o_player = player1.new("O")
+      else
+        @x_player = player1.new("X")
+        @o_player = player2.new("O")
+      end
+      
+      @board = Board.new([" "] * 9)
+    end
+    
+    attr_reader :x_player, :o_player
+    
+    def play
+      until @board.won?
+        @board[@x_player.move(@board)] = @x_player.mark
+        break if @board.won?
+        
+        @board[@o_player.move(@board)] = @o_player.mark
+      end
+      
+      @o_player.finish @board
+      @x_player.finish @board
+    end
+    
+  end
+end
+
+if __FILE__ == $0
+  if ARGV.size &gt; 0 and ARGV[0] == "-d"
+    game = TicTacToe::Game.new TicTacToe::HumanPlayer,
+                   TicTacToe::DumbPlayer
+  else
+    game = TicTacToe::Game.new TicTacToe::HumanPlayer,
+                   TicTacToe::SmartPlayer
+  end
+  game.play
+end
+</PRE>
+
+<P>
+<BR><HR>
+<ADDRESS>
+Casiano Rodriguez León
+2014-02-28
+</ADDRESS>
+</BODY>
+</HTML>

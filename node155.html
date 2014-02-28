@@ -1,0 +1,506 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Práctica: Un Motor para las Expresiones Regulares en Pocas Líneas</TITLE>
+<META NAME="description" CONTENT="Práctica: Un Motor para las Expresiones Regulares en Pocas Líneas">
+<META NAME="keywords" CONTENT="perlexamples">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<META NAME="Generator" CONTENT="LaTeX2HTML v2008">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="mystyle.css">
+
+<LINK REL="previous" HREF="node154.html">
+<LINK REL="up" HREF="node115.html">
+<LINK REL="next" HREF="node156.html">
+</HEAD>
+
+<BODY >
+
+<DIV CLASS="navigation"><!--Navigation Panel-->
+<A NAME="tex2html5286"
+  HREF="node156.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5280"
+  HREF="node115.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5276"
+  HREF="node154.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html5282"
+  HREF="node727.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html5284"
+  HREF="node730.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html5287"
+  HREF="node156.html">Clases y Módulos</A>
+<B> Subir:</B> <A NAME="tex2html5281"
+  HREF="node115.html">Métodos, Procs, Lambdas y</A>
+<B> Anterior:</B> <A NAME="tex2html5277"
+  HREF="node154.html">Ejercicios</A>
+ &nbsp; <B>  <A NAME="tex2html5283"
+  HREF="node727.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5285"
+  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<BR>
+<BR></DIV>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION026120000000000000000"></A>
+   <A NAME="5571"></A>
+  
+<A NAME="practica:regexpengine"></A>
+<BR>
+Práctica: Un Motor para las Expresiones Regulares en Pocas Líneas
+</H1>
+
+<P>
+
+<H4><A NAME="SECTION026120010000000000000">
+Objetivo</A>
+</H4>
+  
+
+<P>
+El objetivo es crear nuestro propio motor de expresiones regulares ([<A
+ HREF="node731.html#friedl">5</A>]).
+Para ello, una expresión regular como <code>c(a|d)+r</code>
+debe ser expresada mediante una lambda.
+Una regexp como <code>c(a|d)+r</code> es el resultado de la composición de lambdas. 
+Por ejemplo, la regexp <code>c(a|d)+r</code> se denotará por:
+
+<P>
+<PRE>
+  seq(char('c'), seq(plus(alt(char('a'), char('d'))), char('r')))
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION026120020000000000000">
+Como se hace</A>
+</H4>
+  
+
+<P>
+La idea es que <code>char</code>, <code>seq</code>, <code>plus</code>, etc. son métodos 
+que retornan funciones (lambdas). La lambda retornada por <code>char('d')</code> reconoce
+el lenguaje <code>'d'</code>, la lambda retornada por <code>star(char('c'))</code> reconoce 
+el lenguaje <code>c*</code> y la lambda retornada por 
+<code>seq(char('c'), seq(plus(alt(char('a'), char('d'))), char('r')))</code>
+reconoce el lenguaje <code>c(a|d)+r</code>.
+
+<P>
+Mas en concreto, <SPAN  CLASS="textit">la lambda que representa la expresión regular</SPAN> <code>r</code>
+
+<OL>
+<LI>recibe una cadena <code>x</code> y
+</LI>
+<LI>devuelve <code>false</code> <SPAN  CLASS="textit">si no hay un prefijo de</SPAN> <code>x</code> <SPAN  CLASS="textit">que case con</SPAN> <code>r</code>
+</LI>
+<LI>y devuelve <SPAN  CLASS="textit">el resto no casado de la cadena</SPAN> <code>x</code> <SPAN  CLASS="textit">si hubo matching</SPAN>
+</LI>
+</OL>
+
+<P>
+Por ejemplo, el método <code>char</code> recibe una cadena <code>c</code> 
+y retorna una lambda que recibe una
+cadena <code>x</code> y 
+
+<P>
+
+<OL>
+<LI>devuelve <code>false</code> si  <code>c</code> no es un prefijo de <code>x</code>.
+</LI>
+<LI>En caso contrario retorna el resto de la cadena 
+</LI>
+</OL>
+Esta implementación de <code>char</code> usa circuito corto:
+<PRE>
+def char(c)
+  lambda { |x| x[0,c.length] == c and x[c.length..-1] }
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION026120030000000000000">
+Ejemplos de uso del Módulo</A>
+</H4>
+  
+
+<P>
+<PRE>
+ruby-1.9.2-p290 :001 &gt; load "regexpcalc1213.rb"
+ =&gt; true 
+ruby-1.9.2-p290 :002 &gt; include ULL::ETSII::AluXXX::LambdaRegexp
+ =&gt; Object 
+ruby-1.9.2-p290 :003 &gt; char('c')
+ =&gt; #&lt;Proc:0x007f998b027408@/Users/casiano/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures/regexp/regexpcalc1213.rb:29 (lambda)&gt; 
+ruby-1.9.2-p290 :004 &gt; char('c')['c'] # 'c' casa con /c/ el resto es vacío ""
+ =&gt; "" 
+ruby-1.9.2-p290 :005 &gt; char('c')['d'] # 'd' no casa con /c/. Se retorna false
+ =&gt; false 
+ruby-1.9.2-p290 :006 &gt; char('c')['cd'] # El prefijo 'c' casa con 'cd'. Resto = 'd'
+ =&gt; "d" 
+ruby-1.9.2-p290 :007 &gt; star(char('c'))['cccef'] # El prefijo 'ccc' casa con /c*/. Resto = 'ef'
+ =&gt; "ef" 
+ruby-1.9.2-p290 :008 &gt; star(alt(char('c'), char('e')))['cccef'] # El prefijo 'e' casa con /(c|e)*/. Resto = 'f'
+ =&gt; "f" 
+ruby-1.9.2-p290 :009 &gt;
+</PRE>
+
+<P>
+La siguiente secuencia de llamadas:
+<PRE>
+e = seq(char('c'), char('d'))
+s = 'cde'
+remaining = e[s]       # 'cde' Matched. Remaining = 'e'
+puts "'#{s}' Matched. Remaining = '#{remaining}'" if remaining
+
+e = seq(char('c'), alt(star(char('d')), char('r')))
+
+s = 'cdddf'            # 
+remaining = e[s]       # 'cdddf' Matched. Remaining = 'f'
+puts "'#{s}' Matched. Remaining = '#{remaining}'" if remaining
+
+s = 'crddf'            # 'crddf' Matched. Remaining = 'rddf'
+remaining = e[s]
+puts "'#{s}' Matched. Remaining = '#{remaining}'" if remaining
+</PRE>
+Debería producir una salida parecida a esta:
+<PRE>
+MacBookdeCasiano:rubytesting casiano$ ruby regexpcalc.rb 
+'cde' Matched. Remaining = 'e'
+'cdddf' Matched. Remaining = 'f'
+'crddf' Matched. Remaining = 'rddf'
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION026120040000000000000">
+Definiendo Operadores</A>
+</H4>
+  
+
+<P>
+Es posible usar overriding de operadores para mejorar la expresividad
+de la notación. He aqui un ejemplo que utiliza una versión en la que se han
+definido los operadores:
+
+<UL>
+<LI><code>-</code> es <code>seq</code>
+</LI>
+<LI><code>|</code> es <code>alt</code>
+</LI>
+<LI><code>+</code> unario es <code>plus</code>
+</LI>
+<LI><code>~</code> es <code>star</code>
+</LI>
+<LI>El método <code>re</code> es una versión de <code>char</code>
+</LI>
+</UL>
+<PRE>
+e = 'cd'.re
+s = 'cde'
+remaining = e[s] # 'cde' Matched. Remaining = 'e' 
+puts "/cd/ '#{s}' Matched. Remaining = '#{remaining}'" if remaining
+
+e = 'd'.re | 'r'.re
+s = 'rdddf'     
+remaining = e[s] #  'rdddf' Matched. Remaining = 'dddf' 
+puts "/d|r/ '#{s}' Matched. Remaining = '#{remaining}'" if remaining
+
+e = 'c'.re - ('d'.re | 'r'.re)
+s = 'crddf'     
+remaining = e[s] # 'crddf' Matched. Remaining = 'ddf' 
+puts "/c(d|r)/ '#{s}' Matched. Remaining = '#{remaining}'" if remaining
+
+e = 'c'.re - +('d'.re | 'r'.re)
+s = 'crddf'
+remaining = e[s]
+puts "/c(d|r)+/ '#{s}' Matched. Remaining = '#{remaining}'" if remaining
+
+e = 'c'.re - ~('d'.re | 'r'.re)
+s = 'cdrdrf'
+remaining = e[s]
+puts "/c(d|r)*/ '#{s}' Matched. Remaining = '#{remaining}'" if remaining
+
+e = 'c'.re - ~('d'.re | 'r'.re)
+s = 'cfff'
+remaining = e[s]
+puts "/c(d|r)*/ '#{s}' Matched. Remaining = '#{remaining}'" if remaining
+
+e = 'c'.re - ~('d'.re | 'r'.re)
+s = 'cdrd'
+remaining = e[s]
+puts "/c(d|r)*/ '#{s}' Matched. Remaining = '#{remaining}'" if remaining
+
+e = 'c'.re - +('d'.re | 'r'.re)
+s = 'cfff'
+remaining = e[s] # 'cfff' didn't match. Remaining = 'false'
+puts "/c(d|r)+/ '#{s}' didn't match. Remaining = '#{remaining}'" unless remaining
+</PRE>
+Cuando se ejecuta, este programa produce:
+<PRE>
+~/rubytesting$ ruby  regexpcalc2.rb 
+/cd/ 'cde' Matched. Remaining = 'e'
+/d|r/ 'rdddf' Matched. Remaining = 'dddf'
+/c(d|r)/ 'crddf' Matched. Remaining = 'ddf'
+/c(d|r)+/ 'crddf' Matched. Remaining = 'f'
+/c(d|r)*/ 'cdrdrf' Matched. Remaining = 'f'
+/c(d|r)*/ 'cfff' Matched. Remaining = 'fff'
+/c(d|r)*/ 'cdrd' Matched. Remaining = ''
+/c(d|r)+/ 'cfff' didn't match. Remaining = 'false'
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION026120050000000000000">
+Tareas</A>
+</H4>
+  
+
+<SPAN  CLASS="textit">Escriba un módulo que implementa este motor de expresiones regulares</SPAN>. Use <code>module_function</code> para 
+que el espacio de nombres sea incluíble
+(véase la sección <A HREF="node202.html#subsection:modulosespaciodenombresincluibles">13.7.4</A> de los apuntes):
+<PRE>
+module ULL
+  module ETSII
+    module AluXXX
+      module LambdaRegexp
+
+        module_function
+
+        def epsilon
+          lambda {|x| x }
+        end
+         
+        ....
+
+      end # Lambda
+    end   # AluXXX
+  end     # ETSII
+end       # ULL
+</PRE>
+
+<OL>
+<LI>Use TDD con <A NAME="tex2html316"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A>
+</LI>
+<LI>Use Unit Testing
+</LI>
+<LI>Use Continuous Integration (Travis)
+</LI>
+<LI>Use Continuous Testing (Guard)
+</LI>
+<LI>Documente su gema (véase
+<A NAME="tex2html317"
+  HREF="http://docs.seattlerb.org/rdoc/RDoc/Markup.html"><SPAN  CLASS="textit">RDOC::Markup</SPAN></A>
+o
+<A NAME="tex2html318"
+  HREF="http://rdoc.sourceforge.net/doc/index.html"><SPAN  CLASS="textit">RDOC</SPAN></A>
+o 
+<A NAME="tex2html319"
+  HREF="http://yardoc.org"><SPAN  CLASS="textit">YARD</SPAN></A>). 
+</LI>
+<LI>Véa un ejemplo ilustrativo de como debería quedar la documentación del
+módulo creado en <A NAME="tex2html320"
+  HREF="rdoc_example/index.html">module ULL::ETSII::AluXXX::LambdaRegexp</A>
+</LI>
+<LI>Cree una gema <code>ull-etsii-aluXX-lambdaregexp</code>
+</LI>
+<LI>Publique la gema en <A NAME="tex2html321"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>
+</LI>
+<LI>Indique la URL de su repositorio en <A NAME="tex2html322"
+  HREF="http://help.github.com">GitHub</A>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION026120060000000000000">
+Enlaces Relacionados</A>
+</H4>
+  
+
+<UL>
+<LI><A NAME="tex2html323"
+  HREF="https://bitbucket.org/casiano/lambda-regexp/src">Casiano lambda-regexp project</A>
+(bitbucket)
+</LI>
+</UL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html5288"
+  HREF="node155.html#SECTION026120010000000000000">Objetivo</A>
+<LI><A NAME="tex2html5289"
+  HREF="node155.html#SECTION026120020000000000000">Como se hace</A>
+<LI><A NAME="tex2html5290"
+  HREF="node155.html#SECTION026120030000000000000">Ejemplos de uso del Módulo</A>
+<LI><A NAME="tex2html5291"
+  HREF="node155.html#SECTION026120040000000000000">Definiendo Operadores</A>
+<LI><A NAME="tex2html5292"
+  HREF="node155.html#SECTION026120050000000000000">Tareas</A>
+<LI><A NAME="tex2html5293"
+  HREF="node155.html#SECTION026120060000000000000">Enlaces Relacionados</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html5286"
+  HREF="node156.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5280"
+  HREF="node115.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5276"
+  HREF="node154.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html5282"
+  HREF="node727.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html5284"
+  HREF="node730.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html5287"
+  HREF="node156.html">Clases y Módulos</A>
+<B> Subir:</B> <A NAME="tex2html5281"
+  HREF="node115.html">Métodos, Procs, Lambdas y</A>
+<B> Anterior:</B> <A NAME="tex2html5277"
+  HREF="node154.html">Ejercicios</A>
+ &nbsp; <B>  <A NAME="tex2html5283"
+  HREF="node727.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5285"
+  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Casiano Rodriguez León
+2014-02-28
+</ADDRESS>
+</BODY>
+</HTML>
