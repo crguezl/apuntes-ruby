@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Véase</TITLE>
-<META NAME="description" CONTENT="Véase">
+<TITLE>Sesiones HTTP</TITLE>
+<META NAME="description" CONTENT="Sesiones HTTP">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node329.html">
 <LINK REL="previous" HREF="node327.html">
-<LINK REL="up" HREF="node324.html">
+<LINK REL="up" HREF="node326.html">
 <LINK REL="next" HREF="node329.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8418"
+<A NAME="tex2html8453"
   HREF="node329.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8412"
-  HREF="node324.html">
+<A NAME="tex2html8447"
+  HREF="node326.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8408"
+<A NAME="tex2html8441"
   HREF="node327.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8414"
-  HREF="node727.html">
+<A NAME="tex2html8449"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8416"
-  HREF="node730.html">
+<A NAME="tex2html8451"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,41 +96,187 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8419"
-  HREF="node329.html">Rack::Request y Depuración con</A>
-<B> Subir:</B> <A NAME="tex2html8413"
-  HREF="node324.html">HTTP</A>
-<B> Anterior:</B> <A NAME="tex2html8409"
-  HREF="node327.html">Métodos de Petición</A>
- &nbsp; <B>  <A NAME="tex2html8415"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8417"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8454"
+  HREF="node329.html">Métodos de Petición</A>
+<B> Subir:</B> <A NAME="tex2html8448"
+  HREF="node326.html">HTTP</A>
+<B> Anterior:</B> <A NAME="tex2html8442"
+  HREF="node327.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html8450"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8452"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03154000000000000000">
-Véase</A>
+<H2><A NAME="SECTION03152000000000000000">
+Sesiones HTTP</A>
 </H2>
 
-<P>
-
 <OL>
-<LI><A NAME="tex2html698"
-  HREF="https://vimeo.com/51903877">ArrrrCamp #6 - Konstantin Haase - We don't know HTTP</A>
+<LI>Una sesión HTTP es una secuencia de transacciones de red de peticiones y respuestas
+
+<P>
 </LI>
-<LI><A NAME="tex2html699"
-  HREF="http://www.confreaks.com/videos/699-rubyconf2011-resources-for-real-this-time-with-webmachine">Resources, For Real This Time (with Webmachine) Sean Cribbs</A>
-Ruby Conference 2011
+<LI>Un cliente HTTP inicia una petición estableciendo una conexión TCP con un puerto 
+particular de un servidor (normalmente el puerto 80)
+</LI>
+<LI>Un servidor que esté escuchando en ese puerto espera por un mensaje
+de petición de un cliente.
+</LI>
+<LI>El servidor retorna la <A NAME="13983"></A><SPAN  CLASS="textbf">línea de estatus</SPAN>, por ejemplo <code>HTTP/1.1 200 OK</code>,
+y su propio mensaje. El cuerpo de este mensaje suele ser el recurso
+solicitado, aunque puede que se trate de un mensaje de error u otro tipo de información.
 </LI>
 </OL>
 
 <P>
-<BR><HR>
+Veamos un ejemplo. Usemos este servidor:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging]$ cat hello1.rb 
+require 'rack'
+
+class HelloWorld
+  def call env
+    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world"]]
+  end
+end
+
+Rack::Handler::WEBrick::run HelloWorld.new
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging]$ ruby hello1.rb 
+[2013-09-23 15:16:58] INFO  WEBrick 1.3.1
+[2013-09-23 15:16:58] INFO  ruby 1.9.3 (2013-02-22) [x86_64-darwin11.4.2]
+[2013-09-23 15:16:58] INFO  WEBrick::HTTPServer#start: pid=12113 port=8080
+</PRE>
+
+<P>
+Arrancamos un cliente con telnet con la salida redirigida:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging]$ telnet localhost 8080 &gt; salida
+</PRE>
+
+<P>
+Escribimos esto en la entrada estandard:
+<PRE>
+GET /index.html HTTP/1.1
+Host: localhost
+Connection: close
+</PRE>
+con una línea en blanco al final.
+Este texto es enviado al servidor.
+
+<P>
+El cliente deja su salida en el fichero <code>salida</code>:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging]$ cat salida
+Trying ::1...
+Connected to localhost.
+Escape character is '^]'.
+HTTP/1.1 200 OK 
+Content-Type: text/plain
+Server: WEBrick/1.3.1 (Ruby/1.9.3/2013-02-22)
+Date: Mon, 23 Sep 2013 14:33:16 GMT
+Content-Length: 11
+Connection: close
+
+Hello world
+</PRE>
+El cliente escribe en la salida estandard:
+<PRE>
+Connection closed by foreign host.
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html8453"
+  HREF="node329.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html8447"
+  HREF="node326.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html8441"
+  HREF="node327.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html8449"
+  HREF="node734.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html8451"
+  HREF="node737.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html8454"
+  HREF="node329.html">Métodos de Petición</A>
+<B> Subir:</B> <A NAME="tex2html8448"
+  HREF="node326.html">HTTP</A>
+<B> Anterior:</B> <A NAME="tex2html8442"
+  HREF="node327.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html8450"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8452"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

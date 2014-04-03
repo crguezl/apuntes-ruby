@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Copia Segura de un Fichero</TITLE>
-<META NAME="description" CONTENT="Copia Segura de un Fichero">
+<TITLE>Agentes SSH</TITLE>
+<META NAME="description" CONTENT="Agentes SSH">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node597.html">
 <LINK REL="previous" HREF="node595.html">
-<LINK REL="up" HREF="node584.html">
+<LINK REL="up" HREF="node590.html">
 <LINK REL="next" HREF="node597.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12978"
+<A NAME="tex2html13005"
   HREF="node597.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12972"
-  HREF="node584.html">
+<A NAME="tex2html12999"
+  HREF="node590.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12968"
+<A NAME="tex2html12993"
   HREF="node595.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12974"
-  HREF="node727.html">
+<A NAME="tex2html13001"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12976"
-  HREF="node730.html">
+<A NAME="tex2html13003"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,124 +96,271 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12979"
-  HREF="node597.html">Transferencia de ficheros por</A>
-<B> Subir:</B> <A NAME="tex2html12973"
-  HREF="node584.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html12969"
-  HREF="node595.html">Los Ficheros de Configuración</A>
- &nbsp; <B>  <A NAME="tex2html12975"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12977"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13006"
+  HREF="node597.html">Mejor un Sólo Agente</A>
+<B> Subir:</B> <A NAME="tex2html13000"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html12994"
+  HREF="node595.html">Deshabilitar la Asignación de</A>
+ &nbsp; <B>  <A NAME="tex2html13002"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13004"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION064120000000000000000">
-Copia Segura de un Fichero</A>
+<H1><A NAME="SECTION06460000000000000000">
+Agentes SSH</A>
 </H1>
 
 <P>
+Un agente SSH es un programa que guarda de forma segura 
+las frases-clave asociadas con las claves privadas y responde a consultas 
+autentificadas de los clientes SSH.
+El agente recuerda la passphrase de manera que el usuario 
+no tenga que teclearla cada vez que la clave es usada.
 
-<H4><A NAME="SECTION064120010000000000000">
-Transferencia de Ficheros con <TT>scp</TT></A>
+<P>
+El agente crea un socket en un subdirectorio de <code>/tmp</code> 
+en el que escucha las peticiones de conexión SSH.
+Cualquiera que tenga acceso a dicho socket puede acceder al agente. Los permisos
+unix para el socket son suficientemente restrictivos.
+
+<P>
+Los programas que se usan son  <TT>ssh-agent</TT>  y  <TT>ssh-add</TT> . 
+Utilizamos <A NAME="tex2html1298"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
+para añadir claves privadas a la cache del agente
+ssh. A partir de ese momento el cliente ssh no nos importunará
+solicitando la passphrase, comúnicandose con el agente 
+para superar el proceso de autentificación.
+El agente <code>ssh-agent</code> actúa como un daemon que permanece dando el
+servicio de autentificación a los clientes SSH.
+
+<P>
+
+<H4><A NAME="SECTION06460010000000000000">
+ssh-add</A>
 </H4>
   
 
 <P>
-El protocolo <A NAME="22713"></A><SPAN  CLASS="textbf">SCP</SPAN> implementa la transferencia de ficheros.
-El cliente se conecta a la máquina remota usando SSH y solicita la ejecución 
-de un programa servidor  (normalmente el mismo programa cliente <code>scp</code> es capaz de funcionar
-como servidor).
+El programa
+<code>ssh-add</code> permite añadir, listar y suprimir claves de la cache del agente:
 
 <P>
-Para la subida de ficheros el cliente alimenta al servidor
-con los ficheros que deberán ser cargados, incluyendo opcionalmente los 
-atributos básicos como permisos y fechas.
+<PRE>
+someone@localhost:~/.ssh$ ssh-add ~/.ssh/conpass
+Enter passphrase for /home/someone/.ssh/conpass: **********
+Identity added: /home/someone/.ssh/conpass (/home/someone/.ssh/conpass)
+someone@localhost:~/.ssh$ ssh-add -l
+2048 da:13:....:ee /home/someone/.ssh/conpass (RSA)
+</PRE>
+Una vez establecida la clave en el agente es posible conectarse sin necesidad
+de proporcionar la frase clave:
 
 <P>
-Para las descargas el cliente envía una solicitud indicando los ficheros y directorios que
-deben ser descargados. 
+<PRE>
+someone@localhost:~/.kde/shutdown$ ssh remote.machine
+Linux remote.machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
 
-<P>
-Veamos un ejemplo:
-<PRE>
-nereida:~&gt; scp mm.c orion:/tmp/
-mm.c
-</PRE>
-La sintáxis de <A NAME="tex2html1331"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?scp"><TT>scp</TT></A>
-es:
-<PRE>
-scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file] 
-    [-l limit] [-o ssh_option] [-P port] [-S program]
-    [[user@]host1:]file1 ... [[user@]host2:]file2
-</PRE>
-Es posible copiar entre dos máquinas remotas  emitiendo
-la orden desde una tercera máquina:
-<PRE>
-portatil@user:/tmp$ scp europa:/tmp/prueba.batch nereida:/tmp/prueba.batch
-</PRE>
-Es posible usar comodines (wildcards), protegiéndolos de la shell local:
-<PRE>
-portatil@user:/tmp$ scp 'europa:/tmp/*.tex' nereida:/tmp/
-</PRE>
-Es posible copiar de dos máquinas remotas a una tercera:
-<PRE>
-pp2@europa:~/Lnet-parscp$ scp orion:Makefile.PL nereida:texput.log beowulf:
-pp2@europa:~/Lnet-parscp$ ssh beowulf ls -ltr | tail -2
--rw-r--r--  1 casiano casiano    615 mar 26 13:56 texput.log
--rw-r--r--  1 casiano casiano   1485 mar 26 13:56 Makefile.PL
-</PRE>
-Hemos copiado desde la máquina orion y desde la máquina nereida
-diferentes ficheros. La máquina <code>beowulf</code> es la máquina de destino
-a la que fueron transferidos.
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
 
-<P>
-La opción <code>-r</code> permite copiar subdirectorios.
-La opción <code>-p</code> permite preservar permisos.
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Tue Mar 11 14:03:59 2008 from localhost.deioc.ull.es
+user@remote.machine:~$
+</PRE>
 
 <P>
 
-<H4><A NAME="SECTION064120020000000000000">
-Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
+<H4><A NAME="SECTION06460020000000000000">
+Arrancando un Agente SSH</A>
 </H4>
   
 
 <P>
-Un comando como este edita dos ficheros en sendos tabs:
-
-<P>
+Para arrancar el agente SSH se ejecuta el comando:
 <PRE>
-vi -p scp://orion/AUTOMATICBACKUPCHECKOUT /home/casiano/europabackup.log
+eval `ssh-agent`
+</PRE>
+Esto se hace asi porque el resultado retornado por <code>ssh-agent</code>
+es una cadena conteniendo un script <A NAME="tex2html1299"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?bash"><TT>bash</TT></A>. Este guión establece las variables de 
+entorno necesarias para que las futuras llamadas a clientes SSH 
+puedan encontrar al agente. Observe el resultado de una ejecución sin <code>eval</code> ni backticks:
+<PRE>
+$ ssh-agent
+SSH_AUTH_SOCK=/tmp/ssh-jaDVTd5583/agent.5583; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=5584; export SSH_AGENT_PID;
+echo Agent pid 5584;
 </PRE>
 
 <P>
-El primero es un fichero <code>~/AUTOMATICBACKUPCHECKOUT</code>
-en una máquina remota con nombre <code>orion</code>. El segundo
-es un fichero local. El editor <code>vim</code> emite el comando <code>scp</code> 
-apropiado para copiar el fichero remoto en un fichero temporal.
+La variable <code>SSH_AUTH_SOCK</code> contiene el camino al socket de dominio UNIX que será 
+utilizado por los clientes <code>ssh</code>, <code>scp</code>, etc. para comunicarse 
+con el agente.
 
 <P>
-Durantre la edición, cada vez que salve el fichero
-<code>~/AUTOMATICBACKUPCHECKOUT</code> de <code>orion</code>, <code>vim</code>
-tasladará la orden <code>:w</code> en el comando <code>scp</code> adecuado:
+El pid proporcionado en <code>SSH_AGENT_PID</code> nos permite eliminar al agente mediante <code>kill</code>. 
+Sin embargo una llamada a <code>kill</code> no elimina 
+las variables de entorno establecidas.
+La forma correcta de terminar el agente es usando la opción <code>-k</code>
+de <code>ssh-agent</code>:
 <PRE>
-:!scp -q '/tmp/v611122/1' 'orion:AUTOMATICBACKUPCHECKOUT'
+pp2@localhost:~/Lbook$ eval `ssh-agent`
+Agent pid 5606
+pp2@localhost:~/Lbook$ env | grep -i ssh
+SSH_AGENT_PID=5606
+SSH_AUTH_SOCK=/tmp/ssh-ALUJyJ5605/agent.5605
+CVS_RSH=/usr/bin/ssh
+pp2@localhost:~/Lbook$ eval `ssh-agent -k`
+Agent pid 5606 killed
+pp2@localhost:~/Lbook$ env | grep -i ssh
+CVS_RSH=/usr/bin/ssh
+pp2@localhost:~/Lbook$
 </PRE>
 
 <P>
-o bien podemos emitir una orden de edición de un nuevo fichero remoto:
+
+<H4><A NAME="SECTION06460030000000000000">
+El Protocolo</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>El usuario escribe el comando que da lugar a la conexión inicial y especifica el username asi como 
+la petición de usar una clave. El programa cliente envía el username y la petición de uso
+de  la clave.
+
+<P>
+</LI>
+<LI>El demonio de SSH mira en el fichero <code>authorized_keys</code> y
+construye un reto basado en esa clave y lo envía al cliente.
+
+<P>
+</LI>
+<LI>El cliente recibe el reto asociado con la clave y lo redirige al
+agente. Supongamos que la clave fué previamente cargada con <A NAME="tex2html1300"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
+<P>
+</LI>
+<LI>El agente construye la respuesta y la devuelve al proceso <A NAME="tex2html1301"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+el cual la envía al proceso <A NAME="tex2html1302"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+que escucha en el otro extremo.
+El cliente <A NAME="tex2html1303"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+nunca ve la clave privada, lo que ve 
+es la respuesta. 
+
+<P>
+</LI>
+<LI>El servidor <A NAME="tex2html1304"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+valida la respuesta. Si es correcta permite 
+el acceso al sistema.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Establezca claves con passphrase, instale un agente ssh y compruebe su buen
+funcionamiento.</I></DIV><P></P>
+
+<P>
+
+<H4><A NAME="SECTION06460040000000000000">
+Bloqueando el acceso a un Agente</A>
+</H4>
+  
+
+<P>
+Es posible cerrar el acceso al agente usando la opción <code>-x</code> de <A NAME="tex2html1305"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
 <PRE>
-:vsplit scp://casiano@some.machine.com/somefile.txt
+pp2@europa:~$ ssh-add -x
+Enter lock password:
+Again:
+Agent locked.
+pp2@europa:~$ ssh orion
+Enter passphrase for key '/home/pp2/.ssh/id_dsa': ********
+Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Mon Apr 27 13:29:32 2009 from europa.deioc.ull.es
+casiano@orion:~$
 </PRE>
 
 <P>
-Es incluso posible ver los contenidos de un directorio:
+Para abrir el acceso al agente usaremos la opción <code>-X</code> de <A NAME="tex2html1306"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
 <PRE>
-:tabedit scp://orion/pp2/
+pp2@europa:~$ ssh-add -X
+Enter lock password: ****************
+Agent unlocked.
+pp2@europa:~$
 </PRE>
+
+<P>
+
+<H4><A NAME="SECTION06460050000000000000">
+Poniendo Fecha de Caducidad</A>
+</H4>
+  
+
+<P>
+La opción <code>-t lifetime</code> de <A NAME="tex2html1307"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>
+puede ser utilizada para 
+limitar el tiempo de caducidad de las identidades en un agente. El tiempo
+se expresará en segundos o bien de la forma <code>time[qualifier]</code>, donde
+<code>time</code> es un entero positivo y <code>qualifier</code> es:
+
+<P>
+<PRE>
+           nada    segundos
+           s | S   segundos
+           m | M   minutos
+           h | H   horas
+           d | D   dias
+           w | W   semanas
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06460060000000000000">
+Véase también</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI>Wikipedia <A NAME="tex2html1308"
+  HREF="http://en.wikipedia.org/wiki/Ssh-agent">Ssh-agent</A>
+</LI>
+<LI><A NAME="tex2html1309"
+  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+</LI>
+<LI><A NAME="tex2html1310"
+  HREF="http://mah.everybody.org/docs/ssh">Using ssh-agent with ssh</A>
+</LI>
+</UL>
 
 <P>
 <BR><HR>
@@ -222,55 +370,37 @@ Es incluso posible ver los contenidos de un directorio:
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html12980"
-  HREF="node596.html#SECTION064120010000000000000">Transferencia de Ficheros con <TT>scp</TT></A>
-<LI><A NAME="tex2html12981"
-  HREF="node596.html#SECTION064120020000000000000">Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html12982"
-  HREF="node597.html">Transferencia de ficheros por <TT>sftp</TT></A>
-<LI><A NAME="tex2html12983"
-  HREF="node598.html">Copias de Seguridad con <TT>rsync</TT></A>
-<UL>
-<LI><A NAME="tex2html12984"
-  HREF="node598.html#SECTION064122010000000000000">El Algoritmo</A>
-<LI><A NAME="tex2html12985"
-  HREF="node598.html#SECTION064122020000000000000">Mode de Uso</A>
-<LI><A NAME="tex2html12986"
-  HREF="node598.html#SECTION064122030000000000000">Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
-<LI><A NAME="tex2html12987"
-  HREF="node598.html#SECTION064122040000000000000">Backups con <TT>rsync</TT> en un Medio Externo</A>
-<LI><A NAME="tex2html12988"
-  HREF="node598.html#SECTION064122050000000000000">El fichero <TT>/etc/fstab</TT></A>
-<LI><A NAME="tex2html12989"
-  HREF="node598.html#SECTION064122060000000000000">El Programa de Copia</A>
-<LI><A NAME="tex2html12990"
-  HREF="node598.html#SECTION064122070000000000000">Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
-<LI><A NAME="tex2html12991"
-  HREF="node598.html#SECTION064122080000000000000">El fichero de <TT>cron</TT></A>
-<LI><A NAME="tex2html12992"
-  HREF="node598.html#SECTION064122090000000000000">Comprobación de la Copia</A>
-</UL></UL>
+<LI><A NAME="tex2html13007"
+  HREF="node596.html#SECTION06460010000000000000">ssh-add</A>
+<LI><A NAME="tex2html13008"
+  HREF="node596.html#SECTION06460020000000000000">Arrancando un Agente SSH</A>
+<LI><A NAME="tex2html13009"
+  HREF="node596.html#SECTION06460030000000000000">El Protocolo</A>
+<LI><A NAME="tex2html13010"
+  HREF="node596.html#SECTION06460040000000000000">Bloqueando el acceso a un Agente</A>
+<LI><A NAME="tex2html13011"
+  HREF="node596.html#SECTION06460050000000000000">Poniendo Fecha de Caducidad</A>
+<LI><A NAME="tex2html13012"
+  HREF="node596.html#SECTION06460060000000000000">Véase también</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12978"
+<A NAME="tex2html13005"
   HREF="node597.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12972"
-  HREF="node584.html">
+<A NAME="tex2html12999"
+  HREF="node590.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12968"
+<A NAME="tex2html12993"
   HREF="node595.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12974"
-  HREF="node727.html">
+<A NAME="tex2html13001"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12976"
-  HREF="node730.html">
+<A NAME="tex2html13003"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -325,20 +455,20 @@ Es incluso posible ver los contenidos de un directorio:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12979"
-  HREF="node597.html">Transferencia de ficheros por</A>
-<B> Subir:</B> <A NAME="tex2html12973"
-  HREF="node584.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html12969"
-  HREF="node595.html">Los Ficheros de Configuración</A>
- &nbsp; <B>  <A NAME="tex2html12975"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12977"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13006"
+  HREF="node597.html">Mejor un Sólo Agente</A>
+<B> Subir:</B> <A NAME="tex2html13000"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html12994"
+  HREF="node595.html">Deshabilitar la Asignación de</A>
+ &nbsp; <B>  <A NAME="tex2html13002"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13004"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Constantes</TITLE>
-<META NAME="description" CONTENT="Constantes">
+<TITLE>Un Método de Clase</TITLE>
+<META NAME="description" CONTENT="Un Método de Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node175.html">
 <LINK REL="previous" HREF="node173.html">
-<LINK REL="up" HREF="node157.html">
+<LINK REL="up" HREF="node158.html">
 <LINK REL="next" HREF="node175.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5677"
+<A NAME="tex2html5701"
   HREF="node175.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5671"
-  HREF="node157.html">
+<A NAME="tex2html5695"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5665"
+<A NAME="tex2html5689"
   HREF="node173.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5673"
-  HREF="node727.html">
+<A NAME="tex2html5697"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5675"
-  HREF="node730.html">
+<A NAME="tex2html5699"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,108 +96,143 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5678"
-  HREF="node175.html">Variables de Clase</A>
-<B> Subir:</B> <A NAME="tex2html5672"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5666"
-  HREF="node173.html">Un Método de Clase</A>
- &nbsp; <B>  <A NAME="tex2html5674"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5676"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5702"
+  HREF="node175.html">Constantes</A>
+<B> Subir:</B> <A NAME="tex2html5696"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5690"
+  HREF="node173.html">Clases Mutables: Fácil y</A>
+ &nbsp; <B>  <A NAME="tex2html5698"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5700"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027117000000000000000"></A>
-<A NAME="strangeerror:introconstantes"></A>
+<H2><A NAME="SECTION027116000000000000000"></A>
+<A NAME="subsection:unmetododeclase"></A>
 <BR>
-Constantes
+Un Método de Clase
 </H2>
 
 <P>
+Let's take another approach to adding <code>Point</code> objects together. Instead of invoking an instance method of one point and passing another point to that method, let's write a method named <code>sum</code> that takes any number of <code>Point</code> objects, adds them together, and returns a new <code>Point</code>. This method is not an instance method invoked on a <code>Point</code> object. Rather, it is a class method, invoked through the <code>Point</code> class itself. We might invoke the <code>sum</code> method like this:
+
+<P>
 <PRE>
- 1 class Point
-  2   attr_reader :x, :y   # Define accessor methods for our instance variables
-  3 
-  4   include Comparable
-  5   include Enumerable
-  6 
-  7   def initialize(x,y)
-  8     @x,@y = x, y
-  9   end    
- 10   
- 11   ORIGIN = Point.new(0, 0)
- 12   E_1    = Point.new(1, 0)
- 13   E_2    = Point.new(0, 1)
+total = Point.sum(p1, p2, p3)  # p1, p2 and p3 are Point objects
 </PRE>
 
 <P>
-Inside the class definition, these constants can be referred to by
-their unqualified names. Outside the definition, they must be
-prefixed by the name of the class:
+Keep in mind that the expression <code>Point</code> refers to a Class
+object that represents our point class. To define a class method
+for the <code>Point</code> class, what we are really doing is defining a
+<A NAME="7526"></A><SPAN  CLASS="textbf">singleton method</SPAN> of the <code>Point</code> object. To define a singleton
+method, use the <code>def</code> statement as usual, but specify the
+object on which the method is to be defined as well as the name of
+the method. Our class method <code>sum</code> is defined like this:
 
 <P>
 <PRE>
-&gt;&gt; load "Point2.rb"
-=&gt; true
-&gt;&gt; Point::E_1
-=&gt; #&lt;Point:0x100589f20 @y=0, @x=1&gt;
-&gt;&gt; Point::E_1.x
-=&gt; 1
-&gt;&gt; E_1
-NameError: uninitialized constant E_1
-  from (irb):4
-&gt;&gt;
+[~/point]$ cat -n point_with_sum.rb 
+     1  require 'point'
+     2  class Point
+     3    attr_reader :x, :y     # Define accessor methods for our instance variables
+     4  
+     5    def Point.sum(*points) # Return the sum of an arbitrary number of points
+     6      x = y = 0
+     7      points.each {|p| x += p.x; y += p.y }
+     8      Point.new(x,y)
+     9    end
+    10  end
+    11  
+    12  if __FILE__ == $0
+    13    z = [[1,1],[2,4],[3,2]].map { |p| Point.new(*p) }
+    14    p z
+    15    w = Point.sum(*z)
+    16    p w
+    17    r = Point.sum(z[0], z[1])
+    18    p r
+    19  end
+    20
 </PRE>
 
 <P>
-Puesto que las constantes crean instancias de la clase, no podemos definirlas antes 
-de tener definido el método <code>initialize</code>:
+This definition of the class method names the class explicitly, and mirrors the syntax used to invoke the method. Class methods can also be defined using self instead of the class name. Thus, this method could also be written like this:
+
+<P>
 <PRE>
-[~/rubytesting]$ cat constant_before_initialize.rb 
-class Tutu
+def self.sum(*points)  # Return the sum of an arbitrary number of points
+  x = y = 0
+  points.each {|p| x += p.x; y += p.y }
+  Point.new(x,y)
+end
+</PRE>
 
-  C = Tutu.new(5)
+<P>
+Using <code>self</code> instead of <code>Point</code> makes the code slightly less clear, but it's an application of the <A NAME="7528"></A><SPAN  CLASS="textbf">DRY</SPAN> (Don't Repeat Yourself) principle. If you use <code>self</code> instead of the class name, you can change the name of a class without having to edit the definition of its class methods.
 
-  def initialize(x)
-   @x = x 
+<P>
+There is yet another technique for defining class methods. Though it is less clear than the previously shown technique, it can be handy when defining multiple class methods, and you are likely to see it used in existing code:
+
+<P>
+<PRE>
+# Open up the Point object so we can add methods to it
+class &lt;&lt; Point      # Syntax for adding methods to a single object
+  def sum(*points)  # This is the class method Point.sum
+    x = y = 0
+    points.each {|p| x += p.x; y += p.y }
+    Point.new(x,y)
+  end
+
+  # Other class methods can be defined here
+end
+</PRE>
+
+<P>
+This technique can also be used inside the class definition, where we can use <code>self</code> instead of repeating the class name:
+
+<P>
+<PRE>
+class Point
+  # Instance methods go here
+
+  class &lt;&lt; self
+    # Class methods go here
   end
 end
 </PRE>
-Al ejecutar produce un error:
+
+<P>
+También podemos poner <code>self.sum</code> o bien <code>class &lt;&lt; self ... end</code>
+
+<P>
 <PRE>
-[~/rubytesting]$ ruby constant_before_initialize.rb 
-constant_before_initialize.rb:3:in `initialize': wrong number of arguments(1 for 0) (ArgumentError)
-  from constant_before_initialize.rb:3:in `new'
-  from constant_before_initialize.rb:3:in `&lt;class:Tutu&gt;'
-  from constant_before_initialize.rb:1:in `&lt;main&gt;'
-</PRE>
-Es posible definir constantes de una clase desde fuera de la misma:
-<PRE>
-&gt;&gt; Point::E_3 = Point.new 1, 1
-=&gt; #&lt;Point:0x100565df0 @y=1, @x=1&gt;
+[~/point]$ ruby point_with_sum.rb 
+[(1,1), (2,4), (3,2)]
+(6,7)
+(3,5)
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5677"
+<A NAME="tex2html5701"
   HREF="node175.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5671"
-  HREF="node157.html">
+<A NAME="tex2html5695"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5665"
+<A NAME="tex2html5689"
   HREF="node173.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5673"
-  HREF="node727.html">
+<A NAME="tex2html5697"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5675"
-  HREF="node730.html">
+<A NAME="tex2html5699"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -252,20 +287,20 @@ Es posible definir constantes de una clase desde fuera de la misma:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5678"
-  HREF="node175.html">Variables de Clase</A>
-<B> Subir:</B> <A NAME="tex2html5672"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5666"
-  HREF="node173.html">Un Método de Clase</A>
- &nbsp; <B>  <A NAME="tex2html5674"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5676"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5702"
+  HREF="node175.html">Constantes</A>
+<B> Subir:</B> <A NAME="tex2html5696"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5690"
+  HREF="node173.html">Clases Mutables: Fácil y</A>
+ &nbsp; <B>  <A NAME="tex2html5698"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5700"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

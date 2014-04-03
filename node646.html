@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Gem Security</TITLE>
-<META NAME="description" CONTENT="Gem Security">
+<TITLE>Dependencias de la Gema</TITLE>
+<META NAME="description" CONTENT="Dependencias de la Gema">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node647.html">
 <LINK REL="previous" HREF="node645.html">
-<LINK REL="up" HREF="node636.html">
+<LINK REL="up" HREF="node642.html">
 <LINK REL="next" HREF="node647.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13766"
+<A NAME="tex2html13814"
   HREF="node647.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13760"
-  HREF="node636.html">
+<A NAME="tex2html13808"
+  HREF="node642.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13754"
+<A NAME="tex2html13802"
   HREF="node645.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13762"
-  HREF="node727.html">
+<A NAME="tex2html13810"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13764"
-  HREF="node730.html">
+<A NAME="tex2html13812"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,193 +96,101 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13767"
-  HREF="node647.html">Retirando una Gema</A>
-<B> Subir:</B> <A NAME="tex2html13761"
-  HREF="node636.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html13755"
-  HREF="node645.html">Push Permissions on RubyGems.org</A>
- &nbsp; <B>  <A NAME="tex2html13763"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13765"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13815"
+  HREF="node647.html">Jerarquía de Ficheros y</A>
+<B> Subir:</B> <A NAME="tex2html13809"
+  HREF="node642.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13803"
+  HREF="node645.html">Underscores and Dashes</A>
+ &nbsp; <B>  <A NAME="tex2html13811"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13813"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0612100000000000000000">
-Gem Security</A>
+<H1><A NAME="SECTION061240000000000000000">
+Dependencias de la Gema</A>
 </H1>
+Nearly all gems are going to have dependencies upon other libraries that
+they require in order to function. These dependencies are explicitly
+declared in the gemspec so that when a gem is installed, all of the gems
+that are needed to run that gem can automatically be installed with it.
 
 <P>
-Installing a gem allows that gem’s code to run in the context of
-your application. Clearly this has security implications: installing
-a malicious gem on a server could ultimately result in that server
-being completely penetrated by the gem’s author. Because of this,
-the security of gem code is a topic of active discussion within the
-Ruby community.
+There are two types of gem dependencies, <A NAME="25473"></A><SPAN  CLASS="textbf">runtime dependencies</SPAN> and
+<A NAME="25475"></A><SPAN  CLASS="textbf">development dependencies</SPAN>. 
 
 <P>
-<A NAME="tex2html1448"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> has had the ability to cryptographically sign gems since
-version 0.8.11. This signing works by using the <code>gem cert</code> command
-to create a key pair, and then packaging signing data inside the
-gem itself. 
+
+<UL>
+<LI>Runtime dependencies are libraries that
+your gem needs in order to function. For example, if you built a Rails
+extension, you would need to add Rails to the runtime dependencies of
+your project. 
+
+<P>
+</LI>
+<LI>Development dependencies, on the other hand, are gems
+that are only needed by people who are going to contribute to the
+code of the gem. 
+
+<P>
+</LI>
+<LI>Gems are, by default, installed only with the runtime
+dependencies. This avoids cluttering up an environment with development
+dependencies if they aren't needed.
+</LI>
+</UL>
+
+<P>
+Adding dependencies to your <code>gemspec</code> is extremely simple; all you need
+to do is add a line to the <code>gemspec</code> file for each dependency:
 
 <P>
 <PRE>
-[~/srcLPPruby/matrices_dispersas(master)]$ gem help cert
-Usage: gem cert [options]
+# -*- encoding: utf-8 -*-
+require File.expand_path('../lib/my_gem/version', __FILE__)
 
-  Options:
-    -a, --add CERT                   Add a trusted certificate.
-    -l, --list [FILTER]              List trusted certificates where the
-                                     subject contains FILTER
-    -r, --remove FILTER              Remove trusted certificates where the
-                                     subject contains FILTER
-    -b, --build EMAIL_ADDR           Build private key and self-signed
-                                     certificate for EMAIL_ADDR
-    -C, --certificate CERT           Signing certificate for --sign
-    -K, --private-key KEY            Key for --sign or --build
-    -s, --sign CERT                  Signs CERT with the key from -K
-                                     and the certificate from -C
+Gem::Specification.new do |gem|
+  # ...
 
-
-  Common Options:
-    -h, --help                       Get help on this command
-    -V, --[no-]verbose               Set the verbose level of output
-    -q, --quiet                      Silence commands
-        --config-file FILE           Use this config file instead of default
-        --backtrace                  Show stack backtrace on errors
-        --debug                      Turn on Ruby debugging
-
-
-  Summary:
-    Manage RubyGems certificates and signing settings
-
-  Description:
-    The cert command manages signing keys and certificates for creating signed
-    gems.  Your signing certificate and private key are typically stored in
-    ~/.gem/gem-public_cert.pem and ~/.gem/gem-private_key.pem respectively.
-    
-    To build a certificate for signing gems:
-    
-      gem cert --build you@example
-    
-    If you already have an RSA key, or are creating a new certificate for an
-    existing key:
-    
-      gem cert --build you@example --private-key /path/to/key.pem
-    
-    If you wish to trust a certificate you can add it to the trust list with:
-    
-      gem cert --add /path/to/cert.pem
-    
-    You can list trusted certificates with:
-    
-      gem cert --list
-    
-    or:
-    
-      gem cert --list cert_subject_substring
-    
-    If you wish to remove a previously trusted certificate:
-    
-      gem cert --remove cert_subject_substring
-    
-    To sign another gem author's certificate:
-    
-      gem cert --sign /path/to/other_cert.pem
-    
-    For further reading on signing gems see `ri Gem::Security`
+  gem.add_dependency 'rails'
+  gem.add_development_dependency 'rspec', '~&gt; 2.7'
+end
 </PRE>
 
 <P>
-The user 
-needs to add the author or source site public key as a trusted certificate (you only need
-to do this once per author/site):
+In addition to specifying the gem name of a dependency, you can also
+specify a version of the gem to get even more specific. 
+<A NAME="tex2html1452"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> will default to the latest version if no specific version is required.
+
+<P>
 <PRE>
-gem cert --add &lt;(curl -Ls https://gist.github.com/sferik/4701180/raw/public_cert.pem)
+git add . 
+git commit -m "Initial Import"
 </PRE>
-The <code>gem install</code> command optionally lets you set a
-<A NAME="25252"></A><SPAN  CLASS="textbf">security policy</SPAN> 
-(via the option <code>-P</code> or <code>--trust-policy POLICY</code> which
-specifies gem trust policy) and you can verify the signing key for a gem before
-you install it:
-<PRE>
-gem install twitter -P HighSecurity
-</PRE>
-
-<P>
-Available policies are:
-
-<OL>
-<LI>NoSecurity - Well, no security at all. Signed packages are treated like unsigned packages.
-
-<P>
-</LI>
-<LI>LowSecurity - Pretty much no security. If a package is signed then <A NAME="tex2html1449"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> will make sure the signature matches the signing certificate, and that the signing certificate hasn't expired, but that's it. A malicious user could easily circumvent this kind of security.
-
-<P>
-</LI>
-<LI>MediumSecurity - Better than LowSecurity and NoSecurity, but still
-fallible. Package contents are verified against the signing
-certificate, and the signing certificate is checked for validity,
-and checked against the rest of the certificate chain.
-The biggest improvement over LowSecurity is that MediumSecurity
-won't install packages that are signed by untrusted sources.
-Unfortunately, MediumSecurity still isn't totally secure – a malicious
-user can still unpack the gem, strip the signatures, and distribute
-the gem unsigned.
-</LI>
-<LI>HighSecurity - The HighSecurity policy is identical to the
-MediumSecurity policy, except that it does not allow unsigned gems.
-A malicious user can't
-modify the package contents without invalidating the signature, and
-he can't modify or remove signature or the signing certificate
-chain
-</LI>
-</OL>
-
-<P>
-However, this method of securing gems is not widely used. It requires
-a number of manual steps on the part of the developer, and there
-is no well-established chain of trust for gem signing keys. 
-
-<P>
-Véase
-
-<OL>
-<LI><A NAME="tex2html1450"
-  HREF="http://sixarm.com/about/ruby-gems-using-high-security-trust-policy.html">Ruby Gems: Using High Security Trust Policy</A>
-</LI>
-<LI><A NAME="tex2html1451"
-  HREF="http://blog.meldium.com/home/2013/3/3/signed-rubygems-part">A Practical Guide to Using Signed Ruby Gems - Part 1: Bundler</A>
-</LI>
-<LI><A NAME="tex2html1452"
-  HREF="http://blog.meldium.com/home/2013/3/6/signed-gems-on-heroku">A Practical Guide to Using Signed Ruby Gems - Part 2: Heroku</A>
-</LI>
-</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13766"
+<A NAME="tex2html13814"
   HREF="node647.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13760"
-  HREF="node636.html">
+<A NAME="tex2html13808"
+  HREF="node642.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13754"
+<A NAME="tex2html13802"
   HREF="node645.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13762"
-  HREF="node727.html">
+<A NAME="tex2html13810"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13764"
-  HREF="node730.html">
+<A NAME="tex2html13812"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -337,20 +245,20 @@ Véase
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13767"
-  HREF="node647.html">Retirando una Gema</A>
-<B> Subir:</B> <A NAME="tex2html13761"
-  HREF="node636.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html13755"
-  HREF="node645.html">Push Permissions on RubyGems.org</A>
- &nbsp; <B>  <A NAME="tex2html13763"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13765"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13815"
+  HREF="node647.html">Jerarquía de Ficheros y</A>
+<B> Subir:</B> <A NAME="tex2html13809"
+  HREF="node642.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13803"
+  HREF="node645.html">Underscores and Dashes</A>
+ &nbsp; <B>  <A NAME="tex2html13811"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13813"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

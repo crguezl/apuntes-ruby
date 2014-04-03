@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: La Calculadora</TITLE>
-<META NAME="description" CONTENT="Práctica: La Calculadora">
+<TITLE>Véase También</TITLE>
+<META NAME="description" CONTENT="Véase También">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node154.html">
-<LINK REL="previous" HREF="node146.html">
-<LINK REL="up" HREF="node115.html">
+<LINK REL="previous" HREF="node152.html">
+<LINK REL="up" HREF="node147.html">
 <LINK REL="next" HREF="node154.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5260"
+<A NAME="tex2html5284"
   HREF="node154.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5254"
-  HREF="node115.html">
+<A NAME="tex2html5278"
+  HREF="node147.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5248"
+<A NAME="tex2html5274"
   HREF="node152.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5256"
-  HREF="node727.html">
+<A NAME="tex2html5280"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5258"
-  HREF="node730.html">
+<A NAME="tex2html5282"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,169 +95,69 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5261"
-  HREF="node154.html">Ejercicios</A>
-<B> Subir:</B> <A NAME="tex2html5255"
-  HREF="node115.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5249"
-  HREF="node152.html">Véase También</A>
- &nbsp; <B>  <A NAME="tex2html5257"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5259"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5285"
+  HREF="node154.html">Práctica: La Calculadora</A>
+<B> Subir:</B> <A NAME="tex2html5279"
+  HREF="node147.html">Programación Funcional</A>
+<B> Anterior:</B> <A NAME="tex2html5275"
+  HREF="node152.html">Símbolos, Métodos y Procs</A>
+ &nbsp; <B>  <A NAME="tex2html5281"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5283"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION026100000000000000000"></A>
-   <A NAME="5565"></A>
-  
-<A NAME="practica:lacalculadora2"></A>
-<BR>
-Práctica: La Calculadora
-</H1>
-
-<P>
-Se trata de extender la calculadora en postfijo realizada en la práctica
-<A HREF="node30.html#practica:postfijo">7.12</A>.
-
-<P>
-La nueva calculadora deberá estar implantada mediante una clase 
-<code>PostfixCalc</code> y dispone de dos operadores <code>=</code> y <code>!</code> que permiten respectivamente 
-asignar valores a variables
-y obtener el valor ligado a una variable.
-
-<P>
-Los objetos <code>PostfixCalc</code>  disponen de un atributo <code>stack</code> (de sólo lectura),
-de un atributo <code>st</code> que contiene la tabla de símbolos.
-
-<P>
-El objeto dispone también de un hash privado 
-que mantiene las lambdas (véase la seccion <A HREF="node154.html#ejercicios:lambda">12.11</A>)
-que implantan las operaciones de  suma, resta, multiplicación, división,
-etc.
-<PRE>
-    @f = {
-      '+' =&gt; lambda { |a,b| a+b},
-      '*' =&gt; lambda { |a,b| a*b},
-      ...
-    }
-</PRE>
-
-<P>
-El siguiente ejemplo muestra un código que usa la clase:
-
-<P>
-<PRE>
- 43 if __FILE__ == $0
- 44   include Math
- 45 
- 46   expr = ARGV.join(" ")
- 47   c = PostfixCalc.new({'sin'   =&gt; lambda { |a| sin(a) }})
- 48 
- 49   c.eval(expr)
- 50 
- 51   puts "----stack------"
- 52   c.stack.each { |m| puts m }
- 53   puts "----symbol table------"
- 54   c.st.each { |k,v|  puts "#{k} =&gt; #{v}" }
- 55 end
-</PRE>
-
-<P>
-Siguen varias ejecuciones:
-
-<P>
-<PRE>
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '3.14159 2 / sin'
-----stack------
-0.99999999999912
-</PRE>
-Por defecto la calculadora contiene un conjunto básico de operaciones.
-El programa cliente puede añadir nuevas operaciones como ocurre en el ejemplo:
-<PRE>
-  c = PostfixCalc.new({'sin'   =&gt; lambda { |a| sin(a) }})
-</PRE>
-El siguiente ejemplo muestra el uso del operador de asignación <code>=</code>
-y del operador de carga (fetch) <code>!</code>:
-<PRE>
-----symbol table------
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '2 a = 3 b = a ! b ! *'
-----stack------
-6.0
-----symbol table------
-a =&gt; 2.0
-b =&gt; 3.0
-</PRE>
-La expresión <code>2 a =</code> retira el <code>2</code> y la <code>a</code> de la pila y
-almacena en la entrada <code>a</code> de la tabla de símbolos de la calculadora
-un <code>2</code>. No añade nada al top de la pila.
-
-<P>
-La expresión <code>a !</code> empuja en el top de la pila el valor asociado 
-con la entrada <code>a</code> de la tabla de símbolos.
-
-<P>
-La función <code>p</code> imprime el elemento en el top de la pila:
-<PRE>
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '2 a = 3 a ! 4 + p'
-6.0
-----stack------
-3.0
-6.0
-----symbol table------
-a =&gt; 2.0
-</PRE>
+<H2><A NAME="SECTION02696000000000000000">
+Véase También</A>
+</H2>
 
 <P>
 
-<UL>
-<LI>Consulte el método <code>merge!</code> de la clase <A NAME="tex2html314"
-  HREF="http://www.ruby-doc.org/core-1.9.2/Hash.html">Hash</A>
+<OL>
+<LI><A NAME="tex2html310"
+  HREF="http://youtu.be/8DvxOLzmLSI">Pat Shaughnessy - Functional Programming In Ruby</A>
+YouTube.
 </LI>
-<LI>Generalize el programa para que los operadores <code>=</code> y <code>!</code> puedan ir pegados al identificador:
-<PRE>
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '2 a= 3 a! 4 + p'
-6.0
-----stack------
-3.0
-6.0
-----symbol table------
-a =&gt; 2.0
-</PRE>
-Hay varias soluciones. Una es usar <code>scan</code>:
-<PRE>
-&gt;&gt; "12 -3+ 4- 5*".scan(/-?\d+|[-+*]/)
-=&gt; ["12", "-3", "+", "4", "-", "5", "*"]
-&gt;&gt;
-</PRE>
-Otra es usar <code>gsub</code>. Consulte el método <code>gsub</code> de la clase <A NAME="5566"></A><A NAME="tex2html315"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>, que permite sustituciones
-globales:
-<PRE>
-expr.gsub!(/([a-zA-Z_]\w)*([!=])/, '\1 \2')
-</PRE>
+<LI><A NAME="tex2html311"
+  HREF="http://youtu.be/VBC-G6hahWA">An Introduction to Procs, Lambdas and Closures in Ruby</A>
+(CooperPress)
 </LI>
-</UL>
+<LI><A NAME="tex2html312"
+  HREF="http://youtu.be/jjwbzVkYT5w">Ruby 2.0 - Getting Started and Named Parameters</A>
+</LI>
+<LI><A NAME="tex2html313"
+  HREF="http://rubymanor.org/3/videos/programming_with_nothing/">Programming with Nothing</A>
+por Tom Stuart (Rubymanor)
+</LI>
+<LI><A NAME="tex2html314"
+  HREF="https://vimeo.com/66849976#at=0">"Impossible Programs" a talk by Tom Stuart, author of "Understanding Computation" (O'Reilly)</A>
+</LI>
+<LI><A NAME="tex2html315"
+  HREF="http://youtu.be/FITJMJjASUs">Ruby Conf 12 - Y Not- Adventures in Functional Programming by Jim Weirich</A>
+YouTube
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5260"
+<A NAME="tex2html5284"
   HREF="node154.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5254"
-  HREF="node115.html">
+<A NAME="tex2html5278"
+  HREF="node147.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5248"
+<A NAME="tex2html5274"
   HREF="node152.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5256"
-  HREF="node727.html">
+<A NAME="tex2html5280"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5258"
-  HREF="node730.html">
+<A NAME="tex2html5282"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -313,20 +212,20 @@ expr.gsub!(/([a-zA-Z_]\w)*([!=])/, '\1 \2')
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5261"
-  HREF="node154.html">Ejercicios</A>
-<B> Subir:</B> <A NAME="tex2html5255"
-  HREF="node115.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5249"
-  HREF="node152.html">Véase También</A>
- &nbsp; <B>  <A NAME="tex2html5257"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5259"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5285"
+  HREF="node154.html">Práctica: La Calculadora</A>
+<B> Subir:</B> <A NAME="tex2html5279"
+  HREF="node147.html">Programación Funcional</A>
+<B> Anterior:</B> <A NAME="tex2html5275"
+  HREF="node152.html">Símbolos, Métodos y Procs</A>
+ &nbsp; <B>  <A NAME="tex2html5281"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5283"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

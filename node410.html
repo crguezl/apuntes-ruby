@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: TicTacToe usando DataMapper</TITLE>
-<META NAME="description" CONTENT="Práctica: TicTacToe usando DataMapper">
+<TITLE>Sinatra como Middleware</TITLE>
+<META NAME="description" CONTENT="Sinatra como Middleware">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node411.html">
 <LINK REL="previous" HREF="node409.html">
-<LINK REL="up" HREF="node372.html">
+<LINK REL="up" HREF="node374.html">
 <LINK REL="next" HREF="node411.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9771"
+<A NAME="tex2html9795"
   HREF="node411.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9765"
-  HREF="node372.html">
+<A NAME="tex2html9789"
+  HREF="node374.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9759"
+<A NAME="tex2html9783"
   HREF="node409.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9767"
-  HREF="node727.html">
+<A NAME="tex2html9791"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9769"
-  HREF="node730.html">
+<A NAME="tex2html9793"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,60 +96,156 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9772"
-  HREF="node411.html">Práctica: Servicio de Syntax</A>
-<B> Subir:</B> <A NAME="tex2html9766"
-  HREF="node372.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9760"
-  HREF="node409.html">Práctica: TicTacToe</A>
- &nbsp; <B>  <A NAME="tex2html9768"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9770"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9796"
+  HREF="node411.html">Práctica: TicTacToe</A>
+<B> Subir:</B> <A NAME="tex2html9790"
+  HREF="node374.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9784"
+  HREF="node409.html">Autentificación Básica</A>
+ &nbsp; <B>  <A NAME="tex2html9792"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9794"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033290000000000000000"></A>
-   <A NAME="16722"></A>
-  
-<A NAME="practica:tictactoedatamapper"></A>
-<BR>
-Práctica: TicTacToe usando DataMapper
+<H1><A NAME="SECTION033270000000000000000">
+Sinatra como Middleware</A>
 </H1>
-Añada una base de datos a la práctica del TicTacToe
-<A HREF="node409.html#practica:ticatactoe">26.28</A>
-de manera que se lleve la cuenta de los usuarios registrados, 
-las partidas jugadas, ganadas y perdídas.
-Repase la sección <I>DataMapper y Sinatra</I> <A HREF="node458.html#chapter:datamapperysinatra">39</A>.
 
 <P>
-Mejore las hojas de estilo usando SAAS <A HREF="node678.html#chapter:sass">89</A>.
-Deberán mostrarse las celdas pares e impares en distintos colores.
-También deberá mostrarse una lista de jugadores con sus registros.
+Not only is Sinatra able to use other Rack middleware, any Sinatra
+application can in turn be added in front of any Rack endpoint as
+middleware itself. 
 
 <P>
-Despliegue la aplicación en <A NAME="tex2html889"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>.
+This endpoint could be another Sinatra application,
+or any other Rack-based application (Rails/Ramaze/Camping/…):
 
 <P>
+
+<OL>
+<LI>When a request comes in, all <code>before</code> filters are triggered
+</LI>
+<LI>Then, if a route matches, the corresponding block will be executed
+</LI>
+<LI>If no route matches, the request is handed off to the wrapped application
+</LI>
+<LI>The <code>after</code> filters are executed after we've got a response back from the
+route or  the wrapped app
+</LI>
+</OL>
+Thus, our Sinatra app is a middleware.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figure:requestobject"></A><A NAME="16287"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figura 26.2:</STRONG>
+La pila Rack</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="574" HEIGHT="429" ALIGN="BOTTOM" BORDER="0"
+ SRC="./rack_stack.png"
+ ALT="Image rack_stack">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+<PRE>
+[~/sinatra/sinatra-as-middleware]$ cat app.rb
+require 'sinatra/base'
+require 'haml'
+require 'pp'
+
+class LoginScreen &lt; Sinatra::Base
+  enable :sessions
+  enable :inline_templates
+
+  get('/login') { haml :login }
+
+  post('/login') do
+    if params[:name] == 'admin' &amp;&amp; params[:password] == 'admin'
+      puts "params = "
+      pp params
+      session['user_name'] = params[:name]
+      redirect '/'
+    else
+      redirect '/login'
+    end
+  end
+end
+
+class MyApp &lt; Sinatra::Base
+  enable :inline_templates
+  # middleware will run before filters
+  use LoginScreen
+
+  before do
+    unless session['user_name']
+      halt haml :denied
+    end
+  end
+
+  get('/') do
+    haml :cheer, :locals =&gt; { :name =&gt; session['user_name'] }
+  end
+
+  run!
+end
+
+__END__
+
+@@ layout
+!!!
+%html
+  %head
+    %title Sinatra as Middleware
+  %body
+    %h1 Sinatra as Middleware
+    = yield
+
+@@ login
+%form{:action=&gt;'/login', :method=&gt;'post'}
+  %label{:for=&gt;'name'} Name
+  %input#name{:type=&gt;"text",     :name=&gt;"name", :autofocus =&gt; true }
+  %br
+  %label{:for=&gt;'password'} Password
+  %input#password{:type=&gt;"password", :name=&gt;"password"}
+  %br
+  %button#go{:type=&gt;"submit",  :name=&gt;"submit", :value=&gt;"submit"} Click me!
+
+@@ cheer
+%h1
+  Hello #{name}
+  %br
+
+@@ denied
+%h1 
+  Access denied, please 
+  %a{:href=&gt;'/login'}login.
+</PRE>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9771"
+<A NAME="tex2html9795"
   HREF="node411.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9765"
-  HREF="node372.html">
+<A NAME="tex2html9789"
+  HREF="node374.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9759"
+<A NAME="tex2html9783"
   HREF="node409.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9767"
-  HREF="node727.html">
+<A NAME="tex2html9791"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9769"
-  HREF="node730.html">
+<A NAME="tex2html9793"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -204,20 +300,20 @@ Despliegue la aplicación en <A NAME="tex2html889"
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9772"
-  HREF="node411.html">Práctica: Servicio de Syntax</A>
-<B> Subir:</B> <A NAME="tex2html9766"
-  HREF="node372.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9760"
-  HREF="node409.html">Práctica: TicTacToe</A>
- &nbsp; <B>  <A NAME="tex2html9768"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9770"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9796"
+  HREF="node411.html">Práctica: TicTacToe</A>
+<B> Subir:</B> <A NAME="tex2html9790"
+  HREF="node374.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9784"
+  HREF="node409.html">Autentificación Básica</A>
+ &nbsp; <B>  <A NAME="tex2html9792"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9794"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

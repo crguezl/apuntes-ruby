@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Variables de Clase</TITLE>
-<META NAME="description" CONTENT="Variables de Clase">
+<TITLE>Constantes</TITLE>
+<META NAME="description" CONTENT="Constantes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node176.html">
 <LINK REL="previous" HREF="node174.html">
-<LINK REL="up" HREF="node157.html">
+<LINK REL="up" HREF="node158.html">
 <LINK REL="next" HREF="node176.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5691"
+<A NAME="tex2html5715"
   HREF="node176.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5685"
-  HREF="node157.html">
+<A NAME="tex2html5709"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5679"
+<A NAME="tex2html5703"
   HREF="node174.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5687"
-  HREF="node727.html">
+<A NAME="tex2html5711"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5689"
-  HREF="node730.html">
+<A NAME="tex2html5713"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,85 +96,108 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5692"
-  HREF="node176.html">Variables de Instancia de</A>
-<B> Subir:</B> <A NAME="tex2html5686"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5680"
-  HREF="node174.html">Constantes</A>
- &nbsp; <B>  <A NAME="tex2html5688"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5690"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5716"
+  HREF="node176.html">Variables de Clase</A>
+<B> Subir:</B> <A NAME="tex2html5710"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5704"
+  HREF="node174.html">Un Método de Clase</A>
+ &nbsp; <B>  <A NAME="tex2html5712"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5714"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027118000000000000000"></A>
-<A NAME="subsection:variablesdeclase"></A>
+<H2><A NAME="SECTION027117000000000000000"></A>
+<A NAME="strangeerror:introconstantes"></A>
 <BR>
-Variables de Clase
+Constantes
 </H2>
-
-<OL>
-<LI>Class variables are visible to, and shared by, the class methods
-and the instance methods of a class, and also by the class definition
-itself. 
-</LI>
-<LI>Like instance variables, class variables are encapsulated;
-they can be used by the implementation of a class, but they are not
-visible to the users of a class. 
-</LI>
-<LI>Class variables have names that
-begin with <code>@@</code>.
-</LI>
-</OL>
 
 <P>
 <PRE>
-class Point
-  # Initialize our class variables in the class definition itself
-  @@n = 0              # How many points have been created
-  @@totalX = 0         # The sum of all X coordinates
-  @@totalY = 0         # The sum of all Y coordinates
+ 1 class Point
+  2   attr_reader :x, :y   # Define accessor methods for our instance variables
+  3 
+  4   include Comparable
+  5   include Enumerable
+  6 
+  7   def initialize(x,y)
+  8     @x,@y = x, y
+  9   end    
+ 10   
+ 11   ORIGIN = Point.new(0, 0)
+ 12   E_1    = Point.new(1, 0)
+ 13   E_2    = Point.new(0, 1)
+</PRE>
 
-  def initialize(x,y)  # Initialize method
-    @x,@y = x, y       # Sets initial values for instance variables
+<P>
+Inside the class definition, these constants can be referred to by
+their unqualified names. Outside the definition, they must be
+prefixed by the name of the class:
 
-    # Use the class variables in this instance method to collect data
-    @@n += 1           # Keep track of how many Points have been created
-    @@totalX += x      # Add these coordinates to the totals
-    @@totalY += y
-  end
+<P>
+<PRE>
+&gt;&gt; load "Point2.rb"
+=&gt; true
+&gt;&gt; Point::E_1
+=&gt; #&lt;Point:0x100589f20 @y=0, @x=1&gt;
+&gt;&gt; Point::E_1.x
+=&gt; 1
+&gt;&gt; E_1
+NameError: uninitialized constant E_1
+  from (irb):4
+&gt;&gt;
+</PRE>
 
-  # A class method to report the data we collected
-  def self.report
-    # Here we use the class variables in a class method
-    puts "Number of points created: #@@n"
-    puts "Average X coordinate: #{@@totalX.to_f/@@n}"
-    puts "Average Y coordinate: #{@@totalY.to_f/@@n}"
+<P>
+Puesto que las constantes crean instancias de la clase, no podemos definirlas antes 
+de tener definido el método <code>initialize</code>:
+<PRE>
+[~/rubytesting]$ cat constant_before_initialize.rb 
+class Tutu
+
+  C = Tutu.new(5)
+
+  def initialize(x)
+   @x = x 
   end
 end
+</PRE>
+Al ejecutar produce un error:
+<PRE>
+[~/rubytesting]$ ruby constant_before_initialize.rb 
+constant_before_initialize.rb:3:in `initialize': wrong number of arguments(1 for 0) (ArgumentError)
+  from constant_before_initialize.rb:3:in `new'
+  from constant_before_initialize.rb:3:in `&lt;class:Tutu&gt;'
+  from constant_before_initialize.rb:1:in `&lt;main&gt;'
+</PRE>
+Es posible definir constantes de una clase desde fuera de la misma:
+<PRE>
+&gt;&gt; Point::E_3 = Point.new 1, 1
+=&gt; #&lt;Point:0x100565df0 @y=1, @x=1&gt;
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5691"
+<A NAME="tex2html5715"
   HREF="node176.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5685"
-  HREF="node157.html">
+<A NAME="tex2html5709"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5679"
+<A NAME="tex2html5703"
   HREF="node174.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5687"
-  HREF="node727.html">
+<A NAME="tex2html5711"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5689"
-  HREF="node730.html">
+<A NAME="tex2html5713"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -229,20 +252,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5692"
-  HREF="node176.html">Variables de Instancia de</A>
-<B> Subir:</B> <A NAME="tex2html5686"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5680"
-  HREF="node174.html">Constantes</A>
- &nbsp; <B>  <A NAME="tex2html5688"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5690"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5716"
+  HREF="node176.html">Variables de Clase</A>
+<B> Subir:</B> <A NAME="tex2html5710"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5704"
+  HREF="node174.html">Un Método de Clase</A>
+ &nbsp; <B>  <A NAME="tex2html5712"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5714"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

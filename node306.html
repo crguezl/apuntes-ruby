@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Plataforma Ruby</TITLE>
-<META NAME="description" CONTENT="La Plataforma Ruby">
+<TITLE>Random bouncy particles using ruby Gosu games library</TITLE>
+<META NAME="description" CONTENT="Random bouncy particles using ruby Gosu games library">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node309.html">
 <LINK REL="previous" HREF="node305.html">
-<LINK REL="up" HREF="node14.html">
+<LINK REL="up" HREF="node302.html">
 <LINK REL="next" HREF="node307.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7777"
+<A NAME="tex2html7804"
   HREF="node307.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7771"
-  HREF="node14.html">
+<A NAME="tex2html7798"
+  HREF="node302.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7765"
+<A NAME="tex2html7794"
   HREF="node305.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7773"
-  HREF="node727.html">
+<A NAME="tex2html7800"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7775"
-  HREF="node730.html">
+<A NAME="tex2html7802"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,65 +95,114 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7778"
-  HREF="node307.html">Unicode</A>
-<B> Subir:</B> <A NAME="tex2html7772"
-  HREF="node14.html">EL LENGUAJE DE PROGRAMACIÓN</A>
-<B> Anterior:</B> <A NAME="tex2html7766"
-  HREF="node305.html">Shoes</A>
- &nbsp; <B>  <A NAME="tex2html7774"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7776"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7805"
+  HREF="node307.html">Shoes</A>
+<B> Subir:</B> <A NAME="tex2html7799"
+  HREF="node302.html">Juegos con Gosu</A>
+<B> Anterior:</B> <A NAME="tex2html7795"
+  HREF="node305.html">Starfighter</A>
+ &nbsp; <B>  <A NAME="tex2html7801"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7803"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021600000000000000000">
-La Plataforma Ruby</A>
+<H1><A NAME="SECTION021440000000000000000">
+Random bouncy particles using ruby Gosu games library</A>
 </H1>
+<A NAME="tex2html658"
+  HREF="https://gist.github.com/blazeeboy/9463030">Random bouncy particles using ruby Gosu games library</A>
+<P>
+
+<H4><A NAME="SECTION021440010000000000000">
+Donde</A>
+</H4>
+  
+
+<PRE>
+[~/src/ruby/rubytesting/gosu]$ pwd -P
+/Users/casiano/local/src/ruby/rubytesting/gosu
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021440020000000000000">
+Código</A>
+</H4>
+  
+
+<PRE>
+[~/src/ruby/rubytesting/gosu]$ cat bouncing.rb 
+require 'gosu'
+$width, $height = 200, 200
+$number_of_particles = 200
+
+class Quad
+  def initialize
+    @pos = {x:rand($width), y:rand($width)}
+    @vel = { x:(rand(5)+1)*[1,-1].sample, y:(rand(5)+1)*[1,-1].sample }
+    @size = rand(4)*[1,-1].sample
+    @color = [  Gosu::Color::GRAY, Gosu::Color::WHITE,
+                Gosu::Color::AQUA, Gosu::Color::RED,
+                Gosu::Color::GREEN, Gosu::Color::BLUE,
+                Gosu::Color::YELLOW, Gosu::Color::FUCHSIA,
+                Gosu::Color::CYAN ].sample
+  end
+  def update
+    @vel[:x] = @vel[:x] * -1 if @pos[:x] &lt;= 0 or @pos[:x] &gt;= $width
+    @vel[:y] = @vel[:y] * -1 if @pos[:y] &lt;= 0 or @pos[:y] &gt;= $height
+    @pos[:x] += @vel[:x]
+    @pos[:y] += @vel[:y] 
+  end
+  def draw win
+    win.draw_quad @pos[:x]-@size, @pos[:y]-@size, @color,
+                  @pos[:x]+@size, @pos[:y]-@size, @color,
+                  @pos[:x]+@size, @pos[:y]+@size, @color,
+                  @pos[:x]-@size, @pos[:y]+@size, @color
+  end
+end
+
+class GameWindow &lt; Gosu::Window
+  def initialize
+    super $width, $height, false
+    self.caption = "Quads"
+    @quads = []
+    $number_of_particles.times { @quads &lt;&lt; Quad.new }
+  end
+  def update
+    @quads.each {|q| q.update }
+  end
+  def draw
+    color = Gosu::Color::WHITE
+    draw_quad 0, 0, color, $width, 0, color, $width, $height, color, 0, $height, color
+    @quads.each { |q| q.draw self }
+  end
+end
+
+window = GameWindow.new
+window.show
+</PRE>
+
+<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html7779"
-  HREF="node307.html">Unicode</A>
-<UL>
-<LI><A NAME="tex2html7780"
-  HREF="node307.html#SECTION021610010000000000000">Introducción</A>
-<LI><A NAME="tex2html7781"
-  HREF="node307.html#SECTION021610020000000000000">Operadores, <TT>STDOUT</TT> y Unicode</A>
-<LI><A NAME="tex2html7782"
-  HREF="node307.html#SECTION021610030000000000000">Ficheros Unicode en <TT>vim</TT></A>
-<LI><A NAME="tex2html7783"
-  HREF="node307.html#SECTION021610040000000000000">Apertura de ficheros UTF-8</A>
-<LI><A NAME="tex2html7784"
-  HREF="node307.html#SECTION021610050000000000000">El Módulo <TT>charnames</TT></A>
-<LI><A NAME="tex2html7785"
-  HREF="node307.html#SECTION021610060000000000000">Expresiones Regulares y Unicode</A>
-<LI><A NAME="tex2html7786"
-  HREF="node307.html#SECTION021610070000000000000">Macros: Dígitos y Words</A>
-<LI><A NAME="tex2html7787"
-  HREF="node307.html#SECTION021610080000000000000">Semántica de Carácter versus Semántica de Byte</A>
-<LI><A NAME="tex2html7788"
-  HREF="node307.html#SECTION021610090000000000000">Caja e Inversión de Cadenas Unicode</A>
-<LI><A NAME="tex2html7789"
-  HREF="node307.html#SECTION0216100100000000000000">Propiedades</A>
-<LI><A NAME="tex2html7790"
-  HREF="node307.html#SECTION0216100110000000000000">Conversores</A>
-<LI><A NAME="tex2html7791"
-  HREF="node307.html#SECTION0216100120000000000000">Véase también</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html7792"
-  HREF="node308.html">Expresiones Regulares</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html7806"
+  HREF="node306.html#SECTION021440010000000000000">Donde</A>
+<LI><A NAME="tex2html7807"
+  HREF="node306.html#SECTION021440020000000000000">Código</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

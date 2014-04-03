@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Clases Mutables: Fácil y Rapido</TITLE>
-<META NAME="description" CONTENT="Clases Mutables: Fácil y Rapido">
+<TITLE>Un Punto Mutable</TITLE>
+<META NAME="description" CONTENT="Un Punto Mutable">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node173.html">
 <LINK REL="previous" HREF="node171.html">
-<LINK REL="up" HREF="node157.html">
+<LINK REL="up" HREF="node158.html">
 <LINK REL="next" HREF="node173.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5649"
+<A NAME="tex2html5673"
   HREF="node173.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5643"
-  HREF="node157.html">
+<A NAME="tex2html5667"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5637"
+<A NAME="tex2html5661"
   HREF="node171.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5645"
-  HREF="node727.html">
+<A NAME="tex2html5669"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5647"
-  HREF="node730.html">
+<A NAME="tex2html5671"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,122 +96,74 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5650"
-  HREF="node173.html">Un Método de Clase</A>
-<B> Subir:</B> <A NAME="tex2html5644"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5638"
-  HREF="node171.html">Un Punto Mutable</A>
- &nbsp; <B>  <A NAME="tex2html5646"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5648"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5674"
+  HREF="node173.html">Clases Mutables: Fácil y</A>
+<B> Subir:</B> <A NAME="tex2html5668"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5662"
+  HREF="node171.html">Ordenando Puntos</A>
+ &nbsp; <B>  <A NAME="tex2html5670"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5672"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027115000000000000000"></A>
-<A NAME="subsection:clasesmutables"></A>
-<BR>
-Clases Mutables: Fácil y Rapido
+<H2><A NAME="SECTION027114000000000000000">
+Un Punto Mutable</A>
 </H2>
 
 <P>
 <PRE>
-$ cat -n struct_point.rb 
-     1  Point = Struct.new(:x, :y)   # Creates new class, assigns to Point
-     2  
-     3  p = Point.new(1,2)   # =&gt; #&lt;struct Point x=1, y=2&gt;
-     4  p p.x                  # =&gt; 1·
-     5  p p.y                  # =&gt; 2
-     6  p.x = 3                # =&gt; 3
-     7  p p.x                  # =&gt; 3
-     8  #---------------------------
-     9  p[:x] = 7         
-    10  p p[:x]              # =&gt; 7: same as p.x
-    11  p p[1]               # =&gt; 2: same as p.y
-    12  p.each {|c| print c}  # prints "72"
-    13  puts
-    14  p.each_pair {|n,c| print n,c; puts } 
-    15  puts
-    16  
-    17  #---------------------------
-    18  q = Point.new(4,2)
-    19  p q == p        # =&gt; true
-    20  h = {q =&gt; 1}  # Create a hash using q as a key
-    21  p h[p]          # =&gt; 1: extract value using p as key
-    22  p q.to_s        # =&gt; "#&lt;struct Point x=4, y=2&gt;"
-    23  
-    24  require 'extending_struct_point'
-    25  
-    26  puts "sorting!"
-    27  puts [p, q].sort
-</PRE>
-Por supuesto podemos abrir la clase creada con <A NAME="tex2html344"
-  HREF="http://ruby-doc.org/core-2.0.0/Struct.html"><TT>Struct</TT></A> y extenderla:
-<PRE>
-$ cat -n extending_struct_point.rb 
-     1  class Point                  # Open Point class for new methods
-     2    def add!(other)            # Define an add! method
-     3      self.x += other.x
-     4      self.y += other.y
-     5      self
-     6    end
-     7  
-     8    include Comparable         # Include a module for the class
-     9    def &lt;=&gt;(other)             # Define the &lt;=&gt; operator
-    10      return nil unless other.instance_of? Point
-    11      self.x**2 + self.y**2 &lt;=&gt; other.x**2 + other.y**2
-    12    end
-    13  end
-</PRE>
-
-<P>
-<PRE>
-$ ruby -I. struct_point.rb 
-1
-2
-3
-7
-2
-72
-x7
-y2
-
-false
-nil
-"#&lt;struct Point x=4, y=2&gt;"
-sorting!
-#&lt;struct Point x=4, y=2&gt;
-#&lt;struct Point x=7, y=2&gt;
-</PRE>
-Las clases creadas por <A NAME="tex2html345"
-  HREF="http://ruby-doc.org/core-2.0.0/Struct.html"><TT>Struct</TT></A> son mutables. Si la queremos hacer inmutable
-usamos <code>undef</code>:
-<PRE>
-$ cat -n making_struct_inmutable.rb 
-     1  Point = Struct.new(:x, :y)  # Define mutable class
-     2  class Point                 # Open the class
-     3    undef x=,y=,[]=           # Undefine mutator methods
-     4  end
-     5  
-     6  z = Point.new(2,3)
-     7  
-     8  z.x = 4
-</PRE>
-
-<P>
-<PRE>
-[~/point]$ ruby making_struct_inmutable.rb 
-making_struct_inmutable.rb:8:in `&lt;main&gt;': 
-  undefined method `x=' for #&lt;struct Point x=2, y=3&gt; (NoMethodError)
+[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ cat -n mutable_point.rb 
+     1  #encoding : utf-8
+     2  class MutablePoint
+     3    def initialize(ñ,y)
+     4     @ñ, @y = ñ, y 
+     5    end
+     6  
+     7    def ñ; @ñ; end       # The getter method for @ñ
+     8    def y; @y; end       # The getter method for @y
+     9  
+    10     def ñ=(value)        # The setter method for @ñ
+    11       @ñ = value
+    12     end
+    13  
+    14    def y=(value)        # The setter method for @y
+    15      @y = value
+    16    end
+    17  
+    18     def add!(p)          # Add p to self, return modified self
+    19       @ñ += p.ñ
+    20       @y += p.y
+    21       self
+    22     end
+    23  #  ---------------------------
+    24    def add(p)           # A nonmutating version of add!
+    25      q = self.dup       # Make a copy of self
+    26      q.add!(p)          # Invoke the mutating method on the copy
+    27    end
+    28  
+    29  end
+    30  
+    31  if __FILE__ == $0
+    32    z = MutablePoint.new(1,2)
+    33    p z
+    34    t = MutablePoint.new(2,1)
+    35    p t 
+    36    t.ñ = 4
+    37    p t 
+    38    z.add!(t)
+    39    p z
+    40  end
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

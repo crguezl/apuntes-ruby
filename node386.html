@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Manejo de Errores</TITLE>
-<META NAME="description" CONTENT="Manejo de Errores">
+<TITLE>Opciones pasadas a los Métodos de los Templates</TITLE>
+<META NAME="description" CONTENT="Opciones pasadas a los Métodos de los Templates">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node387.html">
 <LINK REL="previous" HREF="node385.html">
-<LINK REL="up" HREF="node372.html">
+<LINK REL="up" HREF="node379.html">
 <LINK REL="next" HREF="node387.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9404"
+<A NAME="tex2html9433"
   HREF="node387.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9398"
-  HREF="node372.html">
+<A NAME="tex2html9427"
+  HREF="node379.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9392"
+<A NAME="tex2html9423"
   HREF="node385.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9400"
-  HREF="node727.html">
+<A NAME="tex2html9429"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9402"
-  HREF="node730.html">
+<A NAME="tex2html9431"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,151 +95,164 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9405"
-  HREF="node387.html">The methods body, status</A>
-<B> Subir:</B> <A NAME="tex2html9399"
-  HREF="node372.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9393"
-  HREF="node385.html">Filtros</A>
- &nbsp; <B>  <A NAME="tex2html9401"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9403"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9434"
+  HREF="node387.html">Filtros</A>
+<B> Subir:</B> <A NAME="tex2html9428"
+  HREF="node379.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html9424"
+  HREF="node385.html">Pasando variables a la</A>
+ &nbsp; <B>  <A NAME="tex2html9430"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9432"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03360000000000000000">
-Manejo de Errores</A>
-</H1>
+<H2><A NAME="SECTION03347000000000000000">
+Opciones pasadas a los Métodos de los Templates</A>
+</H2>
+
+<P>
+Options passed to the render method override options set via <code>set</code>.
+
+<P>
+Available Options:
 
 <P>
 
 <OL>
-<LI>The HTTP specification states that response status in the range  200-299
-indicate success in processing a request
+<LI><code>locals</code>
+
+<P>
+List of locals passed to the document. Handy with partials. Example: 
+<PRE>
+erb "&lt;%= foo %&gt;", :locals =&gt; {:foo =&gt; "bar"}
+</PRE>
 </LI>
-<LI>500-599 is reserved for server errors
+<LI><code>default_encoding</code>
+
+<P>
+String encoding to use if uncertain. Defaults to 
+<PRE>
+settings.default_encoding.
+</PRE>
+
+<P>
 </LI>
-<LI>Sinatra  offers helpers for the 404 (Not Found) and 500 (Internal Server Error) status
+<LI><code>views</code>
+
+<P>
+Views folder to load templates from. Defaults to <code>settings.views</code>.
+
+<P>
+</LI>
+<LI><code>layout</code>
+
+<P>
+Whether to use a layout (true or false), if it's a Symbol, specifies what template to use. Example: 
+<PRE>
+erb :index, :layout =&gt; !request.xhr?
+</PRE>
+
+<P>
+</LI>
+<LI><code>content_type</code>
+
+<P>
+Content-Type the template produces, default depends on template language.
+
+<P>
+</LI>
+<LI><code>scope</code>
+
+<P>
+Scope to render template under. 
+
+<P>
+Defaults to the application instance. 
+
+<P>
+If you change this, instance variables and helper methods will not be available.
+
+<P>
+</LI>
+<LI><code>layout_engine</code>
+
+<P>
+Template engine to use for rendering the layout. 
+
+<P>
+Useful for languages
+that do not support layouts otherwise. 
+
+<P>
+Defaults to the engine used
+for the template. Example: 
+
+<P>
+<PRE>
+set :rdoc, :layout_engine =&gt; :erb
+</PRE>
+
+<P>
+</LI>
+<LI><code>layout_options</code>
+
+<P>
+Special options only used for rendering the layout. Example: 
+
+<P>
+<PRE>
+set :rdoc, :layout_options =&gt; { :views =&gt; 'views/layouts' }
+</PRE>
+
+<P>
+</LI>
+<LI>Templates are assumed to be located directly under the <code>./views</code> directory. 
+
+<P>
+To use a different views directory: 
+
+<P>
+<PRE>
+set :views, settings.root + '/templates'
+</PRE>
+
+<P>
+</LI>
+<LI>One important thing to remember is that you always have to reference
+templates with symbols, even if they’re in a subdirectory (in this
+case, use: 
+<code>:'subdir/template'</code> 
+or 
+<code>'subdir/template'.to_sym</code>). 
+
+<P>
+You
+must use a symbol because otherwise rendering methods will render
+any strings passed to them directly.
 </LI>
 </OL>
 
 <P>
 
-<H4><A NAME="SECTION03360010000000000000">
-not_found</A>
-</H4>
-  
-
-When a <code>Sinatra::NotFound</code> exception is raised, or the response’s
-status code is 404, the <code>not_found</code> handler is invoked:
-
-<P>
-<PRE>
-not_found do
-  'This is nowhere to be found.'
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03360020000000000000">
-error</A>
-</H4>
-  
-
-The <code>error</code> handler is invoked any time an exception is raised from
-a route block or a filter. 
-
-<P>
-The exception object can be obtained
-from the <code>sinatra.error</code> Rack variable:
-
-<P>
-<PRE>
-error do
-  'Sorry there was a nasty error - ' + env['sinatra.error'].name
-end
-</PRE>
-Custom errors:
-
-<P>
-<PRE>
-error MyCustomError do
-  'So what happened was...' + env['sinatra.error'].message
-end
-</PRE>
-Then, if this happens:
-
-<P>
-<PRE>
-get '/' do
-  raise MyCustomError, 'something bad'
-end
-</PRE>
-You get this:
-
-<P>
-<PRE>
-So what happened was... something bad
-</PRE>
-Alternatively, you can install an error handler for a status code:
-
-<P>
-<PRE>
-error 403 do
-  'Access forbidden'
-end
-
-get '/secret' do
-  403
-end
-</PRE>
-Or a range:
-
-<P>
-<PRE>
-error 400..510 do
-  'Boom'
-end
-</PRE>
-Sinatra installs special <code>not_found</code> and <code>error</code> handlers 
-when running under the development environment to display nice stack
-traces and additional debugging information in your browser (esto es,
-en producción estos handlers son mucho mas "parcos").
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html9406"
-  HREF="node386.html#SECTION03360010000000000000">not_found</A>
-<LI><A NAME="tex2html9407"
-  HREF="node386.html#SECTION03360020000000000000">error</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9404"
+<A NAME="tex2html9433"
   HREF="node387.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9398"
-  HREF="node372.html">
+<A NAME="tex2html9427"
+  HREF="node379.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9392"
+<A NAME="tex2html9423"
   HREF="node385.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9400"
-  HREF="node727.html">
+<A NAME="tex2html9429"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9402"
-  HREF="node730.html">
+<A NAME="tex2html9431"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -295,20 +307,20 @@ en producción estos handlers son mucho mas "parcos").
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9405"
-  HREF="node387.html">The methods body, status</A>
-<B> Subir:</B> <A NAME="tex2html9399"
-  HREF="node372.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9393"
-  HREF="node385.html">Filtros</A>
- &nbsp; <B>  <A NAME="tex2html9401"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9403"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9434"
+  HREF="node387.html">Filtros</A>
+<B> Subir:</B> <A NAME="tex2html9428"
+  HREF="node379.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html9424"
+  HREF="node385.html">Pasando variables a la</A>
+ &nbsp; <B>  <A NAME="tex2html9430"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9432"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Herencia y Variables de Clase</TITLE>
-<META NAME="description" CONTENT="Herencia y Variables de Clase">
+<TITLE>Herencia y Variables de la Instancia</TITLE>
+<META NAME="description" CONTENT="Herencia y Variables de la Instancia">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node189.html">
 <LINK REL="previous" HREF="node187.html">
-<LINK REL="up" HREF="node181.html">
+<LINK REL="up" HREF="node182.html">
 <LINK REL="next" HREF="node189.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5885"
+<A NAME="tex2html5909"
   HREF="node189.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5879"
-  HREF="node181.html">
+<A NAME="tex2html5903"
+  HREF="node182.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5873"
+<A NAME="tex2html5897"
   HREF="node187.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5881"
-  HREF="node727.html">
+<A NAME="tex2html5905"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5883"
-  HREF="node730.html">
+<A NAME="tex2html5907"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,125 +96,111 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5886"
-  HREF="node189.html">Herencia y Constantes</A>
-<B> Subir:</B> <A NAME="tex2html5880"
-  HREF="node181.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html5874"
-  HREF="node187.html">Herencia y Variables de</A>
- &nbsp; <B>  <A NAME="tex2html5882"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5884"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5910"
+  HREF="node189.html">Herencia y Variables de</A>
+<B> Subir:</B> <A NAME="tex2html5904"
+  HREF="node182.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html5898"
+  HREF="node187.html">Herencia y Métodos de</A>
+ &nbsp; <B>  <A NAME="tex2html5906"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5908"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02737000000000000000"></A>
-<A NAME="subsection:herenciayvariablesdeclase"></A>
-<BR>
-Herencia y Variables de Clase
+<H2><A NAME="SECTION02736000000000000000">
+Herencia y Variables de la Instancia</A>
 </H2>
 
 <P>
-Las variables de clase (como <code>@@count</code>) 
-son compartidas por una clase y todas sus subclases.
-
-<P>
-Si una variable <code>@@a</code> es definida por una clase <code>A</code>
-entonces cualquier subclase <code>B</code> de <code>A</code> puede usar dicha variable.
-
-<P>
-Si una subclase asigna un valor a una variable de clase en uso por una superclase no es que cree una copia
-de dicha variable sino que altera el valor de la variable de la superclase.
-Ese será el valor que vean todas las otras subclases de la superclase.
-
-<P>
-Este ejemplo ilustra el comportamiento:
+Considere el siguiente ejemplo:
 <PRE>
-[~/srcLPP/inheritance]$ cat InheritanceAndClassVariables.rb 
-class A
-  @@value = 1
-  def A.value 
-    @@value
+[~/srcLPP/inheritance]$ cat VariableInheritance.rb 
+class Point
+  def initialize(x,y)
+    @x,@y = x, y
+  end
+
+  def to_s
+    "#@x #@y"
   end
 end
 
-puts A.value
+class Point3D &lt; Point
+  def initialize(x, y, z)
+    super(x, y)
+    @z = z
+  end
 
-class B &lt; A
-  @@value = 2
-end
-
-puts A.value
-puts B.value
-
-class C &lt; A; @@value = 3; end
-
-puts B.value
-puts C.value
-
-puts "A.class_variables = #{A.class_variables.inspect}"
-puts "B.class_variables = #{B.class_variables.inspect}"
-puts "C.class_variables = #{C.class_variables.inspect}"
-</PRE>
-Al ejecutar tenemos:
-<PRE>
-[~/srcLPP/inheritance]$ ruby InheritanceAndClassVariables.rb 
-1
-2
-2
-3
-3
-A.class_variables = [:@@value]
-B.class_variables = []
-C.class_variables = []
-</PRE>
-<SPAN  CLASS="textbf">Por esta razón es preferible usar variables de instancia de la clase en vez de variables de clase</SPAN>.
-Nótese que siempre podemos averiguar las variables de clase de una clase mediante el
-método <code>class_variables</code>.
-
-<P>
-Observa la diferencia cuando se usan variables de instancia de la clase:
-
-<P>
-<PRE>
-13:11][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat InheritanceAndClassInstanceVariables.rb
-class A
-  @value = 1
-  def self.value 
-    @value
+  def to_s
+    "#@x #@y #@z"
   end
 end
 
-puts A.value  # 1
+if __FILE__ == $0
+  q, r, s = Point3D.new(1,1,1), Point3D.new(2,2,2), Point3D.new(3,3,3)
+  puts q, r, s
 
-class B &lt; A
-  @value = 2
+  print "The instance variables of point 'q' are: "
+  puts q.instance_variables.join(',')
 end
-
-puts A.value  # 1
-puts B.value  # 2
-
-class C &lt; A; @value = 3; end
-
-puts B.value # 2
-puts C.value # 3
-[13:12][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby InheritanceAndClassInstanceVariables.rb
-1
-1
-2
-2
-3
 </PRE>
+Observe como en la línea 18 accedemos a las referencias <code>@x</code> y <code>@y</code> de la superclase <code>Point</code>.
+Este código funciona como cabría esperar:
+
+<P>
+<PRE>
+[~/srcLPP/inheritance]$ ruby VariableInheritance.rb 
+1 1 1
+2 2 2
+3 3 3
+The instance variables of point 'q' are: @x,@y,@z
+[~/srcLPP/inheritance]$
+</PRE>
+
+<P>
+
+<UL>
+<LI>Una variable de un objeto/instancia
+se crea en el momento en el que se le asigna
+un valor
+</LI>
+<LI>Las variables de la instancia no son definidas por la clase
+y no están relacionadas con los mecanismos de herencia
+</LI>
+<LI>Si una subclase utiliza el mismo  nombre 
+para una variable de instancia que alguno de sus ancestros la variable
+será <SPAN  CLASS="textbf">sobreescrita</SPAN>
+</LI>
+</UL>
+
+<P>
+Puesto que las variables de instancia no están relacionadas con la
+herencia, se deduce que una variable de instancia usada por una
+subclase no puede
+<SPAN  CLASS="textbf">ocultar</SPAN> una variable de instancia definida usada en la superclase.
+Si una subclase usa una variable de instancia con el mismo nombre que una variable utilizada por uno de sus
+ancestros, sobreescribirá el valor de la variable de su ancestro.
+<SPAN  CLASS="textbf">Esto puede ser que se haga con intencionalidad, para cambiar la conducta del ancestro
+o puede que ocurra por accidente. En este último caso seguramente dará lugar a bugs</SPAN>.
 
 <P>
 
 <OL>
-<LI>Véase  el excelente artículo
-<A NAME="tex2html359"
-  HREF="http://patshaughnessy.net/2012/12/17/ruby-smalltalk-and-class-variables">Ruby, Smalltalk and Class Variables</A>
-by Pat Shaughnessy 
+<LI>Observe que, como en el ejemplo, 
+podemos siempre averiguar cuales son las variables de instancia
+de un objeto <code>q</code> llamando a <code>q.instance_variables</code>
+</LI>
+<LI>En general, el mecanismo de herencia debe ser usado para extender clases en Ruby
+sólo cuando estamos familiarizados y tenemos control de la superclase.
+</LI>
+<LI>Compruebe que nombres usa la superclase para sus variables de instancia y evítelos
+</LI>
+<LI>Documente sus variables de instancia en la sección para desarrolladores
+</LI>
+<LI>Prefije los nombres de sus variables de instancia con el nombre de la clase. 
 </LI>
 </OL>
 
@@ -222,20 +208,20 @@ by Pat Shaughnessy
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5885"
+<A NAME="tex2html5909"
   HREF="node189.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5879"
-  HREF="node181.html">
+<A NAME="tex2html5903"
+  HREF="node182.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5873"
+<A NAME="tex2html5897"
   HREF="node187.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5881"
-  HREF="node727.html">
+<A NAME="tex2html5905"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5883"
-  HREF="node730.html">
+<A NAME="tex2html5907"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -290,20 +276,20 @@ by Pat Shaughnessy
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5886"
-  HREF="node189.html">Herencia y Constantes</A>
-<B> Subir:</B> <A NAME="tex2html5880"
-  HREF="node181.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html5874"
-  HREF="node187.html">Herencia y Variables de</A>
- &nbsp; <B>  <A NAME="tex2html5882"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5884"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5910"
+  HREF="node189.html">Herencia y Variables de</A>
+<B> Subir:</B> <A NAME="tex2html5904"
+  HREF="node182.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html5898"
+  HREF="node187.html">Herencia y Métodos de</A>
+ &nbsp; <B>  <A NAME="tex2html5906"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5908"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

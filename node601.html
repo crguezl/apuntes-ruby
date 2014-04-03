@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un poco de SSH</TITLE>
-<META NAME="description" CONTENT="Un poco de SSH">
+<TITLE>Los Ficheros de Configuración</TITLE>
+<META NAME="description" CONTENT="Los Ficheros de Configuración">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node602.html">
 <LINK REL="previous" HREF="node600.html">
-<LINK REL="up" HREF="node599.html">
+<LINK REL="up" HREF="node590.html">
 <LINK REL="next" HREF="node602.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13079"
+<A NAME="tex2html13094"
   HREF="node602.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13073"
-  HREF="node599.html">
+<A NAME="tex2html13088"
+  HREF="node590.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13067"
+<A NAME="tex2html13082"
   HREF="node600.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13075"
-  HREF="node727.html">
+<A NAME="tex2html13090"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13077"
-  HREF="node730.html">
+<A NAME="tex2html13092"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,44 +96,426 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13080"
-  HREF="node602.html">Tutoriales de Git</A>
-<B> Subir:</B> <A NAME="tex2html13074"
-  HREF="node599.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html13068"
-  HREF="node600.html">Introducción al uso de</A>
- &nbsp; <B>  <A NAME="tex2html13076"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13078"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13095"
+  HREF="node602.html">Copia Segura de un</A>
+<B> Subir:</B> <A NAME="tex2html13089"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13083"
+  HREF="node600.html">Depuración/Debugging</A>
+ &nbsp; <B>  <A NAME="tex2html13091"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13093"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06520000000000000000">
-Un poco de SSH</A>
+<H1><A NAME="SECTION064110000000000000000">
+Los Ficheros de Configuración</A>
 </H1>
 
+<P>
+En vez de llenar nuestra llamada a <code>ssh</code> de parámetros lo aconsejable
+es configurar la llamada en uno de los ficheros de configuración (<code>man ssh_config</code>).
+SSH consulta las opciones en el siguiente orden:
+
+<P>
+
+<OL>
+<LI>Línea de comandos
+</LI>
+<LI>Fichero de configuración del usuario <code>~/.ssh/config</code>
+	     Este fichero debe tener permisos de lectura/escritura para el usuario
+       y no ser accesible al resto. 
+</LI>
+<LI>Fichero de configuración global <code>/etc/ssh/ssh_config</code>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION064110010000000000000">
+Estructura de un Fichero de Configuración</A>
+</H4>
+  
+
+<P>
+Para cada parámetro el primer valor encontrado será el utilizado. 
+Los ficheros de configuración contienen secciones. Cada sección comienza con una
+especificación de <code>Host</code>. Las especificaciones en esa sección sólo 
+se aplican a los máquinas (tal y como se especifico en la línea de comandos)
+que casen con el patrón especificado en  <TT>Host</TT> . Por ejemplo, si escribo en la
+línea de comandos:
+
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ ssh rbeo
+</PRE>
+
+<P>
+Se buscará en mi fichero de configuración <code>~/.ssh/config</code> por una especificación
+<code>Host rbeo</code>. En efecto, en mi fichero existe una:
+
+<P>
+<PRE>
+...
+
+Host rbeo
+user otheruser
+Hostname localhost
+Port 2048
+IdentityFile /home/pp2/.ssh/ursu
+
+...
+</PRE>
+
+<P>
+La sección dice que opciones deben aplicarse cuando nos conectamos a <code>rbeo</code>:
+
 <UL>
-<LI><A NAME="tex2html1344"
-  HREF="http://nereida.deioc.ull.es/~pp2/perlexamples/node28.html">Claves Pública y Privada: Estableciendo Autentificación No Interactiva</A>
+<LI>La opción  <TT>user</TT>  indica que debo proporcionar como usuario <code>otheruser</code>
 </LI>
-<LI><A NAME="tex2html1345"
-  HREF="http://nereida.deioc.ull.es/~pp2/perlexamples/node43.html">Los Ficheros de Configuración de SSH</A>
+<LI>La opción  <TT>Hostname</TT>  dice que el nombre auténtico de la máquina es <code>localhost</code>
 </LI>
-<LI><A NAME="tex2html1346"
-  HREF="http://nereida.deioc.ull.es/~pp2/perlexamples/node38.html">Agentes SSH</A>
+<LI>La opción  <TT>Port</TT>  indica que nos debemos conectar via el puerto 2048
 </LI>
-<LI><A NAME="tex2html1347"
-  HREF="http://vimeo.com/6457780">Getting started with GitHub by Charles Max Wood</A>
+<LI>La opción  <TT>IdentityFile</TT>  nos dice que debemos usar autentificación automática
+con fichero de identidad (que fué previamente generado con <code>ssh-keygen</code>)
+<code>/home/pp2/.ssh/ursu</code>
 </LI>
 </UL>
 
 <P>
+Las líneas que comienzan por el carácter <code>#</code> son tratadas como comentarios.
+Es posible añadir líneas en blanco para aumentar la legibilidad.
+
+<P>
+El resto de las líneas deben seguir el patrón 
+
+<P>
+<PRE>
+PALABRACLAVE argumentos
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION064110020000000000000">
+Palabras Clave</A>
+</H4>
+  
+
+<P>
+Algunas palabras clave importantes son:
+
+<P>
+
+<UL>
+<LI><TT>Host</TT>  Se pueden usar patrones como <code>*</code> y <code>?</code>. 
+     Define la sección. Si el nombre proveído en la línea de comandos 
+     casa con él las reglas de la sección serán aplicadas.
+
+<P>
+</LI>
+<LI><TT>BatchMode</TT> 
+Se desactivará la petición de <code>passphrase/password</code>.
+
+<P>
+Además las opciones  <TT>ServerAliveInterval</TT> <A NAME="tex2html1339"
+  HREF="footnode.html#foot22529"><SUP><SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> 
+y  <TT>SetupTimeOut</TT> <A NAME="tex2html1340"
+  HREF="footnode.html#foot22530"><SUP><SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> 
+se establecen a 300 segundos. Esta opción es útil cuando se usan 
+procesos por lotes o programas - por ejemplo cuando se usa <A NAME="tex2html1342"
+  HREF="http://search.cpan.org/perldoc?GRID::Machine"><TT>GRID::Machine</TT></A>
+-
+en los que no hay un usuario presente para proporcionar
+una clave y es necesario detectar la caída de la red. El argumento 
+debe ser <code>yes</code> o <code>no</code>. El valor por defecto es <code>no</code>
+
+<P>
+</LI>
+<LI><TT>BindAddress</TT> 
+Se usa para especificar la dirección de la máquina local. Sólo es útil
+si la máquina dispone de mas de una dirección. Esta opción no funciona
+si  <TT>UsePrivilegedPort</TT> <A NAME="tex2html1341"
+  HREF="footnode.html#foot22531"><SUP><SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>se pone a <code>yes</code>.
+
+<P>
+</LI>
+<LI><TT>Compression</TT>  y  <TT>CompressionLevel</TT> 
+
+<P>
+Si se establece la opción
+<TT>Compression</TT> se compactarán los datos según diga  <TT>CompressionLevel</TT>  (de 1 a 9)
+
+<P>
+</LI>
+<LI><TT>ConnectionAttempts</TT> 
+Especifica el número de intentos antes de abandonar. El argumento debe ser un número 
+(por defecto 1). Puede ser útil cuando se esta usando un
+procesado por lotes y la conexión falla a menudo.
+
+<P>
+</LI>
+<LI><TT>ConnectTimeout</TT> 
+Especifica el límite de tiempo (segundos) antes de abandonar
+cuando se conecta a un servidor <code>ssh</code>
+
+<P>
+</LI>
+<LI><TT>HostName</TT> 
+El nombre real del <code>host</code> al que entramos. Esto nos permite
+tener apodos y abreviaciones. El valor usado por defecto es el
+proveído en la línea de comandos. Se permite poner direciones IP
+numéricas.
+
+<P>
+</LI>
+<LI><TT>IdentityFile</TT> 
+Especifica el fichero conteniendo la identidad de autentificación (RSA o DSA)
+a ser usado. Por defecto toma el valor <code>~/.ssh/identity</code> para la versión 1
+del protocolo y <code>~/.ssh/id_rsa</code> y <code>~/.ssh/id_dsa</code> para la versión
+2. Si hay un agente cargado el agente intentará también las otras identidades.
+Es posible especificar múltiples identidades, las cuales serán intentadas
+en secuencia.
+
+<P>
+</LI>
+<LI><TT>NoHostAuthenticationForLocalhost</TT> 
+
+<P>
+Esta opción es conveniente cuando el directorio <code>home</code> 
+es compartido entre un conjunto de máquinas (via NFS por ejemplo).
+En ese caso  <TT>localhost</TT>  refiere a una máquina distinta
+en cada una de las máquinas del conjunto.
+En tal caso, las conexiones a <code>localhost</code>
+dan lugar a un buen número de warnings indicando
+que la clave ha cambiado. 
+
+<P>
+</LI>
+<LI><TT>Port</TT>  Especifica el número de puerto.
+
+<P>
+</LI>
+<LI><TT>ServerAliveInterval</TT> 
+Si después del intervalo especificado en segundos no 
+se obtiene respuesta alguna del servidor, se envía un mensaje
+al servidor para solicitar una respuesta del mismo.
+Por defecto es 0, indicando que estos mensajes no deben ser emitidos.
+
+<P>
+Es útil probar con esta opción si la conexión se desconecta después de un corto periodo
+de inactividad.
+Ciertos administradores configuran sus servidores
+de manera que responden muy tardíamente.
+Sigue un fragmento de mi configuración desde fuera de la Universidad:
+
+<P>
+<PRE>
+Host cardon
+user pepito
+Hostname cardon.ull.es
+ForwardX11 yes
+ServerAliveInterval=30
+</PRE>
+
+<P>
+</LI>
+<LI><TT>ServerAliveCountMax</TT> 
+
+<P>
+Establece el número de mensajes <SPAN  CLASS="textbf">alive</SPAN> que
+pueden ser enviados por el cliente <code>ssh</code> sin que este reciba 
+respuesta desde el servidor. Si se supera este umbral el
+cliente abandona, finalizando la sesión. El valor por
+defecto es 3. (Sólo para el protocolo 2).
+
+<P>
+</LI>
+<LI><TT>TCPKeepAlive</TT> 
+
+<P>
+Especifica si se deben enviar mensajes TCP  <TT>keepalive</TT> 
+al otro lado. Si se envían se podrán detectar los fallos
+en las máquinas remotas. El valor por defecto es <code>yes</code>,
+de modo que el cliente se percate de la caída del remoto.
+
+<P>
+</LI>
+<LI><TT>User</TT>  El usuario
+
+<P>
+</LI>
+<LI><TT>UserKnownHostsFile</TT>  especifica un fichero alternativo
+a <code>~/.ssh/known_hosts</code> para las claves de máquinas
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION064110030000000000000">
+Ejemplo</A>
+</H4>
+  
+
+<P>
+Sigue un ejemplo de fichero de configuración de usuario:
+
+<P>
+<PRE>
+pp2@nereida:~/.ssh$ cat -n config
+ 1  # man  ssh_config
+ 2
+ 3  GSSAPIAuthentication no
+ 4
+ 5  Host somemachine
+ 6  user myname
+ 7  Hostname somemachine.pcg.ull.es
+ 8  #ForwardX11 yes
+ 9
+10  Host ursu
+11  user otheruser
+12  Hostname somemachine.pcg.ull.es
+13  IdentityFile /home/pp2/.ssh/ursu
+14  #ForwardX11 yes
+15
+16  Host chazam chazam.pcg.ull.es chazam.deioc.ull.es chum
+17  user myname
+18  # The real name of the machine
+19  Hostname chazam.pcg.ull.es
+20
+21  # Example to be used when connecting via reverse tunneling
+22  # myname@somemachine:~$ ssh -R2048:localhost:22 pp2@nereida
+23  # Logic name for the machine
+24  Host rbeo
+25  # user in the remote machine
+26  user otheruser
+27  # The 'real name' of the machine after the tunnel
+28  Hostname localhost
+29  # Port to connect to
+30  Port 2048
+31  IdentityFile /home/pp2/.ssh/ursu
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION064110040000000000000">
+El fichero <TT>rc</TT></A>
+</H4>
+  
+
+<P>
+Cada vez que ocurre una conexión SSH el servidor ejecuta el script
+en <code>/etc/sshrc</code>. Si existe un fichero <code>~/.ssh/rc</code> (SSH1, OpenSSH) o <code>~/.ssh2/rc</code> (SSH2),
+será invocado. Su presencia inhibe la ejecución de <code>/etc/sshrc</code>.
+Se ejecuta tanto si la sesión es interactiva como si es un comando.
+
+<P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html13096"
+  HREF="node601.html#SECTION064110010000000000000">Estructura de un Fichero de Configuración</A>
+<LI><A NAME="tex2html13097"
+  HREF="node601.html#SECTION064110020000000000000">Palabras Clave</A>
+<LI><A NAME="tex2html13098"
+  HREF="node601.html#SECTION064110030000000000000">Ejemplo</A>
+<LI><A NAME="tex2html13099"
+  HREF="node601.html#SECTION064110040000000000000">El fichero <TT>rc</TT></A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html13094"
+  HREF="node602.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html13088"
+  HREF="node590.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html13082"
+  HREF="node600.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html13090"
+  HREF="node734.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html13092"
+  HREF="node737.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html13095"
+  HREF="node602.html">Copia Segura de un</A>
+<B> Subir:</B> <A NAME="tex2html13089"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13083"
+  HREF="node600.html">Depuración/Debugging</A>
+ &nbsp; <B>  <A NAME="tex2html13091"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13093"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

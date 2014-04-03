@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Fichero package.json</TITLE>
-<META NAME="description" CONTENT="Un Fichero package.json">
+<TITLE>Las Carpetas Usadas Como Módulos</TITLE>
+<META NAME="description" CONTENT="Las Carpetas Usadas Como Módulos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node527.html">
 <LINK REL="previous" HREF="node525.html">
-<LINK REL="up" HREF="node524.html">
+<LINK REL="up" HREF="node521.html">
 <LINK REL="next" HREF="node527.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11705"
+<A NAME="tex2html11745"
   HREF="node527.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11699"
-  HREF="node524.html">
+<A NAME="tex2html11739"
+  HREF="node521.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11693"
+<A NAME="tex2html11733"
   HREF="node525.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11701"
-  HREF="node727.html">
+<A NAME="tex2html11741"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11703"
-  HREF="node730.html">
+<A NAME="tex2html11743"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,115 +96,96 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11706"
-  HREF="node527.html">README y otros documentos</A>
-<B> Subir:</B> <A NAME="tex2html11700"
-  HREF="node524.html">Como Crear tu Propio</A>
-<B> Anterior:</B> <A NAME="tex2html11694"
-  HREF="node525.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html11702"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11704"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11746"
+  HREF="node527.html">Caching</A>
+<B> Subir:</B> <A NAME="tex2html11740"
+  HREF="node521.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html11734"
+  HREF="node525.html">Carga desde Carpetas node_modules</A>
+ &nbsp; <B>  <A NAME="tex2html11742"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11744"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04592000000000000000">
-Un Fichero <TT>package.json</TT></A>
+<H2><A NAME="SECTION04585000000000000000">
+Las Carpetas Usadas Como Módulos</A>
 </H2>
+It is convenient to organize programs and libraries into self-contained
+directories, and then provide a single entry point to that library. 
 
 <P>
-Creamos un fichero en la raíz de nuestro proyecto con nombre 
-<code>package.json</code>. Este fichero describe nuestro proyecto.
-Es esencial si vamos a publicar nuestro proyecto con 
-<A NAME="tex2html1150"
-  HREF="https://npmjs.org/"><TT>npm</TT></A>.
-
-<P>
-Podemos especificar en este fichero:
+There
+are a few ways in which a folder may be passed to <code>require()</code> as an
+argument.
 
 <P>
 
 <OL>
-<LI>Name, version, description, and keywords to describe your program.
+<LI>The first is to create a <code>package.json</code> file in the root of the
+folder, which specifies a <code>main</code> module. 
+An example <code>package.json</code> file
+might look like this:
+
+<P>
+<PRE>
+{ "name" : "some-library",
+  "main" : "./lib/some-library.js" }
+</PRE>
+
+<P>
+If this was in a folder at 
+<code>./some-library</code>, then <code>require('./some-library')</code> would attempt
+to load <code>./some-library/lib/some-library.js</code>.
+
+<P>
+This is the extent of Node's awareness of <code>package.json</code> files.
+
+<P>
 </LI>
-<LI>A homepage where users can learn more about it.
-</LI>
-<LI>Other packages that yours depends on.
+<LI>If there is no <code>package.json</code> 
+file present in the directory, then node will
+attempt to load an 
+<code>index.js</code> or
+<code>index.node</code> 
+file out of that directory. 
+
+<P>
+For
+example, if there was no 
+<code>package.json</code> file in the above example, then
+<code>require('./some-library')</code> would attempt to load:
+
+<P>
+<PRE>
+./some-library/index.js
+./some-library/index.node
+</PRE>
+
+<P>
 </LI>
 </OL>
-
-<P>
-Si hemos instalado <A NAME="tex2html1151"
-  HREF="https://npmjs.org/"><TT>npm</TT></A> podemos usar el comando 
-<code>npm</code> <A NAME="tex2html1152"
-  HREF="https://npmjs.org/doc/init.html"><TT>init</TT></A>
-para empezar.
-Véase  <code>npm help</code>
-<A NAME="tex2html1153"
-  HREF="https://npmjs.org/doc/json.html"><TT>json</TT></A>
-para obtener información sobre este fichero:
-
-<P>
-La cosa mas importante a especificar 
-cuando estamos escribiendo un programa para su uso por otros,
-es el módulo <code>main</code>. Este consituirá el punto de entrada 
-a nuestro programa.
-
-<P>
-Es esencial documentar las dependencias.
-
-<P>
-El siguiente es un ejemplo de fichero <code>package.json</code> tomado
-del proyecto <A NAME="tex2html1154"
-  HREF="https://github.com/zaach/ebnf-parser"><TT>ebnf-parser</TT></A>:
-<PRE>
-[~/javascript/PLgrado/ebnf-parser(master)]$ cat -n package.json 
-   1  {
-   2    "name": "ebnf-parser",
-   3    "version": "0.1.1",
-   4    "description": "A parser for BNF and EBNF grammars used by jison",
-   5    "main": "ebnf-parser.js",
-   6    "scripts": {
-   7      "test": "make test"
-   8    },
-   9    "repository": "",
-  10    "keywords": [
-  11      "bnf",
-  12      "ebnf",
-  13      "grammar",
-  14      "parser",
-  15      "jison"
-  16    ],
-  17    "author": "Zach Carter",
-  18    "license": "MIT",
-  19    "devDependencies": {
-  20      "jison": "0.4.x",
-  21      "lex-parser": "0.1.0",
-  22      "test": "*"
-  23    }
-  24  }
-</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11705"
+<A NAME="tex2html11745"
   HREF="node527.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11699"
-  HREF="node524.html">
+<A NAME="tex2html11739"
+  HREF="node521.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11693"
+<A NAME="tex2html11733"
   HREF="node525.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11701"
-  HREF="node727.html">
+<A NAME="tex2html11741"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11703"
-  HREF="node730.html">
+<A NAME="tex2html11743"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -259,20 +240,20 @@ del proyecto <A NAME="tex2html1154"
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11706"
-  HREF="node527.html">README y otros documentos</A>
-<B> Subir:</B> <A NAME="tex2html11700"
-  HREF="node524.html">Como Crear tu Propio</A>
-<B> Anterior:</B> <A NAME="tex2html11694"
-  HREF="node525.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html11702"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11704"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11746"
+  HREF="node527.html">Caching</A>
+<B> Subir:</B> <A NAME="tex2html11740"
+  HREF="node521.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html11734"
+  HREF="node525.html">Carga desde Carpetas node_modules</A>
+ &nbsp; <B>  <A NAME="tex2html11742"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11744"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

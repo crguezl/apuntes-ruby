@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>instance_exec y class_exec</TITLE>
-<META NAME="description" CONTENT="instance_exec y class_exec">
+<TITLE>instance_eval y class_eval</TITLE>
+<META NAME="description" CONTENT="instance_eval y class_eval">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node231.html">
 <LINK REL="previous" HREF="node229.html">
-<LINK REL="up" HREF="node227.html">
+<LINK REL="up" HREF="node228.html">
 <LINK REL="next" HREF="node231.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6589"
+<A NAME="tex2html6614"
   HREF="node231.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6583"
-  HREF="node227.html">
+<A NAME="tex2html6608"
+  HREF="node228.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6579"
+<A NAME="tex2html6602"
   HREF="node229.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6585"
-  HREF="node727.html">
+<A NAME="tex2html6610"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6587"
-  HREF="node730.html">
+<A NAME="tex2html6612"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,62 +96,213 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6590"
-  HREF="node231.html">Variables y Constantes</A>
-<B> Subir:</B> <A NAME="tex2html6584"
-  HREF="node227.html">Evaluando Strings y Bloques</A>
-<B> Anterior:</B> <A NAME="tex2html6580"
-  HREF="node229.html">instance_eval y class_eval</A>
- &nbsp; <B>  <A NAME="tex2html6586"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6588"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6615"
+  HREF="node231.html">instance_exec y class_exec</A>
+<B> Subir:</B> <A NAME="tex2html6609"
+  HREF="node228.html">Evaluando Strings y Bloques</A>
+<B> Anterior:</B> <A NAME="tex2html6603"
+  HREF="node229.html">Bindings (encarpetados) y eval</A>
+ &nbsp; <B>  <A NAME="tex2html6611"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6613"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02823000000000000000">
-instance_exec y class_exec</A>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html6616"
+  HREF="node230.html#SECTION02822100000000000000">Creando accessors con class_eval</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02822000000000000000"></A>
+<A NAME="subsection:instanceevalyclasseval"></A>
+<BR>
+instance_eval y class_eval
 </H2>
-Los métodos
-<A NAME="9658"></A><A NAME="tex2html462"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_exec"><TT>instance_exec</TT></A>
-(<A NAME="tex2html463"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html"><TT>BasicObject</TT></A>)
-y 
-<A NAME="9665"></A><A NAME="tex2html464"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_exec"><TT>class_exec</TT></A>
-(y su alias <A NAME="9669"></A><A NAME="tex2html465"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-module_exec"><TT>module_exec</TT></A>, ambos en <A NAME="tex2html466"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>)
-evaluan un bloque 
-(pero no una <A NAME="tex2html467"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>)
-de la misma forma que sus homólogos <A NAME="9679"></A><A NAME="tex2html468"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
-y <A NAME="9683"></A><A NAME="tex2html469"
+
+<P>
+
+<UL>
+<LI>La clase <A NAME="9686"></A><A NAME="tex2html450"
+  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html"><TT>BasicObject</TT></A>
+define el método <A NAME="9690"></A><A NAME="tex2html451"
+  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>.
+<PRE>
+ruby-1.9.2-head :004 &gt; BasicObject.public_methods.select { |x| x =~ /instance_e/ }
+ =&gt; [:instance_eval, :instance_exec]
+</PRE>
+</LI>
+<LI>La clase <A NAME="9694"></A><A NAME="tex2html452"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>
+define el método <A NAME="9698"></A><A NAME="tex2html453"
   HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>.
-La diferencias es que los métodos <code>exec</code> aceptan argumentos
-que pasan al bloque evaluado.
+</LI>
+<LI>El método <A NAME="9702"></A><A NAME="tex2html454"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-module_eval"><TT>module_eval</TT></A>
+es un sinónimo de <A NAME="9706"></A><A NAME="tex2html455"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>.
+</LI>
+</UL>
+Estos dos métodos evaluan de manera similar a <code>eval</code> pero con estas consideraciones:
+
+<OL>
+<LI>Evaluan el código en el contexto del objeto o de la clase o módulo especificados
+</LI>
+<LI>El objeto o módulo es el valor de <code>self</code> durante la evaluación
+</LI>
+<LI><A NAME="9710"></A><A NAME="tex2html456"
+  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
+define métodos singleton del objeto 
+(y, por tanto define métodos de clase cuando el objeto es una clase)
+<PRE>
+# Use instance_eval to define class method String.empty
+# Note that quotes within quotes get a little tricky...
+String.instance_eval("def empty; ''; end")
+</PRE>
+</LI>
+<LI><A NAME="9714"></A><A NAME="tex2html457"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>
+define métodos de instancia 
+<PRE>
+# Define an instance method len of String to return string length
+String.class_eval("def len; size; end")
+</PRE>
+</LI>
+<LI><A NAME="9718"></A><A NAME="tex2html458"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-instance_eval"><TT>instance_eval</TT></A>
+y  <A NAME="9722"></A><A NAME="tex2html459"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>
+aceptan un bloque de código como argumento para la evaluación
+<PRE>
+String.class_eval {
+  def len
+    size
+  end
+}
+String.class_eval { alias len size }
+String.instance_eval { def empty; ""; end }
+</PRE>
+
+<P>
+</LI>
+<LI>La sintáxis de <A NAME="9726"></A><A NAME="tex2html460"
+  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
+es:
+<PRE>
+    instance_eval(string [, filename [, lineno]] ) 
+    instance_eval {| | block }
+</PRE>
+En el caso de la <A NAME="tex2html461"
+  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>, los dos últimos argumentos 
+son utilizados para mejorar los mensajes de error
+</LI>
+<LI>El método <A NAME="9733"></A><A NAME="tex2html462"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>
+tiene la sintaxis:
+
+<P>
+<PRE>
+class_eval(string [, filename [, lineno]])
+module_eval {|| block }
+</PRE>
+</LI>
+</OL>
+Veamos un ejemplo:
+
+<P>
+
+    <pre>
+
+    </pre>
+
+<P>
+Los dos últimos argumentos 
+<code>class_eval(string [, filename [, lineno]])</code>
+son utilizados para mejorar los mensajes de error:
+
+<P>
+<PRE>
+~/Chapter8ReflectionandMetaprogramming$ cat -n class_eval.rb 
+     1  class Thing
+     2  end
+     3  a = %q{def hello() "Hello there!" end}
+     4  Thing.module_eval(a)
+     5  puts Thing.new.hello()
+     6                                     
+     7  Thing.module_eval("invalid code", 
+     8                    "ficherito.rb", 
+     9                    123               # nº de linea
+    10                   )
+</PRE>
+Ejecución:
+<PRE>
+~/Chapter8ReflectionandMetaprogramming$ ruby class_eval.rb 
+Hello there!
+ficherito.rb:123: undefined local variable or method `code' for Thing:Class (NameError)
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02822100000000000000">
+Creando accessors con class_eval</A>
+</H3>
+Sabemos que podemos crear accessors a los atributos de una clase
+usando <code>attr_accessor</code>, <code>attr_reader</code> y <code>attr_writer</code>.
+Estas no son palabras reservadas de Ruby sino que se trata de métodos.
+Veamos como podemos emular su construcción  usando <A NAME="9737"></A><A NAME="tex2html463"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>:
+
+<P>
+<PRE>
+MacBookdeCasiano:chapter8ReflectionandMetaprogramming casiano$ cat -n myAccessors.rb 
+     1  class Module
+     2    def my_attr_reader(*syms) # método de instancia de Module
+     3      syms.each { |s|         # esto es, ¡un método de clase!
+     4        class_eval %{         # aquí self es el objeto Module
+     5                      def #{s}  # estamos definiendo un método de 
+     6                        @#{s}   #instancia en la clase "self"
+     7                      end
+     8                    }
+     9      }
+    10    end
+    11  end
+    12  
+    13  class Chuchu
+    14    my_attr_reader :a, :b
+    15  
+    16    def initialize(a,b)
+    17      @a, @b = a, b
+    18    end
+    19  end
+    20  
+    21  x = Chuchu.new(4, "z")
+    22  puts x.a    # 4
+    23  puts x.b    # z
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6589"
+<A NAME="tex2html6614"
   HREF="node231.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6583"
-  HREF="node227.html">
+<A NAME="tex2html6608"
+  HREF="node228.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6579"
+<A NAME="tex2html6602"
   HREF="node229.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6585"
-  HREF="node727.html">
+<A NAME="tex2html6610"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6587"
-  HREF="node730.html">
+<A NAME="tex2html6612"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -205,20 +357,20 @@ que pasan al bloque evaluado.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6590"
-  HREF="node231.html">Variables y Constantes</A>
-<B> Subir:</B> <A NAME="tex2html6584"
-  HREF="node227.html">Evaluando Strings y Bloques</A>
-<B> Anterior:</B> <A NAME="tex2html6580"
-  HREF="node229.html">instance_eval y class_eval</A>
- &nbsp; <B>  <A NAME="tex2html6586"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6588"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6615"
+  HREF="node231.html">instance_exec y class_exec</A>
+<B> Subir:</B> <A NAME="tex2html6609"
+  HREF="node228.html">Evaluando Strings y Bloques</A>
+<B> Anterior:</B> <A NAME="tex2html6603"
+  HREF="node229.html">Bindings (encarpetados) y eval</A>
+ &nbsp; <B>  <A NAME="tex2html6611"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6613"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

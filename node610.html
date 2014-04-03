@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Vim y Git. FuGitive: a Git wrapper so awesome, it should be illegal</TITLE>
-<META NAME="description" CONTENT="Vim y Git. FuGitive: a Git wrapper so awesome, it should be illegal">
+<TITLE>Mezclando Ficheros Específicos desde otra Rama</TITLE>
+<META NAME="description" CONTENT="Mezclando Ficheros Específicos desde otra Rama">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node611.html">
 <LINK REL="previous" HREF="node609.html">
-<LINK REL="up" HREF="node599.html">
+<LINK REL="up" HREF="node605.html">
 <LINK REL="next" HREF="node611.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13204"
+<A NAME="tex2html13253"
   HREF="node611.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13198"
-  HREF="node599.html">
+<A NAME="tex2html13247"
+  HREF="node605.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13194"
+<A NAME="tex2html13241"
   HREF="node609.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13200"
-  HREF="node727.html">
+<A NAME="tex2html13249"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13202"
-  HREF="node730.html">
+<A NAME="tex2html13251"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,37 +96,96 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13205"
-  HREF="node611.html">Debugging, Depurando</A>
-<B> Subir:</B> <A NAME="tex2html13199"
-  HREF="node599.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html13195"
-  HREF="node609.html">Hub</A>
- &nbsp; <B>  <A NAME="tex2html13201"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13203"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13254"
+  HREF="node611.html">Configuración y Algunos alias</A>
+<B> Subir:</B> <A NAME="tex2html13248"
+  HREF="node605.html">Git</A>
+<B> Anterior:</B> <A NAME="tex2html13242"
+  HREF="node609.html">Diferencias entre fetch y</A>
+ &nbsp; <B>  <A NAME="tex2html13250"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13252"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06580000000000000000">
-Vim y Git. FuGitive: a Git wrapper so awesome, it should be illegal</A>
+<H1><A NAME="SECTION06550000000000000000"></A>
+<A NAME="section:mergespecificfilesfromanbotherbranch"></A>
+<BR>
+Mezclando Ficheros Específicos desde otra Rama
 </H1>
 
 <UL>
-<LI><A NAME="tex2html1358"
-  HREF="https://github.com/tpope/vim-fugitive">vim-fugitive</A>
-en GitHub
+<LI><PRE>
+(master)$git checkout branchname file1 file2 files3
+
+  git checkout [-p|--patch] [&lt;tree-ish&gt;] [--] &lt;pathspec&gt;...
+
+   When &lt;paths&gt; or --patch are given, git checkout does not switch
+   branches. It updates the named paths in the working tree from the
+   index file or from a named &lt;tree-ish&gt; (most often a commit). 
+   The &lt;tree-ish&gt; argument can be
+   used to specify a specific tree-ish (i.e. commit, tag or tree) to
+   update the index for the given paths before updating the working
+   tree.
+</PRE>
+
+<P>
 </LI>
-<LI><A NAME="tex2html1359"
-  HREF="http://vimcasts.org/blog/2011/05/the-fugitive-series/">The Fugitive Series - a retrospective</A>
+<LI>The following sequence checks out the master branch, reverts the Makefile to two
+revisions back, deletes hello.c by mistake, and gets it back from the index.
+<PRE>
+               $ git checkout master             (1)
+               $ git checkout master~2 Makefile  (2)
+               $ rm -f hello.c
+               $ git checkout hello.c            (3)
+</PRE>
+
+<OL>
+<LI>switch branch
 </LI>
-<LI><A NAME="tex2html1360"
-  HREF="http://vimcasts.org/episodes/fugitive-vim-resolving-merge-conflicts-with-vimdiff/">Fugitive.vim - resolving merge conflicts with vimdiff</A>
+<LI>take a file out of another commit
 </LI>
-<LI><A NAME="tex2html1361"
-  HREF="http://vimcasts.org/episodes/fugitive-vim--a-complement-to-command-line-git/">Fugitive.vim - a complement to command line git</A>
+<LI>restore hello.c from the index
+</LI>
+</OL>
+
+<P>
+</LI>
+<LI>If you want to check out all C source files out of the index, you can say
+<PRE>
+               $ git checkout -- '*.c'
+</PRE>
+Note the quotes around <code>*.c</code>. 
+
+<P>
+The removed file <code>hello.c</code> will also be checked out, even though it is
+no longer in the working tree, because the file globbing is used to match entries in the
+<SPAN ID="txt24011">index</SPAN> (not in the working tree by the shell).
+
+<P>
+</LI>
+<LI>If you have an unfortunate branch that is named <code>hello.c</code>, this step:
+
+<P>
+<PRE>
+       $ git checkout hello.c
+</PRE>
+would be confused as
+an instruction to switch to that branch. 
+
+<P>
+You should instead write:
+
+<P>
+<PRE>
+               $ git checkout -- hello.c
+</PRE>
+</LI>
+<LI><A NAME="tex2html1366"
+  HREF="http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/">Git Tip: How to "Merge" Specific Files from Another Branch</A>
+<P>
 </LI>
 </UL>
 
@@ -133,20 +193,20 @@ en GitHub
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13204"
+<A NAME="tex2html13253"
   HREF="node611.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13198"
-  HREF="node599.html">
+<A NAME="tex2html13247"
+  HREF="node605.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13194"
+<A NAME="tex2html13241"
   HREF="node609.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13200"
-  HREF="node727.html">
+<A NAME="tex2html13249"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13202"
-  HREF="node730.html">
+<A NAME="tex2html13251"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -201,20 +261,20 @@ en GitHub
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13205"
-  HREF="node611.html">Debugging, Depurando</A>
-<B> Subir:</B> <A NAME="tex2html13199"
-  HREF="node599.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html13195"
-  HREF="node609.html">Hub</A>
- &nbsp; <B>  <A NAME="tex2html13201"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13203"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13254"
+  HREF="node611.html">Configuración y Algunos alias</A>
+<B> Subir:</B> <A NAME="tex2html13248"
+  HREF="node605.html">Git</A>
+<B> Anterior:</B> <A NAME="tex2html13242"
+  HREF="node609.html">Diferencias entre fetch y</A>
+ &nbsp; <B>  <A NAME="tex2html13250"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13252"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

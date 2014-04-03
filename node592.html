@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Redireccionado al Agente SSH</TITLE>
-<META NAME="description" CONTENT="Redireccionado al Agente SSH">
+<TITLE>Conexión SSH a Una máquina por Primera Vez</TITLE>
+<META NAME="description" CONTENT="Conexión SSH a Una máquina por Primera Vez">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node593.html">
 <LINK REL="previous" HREF="node591.html">
-<LINK REL="up" HREF="node584.html">
+<LINK REL="up" HREF="node590.html">
 <LINK REL="next" HREF="node593.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12917"
+<A NAME="tex2html12934"
   HREF="node593.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12911"
-  HREF="node584.html">
+<A NAME="tex2html12928"
+  HREF="node590.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12905"
+<A NAME="tex2html12922"
   HREF="node591.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12913"
-  HREF="node727.html">
+<A NAME="tex2html12930"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12915"
-  HREF="node730.html">
+<A NAME="tex2html12932"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,147 +96,214 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12918"
-  HREF="node593.html">Consideraciones sobre la Seguridad</A>
-<B> Subir:</B> <A NAME="tex2html12912"
-  HREF="node584.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html12906"
-  HREF="node591.html">Mejor un Sólo Agente</A>
- &nbsp; <B>  <A NAME="tex2html12914"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12916"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12935"
+  HREF="node593.html">Claves Pública y Privada:</A>
+<B> Subir:</B> <A NAME="tex2html12929"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html12923"
+  HREF="node591.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html12931"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12933"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06480000000000000000">
-Redireccionado al Agente SSH</A>
+<H1><A NAME="SECTION06420000000000000000"></A>
+<A NAME="subsection:sshfirsttime"></A>
+<BR>
+Conexión SSH a Una máquina por Primera Vez
 </H1>
 
 <P>
-El mismo agente SSH puede servir los retos producidos por conexiones SSH indirectas, es decir conexiones SSH arrancadas desde una conexión SSH.
-La idea general es que el reto producido por el servidor SSH será redirigido via los servidores intermedios hasta el agente en la máquina
-local. El reto será resuelto por este último y la solución emprenderá el camino de vuelta hasta el último servidor en la lista de saltos.
-
-<P>
-Para habilitar <A NAME="22636"></A><SPAN  CLASS="textbf">Agent forwarding</SPAN> 
-usamos la opción <code>-A</code>.
-
-<P>
-<PRE>
-  desktop$ ssh -A user@remotehost
-</PRE>
-
-<P>
-Si se quiere habilitar agent-forwarding desde el fichero de configuración
-pondremos <code>ForwardAgent yes</code> en la correspondiente
-entrada para ese host en <code>~/.ssh/config</code>:
-
-<P>
-<PRE>
-  $ cat ~/.ssh/config
-  Host shellserver
-    ForwardAgent yes
-  
-  Host management-server
-    ForwardAgent yes
-  
-  Host *
-    ForwardAgent no
-</PRE>
-
-<P>
-Obsérvese la presencia de la sección restrictiva <code>Host *</code>
-en el fichero de configuración.
-
-<P>
-Veamos un ejemplo:
+SSH utiliza cifrado de clave pública para autentificar
+la máquina remota y permitir a la máquina remota la
+autentificación del usuario.
 
 <P>
 
-<OL>
-<LI>El cliente <code>ssh</code> conecta con el servidor SSH remoto, se produce la autentificación via el agente
-que previamente ha sido cargado  con la identidad.  Se le solicita al servidor agent-forwarding.
-
-<P>
-<PRE>
-lusasoft@LusaSoft:~$ ssh -A orion
-Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-</PRE>
-El servidor crea un socket en <code>/tmp/ssh-XXXXXXX/agent.#####</code> y 
-inicializa la variable <code>SSH_AUTH_SOCK</code>.
-El  daemon SSH abre nuestra shell y comenzamos a trabajar en el servidor.
-
-<P>
-<PRE>
-Last login: Fri May  1 10:21:38 2009 from 85.155.13.48.dyn.user.ono.com
-casiano@orion:~$ env | grep -i SSH
-SSH_CLIENT=85.155.13.48 35107 22
-SSH_TTY=/dev/pts/3
-SSH_AUTH_SOCK=/tmp/ssh-ngwpX26103/agent.26103
-SSH_CONNECTION=85.155.13.48 35107 193.145.105.17 22
-casiano@orion:~$ ls -lR /tmp/ssh-ngwpX26103/agent.26103
-srwxr-xr-x 1 casiano casiano 0 2009-05-01 10:53 /tmp/ssh-ngwpX26103/agent.26103
-</PRE>
-En la máquina en la que estamos no existen ningunas identidades operativas:
-<PRE>
-casiano@orion:~$ ls -ltra .ssh
-total 60
--rw-rw-r--  1 casiano casiano   505 2009-03-30 08:53 config
--rw-r--r--  1 casiano casiano  4960 2009-04-04 11:43 known_hosts
--rw-------  1 casiano casiano  6466 2009-04-04 11:43 authorized_keys
-drwx------  2 casiano casiano  4096 2009-05-01 10:19 .
-drwxr-x--x 50 casiano casiano 12288 2009-05-01 11:13 ..
-</PRE>
-</LI>
-<LI>Ahora decidimos conectarnos en orion via <code>ssh</code> a otra máquina <code>europa</code>. El cliente
-<code>ssh</code> observa la presencia de la variable
-<code>SSH_AUTH_SOCK</code> y se conecta al socket. El cliente le indica 
-al servidor que quiere usar la misma clave que se ha usado
-para esta conexión.
-
-<P>
-<PRE>
-casiano@orion:~$ ssh europa
-Linux europa 2.6.24-23-generic #1 SMP Wed Apr 1 21:43:24 UTC 2009 x86_64
-casiano@europa:~$
-</PRE>
-Vemos que hemos entrado sin necesidad de introducir una clave por teclado.
-La clave pública de la identidad que reside en la máquina inicial
-ha sido instalada también en <code>europa</code>. ¿Que ha ocurrido?
-
-<P>
-El servidor en <code>europa</code> prepara el reto y se lo envía al cliente. 
-El cliente en <code>orion</code> recibe el reto y se lo pasa a su servidor el cual actúa 
-- desde el punto de vista del cliente - como si fuera un agente.
-El servidro <code>sshd</code> en <code>orion</code> mueve el reto al cliente de la primera conexión.
-Este primer cliente se lo pasa al agente inicial que es quien conoce
-la clave privada. La solución es preparada por el agente.
-Ahora la solución recorre el camino de vuelta.
-
-<P>
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION06480010000000000000">
-Véase También</A>
+<H4><A NAME="SECTION06420010000000000000">
+El Fichero <TT>.ssh/known_hosts</TT></A>
 </H4>
   
 
 <P>
+En SSH1 y OpenSSH las claves de máquinas se mantienen en <code>etc/ssh_knownhosts</code>
+y en el directorio del usuario <code>~/.ssh/known_hosts</code>.
+Es posible cambiar la ubicación de estos ficheros
+usando  en el fichero de configuración <code>~/.ssh/config</code>
+la opción <code>UserKnownHostsFile</code>.
+
+<P>
+Al establecer por primera vez una conexión con  <TT>ssh</TT>  o  <TT>sftp</TT> 
+se nos avisa de la posibilidad de que la máquina no sea quien aparenta:
+
+<P>
+<PRE>
+nereida:~&gt; sftp user@machine.ull.es
+Connecting to machine.ull.es...
+The authenticity of host 'machine.ull.es (193.312.112.190)' can't be established.
+RSA key fingerprint is a4:1e:f1:35:0d:b1:6c:7d:5c:3e:86:ef:4c:17:8a:a9.
+Are you sure you want to continue connecting (yes/no)? yes
+</PRE>
+Si respondemos <code>yes</code> la conexión continúa:
+<PRE>
+Warning: Permanently added 'machine.ull.es' (RSA) to the list of known hosts.
+user@machine.ull.es's password:
+sftp&gt; bye
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06420020000000000000">
+Algoritmo de Autentificación de las Máquinas</A>
+</H4>
+  
+
+<P>
+Esta precaución se toma por si el adversario subvierte el servidor de nombre
+para que <code>machine.ull.es</code> sea resuelta a su máquina. A continuación puede
+hacer un forward de la conexión solicitada a la verdadera máquina <code>machine.ull.es</code>.
+Este es un caso de <A NAME="22603"></A><SPAN  CLASS="textbf">man-in-the-middle-attack</SPAN>.
+
+<P>
 
 <UL>
-<LI><A NAME="tex2html1323"
-  HREF="http://www.securityfocus.com/infocus/1812">ssh and ssh-agent</A>
-por Brian Hatch
+<LI>Cuando un cliente SSH hace una conexión cada una de las máquinas
+prueba su identidad a la otra utilizando criptografía de clave 
+pública. 
 </LI>
-<LI><A NAME="tex2html1324"
-  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+<LI>Cada servidor SSH dispone de un único ID secreto que se 
+denomina <A NAME="22605"></A><SPAN  CLASS="textbf">host key</SPAN> que utiliza para identificarse ante los 
+clientes. 
+</LI>
+<LI>La primera vez que nos conectamos a una máquina remota
+el cliente obtiene y almacena la parte pública de la <I>host key</I> 
+en su fichero <code>~/.ssh/known_hosts</code>.
+</LI>
+<LI>Cada vez que nos conectamos con esa máquina el cliente comprueba
+la identidad del servidor remoto utilizando su correspondiente
+clave pública.
 </LI>
 </UL>
+
+<P>
+El cliente  <TT>ssh</TT>  mantiene en <code>~/.ssh/known_hosts</code>
+una base de datos conteniendo las máquinas a las que el usuario
+se ha conectado. Cualquier nuevo hosts es añadido al fichero 
+del usuario:
+
+<P>
+<PRE>
+nereida:~&gt; grep 'machine.ull.es' ~/.ssh/known_hosts
+machine.ull.es ssh-rsa KEY.....
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06420030000000000000">
+Borrando una Entrada de <TT>.ssh/known_hosts</TT></A>
+</H4>
+  
+
+<P>
+Si la relación entre la IP de la máquina y su nombre cambian <code>ssh</code> nos avisa.
+Si confiamos en el cambio podemos borrar
+la entrada en el fichero <code>~/.ssh/known_hosts</code>. De otro
+modo <code>ssh</code> se negará a efectuar la conexión.
+Podemos borrarla manualmente o con el comando:
+<PRE>
+casiano@cc116:~$ ssh-keygen -R rala
+/home/casiano/.ssh/known_hosts updated.
+Original contents retained as /home/casiano/.ssh/known_hosts.old
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06420040000000000000">
+Hashing</A>
+</H4>
+  
+
+<P>
+Supongamos que el atacante ha descubierto nuestra clave y ha entrado
+en nuestro servidor: ahora puede hacer <code>cat ~/.ssh/known_hosts</code>
+y deducir que otros servidores solemos visitar.
+Es incluso probable que la clave sea la misma o que tengamos
+un sistema de autentificación sin passphrase.
+
+<P>
+Si se quiere proteger el fichero  <TT>known_hosts</TT>  se puede usar la opción <code>-H</code>
+de  <TT>ssh-keygen</TT> :
+<PRE>
+casiano@cc116:~/.ssh$ ssh-keygen -H
+/home/casiano/.ssh/known_hosts updated.
+Original contents retained as /home/casiano/.ssh/known_hosts.old
+WARNING: /home/casiano/.ssh/known_hosts.old contains unhashed entries
+Delete this file to ensure privacy of hostnames
+</PRE>
+
+<P>
+Este comando reemplaza los nombres de los servidores y las direcciones con representaciones
+hash. Estas versiones hash pueden ser usadas por <code>ssh</code> pero son ilegibles
+para un humano. Es posible usar un fichero con una combinacion de entradas hash y 
+entradas legibles.
+
+<P>
+La opción  <TT>HashKnownHosts</TT>  permite en los ficheros de configuración
+permite indicarle a <code>ssh</code> que debe hacer hashing sobre los nombres y 
+las direcciones en <code>~/.ssh/known_hosts</code>. 
+Esto no afecta a las ya existentens en el fichero.
+
+<P>
+Es posible asociar varios nombres/direcciones con la misma clave
+(o repetirlas):
+
+<P>
+<PRE>
+foo1,foo,192.168.1.1,192.168.1.10 ssh-rsa AAAAB3Nsomething[...]
+foo2,foo,192.168.1.2,192.168.1.10 ssh-rsa AAAAB3Nsomethingelse[...]
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06420050000000000000">
+Búsqueda de Entradas Hash</A>
+</H4>
+  
+
+<P>
+Es posible encontrar las entradas en un fichero hash con la opción <code>-F</code>
+
+<P>
+<PRE>
+casiano@cc116:~/.ssh$ ssh-keygen -F millo
+# Host millo found: line 10 type RSA
+|1|BXG98oZImAlC02AQMAmuDb0jadQ=...
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06420060000000000000">
+Ejercicios con <TT>known_hosts</TT></A>
+</H4>
+  
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Elimine una entrada en el fichero si existe e intente la conexión ¿que ocurre?</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN></B> &nbsp; 
+<I>Pase a modo hashed su fichero</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN></B> &nbsp; 
+<I>Busque por una entrada en el fichero hashed</I></DIV><P></P>
 
 <P>
 <BR><HR>
@@ -246,27 +313,37 @@ por Brian Hatch
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html12919"
-  HREF="node592.html#SECTION06480010000000000000">Véase También</A>
+<LI><A NAME="tex2html12936"
+  HREF="node592.html#SECTION06420010000000000000">El Fichero <TT>.ssh/known_hosts</TT></A>
+<LI><A NAME="tex2html12937"
+  HREF="node592.html#SECTION06420020000000000000">Algoritmo de Autentificación de las Máquinas</A>
+<LI><A NAME="tex2html12938"
+  HREF="node592.html#SECTION06420030000000000000">Borrando una Entrada de <TT>.ssh/known_hosts</TT></A>
+<LI><A NAME="tex2html12939"
+  HREF="node592.html#SECTION06420040000000000000">Hashing</A>
+<LI><A NAME="tex2html12940"
+  HREF="node592.html#SECTION06420050000000000000">Búsqueda de Entradas Hash</A>
+<LI><A NAME="tex2html12941"
+  HREF="node592.html#SECTION06420060000000000000">Ejercicios con <TT>known_hosts</TT></A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12917"
+<A NAME="tex2html12934"
   HREF="node593.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12911"
-  HREF="node584.html">
+<A NAME="tex2html12928"
+  HREF="node590.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12905"
+<A NAME="tex2html12922"
   HREF="node591.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12913"
-  HREF="node727.html">
+<A NAME="tex2html12930"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12915"
-  HREF="node730.html">
+<A NAME="tex2html12932"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -321,20 +398,20 @@ por Brian Hatch
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12918"
-  HREF="node593.html">Consideraciones sobre la Seguridad</A>
-<B> Subir:</B> <A NAME="tex2html12912"
-  HREF="node584.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html12906"
-  HREF="node591.html">Mejor un Sólo Agente</A>
- &nbsp; <B>  <A NAME="tex2html12914"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12916"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12935"
+  HREF="node593.html">Claves Pública y Privada:</A>
+<B> Subir:</B> <A NAME="tex2html12929"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html12923"
+  HREF="node591.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html12931"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12933"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

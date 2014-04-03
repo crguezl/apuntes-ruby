@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Métodos Factoría</TITLE>
-<META NAME="description" CONTENT="Métodos Factoría">
+<TITLE>new, allocate e initialize</TITLE>
+<META NAME="description" CONTENT="new, allocate e initialize">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node194.html">
 <LINK REL="previous" HREF="node192.html">
-<LINK REL="up" HREF="node191.html">
+<LINK REL="up" HREF="node192.html">
 <LINK REL="next" HREF="node194.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5961"
+<A NAME="tex2html5985"
   HREF="node194.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5955"
-  HREF="node191.html">
+<A NAME="tex2html5979"
+  HREF="node192.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5949"
+<A NAME="tex2html5973"
   HREF="node192.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5957"
-  HREF="node727.html">
+<A NAME="tex2html5981"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5959"
-  HREF="node730.html">
+<A NAME="tex2html5983"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,115 +96,101 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5962"
-  HREF="node194.html">dup, clone e initialize_copy</A>
-<B> Subir:</B> <A NAME="tex2html5956"
-  HREF="node191.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html5950"
-  HREF="node192.html">new, allocate e initialize</A>
- &nbsp; <B>  <A NAME="tex2html5958"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5960"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5986"
+  HREF="node194.html">Métodos Factoría</A>
+<B> Subir:</B> <A NAME="tex2html5980"
+  HREF="node192.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html5974"
+  HREF="node192.html">Creación e Inicialización de</A>
+ &nbsp; <B>  <A NAME="tex2html5982"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5984"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02742000000000000000"></A>
-<A NAME="subsection:metodosfactoria"></A>
-<BR>
-Métodos Factoría
+<H2><A NAME="SECTION02741000000000000000">
+new, allocate e initialize</A>
 </H2>
+Todas las clases heredan el método de clase <code>new</code>.
+Este método tiene dos tareas: 
 
 <P>
-A veces se necesita mas de una forma de inicializar las instancias
-de una clase.
-Una manera simple de hacerlo es dando valores por defecto a los 
-parámetros de <code>initialize</code>:
 
-<P>
+<OL>
+<LI>debe alojar al objeto y 
+</LI>
+<LI>debe inicializarlo.
+</LI>
+</OL>
+Para estas tareas, delega en los métodos.
+Este es el seudocódigo de <code>new</code>: 
+<code>allocate</code> e <code>initialize</code>:
 <PRE>
-class Point
-  def initialize(x, y, z = nil)
-    @x,@y,@z = x,y,z
-  end
+def new(* args)
+  o = self.allocate       # crear el objeto
+  o.initialize(* args)    # inicializarlo
+  o                       # retornar el objeto
 end
 </PRE>
-Pero a menudo no es suficiente con esto. Necesitamos <A NAME="7500"></A><SPAN  CLASS="textbf">factory methods</SPAN> o
-<A NAME="7502"></A><SPAN  CLASS="textbf">métodos factoría</SPAN> 
-para crear los objetos de nuestra clase.
 
 <P>
-Supongamos que queremos crear objetos <code>Point</code>
-bien en coordenadas cartesianas
-bien en coordenadas  polares:
+
+<UL>
+<LI>El método <code>allocate</code> es un método de instancia de la clase <code>Class</code>.
+</LI>
+<LI>Es heredado por todos los objetos clase. 
+</LI>
+<LI>Ruby invoca al
+método directamente.
+No puede ser sobreescrito. 
+</LI>
+</UL>
 
 <P>
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n CartAndPolar.rb 
-     1  include Math
-     2  class Point
-     3    attr_accessor :x, :y
-     4  
-     5    def initialize(x, y)
-     6      @x, @y = x,y
-     7    end
-     8  
-     9    private_class_method :new
-    10  
-    11    def Point.cartesian(x,y)
-    12      new(x,y)
-    13    end
-    14  
-    15    def Point.polar(r,theta)
-    16      new(r*cos(theta), r*sin(theta))
-    17    end
-    18  
-    19    def r 
-    20      sqrt(@x*@x+@y*@y)
-    21    end
-    22  
-    23    def theta
-    24      atan2(@y, @x)
-    25    end
-    26  end
-    27  if __FILE__ == $0 
-    28    p = Point.polar(1, PI/4)
-    29    puts p.r, p.theta         # 1.0 0.785398
-    30    q = Point.cartesian(1, 1) # 1 1
-    31    puts q.x, q.y
-    32  end
-</PRE>
-Al hacer <code>new</code> privado lo hacemos inaccesible a las clases cliente,
-de manera que las clases usuario de <code>Point</code> deberán de usar uno de los dos métodos factoría proveídos para construir un objeto <code>Point</code>.
 
-<P>
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby CartAndPolar.rb 
-1.0
-0.785398163397448
-1
-1
-</PRE>
+<UL>
+<LI><code>initialize</code> es un método de instancia y privado
+</LI>
+<LI>La mayor parte de las clases deberían usar <code>super</code>
+para encadenar con el <code>initialize</code> de la superclase.
+</LI>
+<LI>La tarea habitual de <code>initialize</code> es crear e inicializar
+las variables de instancia del objeto, cuyos valores normalmente 
+se derivan de los argumentos pasados a <code>new</code>.
+</LI>
+<LI>El valor retornado por <code>initialize</code> es ignorado.
+</LI>
+<LI>En realidad, <code>Class</code> define dos métodos con nombre <code>new</code>:
+
+<UL>
+<LI>Uno <code>Class#new</code> es el método de instancia descrito aquí.
+</LI>
+<LI>El otro <code>Class::new</code> es un método de clase y se usa para crear nuevas clases.
+</LI>
+</UL>
+</LI>
+</UL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5961"
+<A NAME="tex2html5985"
   HREF="node194.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5955"
-  HREF="node191.html">
+<A NAME="tex2html5979"
+  HREF="node192.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5949"
+<A NAME="tex2html5973"
   HREF="node192.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5957"
-  HREF="node727.html">
+<A NAME="tex2html5981"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5959"
-  HREF="node730.html">
+<A NAME="tex2html5983"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -259,20 +245,20 @@ de manera que las clases usuario de <code>Point</code> deberán de usar uno de l
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5962"
-  HREF="node194.html">dup, clone e initialize_copy</A>
-<B> Subir:</B> <A NAME="tex2html5956"
-  HREF="node191.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html5950"
-  HREF="node192.html">new, allocate e initialize</A>
- &nbsp; <B>  <A NAME="tex2html5958"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5960"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5986"
+  HREF="node194.html">Métodos Factoría</A>
+<B> Subir:</B> <A NAME="tex2html5980"
+  HREF="node192.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html5974"
+  HREF="node192.html">Creación e Inicialización de</A>
+ &nbsp; <B>  <A NAME="tex2html5982"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5984"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

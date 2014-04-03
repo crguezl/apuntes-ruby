@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Búsqueda de Métodos de Clase</TITLE>
-<META NAME="description" CONTENT="Búsqueda de Métodos de Clase">
+<TITLE>La Búsqueda por Métodos</TITLE>
+<META NAME="description" CONTENT="La Búsqueda por Métodos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node213.html">
 <LINK REL="previous" HREF="node211.html">
-<LINK REL="up" HREF="node156.html">
+<LINK REL="up" HREF="node157.html">
 <LINK REL="next" HREF="node213.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6248"
+<A NAME="tex2html6272"
   HREF="node213.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6242"
-  HREF="node156.html">
+<A NAME="tex2html6266"
+  HREF="node157.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6236"
+<A NAME="tex2html6260"
   HREF="node211.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6244"
-  HREF="node727.html">
+<A NAME="tex2html6268"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6246"
-  HREF="node730.html">
+<A NAME="tex2html6270"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,178 +96,148 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6249"
-  HREF="node213.html">La Búsqueda de Constantes</A>
-<B> Subir:</B> <A NAME="tex2html6243"
-  HREF="node156.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6237"
-  HREF="node211.html">La Búsqueda por Métodos</A>
- &nbsp; <B>  <A NAME="tex2html6245"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6247"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6273"
+  HREF="node213.html">Búsqueda de Métodos de</A>
+<B> Subir:</B> <A NAME="tex2html6267"
+  HREF="node157.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6261"
+  HREF="node211.html">Los Métodos Singleton y</A>
+ &nbsp; <B>  <A NAME="tex2html6269"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6271"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION027140000000000000000"></A>
-<A NAME="subsection:busqueda_de_metodos_de_clase"></A>
+<H1><A NAME="SECTION027130000000000000000"></A>
+<A NAME="section:la_busqueda_por_metodos"></A>
 <BR>
-Búsqueda de Métodos de Clase
+La Búsqueda por Métodos
 </H1>
 
 <P>
-El algoritmo de resolución para los métodos de clase es el mismo 
-que para los métodos de instancia, pero con un cambio importante.
-
-<P>
-Supongamos esta clase <code>C</code> sin métodos:
-<PRE>
-class C
-end
-</PRE>
-
-<P>
-Supongamos la llamada:
-<PRE>
-c = C.new
-</PRE>
+Cuando Ruby evalúa una expresión de invocación de un método (este proceso
+es conocido como <A NAME="7667"></A><SPAN  CLASS="textbf">method lookup</SPAN> o <A NAME="7669"></A><SPAN  CLASS="textbf">method resolution</SPAN>), por ejemplo
+<code>o.m</code> ocurren los siguientes pasos:
 
 <P>
 
 <OL>
-<LI>Ruby busca en la eigenclass de <code>C</code>, no se encuentra
-ya que en <code>C</code> no se han declarado métodos de clase
-</LI>
-<LI>Se busca a continuación en la clase de <code>C</code>: esta clase es la clase <code>Class</code>.
+<LI><A NAME="item:busca_eigenclass"></A>Primero comprueba en la <A NAME="7671"></A><SPAN  CLASS="textbf">singleton class</SPAN> o <A NAME="7673"></A><SPAN  CLASS="textbf">eigenclass</SPAN> de <code>o</code> la existencia de un método <code>m</code>
 
 <P>
 </LI>
-<LI>En <A NAME="tex2html384"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A> ruby encuentra el <SPAN ID="txt7265">método de instancia</SPAN> <code>new</code> y lo invoca
+<LI><A NAME="item:busca_clase"></A>Si no, busca en la clase de <code>o</code> por un método <code>m</code>
+
+<P>
+</LI>
+<LI><A NAME="item:busca_modulos"></A>Si no, busca en los módulos incluídos por la clase de <code>o</code>.
+Si la clase incluye mas de un módulo se buscan en orden inverso al orden en el que fueron incluídos
+
+<P>
+</LI>
+<LI>Si no, se mueve hacia arriba en la clase de herencia a la superclase.
+Los pasos
+<A HREF="#item:busca_clase">2</A>
+y
+<A HREF="#item:busca_modulos">3</A>
+se repiten para cada clase en la jerarquía de herencia hasta que todos los 
+antecesores y módulos incluídos han sido buscados.
+
+<P>
+</LI>
+<LI>Si no, se invoca a un método con nombre <A NAME="7675"></A><SPAN  CLASS="textbf">method_missing</SPAN>.
+Para encontrar dicho método se empieza en el paso
+<A HREF="#item:busca_eigenclass">1</A>.
+
+<P>
+El módulo <A NAME="tex2html382"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> provee una implementación por defecto de
+<code>method_missing</code> por lo que queda garantizado 
+el éxito de esta segunda pasada.
 </LI>
 </OL>
 
 <P>
-En Ruby cualquier invocación a un método implica
-un objeto receptor y un nombre de método.
-Si nuestro objeto es una instancia de la clase
-<code>Class</code> entonces nuestro objeto es una clase.
-
-<P>
-Para explicar en que consiste 
-el cambio importante en la búsqueda 
-de métodos de clase mencionado 
-antes, consideremos este otro ejemplo
-en el que definimos un método de clase 
-<code>Integer.parse</code>:
+Let’s consider a concrete example of this algorithm. Suppose we have the following code:
 <PRE>
-def Integer.parse(text)
-  text.to_i
-end
+  message = "hello" 
+  message.world
 </PRE>
-Puesto que <code>Fixnum</code> es una subclase de 
-<code>Integer</code> deberíamos poder invocarlo así:
+We want to invoke a method named <code>world</code> on the String instance <code>"hello"</code>. 
 <PRE>
-n = Fixnum.parse("1")
+[1] pry(main)&gt; String.ancestors
+=&gt; [String, Comparable, Object, PP::ObjectMixin, Kernel, BasicObject]
 </PRE>
-<PRE>
-[3] pry(main)&gt; Class.ancestors
-=&gt; [Class, Module, Object, PP::ObjectMixin, Kernel, BasicObject]
-[4] pry(main)&gt; Fixnum.ancestors
-=&gt; [Fixnum,
- Integer,
- Numeric,
- Comparable,
- Object,
- PP::ObjectMixin,
- Kernel,
- BasicObject]
-</PRE>
-Si aplicamos el method lookup anterior tendríamos:
+Name resolution proceeds as follows:
 
 <OL>
-<LI>Se busca en la eigenclass de <code>Fixnum</code>: no se encuentra
+<LI>Check the eigenclass for singleton methods. There aren’t any in this case.
 </LI>
-<LI>Se busca en la clase de <code>Fixnum</code>: es <code>Class</code>.
-No se encuentra
+<LI>Check the <code>String</code> class. There is no instance method named <code>world</code>.
 </LI>
-<LI>Se busca en <A NAME="tex2html385"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>, <A NAME="tex2html386"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>,  <A NAME="tex2html387"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A>
-y <A NAME="tex2html388"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html"><TT>BasicObject</TT></A>
-infructuosamente 
+<LI>Check the <code>Comparable</code> module of the <code>String</code> class for an instance method named <code>world</code>. 
 </LI>
-</OL>
-
-<P>
-Falla. ¿Donde se encuentra el método <code>parse</code>?.
-Sabemos que <code>parse</code> <SPAN  CLASS="textbf">es un método singleton del objeto</SPAN> <code>Integer</code>.
-Por tanto está en la eigenclass/singleton class  de <code>Integer</code>.
-
-<P>
+<LI>Check the superclass of <code>String</code>, which is <code>Object</code>. The <code>Object</code> class does not define a method named <code>world</code>, either.
+</LI>
+<LI>Check the <A NAME="tex2html383"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> module included by
+<code>Object</code>.
+The <code>world</code> method is not found here either, 
+so we now switch to looking for a method named <code>method_missing</code>.
+</LI>
+<LI>Look for <code>method_missing</code> in each of the spots above:
 
 <OL>
-<LI>Los objetos de la clase <code>Class</code>
-son especiales: tienen <A NAME="7621"></A><SPAN  CLASS="textbf">superclases</SPAN>.
+<LI>the eigenclass of the <code>String</code> object, 
 </LI>
-<LI>Las singleton clases o eigenclases de los objetos de la clase <code>Class</code>
-son también especiales: tienen <A NAME="7623"></A><SPAN  CLASS="textbf">superclases</SPAN>.
+<LI>the <code>String</code>
+class, 
 </LI>
-<LI>La eigenclass de un objeto ordinario no tiene superclase
+<LI>the <code>Comparable</code> module, 
 </LI>
-<LI>Si la clase <code>A</code> hereda de la clase <code>B</code> (esto es <code>A &lt; B</code>)
-y <code>A'</code> denota la eigenclass de <code>A</code>
-y <code>B'</code> denota la eigenclass de <code>B</code>,
-entonces la superclase de <code>A'</code> es <code>B'</code>
-</LI>
-<LI>Ruby para los métodos singleton busca en la eigenclass del objeto y en todas las superclases de la eigenclass 
+<LI>the
+<code>Object</code> class, and the <A NAME="tex2html384"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> module
 </LI>
 </OL>
-Si aplicamos el nuevo lookup  a la búsqueda de <code>Fixnum.parse</code> en:
+The first definition
+of <code>method_missing</code> we find is in the <A NAME="tex2html385"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> module, so this
+is the method we invoke. What it does is raise an exception:
 <PRE>
-n = Fixnum.parse("1")
+NoMethodError: undefined method `world' for "hello":String
 </PRE>
-tendríamos:
-
-<P>
-
-<OL>
-<LI>Se busca en la eigenclass de <code>Fixnum</code>: no se encuentra
-</LI>
-<LI>Busca en la superclase de la eigenclass de  <code>Fixnum</code> esta es la eigenclass de <code>Integer</code> y allí encuentra el método <code>parse</code>
-</LI>
-<LI>Si no lo hubiera encontrado hubiera probado con las subsiguientes eigenclasses de <code>Numeric</code> y <A NAME="tex2html389"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>. 
-Es decir, sigue buscando por métodos singleton
-</LI>
-<LI>Después probaría con <code>Class</code>,
-<code>Module</code>,
-<A NAME="tex2html390"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A> y <code>Kernel</code>
 </LI>
 </OL>
+This may seem like it requires Ruby to perform an exhaustive search
+every time it invokes a method. 
+
+<P>
+In typical implementations, however,
+successful method lookups will be cached so that subsequent lookups
+of the same name (with no intervening method definitions) will be
+very quick.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6248"
+<A NAME="tex2html6272"
   HREF="node213.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6242"
-  HREF="node156.html">
+<A NAME="tex2html6266"
+  HREF="node157.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6236"
+<A NAME="tex2html6260"
   HREF="node211.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6244"
-  HREF="node727.html">
+<A NAME="tex2html6268"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6246"
-  HREF="node730.html">
+<A NAME="tex2html6270"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -322,20 +292,20 @@ Es decir, sigue buscando por métodos singleton
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6249"
-  HREF="node213.html">La Búsqueda de Constantes</A>
-<B> Subir:</B> <A NAME="tex2html6243"
-  HREF="node156.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6237"
-  HREF="node211.html">La Búsqueda por Métodos</A>
- &nbsp; <B>  <A NAME="tex2html6245"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6247"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6273"
+  HREF="node213.html">Búsqueda de Métodos de</A>
+<B> Subir:</B> <A NAME="tex2html6267"
+  HREF="node157.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6261"
+  HREF="node211.html">Los Métodos Singleton y</A>
+ &nbsp; <B>  <A NAME="tex2html6269"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6271"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

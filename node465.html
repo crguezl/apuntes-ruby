@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Servicio para Abreviar URLs</TITLE>
-<META NAME="description" CONTENT="Práctica: Servicio para Abreviar URLs">
+<TITLE>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</TITLE>
+<META NAME="description" CONTENT="Configurando la Base de Datos en Heroku con DataMapper. Despliegue">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node466.html">
 <LINK REL="previous" HREF="node464.html">
-<LINK REL="up" HREF="node464.html">
+<LINK REL="up" HREF="node461.html">
 <LINK REL="next" HREF="node466.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10674"
+<A NAME="tex2html10713"
   HREF="node466.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10668"
-  HREF="node464.html">
+<A NAME="tex2html10707"
+  HREF="node461.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10662"
+<A NAME="tex2html10703"
   HREF="node464.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10670"
-  HREF="node727.html">
+<A NAME="tex2html10709"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10672"
-  HREF="node730.html">
+<A NAME="tex2html10711"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,459 +95,131 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10675"
-  HREF="node466.html">Práctica: Servicio para Abreviar</A>
-<B> Subir:</B> <A NAME="tex2html10669"
-  HREF="node464.html">ActiveRecord y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html10663"
-  HREF="node464.html">ActiveRecord y Sinatra</A>
- &nbsp; <B>  <A NAME="tex2html10671"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10673"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10714"
+  HREF="node466.html">Sequel y Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html10708"
+  HREF="node461.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html10704"
+  HREF="node464.html">Ejemplo de Uso de</A>
+ &nbsp; <B>  <A NAME="tex2html10710"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10712"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031810000000000000000"></A>
-   <A NAME="19192"></A>
-  
-<A NAME="sectionpractica:abreviarurl"></A>
-<BR>
-Práctica: Servicio para Abreviar URLs
+<H1><A NAME="SECTION031640000000000000000">
+Configurando la Base de Datos en Heroku con DataMapper. Despliegue</A>
 </H1>
-Escriba un acortador de URLs usando ActiveRecords y <A NAME="tex2html1079"
-  HREF="https://github.com/janko-m/sinatra-activerecord">sinatra-activerecord</A>
-Asegúrese de tener instalados:
 
-<OL>
-<LI>gem install activerecord
-</LI>
-<LI>gem install sinatra-activerecord
-</LI>
-<LI>gem install sqlite3
-</LI>
-</OL>
-Este es un ejemplo de estructura de la aplicación en su forma final:
+<P>
+<A NAME="tex2html1078"
+  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A> utiliza la base de datos PostgreSQL y una URL en una variable 
+de entorno <code>ENV['DATABASE_URL']</code>.
+
+<P>
 <PRE>
-[~/srcSTW/url_shortener_with_active_records(master)]$ tree -A
-.
-|-- Gemfile
-|-- Gemfile.lock
-|-- README
-|-- Rakefile
-|-- app.rb
-|-- db
-|   |-- config.yml
-|   `-- migrate
-|       `-- 20121017115717_shortened_urls.rb
-|-- shortened_urls.db
-|-- shortened_urls_bak.db
-`-- views
-    |-- index.haml
-    |-- layout.haml
-    `-- success.haml
+configure :development do
+  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
+end
 
-3 directories, 12 files
+configure :production do
+  DataMapper.setup(:default, ENV['DATABASE_URL'])
+end
 </PRE>
-Una vez instaladas las gemas implicadas:
+
+<P>
+Estas líneas especifican que se usa SQLite en desarrollo y PostgreSQL en producción.
+Obsérvese que el <code>Gemfile</code> debe estar coherente:
 <PRE>
-[~/srcSTW/url_shortener_with_active_records(master)]$ cat Gemfile
+[~/sinatra/sinatra-datamapper-jump-start(master)]$ cat Gemfile
 source 'https://rubygems.org'
-
-#gem 'alphadecimal'
-gem 'sinatra-activerecord'
-gem 'sqlite3'
+gem "sinatra"
+gem "slim"
+gem "sass"
+gem "dm-core"
+gem "dm-migrations"
+gem "thin"
+gem "pg", :group =&gt; :production
+gem "dm-postgres-adapter", :group =&gt; :production
+gem "dm-sqlite-adapter", :group =&gt; :development
 </PRE>
-con <code>bundle install</code>,
-procedemos a añadir objetivos al <code>Rakefile</code>:
+o mejor:
 <PRE>
-[~/srcSTW/url_shortener_with_active_records(master)]$ cat Rakefile 
-$: &lt;&lt; '.' # add current path to the search path
-require 'sinatra/activerecord/rake'
-require 'app'
-
-desc "Reset the data base to initial state"
-task :clean do
-  sh "mv shortened_urls.db tmp/"
-  sh "mv db/migrate /tmp/"
-end
-
-desc "Create the specific ActiveRecord migration for this app"
-task :create_migration do
-  sh "rake db:create_migration NAME=create_shortened_urls"
-end
-
-desc "shows the code you have to have in your db/migrate/#number_shortened_urls.rb file"
-task :edit_migration do
-  source = &lt;&lt;EOS
-class ShortenedUrls &lt; ActiveRecord::Migration
-  def up
-    create_table :shortened_urls do |t|
-      t.string :url
-    end
-    add_index :shortened_urls, :url
-  end
-
-  def down
-    drop_table :shortened_urls
-  end
-end
-EOS
-  puts "Edit the migration and insert this code:"
-  puts source
-end
-
-desc "run the url shortener app"
-task :run do
-  sh "ruby app.rb"
-end
-</PRE>
-Este <code>Rakefile</code> tiene los siguientes objetivos:
-<PRE>
-[~/srcSTW/url_shortener_with_active_records(master)]$ rake -T
-rake clean                # Reset the data base to initial state
-rake create_migration     # Create the specific ActiveRecord migration for this app
-rake db:create_migration  # create an ActiveRecord migration in ./db/migrate
-rake db:migrate           # migrate the database (use version with VERSION=n)
-rake db:rollback          # roll back the migration (use steps with STEP=n)
-rake edit_migration       # shows the code you have to have in your db/migrate/#number_shortened_urls.rb file
-rake run                  # run the url shortener app
-[~/srcSTW/url_shortener_with_active_records(master)]$
-</PRE>
-De ellos los tres que nos importan ahora son <code>db:create_migration</code>, <code>db:migrate</code> y <code>db:rollback</code> 
-que son creados por la línea <code>require 'sinatra/activerecord/rake'</code>.
-
-<P>
-Las <A NAME="tex2html1080"
-  HREF="http://api.rubyonrails.org/classes/ActiveRecord/Migration.html">migraciones</A>
-nos permiten gestionar la evolución de un esquema utilizado por varias bases de datos.
-Es una solución al problema habitual de añadir un campo para proveer una nueva funcionalidad en nuestra 
-base de datos, pero no tener claro como comunicar dicho cambio al resto de los desarrolladores
-y al servidor de producción.
-Con las migraciones podemos describir las transformaciones mediante clases autocintenidas que pueden
-ser añadadidas a nuestro repositorio <code>git</code> y ejecutadas contra una base de datos que puede estar una, dos 
-o cinco versiones atrás.
-
-<P>
-Comenzemos configurando el modelo para nuestra aplicación. En el directorio <code>db</code> 
-creamos el fichero <code>config.yml</code>:
-<PRE>
-[~/srcSTW/url_shortener_with_active_records(master)]$ cat db/config.yml 
-development:
-  adapter: sqlite3
-  encoding: utf8
-  database: shortened_urls_dev.sqlite
-
-test:
-  adapter: sqlite3
-  encoding: utf8
-  database: shortened_urls_test.sqlite
-
-production:
-  adapter: sqlite3
-  encoding: utf8
-  database: shortened_urls_live.sqlite
-</PRE>
-
-<P>
-Comenzaremos creando nuestro modelo.
-Para ello ejecutamos <code>rake db:create_migration</code>.
-Como vemos debemos pasar una opción <code>NAME</code> para nuestra migración. En nuestro caso pasamos 
-<code>NAME=create_shortened_urls</code>.
-Esto crea la carpeta <code>db/migrate</code> que contienen nuestra migración.
-
-<P>
-<PRE>
-[~/srcSTW/url_shortener_with_active_records(master)]$ tree db
-db
-|-- config.yml
-`-- migrate
-    `-- 20121017115717_shortened_urls.rb
-</PRE>
-ahora rellenamos los métodos <code>up</code> y el <code>down</code>:
-<PRE>
-1 directory, 2 files
-[~/srcSTW/url_shortener_with_active_records(master)]$ cat db/migrate/20121017115717_shortened_urls.rb 
-class ShortenedUrls &lt; ActiveRecord::Migration
-  def up
-    create_table :shortened_urls do |t|
-      t.string :url
-    end
-    add_index :shortened_urls, :url
-  end
-
-  def down
-    drop_table :shortened_urls
-  end
-end
-</PRE>
-cuando ejecutamos <code>rake db:migrate</code> se ejecuta la migración y crea la base de datos
-con la tabla <code>shortened_urls</code>.
-
-<P>
-En nuestro fichero <code>app.rb</code> creamos nuestro modelo <code>ShortenedUrl</code>.
-Para ello escribimos:
-<PRE>
-class ShortenedUrl &lt; ActiveRecord::Base
-end
-</PRE>
-Después incluímos algunas <A NAME="tex2html1081"
-  HREF="http://guides.rubyonrails.org/active_record_validations_callbacks.html">validaciones</A>:
-<PRE>
-class ShortenedUrl &lt; ActiveRecord::Base
-  # Validates whether the value of the specified attributes are unique across the system.
-  validates_uniqueness_of :url
-  # Validates that the specified attributes are not blank
-  validates_presence_of :url
-  #validates_format_of :url, :with =&gt; /.*/
-  validates_format_of :url, 
-       :with =&gt; %r{^(https?|ftp)://.+}i, 
-       :allow_blank =&gt; true, 
-       :message =&gt; "The URL must start with http://, https://, or ftp:// ."
-end
-</PRE>
-A continuación escribimos las rutas:
-<PRE>
-get '/' do
-  
-end
-
-post '/' do
-end
-</PRE>
-Creamos también una ruta <code>get</code> para redireccionar la URL
-acortada a su destino final:
-<PRE>
-get '/:shortened' do
-end
-</PRE>
-Supongamos  que  usamos el <code>id</code> de la URL en la base de datos 
-para acortar la URL.
-Entonces lo que tenemos que hacer es 
-encontrar mediante el método <A NAME="tex2html1082"
-  HREF="http://guides.rubyonrails.org/active_record_querying.html">find</A>
-la URL:
-
-<P>
-<PRE>
-get '/:shortened' do
-  short_url = ShortenedUrl.find(params[:shortened].to_i(36))
-  redirect short_url.url
-end
-</PRE>
-Mediante una llamada de la forma <code>Model.find(primary_key)</code>
-obtenemos el objeto correspondiente a la clave primaria específicada.
-que casa con las opciones suministradas.
-
-<P>
-El SQL equivalente es:
-
-<P>
-<PRE>
-SELECT * FROM shortened_urls WHERE (url.id = params[:shortened].to_i(36)) LIMIT 1
-</PRE>
-<code>Model.find(primary_key)</code>
-genera una excepción  <code>ActiveRecord::RecordNotFound</code>
-si no se encuentra ningún registro.
-
-<P>
-Veamos una sesión on <code>sqlite3</code>:
-<PRE>
-[~/srcSTW/url_shortener_with_active_records(master)]$ sqlite3 shortened_urls.db 
-SQLite version 3.7.7 2011-06-25 16:35:41
-Enter ".help" for instructions
-Enter SQL statements terminated with a ";"
-sqlite&gt; .schema
-CREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL);
-CREATE TABLE "shortened_urls" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "url" varchar(255));
-CREATE INDEX "index_shortened_urls_on_url" ON "shortened_urls" ("url");
-CREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version");
-sqlite&gt; select * from  shortened_urls;
-1|https://mail.google.com/mail/u/0/
-2|https://plus.google.com/u/0/
-3|http://campusvirtual.ull.es/1213m2/mod/forum/discuss.php?d=5629
-4|http://www.sinatrarb.com/intro#Accessing%20Variables%20in%20Templates
-sqlite&gt; select * from shortened_urls where (id = 3) limit 1;
-3|http://campusvirtual.ull.es/1213m2/mod/forum/discuss.php?d=5629
-sqlite&gt;  .quit
-</PRE>
-
-<P>
-Este es el código completo de <code>app.rb</code>:
-<PRE>
-$ cat app.rb 
-require 'sinatra'
-require 'sinatra/activerecord'
-require 'haml'
-
-set :database, 'sqlite3:///shortened_urls.db'
-#set :address, 'localhost:4567'
-set :address, 'exthost.etsii.ull.es:4567'
-
-class ShortenedUrl &lt; ActiveRecord::Base
-  # Validates whether the value of the specified attributes are unique across the system.
-  validates_uniqueness_of :url
-  # Validates that the specified attributes are not blank
-  validates_presence_of :url
-  #validates_format_of :url, :with =&gt; /.*/
-  validates_format_of :url, 
-       :with =&gt; %r{^(https?|ftp)://.+}i, 
-       :allow_blank =&gt; true, 
-       :message =&gt; "The URL must start with http://, https://, or ftp:// ."
-end
-
-
-get '/' do
-  haml :index
-end
-
-post '/' do
-  @short_url = ShortenedUrl.find_or_create_by_url(params[:url])
-  if @short_url.valid?
-    haml :success, :locals =&gt; { :address =&gt; settings.address }
-  else
-    haml :index
-  end
-end
-
-get '/:shortened' do
-  short_url = ShortenedUrl.find(params[:shortened].to_i(36))
-  redirect short_url.url
+group :production do
+    gem "pg"
+    gem "dm-postgres-adapter"
 end
 </PRE>
 
 <P>
-Las Vistas. Primero 
-el fichero <code>views/layout.haml</code>:
 <PRE>
-$ cat views/layout.haml 
-!!!
-%html
-    %body
-        =yield
-        %form(action="/" method="POST")
-            %label(for="url")
-            %input(type="text" name="url" id="url" accesskey="s")
-            %input(type="submit" value="Shorten")
-</PRE>
-Creamos un formulario que envía con <code>method="POST"</code> a la raíz <code>action="/"</code>.
-tiene un elemento <code>input</code> para obtener la URL.
-
-<P>
-El formulario es procesado por la ruta <code>post '/'</code>:
-<PRE>
-post '/' do
-  @short_url = ShortenedUrl.find_or_create_by_url(params[:url])
-  if @short_url.valid?
-    haml :success, :locals =&gt; { :address =&gt; settings.address }
-  else
-    haml :index
-  end
-end
-</PRE>
-El método <A NAME="tex2html1083"
-  HREF="http://guides.rubyonrails.org/active_record_querying.html">find_or_create</A>
-encontrará la URL o creará una nueva.
-
-<P>
-El fichero <code>views/index.haml</code>:
-<PRE>
-[~/srcSTW/url_shortener_with_active_records(master)]$ cat views/index.haml 
-- if @short_url.present? &amp;&amp; !@short_url.valid?
-  %p Invalid URL: #{@short_url.url}
+heroku create ...
 </PRE>
 
 <P>
-El fichero <code>views/success.haml</code>:
 <PRE>
-[~/srcSTW/url_shortener_with_active_records(master)]$ cat views/success.haml 
-%p #{params}
-%p http://#{address}/#{@short_url.id.to_s(36)}
+git push heroku master
 </PRE>
 
 <P>
-Puede ir añadiendo extensiones a la práctica:
-
-<OL>
-<LI>Añada una opción para mostrar la lista de URLs abreviadas
-El método <code>find</code> puede serle útil:
 <PRE>
-get '/show' do
-  urls = ShortenedUrl.find(:all)
-  ...
-  haml :show
-end
+heroku open
 </PRE>
-</LI>
-<LI>Añada una opción para buscar por una abreviación y mostrar la URL
-</LI>
-<LI>Añada una opción para buscar por una URL y mostrar la abreviación
-</LI>
-<LI>Añada una opción que permita una abreviación personalizada, siempre que esté libre. 
-Por ejemplo, abreviar
-<code>http://www.sinatrarb.com/documentation</code> a <code>http://localhost:4567/sindoc</code>
 
 <P>
-Esto obliga a 
-poner una opción para ello en el formulario:
 <PRE>
-  %form(action="/" method="POST")
-          %label(for="url") URL
-          %input(type="text" name="url" id="url" accesskey="s")
-          %br
-          %label(for="custom") Custom Shortened URL(optional)
-          %input(type="text" name="custom" id="custom" accesskey="t")
-          %br
-          %input(type="submit" value="Shorten" class="btn btn-primary")
+heroku logs --source app
 </PRE>
-y a comprobar de alguna manera si la opción <code>custom</code> contiene algo.
-</LI>
-</OL>
 
 <P>
-
-<H4><A NAME="SECTION031810010000000000000">
-Véase</A>
-</H4>
-  
-
-<OL>
-<LI><A NAME="tex2html1084"
-  HREF="https://github.com/jrcryer/songbird-sinatra">URL Shortner App using Ruby, Sinatra and MongoDb (originally Redis)</A>
-en Github
-</LI>
-</OL>
+Ahora ejecutamos la consola de heroku:
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+heroku run console
+</PRE>
+lo que nos abre una sesión <code>irb</code>.
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html10676"
-  HREF="node465.html#SECTION031810010000000000000">Véase</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
+<P>
+Ahora creamos la base de datos en <A NAME="tex2html1079"
+  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>:
+<PRE>
+[~/sinatra/sinatra-datamapper-jump-start(master)]$ heroku run console
+Running `console` attached to terminal... up, run.8011
+irb(main):001:0&gt; require './main'
+=&gt; true
+irb(main):002:0&gt; DataMapper.auto_migrate!
+=&gt; #&lt;DataMapper::DescendantSet:0x007fb89c878230 @descendants=#&lt;DataMapper::SubjectSet:0x007fb89c8781b8 @entries=#&lt;DataMapper::OrderedSet:0x007fb89c878190 @cache=#&lt;DataMapper::SubjectSet::NameCache:0x007fb89c878168 @cache={"Song"=&gt;0}&gt;, @entries=[Song]&gt;&gt;&gt;
+irb(main):003:0&gt;
+</PRE>
+Véase también 
+la practica TicTacToe
+<A HREF="node411.html#practica:ticatactoe">26.28</A>
+y
+el capítulo <I>Despliegue en Heroku</I> 
+<A HREF="node475.html#chapter:despliegueenheroku">45</A>.
+.
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10674"
+<A NAME="tex2html10713"
   HREF="node466.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10668"
-  HREF="node464.html">
+<A NAME="tex2html10707"
+  HREF="node461.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10662"
+<A NAME="tex2html10703"
   HREF="node464.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10670"
-  HREF="node727.html">
+<A NAME="tex2html10709"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10672"
-  HREF="node730.html">
+<A NAME="tex2html10711"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -603,20 +274,20 @@ en Github
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10675"
-  HREF="node466.html">Práctica: Servicio para Abreviar</A>
-<B> Subir:</B> <A NAME="tex2html10669"
-  HREF="node464.html">ActiveRecord y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html10663"
-  HREF="node464.html">ActiveRecord y Sinatra</A>
- &nbsp; <B>  <A NAME="tex2html10671"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10673"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10714"
+  HREF="node466.html">Sequel y Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html10708"
+  HREF="node461.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html10704"
+  HREF="node464.html">Ejemplo de Uso de</A>
+ &nbsp; <B>  <A NAME="tex2html10710"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10712"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

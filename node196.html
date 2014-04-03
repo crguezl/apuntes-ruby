@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Métodos y Clases: Construyendo un Iterador</TITLE>
-<META NAME="description" CONTENT="Métodos y Clases: Construyendo un Iterador">
+<TITLE>Limitando el Número de Instancias de una Clase</TITLE>
+<META NAME="description" CONTENT="Limitando el Número de Instancias de una Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node197.html">
-<LINK REL="previous" HREF="node191.html">
-<LINK REL="up" HREF="node156.html">
+<LINK REL="previous" HREF="node195.html">
+<LINK REL="up" HREF="node192.html">
 <LINK REL="next" HREF="node197.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6004"
+<A NAME="tex2html6028"
   HREF="node197.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5998"
-  HREF="node156.html">
+<A NAME="tex2html6022"
+  HREF="node192.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5992"
+<A NAME="tex2html6018"
   HREF="node195.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6000"
-  HREF="node727.html">
+<A NAME="tex2html6024"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6002"
-  HREF="node730.html">
+<A NAME="tex2html6026"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,148 +95,81 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6005"
-  HREF="node197.html">Práctica: Conjuntos</A>
-<B> Subir:</B> <A NAME="tex2html5999"
-  HREF="node156.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html5993"
-  HREF="node195.html">Limitando el Número de</A>
- &nbsp; <B>  <A NAME="tex2html6001"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6003"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6029"
+  HREF="node197.html">Métodos y Clases: Construyendo</A>
+<B> Subir:</B> <A NAME="tex2html6023"
+  HREF="node192.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6019"
+  HREF="node195.html">dup, clone e initialize_copy</A>
+ &nbsp; <B>  <A NAME="tex2html6025"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6027"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02750000000000000000">
-Métodos y Clases: Construyendo un Iterador</A>
-</H1>
-
-<P>
+<H2><A NAME="SECTION02744000000000000000">
+Limitando el Número de Instancias de una Clase</A>
+</H2>
 <PRE>
-lpp@nereida:~/src/rubytesting/TheRubyProgrammingLanguage$ cat -n useSequence.rb 
-     1  #!/usr/bin/env ruby
-     2  require "Sequence.rb"
-     3
-     4  a = Sequence.new(1,10,2)
-     5  a.each { |x| print x,"\n" }
-     6
-     7  puts "Length = #{a.length}"
-     8  puts "Size = #{a.size}"
-     9
-    10  (0..(a.size-1)).each { |i|
-    11    puts "a[#{i}] = '#{a[i]}'"
-    12  }
-    13
-    14  puts ""
-    15
-    16  b = a * 2
-    17  b.each { |x| print x,"\n" }
-    18
-    19  puts ""
-    20
-    21  b = a + 2
-    22  b.each { |x| print x,"\n" }
-</PRE>
-
-<P>
-<PRE>
-lpp@nereida:~/src/rubytesting/TheRubyProgrammingLanguage$ ./useSequence.rb 
-1
-3
-5
-7
-9
-Length = 5
-Size = 5
-a[0] = '1'
-a[1] = '3'
-a[2] = '5'
-a[3] = '7'
-a[4] = '9'
-
-2
-6
-10
-14
-18
-
-3
-5
-7
-9
-11
-</PRE>
-
-<P>
-<PRE>
-lpp@nereida:~/src/rubytesting/TheRubyProgrammingLanguage$ cat -n Sequence.rb 
-     1  # The Ruby programming Language Flanagan &amp; Matsumoto
-     2  # page 8
-     3  class Sequence
-     4    include Enumerable
-     5    def initialize(from, to, by)
-     6      @from, @to, @by = from, to, by
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n LimitingTheNumberOfInstances.rb 
+     1  class Season
+     2    NAMES = %w{ Spring Summer Autumn Winter }
+     3    INSTANCES = []
+     4  
+     5    def initialize(n)
+     6      @n = n
      7    end
-     8
-     9    def each
-    10      x = @from
-    11      while x &lt;= @to
-    12        yield x                                                                                       
-    13        x +=@by
-    14      end                                                                                                             
-    15    end
-    16                                                                                                                              
-    17    def length
-    18      return 0 if @from &gt; @to                                                                                                             
-    19      Integer((@to-@from)/@by)+1                                                                                                          
-    20    end
-    21                                                                                                                                                    
-    22    alias size length
-    23
-    24    # override the array-access operator to give random access to the sequence                                                                               
-    25
-    26    def [](index)                                                                                                                                              
-    27      return nil if index &lt; 0
-    28      v = @from+index*@by
-    29      return v if v &lt;= @to
-    30      return nil
-    31    end
-    32
-    33    def *(factor) 
-    34      Sequence.new(@from*factor, @to*factor, @by*factor)
-    35    end
-    36
-    37    def +(offset) 
-    38      Sequence.new(@from+offset, @to+offset, @by)
-    39    end
-    40  end
+     8  
+     9    def to_s
+    10      NAMES[@n]
+    11    end
+    12  
+    13    NAMES.each_with_index { |n,i|
+    14      season = new(i)
+    15      INSTANCES[i] = season
+    16      const_set n, season
+    17    }
+    18  
+    19    private_class_method :allocate, :new
+    20    private :dup, :clone
+    21  end
+    22  
+    23  if __FILE__ == $0
+    24    puts Season::Spring 
+    25    puts Season::Summer
+    26    puts Season::Autumn
+    27    puts Season::Winter
+    28  end
+</PRE>
+El método <A NAME="tex2html364"
+  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html#method-i-const_set">const_set</A>
+de la clase <A NAME="tex2html365"
+  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html">Module</A>
+establece el valor asociado con el nombre pasado como primer argumento al objeto dado como segundo argumento:
+<PRE>
+&gt;&gt; Math.const_set("HIGH_SCHOOL_PI", 22.0/7.0)
+=&gt; 3.14285714285714
+&gt;&gt; Math::HIGH_SCHOOL_PI
+=&gt; 3.14285714285714
 </PRE>
 
 <P>
-
-<UL>
-<LI><A NAME="tex2html364"
-  HREF="http://www.ruby-doc.org/core/classes/Enumerable.html">The Enumerable Module</A>
-</LI>
-<LI><A NAME="tex2html365"
-  HREF="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_modules.html">Modules: Programming Ruby
-The Pragmatic Programmer's Guide</A>
-</LI>
-<LI>Vea la sección <A NAME="tex2html366"
-  HREF="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_containers.html">Containers, Blocks, and Iterators</A>
-</LI>
-<LI><A NAME="tex2html367"
-  HREF="http://ruby.about.com/od/rubyfeatures/a/aliasing.htm">alias</A>
-</LI>
-</UL>
+Cuando se ejecuta el programa anterior produce esta salida:
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby LimitingTheNumberOfInstances.rb 
+Spring
+Summer
+Autumn
+Winter
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

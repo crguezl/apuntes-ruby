@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Pessimistic version constraint</TITLE>
-<META NAME="description" CONTENT="Pessimistic version constraint">
+<TITLE>Publishing to RubyGems.org</TITLE>
+<META NAME="description" CONTENT="Publishing to RubyGems.org">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node651.html">
 <LINK REL="previous" HREF="node649.html">
-<LINK REL="up" HREF="node636.html">
+<LINK REL="up" HREF="node642.html">
 <LINK REL="next" HREF="node651.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13822"
+<A NAME="tex2html13870"
   HREF="node651.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13816"
-  HREF="node636.html">
+<A NAME="tex2html13864"
+  HREF="node642.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13810"
+<A NAME="tex2html13858"
   HREF="node649.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13818"
-  HREF="node727.html">
+<A NAME="tex2html13866"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13820"
-  HREF="node730.html">
+<A NAME="tex2html13868"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,157 +96,141 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13823"
-  HREF="node651.html">Controlando nuestras dependencias</A>
-<B> Subir:</B> <A NAME="tex2html13817"
-  HREF="node636.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html13811"
-  HREF="node649.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html13819"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13821"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13871"
+  HREF="node651.html">Push Permissions on RubyGems.org</A>
+<B> Subir:</B> <A NAME="tex2html13865"
+  HREF="node642.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13859"
+  HREF="node649.html">Sharing Source Code</A>
+ &nbsp; <B>  <A NAME="tex2html13867"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13869"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0612140000000000000000">
-Pessimistic version constraint</A>
+<H1><A NAME="SECTION061280000000000000000">
+Publishing to RubyGems.org</A>
 </H1>
-If your gem properly follows <A NAME="25282"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
-scheme, then other Ruby developers can take advantage of this when
-choosing a version constraint to lock down your gem in their
-application.
 
 <P>
-Let’s say the following releases of a gem exist:
+The simplest way to distribute a gem for public consumption is to
+use <A NAME="tex2html1455"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>.org. Gems that are published to <A NAME="tex2html1456"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>.org can be
+installed via the <code>gem install</code> command or through the use of tools
+such as Bundler.
 
 <P>
-<PRE>
-Version 2.1.0 — Baseline
-Version 2.2.0 — Introduced some new (backward compatible) features.
-Version 2.2.1 — Removed some bugs
-Version 2.2.2 — Streamlined your code
-Version 2.3.0 — More new features (but still backwards compatible).
-Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
-</PRE>
-Someone who wants to use your gem has determined that 
-
-<OL>
-<LI>version 2.2.0
-works with their software, 
-</LI>
-<LI>but version 2.1.0 doesn’t have a feature
-they need. 
-</LI>
-<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
-might look like:
+To begin, you’ll need to create an account on <A NAME="tex2html1457"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>.org. Visit
+the sign up page and supply an email address that you control, a
+handle (username) and a password.
 
 <P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '&gt;= 2.2.0'
-</PRE>
-or 
-<PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0'
-</PRE>
-This is an <A NAME="25284"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
+
+<DIV ALIGN="CENTER"><A NAME="figure:singinupinrubygems"></A><A NAME="24936"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
+Elige la opción sign up para darte de alta</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="1302" HEIGHT="205" ALIGN="BOTTOM" BORDER="0"
+ SRC="./rubygems.png"
+ ALT="Image rubygems">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
 
 <P>
-It’s saying that all
-changes from <code>2.x</code> on will work with my software, 
-but for version
-<code>3.0.0</code> this will not be true.
+El "handle" que te solicita es tu nombre de usuario (loginname).
 
 <P>
-</LI>
-<LI>The alternative here is to use <A NAME="25286"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
+After creating the account, use your email and password when pushing
+the gem. (<A NAME="tex2html1458"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> saves the credentials in <code>~/.gem/credentials</code> for
+you so you only need to log in once.)
 
 <P>
-This explicitly excludes the version that might break your code.
+To publish version <code>0.1.0</code> of a new gem named <code>squid-utils</code>:
 
 <P>
 <PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  ['&gt;= 2.2.0', '&lt; 3.0']
+$ gem push squid-utils-0.1.0.gem
+Enter your RubyGems.org credentials.
+
+Don't have an account yet? Create one at https://rubygems.org/sign_up
+   Email:   gem_author@example
+Password:
+Signed in.
+Pushing gem to RubyGems.org...
+Successfully registered gem: squid-utils (0.1.0)
+Congratulations! Your new gem is now ready for any ruby user in the world to install!
 </PRE>
-or
 
 <P>
+We can also use <code>rake release</code>:
 <PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
+[/tmp/tutu/my_gem]$ rake -T
+rake build    # Build my_gem-0.0.1.gem into the pkg directory
+rake install  # Build and install my_gem-0.0.1.gem into system gems
+rake release  # Create tag v0.0.1 and build and push my_gem-0.0.1.gem to Rubygems
 </PRE>
-</LI>
-<LI><A NAME="tex2html1459"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> provides a shortcut for this, commonly known as the <A NAME="25291"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
 
 <P>
+Para contruir la gema podemos usar:
 <PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '~&gt; 2.2'
+[/tmp/tutu/my_gem]$ gem build my_gem.gemspec 
+WARNING:  no homepage specified
+  Successfully built RubyGem
+  Name: my_gem
+  Version: 0.0.1
+  File: my_gem-0.0.1.gem
 </PRE>
+o bien <code>rake build</code>.
 
 <P>
+Para instalarla podemos hacer uso de <code>gem install</code>:
 <PRE>
-# bundler
-gem 'library', '~&gt; 2.2'
+[/tmp/tutu/my_gem]$ gem install ./my_gem-0.0.1.gem 
+Successfully installed my_gem-0.0.1
+1 gem installed
 </PRE>
-Notice that we dropped the <code>PATCH</code> level of the version number. 
+o bien <code>rake install</code>.
 
 <P>
-</LI>
-<LI>Had
-we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
-<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
-
-<P>
-</LI>
-<LI>If you want to allow use of newer backwards-compatible versions but
-need a specific bug fix you can use a compound requirement:
-
-<P>
+Para desinstalarla:
 <PRE>
-# gemspec
-spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+[/tmp/tutu]$ gem uninstall --force my_gem
+Successfully uninstalled my_gem-0.0.1
+[/tmp/tutu]$ pry
+[1] pry(main)&gt; require 'my_gem'
+LoadError: cannot load such file -- my_gem
+from /Users/casiano/.rvm/rubies/ruby-2.0.0-p247/lib/ruby/2.0.0/rubygems/core_ext/kernel_require.rb:45:in `require'
+[2] pry(main)&gt;
 </PRE>
-
-<P>
-<PRE>
-# bundler
-gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
-</PRE>
-</LI>
-<LI>The important note to take home here is to be aware others will be
-using your gems, so guard yourself from potential bugs/failures in
-future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
-if at all possible.
-</LI>
-</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13822"
+<A NAME="tex2html13870"
   HREF="node651.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13816"
-  HREF="node636.html">
+<A NAME="tex2html13864"
+  HREF="node642.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13810"
+<A NAME="tex2html13858"
   HREF="node649.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13818"
-  HREF="node727.html">
+<A NAME="tex2html13866"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13820"
-  HREF="node730.html">
+<A NAME="tex2html13868"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -301,20 +285,20 @@ if at all possible.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13823"
-  HREF="node651.html">Controlando nuestras dependencias</A>
-<B> Subir:</B> <A NAME="tex2html13817"
-  HREF="node636.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html13811"
-  HREF="node649.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html13819"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13821"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13871"
+  HREF="node651.html">Push Permissions on RubyGems.org</A>
+<B> Subir:</B> <A NAME="tex2html13865"
+  HREF="node642.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13859"
+  HREF="node649.html">Sharing Source Code</A>
+ &nbsp; <B>  <A NAME="tex2html13867"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13869"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

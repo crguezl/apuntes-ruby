@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Véase</TITLE>
-<META NAME="description" CONTENT="Véase">
+<TITLE>La Búsqueda de Constantes</TITLE>
+<META NAME="description" CONTENT="La Búsqueda de Constantes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node215.html">
 <LINK REL="previous" HREF="node213.html">
-<LINK REL="up" HREF="node156.html">
+<LINK REL="up" HREF="node157.html">
 <LINK REL="next" HREF="node215.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6276"
+<A NAME="tex2html6300"
   HREF="node215.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6270"
-  HREF="node156.html">
+<A NAME="tex2html6294"
+  HREF="node157.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6264"
+<A NAME="tex2html6288"
   HREF="node213.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6272"
-  HREF="node727.html">
+<A NAME="tex2html6296"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6274"
-  HREF="node730.html">
+<A NAME="tex2html6298"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,37 +96,210 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6277"
-  HREF="node215.html">Jugador de TicTacToe (Tres</A>
-<B> Subir:</B> <A NAME="tex2html6271"
-  HREF="node156.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6265"
-  HREF="node213.html">La Búsqueda de Constantes</A>
- &nbsp; <B>  <A NAME="tex2html6273"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6275"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6301"
+  HREF="node215.html">Véase</A>
+<B> Subir:</B> <A NAME="tex2html6295"
+  HREF="node157.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6289"
+  HREF="node213.html">Búsqueda de Métodos de</A>
+ &nbsp; <B>  <A NAME="tex2html6297"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6299"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION027160000000000000000">
-Véase</A>
+<H1><A NAME="SECTION027150000000000000000"></A>
+<A NAME="section:busqueda_de_constantes"></A>
+<BR>
+La Búsqueda de Constantes
 </H1>
+Cuando se referencia una constante sin cualificar su espacio de nombres el intérprete 
+Ruby busca por la definición apropiada de la constante.
 
 <P>
 
 <OL>
-<LI><A NAME="tex2html396"
-  HREF="http://www.youtube.com/watch?v=kcvQ-DBvgFE&amp;feature=share&amp;list=SP12D99636F40AE59B&amp;index=1">Message in a Bottle by Konstantin Haase</A>
+<LI>Intenta resolver la constante en el ámbito local en el que ocurre la referencia
+</LI>
+<LI>Si no, busca en el siguiente módulo o clase que anida en su ámbito
+la referencia a la constante
+</LI>
+<LI>Esto continúa hasta que no hay mas clases o módulos que encierren a la referencia
+</LI>
+<LI>Si no se encuentra la constante se pasa a buscar en la jerarquía de herencia
+</LI>
+<LI>Si no se encuentra se buscan en las constantes globales
+</LI>
+<LI>Si no se encuentra se llama al método <code>const_missing</code>
 </LI>
 </OL>
 
 <P>
-<BR><HR>
+
+<OL>
+<LI>El método de clase <A NAME="tex2html393"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A><code>.nesting</code> retorna la lista de clases y módulos que serán buscados
+en el orden de búsqueda
+</LI>
+<LI>El método <code>ancestors</code> (definido en la clase <A NAME="tex2html394"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>) de una clase o módulo retorna la lista de clases y módulos
+que serán buscados después que la búsqueda por ámbito fracase
+</LI>
+</OL>
+
+<P>
+<PRE>
+module Kernel
+  # Constants defined in Kernel
+  A = B = C = D = E = F = "defined in kernel"
+end
+
+# Top-level or "global" constants defined in Object
+A = B = C = D = E = "defined at toplevel"
+
+class Super
+  # Constants defined in a superclass
+  A = B = C = D = "defined in superclass"
+end
+
+module Included
+  # Constants defined in an included module
+  A = B = C = "defined in included module"
+end
+
+module Enclosing
+  # Constants defined in an enclosing module
+  A = B = "defined in enclosing module"
+
+  class Local &lt; Super
+    include Included
+
+    # Locally defined constant
+    A = "defined locally"
+
+    # The list of modules searched, in the order searched
+    # [Enclosing::Local, Enclosing, Included, Super, Object, Kernel]
+    search = (Module.nesting + self.ancestors + Object.ancestors).uniq
+
+    puts A  # Prints "defined locally"
+    puts B  # Prints "defined in enclosing module"
+    puts C  # Prints "defined in included module"
+    puts D  # Prints "defined in superclass"
+    puts E  # Prints "defined at toplevel"
+    puts F  # Prints "defined in kernel"
+  end
+end
+</PRE>
+
+<P>
+
+<UL>
+<LI>Las constantes del nivel mas alto, definidas fuera de cualquier clase o módulo
+son definidas implícitamente en <A NAME="tex2html395"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>. Cuando una constante del 
+nivel mas alto es referenciada dentro de una clase, es resuelta durante el paso de
+búsqueda en la jerarquía de herencia
+</LI>
+<LI>El módulo <code>Kernel</code> es un ancestor de <A NAME="tex2html396"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>:
+<PRE>
+[11] pry(main)&gt; Object.ancestors
+=&gt; [Object, PP::ObjectMixin, Kernel, BasicObject]
+</PRE>
+Las constantes definidas en  <code>Kernel</code> pueden ser sobreescritas 
+por constantes al nivel mas alto, ya que estan se definen implícitamente en <A NAME="tex2html397"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
+</LI>
+</UL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html6300"
+  HREF="node215.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html6294"
+  HREF="node157.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html6288"
+  HREF="node213.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html6296"
+  HREF="node734.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html6298"
+  HREF="node737.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html6301"
+  HREF="node215.html">Véase</A>
+<B> Subir:</B> <A NAME="tex2html6295"
+  HREF="node157.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6289"
+  HREF="node213.html">Búsqueda de Métodos de</A>
+ &nbsp; <B>  <A NAME="tex2html6297"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6299"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

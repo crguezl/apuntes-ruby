@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Herencia y Métodos de Clase</TITLE>
-<META NAME="description" CONTENT="Herencia y Métodos de Clase">
+<TITLE>Aumentando la Conducta Mediante Encadenamiento</TITLE>
+<META NAME="description" CONTENT="Aumentando la Conducta Mediante Encadenamiento">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node187.html">
 <LINK REL="previous" HREF="node185.html">
-<LINK REL="up" HREF="node181.html">
+<LINK REL="up" HREF="node182.html">
 <LINK REL="next" HREF="node187.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5857"
+<A NAME="tex2html5881"
   HREF="node187.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5851"
-  HREF="node181.html">
+<A NAME="tex2html5875"
+  HREF="node182.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5845"
+<A NAME="tex2html5869"
   HREF="node185.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5853"
-  HREF="node727.html">
+<A NAME="tex2html5877"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5855"
-  HREF="node730.html">
+<A NAME="tex2html5879"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,103 +96,113 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5858"
-  HREF="node187.html">Herencia y Variables de</A>
-<B> Subir:</B> <A NAME="tex2html5852"
-  HREF="node181.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html5846"
-  HREF="node185.html">Aumentando la Conducta Mediante</A>
- &nbsp; <B>  <A NAME="tex2html5854"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5856"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5882"
+  HREF="node187.html">Herencia y Métodos de</A>
+<B> Subir:</B> <A NAME="tex2html5876"
+  HREF="node182.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html5870"
+  HREF="node185.html">Predominancia/Invalidación de Métodos (overriding)</A>
+ &nbsp; <B>  <A NAME="tex2html5878"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5880"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02735000000000000000">
-Herencia y Métodos de Clase</A>
+<H2><A NAME="SECTION02734000000000000000">
+Aumentando la Conducta Mediante Encadenamiento</A>
 </H2>
 
 <P>
-Si nuestra clase <code>Point3D</code> hereda de <code>Point</code> y 
-<code>Point</code> define un método de clase <code>sum</code>
-entonces la llamada <code>Point3D.sum</code> invocará a <code>Point.sum</code> 
-en el caso de que la clase <code>Point3D</code> no defina su propio método <code>sum</code>.
+Cuando queremos aumentar la funcionalidad de un método de la clase de la que se hereda
+es necesario invocar el método sobreescrito desde la nueva versión del  método.
+Esto se consigue mediante la palabra reservada <code>super</code>.
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n Point3D.rb 
+     1  require "Point"
+     2  class Point3D &lt; Point
+     3    def initialize(x, y, z)
+     4      super(x, y)
+     5      @z = z
+     6    end
+     7  end
+     8  if __FILE__ == $0
+     9    p = Point3D.new(1,2,3)
+    10    puts p.inspect
+    11  end
+</PRE>
 
 <P>
+Ejecución:
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n Point3DSuper.rb
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby Point3D.rb 
+#&lt;Point3D:0x1001622f8 @y=2, @x=1, @z=3&gt;
+</PRE>
+
+<P>
+
+<UL>
+<LI>Si se usa <code>super</code> sin argumentos y sin paréntesis
+entonces se le pasarán todos los argumentos con los que ha sido llamado el método
+actual.
+</LI>
+<LI><code>super()</code> lo llamará sin argumentos
+</LI>
+<LI>Si el método modifica los valores de los argumentos antes de la llamada a <code>super</code>
+entonces son los valores modificados los que son pasados en la invocación del correspondiente 
+método de la superclase:
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n Point3DSuper.rb 
      1  class Point
      2    attr_reader :x, :y   
      3  
      4    def initialize(x,y)
      5      @x,@y = x, y
      6    end
-     7  
-     8    def self.sum(* points)
-     9      x, y  = 0, 0
-    10      points.each { |p| x += p.x; y += p.y }
-    11      Point.new(x, y)
-    12    end
-    13  
-    14    def to_s
-    15      "#@x #@y"
-    16    end
-    17  end
-    18  
-    19  class Point3D &lt; Point
-    20    attr_reader :z
-    21  
-    22    def initialize(x, y, z)
-    23      super(x, y)
-    24      @z = z
-    25    end
-    26  
-    27    def self.sum(* points)
-    28      p = super
-    29      z = points.inject(0) { |a,r| a  += r.z } 
-    30      Point3D.new(p.x, p.y, z)
-    31    end
-    32  
-    33    def to_s
-    34      super+" #@z"
-    35    end
-    36  end
-    37  
-    38  if __FILE__ == $0
-    39    q, r, s = Point3D.new(1,1,1), Point3D.new(2,2,2), Point3D.new(3,3,3)
-    40  
-    41    puts Point3D.sum(q, r, s)
-    42  end
+     7  end
+     8  
+     9  class Point3D &lt; Point
+    10    attr_reader :z
+    11    def initialize(x, y, z)
+    12      x, y = x+1, y+1
+    13      super(x, y)
+    14      @z = z
+    15    end
+    16  end
+    17  if __FILE__ == $0
+    18    p = Point3D.new(1,1,1)
+    19    puts "#{p.x} #{p.y} #{p.z}"
+    20  end
 </PRE>
-Como se ve, podemos usar <code>super</code> con métodos de clase con el mismo significado que en los métodos de objeto.
 
 <P>
-La línea 28 es equivalente a <code>p = super(* points)</code> y también equivalente a <code>p = Point.sum(* points)</code>
+Ejecución:
 <PRE>
 ~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby Point3DSuper.rb 
-6 6 6
+2 2 1
 </PRE>
+</LI>
+</UL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5857"
+<A NAME="tex2html5881"
   HREF="node187.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5851"
-  HREF="node181.html">
+<A NAME="tex2html5875"
+  HREF="node182.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5845"
+<A NAME="tex2html5869"
   HREF="node185.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5853"
-  HREF="node727.html">
+<A NAME="tex2html5877"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5855"
-  HREF="node730.html">
+<A NAME="tex2html5879"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -247,20 +257,20 @@ La línea 28 es equivalente a <code>p = super(* points)</code> y también equiva
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5858"
-  HREF="node187.html">Herencia y Variables de</A>
-<B> Subir:</B> <A NAME="tex2html5852"
-  HREF="node181.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html5846"
-  HREF="node185.html">Aumentando la Conducta Mediante</A>
- &nbsp; <B>  <A NAME="tex2html5854"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5856"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5882"
+  HREF="node187.html">Herencia y Métodos de</A>
+<B> Subir:</B> <A NAME="tex2html5876"
+  HREF="node182.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html5870"
+  HREF="node185.html">Predominancia/Invalidación de Métodos (overriding)</A>
+ &nbsp; <B>  <A NAME="tex2html5878"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5880"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

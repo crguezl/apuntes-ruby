@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Templates Inline</TITLE>
-<META NAME="description" CONTENT="Templates Inline">
+<TITLE>Ficheros Estáticos</TITLE>
+<META NAME="description" CONTENT="Ficheros Estáticos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node379.html">
-<LINK REL="previous" HREF="node377.html">
-<LINK REL="up" HREF="node377.html">
+<LINK REL="previous" HREF="node376.html">
+<LINK REL="up" HREF="node374.html">
 <LINK REL="next" HREF="node379.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9289"
+<A NAME="tex2html9314"
   HREF="node379.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9283"
-  HREF="node377.html">
+<A NAME="tex2html9308"
+  HREF="node374.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9277"
+<A NAME="tex2html9302"
   HREF="node377.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9285"
-  HREF="node727.html">
+<A NAME="tex2html9310"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9287"
-  HREF="node730.html">
+<A NAME="tex2html9312"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,142 +96,134 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9290"
-  HREF="node379.html">Named Templates</A>
-<B> Subir:</B> <A NAME="tex2html9284"
-  HREF="node377.html">Vistas</A>
-<B> Anterior:</B> <A NAME="tex2html9278"
-  HREF="node377.html">Vistas</A>
- &nbsp; <B>  <A NAME="tex2html9286"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9288"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9315"
+  HREF="node379.html">Vistas</A>
+<B> Subir:</B> <A NAME="tex2html9309"
+  HREF="node374.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9303"
+  HREF="node377.html">Verbos HTTP en Sinatra/Base</A>
+ &nbsp; <B>  <A NAME="tex2html9311"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9313"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03341000000000000000">
-Templates Inline</A>
-</H2>
+<H1><A NAME="SECTION03330000000000000000">
+Ficheros Estáticos</A>
+</H1>
 
-<P>
-Templates may be defined at the end of the source file.
-En este ejemplo trabajamos con varios templates inline en diferentes ficheros:
+<OL>
+<LI>Static files are served from the <code>./public</code> directory. 
+</LI>
+<LI>You can specify a different location by setting the <code>:public_folder</code> option:
 <PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat example2-14.rb 
-require 'sinatra/base'
-
-class App &lt; Sinatra::Base
-  enable :inline_templates
-  get '/index' do 
-    puts "Visiting #{request.url}"
-    erb :index
-  end
-end
-
-require './another'
-__END__
-@@index
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Inline template&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Worked!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
+set :public_folder, File.dirname(__FILE__) + '/static'
 </PRE>
-
-<P>
-En este fichero tenemos un segundo template inline:
+Put this code in a <code>configure</code> block
+</LI>
+<LI>Note that the public directory name is not included in the URL. 
+</LI>
+<LI>A file <code>./public/css/style.css</code> is made available as <code>http://example.com/css/style.css</code>.
+</LI>
+<LI>Use the <code>:static_cache_control</code> setting to add Cache-Control header info.
+Use an explicit array when setting multiple values:
 <PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat another.rb 
-class App 
-  enable :inline_templates
-  get '/' do
-    erb :another
-  end
-end
-
-__END__
-@@another
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Separated file&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Inside another!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
+ set :static_cache_control, [:public, :max_age =&gt; 300]
 </PRE>
+</LI>
+<LI>What would be delivered in the event that a defined route conflicts with the name of the static resource?.
+The answer is the static resource.
+</LI>
+</OL>
 
 <P>
-Este es nuestro config.ru:
 
-<P>
-<PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat config.ru 
-require './example2-14'
-
-run App
-</PRE>
-Para simplificar las cosas hemos hecho un <code>Rakefile</code>:
-<PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat Rakefile 
-task :default =&gt; :server
-
-desc "run server"
-task :server do
-  sh "rackup"
-end
-
-desc "make a get / request via curl"
-task :root do
-  sh "curl -v localhost:9292"
-end
-
-desc "make a get /index request via curl"
-task :index do 
-  sh "curl -v localhost:9292/index"
-end
-</PRE>
-
-<P>
-El resultado de la ejecución es:
-<PRE>
-[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/index
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Inline template&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Worked!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
-[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Separated file&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Inside another!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
-</PRE>
-
-<P>
-<BR><HR>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9314"
+  HREF="node379.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9308"
+  HREF="node374.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9302"
+  HREF="node377.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html9310"
+  HREF="node734.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html9312"
+  HREF="node737.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html9315"
+  HREF="node379.html">Vistas</A>
+<B> Subir:</B> <A NAME="tex2html9309"
+  HREF="node374.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9303"
+  HREF="node377.html">Verbos HTTP en Sinatra/Base</A>
+ &nbsp; <B>  <A NAME="tex2html9311"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9313"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

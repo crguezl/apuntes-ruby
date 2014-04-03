@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Manejo de Excepciones</TITLE>
-<META NAME="description" CONTENT="Manejo de Excepciones">
+<TITLE>throw y catch son Sentencias de Control</TITLE>
+<META NAME="description" CONTENT="throw y catch son Sentencias de Control">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node111.html">
-<LINK REL="previous" HREF="node108.html">
-<LINK REL="up" HREF="node102.html">
+<LINK REL="previous" HREF="node109.html">
+<LINK REL="up" HREF="node109.html">
 <LINK REL="next" HREF="node111.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html4506"
+<A NAME="tex2html4530"
   HREF="node111.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html4500"
-  HREF="node102.html">
+<A NAME="tex2html4524"
+  HREF="node109.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html4494"
+<A NAME="tex2html4520"
   HREF="node109.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html4502"
-  HREF="node727.html">
+<A NAME="tex2html4526"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html4504"
-  HREF="node730.html">
+<A NAME="tex2html4528"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,76 +95,140 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html4507"
-  HREF="node111.html">BEGIN y END</A>
-<B> Subir:</B> <A NAME="tex2html4501"
-  HREF="node102.html">Sentencias y Estructuras de</A>
-<B> Anterior:</B> <A NAME="tex2html4495"
-  HREF="node109.html">throw y catch son</A>
- &nbsp; <B>  <A NAME="tex2html4503"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html4505"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html4531"
+  HREF="node111.html">Manejo de Excepciones</A>
+<B> Subir:</B> <A NAME="tex2html4525"
+  HREF="node109.html">Alterando el Flujo de</A>
+<B> Anterior:</B> <A NAME="tex2html4521"
+  HREF="node109.html">Alterando el Flujo de</A>
+ &nbsp; <B>  <A NAME="tex2html4527"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html4529"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02560000000000000000">
-Manejo de Excepciones</A>
-</H1>
+<H2><A NAME="SECTION02551000000000000000">
+throw y catch son Sentencias de Control</A>
+</H2>
 
 <P>
-An exception is an object that represents some kind of exceptional
-condition; it indicates that something has gone wrong. This could
-be a programming error—attempting to divide by zero, attempting to
-invoke a method on an object that does not define the method, or
-passing an invalid argument to a method. Or it could be the result
-from some kind of external condition—making a network request when
-the network is down, or trying to create an object when the system
-is out of memory.
+<A NAME="4238"></A><SPAN  CLASS="textit">throw</SPAN> and <A NAME="4240"></A><SPAN  CLASS="textit">catch</SPAN> are <A NAME="tex2html182"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> methods that define a control structure
+that can be thought of as a multilevel <code>break</code>. 
 
 <P>
-When one of these errors or conditions occurs, an exception is
-<code>raise</code>d (or <code>throw</code>n). By default, Ruby programs terminate when an
-exception occurs. But it is possible to declare exception handlers.
-An exception handler is a block of code that is executed if an
-exception occurs during the execution of some other block of code.
-In this sense, exceptions are a kind of control statement. Raising
-an exception transfers the flow-of-control to exception handling
-code. This is like using the <code>break</code> statement to exit from a loop.
-As we’ll see, though, exceptions are quite different from the <code>break</code>
-statement; they may transfer control out of many enclosing blocks
-and even up the call stack in order to reach the exception handler.
+<code>throw</code> doesn’t just
+<code>break</code> out of the current loop or block but can actually transfer
+out any number of levels, causing the block defined with a <code>catch</code>
+to exit. 
 
 <P>
-Ruby uses the Kernel method <code>raise</code> to <code>raise</code> exceptions, and uses a
-<code>rescue</code> clause to handle exceptions. Exceptions <code>raise</code>d by <code>raise</code> are
-instances of the Exception class or one of its many subclasses. The
-<code>throw</code> and <code>catch</code> methods described earlier in this chapter are not
-intended to signal and handle exceptions, but a symbol thrown by
-<code>throw</code> propagates in the same way that an exception <code>raise</code>d by <code>raise</code>
-does. Exception objects, exception propagation, the <code>raise</code> method,
-and the <code>rescue</code> clause are described in detail in the subsections
-that follow.
+The <code>catch</code> need not even be in the same method as the <code>throw</code>.
+It can be in the calling method, or somewhere even further up the
+call stack.
+
+<P>
+Languages like Java and JavaScript allow loops to be named or labeled
+with an arbitrary prefix. When this is done, a control structure
+known as a <A NAME="4245"></A><SPAN  CLASS="textit">labeled break</SPAN> causes the named loop to exit. 
+
+<P>
+Ruby’s
+<code>catch</code> method defines a labeled block of code, and Ruby’s <code>throw</code>
+method causes that block to exit. 
+
+<P>
+But <code>throw</code> and <code>catch</code> are much more
+general than a labeled <code>break</code>. For one, it can be used with any kind
+of statement and is not restricted to loops. 
+
+<P>
+More profoundly, a
+<code>throw</code> can propagate up the call stack to cause a block in an invoking
+method to exit.
+
+<P>
+If you are familiar with languages like Java and JavaScript, then
+you probably recognize <code>throw</code> and <code>catch</code> as the keywords those languages
+use for raising and handling exceptions. 
+
+<P>
+Ruby does exceptions
+differently, using <code>raise</code> and <code>rescue</code>, which we’ll learn about later
+in this chapter. 
+
+<P>
+But the parallel to exceptions is intentional.
+Calling <code>throw</code> is very much like raising an exception. 
+
+<P>
+And the way
+a <code>throw</code> propagates out through the lexical scope and then up the
+call stack is very much the same as the way an exception propagates out and up. 
+
+<P>
+<I>Despite the similarity to exceptions, it is
+best to consider</I> <code>throw</code> <I>and</I> <code>catch</code> <I>as a general-purpose (if perhaps
+infrequently used) control structure rather than an exception
+mechanism</I>. 
+
+<P>
+If you want to signal an error or exceptional condition,
+use <code>raise</code> instead of <code>throw</code>.
+
+<P>
+The following code demonstrates how <code>throw</code> and <code>catch</code> can be used to <code>break</code> out of nested loops:
+
+<P>
+<PRE>
+for matrix in data do       # Process a deeply nested data structure. 
+  catch :missing_data do    # Label this statement so we can break out.
+    for row in matrix do 
+      for value in row do
+        throw :missing_data unless value # Break out of two loops at once.
+        # Otherwise, do some actual data processing here. end
+      end 
+    end
+    # We end up here after the nested loops finish processing each matrix.
+    # We also get here if :missing_data is thrown. 
+end
+</PRE>
+Note that the <code>catch</code> method takes a symbol argument and a block. 
+
+<P>
+It
+executes the block and returns when the block exits or when the
+specified symbol is thrown. 
+
+<P>
+<code>throw</code> also expects a symbol as its
+argument and causes the corresponding <code>catch</code> invocation to return.
+
+<P>
+If no <code>catch</code> call matches the symbol passed to <code>throw</code>, then a 
+<code>NameError</code>
+exception is <code>raise</code>d.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html4506"
+<A NAME="tex2html4530"
   HREF="node111.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html4500"
-  HREF="node102.html">
+<A NAME="tex2html4524"
+  HREF="node109.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html4494"
+<A NAME="tex2html4520"
   HREF="node109.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html4502"
-  HREF="node727.html">
+<A NAME="tex2html4526"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html4504"
-  HREF="node730.html">
+<A NAME="tex2html4528"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -220,20 +283,20 @@ that follow.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html4507"
-  HREF="node111.html">BEGIN y END</A>
-<B> Subir:</B> <A NAME="tex2html4501"
-  HREF="node102.html">Sentencias y Estructuras de</A>
-<B> Anterior:</B> <A NAME="tex2html4495"
-  HREF="node109.html">throw y catch son</A>
- &nbsp; <B>  <A NAME="tex2html4503"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html4505"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html4531"
+  HREF="node111.html">Manejo de Excepciones</A>
+<B> Subir:</B> <A NAME="tex2html4525"
+  HREF="node109.html">Alterando el Flujo de</A>
+<B> Anterior:</B> <A NAME="tex2html4521"
+  HREF="node109.html">Alterando el Flujo de</A>
+ &nbsp; <B>  <A NAME="tex2html4527"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html4529"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

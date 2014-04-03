@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Definiendo Clases y Módulos</TITLE>
-<META NAME="description" CONTENT="Definiendo Clases y Módulos">
+<TITLE>Antepasados y Módulos</TITLE>
+<META NAME="description" CONTENT="Antepasados y Módulos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node227.html">
 <LINK REL="previous" HREF="node225.html">
-<LINK REL="up" HREF="node224.html">
+<LINK REL="up" HREF="node225.html">
 <LINK REL="next" HREF="node227.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6527"
+<A NAME="tex2html6551"
   HREF="node227.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6521"
-  HREF="node224.html">
+<A NAME="tex2html6545"
+  HREF="node225.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6517"
+<A NAME="tex2html6539"
   HREF="node225.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6523"
-  HREF="node727.html">
+<A NAME="tex2html6547"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6525"
-  HREF="node730.html">
+<A NAME="tex2html6549"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,16 +96,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6528"
-  HREF="node227.html">Evaluando Strings y Bloques</A>
-<B> Subir:</B> <A NAME="tex2html6522"
-  HREF="node224.html">Tipos, Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6518"
-  HREF="node225.html">Antepasados y Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6524"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6526"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6552"
+  HREF="node227.html">Definiendo Clases y Módulos</A>
+<B> Subir:</B> <A NAME="tex2html6546"
+  HREF="node225.html">Tipos, Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6540"
+  HREF="node225.html">Tipos, Clases y Módulos</A>
+ &nbsp; <B>  <A NAME="tex2html6548"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6550"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
@@ -112,167 +113,243 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6529"
-  HREF="node226.html#SECTION02812100000000000000"><TT>Class</TT>.new, <TT>Module</TT>.new, <TT>define_method</TT>
-y Ambitos</A>
+<LI><A NAME="tex2html6553"
+  HREF="node226.html#SECTION02811100000000000000">El método <TT>extend</TT>
+de la clase <TT>Object</TT></A>
+<LI><A NAME="tex2html6554"
+  HREF="node226.html#SECTION02811200000000000000">El Método <TT>nesting</TT>
+de la clase <TT>Module</TT></A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H2><A NAME="SECTION02812000000000000000">
-Definiendo Clases y Módulos</A>
+<H2><A NAME="SECTION02811000000000000000">
+Antepasados y Módulos</A>
 </H2>
 
 <P>
-Las clases y los módulos son instancias de las clases <A NAME="9489"></A><A NAME="tex2html418"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>
-y <A NAME="9493"></A><A NAME="tex2html419"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.
-Por tanto, es posible crearlos dinámicamente:
+Los siguientes métodos sirven para determinar que módulos han sido incluídos 
+y cuales son los ancestros de una clase o módulo:
 <PRE>
-M = Module.new      # Define a new module M
-C = Class.new       # Define a new class C
-D = Class.new(C) {  # Define a subclass of C
-  include M         # that includes module M
-}
-D.to_s              # =&gt; "D": class gets constant name by magic
+[~/chapter8ReflectionandMetaprogramming]$ cat ancestryAndModules.rb 
+module A; end
+
+module B; include A; end
+
+class C; include B; end
+
+if __FILE__ == $0
+  puts C &lt; B               # =&gt; true: C includes B
+  puts B &lt; A               # =&gt; true: B includes A
+  puts C &lt; A               # =&gt; true
+  puts Fixnum &lt; Integer    # =&gt; true: all fixnums are integers
+  puts Integer &lt;Comparable # =&gt; true: integers are comparable
+  puts Integer &lt; Fixnum    # =&gt; false: not all integers are fixnums
+  puts (String &lt; Numeric).inspect  # =&gt; nil: strings are not numbers
+  
+  puts A.ancestors.inspect         # =&gt; [A]
+  puts B.ancestors.inspect         # =&gt; [B, A]
+  puts C.ancestors.inspect         # =&gt; [C, B, A, Object, Kernel, BasicObject]
+  puts String.ancestors.inspect    # =&gt; [String, Comparable, Object, Kernel, BasicObject]
+ 
+  puts C.include?(B)       # =&gt; true
+  puts C.include?(A)       # =&gt; true
+  puts B.include?(A)       # =&gt; true
+  puts A.include?(A)       # =&gt; false 
+  puts A.include?(B)       # =&gt; false
+
+  puts A.included_modules.inspect  # =&gt; []
+  puts B.included_modules.inspect  # =&gt; [A]
+  puts C.included_modules.inspect  # =&gt; [B, A, Kernel]
+end
 </PRE>
 
 <P>
-Cuando un módulo o clase dinámicamente creado es asignado a una constante el nombre de esa 
-constante es usado como nombre del módulo o clase.
-
-<P>
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ cat -n dynamicclassesandmodules.rb 
-     1  Fred = Module.new do
-     2    def meth1
-     3      "hello #{args.inspect}"
-     4    end
-     5    def meth2
-     6      "bye #{args.inspect}"
-     7    end
-     8  end
-     9  
-    10  Klass = Class.new do
-    11    include Fred
-    12    attr_accessor 'args'
-    13  
-    14    def initialize(*args)
-    15      @args = args
-    16    end
-    17  end
-    18  
-    19  puts Fred.to_s     # Fred
-    20  puts Klass.name    # Klass
-    21  
-    22  a = Klass.new(4, 5)
-    23  
-    24  puts a.meth1     # hello [4, 5] 
-    25  puts a.meth2     # bye [4, 5]
-</PRE>
 
 <UL>
-<LI>Cuando una clase o módulo es creado dinámicamente y asignado a una constante, el nombre de la constante
-es utilizado como nombre de la clase 
-
-<P>
+<LI>El método <A NAME="9497"></A><A NAME="tex2html402"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-include-3F"><TT>include?</TT></A>
+es un método de instancia público definido en la clase <A NAME="tex2html403"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>
 </LI>
-<LI>Si fuera asignado a una
-variable, el método <A NAME="9497"></A><A NAME="tex2html420"
-  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-to_s"><TT>to_s</TT></A>
-devolvería algo del estilo
-<code>#&lt;Class:0x10016a868&gt;</code> y <A NAME="9501"></A><A NAME="tex2html421"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-name"><TT>name</TT></A>
-devolvería <code>nil</code>.
+<LI>El método <code>include</code> es un método privado de <A NAME="tex2html404"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.
+<PRE>
+ruby-1.9.2-head :002 &gt; Module.private_methods.select { |x| x=~ /include/ }
+ =&gt; [:included, :include]
+</PRE>
+(Para mas información sobre <code>include</code>, véase la sección <A HREF="node201.html#subsection:colisiones">13.7.2</A>)
 </LI>
 </UL>
 
 <P>
 
-<H3><A NAME="SECTION02812100000000000000"></A><A NAME="9511"></A>
+<H3><A NAME="SECTION02811100000000000000"></A><A NAME="9507"></A>
+<A NAME="susubsection:extend"></A>
 <BR>
-<A NAME="tex2html422"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>.new, <A NAME="tex2html423"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.new, <A NAME="tex2html424"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
-y Ambitos
+El método <A NAME="tex2html405"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-extend"><TT>extend</TT></A>
+de la clase <A NAME="tex2html406"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
+</H3>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">14</SPAN>.<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>¿Es posible incorporar los métodos de clase definidos en un módulo dentro 
+de una clase? ¿Cual es el resultado de la llamada de la línea 15 en el siguiente
+programa?
+</I><PRE>
+[~/chapter8ReflectionandMetaprogramming]$ cat -n including_class_methods1.rb 
+ 1  module Tutu
+ 2    def self.tutu; "tutu"; end
+ 3  end
+ 4  
+ 5  class Chazam
+ 6    include Tutu
+ 7  end
+ 8  
+ 9  puts Chazam.ancestors.inspect # [Chazam, Tutu, Object, Kernel, BasicObject]
+10  
+11  chazam_eigenclass = class &lt;&lt; Chazam; self; end
+12  
+13  puts chazam_eigenclass.ancestors.inspect # [Class, Module, Object, Kernel, BasicObject]
+14  
+15  Chazam.tutu
+</PRE></DIV><P></P>
+La línea:
+
+<P>
+
+    <pre>
+
+    </pre>
+
+<P>
+obtiene una referencia al objeto que representa la <A NAME="9514"></A><SPAN  CLASS="textbf">singleton class</SPAN>, <A NAME="9516"></A><SPAN  CLASS="textbf">eigenclass</SPAN> o <A NAME="9518"></A><SPAN  CLASS="textbf">metaclass</SPAN> 
+de <code>Chazam</code>. 
+Es posible obtener mas directamente la eigenclass de una clase
+usando el método <A NAME="9520"></A><A NAME="tex2html407"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-singleton_class"><TT>singleton_class</TT></A>
+de <A NAME="tex2html408"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A>:
+<PRE>
+ruby-1.9.2-head :001 &gt; class Tutu; end
+ =&gt; nil 
+ruby-1.9.2-head :002 &gt; Tutu.singleton_class
+ =&gt; #&lt;Class:Tutu&gt;
+</PRE>
+
+<P>
+Si tiene dudas para responder al ejercicio, 
+repase la Sección <SPAN  CLASS="textbf">La Búsqueda por Métodos</SPAN> <A HREF="node212.html#section:la_busqueda_por_metodos">13.13</A>.
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">14</SPAN>.<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">2</SPAN></B> &nbsp; 
+<I>¿Que hacen las líneas 6-8 en el siguiente código?
+¿Donde esta siendo incluído el módulo <code>Tutu</code>?
+¿Cual es el resultado de la llamada de la línea 17 en el siguiente código?
+</I><PRE>
+[~/chapter8ReflectionandMetaprogramming]$ cat -n including_class_methods2.rb 
+ 1  module Tutu
+ 2    def tutu; puts "tutu"; end
+ 3  end
+ 4  
+ 5  class Chazam
+ 6    class &lt;&lt; self
+ 7      include Tutu
+ 8    end
+ 9  end
+10  
+11  puts Chazam.ancestors.inspect # [Chazam, Tutu, Object, Kernel, BasicObject]
+12  
+13  chazam_eigenclass = class &lt;&lt; Chazam; self; end
+14  
+15  puts chazam_eigenclass.ancestors.inspect # [ Tutu, Class, Module, Object, Kernel, BasicObject]
+16  
+17  Chazam.tutu
+</PRE></DIV><P></P>
+
+<P>
+
+<UL>
+<LI>El método <A NAME="9527"></A><A NAME="tex2html409"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-extend"><TT>extend</TT></A>
+de la clase <A NAME="tex2html410"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A> hace que todos los métodos de los módulos 
+especificados se conviertan en <A NAME="9534"></A><SPAN  CLASS="textbf">métodos singleton</SPAN> 
+(Véase la sección <A HREF="node211.html#section:singleton_y_eigenclass">13.12</A>)
+del objeto sobre el que se llama <A NAME="9536"></A><A NAME="tex2html411"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-extend"><TT>extend</TT></A>:
+<PRE>
+module Greeter; def hi; "hello"; end; end # A silly module
+s = "string object"
+s.extend(Greeter)       # Add hi as a singleton method to s
+s.hi                    # =&gt; "hello"
+</PRE>
+</LI>
+<LI>Si <A NAME="9540"></A><A NAME="tex2html412"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-extend"><TT>extend</TT></A>
+se llama sobre un objeto <A NAME="tex2html413"
+  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A> los métodos se añaden como 
+métodos de clase:
+<PRE>
+String.extend(Greeter)  # Add hi as a class method of String
+String.hi               # =&gt; "hello"
+</PRE>
+</LI>
+<LI>El método <A NAME="9547"></A><A NAME="tex2html414"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-extend"><TT>extend</TT></A>
+de la clase <A NAME="tex2html415"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A> 
+es simplemente una abreviación que incluye el módulo
+en la <A NAME="9554"></A><SPAN  CLASS="textbf">singleton class</SPAN> o <A NAME="9556"></A><SPAN  CLASS="textbf">eigenclass</SPAN> del objeto receptor
+</LI>
+</UL>
+
+<P>
+
+<H3><A NAME="SECTION02811200000000000000"></A><A NAME="9558"></A>
+<BR>
+El Método <A NAME="tex2html416"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-c-nesting"><TT>nesting</TT></A>
+de la clase <A NAME="tex2html417"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>
 </H3>
 
-<P>
-
-<OL>
-<LI>El método <A NAME="9515"></A><A NAME="tex2html425"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-local_variables"><TT>local_variables</TT></A>
-del módulo <A NAME="tex2html426"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> nos permite acceder
-a las variables locales visibles en un punto.
+<UL>
+<LI>El método <A NAME="9565"></A><A NAME="tex2html418"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-c-nesting"><TT>nesting</TT></A>
+de la clase <A NAME="tex2html419"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A> retorna un array especificando el anidamiento
+de módulos en el punto de llamada:
+<PRE>
+module M
+  class C
+    Module.nesting   # =&gt; [M::C, M]
+  end
+end
+</PRE>
 </LI>
-<LI>Algunos lenguajes permiten a un <A NAME="9522"></A><SPAN  CLASS="textbf">ámbito</SPAN> interno ver las variables
-de un ámbito mas externo. Este tipo de visibilidad no ocurre en Ruby
-</LI>
-<LI>Hay tres puntos en los que un programa abandona el ámbito previo y
-abre un nuevo ámbito (<A NAME="9524"></A><SPAN  CLASS="textbf">scope gates</SPAN> en al terminología del libro <SPAN  CLASS="textbf">Metaprogramming Ruby</SPAN>
-[<A
- HREF="node731.html#metaprogramming">9</A>]):
-
-<OL>
-<LI>Definiciones de clase
-</LI>
-<LI>Definiciones de módulo
-</LI>
-<LI>Definiciones de método
-</LI>
-</OL>
-</LI>
-<LI>Las variables globales son visibles desde cualquier ámbito
-</LI>
-<LI>las variables de instancia son visibles desde cualquier punto en el que 
-<code>self</code> se refiere al mismo objeto
-</LI>
-</OL>
-
-<P>
-
-    <pre>
-
-    </pre>
-
-<P>
-Puesto que <A NAME="tex2html427"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>.new, <A NAME="tex2html428"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.new y <A NAME="9532"></A><A NAME="tex2html429"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
-usan el bloque que les sigue y los bloques no abandonan el <A NAME="9536"></A><SPAN  CLASS="textbf">ámbito</SPAN> previo (aunque 
-crean uno nuevo),
-podemos jugar con estos tres métodos para crear clausuras en las que se comparten
-variables locales entre clases, métodos y ámbitos. Observe como en esta
-reescritura del programa anterior cambia la visibilidad:
-
-<P>
-
-    <pre>
-
-    </pre>
+</UL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6527"
+<A NAME="tex2html6551"
   HREF="node227.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6521"
-  HREF="node224.html">
+<A NAME="tex2html6545"
+  HREF="node225.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6517"
+<A NAME="tex2html6539"
   HREF="node225.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6523"
-  HREF="node727.html">
+<A NAME="tex2html6547"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6525"
-  HREF="node730.html">
+<A NAME="tex2html6549"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -327,20 +404,20 @@ reescritura del programa anterior cambia la visibilidad:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6528"
-  HREF="node227.html">Evaluando Strings y Bloques</A>
-<B> Subir:</B> <A NAME="tex2html6522"
-  HREF="node224.html">Tipos, Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6518"
-  HREF="node225.html">Antepasados y Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6524"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6526"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6552"
+  HREF="node227.html">Definiendo Clases y Módulos</A>
+<B> Subir:</B> <A NAME="tex2html6546"
+  HREF="node225.html">Tipos, Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6540"
+  HREF="node225.html">Tipos, Clases y Módulos</A>
+ &nbsp; <B>  <A NAME="tex2html6548"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6550"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

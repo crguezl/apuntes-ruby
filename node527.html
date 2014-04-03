@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>README y otros documentos</TITLE>
-<META NAME="description" CONTENT="README y otros documentos">
+<TITLE>Caching</TITLE>
+<META NAME="description" CONTENT="Caching">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node528.html">
 <LINK REL="previous" HREF="node526.html">
-<LINK REL="up" HREF="node524.html">
+<LINK REL="up" HREF="node521.html">
 <LINK REL="next" HREF="node528.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11719"
+<A NAME="tex2html11759"
   HREF="node528.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11713"
-  HREF="node524.html">
+<A NAME="tex2html11753"
+  HREF="node521.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11707"
+<A NAME="tex2html11747"
   HREF="node526.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11715"
-  HREF="node727.html">
+<A NAME="tex2html11755"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11717"
-  HREF="node730.html">
+<A NAME="tex2html11757"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,283 +96,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11720"
-  HREF="node528.html">Véase También</A>
-<B> Subir:</B> <A NAME="tex2html11714"
-  HREF="node524.html">Como Crear tu Propio</A>
-<B> Anterior:</B> <A NAME="tex2html11708"
-  HREF="node526.html">Un Fichero package.json</A>
- &nbsp; <B>  <A NAME="tex2html11716"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11718"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11760"
+  HREF="node528.html">El Objeto module y</A>
+<B> Subir:</B> <A NAME="tex2html11754"
+  HREF="node521.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html11748"
+  HREF="node526.html">Las Carpetas Usadas Como</A>
+ &nbsp; <B>  <A NAME="tex2html11756"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11758"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04593000000000000000">
-README y otros documentos</A>
+<H2><A NAME="SECTION04586000000000000000">
+Caching</A>
 </H2>
 
 <P>
-Pon la información basica acerca del módulo 
-en la raíz del proyecto.
-Como ejemplo veamos el <code>README.md</code> (observa que 
-está en formato <A NAME="tex2html1155"
-  HREF="http://daringfireball.net/projects/markdown/syntax"><TT>markdown</TT></A>) 
-del proyecto <A NAME="tex2html1156"
-  HREF="https://github.com/zaach/ebnf-parser"><TT>ebnf-parser</TT></A>:
+
+<OL>
+<LI>Modules are cached after the first time they are loaded. This means
+(among other things) that every call to <code>require('foo')</code> will get exactly
+the same object returned, if it would resolve to the same file.
 
 <P>
-<PRE>
-$ cat README.md 
-
-# ebnf-parser
-
-A parser for BNF and EBNF grammars used by jison.
-
-## install
-
-    npm install ebnf-parser
-
-
-## build
-
-To build the parser yourself, clone the git repo then run:
-
-    make
-
-This will generate `parser.js`, which is required by `ebnf-parser.js`.
-
-## usage
-
-The parser translates a string grammar or JSON grammar into a JSON grammar that jison can use (ENBF is transformed into BNF).
-
-    var ebnfParser = require('ebnf-parser');
-
-    // parse a bnf or ebnf string grammar
-    ebnfParser.parse("%start ... %");
-
-    // transform an ebnf JSON gramamr
-    ebnfParser.transform({"ebnf": ...});
-
-
-## example grammar
-
-The parser can parse its own BNF grammar, shown below:
-
-    %start spec
-
-    /* grammar for parsing jison grammar files */
-
-    %{
-    var transform = require('./ebnf-transform').transform;
-    var ebnf = false;
-    %}
-
-    %%
-
-    spec
-        : declaration_list '%%' grammar optional_end_block EOF
-            {$$ = $1; return extend($$, $3);}
-        | declaration_list '%%' grammar '%%' CODE EOF
-            {$$ = $1; yy.addDeclaration($$,{include:$5}); return extend($$, $3);}
-        ;
-
-    optional_end_block
-        :
-        | '%%'
-        ;
-
-    declaration_list
-        : declaration_list declaration
-            {$$ = $1; yy.addDeclaration($$, $2);}
-        |
-            {$$ = {};}
-        ;
-
-    declaration
-        : START id
-            {$$ = {start: $2};}
-        | LEX_BLOCK
-            {$$ = {lex: $1};}
-        | operator
-            {$$ = {operator: $1};}
-        | ACTION
-            {$$ = {include: $1};}
-        ;
-
-    operator
-        : associativity token_list
-            {$$ = [$1]; $$.push.apply($$, $2);}
-        ;
-
-    associativity
-        : LEFT
-            {$$ = 'left';}
-        | RIGHT
-            {$$ = 'right';}
-        | NONASSOC
-            {$$ = 'nonassoc';}
-        ;
-
-    token_list
-        : token_list symbol
-            {$$ = $1; $$.push($2);}
-        | symbol
-            {$$ = [$1];}
-        ;
-
-    grammar
-        : production_list
-            {$$ = $1;}
-        ;
-
-    production_list
-        : production_list production
-            {$$ = $1;
-              if($2[0] in $$) $$[$2[0]] = $$[$2[0]].concat($2[1]);
-              else  $$[$2[0]] = $2[1];}
-        | production
-            {$$ = {}; $$[$1[0]] = $1[1];}
-        ;
-
-    production
-        : id ':' handle_list ';'
-            {$$ = [$1, $3];}
-        ;
-
-    handle_list
-        : handle_list '|' handle_action
-            {$$ = $1; $$.push($3);}
-        | handle_action
-            {$$ = [$1];}
-        ;
-
-    handle_action
-        : handle prec action
-            {$$ = [($1.length ? $1.join(' ') : '')];
-                if($3) $$.push($3);
-                if($2) $$.push($2);
-                if ($$.length === 1) $$ = $$[0];
-            }
-        ;
-
-    handle
-        : handle expression_suffix
-            {$$ = $1; $$.push($2)}
-        |
-            {$$ = [];}
-        ;
-
-    handle_sublist
-        : handle_sublist '|' handle
-            {$$ = $1; $$.push($3.join(' '));}
-        | handle
-            {$$ = [$1.join(' ')];}
-        ;
-
-    expression_suffix
-        : expression suffix
-            {$$ = $expression + $suffix; }
-        ;
-
-    expression
-        : ID
-            {$$ = $1; }
-        | STRING
-            {$$ = ebnf ? "'"+$1+"'" : $1; }
-        | '(' handle_sublist ')'
-            {$$ = '(' + $handle_sublist.join(' | ') + ')'; }
-        ;
-
-    suffix
-        : {$$ = ''}
-        | '*'
-        | '?'
-        | '+'
-        ;
-
-    prec
-        : PREC symbol
-            {$$ = {prec: $2};}
-        |
-            {$$ = null;}
-        ;
-
-    symbol
-        : id
-            {$$ = $1;}
-        | STRING
-            {$$ = yytext;}
-        ;
-
-    id
-        : ID
-            {$$ = yytext;}
-        ;
-
-    action
-        : '{' action_body '}'
-            {$$ = $2;}
-        | ACTION
-            {$$ = $1;}
-        | ARROW_ACTION
-            {$$ = '$$ ='+$1+';';}
-        |
-            {$$ = '';}
-        ;
-
-    action_body
-        :
-            {$$ = '';}
-        | ACTION_BODY
-            {$$ = yytext;}
-        | action_body '{' action_body '}' ACTION_BODY
-            {$$ = $1+$2+$3+$4+$5;}
-        | action_body '{' action_body '}'
-            {$$ = $1+$2+$3+$4;}
-        ;
-
-    %%
-
-    // transform ebnf to bnf if necessary
-    function extend (json, grammar) {
-        json.bnf = ebnf ? transform(grammar) : grammar;
-        return json;
-    }
-
-## license
-
-MIT
-</PRE>
+</LI>
+<LI>Multiple calls to <code>require('foo')</code> may not cause the module code
+to be executed multiple times. This is an important feature. With it,
+<A NAME="20855"></A><SPAN  CLASS="textbf">partially done</SPAN> objects can be returned, thus allowing transitive
+dependencies to be loaded even when they would cause cycles.
 
 <P>
-En general se anima  a que uses el formato markdown. Salva el fichero como
-<code>README.md</code>.
+</LI>
+<LI>If you want to have a module execute code multiple times, then export
+a function, and call that function.
 
 <P>
-La documentación adicional se pone en un directorio <code>./docs</code>. 
-Los ficheros markdown teminan en <code>.md</code> y los html en <code>.html</code>.
+</LI>
+<LI>Modules are cached based on their <B>resolved filename</B>. Since modules may
+resolve to a different filename based on the location of the calling
+module (loading from <code>node_modules folders</code>), it is not a guarantee that
+<code>require('foo')</code> will always return the exact same object, if it would
+resolve to different files.
+
+<P>
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11719"
+<A NAME="tex2html11759"
   HREF="node528.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11713"
-  HREF="node524.html">
+<A NAME="tex2html11753"
+  HREF="node521.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11707"
+<A NAME="tex2html11747"
   HREF="node526.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11715"
-  HREF="node727.html">
+<A NAME="tex2html11755"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11717"
-  HREF="node730.html">
+<A NAME="tex2html11757"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -427,20 +217,20 @@ Los ficheros markdown teminan en <code>.md</code> y los html en <code>.html</cod
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11720"
-  HREF="node528.html">Véase También</A>
-<B> Subir:</B> <A NAME="tex2html11714"
-  HREF="node524.html">Como Crear tu Propio</A>
-<B> Anterior:</B> <A NAME="tex2html11708"
-  HREF="node526.html">Un Fichero package.json</A>
- &nbsp; <B>  <A NAME="tex2html11716"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11718"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11760"
+  HREF="node528.html">El Objeto module y</A>
+<B> Subir:</B> <A NAME="tex2html11754"
+  HREF="node521.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html11748"
+  HREF="node526.html">Las Carpetas Usadas Como</A>
+ &nbsp; <B>  <A NAME="tex2html11756"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11758"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

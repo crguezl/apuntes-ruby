@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Variables de Instancia de Clase</TITLE>
-<META NAME="description" CONTENT="Variables de Instancia de Clase">
+<TITLE>Variables de Clase</TITLE>
+<META NAME="description" CONTENT="Variables de Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node177.html">
 <LINK REL="previous" HREF="node175.html">
-<LINK REL="up" HREF="node157.html">
+<LINK REL="up" HREF="node158.html">
 <LINK REL="next" HREF="node177.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5705"
+<A NAME="tex2html5729"
   HREF="node177.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5699"
-  HREF="node157.html">
+<A NAME="tex2html5723"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5693"
+<A NAME="tex2html5717"
   HREF="node175.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5701"
-  HREF="node727.html">
+<A NAME="tex2html5725"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5703"
-  HREF="node730.html">
+<A NAME="tex2html5727"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,142 +96,85 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5706"
-  HREF="node177.html">Práctica: La Clase Punto</A>
-<B> Subir:</B> <A NAME="tex2html5700"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5694"
-  HREF="node175.html">Variables de Clase</A>
- &nbsp; <B>  <A NAME="tex2html5702"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5704"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5730"
+  HREF="node177.html">Variables de Instancia de</A>
+<B> Subir:</B> <A NAME="tex2html5724"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5718"
+  HREF="node175.html">Constantes</A>
+ &nbsp; <B>  <A NAME="tex2html5726"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5728"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027119000000000000000"></A>
-<A NAME="subsection:variablesdeinstnciadeclase"></A>
+<H2><A NAME="SECTION027118000000000000000"></A>
+<A NAME="subsection:variablesdeclase"></A>
 <BR>
-Variables de Instancia de Clase
+Variables de Clase
 </H2>
 
 <OL>
-<LI>Classes are objects and can have instance variables just as other objects can
+<LI>Class variables are visible to, and shared by, the class methods
+and the instance methods of a class, and also by the class definition
+itself. 
 </LI>
-<LI>The instance variables of a class—often called class instance variables—are not the same as class variables
+<LI>Like instance variables, class variables are encapsulated;
+they can be used by the implementation of a class, but they are not
+visible to the users of a class. 
 </LI>
-<LI>They are similar enough that they can often be used instead of class variables
+<LI>Class variables have names that
+begin with <code>@@</code>.
 </LI>
 </OL>
 
 <P>
 <PRE>
 class Point
-  # Initialize our class instance variables in the class definition itself
-  @n = 0              # How many points have been created
-  @totalX = 0         # The sum of all X coordinates
-  @totalY = 0         # The sum of all Y coordinates
+  # Initialize our class variables in the class definition itself
+  @@n = 0              # How many points have been created
+  @@totalX = 0         # The sum of all X coordinates
+  @@totalY = 0         # The sum of all Y coordinates
 
-  def initialize(x,y) # Initialize method 
-    @x,@y = x, y      # Sets initial values for instance variables
-  end
+  def initialize(x,y)  # Initialize method
+    @x,@y = x, y       # Sets initial values for instance variables
 
-  def self.new(x,y)   # Class method to create new Point objects
-    # Use the class instance variables in this class method to collect data
-    @n += 1           # Keep track of how many Points have been created
-    @totalX += x      # Add these coordinates to the totals
-    @totalY += y
-
-    super             # Invoke the real definition of new to create a Point
-                      # More about super later in the chapter
+    # Use the class variables in this instance method to collect data
+    @@n += 1           # Keep track of how many Points have been created
+    @@totalX += x      # Add these coordinates to the totals
+    @@totalY += y
   end
 
   # A class method to report the data we collected
   def self.report
-    # Here we use the class instance variables in a class method
-    puts "Number of points created: #@n"
-    puts "Average X coordinate: #{@totalX.to_f/@n}"
-    puts "Average Y coordinate: #{@totalY.to_f/@n}"
+    # Here we use the class variables in a class method
+    puts "Number of points created: #@@n"
+    puts "Average X coordinate: #{@@totalX.to_f/@@n}"
+    puts "Average Y coordinate: #{@@totalY.to_f/@@n}"
   end
 end
 </PRE>
-
-<P>
-
-<OL>
-<LI>Because class instance variables are just instance variables of class objects, we can use <code>attr</code>, <code>attr_reader</code>, and <code>attr_accessor</code> to create accessor methods for them
-</LI>
-<LI>The trick, however, is to invoke these metaprogramming methods in the right context
-</LI>
-<LI>Recall that one way to define class methods uses the syntax <code>class &lt;&lt; self</code>
-</LI>
-<LI>This same syntax allows us to define attribute accessor methods for class instance variables:
-</LI>
-</OL>
-
-<P>
-<PRE>
-class &lt;&lt; self
-  attr_accessor :n, :totalX, :totalY
-end
-</PRE>
-
-<P>
-El siguiente ejemplo muestra como crear accessors a las variables de instancia
-de clase:
-
-<P>
-<PRE>
-$ cat -n creating_class_accessors.rb 
-     1  class Tutu
-     2  
-     3    class &lt;&lt; self
-     4        attr_accessor :n
-     5    end
-     6  
-     7  end
-     8  
-     9  Tutu.n = 4
-    10  p Tutu.n
-    11  
-    12  
-[~/point]$ ruby creating_class_accessors.rb 
-4
-</PRE>
-
-<P>
-
-<OL>
-<LI>Una desventaja de las variables de instancia de clase
-es que no pueden ser utilizadas directamente dentro de los métodos de instancia,
-mientras que las variables de clase si son accesibles.
-</LI>
-<LI>Otra desventaja es el riesgo potencial de confundirlas con variables de
-instancia ordinarias
-</LI>
-<LI>Aún así su uso es mas recomendable que el de las variables de clase
-</LI>
-</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5705"
+<A NAME="tex2html5729"
   HREF="node177.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5699"
-  HREF="node157.html">
+<A NAME="tex2html5723"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5693"
+<A NAME="tex2html5717"
   HREF="node175.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5701"
-  HREF="node727.html">
+<A NAME="tex2html5725"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5703"
-  HREF="node730.html">
+<A NAME="tex2html5727"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -286,20 +229,20 @@ instancia ordinarias
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5706"
-  HREF="node177.html">Práctica: La Clase Punto</A>
-<B> Subir:</B> <A NAME="tex2html5700"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5694"
-  HREF="node175.html">Variables de Clase</A>
- &nbsp; <B>  <A NAME="tex2html5702"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5704"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5730"
+  HREF="node177.html">Variables de Instancia de</A>
+<B> Subir:</B> <A NAME="tex2html5724"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5718"
+  HREF="node175.html">Constantes</A>
+ &nbsp; <B>  <A NAME="tex2html5726"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5728"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

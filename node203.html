@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Prepend</TITLE>
-<META NAME="description" CONTENT="Prepend">
+<TITLE>Módulos Espacio de Nombres Incluíbles</TITLE>
+<META NAME="description" CONTENT="Módulos Espacio de Nombres Incluíbles">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node204.html">
-<LINK REL="previous" HREF="node198.html">
-<LINK REL="up" HREF="node156.html">
+<LINK REL="previous" HREF="node202.html">
+<LINK REL="up" HREF="node199.html">
 <LINK REL="next" HREF="node204.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6118"
+<A NAME="tex2html6142"
   HREF="node204.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6112"
-  HREF="node156.html">
+<A NAME="tex2html6136"
+  HREF="node199.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6106"
+<A NAME="tex2html6132"
   HREF="node202.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6114"
-  HREF="node727.html">
+<A NAME="tex2html6138"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6116"
-  HREF="node730.html">
+<A NAME="tex2html6140"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,87 +95,173 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6119"
-  HREF="node204.html">Carga y Solicitud de</A>
-<B> Subir:</B> <A NAME="tex2html6113"
-  HREF="node156.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6107"
-  HREF="node202.html">Módulos Espacio de Nombres</A>
- &nbsp; <B>  <A NAME="tex2html6115"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6117"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6143"
+  HREF="node204.html">Prepend</A>
+<B> Subir:</B> <A NAME="tex2html6137"
+  HREF="node199.html">Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6133"
+  HREF="node202.html">Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html6139"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6141"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02780000000000000000"></A>
-<A NAME="section:prependmemoize"></A>
+<H2><A NAME="SECTION02774000000000000000"></A>
+<A NAME="subsection:modulosespaciodenombresincluibles"></A>
 <BR>
-Prepend
-</H1>
-
-<P>
-What <A NAME="tex2html376"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A><code>#prepend</code> allows us to do is insert a module
-in-front of the class it was prepended to:
+Módulos Espacio de Nombres Incluíbles
+</H2>
 <PRE>
-module Before
-end
-
-class Example
-  prepend Before
-end
-
-Example.ancestors
-# =&gt; [Before, Example, Object, Kernel, BasicObject]
+[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ irb
+ruby-1.9.2-head :001 &gt; Math.sin(Math::PI/2)
+ =&gt; 1.0 
+ruby-1.9.2-head :002 &gt; include Math
+ =&gt; Object 
+ruby-1.9.2-head :003 &gt; sin(PI/2)
+ =&gt; 1.0
 </PRE>
 
+<UL>
+<LI>Para crear un módulo que funcione como <A NAME="7627"></A><SPAN  CLASS="textbf">Math</SPAN> define
+tus métodos como métodos de instancia dentro del módulo
+</LI>
+<LI>Usa la función <code>module_function</code>, un método de instancia privado
+de <code>Module</code> para convertir en <A NAME="7629"></A><SPAN  CLASS="textbf">module functions</SPAN> a los métodos
+cuyos nombres le pases como argumentos
+</LI>
+<LI>El resultado de llamar a <A NAME="7631"></A><SPAN  CLASS="textbf">module_function</SPAN> es que: 
+
+<UL>
+<LI>construye métodos
+de clase equivalentes para cada uno de los métodos de instancia especificados
+</LI>
+<LI>Hace privados a los métodos de instancia implicados
+</LI>
+</UL>
+</LI>
+</UL>
+
 <P>
-
-<H4><A NAME="SECTION02780010000000000000">
-Ejemplo: Memoización</A>
-</H4>
-  
-
 <PRE>
-module Memoize
+~/srcLPP/Chapter7ClassesAndModules/modules]$ cat module_function.rb 
+module SpaceOdissey
 
-  def memoize(method)
-    memoizer = Module.new do
+  THE_UNIVERSE = 1
 
-      # Define a method in the module with the same name
-      define_method method do
-        @__memoized_results ||= {}
-
-        if @__memoized_results.include? method
-          @__memoized_results[method]
-        else
-          @__memoized_results[method] = super()
-        end
-      end
-
-    end
-
-    prepend memoizer
+  def tutu
+    "inside tutu"
   end
-end
-</PRE>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html6120"
-  HREF="node203.html#SECTION02780010000000000000">Ejemplo: Memoización</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+  module_function :tutu
+end
+
+puts SpaceOdissey::THE_UNIVERSE
+puts SpaceOdissey::tutu
+
+include SpaceOdissey
+puts THE_UNIVERSE
+puts tutu
+</PRE>
+Ejecución:
+<PRE>
+[~/srcLPP/Chapter7ClassesAndModules/modules]$ ruby module_function.rb 
+1
+inside tutu
+1
+inside tutu
+</PRE>
+Cuando se define una función-módulo se debe evitar hacer uso de <code>self</code>
+ya que el valor de <code>self</code> hará que dependa de como es invocada.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html6142"
+  HREF="node204.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html6136"
+  HREF="node199.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html6132"
+  HREF="node202.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html6138"
+  HREF="node734.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html6140"
+  HREF="node737.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html6143"
+  HREF="node204.html">Prepend</A>
+<B> Subir:</B> <A NAME="tex2html6137"
+  HREF="node199.html">Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6133"
+  HREF="node202.html">Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html6139"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6141"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

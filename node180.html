@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node181.html">
 <LINK REL="previous" HREF="node179.html">
-<LINK REL="up" HREF="node178.html">
+<LINK REL="up" HREF="node179.html">
 <LINK REL="next" HREF="node181.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5759"
+<A NAME="tex2html5785"
   HREF="node181.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5753"
-  HREF="node178.html">
+<A NAME="tex2html5779"
+  HREF="node179.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5749"
+<A NAME="tex2html5773"
   HREF="node179.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5755"
-  HREF="node727.html">
+<A NAME="tex2html5781"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5757"
-  HREF="node730.html">
+<A NAME="tex2html5783"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,90 +96,95 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5760"
-  HREF="node181.html">Subclases y Herencia</A>
-<B> Subir:</B> <A NAME="tex2html5754"
-  HREF="node178.html">Visibilidad de los métodos:</A>
-<B> Anterior:</B> <A NAME="tex2html5750"
-  HREF="node179.html">Ejemplo de Visibilidad</A>
- &nbsp; <B>  <A NAME="tex2html5756"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5758"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5786"
+  HREF="node181.html">Ejemplo de Visibilidad</A>
+<B> Subir:</B> <A NAME="tex2html5780"
+  HREF="node179.html">Visibilidad de los métodos:</A>
+<B> Anterior:</B> <A NAME="tex2html5774"
+  HREF="node179.html">Visibilidad de los métodos:</A>
+ &nbsp; <B>  <A NAME="tex2html5782"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5784"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02722000000000000000">
+<H2><A NAME="SECTION02721000000000000000">
 Ejemplo de Visibilidad</A>
 </H2>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n SubClass.rb 
+     1  class Point
+     2  
+     3    def chuchu
+     4      "Point: chuchu"
+     5    end
+     6  
+     7    def chachi
+     8      "Point: chachi"
+     9    end
+    10  
+    11    private   :chuchu
+    12    protected :chachi
+    13  end
+    14  
+    15  class SubClass &lt; Point
+    16  
+    17    def titi1 
+    18      chuchu
+    19    end
+    20  
+    21    def titi2 
+    22      self.chuchu
+    23    end
+    24  
+    25    def titi3
+    26      chachi 
+    27    end
+    28  
+    29    def titi4
+    30      self.chachi 
+    31    end
+    32  end
+    33  
+    34  if __FILE__ == $0
+    35    x = SubClass.new
+    36    puts x.titi1
+    37    begin
+    38      puts x.titi2
+    39      rescue 
+    40        puts "Can't call private meth. via 'self'. Exception type: &lt;#{$!.class}&gt; message: &lt;#{$!}&gt;"
+    41    end
+    42  
+    43    puts x.titi3
+    44  
+    45    puts x.titi4
+    46  
+    47    begin
+    48      puts x.chachi
+    49      rescue
+    50        puts "Can't call protected meth. from outside. Exception type: &lt;#{$!.class}&gt; message: &lt;#{$!}&gt;"
+    51    end
+    52  end
+</PRE>
 
 <P>
+La ejecución del programa produce la salida:
 <PRE>
-~/rubytesting/programmingRuby$ !cat
-cat -n Visibility.rb 
-   1  class Visibility
-   2  protected
-   3    def tutu_prot
-   4      puts "Prot"
-   5    end
-   6  
-   7  private
-   8    def tutu_priv
-   9      puts "Priv"
-  10    end
-  11  
-  12  public
-  13    def tutu_pub
-  14      puts "Pub"
-  15    end
-  16  end
-  17  
-  18  
-  19  class Child &lt; Visibility
-  20  
-  21    def chachi
-  22      puts "in chachi"
-  23      self.tutu_prot
-  24    end
-  25  
-  26    def chuchu
-  27      puts "in chuchu"
-  28      self.tutu_priv
-  29    end
-  30  end
-  31  
-  32  if $0 == __FILE__
-  33    b = Child.new
-  34    b.tutu_pub       # &lt;- Pub
-  35    begin
-  36      b.tutu_priv    # Exception &lt;NoMethodError&gt; raised &lt;private method `tutu_priv' called for #&lt;Child:0x100168068&gt;&gt; 
-  37    rescue NoMethodError
-  38        puts "Exception &lt;#{$!.class}&gt; raised &lt;#{$!}&gt;"
-  39    end
-  40    b.chachi  # &lt;- in chachi
-  41              #    Prot
-  42    begin
-  43      b.chuchu # &lt;- Exception &lt;NoMethodError&gt; raised &lt;private method `tutu_priv' called for #&lt;Child:0x100168068&gt;&gt;
-  44    rescue
-  45        puts "Exception &lt;#{$!.class}&gt; raised &lt;#{$!}&gt;"
-  46    end
-  47  
-  48    begin
-  49      c = Visibility.new
-  50      c.tutu_pub  # &lt;- Pub
-  51      c.tutu_prot # &lt;- Exception &lt;NoMethodError&gt; raised &lt;protected method `tutu_prot' called for #&lt;Visibility:0x100167b40&gt;&gt;
-  52    rescue NoMethodError
-  53        puts "Exception &lt;#{$!.class}&gt; raised &lt;#{$!}&gt;"
-  54    end
-  55  end
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby SubClass.rb 
+Point: chuchu
+Can't call private meth. via 'self'. Exception type: &lt;NoMethodError&gt; message: &lt;private method `chuchu' called for #&lt;SubClass:0x1001685b8&gt;&gt;
+Point: chachi
+Point: chachi
+Can't call protected meth. from outside. Exception type: &lt;NoMethodError&gt; message: &lt;protected method `chachi' called for #&lt;SubClass:0x1001685b8&gt;&gt;
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

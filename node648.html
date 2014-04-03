@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Semantic Versioning</TITLE>
-<META NAME="description" CONTENT="Semantic Versioning">
+<TITLE>Gemas con Un Gran Número de Utilidades Independientes</TITLE>
+<META NAME="description" CONTENT="Gemas con Un Gran Número de Utilidades Independientes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node649.html">
 <LINK REL="previous" HREF="node647.html">
-<LINK REL="up" HREF="node636.html">
+<LINK REL="up" HREF="node642.html">
 <LINK REL="next" HREF="node649.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13794"
+<A NAME="tex2html13842"
   HREF="node649.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13788"
-  HREF="node636.html">
+<A NAME="tex2html13836"
+  HREF="node642.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13782"
+<A NAME="tex2html13830"
   HREF="node647.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13790"
-  HREF="node727.html">
+<A NAME="tex2html13838"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13792"
-  HREF="node730.html">
+<A NAME="tex2html13840"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,104 +96,106 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13795"
-  HREF="node649.html">Declaring dependencies: Runtime vs.</A>
-<B> Subir:</B> <A NAME="tex2html13789"
-  HREF="node636.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html13783"
-  HREF="node647.html">Retirando una Gema</A>
- &nbsp; <B>  <A NAME="tex2html13791"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13793"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13843"
+  HREF="node649.html">Sharing Source Code</A>
+<B> Subir:</B> <A NAME="tex2html13837"
+  HREF="node642.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13831"
+  HREF="node647.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html13839"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13841"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0612120000000000000000">
-Semantic Versioning</A>
+<H1><A NAME="SECTION061260000000000000000">
+Gemas con Un Gran Número de Utilidades Independientes</A>
 </H1>
+Some
+gems, however, may be made up of multiple parts that could be used
+independently of each other. <code>ActiveSupport</code>, for example, provides a
+large number of useful utilities that, while they function together,
+can also function separately.
 
 <P>
-A <A NAME="25263"></A><SPAN  CLASS="textbf">versioning policy</SPAN> is merely a set of simple rules governing how
-version numbers are allocated. 
+If I add require <code>active_support</code> to my code I load all of
+<code>ActiveSupport</code>. While this may be what I want in some cases (like inside
+a Rails application) in other cases I may just want a specific piece
+of <code>ActiveSupport</code>. Luckily, <code>ActiveSupport</code> is designed to handle this
+well. If I, for instance, add require <code>active_support/core_ext</code> I will
+only be loading the Ruby core extensions that are a part of <code>ActiveSupport</code>.
 
 <P>
-
-<OL>
-<LI>It can be very simple (e.g. the
-version number is a single number starting with 1 and incremented
-for each successive version), 
-</LI>
-<LI>or it can be really strange (Knuth’s
-TeX project had version numbers: 3, 3.1, 3.14, 3.141, 3.1415; each
-successive version added another digit to PI).
-</LI>
-</OL>
-
-<P>
-The <A NAME="tex2html1455"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> team urges gem developers to follow the <A NAME="25268"></A><SPAN  CLASS="textbf">Semantic Versioning standard</SPAN> 
-for their gem’s versions. 
-
-<OL>
-<LI>The <A NAME="tex2html1456"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> library itself does not enforce a strict versioning policy, but using an irrational policy will only be a disservice to those in the community who use your gems.
-</LI>
-<LI>Suppose you have a <code>stack</code> gem that holds a <code>Stack</code> class with both push and pop functionalty. 
-
-<P>
-Your CHANGELOG might look like this if you use semantic versioning:
+How can you make this work in your library? It's quite simple: your
+base file should, when required, require all the other parts of your
+library. However, each part of your library should, at its top, require
+any other parts or external dependencies so that it may be included
+without the user having previously required the base file. Let's take
+a look at an example:
 
 <P>
 <PRE>
-Version 0.0.1: The initial Stack class is released.
-Version 0.0.2: Switched to a linked list implementation because it is cooler.
-Version 0.1.0: Added a depth method.
-Version 1.0.0: Added top and made pop return nil (pop used to return the old top item).
-Version 1.1.0: push now returns the value pushed (it used it return nil).
-Version 1.1.1: Fixed a bug in the linked list implementation.
-Version 1.1.2: Fixed a bug introduced in the last fix.
+# in lib/my_gem.rb
+
+require 'my_gem/widget'
+require 'my_gem/widgets/foo_bar'
+require 'my_gem/widgets/baz'
 </PRE>
-</LI>
-<LI>Semantic versioning boils down to:
 
 <P>
+<PRE>
+# in lib/my_gem/widget.rb
 
-<OL>
-<LI><A NAME="25273"></A><SPAN  CLASS="textbf">PATCH level</SPAN> 0.0.x: changes for implementation level detail changes, such as <I>small bug fixes</I>
-</LI>
-<LI><A NAME="25275"></A><SPAN  CLASS="textbf">MINOR level</SPAN> 0.x.0 changes for any <I>backwards compatible API changes</I>, such as new functionality/features
-</LI>
-<LI><A NAME="25277"></A><SPAN  CLASS="textbf">MAJOR level</SPAN> x.0.0 changes for <I>backwards incompatible API changes</I>, such as changes that will break existing users code if they update
-</LI>
-</OL>
-</LI>
-<LI>Véase  en
-<A NAME="tex2html1457"
-  HREF="http://semver.org/">http://semver.org/</A>
-la definición completa del estandard
-</LI>
-</OL>
+require 'external_library'
+
+module MyGem
+  class Widget
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+# in lib/my_gem/widgets/foo_bar
+
+require 'my_gem/widget'
+
+module MyGem
+  module Widgets
+    class FooBar &lt; MyGem::Widget
+    end
+  end
+end
+</PRE>
+Each of the files in the above example can be required independently,
+giving developers the flexibility to use only a subset of your library's
+functionality if needed. 
+
+<P>
+Remember that <code>require</code> statements will only
+load the code from a file once, so it is safe to <code>require</code> the same file
+multiple times.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13794"
+<A NAME="tex2html13842"
   HREF="node649.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13788"
-  HREF="node636.html">
+<A NAME="tex2html13836"
+  HREF="node642.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13782"
+<A NAME="tex2html13830"
   HREF="node647.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13790"
-  HREF="node727.html">
+<A NAME="tex2html13838"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13792"
-  HREF="node730.html">
+<A NAME="tex2html13840"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -248,20 +250,20 @@ la definición completa del estandard
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13795"
-  HREF="node649.html">Declaring dependencies: Runtime vs.</A>
-<B> Subir:</B> <A NAME="tex2html13789"
-  HREF="node636.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html13783"
-  HREF="node647.html">Retirando una Gema</A>
- &nbsp; <B>  <A NAME="tex2html13791"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13793"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13843"
+  HREF="node649.html">Sharing Source Code</A>
+<B> Subir:</B> <A NAME="tex2html13837"
+  HREF="node642.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13831"
+  HREF="node647.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html13839"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13841"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

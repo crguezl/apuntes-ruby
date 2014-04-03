@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Environments</TITLE>
-<META NAME="description" CONTENT="Environments">
+<TITLE>Configuring attack protection</TITLE>
+<META NAME="description" CONTENT="Configuring attack protection">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node403.html">
 <LINK REL="previous" HREF="node401.html">
-<LINK REL="up" HREF="node372.html">
+<LINK REL="up" HREF="node374.html">
 <LINK REL="next" HREF="node403.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9646"
+<A NAME="tex2html9679"
   HREF="node403.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9640"
-  HREF="node372.html">
+<A NAME="tex2html9673"
+  HREF="node374.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9634"
+<A NAME="tex2html9667"
   HREF="node401.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9642"
-  HREF="node727.html">
+<A NAME="tex2html9675"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9644"
-  HREF="node730.html">
+<A NAME="tex2html9677"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,62 +96,65 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9647"
-  HREF="node403.html">Correo</A>
-<B> Subir:</B> <A NAME="tex2html9641"
-  HREF="node372.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9635"
-  HREF="node401.html">Settings disponibles/Available Settings</A>
- &nbsp; <B>  <A NAME="tex2html9643"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9645"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9680"
+  HREF="node403.html">Settings disponibles/Available Settings</A>
+<B> Subir:</B> <A NAME="tex2html9674"
+  HREF="node374.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9668"
+  HREF="node401.html">Configuration / Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html9676"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9678"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033220000000000000000">
-Environments</A>
+<H1><A NAME="SECTION033200000000000000000">
+Configuring attack protection</A>
 </H1>
+Sinatra is using <A NAME="tex2html867"
+  HREF="http://rubydoc.info/gems/rack-protection/">Rack::Protection</A>
+to defend your application against common, opportunistic attacks.
+
+<P>
 
 <OL>
-<LI>There are three predefined environments:
- <TT>development</TT> ,  <TT>production</TT>  and  <TT>test</TT> . 
+<LI>You can easily disable this behavior (which will open up your
+application to tons of common vulnerabilities):
 
 <P>
+<code>disable :protection</code>
 </LI>
-<LI>Environments can be set through the <code>RACK_ENV</code> environment variable. 
-
-<P>
-</LI>
-<LI>The default value is <code>development</code>
-</LI>
-<LI>In the <code>development</code> environment all templates are
-reloaded between requests, and special <code>not_found</code> and 
-<code>error</code> handlers
-display stack traces in your browser
-</LI>
-<LI>In the <code>production</code> and <code>test</code> environments, templates are cached by default
-</LI>
-<LI>To run different environments, set the <code>RACK_ENV</code> environment variable:
+<LI>To skip a single defense layer, set protection to an options hash:
 
 <P>
 <PRE>
-RACK_ENV=production ruby my_app.rb
+set :protection, :except =&gt; :path_traversal
 </PRE>
 </LI>
-<LI>You can use predefined methods: <code>development?</code>, <code>test?</code> 
-and <code>production?</code> to check the current environment setting:
+<LI>You can also hand in an array in order to disable a list of protections:
 
 <P>
 <PRE>
-get '/' do
-  if settings.development?
-    "development!"
-  else
-    "not development!"
-  end
-end
+set :protection, :except =&gt; [:path_traversal, :session_hijacking]
+</PRE>
+</LI>
+<LI>By default, Sinatra will only set up session based protection if
+<code>:sessions</code> has been enabled. 
+
+<P>
+Sometimes you want to set up sessions
+on your own, though. 
+
+<P>
+In that case you can get it to set up session
+based protections by passing the <code>:session option</code>:
+
+<P>
+<PRE>
+use Rack::Session::Pool
+set :protection, :session =&gt; true
 </PRE>
 </LI>
 </OL>
@@ -160,20 +163,20 @@ end
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9646"
+<A NAME="tex2html9679"
   HREF="node403.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9640"
-  HREF="node372.html">
+<A NAME="tex2html9673"
+  HREF="node374.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9634"
+<A NAME="tex2html9667"
   HREF="node401.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9642"
-  HREF="node727.html">
+<A NAME="tex2html9675"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9644"
-  HREF="node730.html">
+<A NAME="tex2html9677"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -228,20 +231,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9647"
-  HREF="node403.html">Correo</A>
-<B> Subir:</B> <A NAME="tex2html9641"
-  HREF="node372.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9635"
-  HREF="node401.html">Settings disponibles/Available Settings</A>
- &nbsp; <B>  <A NAME="tex2html9643"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9645"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9680"
+  HREF="node403.html">Settings disponibles/Available Settings</A>
+<B> Subir:</B> <A NAME="tex2html9674"
+  HREF="node374.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9668"
+  HREF="node401.html">Configuration / Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html9676"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9678"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Website wireframes</TITLE>
-<META NAME="description" CONTENT="Website wireframes">
+<TITLE>Despliegue de una Aplicación Web en la ETSII</TITLE>
+<META NAME="description" CONTENT="Despliegue de una Aplicación Web en la ETSII">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node694.html">
 <LINK REL="previous" HREF="node692.html">
-<LINK REL="up" HREF="node562.html">
+<LINK REL="up" HREF="node691.html">
 <LINK REL="next" HREF="node694.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14464"
+<A NAME="tex2html14514"
   HREF="node694.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14458"
-  HREF="node562.html">
+<A NAME="tex2html14508"
+  HREF="node691.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14452"
+<A NAME="tex2html14502"
   HREF="node692.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14460"
-  HREF="node727.html">
+<A NAME="tex2html14510"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14462"
-  HREF="node730.html">
+<A NAME="tex2html14512"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,71 +96,105 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14465"
-  HREF="node694.html">Markdown</A>
-<B> Subir:</B> <A NAME="tex2html14459"
-  HREF="node562.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14453"
-  HREF="node692.html">Editores Entornos de Desarrollo</A>
- &nbsp; <B>  <A NAME="tex2html14461"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14463"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14515"
+  HREF="node694.html">Gemas instaladas en local</A>
+<B> Subir:</B> <A NAME="tex2html14509"
+  HREF="node691.html">ETSII</A>
+<B> Anterior:</B> <A NAME="tex2html14503"
+  HREF="node692.html">Prácticas: Centro de Cálculo</A>
+ &nbsp; <B>  <A NAME="tex2html14511"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14513"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION062500000000000000000">
-Website wireframes</A>
+<H1><A NAME="SECTION062120000000000000000">
+Despliegue de una Aplicación Web en la ETSII</A>
 </H1>
+Para desplegar una aplicación web usaremos <code>exthost2</code> (en 2013).
 
 <P>
-A website wireframe, also known as a page schematic or screen
-blueprint, is a visual guide that represents the skeletal framework
-of a website. Wireframes are created for the purpose of arranging
-elements to best accomplish a particular purpose. The purpose is
-usually being informed by a business objective and a creative idea.
-The wireframe depicts the page layout or arrangement of the website’s
-content, including interface elements and navigational systems, and
-how they work together. The wireframe usually lacks typographic
-style, color, or graphics, since the main focus lies in functionality,
-behavior, and priority of content. In other words, it focuses on
-what a screen does, not what it looks like. Wireframes can be pencil
-drawings or sketches on a whiteboard, or they can be produced by
-means of a broad array of free or commercial software applications.
-Wireframes are generally created by business analysts, user experience
-designers, developers, visual designers and other roles with expertise
-in interaction design, information architecture and user research.
+Veamos que puertos están libres usando  <TT>netstat</TT> :
+<PRE>
+casiano@exthost2:~$ netstat -an | less
+</PRE>
+o bien usamos  <TT>lsof</TT> : 
+<PRE>
+lsof -i | less
+</PRE>
+y después - si es necesario - terminamos el proceso que ya estuviera escuchando en el puerto
+<PRE>
+kill -9 PID
+</PRE>
 
 <P>
+Veamos una simple aplicación usando <code>rack</code>:
+<PRE>
+casiano@exthost2:~/src/ruby/simplewebapp$ cat hello.rb 
+require 'rack'
+
+app = lambda { |env| [200, {"Content-Type" =&gt; "text/plain"}, ["Hello. The time is #{Time.now}"]] }
+Rack::Handler::WEBrick.run app,:Port =&gt; 4567
+</PRE>
+La ejecutamos:
+<PRE>
+casiano@exthost2:~/src/ruby/simplewebapp$ ruby hello.rb 
+[2013-10-28 09:58:54] INFO  WEBrick 1.3.1
+[2013-10-28 09:58:54] INFO  ruby 1.9.3 (2011-10-30) [i686-linux]
+[2013-10-28 09:58:54] WARN  TCPServer Error: Address already in use - bind(2)
+[2013-10-28 09:58:54] INFO  WEBrick::HTTPServer#start: pid=16597 port=4567
+</PRE>
+Ya tenemos disponible la página en <code>exthost2</code> en el puerto correspondiente.
+
+<P>
+El acceso al servidor está limitado a
+la red de la ULL.
+
+<P>
+
+<H4><A NAME="SECTION062120010000000000000">
+Véase también</A>
+</H4>
+  
 
 <OL>
-<LI><A NAME="tex2html1578"
-  HREF="http://mashable.com/2010/07/15/wireframing-tools/">Mashable: 10 wireframing tools</A>
-</LI>
-<LI><A NAME="tex2html1579"
-  HREF="https://gomockingbird.com/">Mockingbird</A>
+<LI><I>Gemas instaladas en local</I> <A HREF="node694.html#section:gemasinstaladasenlocal">93.3</A>
 </LI>
 </OL>
 
 <P>
 
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14516"
+  HREF="node693.html#SECTION062120010000000000000">Véase también</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14464"
+<A NAME="tex2html14514"
   HREF="node694.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14458"
-  HREF="node562.html">
+<A NAME="tex2html14508"
+  HREF="node691.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14452"
+<A NAME="tex2html14502"
   HREF="node692.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14460"
-  HREF="node727.html">
+<A NAME="tex2html14510"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14462"
-  HREF="node730.html">
+<A NAME="tex2html14512"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -215,20 +249,20 @@ in interaction design, information architecture and user research.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14465"
-  HREF="node694.html">Markdown</A>
-<B> Subir:</B> <A NAME="tex2html14459"
-  HREF="node562.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14453"
-  HREF="node692.html">Editores Entornos de Desarrollo</A>
- &nbsp; <B>  <A NAME="tex2html14461"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14463"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14515"
+  HREF="node694.html">Gemas instaladas en local</A>
+<B> Subir:</B> <A NAME="tex2html14509"
+  HREF="node691.html">ETSII</A>
+<B> Anterior:</B> <A NAME="tex2html14503"
+  HREF="node692.html">Prácticas: Centro de Cálculo</A>
+ &nbsp; <B>  <A NAME="tex2html14511"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14513"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

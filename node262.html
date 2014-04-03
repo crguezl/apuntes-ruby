@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: DSL: Redacción de Cuestionarios I (Sin Contexto)</TITLE>
-<META NAME="description" CONTENT="Práctica: DSL: Redacción de Cuestionarios I (Sin Contexto)">
+<TITLE>Creando un ORM</TITLE>
+<META NAME="description" CONTENT="Creando un ORM">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node263.html">
-<LINK REL="previous" HREF="node257.html">
-<LINK REL="up" HREF="node223.html">
+<LINK REL="previous" HREF="node261.html">
+<LINK REL="up" HREF="node258.html">
 <LINK REL="next" HREF="node263.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7088"
+<A NAME="tex2html7112"
   HREF="node263.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7082"
-  HREF="node223.html">
+<A NAME="tex2html7106"
+  HREF="node258.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7076"
+<A NAME="tex2html7102"
   HREF="node261.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7084"
-  HREF="node727.html">
+<A NAME="tex2html7108"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7086"
-  HREF="node730.html">
+<A NAME="tex2html7110"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,209 +95,63 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7089"
+<B> Siguiente:</B> <A NAME="tex2html7113"
   HREF="node263.html">Práctica: DSL: Redacción de</A>
-<B> Subir:</B> <A NAME="tex2html7083"
-  HREF="node223.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7077"
-  HREF="node261.html">Creando un ORM</A>
- &nbsp; <B>  <A NAME="tex2html7085"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7087"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Subir:</B> <A NAME="tex2html7107"
+  HREF="node258.html">Lenguajes de Dominio Específico.</A>
+<B> Anterior:</B> <A NAME="tex2html7103"
+  HREF="node261.html">Dos DSLs: Generando XML</A>
+ &nbsp; <B>  <A NAME="tex2html7109"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7111"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION028130000000000000000"></A>
-   <A NAME="9914"></A>
-  
-<A NAME="sectionpractica:DSL1"></A>
-<BR>
-Práctica: DSL: Redacción de Cuestionarios I (Sin Contexto)
-</H1>
-Se trata de escribir un programa que redacte cuestionarios.
-En principio, sólo soportaremos preguntas del tipo selección múltiple:
-
-<P>
-<PRE>
-1. ¿En que año Cristobal Colón descubrió América?
-      1 - 1942
-      2 - 1492
-      3 - 1808
-      4 - 1914
-Su respuesta:
-</PRE>
-Debe definir una clase <code>Quiz</code> que soporte un pequeño lenguaje
-en el que las preguntas puedan ser especificadas.
-El constructor de <code>Quiz</code> va seguido de un bloque al que pasa
-como argumento el objeto <code>e</code> que representa al examen:
-
-<P>
-<PRE>
-quiz = Quiz.new("Cuestionario de PFS 10/12/2011") do |e|
-  e.question '¿En que año Cristobal Colón descubrió América?',
-    e.wrong =&gt;'1942',
-    e.right =&gt;'1492',
-    e.wrong =&gt;'1808',
-    e.wrong =&gt;'1914'
-  
-  a = rand(10)
-  b = rand(10)
-  e.question "#{a}+#{b} = ",
-    e.wrong =&gt;"44",
-    e.wrong =&gt;"#{a + b + 2}",
-    e.right =&gt;"#{a + b}",
-    e.wrong =&gt;"#{a + b - 2}"
-end
-
-quiz.run
-</PRE>
-El programa anterior podría producir una salida parecida a esta:
-
-<P>
-<PRE>
-MacBookdeCasiano:chapter8ReflectionandMetaprogramming casiano$ ruby Quiz.rb 
-Cuestionario de PFS 10/12/2011
-
-¿En que año Cristobal Colón descubrió América?
-
-  1 -  1942
-  2 -  1492
-  3 -  1808
-  4 -  1914
-
-Su respuesta: 3
-0+8 = 
-
-  1 -  44
-  2 -  10
-  3 -  8
-  4 -  6
-
-Su respuesta: 1
-0 respuestas correctas de un total de 2.
-MacBookdeCasiano:chapter8ReflectionandMetaprogramming casiano$
-</PRE>
+<H2><A NAME="SECTION028124000000000000000">
+Creando un ORM</A>
+</H2>
 
 <P>
 
-<UL>
-<LI>Los cuestionarios deberían tener un método <code>to_s</code> que devuelve una <A NAME="tex2html517"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>
-conteniendo el examen en texto plano.
-Así al imprimir el objeto <code>quiz</code> del ejemplo anterior:
-<PRE>
-puts quiz
-puts "************************"
-</PRE>
-obtendríamos como salida:
-<PRE>
-Cuestionario de PFS 10/12/2011
-
-¿En que año Cristobal Colón descubrió América?
-
-  1 -  1942
-  2 -  1492
-  3 -  1808
-  4 -  1914
-
-
-0+8 = 
-
-  1 -  44
-  2 -  10
-  3 -  8
-  4 -  6
-
-
-************************
-</PRE>
+<OL>
+<LI><A NAME="tex2html515"
+  HREF="http://youtu.be/kNpcaaL_dZA">Ruby Metaprogramming Tutorial - Part 1 - send method</A>
+por José Mota (YouTube)
 </LI>
-<LI>Los cuestionarios deberían tener un método <code>run</code> que formulará
-cada una de las preguntas del cuestionario y mostrara el porcentaje de aciertos
+<LI><A NAME="tex2html516"
+  HREF="http://youtu.be/lK8pGCu46nM">Ruby Metaprogramming Tutorial - Part 2 - define_method</A>
+por José Mota (YouTube)
 </LI>
-<LI>Puede que le interese crear tres clases, una para modelar las respuestas (<code>Answer</code>),
-otra para modelar las preguntas (<code>Question</code>) y una tercera para el cuestionario (<code>Quiz</code>)
+<LI><A NAME="tex2html517"
+  HREF="http://youtu.be/pvn0ZHPTUSI">Ruby Metaprogramming Tutorial - Part 3 - ORM example</A>
+por José Mota (YouTube)
 </LI>
-<LI>El método <code>question</code> recibe dos argumentos. El primero es el título del examen, el segundo es un hash:
-<PRE>
-  e.question '¿En que año Cristobal Colón descubrió América?',
-    e.wrong =&gt;'1942',
-    e.right =&gt;'1492',
-    e.wrong =&gt;'1808',
-    e.wrong =&gt;'1914'
-</PRE>
-de modo que la llamada, realmente es equivalente a:
-<PRE>
-  e.question('¿En que año Cristobal Colón descubrió América?',
-    {e.wrong =&gt;'1942', e.right =&gt;'1492', e.wrong =&gt;'1808', e.wrong =&gt;'1914'})
-</PRE>
-si el segundo argumento de <code>question</code> es un hash y las claves son <code>:wrong</code> y <code>:right</code> se va a 
-producir una colisión y el último valor sobreescribirá a los anteriores. ¿Como resolverlo?
-Una posible forma de hacerlo es que los métodos <code>wrong</code> y <code>right</code> diferencien las ocurrencias de las repsuestas
-usando un contador <code>@counter</code>:
-<PRE>
- def wrong
-    @counter += 1
-    [@counter, WRONG]
-  end
-</PRE>
+<LI><A NAME="tex2html518"
+  HREF="https://github.com/tutsplus/ruby-metaprogramming-exercise">GitHub repo</A>
+source code for the project creator exercise in the "Metaprogramming in Ruby" course.
 </LI>
-<LI>Escriba un método <code>to_html</code> que genere una página describiendo el examen. Use <A NAME="tex2html518"
-  HREF="http://ruby-doc.org/stdlib-1.9.3/libdoc/erb/rdoc/ERB.html"><TT>ERB</TT></A>. 
-</LI>
-<LI>Opcionalmente
-puede incluir hojas de estilo, javascript, etc. en el HTML generado
-</LI>
-<LI>Use TDD con <A NAME="tex2html519"
-  HREF="http://rspec.info/"><TT>RSpec</TT></A>
-</LI>
-<LI>Use Unit Testing
-</LI>
-<LI>Use Continuous Integration (Travis)
-</LI>
-<LI>Use Continuous Testing (Guard)
-</LI>
-<LI>Documente su gema (véase
-<A NAME="tex2html520"
-  HREF="http://docs.seattlerb.org/rdoc/RDoc/Markup.html"><SPAN  CLASS="textbf">RDOC::Markup</SPAN></A>
-o
-<A NAME="tex2html521"
-  HREF="http://rdoc.sourceforge.net/doc/index.html"><SPAN  CLASS="textbf">RDOC</SPAN></A>
-o 
-<A NAME="tex2html522"
-  HREF="http://yardoc.org"><SPAN  CLASS="textbf">YARD</SPAN></A>). 
-</LI>
-<LI>Cree una gema <code>ull-etsii-aluXX-quiz</code>
-</LI>
-<LI>Publique la gema en <A NAME="tex2html523"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>
-</LI>
-<LI>Indique la URL de su repositorio en <A NAME="tex2html524"
-  HREF="http://help.github.com">GitHub</A> y la URL en <A NAME="tex2html525"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>
-</LI>
-</UL>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7088"
+<A NAME="tex2html7112"
   HREF="node263.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7082"
-  HREF="node223.html">
+<A NAME="tex2html7106"
+  HREF="node258.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7076"
+<A NAME="tex2html7102"
   HREF="node261.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7084"
-  HREF="node727.html">
+<A NAME="tex2html7108"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7086"
-  HREF="node730.html">
+<A NAME="tex2html7110"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -353,20 +206,20 @@ o
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7089"
+<B> Siguiente:</B> <A NAME="tex2html7113"
   HREF="node263.html">Práctica: DSL: Redacción de</A>
-<B> Subir:</B> <A NAME="tex2html7083"
-  HREF="node223.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7077"
-  HREF="node261.html">Creando un ORM</A>
- &nbsp; <B>  <A NAME="tex2html7085"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7087"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Subir:</B> <A NAME="tex2html7107"
+  HREF="node258.html">Lenguajes de Dominio Específico.</A>
+<B> Anterior:</B> <A NAME="tex2html7103"
+  HREF="node261.html">Dos DSLs: Generando XML</A>
+ &nbsp; <B>  <A NAME="tex2html7109"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7111"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

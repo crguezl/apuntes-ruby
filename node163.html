@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Definiendo Operadores (La Clase Point)</TITLE>
-<META NAME="description" CONTENT="Definiendo Operadores (La Clase Point)">
+<TITLE>Acceso a los Atributos</TITLE>
+<META NAME="description" CONTENT="Acceso a los Atributos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node164.html">
 <LINK REL="previous" HREF="node162.html">
-<LINK REL="up" HREF="node157.html">
+<LINK REL="up" HREF="node158.html">
 <LINK REL="next" HREF="node164.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5520"
+<A NAME="tex2html5541"
   HREF="node164.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5514"
-  HREF="node157.html">
+<A NAME="tex2html5535"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5508"
+<A NAME="tex2html5529"
   HREF="node162.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5516"
-  HREF="node727.html">
+<A NAME="tex2html5537"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5518"
-  HREF="node730.html">
+<A NAME="tex2html5539"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,16 +96,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5521"
-  HREF="node164.html">Tabla de Operadores en</A>
-<B> Subir:</B> <A NAME="tex2html5515"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5509"
-  HREF="node162.html">Acceso a los Atributos</A>
- &nbsp; <B>  <A NAME="tex2html5517"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5519"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5542"
+  HREF="node164.html">Definiendo Operadores (La Clase</A>
+<B> Subir:</B> <A NAME="tex2html5536"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5530"
+  HREF="node162.html">Definiendo un método to_s</A>
+ &nbsp; <B>  <A NAME="tex2html5538"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5540"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
@@ -114,207 +114,244 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <UL CLASS="ChildLinks">
 <LI><UL>
-<LI><A NAME="tex2html5522"
-  HREF="node163.html#SECTION02716010000000000000">Enlaces Relacionados</A>
+<LI><A NAME="tex2html5543"
+  HREF="node163.html#SECTION02715010000000000000">Utilización de  los Setters Dentro de una Clase</A>
+<LI><A NAME="tex2html5544"
+  HREF="node163.html#SECTION02715020000000000000">Los Accessors como <TT>attr_accessor</TT> se Invocan Fuera de las Definiciones de Métodos</A>
+<LI><A NAME="tex2html5545"
+  HREF="node163.html#SECTION02715030000000000000">Todas las clases son módulos</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H2><A NAME="SECTION02716000000000000000"></A>
-<A NAME="subsection:definiendooperadores"></A>
+<H2><A NAME="SECTION02715000000000000000"></A>
+<A NAME="subsection:accesoalosatributos"></A>
 <BR>
-Definiendo Operadores (La Clase Point)
+Acceso a los Atributos
 </H2>
 
 <P>
-
-<OL>
-<LI>We’d like the <code>+</code> operator to perform vector addition of two
-Point objects, 
-</LI>
-<LI>the <code>*</code> operator to multiply a Point by a scalar,
-</LI>
-<LI>and the unary <code>–</code> operator to do the equivalent of multiplying by
-–1. 
-</LI>
-</OL>
-Method-based operators such as <code>+</code> are simply methods with
-punctuation for names. 
-
-<P>
-Because there are unary and binary forms of
-the <code>–</code> operator, Ruby uses the method name <code>–@</code> for unary minus. 
-
-<P>
-Here
-is a version of the Point class with mathematical operators defined:
+Our Point class uses two instance variables. As we've noted, however,
+the value of these variables are only accessible to other instance
+methods. If we want users of the Point class to be able to use the
+X and Y coordinates of a point, we've got to provide accessor methods
+that return the value of the variables:
 
 <P>
 <PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ cat -n point.rb 
-     1	class Point
-     2	  attr_reader :x, :y   # Define accessor methods for our instance variables
-     3	
-     4	  include Comparable
-     5	  include Enumerable
-     6	
-     7	  def initialize(x,y)
-     8	    @x,@y = x, y
-     9	  end
-    10	
-    11	  def to_s        # Return a String that represents this point
-    12	    "(#@x,#@y)"   # Just interpolate the instance variables into a string
-    13	  end
-    14	
-    15	  def chuchu
-    16	    "Point: chuchu"
-    17	  end
-    18	  private :chuchu
-    19	
-    20	  def +(other)         # Define + to do vector addition
-    21	    Point.new(@x + other.x, @y + other.y)
-    22	  end
-    23	
-    24	  def -@               # Define unary minus to negate both coordinates
-    25	    Point.new(-@x, -@y)
-    26	  end
-    27	
-    28	  def *(scalar)        # Define * to perform scalar multiplication
-    29	    return Point.new(@x*scalar,   @y*scalar) if scalar.is_a? Numeric
-    30	    return Point.new(@x*scalar.x, @y*scalar.y) if scalar.is_a? Point
-    31	  end
-    32	
-    33	  def coerce(other)
-    34	    [self, other]
-    35	  end
-    36	
-    37	  def [](index)
-    38	    case index
-    39	    when 0, -2 then @x         # Index 0 (or -2) is the X coordinate
-    40	    when 1, -1 then @y         # Index 1 (or -1) is the Y coordinate
-    41	
-    42	    when :x, "x" then @x       # Hash keys as symbol or string for X
-    43	    when :y, "y" then @y       # Hash keys as symbol or string for Y
-    44	    else nil               # Arrays and hashes just return nil on bad indexes
-    45	    end
-    46	  end
-    47	
-    48	  def hash
-    49	    code = 17
-    50	    code = 37*code + @x.hash
-    51	    code = 37*code + @y.hash
-    52	    code
-    53	  end
-    54	
-    55	  def eql?(o)
-    56	    return @x.eql?(o.x) &amp;&amp; @y.eql?(o.y) if o.instance_of? Point
-    57	    false
-    58	  end
-    59	
-    60	  def ==(o)
-    61	    return @x == o.x &amp;&amp; @y  == o.y if o.instance_of? Point
-    62	    false
-    63	  end
-    64	
-    65	  def &lt;=&gt;(o)
-    66	    return nil unless o.instance_of? Point
-    67	    @x*@x+@y*@y &lt;=&gt; o.x*o.x+o.y*o.y
-    68	  end
-    69	
-    70	end
-    71	
-    72	if __FILE__ == $0
-    73	  p = Point.new(1,2)
-    74	  q = Point.new(1,1)
-    75	  puts p
-    76	  puts -p
-    77	  puts p+q
-    78	  puts p*q
-    79	  puts p*2
-    80	  puts 2*p
-    81	
-    82	  puts "#{p[0]}, #{p[1]}"
-    83	  puts "#{p[-2]}, #{p[-1]}"
-    84	  puts "#{p[:x]}, #{p[:y]}"
-    85	  puts "#{p['x']}, #{p['y']}"
-    86	
-    87	  m = { p =&gt; 1, q =&gt; 2 }
-    88	  puts m[p]
-    89	  puts m[q]
-    90	
-    91	
-    92	  # It is not a total order relation
-    93	  r = Point.new(2, 1)
-    94	  puts p &gt; r
-    95	  puts r &gt; p
-    96	  puts r == p
-    97	  puts q &lt; p
-    98	  puts "#{[p, q, r].sort}"
-    99	  puts [p, q, r].min
-   100	  puts [p, q, r, Point.new(4,3)].max
-   101	
-   102	
-   103	end
+class Point
+  def initialize(x,y)
+    @x, @y = x, y
+  end
+
+  def x           # The accessor (or getter) method for @x
+    @x
+  end
+
+  def y           # The accessor method for @y
+    @y
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+p = Point.new(1,2)
+q = Point.new(p.x*2, p.y*3)
+</PRE>
+
+<P>
+<PRE>
+class MutablePoint
+  def initialize(x,y); @x, @y = x, y; end
+
+  def x; @x; end       # The getter method for @x
+  def y; @y; end       # The getter method for @y
+
+  def x=(value)        # The setter method for @x
+    @x = value
+  end
+
+  def y=(value)        # The setter method for @y
+    @y = value
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+p = Point.new(1,1)
+p.x = 0
+p.y = 0
+</PRE>
+
+<P>
+This combination of instance variable with trivial getter and setter methods is so common that Ruby provides a way to automate it. The <code>attr_reader</code> and <code>attr_accessor</code> methods are defined by the <A NAME="tex2html327"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A> class. All classes are modules, (the <A NAME="tex2html328"
+  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A> class is a subclass of <A NAME="tex2html329"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>) so you can invoke these method inside any class definition. Both methods take any number of symbols naming attributes. <code>attr_reader</code> creates trivial getter methods for the instance variables with the same name. <code>attr_accessor</code> creates getter and setter methods. Thus, if we were defining a mutable <code>Point</code> class, we could write:
+
+<P>
+<PRE>
+class Point
+  attr_accessor :x, :y # Define accessor methods for our instance variables
+end
+</PRE>
+
+<P>
+<PRE>
+class Point
+  attr_reader :x, :y  # Define reader methods for our instance variables
+end
+</PRE>
+
+<P>
+<PRE>
+attr_reader "x", "y"
+</PRE>
+
+<P>
+<PRE>
+attr :x        # Define a trivial getter method x for @x
+attr :y, true  # Define getter and setter methods for @y. Optional boolean is Obsoleted
+</PRE>
+
+<P>
+<BLOCKQUOTE>
+The <code>attr</code>, <code>attr_reader</code>, and <code>attr_accessor</code> methods
+create instance methods for us. This is an example of metaprogramming.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H4><A NAME="SECTION02715010000000000000">
+Utilización de  los Setters Dentro de una Clase</A>
+</H4>
+  
+
+<A NAME="parrafo:usodesettersenunmetodo"></A>Una vez que se ha definido un setter como <code>x=</code> podemos sentirnos tentados de utilizarlo
+dentro de otro método de instancia de la clase.
+
+<P>
+That is, instead of writing <code>@x=2</code>, you might write
+<code>x=2</code>, intending to invoke <code>x=(2)</code> implicitly on self.
+<OL>
+<LI>It doesn’t work; <code>x=2</code> creates a new
+local variable.
+</LI>
+<LI>The rule is that <I><A NAME="7475"></A><SPAN  CLASS="textbf">assignment expressions</SPAN> will only invoke a
+<A NAME="7477"></A><SPAN  CLASS="textbf">setter method</SPAN> when invoked through an object</I>
+</LI>
+<LI>If you want to use a setter from within the class that defines
+it, invoke it explicitly through self.
+</LI>
+<LI>For example: <code>self.x=2</code>.
+</LI>
+</OL>
+
+<P>
+<PRE>
+casiano@exthost:~/LPPsrc/221012$ cat -n setters.rb
+     1  class Tutu
+     2    attr_accessor :n
+     3  
+     4    def initialize(n)
+     5      @n = n
+     6    end
+     7  
+     8    def to_s
+     9      "#{n*2}"
+    10    end
+    11  
+    12    def square
+    13      n = n * n # n here is a local variable!
+    14    end
+    15  
+    16    def square2
+    17      self.n = n * n
+    18    end
+    19  end
+    20  
+    21  if __FILE__ == $0
+    22    x = Tutu.new(ARGV.shift || 4)
+    23    puts x                      # to_s gets called: 8
+    24    begin
+    25      x.square
+    26    rescue
+    27        puts "Raised exception '#{$!.class}'. Message: &lt;#{$!}&gt;"
+    28    end
+    29    x.square2                   # 32 = 16 *2
+    30    puts x
+    31  end
+</PRE>
+
+<P>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby setters.rb
+8
+Raised exception 'NoMethodError'. Message: &lt;undefined method `*' for nil:NilClass&gt;
+32
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION02716010000000000000">
-Enlaces Relacionados</A>
+<H4><A NAME="SECTION02715020000000000000">
+Los Accessors como <TT>attr_accessor</TT> se Invocan Fuera de las Definiciones de Métodos</A>
 </H4>
   
 
 <P>
+<code>attr_reader</code> et al. son proveídos por la clase <A NAME="tex2html330"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.
 
-<OL>
-<LI><A NAME="tex2html329"
-  HREF="http://ruby-doc.org/core-2.0.0/Comparable.html"><TT>Comparable</TT></A>
-</LI>
-<LI><A NAME="tex2html330"
-  HREF="http://ruby-doc.org/core-2.0.0/Enumerable.html"><TT>Enumerable</TT></A>
-</LI>
-<LI><A NAME="tex2html331"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Instance_Variables">Variables de Instancia</A>
-</LI>
-<LI><A NAME="tex2html332"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Accessor_Methods">Métodos de Acceso</A>
-</LI>
-<LI><A NAME="tex2html333"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Class_Variables">Variables de Clase</A>
-</LI>
-<LI><A NAME="tex2html334"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Class_Methods">Métodos de Clase</A>
-</LI>
-<LI><A NAME="tex2html335"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Declaring_Visibility">Visibilidad de los métodos</A>
-</LI>
-<LI>Los métodos <A NAME="7418"></A><SPAN  CLASS="textbf">private</SPAN>, <A NAME="7420"></A><SPAN  CLASS="textbf">public</SPAN> y <A NAME="7422"></A><SPAN  CLASS="textbf">protected</SPAN> son métodos de instancia privados de 
-</LI>
-<LI><A NAME="tex2html336"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Class_Instance_Variables">Variables de Instancia de Clase</A>
-<A NAME="tex2html337"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>
-</LI>
-</OL>
+<P>
+
+<H4><A NAME="SECTION02715030000000000000">
+Todas las clases son módulos</A>
+</H4>
+  
+
+<P>
+<PRE>
+ruby-1.9.2-head :004 &gt; Class.class
+ =&gt; Class 
+ruby-1.9.2-head :005 &gt; Class.superclass
+ =&gt; Module 
+ruby-1.9.2-head :006 &gt; Class.superclass.superclass
+ =&gt; Object 
+ruby-1.9.2-head :007 &gt; Class.superclass.superclass.superclass
+ =&gt; BasicObject 
+ruby-1.9.2-head :008 &gt; Class.ancestors
+ =&gt; [Class, Module, Object, InteractiveEditor::Editors, 
+     Wirble::Shortcuts, 
+     PP::ObjectMixin, 
+     Kernel, BasicObject]
+</PRE>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">13</SPAN>.<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>¿<code>attr_accessor</code> es un método de instancia o de clase?</I></DIV><P></P>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5520"
+<A NAME="tex2html5541"
   HREF="node164.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5514"
-  HREF="node157.html">
+<A NAME="tex2html5535"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5508"
+<A NAME="tex2html5529"
   HREF="node162.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5516"
-  HREF="node727.html">
+<A NAME="tex2html5537"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5518"
-  HREF="node730.html">
+<A NAME="tex2html5539"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -369,20 +406,20 @@ Enlaces Relacionados</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5521"
-  HREF="node164.html">Tabla de Operadores en</A>
-<B> Subir:</B> <A NAME="tex2html5515"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5509"
-  HREF="node162.html">Acceso a los Atributos</A>
- &nbsp; <B>  <A NAME="tex2html5517"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5519"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5542"
+  HREF="node164.html">Definiendo Operadores (La Clase</A>
+<B> Subir:</B> <A NAME="tex2html5536"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5530"
+  HREF="node162.html">Definiendo un método to_s</A>
+ &nbsp; <B>  <A NAME="tex2html5538"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5540"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

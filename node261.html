@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Creando un ORM</TITLE>
-<META NAME="description" CONTENT="Creando un ORM">
+<TITLE>Dos DSLs: Generando XML con Validación via Generación de Métodos</TITLE>
+<META NAME="description" CONTENT="Dos DSLs: Generando XML con Validación via Generación de Métodos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node262.html">
 <LINK REL="previous" HREF="node260.html">
-<LINK REL="up" HREF="node257.html">
+<LINK REL="up" HREF="node258.html">
 <LINK REL="next" HREF="node262.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7074"
+<A NAME="tex2html7094"
   HREF="node262.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7068"
-  HREF="node257.html">
+<A NAME="tex2html7088"
+  HREF="node258.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7064"
+<A NAME="tex2html7082"
   HREF="node260.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7070"
-  HREF="node727.html">
+<A NAME="tex2html7090"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7072"
-  HREF="node730.html">
+<A NAME="tex2html7092"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,63 +96,418 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7075"
-  HREF="node262.html">Práctica: DSL: Redacción de</A>
-<B> Subir:</B> <A NAME="tex2html7069"
-  HREF="node257.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7065"
-  HREF="node260.html">Dos DSLs: Generando XML</A>
- &nbsp; <B>  <A NAME="tex2html7071"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7073"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7095"
+  HREF="node262.html">Creando un ORM</A>
+<B> Subir:</B> <A NAME="tex2html7089"
+  HREF="node258.html">Lenguajes de Dominio Específico.</A>
+<B> Anterior:</B> <A NAME="tex2html7083"
+  HREF="node260.html">Un DSL para Procesar</A>
+ &nbsp; <B>  <A NAME="tex2html7091"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7093"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION028124000000000000000">
-Creando un ORM</A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html7096"
+  HREF="node261.html#SECTION028123010000000000000">Primer DSL: Lenguaje para la Generación de XML</A>
+<LI><A NAME="tex2html7097"
+  HREF="node261.html#SECTION028123020000000000000">XML Generado</A>
+<LI><A NAME="tex2html7098"
+  HREF="node261.html#SECTION028123030000000000000">Visualización del HTML Generado</A>
+<LI><A NAME="tex2html7099"
+  HREF="node261.html#SECTION028123040000000000000">Segundo DSL: Lenguaje para la Generación del DSL Anterior y su Validación</A>
+<LI><A NAME="tex2html7100"
+  HREF="node261.html#SECTION028123050000000000000">La Clase <TT>XMLGrammar</TT></A>
+<LI><A NAME="tex2html7101"
+  HREF="node261.html#SECTION028123060000000000000">Código Completo</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION028123000000000000000">
+Dos DSLs: Generando XML con Validación via Generación de Métodos</A>
 </H2>
 
 <P>
 
-<OL>
-<LI><A NAME="tex2html513"
-  HREF="http://youtu.be/kNpcaaL_dZA">Ruby Metaprogramming Tutorial - Part 1 - send method</A>
-por José Mota (YouTube)
-</LI>
-<LI><A NAME="tex2html514"
-  HREF="http://youtu.be/lK8pGCu46nM">Ruby Metaprogramming Tutorial - Part 2 - define_method</A>
-por José Mota (YouTube)
-</LI>
-<LI><A NAME="tex2html515"
-  HREF="http://youtu.be/pvn0ZHPTUSI">Ruby Metaprogramming Tutorial - Part 3 - ORM example</A>
-por José Mota (YouTube)
-</LI>
-<LI><A NAME="tex2html516"
-  HREF="https://github.com/tutsplus/ruby-metaprogramming-exercise">GitHub repo</A>
-source code for the project creator exercise in the "Metaprogramming in Ruby" course.
-</LI>
-</OL>
+<H4><A NAME="SECTION028123010000000000000">
+Primer DSL: Lenguaje para la Generación de XML</A>
+</H4>
+  
+
+<PRE>
+HTMLForm.generate(STDOUT) do
+  comment "This is a simple HTML form"
+  form :name =&gt; "registration",
+       :action =&gt; "http://www.example.com/register.cgi" do
+    content "Name:"
+    br
+    input :name =&gt; "name"
+    br
+    content "Post:"
+    br
+    textarea :name =&gt; "address", :rows=&gt;6, :cols=&gt;40 do
+      "Please enter your post here"        # Este bloque retorna contenido
+    end
+    br
+    button { "Submit" }                    # Este bloque retorna contenido
+  end
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION028123020000000000000">
+XML Generado</A>
+</H4>
+  
+
+<P>
+<PRE>
+[xmlgenerator]$ ruby xml_generator.rb &gt; ejemplo.html
+[xmlgenerator]$ cat ejemplo.html 
+&lt;!-- This is a simple HTML form --&gt;
+&lt;form name='registration' action='http://www.example.com/register.cgi' method='GET' enctype='application/x-www-form-urlencoded'&gt;Name:&lt;br/&gt;
+&lt;input name='name' type='text'/&gt;
+&lt;br/&gt;
+Post:&lt;br/&gt;
+&lt;textarea name='address' rows='6' cols='40'&gt;Please enter your post here&lt;/textarea&gt;
+&lt;br/&gt;
+&lt;button type='submit'&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION028123030000000000000">
+Visualización del HTML Generado</A>
+</H4>
+  
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figure:formulario"></A><A NAME="9212"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figura 14.1:</STRONG>
+Formulario generado</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<IMG
+  WIDTH="1351" HEIGHT="336" ALIGN="BOTTOM" BORDER="0"
+ SRC="./form.png"
+ ALT="Image form">
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H4><A NAME="SECTION028123040000000000000">
+Segundo DSL: Lenguaje para la Generación del DSL Anterior y su Validación</A>
+</H4>
+  
+
+<P>
+Este DSL permite describir una gramática XML: que tags son permitidos
+y para cada tag que atributos son legales y de que tipo son.
+Se usaría así:
+
+<P>
+<PRE>
+class HTMLForm &lt; XMLGrammar
+  element :form, :action =&gt; REQ,        # atributo requerido
+                 :method =&gt; "GET",      # cadena: valor por defecto
+                 :enctype =&gt; "application/x-www-form-urlencoded",
+                 :name =&gt; OPT           # opcional
+  element :input, :type =&gt; "text", :name =&gt; OPT, :value =&gt; OPT,
+                  :maxlength =&gt; OPT, :size =&gt; OPT, :src =&gt; OPT,
+                  :checked =&gt; BOOL, :disabled =&gt; BOOL, :readonly =&gt; BOOL
+  element :textarea, :rows =&gt; REQ, :cols =&gt; REQ, :name =&gt; OPT,
+                     :disabled =&gt; BOOL, :readonly =&gt; BOOL
+  element :button, :name =&gt; OPT, :value =&gt; OPT,
+                   :type =&gt; "submit", :disabled =&gt; OPT
+  element :br
+end
+</PRE>
+
+<P>
+El método <code>element</code> construye un método de instancia 
+con el nombre especificado (por ejemplo, <code>:form</code>) como primer
+argumento en la subclase (<code>HTMLForm</code> en el ejemplo).
+Como segundo argumento opcional recibe un hash especificando los atributos 
+legales del elemento y de que tipo son (<code>REQ</code> por requerido, <code>OPT</code> por opcional,
+una <A NAME="tex2html514"
+  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A> como en <code>:method =&gt; "GET"</code> indica valor por defecto y <code>BOOL</code> para atributos
+cuyo valor es su propio nombre.
+
+<P>
+En el código anterior se crean métodos <code>form</code>, <code>input</code>, <code>texarea</code>, <code>button</code>
+y <code>br</code> en la clase <code>HTMLForm</code>.
+
+<P>
+
+<H4><A NAME="SECTION028123050000000000000">
+La Clase <TT>XMLGrammar</TT></A>
+</H4>
+  
+
+<P>
+<PRE>
+class XMLGrammar
+  # Create an instance of this class, specifying a stream or object to
+  # hold the output. This can be any object that responds to &lt;&lt;(String).
+  def initialize(out)
+    @out = out  # Remember where to send our output
+  end
+
+  # Invoke the block in an instance that outputs to the specified stream.
+  def self.generate(out, &amp;block)
+    new(out).instance_eval(&amp;block)
+  end
+
+  # Define an allowed element (or tag) in the grammar.
+  # This class method is the grammar-specification DSL
+  # and defines the methods that constitute the XML-output DSL.
+  def self.element(tagname, attributes={})
+    @allowed_attributes ||= {}
+    @allowed_attributes[tagname] = attributes
+
+    class_eval %Q{
+      def #{tagname}(attributes={}, &amp;block)
+        tag(:#{tagname},attributes,&amp;block)
+      end
+    }
+  end
+
+  # These are constants used when defining attribute values.
+  OPT = :opt     # for optional attributes
+  REQ = :req     # for required attributes
+  BOOL = :bool   # for attributes whose value is their own name
+
+  def self.allowed_attributes
+    @allowed_attributes
+  end
+
+  # Output the specified object as CDATA, return nil.
+  def content(text)
+    @out &lt;&lt; text.to_s
+    nil
+  end
+
+  # Output the specified object as a comment, return nil.
+  def comment(text)
+    @out &lt;&lt; "&lt;!-- #{text} --&gt;\n"
+    nil
+  end
+
+  # Output a tag with the specified name and attribute.
+  # If there is a block, invoke it to output or return content.
+  # Return nil.
+  def tag(tagname, attributes={})
+    # Output the tag name
+    @out &lt;&lt; "&lt;#{tagname}"
+
+    # Get the allowed attributes for this tag.
+    allowed = self.class.allowed_attributes[tagname]
+
+    # First, make sure that each of the attributes is allowed.
+    # Assuming they are allowed, output all of the specified ones.
+    attributes.each_pair do |key,value|
+      raise "unknown attribute: #{key}" unless allowed.include?(key)
+      @out &lt;&lt; " #{key}='#{value}'"
+    end
+
+    # Now look through the allowed attributes, checking for 
+    # required attributes that were omitted and for attributes with
+    # default values that we can output.
+    allowed.each_pair do |key,value|
+      # If this attribute was already output, do nothing.
+      next if attributes.has_key? key
+      if (value == REQ)
+        raise "required attribute '#{key}' missing in &lt;#{tagname}&gt;"
+      elsif value.is_a? String
+        @out &lt;&lt; " #{key}='#{value}'"
+      end
+    end
+
+    if block_given?
+      # This block has content
+      @out &lt;&lt; '&gt;'             # End the opening tag
+      content = yield         # Invoke the block to output or return content
+      if content              # If any content returned
+        @out &lt;&lt; content.to_s  # Output it as a string
+      end
+      @out &lt;&lt; "&lt;/#{tagname}&gt;\n" # Close the tag
+    else 
+      # Otherwise, this is an empty tag, so just close it.
+      @out &lt;&lt; "/&gt;\n"
+    end
+    nil # Tags output themselves, so they don't return any content.
+  end
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION028123060000000000000">
+Código Completo</A>
+</H4>
+  
+
+<P>
+<PRE>
+class XMLGrammar
+  # Create an instance of this class, specifying a stream or object to
+  # hold the output. This can be any object that responds to &lt;&lt;(String).
+  def initialize(out)
+    @out = out  # Remember where to send our output
+  end
+
+  # Invoke the block in an instance that outputs to the specified stream.
+  def self.generate(out, &amp;block)
+    new(out).instance_eval(&amp;block)
+  end
+
+  # Define an allowed element (or tag) in the grammar.
+  # This class method is the grammar-specification DSL
+  # and defines the methods that constitute the XML-output DSL.
+  def self.element(tagname, attributes={})
+    @allowed_attributes ||= {}
+    @allowed_attributes[tagname] = attributes
+
+    class_eval %Q{
+      def #{tagname}(attributes={}, &amp;block)
+        tag(:#{tagname},attributes,&amp;block)
+      end
+    }
+  end
+
+  # These are constants used when defining attribute values.
+  OPT = :opt     # for optional attributes
+  REQ = :req     # for required attributes
+  BOOL = :bool   # for attributes whose value is their own name
+
+  def self.allowed_attributes
+    @allowed_attributes
+  end
+
+  # Output the specified object as CDATA, return nil.
+  def content(text)
+    @out &lt;&lt; text.to_s
+    nil
+  end
+
+  # Output the specified object as a comment, return nil.
+  def comment(text)
+    @out &lt;&lt; "&lt;!-- #{text} --&gt;\n"
+    nil
+  end
+
+  # Output a tag with the specified name and attribute.
+  # If there is a block, invoke it to output or return content.
+  # Return nil.
+  def tag(tagname, attributes={})
+    # Output the tag name
+    @out &lt;&lt; "&lt;#{tagname}"
+
+    # Get the allowed attributes for this tag.
+    allowed = self.class.allowed_attributes[tagname]
+
+    # First, make sure that each of the attributes is allowed.
+    # Assuming they are allowed, output all of the specified ones.
+    attributes.each_pair do |key,value|
+      raise "unknown attribute: #{key}" unless allowed.include?(key)
+      @out &lt;&lt; " #{key}='#{value}'"
+    end
+
+    # Now look through the allowed attributes, checking for 
+    # required attributes that were omitted and for attributes with
+    # default values that we can output.
+    allowed.each_pair do |key,value|
+      # If this attribute was already output, do nothing.
+      next if attributes.has_key? key
+      if (value == REQ)
+        raise "required attribute '#{key}' missing in &lt;#{tagname}&gt;"
+      elsif value.is_a? String
+        @out &lt;&lt; " #{key}='#{value}'"
+      end
+    end
+
+    if block_given?
+      # This block has content
+      @out &lt;&lt; '&gt;'             # End the opening tag
+      content = yield         # Invoke the block to output or return content
+      if content              # If any content returned
+        @out &lt;&lt; content.to_s  # Output it as a string
+      end
+      @out &lt;&lt; "&lt;/#{tagname}&gt;\n" # Close the tag
+    else 
+      # Otherwise, this is an empty tag, so just close it.
+      @out &lt;&lt; "/&gt;\n"
+    end
+    nil # Tags output themselves, so they don't return any content.
+  end
+end
+
+class HTMLForm &lt; XMLGrammar
+  element :form, :action =&gt; REQ,
+                 :method =&gt; "GET",
+                 :enctype =&gt; "application/x-www-form-urlencoded",
+                 :name =&gt; OPT
+  element :input, :type =&gt; "text", :name =&gt; OPT, :value =&gt; OPT,
+                  :maxlength =&gt; OPT, :size =&gt; OPT, :src =&gt; OPT,
+                  :checked =&gt; BOOL, :disabled =&gt; BOOL, :readonly =&gt; BOOL
+  element :textarea, :rows =&gt; REQ, :cols =&gt; REQ, :name =&gt; OPT,
+                     :disabled =&gt; BOOL, :readonly =&gt; BOOL
+  element :button, :name =&gt; OPT, :value =&gt; OPT,
+                   :type =&gt; "submit", :disabled =&gt; OPT
+  element :br
+end
+
+HTMLForm.generate(STDOUT) do
+  comment "This is a simple HTML form"
+  form :name =&gt; "registration",
+       :action =&gt; "http://www.example.com/register.cgi" do
+    content "Name:"
+    br
+    input :name =&gt; "name"
+    br
+    content "Post:"
+    br
+    textarea :name =&gt; "address", :rows=&gt;6, :cols=&gt;40 do
+      "Please enter your post here"
+    end
+    br
+    button { "Submit" }
+  end
+end
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7074"
+<A NAME="tex2html7094"
   HREF="node262.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7068"
-  HREF="node257.html">
+<A NAME="tex2html7088"
+  HREF="node258.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7064"
+<A NAME="tex2html7082"
   HREF="node260.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7070"
-  HREF="node727.html">
+<A NAME="tex2html7090"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7072"
-  HREF="node730.html">
+<A NAME="tex2html7092"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -206,20 +562,20 @@ source code for the project creator exercise in the "Metaprogramming in Ruby" co
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7075"
-  HREF="node262.html">Práctica: DSL: Redacción de</A>
-<B> Subir:</B> <A NAME="tex2html7069"
-  HREF="node257.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7065"
-  HREF="node260.html">Dos DSLs: Generando XML</A>
- &nbsp; <B>  <A NAME="tex2html7071"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7073"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7095"
+  HREF="node262.html">Creando un ORM</A>
+<B> Subir:</B> <A NAME="tex2html7089"
+  HREF="node258.html">Lenguajes de Dominio Específico.</A>
+<B> Anterior:</B> <A NAME="tex2html7083"
+  HREF="node260.html">Un DSL para Procesar</A>
+ &nbsp; <B>  <A NAME="tex2html7091"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7093"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Inicializando un Punto</TITLE>
-<META NAME="description" CONTENT="Inicializando un Punto">
+<TITLE>Instanciando un Punto</TITLE>
+<META NAME="description" CONTENT="Instanciando un Punto">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node161.html">
 <LINK REL="previous" HREF="node159.html">
-<LINK REL="up" HREF="node157.html">
+<LINK REL="up" HREF="node158.html">
 <LINK REL="next" HREF="node161.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5475"
+<A NAME="tex2html5499"
   HREF="node161.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5469"
-  HREF="node157.html">
+<A NAME="tex2html5493"
+  HREF="node158.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5463"
+<A NAME="tex2html5487"
   HREF="node159.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5471"
-  HREF="node727.html">
+<A NAME="tex2html5495"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5473"
-  HREF="node730.html">
+<A NAME="tex2html5497"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,219 +96,40 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5476"
-  HREF="node161.html">Definiendo un método to_s</A>
-<B> Subir:</B> <A NAME="tex2html5470"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5464"
-  HREF="node159.html">Instanciando un Punto</A>
- &nbsp; <B>  <A NAME="tex2html5472"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5474"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5500"
+  HREF="node161.html">Inicializando un Punto</A>
+<B> Subir:</B> <A NAME="tex2html5494"
+  HREF="node158.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5488"
+  HREF="node159.html">Creando una Clase</A>
+ &nbsp; <B>  <A NAME="tex2html5496"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5498"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02713000000000000000"></A>
-<A NAME="subsection:initialize"></A>
-<BR>
-Inicializando un Punto
+<H2><A NAME="SECTION02712000000000000000">
+Instanciando un Punto</A>
 </H2>
-El método <code>initialize</code> es privado:
 
 <P>
 <PRE>
-$ cat -n calling_initialize.rb 
-     1  class Tutu
-     2    def initialize(a,b)
-     3      @a, @b = a,b
-     4    end
-     5  
-     6    def titi
-     7      initialize(2,3)
-     8    end
-     9  end
-    10  if __FILE__ == $0
-    11    x = Tutu.new(4,5)
-    12    z = x.titi()
-    13    puts z.class
-    14    puts z
-    15    x.initialize(4,2)
-    16  end
+p = Point.new
 </PRE>
 
 <P>
 <PRE>
-casiano@exthost:~/LPPsrc/151012$ ruby calling_initialize.rb 
-Array
-2
-3
-calling_initialize.rb:15:in `&lt;main&gt;': private method `initialize' called for #&lt;Tutu:0x8bb576c @a=2, @b=3&gt; (NoMethodError)
-casiano@exthost:~/LPPsrc/151012$
+p.class       # =&gt; Point
+p.is_a? Point # =&gt; true
 </PRE>
 
 <P>
-<BLOCKQUOTE>
-The instance variables of an object can only be accessed by the
-instance methods of that object. Code that is not inside an instance
-method cannot read or set the value of an instance variable 
-
-</BLOCKQUOTE>
-
-<P>
-Aviso a los programadores Java:
-<PRE>
-casiano@exthost:~/LPPsrc/151012$ cat -n instance_variables_of_a_class.rb 
-     1  class Tutu
-     2    @x = 4
-     3    @y = 9
-     4  
-     5    def initialize(x,y)
-     6      @x, @y = x, y
-     7    end
-     8    def self.x
-     9      @x
-    10    end
-    11  
-    12    def self.y
-    13      @y
-    14    end
-    15  
-    16    def x
-    17      @x
-    18    end
-    19  
-    20    def y
-    21      @y
-    22    end
-    23  end
-    24  
-    25  if __FILE__ == $0
-    26    puts Tutu.x        # 4
-    27    puts Tutu.y        # 9
-    28    z = Tutu.new(5,7)
-    29    puts z.x           # 5
-    30    puts z.y           # 7
-    31  end
-</PRE>
-
-<P>
-<PRE>
-casiano@exthost:~/LPPsrc/151012$ ruby instance_variables_of_a_class.rb 
-4
-9
-5
-7
-</PRE>
-
-<P>
-<OL>
-<LI>This code does not do at all what a Java programmer expects. Instance
-variables are always resolved in the context of <code>self</code>.
-</LI>
-<LI>When the
-<code>initialize</code> method is invoked, <code>self</code> holds an instance of the <code>Tutu</code>
-class.
-</LI>
-<LI>But the code outside of that method is executed as part of
-the definition of the <code>Tutu</code> class. 
-</LI>
-<LI>When those first two assignments
-are executed, <code>self</code> refers to the <code>Tutu</code> class it<code>self</code>, not to an
-instance of the class. 
-</LI>
-<LI>The <code>@x</code> and <code>@y</code> variables inside the <code>initialize</code>
-method are completely different from those outside it.
-</LI>
-</OL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html5475"
-  HREF="node161.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5469"
-  HREF="node157.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5463"
-  HREF="node159.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5471"
-  HREF="node727.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5473"
-  HREF="node730.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="logoLPP.png"
- ALT="LPP"></A><A NAME="tex2html30"
-  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html31"
-  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html32"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html33"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html34"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html35"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html36"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html37"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html39"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html5476"
-  HREF="node161.html">Definiendo un método to_s</A>
-<B> Subir:</B> <A NAME="tex2html5470"
-  HREF="node157.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5464"
-  HREF="node159.html">Instanciando un Punto</A>
- &nbsp; <B>  <A NAME="tex2html5472"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5474"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

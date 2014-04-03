@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Herencia y Constantes</TITLE>
-<META NAME="description" CONTENT="Herencia y Constantes">
+<TITLE>Herencia y Variables de Clase</TITLE>
+<META NAME="description" CONTENT="Herencia y Variables de Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node190.html">
 <LINK REL="previous" HREF="node188.html">
-<LINK REL="up" HREF="node181.html">
+<LINK REL="up" HREF="node182.html">
 <LINK REL="next" HREF="node190.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5899"
+<A NAME="tex2html5923"
   HREF="node190.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5893"
-  HREF="node181.html">
+<A NAME="tex2html5917"
+  HREF="node182.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5887"
+<A NAME="tex2html5911"
   HREF="node188.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5895"
-  HREF="node727.html">
+<A NAME="tex2html5919"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5897"
-  HREF="node730.html">
+<A NAME="tex2html5921"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,98 +96,146 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5900"
-  HREF="node190.html">Delegación</A>
-<B> Subir:</B> <A NAME="tex2html5894"
-  HREF="node181.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html5888"
+<B> Siguiente:</B> <A NAME="tex2html5924"
+  HREF="node190.html">Herencia y Constantes</A>
+<B> Subir:</B> <A NAME="tex2html5918"
+  HREF="node182.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html5912"
   HREF="node188.html">Herencia y Variables de</A>
- &nbsp; <B>  <A NAME="tex2html5896"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5898"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5920"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5922"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02738000000000000000"></A>
-<A NAME="subsection:herenciayconstantes"></A>
+<H2><A NAME="SECTION02737000000000000000"></A>
+<A NAME="subsection:herenciayvariablesdeclase"></A>
 <BR>
-Herencia y Constantes
+Herencia y Variables de Clase
 </H2>
 
 <P>
-Las constantes son heredadas y pueden ser sobredominadas en la misma forma que los métodos.
+Las variables de clase (como <code>@@count</code>) 
+son compartidas por una clase y todas sus subclases.
+
+<P>
+Si una variable <code>@@a</code> es definida por una clase <code>A</code>
+entonces cualquier subclase <code>B</code> de <code>A</code> puede usar dicha variable.
+
+<P>
+Si una subclase asigna un valor a una variable de clase en uso por una superclase no es que cree una copia
+de dicha variable sino que altera el valor de la variable de la superclase.
+Ese será el valor que vean todas las otras subclases de la superclase.
+
+<P>
+Este ejemplo ilustra el comportamiento:
+<PRE>
+[~/srcLPP/inheritance]$ cat InheritanceAndClassVariables.rb 
+class A
+  @@value = 1
+  def A.value 
+    @@value
+  end
+end
+
+puts A.value
+
+class B &lt; A
+  @@value = 2
+end
+
+puts A.value
+puts B.value
+
+class C &lt; A; @@value = 3; end
+
+puts B.value
+puts C.value
+
+puts "A.class_variables = #{A.class_variables.inspect}"
+puts "B.class_variables = #{B.class_variables.inspect}"
+puts "C.class_variables = #{C.class_variables.inspect}"
+</PRE>
+Al ejecutar tenemos:
+<PRE>
+[~/srcLPP/inheritance]$ ruby InheritanceAndClassVariables.rb 
+1
+2
+2
+3
+3
+A.class_variables = [:@@value]
+B.class_variables = []
+C.class_variables = []
+</PRE>
+<SPAN  CLASS="textbf">Por esta razón es preferible usar variables de instancia de la clase en vez de variables de clase</SPAN>.
+Nótese que siempre podemos averiguar las variables de clase de una clase mediante el
+método <code>class_variables</code>.
+
+<P>
+Observa la diferencia cuando se usan variables de instancia de la clase:
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n  InheritanceAndConstants.rb 
-     1  class Point
-     2    def initialize(x,y)
-     3      @x,@y = x, y
-     4    end
-     5  
-     6    ORIGIN = Point.new(0,0)   
-     7  
-     8    def to_s;  "#@x #@y" end
-     9  
-    10    def chuchu
-    11      puts ORIGIN
-    12    end
-    13  end
-    14  
-    15  class Point3D &lt; Point
-    16    def initialize(x, y, z)
-    17      super(x, y); @z = z
-    18    end
-    19    def to_s; super+" #@z" end
-    20  
-    21    puts ORIGIN                  # 0 0
-    22    ORIGIN = Point3D.new(0, 0, 0)
-    23    puts ORIGIN                  # 0 0 0
-    24    puts Point::ORIGIN           # 0 0
-    25  
-    26  end
-    27  
-    28  x = Point3D.new(1, 2, 3)
-    29  x.chuchu                       # 0 0
+13:11][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat InheritanceAndClassInstanceVariables.rb
+class A
+  @value = 1
+  def self.value 
+    @value
+  end
+end
+
+puts A.value  # 1
+
+class B &lt; A
+  @value = 2
+end
+
+puts A.value  # 1
+puts B.value  # 2
+
+class C &lt; A; @value = 3; end
+
+puts B.value # 2
+puts C.value # 3
+[13:12][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby InheritanceAndClassInstanceVariables.rb
+1
+1
+2
+2
+3
 </PRE>
-Obsérvese como la llamada al método <code>chuchu</code>
-de la línea 29  muestra <code>Point::ORIGIN</code> y no
-<code>Point3D::ORIGIN</code>:
 
 <P>
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby InheritanceAndConstants.rb 
-0 0                 # linea 21
-0 0 0               #       23
-0 0                 #       24
-0 0                 #       29
-</PRE>
-<SPAN  CLASS="textbf">La diferencia entre constantes y métodos es que las constantes se buscan en el ámbito 
-léxico del lugar en el que son usadas antes de mirar en la jerarquía de herencia</SPAN>.
-Esto significa que si <code>Point3D</code> hereda de 
-<code>Point</code> métodos que usan la constante <code>ORIGIN</code>, la conducta de dichos métodos no cambia 
-cuando <code>Point3D</code> define su propia constante <code>ORIGIN</code>.
+
+<OL>
+<LI>Véase  el excelente artículo
+<A NAME="tex2html361"
+  HREF="http://patshaughnessy.net/2012/12/17/ruby-smalltalk-and-class-variables">Ruby, Smalltalk and Class Variables</A>
+by Pat Shaughnessy 
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5899"
+<A NAME="tex2html5923"
   HREF="node190.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5893"
-  HREF="node181.html">
+<A NAME="tex2html5917"
+  HREF="node182.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5887"
+<A NAME="tex2html5911"
   HREF="node188.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5895"
-  HREF="node727.html">
+<A NAME="tex2html5919"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5897"
-  HREF="node730.html">
+<A NAME="tex2html5921"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -242,20 +290,20 @@ cuando <code>Point3D</code> define su propia constante <code>ORIGIN</code>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5900"
-  HREF="node190.html">Delegación</A>
-<B> Subir:</B> <A NAME="tex2html5894"
-  HREF="node181.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html5888"
+<B> Siguiente:</B> <A NAME="tex2html5924"
+  HREF="node190.html">Herencia y Constantes</A>
+<B> Subir:</B> <A NAME="tex2html5918"
+  HREF="node182.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html5912"
   HREF="node188.html">Herencia y Variables de</A>
- &nbsp; <B>  <A NAME="tex2html5896"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5898"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+ &nbsp; <B>  <A NAME="tex2html5920"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5922"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

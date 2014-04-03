@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Carga y Solicitud de Módulos</TITLE>
-<META NAME="description" CONTENT="Carga y Solicitud de Módulos">
+<TITLE>Prepend</TITLE>
+<META NAME="description" CONTENT="Prepend">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node208.html">
-<LINK REL="previous" HREF="node203.html">
-<LINK REL="up" HREF="node156.html">
+<LINK REL="next" HREF="node205.html">
+<LINK REL="previous" HREF="node199.html">
+<LINK REL="up" HREF="node157.html">
 <LINK REL="next" HREF="node205.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6133"
+<A NAME="tex2html6156"
   HREF="node205.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6127"
-  HREF="node156.html">
+<A NAME="tex2html6150"
+  HREF="node157.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6121"
+<A NAME="tex2html6144"
   HREF="node203.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6129"
-  HREF="node727.html">
+<A NAME="tex2html6152"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6131"
-  HREF="node730.html">
+<A NAME="tex2html6154"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,47 +96,87 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6134"
-  HREF="node205.html">El Camino de Búsqueda</A>
-<B> Subir:</B> <A NAME="tex2html6128"
-  HREF="node156.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6122"
-  HREF="node203.html">Prepend</A>
- &nbsp; <B>  <A NAME="tex2html6130"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6132"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6157"
+  HREF="node205.html">Carga y Solicitud de</A>
+<B> Subir:</B> <A NAME="tex2html6151"
+  HREF="node157.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6145"
+  HREF="node203.html">Módulos Espacio de Nombres</A>
+ &nbsp; <B>  <A NAME="tex2html6153"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6155"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02790000000000000000">
-Carga y Solicitud de Módulos</A>
+<H1><A NAME="SECTION02780000000000000000"></A>
+<A NAME="section:prependmemoize"></A>
+<BR>
+Prepend
 </H1>
 
 <P>
+What <A NAME="tex2html378"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A><code>#prepend</code> allows us to do is insert a module
+in-front of the class it was prepended to:
+<PRE>
+module Before
+end
+
+class Example
+  prepend Before
+end
+
+Example.ancestors
+# =&gt; [Before, Example, Object, Kernel, BasicObject]
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION02780010000000000000">
+Ejemplo: Memoización</A>
+</H4>
+  
+
+<PRE>
+module Memoize
+
+  def memoize(method)
+    memoizer = Module.new do
+
+      # Define a method in the module with the same name
+      define_method method do
+        @__memoized_results ||= {}
+
+        if @__memoized_results.include? method
+          @__memoized_results[method]
+        else
+          @__memoized_results[method] = super()
+        end
+      end
+
+    end
+
+    prepend memoizer
+  end
+end
+</PRE>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6135"
-  HREF="node205.html">El Camino de Búsqueda</A>
-<LI><A NAME="tex2html6136"
-  HREF="node206.html">Ejecutando Código Cargado</A>
-<UL>
-<LI><A NAME="tex2html6137"
-  HREF="node206.html#SECTION02792100000000000000">Envolviendo una Carga</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6138"
-  HREF="node207.html">Autoloading de Módulos</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html6158"
+  HREF="node204.html#SECTION02780010000000000000">Ejemplo: Memoización</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

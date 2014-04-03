@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Organizando las pruebas</TITLE>
-<META NAME="description" CONTENT="Organizando las pruebas">
+<TITLE>Cuando una assertion falla</TITLE>
+<META NAME="description" CONTENT="Cuando una assertion falla">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node275.html">
 <LINK REL="previous" HREF="node273.html">
-<LINK REL="up" HREF="node271.html">
+<LINK REL="up" HREF="node272.html">
 <LINK REL="next" HREF="node275.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7273"
+<A NAME="tex2html7297"
   HREF="node275.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7267"
-  HREF="node271.html">
+<A NAME="tex2html7291"
+  HREF="node272.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7261"
+<A NAME="tex2html7285"
   HREF="node273.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7269"
-  HREF="node727.html">
+<A NAME="tex2html7293"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7271"
-  HREF="node730.html">
+<A NAME="tex2html7295"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,188 +96,138 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7274"
-  HREF="node275.html">Setup y Teardown</A>
-<B> Subir:</B> <A NAME="tex2html7268"
-  HREF="node271.html">Test/Unit</A>
-<B> Anterior:</B> <A NAME="tex2html7262"
-  HREF="node273.html">Cuando una assertion falla</A>
- &nbsp; <B>  <A NAME="tex2html7270"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7272"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7298"
+  HREF="node275.html">Organizando las pruebas</A>
+<B> Subir:</B> <A NAME="tex2html7292"
+  HREF="node272.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7286"
+  HREF="node273.html">Ejemplo Sencillo de uso</A>
+ &nbsp; <B>  <A NAME="tex2html7294"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7296"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html7275"
-  HREF="node274.html#SECTION02913010000000000000">Convenciones con respecto a los Nombres</A>
-<LI><A NAME="tex2html7276"
-  HREF="node274.html#SECTION02913020000000000000">Ejecución de pruebas específicas</A>
-<LI><A NAME="tex2html7277"
-  HREF="node274.html#SECTION02913030000000000000">Opciones en Línea de Comandos</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02913000000000000000">
-Organizando las pruebas</A>
+<H2><A NAME="SECTION02912000000000000000">
+Cuando una assertion falla</A>
 </H2>
 
 <P>
+<PRE>
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat test/tc_simple_number2.rb 
+# File:  tc_simple_number2.rb
+ 
+require "simple_number"
+require "test/unit"
+ 
+class TestSimpleNumber &lt; Test::Unit::TestCase
+ 
+  def test_simple
+    assert_equal(4, SimpleNumber.new(2).add(2) )
+    assert_equal(4, SimpleNumber.new(2).multiply(2) )
+  end
+ 
+  def test_typecheck
+    assert_raise( RuntimeError ) { SimpleNumber.new('a') }
+  end
+ 
+  def test_failure
+    assert_equal(3, SimpleNumber.new(2).add(2), "Adding doesn't work" )
+  end
+ 
+end
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat Rakefile 
+desc "Test class SimpleNumber"
+task :test do
+  sh "ruby -Ilib -Itest test/tc_simple_number.rb"
+end
+
+desc "Test with test/tc_simple_number2.rb. Expect failures"
+task :test2 do
+  sh "ruby -Ilib -Itest test/tc_simple_number2.rb"
+end
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ rake test2
+ruby -Ilib -Itest test/tc_simple_number2.rb
+Run options: 
+
+# Running tests:
+
+F..
+
+Finished tests in 0.001706s, 1758.4994 tests/s, 2344.6659 assertions/s.
+
+  1) Failure:
+test_failure(TestSimpleNumber) [test/tc_simple_number2.rb:18]:
+Adding doesn't work.
+&lt;3&gt; expected but was
+&lt;4&gt;.
+
+3 tests, 4 assertions, 1 failures, 0 errors, 0 skips
+rake aborted!
+Command failed with status (1): [ruby -Ilib -Itest test/tc_simple_number2.r...]
+/Users/casiano/local/src/ruby/LPP/unit_testing/simple_example/Rakefile:8:in `block in &lt;top (required)&gt;'
+/Users/casiano/.rvm/gems/ruby-1.9.3-p392/bin/ruby_noexec_wrapper:14:in `eval'
+/Users/casiano/.rvm/gems/ruby-1.9.3-p392/bin/ruby_noexec_wrapper:14:in `&lt;main&gt;'
+Tasks: TOP =&gt; test2
+(See full trace by running task with --trace)
+</PRE>
 
 <OL>
-<LI>Tests for a particular unit of code are grouped together into a
-<A NAME="10816"></A><SPAN  CLASS="textbf">test case</SPAN>, which is a subclass of <A NAME="tex2html541"
-  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit/TestCase.html"><TT>Test/Unit/TestCase</TT></A>. 
+<LI>Now there are three tests (three member functions) in the class.
 
 <P>
 </LI>
-<LI><TT>Assertions</TT> 
-are gathered in <A NAME="10822"></A><SPAN  CLASS="textbf">tests</SPAN>, member functions for the test case whose
-names start with <code>test_</code>. 
+<LI>The function <code>test_typecheck</code> uses <code>assert_raise</code> to check for an
+exception. 
 
 <P>
 </LI>
-<LI>When the test case is executed or required,
-<A NAME="tex2html542"
-  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A> will iterate through all of the tests (finding all of
-the <A NAME="10827"></A><SPAN  CLASS="textbf">member functions</SPAN> which start with <code>test_</code> using reflection) in
-the test case, and provide the appropriate feedback.
+<LI>The function <code>test_failure</code> is set up to fail, which the
+Ruby output happily points out, not only telling us which test
+failed, but how it failed (<code>expected &lt;3&gt; but was &lt;4&gt;</code>). 
 
 <P>
 </LI>
-<LI>Test case classes can be gathered together into test suites which are Ruby files which require other test cases:
-<PRE>
-  # File: ts_allTheTests.rb
-  require 'test/unit'
-  require 'testOne'
-  require 'testTwo'
-  require 'testThree'
-</PRE>
-In this way, related test cases can be naturally grouped.
+<LI>On this
+assertion, we've also added an final parameters which is a custom
+error message. It's strictly optional but can be helpful for
+debugging. 
 
 <P>
 </LI>
-<LI>Further, test suites can contain other test suites, allowing the construction of a hierarchy of tests.
-</LI>
-<LI>This structure provides relatively fine-grained control over testing.
-
-<P>
-
-<OL>
-<LI>Individual tests can be run from a test case
-</LI>
-<LI>a full test case can be run stand-alone, 
-</LI>
-<LI>a test suite containing multiple cases can be run, 
-</LI>
-<LI>or a suite of suites can run, spanning many test
-  cases.
-  
+<LI>All of the assertions include their own error messages
+which are usually sufficient for simple debugging.
 </LI>
 </OL>
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION02913010000000000000">
-Convenciones con respecto a los Nombres</A>
-</H4>
-  
-
-<P>
-The author of <A NAME="tex2html543"
-  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A>, <A NAME="tex2html544"
-  HREF="https://github.com/ntalbott">Nathaniel Talbott</A>, suggests starting the
-names of test cases with <code>tc_</code> and the names of test suites with <code>ts_</code>
-
-<P>
-
-<H4><A NAME="SECTION02913020000000000000">
-Ejecución de pruebas específicas</A>
-</H4>
-  
-
-It's possible to run just one (or more) tests out of a full test case:
-<PRE>
-&gt;&gt; ruby -w tc_simpleNumber2.rb --name test_typecheck 
-Loaded suite tc_simpleNumber2
-Started
-.
-Finished in 0.003401 seconds.
- 
-1 tests, 1 assertions, 0 failures, 0 errors
-</PRE>
-
-<P>
-It is also possible to run all tests whose names match a given pattern:
-<PRE>
-&gt;&gt; ruby -w tc_simpleNumber2.rb --name /test_type.*/ 
-Loaded suite tc_simpleNumber2
-Started
-.
-Finished in 0.003401 seconds.
- 
-1 tests, 1 assertions, 0 failures, 0 errors
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION02913030000000000000">
-Opciones en Línea de Comandos</A>
-</H4>
-  
-
-<PRE>
-unittestingpoint/examples(master)]$ ruby -I. tc_point_1.rb --help
-Usage: tc_point_1 [options]
-minitest options:
-    -h, --help                       Display this help.
-    -s, --seed SEED                  Sets random seed
-    -v, --verbose                    Verbose. Show progress processing files.
-    -n, --name PATTERN               Filter test names on pattern.
-        --jobs-status [TYPE]         Show status of jobs every file; Disabled when --jobs isn't specified.
-    -j, --jobs N                     Allow run tests with N jobs at once
-        --separate                   Restart job process after one testcase has done
-        --retry                      Retry running testcase when --jobs specified
-        --no-retry                   Disable --retry
-        --ruby VAL                   Path to ruby; It'll have used at -j option
-    -q, --hide-skip                  Hide skipped tests
-        --show-skip                  Show skipped tests
-        --color[=WHEN]               colorize the output.  WHEN defaults to 'always'
-                                     or can be 'never' or 'auto'.
-        --tty[=WHEN]                 force to output tty control.  WHEN defaults to 'yes'
-                                     or can be 'no'.
-    -b, --basedir=DIR                Base directory of test suites.
-    -x, --exclude PATTERN            Exclude test files on pattern.
-    -Idirectory                      Add library load path
-        --[no-]gc-stress             Set GC.stress as true
-</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7273"
+<A NAME="tex2html7297"
   HREF="node275.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7267"
-  HREF="node271.html">
+<A NAME="tex2html7291"
+  HREF="node272.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7261"
+<A NAME="tex2html7285"
   HREF="node273.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7269"
-  HREF="node727.html">
+<A NAME="tex2html7293"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7271"
-  HREF="node730.html">
+<A NAME="tex2html7295"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -332,20 +282,20 @@ minitest options:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7274"
-  HREF="node275.html">Setup y Teardown</A>
-<B> Subir:</B> <A NAME="tex2html7268"
-  HREF="node271.html">Test/Unit</A>
-<B> Anterior:</B> <A NAME="tex2html7262"
-  HREF="node273.html">Cuando una assertion falla</A>
- &nbsp; <B>  <A NAME="tex2html7270"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7272"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7298"
+  HREF="node275.html">Organizando las pruebas</A>
+<B> Subir:</B> <A NAME="tex2html7292"
+  HREF="node272.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7286"
+  HREF="node273.html">Ejemplo Sencillo de uso</A>
+ &nbsp; <B>  <A NAME="tex2html7294"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7296"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

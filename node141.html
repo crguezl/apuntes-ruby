@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Clausuras y Variables Compartidas</TITLE>
-<META NAME="description" CONTENT="Clausuras y Variables Compartidas">
+<TITLE>Clausuras</TITLE>
+<META NAME="description" CONTENT="Clausuras">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node142.html">
-<LINK REL="previous" HREF="node140.html">
-<LINK REL="up" HREF="node140.html">
+<LINK REL="next" HREF="node144.html">
+<LINK REL="previous" HREF="node132.html">
+<LINK REL="up" HREF="node116.html">
 <LINK REL="next" HREF="node142.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5080"
+<A NAME="tex2html5101"
   HREF="node142.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5074"
-  HREF="node140.html">
+<A NAME="tex2html5095"
+  HREF="node116.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5068"
+<A NAME="tex2html5089"
   HREF="node140.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5076"
-  HREF="node727.html">
+<A NAME="tex2html5097"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5078"
-  HREF="node730.html">
+<A NAME="tex2html5099"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,230 +96,45 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5081"
-  HREF="node142.html">Clausuras y Bindings</A>
-<B> Subir:</B> <A NAME="tex2html5075"
-  HREF="node140.html">Clausuras</A>
-<B> Anterior:</B> <A NAME="tex2html5069"
-  HREF="node140.html">Clausuras</A>
- &nbsp; <B>  <A NAME="tex2html5077"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5079"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5102"
+  HREF="node142.html">Clausuras y Variables Compartidas</A>
+<B> Subir:</B> <A NAME="tex2html5096"
+  HREF="node116.html">Métodos, Procs, Lambdas y</A>
+<B> Anterior:</B> <A NAME="tex2html5090"
+  HREF="node140.html">Ejemplo: La Clase Filter</A>
+ &nbsp; <B>  <A NAME="tex2html5098"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5100"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02661000000000000000">
-Clausuras y Variables Compartidas</A>
-</H2>
-
-<P>
-
-<OL>
-<LI>El término <A NAME="5303"></A><SPAN  CLASS="textit">clausura</SPAN> se refiere a un objeto que es a la vez invocable
-como una función  y que dispone de un binding o entorno de ejecución para esa función.
-
-<P>
-</LI>
-<LI>El objeto <A NAME="tex2html236"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> resultante de la creación de un proc o una lambda 
-no sólo nos proporciona un bloque ejecutable: también nos proporciona
-bindings para todas las variables que son usadas por el bloque
-</LI>
-<LI>El bloque asociado con la invocación de <code>collect</code>
-usa <code>n</code>:
-<PRE>
-# multiply each element of the data array by n
-def multiply(data, n)
-  data.collect {|x| x*n }
-end
-
-puts multiply([1,2,3], 2)   # Prints 2,4,6
-</PRE>
-</LI>
-<LI>Si en vez de un proc usamos una lambda, el acceso a <code>n</code> 
-permanece mas allá de <code>multiplier</code>. Es esta característica la
-que hace que la lambda <code>doubler</code> sea una clausura:
-<PRE>
-# Return a lambda that retains or "closes over" the argument n
-def multiplier(n) 
-  lambda {|data| data.collect{|x| x*n } }
-end
-doubler = multiplier(2)     # Get a lambda that knows how to double
-puts doubler.call([1,2,3])  # Prints 2,4,6
-</PRE>
-<code>doubler</code> encapsula o clausura con la lambda el binding 
-de <code>n</code>
-</LI>
-<LI>Return a pair of lambdas that share access to a local variable.
-<PRE>
-def accessor_pair(initialValue=nil)
-  value = initialValue  # A local variable shared by the returned lambdas.
-  getter = lambda { value }          # Return value of local variable.
-  setter = lambda {|x| value = x }   # Change value of local variable.
-  return getter,setter               # Return pair of lambdas to caller.
-end
-
-getX, setX = accessor_pair(0) # Create accessor lambdas for initial value 0.
-puts getX[]        # Prints 0. Note square brackets instead of call.
-setX[10]           # Change the value through one closure.
-puts getX[]        # Prints 10. The change is visible through the other.
-</PRE>
-</LI>
-<LI>Este código retorna un array de lambdas que son multiplicadores:
-<PRE>
-$ cat closure_shared_variables.rb 
-# Return an array of lambdas that multiply by the arguments
-def multipliers(*args)
-# x = nil
-  args.map {|x| lambda {|y| x*y }}
-end
-
-double,triple = multipliers(2,3)
-puts double.call(2)
-</PRE>
-
-<P>
-<PRE>
-$ rvm use 1.8.7
-Using /Users/casiano/.rvm/gems/ruby-1.8.7-p352
-$ ruby closure_shared_variables.rb 
-4
-</PRE>
-Veamos que ocurre cuando descomentamos la línea <code># x = nil</code>:
-<PRE>
-$ cat closure_shared_variables.rb
-
-# Return an array of lambdas that multiply by the arguments
-def multipliers(*args)
-  x = nil                            
-  args.map {|x| lambda {|y| x*y }}   # En 1.8 la |x| es la misma x 
-end                                  # local
-
-double,triple = multipliers(2,3)     
-puts double.call(2)    # Prints 6 in Ruby 1.8
-</PRE>
-En Ruby 1.8 la <code>|x|</code> del argumento del bloque no es local al bloque sino que 
-es la <code>x</code> de <code>multipliers</code> definida en <code>x = nil</code>.
-Obsérvese que la llamada <code>multipliers(2, 3)</code> retorna un array con dos 
-lambdas.
-Obtenemos así un comportamiento inesperado:
-<PRE>
-$ rvm use 1.8.7
-Using /Users/casiano/.rvm/gems/ruby-1.8.7-p352
-$ rvm list
-
-rvm rubies
-
-=&gt; ruby-1.8.7-p352 [ i686 ]
-   ruby-1.9.2-head [ x86_64 ]
-   ruby-1.9.2-p290 [ x86_64 ]
-   ruby-1.9.3-head [ x86_64 ]
-
-$ ruby closure_shared_variables.rb 
-6
-</PRE>
-Esto es así porque la única <code>x</code> contiene el último valor asignado a ella: 3.
-
-<P>
-En este código el problema desaparece con versiones posteriores a la 1.9 porque los
-argumentos de un bloque son siempre locales:
-<PRE>
-$ rvm use 1.9.2
-Using /Users/casiano/.rvm/gems/ruby-1.9.2-p290
-$ ruby closure_shared_variables.rb 
-4
-</PRE>
-</LI>
-</OL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html5080"
-  HREF="node142.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5074"
-  HREF="node140.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5068"
-  HREF="node140.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5076"
-  HREF="node727.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5078"
-  HREF="node730.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="logoLPP.png"
- ALT="LPP"></A><A NAME="tex2html30"
-  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html31"
-  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html32"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html33"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html34"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html35"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html36"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html37"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html39"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
+<H1><A NAME="SECTION02660000000000000000"></A>
+<A NAME="section:clausuras"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5081"
-  HREF="node142.html">Clausuras y Bindings</A>
-<B> Subir:</B> <A NAME="tex2html5075"
-  HREF="node140.html">Clausuras</A>
-<B> Anterior:</B> <A NAME="tex2html5069"
-  HREF="node140.html">Clausuras</A>
- &nbsp; <B>  <A NAME="tex2html5077"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5079"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+Clausuras
+</H1>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html5103"
+  HREF="node142.html">Clausuras y Variables Compartidas</A>
+<LI><A NAME="tex2html5104"
+  HREF="node143.html">Clausuras y Bindings</A>
+<UL>
+<LI><A NAME="tex2html5105"
+  HREF="node143.html#SECTION02662010000000000000">Véase</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

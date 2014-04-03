@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Asignando Argumentos a los Parámetros</TITLE>
-<META NAME="description" CONTENT="Asignando Argumentos a los Parámetros">
+<TITLE>Listas de Argumentos de Longitud Variable y Arrays</TITLE>
+<META NAME="description" CONTENT="Listas de Argumentos de Longitud Variable y Arrays">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node128.html">
 <LINK REL="previous" HREF="node126.html">
-<LINK REL="up" HREF="node124.html">
+<LINK REL="up" HREF="node125.html">
 <LINK REL="next" HREF="node128.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html4837"
+<A NAME="tex2html4859"
   HREF="node128.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html4831"
-  HREF="node124.html">
+<A NAME="tex2html4853"
+  HREF="node125.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html4825"
+<A NAME="tex2html4847"
   HREF="node126.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html4833"
-  HREF="node727.html">
+<A NAME="tex2html4855"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html4835"
-  HREF="node730.html">
+<A NAME="tex2html4857"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,68 +96,134 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html4838"
-  HREF="node128.html">Hashes para Argumentos con</A>
-<B> Subir:</B> <A NAME="tex2html4832"
-  HREF="node124.html">Argumentos de un Método</A>
-<B> Anterior:</B> <A NAME="tex2html4826"
-  HREF="node126.html">Listas de Argumentos de</A>
- &nbsp; <B>  <A NAME="tex2html4834"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html4836"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html4860"
+  HREF="node128.html">Asignando Argumentos a los</A>
+<B> Subir:</B> <A NAME="tex2html4854"
+  HREF="node125.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html4848"
+  HREF="node126.html">Parámetros por Defecto</A>
+ &nbsp; <B>  <A NAME="tex2html4856"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html4858"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02643000000000000000">
-Asignando Argumentos a los Parámetros</A>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html4861"
+  HREF="node127.html#SECTION02642100000000000000">Pasando Arrays a Métodos que Esperan una Lista de Argumentos</A>
+<LI><A NAME="tex2html4862"
+  HREF="node127.html#SECTION02642200000000000000">Los Enumeradores son Splattables</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02642000000000000000">
+Listas de Argumentos de Longitud Variable y Arrays</A>
 </H2>
 
 <P>
-Supongamos que tenemos un método que es declarado con 
+<PRE>
+# Return the largest of the one or more arguments passed
+def max(first, *rest)
+  # Assume that the required first argument is the largest
+  max = first
+  # Now loop through each of the optional arguments looking for bigger ones
+  rest.each {|x| max = x if x &gt; max }
+  # Return the largest one we found
+  max
+end
+</PRE>
 
-<UL>
-<LI><code>o</code> parámetros ordinarios,
-</LI>
-<LI><code>d</code> parámetros con valores por defecto
-</LI>
-<LI>un parámetro array prefijado con <code>*</code>
-</LI>
-</UL>
-Supongamos que este método es invocado con <code>a</code> argumentos.
+<P>
+<PRE>
+max(1)       # first=1, rest=[]   
+max(1,2)     # first=1, rest=[2]  
+max(1,2,3)   # first=1, rest=[2,3]
+</PRE>
 
 <P>
 
-<UL>
-<LI>Si <code>a &lt; o</code> se genera una excepción <code>ArgumentError</code>
-</LI>
-<LI>Si <code>a &gt;= o</code> y <code>a &lt;= o+d</code> entonces los  <code>a-o</code> parámetros con defecto mas a la izquierda tendrán argumentos asignados. 
-Los restantes <code>o+d-a</code> tendrán los valores por defecto
-</LI>
-<LI>Si <code>a &gt; o + d</code> entonces el array de parámetros cuyo nombre se prefijo con
-<code>*</code> tendrá <code>a-o-d</code> argumentos. En otro caso estará vacío
-</LI>
-</UL>
+<H3><A NAME="SECTION02642100000000000000">
+Pasando Arrays a Métodos que Esperan una Lista de Argumentos</A>
+</H3>
+
+<P>
+<PRE>
+data = [3, 2, 1]
+m = max(*data)   # first = 3, rest=[2,1] =&gt; 3
+</PRE>
+
+<P>
+A veces nos referimos a este uso de <code>*</code> como el <A NAME="5172"></A><SPAN  CLASS="textit">operador de splat</SPAN>
+
+<P>
+<PRE>
+m = max(data)   # first = [3,2,1], rest=[] =&gt; [3,2,1]
+</PRE>
+
+<P>
+<PRE>
+# Convert the Cartesian point (x,y) to polar (magnitude, angle) coordinates
+def polar(x,y)
+  return [ Math.hypot(y,x), Math.atan2(y,x) ]
+end
+
+# Convert polar coordinates to Cartesian coordinates
+def cartesian(magnitude, angle)
+  [magnitude*Math.cos(angle), magnitude*Math.sin(angle)]
+end
+
+x,y = cartesian(*polar(x, y))
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02642200000000000000">
+Los Enumeradores son Splattables</A>
+</H3>
+
+<P>
+Los enumeradores en Ruby 1.9 son objetos con métodos como
+<code>each</code>, <code>each_with_index</code> y <code>next</code>:
+<PRE>
+ruby-1.9.2-head :015 &gt; z = "hello".each_char
+ =&gt; #&lt;Enumerator: "hello":each_char&gt; 
+ruby-1.9.2-head :016 &gt; z.next
+ =&gt; "h" 
+ruby-1.9.2-head :017 &gt; z.next
+ =&gt; "e" 
+ruby-1.9.2-head :022 &gt; z.class.instance_methods(false)
+ =&gt; [:each, :each_with_index, :each_with_object, :with_index,
+     :with_object, :next_values, :peek_values, :next, :peek, :feed,
+     :rewind, :inspect]
+</PRE>
+Los enumeradores en Ruby 1.9 son objetos splattables:
+<PRE>
+max(*"hello world".each_char)  # =&gt; 'w'
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html4837"
+<A NAME="tex2html4859"
   HREF="node128.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html4831"
-  HREF="node124.html">
+<A NAME="tex2html4853"
+  HREF="node125.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html4825"
+<A NAME="tex2html4847"
   HREF="node126.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html4833"
-  HREF="node727.html">
+<A NAME="tex2html4855"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html4835"
-  HREF="node730.html">
+<A NAME="tex2html4857"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -212,20 +278,20 @@ Los restantes <code>o+d-a</code> tendrán los valores por defecto
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html4838"
-  HREF="node128.html">Hashes para Argumentos con</A>
-<B> Subir:</B> <A NAME="tex2html4832"
-  HREF="node124.html">Argumentos de un Método</A>
-<B> Anterior:</B> <A NAME="tex2html4826"
-  HREF="node126.html">Listas de Argumentos de</A>
- &nbsp; <B>  <A NAME="tex2html4834"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html4836"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html4860"
+  HREF="node128.html">Asignando Argumentos a los</A>
+<B> Subir:</B> <A NAME="tex2html4854"
+  HREF="node125.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html4848"
+  HREF="node126.html">Parámetros por Defecto</A>
+ &nbsp; <B>  <A NAME="tex2html4856"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html4858"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

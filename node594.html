@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Depuración/Debugging</TITLE>
-<META NAME="description" CONTENT="Depuración/Debugging">
+<TITLE>El fichero authorized_keys</TITLE>
+<META NAME="description" CONTENT="El fichero authorized_keys">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node595.html">
 <LINK REL="previous" HREF="node593.html">
-<LINK REL="up" HREF="node584.html">
+<LINK REL="up" HREF="node590.html">
 <LINK REL="next" HREF="node595.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12946"
+<A NAME="tex2html12976"
   HREF="node595.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12940"
-  HREF="node584.html">
+<A NAME="tex2html12970"
+  HREF="node590.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12934"
+<A NAME="tex2html12964"
   HREF="node593.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12942"
-  HREF="node727.html">
+<A NAME="tex2html12972"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12944"
-  HREF="node730.html">
+<A NAME="tex2html12974"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,156 +96,204 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12947"
-  HREF="node595.html">Los Ficheros de Configuración</A>
-<B> Subir:</B> <A NAME="tex2html12941"
-  HREF="node584.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html12935"
-  HREF="node593.html">Consideraciones sobre la Seguridad</A>
- &nbsp; <B>  <A NAME="tex2html12943"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12945"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12977"
+  HREF="node595.html">Deshabilitar la Asignación de</A>
+<B> Subir:</B> <A NAME="tex2html12971"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html12965"
+  HREF="node593.html">Claves Pública y Privada:</A>
+ &nbsp; <B>  <A NAME="tex2html12973"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12975"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION064100000000000000000">
-Depuración/Debugging</A>
+<H1><A NAME="SECTION06440000000000000000"></A>
+<A NAME="subsection:authorizedkeys"></A>
+<BR>
+El fichero <TT>authorized_keys</TT>
 </H1>
 
 <P>
-La opción <code>-v</code> hace que los clientes <code>scp</code> y <code>ssh</code> proporcionen
-información de depuración. Observemos la siguiente copia remota:
+Cada línea del fichero SSH1  <TT>authorized_keys</TT>  
+(habitualmente en <code>~/.ssh/authorized_keys</code>) 
+contiene una clave pública. Tiene el siguiente formato:
+Cada entrada va en una sóla línea. Los campos se separan por comas.
+Las líneas en blanco y las que empiezan por <code>#</code> se ignoran.
+
+<P>
+
+<UL>
+<LI>Primero van las opciones, separadas por comas, por ejemplo:
+
+<UL>
+<LI><code>from="pattern-list"</code>
+El servidor <A NAME="tex2html1290"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+puede limitar que máquinas pueden conectarse a la máquina usando wrappers TCP, pero 
+no a nivel de usuario. Utilizando esta opción es posible limitar las conexiones para una identidad a un conjunto especifico
+de máquinas. Los hosts se separan por comas y pueden contener comodines como <code>*</code> y <code>?</code>. Se pueden 
+rechazar hosts específicos prefijándolos con <code>!</code>. Por ejemplo:
 
 <P>
 <PRE>
-pp2@nereida:~/Lbook$ scp procesos.tex orion:
-procesos.tex                         100%  250KB 249.5KB/s   00:01
+      from="!enemy.my_isp.net,*.my_isp.net,home.example.com"
 </PRE>
-La opción <code>-v</code> nos informa de la existencia de un problema:
+
+<P>
+</LI>
+<LI><code>command="command"</code>
+</LI>
+<LI><code>environment="NAME=value"</code>
+Se usa si se quiere tener un entorno específico cuando se usa esta clave. Por ejemplo 
+podemos poner un <code>$PATH</code> restrictivo para que no pueda ejecutar ciertos comandos,
+cambiar <code>$HOME</code>, etc. 
+
+<P>
+Si se tiene varias personas accediendo via diferentes identidades a la misma cuenta - 
+usando tal vez un comando forzado - puede
+ser útil establecer la variable <code>$LOGNAME</code> de manera que identifique quién se conecta.
+</LI>
+<LI><code>nopty</code>
+</LI>
+</UL>
+Este campo es opcional. Su presencia se detecta 
+viendo si la línea comienza por un número o no
+</LI>
+<LI>La clave pública: bits, exponente y módulo
+</LI>
+<LI>Un comentario (<code>user@machine.domain.es</code> en el ejemplo que sigue)
+</LI>
+</UL>
+
+<P>
+Sigue un ejemplo. Primero generemos una pareja especial para esto:
 
 <P>
 <PRE>
-pp2@nereida:~/Lbook$ scp -v procesos.tex orion:
-Executing: program /usr/bin/ssh host orion, user (unspecified), command scp -v -t .
-OpenSSH_4.3p2 Debian-9, OpenSSL 0.9.8c 05 Sep 2006
-debug1: Reading configuration data /home/pp2/.ssh/config
-debug1: Applying options for orion
-debug1: Reading configuration data /etc/ssh/ssh_config
-debug1: Applying options for *
-debug1: Connecting to orion [193.145.105.17] port 22.
-debug1: Connection established.
-debug1: identity file /home/pp2/.ssh/identity type -1
-debug1: identity file /home/pp2/.ssh/id_rsa type 1
-debug1: identity file /home/pp2/.ssh/id_dsa type 2
-debug1: Remote protocol version 2.0, remote software version OpenSSH_4.3p2 Debian-9
-debug1: match: OpenSSH_4.3p2 Debian-9 pat OpenSSH*
-debug1: Enabling compatibility mode for protocol 2.0
-debug1: Local version string SSH-2.0-OpenSSH_4.3p2 Debian-9
-debug1: An invalid name was supplied
-Configuration file does not specify default realm
-
-debug1: An invalid name was supplied
-A parameter was malformed
-Validation error
-
-debug1: An invalid name was supplied
-Configuration file does not specify default realm
-
-debug1: An invalid name was supplied
-A parameter was malformed
-Validation error
-
-debug1: SSH2_MSG_KEXINIT sent
-....................................................
-debug1: Transferred: stdin 0, stdout 0, stderr 0 bytes in 0.3 seconds
-debug1: Bytes per second: stdin 0.0, stdout 0.0, stderr 0.0
-debug1: Exit status 0
+$ ssh-keygen -tdsa -C 'limited command to millo' -P '' -f ~/.ssh/limited_command
+$ ssh-copy-id -i ~/.ssh/limited_command.pub millo
 </PRE>
-
-<P>
-Después de buscar en <code>Google</code> vemos
-cual es la causa del problema:
-
-<P>
-<BLOCKQUOTE>
-<I>What happens is that SSH will hang for a long period of time before
-providing a password prompt or performing key authentication. In either
-case the problem is the GSSAPI that is now being used by clients and
-not by most servers.
-</I>
-
-</BLOCKQUOTE>
-
-<P>
-La solución recomendada es desactivar <code>GSSAPIAuthentication</code>:
+Ahora podemos entrar a la máquina usando esa pareja con:
 <PRE>
-pp2@nereida:~/Lbook$ vi ~/.ssh/config
-pp2@nereida:~/Lbook$ grep -i gss ~/.ssh/config
-GSSAPIAuthentication no
+$ ssh -i ~/.ssh/limited_command millo
+Last login: Mon Apr 20 09:05:11 2009 from 192.168.100.242
+millo:~$ vi ~/.ssh/authorized_keys
+millo:~$
 </PRE>
-Ejecutamos con <code>-v</code> de nuevo. El error ha desaparecido. La velocidad de transferencia
-a aumentado ligeramente:
+Editamos el fichero <code>~/.ssh/authorized_keys</code> y añadimos la opción comando
 <PRE>
-pp2@nereida:~/Lbook$ scp procesos.tex orion:
-procesos.tex                              100%  253KB 252.9KB/s   00:00
+17 # Prueba de comando limitado
+18 command="ls" ssh-dss AAAAB3NzaC1kc3...= limited command to millo
 </PRE>
 
 <P>
+La presencia de la opción <code>command</code> permite dar acceso a nuestra cuenta a usuarios
+restringiendo el uso de los comandos que pueden utilizar.
+<PRE>
+tonga:~/.ssh$ ssh -i ~/.ssh/limited_command millo
+ADVENS_OF_SHERLOCK.html  cshrc       Imágenes  LSimple-Scope     
+asignas                  Desktop     LEyapp    machines.sample  
+autosave                 doc         Llhp      Makefile.PL     
+bidirwithnamedpipes.pl   Documentos  LPLdoc    Música         
+bin                      exrc        LPLsrc    myprofile     
+cat                      help        LPL-Tutu  Net-ParSCP.tar.gz 
+Connection to millo closed.
+</PRE>
 
-<H4><A NAME="SECTION064100010000000000000">
-Lista de Comprobaciones en Caso de Error</A>
-</H4>
-  
+<P>
+Es posible obtener los argumentos escritos en la línea de comandos de la llamada 
+al cliente
+consultando la variable de entorno <code>SSH_ORIGINAL_COMMAND</code>.
+Existen otras variables de entorno que están definidas cuando
+se ejecuta una conexión (véase la sección <code>ENVIRONMENT</code> en la 
+página del manual de <A NAME="tex2html1291"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>)
+Para ilustrar el punto usaremos el siguiente programa 
+como comando forzado:
+<PRE>
+$ cat -n get_ssh_env
+ 1  #!/usr/bin/perl -w
+ 2  use strict;
+ 3
+ 4  my @keys = qw{
+ 5         SSH_ORIGINAL_COMMAND
+ 6         SSH_CONNECTION
+ 7         SSH_AUTH_SOCK
+ 8         SSH_TTY
+ 9         DISPLAY
+10         HOME
+11         LOGNAME
+12         MAIL PATH TZ USER
+13      };
+14  my ($args, $con, $sock, $tty,
+15      $display, $home, $logname, $mail, $path, $tz, $user
+16     ) = map { $ENV{$_} || '' } @keys;
+17
+18  print &lt;&lt; "INFO";
+19  args=&lt;$args&gt;
+20  con=&lt;$con&gt;
+21  sock=&lt;$sock&gt;
+22  tty=&lt;$tty&gt;
+23  display=&lt;$display&gt;
+24  home=&lt;$home&gt;
+25  logname=&lt;$logname&gt;
+26  mail=&lt;$mail&gt;
+27  path=&lt;$path&gt;
+28  tz=&lt;$tz&gt;
+29  user=&lt;$user&gt;
+30  INFO
+</PRE>
+Cuando se fuerza en <code>authorized_keys</code> y se ejecuta la conexión
+se obtiene:
+
+<P>
+<PRE>
+casiano@tonga:~$ ssh -i ~/.ssh/show_arguments millo chum cham chim
+args=&lt;chum cham chim&gt;
+con=&lt;XXX.XXX.XXX.XXX 55286 XXX.XXX.XXX.XXX 22&gt;
+sock=&lt;&gt;
+tty=&lt;&gt;
+display=&lt;localhost:11.0&gt;
+home=&lt;/home/casiano&gt;
+logname=&lt;casiano&gt;
+mail=&lt;/var/mail/casiano&gt;
+path=&lt;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/soft/perl5lib/bin:/home/casiano/bin&gt;
+tz=&lt;&gt;
+user=&lt;casiano&gt;
+</PRE>
+
+<P>
+Si el administrador tiene configurada la opción <code>PermitUserEnvironment</code> de <A NAME="tex2html1292"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd_config"><TT>sshd_config</TT></A>
+a <code>yes</code> (el valor por defecto es <code>no</code>), <A NAME="tex2html1293"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+leerá el fichero <code>~/.ssh/environment</code> (si existe)
+añadiendo al entorno líneas con el formato <code>VARNAME=value</code>.
 
 <P>
 
-<OL>
-<LI>Añada la opción <code>-v</code>  el número de veces que sea necesario
-</LI>
-<LI>Añada la opción de depuración al servidor; <code>/usr/sbin/sshd -d -p 2222</code>. 
-El número <code>2222</code> se refiere aquí al puerto.
-</LI>
-<LI>Observe el fichero de log del servicio SSH usando <A NAME="tex2html1325"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?tail"><TT>tail</TT></A>
-<code>-f</code>: 
-<code>tail -f /var/log/auth.log</code> ( en el servidor)
-</LI>
-<LI>Asegúrese que el agente se está ejecutando: <code>ps aux|grep ssh-agent</code>.  
-Si se está usando <code>keychain</code> asegúrese de que el agente, el PID y el socket
-están correctamente actualizados
-</LI>
-<LI>Asegúrese que su clave ha sido añadida al agente SSH.
-Use <code>ssh-add -l</code> para comprobarlo.  
-</LI>
-<LI>Compruebe los permisos en sus directorios <code>HOME</code>, <code>~/.ssh</code>
-y en el fichero <code>authorized_keys</code>. El servidor 
-rechazará el uso de claves públicas si 
-esta en modo <code>StrictModes on</code> si los permisos no son
-suficientemente restrictivos.
-</LI>
-</OL>
-
-<P>
-<P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">74</SPAN>.<SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
-<I>Establezca una conexión SSH:
-¿Que protocolo se esta usando en la conexión?
-¿Que identidad se esta usando?</I></DIV><P></P>
-
-<P>
-
-<H4><A NAME="SECTION064100020000000000000">
-Véase también</A>
+<H4><A NAME="SECTION06440010000000000000">
+Véase También</A>
 </H4>
   
 
 <P>
 
 <UL>
-<LI><A NAME="tex2html1326"
-  HREF="http://blog.codefront.net/2007/02/28/debugging-ssh-public-key-authentication-problems/">Debugging SSH public key authentication problems</A>
+<LI><A NAME="tex2html1294"
+  HREF="http://www.jms1.net/ssh.shtml">http://www.jms1.net/ssh.shtml</A>
+</LI>
+<LI><A NAME="tex2html1295"
+  HREF="http://troy.jdmz.net/rsync/index.html">http://troy.jdmz.net/rsync/index.html</A>
+</LI>
+<LI><A NAME="tex2html1296"
+  HREF="http://www.hackinglinuxexposed.com/articles/20030109.html">http://www.hackinglinuxexposed.com/articles/20030109.html</A>
+</LI>
+<LI><A NAME="tex2html1297"
+  HREF="http://www.snailbook.com/faq/restricted-scp.auto.html">http://www.snailbook.com/faq/restricted-scp.auto.html</A>)
 </LI>
 </UL>
 
@@ -257,29 +305,27 @@ Véase también</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html12948"
-  HREF="node594.html#SECTION064100010000000000000">Lista de Comprobaciones en Caso de Error</A>
-<LI><A NAME="tex2html12949"
-  HREF="node594.html#SECTION064100020000000000000">Véase también</A>
+<LI><A NAME="tex2html12978"
+  HREF="node594.html#SECTION06440010000000000000">Véase También</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12946"
+<A NAME="tex2html12976"
   HREF="node595.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12940"
-  HREF="node584.html">
+<A NAME="tex2html12970"
+  HREF="node590.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12934"
+<A NAME="tex2html12964"
   HREF="node593.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12942"
-  HREF="node727.html">
+<A NAME="tex2html12972"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12944"
-  HREF="node730.html">
+<A NAME="tex2html12974"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -334,20 +380,20 @@ Véase también</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12947"
-  HREF="node595.html">Los Ficheros de Configuración</A>
-<B> Subir:</B> <A NAME="tex2html12941"
-  HREF="node584.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html12935"
-  HREF="node593.html">Consideraciones sobre la Seguridad</A>
- &nbsp; <B>  <A NAME="tex2html12943"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12945"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12977"
+  HREF="node595.html">Deshabilitar la Asignación de</A>
+<B> Subir:</B> <A NAME="tex2html12971"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html12965"
+  HREF="node593.html">Claves Pública y Privada:</A>
+ &nbsp; <B>  <A NAME="tex2html12973"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12975"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

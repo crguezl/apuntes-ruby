@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Introducción al uso de Git con GitHub en GitHub</TITLE>
-<META NAME="description" CONTENT="Introducción al uso de Git con GitHub en GitHub">
+<TITLE>Depuración/Debugging</TITLE>
+<META NAME="description" CONTENT="Depuración/Debugging">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node601.html">
 <LINK REL="previous" HREF="node599.html">
-<LINK REL="up" HREF="node599.html">
+<LINK REL="up" HREF="node590.html">
 <LINK REL="next" HREF="node601.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13065"
+<A NAME="tex2html13078"
   HREF="node601.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13059"
-  HREF="node599.html">
+<A NAME="tex2html13072"
+  HREF="node590.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13053"
+<A NAME="tex2html13066"
   HREF="node599.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13061"
-  HREF="node727.html">
+<A NAME="tex2html13074"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13063"
-  HREF="node730.html">
+<A NAME="tex2html13076"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,57 +96,258 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13066"
-  HREF="node601.html">Un poco de SSH</A>
-<B> Subir:</B> <A NAME="tex2html13060"
-  HREF="node599.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html13054"
-  HREF="node599.html">Git</A>
- &nbsp; <B>  <A NAME="tex2html13062"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13064"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13079"
+  HREF="node601.html">Los Ficheros de Configuración</A>
+<B> Subir:</B> <A NAME="tex2html13073"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13067"
+  HREF="node599.html">Consideraciones sobre la Seguridad</A>
+ &nbsp; <B>  <A NAME="tex2html13075"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13077"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06510000000000000000">
-Introducción al uso de Git con GitHub en GitHub</A>
+<H1><A NAME="SECTION064100000000000000000">
+Depuración/Debugging</A>
 </H1>
+
+<P>
+La opción <code>-v</code> hace que los clientes <code>scp</code> y <code>ssh</code> proporcionen
+información de depuración. Observemos la siguiente copia remota:
+
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ scp procesos.tex orion:
+procesos.tex                         100%  250KB 249.5KB/s   00:01
+</PRE>
+La opción <code>-v</code> nos informa de la existencia de un problema:
+
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ scp -v procesos.tex orion:
+Executing: program /usr/bin/ssh host orion, user (unspecified), command scp -v -t .
+OpenSSH_4.3p2 Debian-9, OpenSSL 0.9.8c 05 Sep 2006
+debug1: Reading configuration data /home/pp2/.ssh/config
+debug1: Applying options for orion
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Applying options for *
+debug1: Connecting to orion [193.145.105.17] port 22.
+debug1: Connection established.
+debug1: identity file /home/pp2/.ssh/identity type -1
+debug1: identity file /home/pp2/.ssh/id_rsa type 1
+debug1: identity file /home/pp2/.ssh/id_dsa type 2
+debug1: Remote protocol version 2.0, remote software version OpenSSH_4.3p2 Debian-9
+debug1: match: OpenSSH_4.3p2 Debian-9 pat OpenSSH*
+debug1: Enabling compatibility mode for protocol 2.0
+debug1: Local version string SSH-2.0-OpenSSH_4.3p2 Debian-9
+debug1: An invalid name was supplied
+Configuration file does not specify default realm
+
+debug1: An invalid name was supplied
+A parameter was malformed
+Validation error
+
+debug1: An invalid name was supplied
+Configuration file does not specify default realm
+
+debug1: An invalid name was supplied
+A parameter was malformed
+Validation error
+
+debug1: SSH2_MSG_KEXINIT sent
+....................................................
+debug1: Transferred: stdin 0, stdout 0, stderr 0 bytes in 0.3 seconds
+debug1: Bytes per second: stdin 0.0, stdout 0.0, stderr 0.0
+debug1: Exit status 0
+</PRE>
+
+<P>
+Después de buscar en <code>Google</code> vemos
+cual es la causa del problema:
+
+<P>
+<BLOCKQUOTE>
+<I>What happens is that SSH will hang for a long period of time before
+providing a password prompt or performing key authentication. In either
+case the problem is the GSSAPI that is now being used by clients and
+not by most servers.
+</I>
+
+</BLOCKQUOTE>
+
+<P>
+La solución recomendada es desactivar <code>GSSAPIAuthentication</code>:
+<PRE>
+pp2@nereida:~/Lbook$ vi ~/.ssh/config
+pp2@nereida:~/Lbook$ grep -i gss ~/.ssh/config
+GSSAPIAuthentication no
+</PRE>
+Ejecutamos con <code>-v</code> de nuevo. El error ha desaparecido. La velocidad de transferencia
+a aumentado ligeramente:
+<PRE>
+pp2@nereida:~/Lbook$ scp procesos.tex orion:
+procesos.tex                              100%  253KB 252.9KB/s   00:00
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION064100010000000000000">
+Lista de Comprobaciones en Caso de Error</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>Añada la opción <code>-v</code>  el número de veces que sea necesario
+</LI>
+<LI>Añada la opción de depuración al servidor; <code>/usr/sbin/sshd -d -p 2222</code>. 
+El número <code>2222</code> se refiere aquí al puerto.
+</LI>
+<LI>Observe el fichero de log del servicio SSH usando <A NAME="tex2html1337"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?tail"><TT>tail</TT></A>
+<code>-f</code>: 
+<code>tail -f /var/log/auth.log</code> ( en el servidor)
+</LI>
+<LI>Asegúrese que el agente se está ejecutando: <code>ps aux|grep ssh-agent</code>.  
+Si se está usando <code>keychain</code> asegúrese de que el agente, el PID y el socket
+están correctamente actualizados
+</LI>
+<LI>Asegúrese que su clave ha sido añadida al agente SSH.
+Use <code>ssh-add -l</code> para comprobarlo.  
+</LI>
+<LI>Compruebe los permisos en sus directorios <code>HOME</code>, <code>~/.ssh</code>
+y en el fichero <code>authorized_keys</code>. El servidor 
+rechazará el uso de claves públicas si 
+esta en modo <code>StrictModes on</code> si los permisos no son
+suficientemente restrictivos.
+</LI>
+</OL>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Establezca una conexión SSH:
+¿Que protocolo se esta usando en la conexión?
+¿Que identidad se esta usando?</I></DIV><P></P>
+
+<P>
+
+<H4><A NAME="SECTION064100020000000000000">
+Véase también</A>
+</H4>
+  
 
 <P>
 
 <UL>
-<LI><A NAME="tex2html1337"
-  HREF="https://github.com/">GitHub</A>
-</LI>
 <LI><A NAME="tex2html1338"
-  HREF="http://help.github.com/">http://help.github.com/</A>
-<OL>
-<LI><A NAME="tex2html1339"
-  HREF="http://help.github.com/https://help.github.com/articles/setting-your-email-in-git/">Set your user name</A>
-</LI>
-<LI><A NAME="tex2html1340"
-  HREF="https://help.github.com/articles/set-up-git#platform-linux">Set Up Git</A>
-</LI>
-<LI><A NAME="tex2html1341"
-  HREF="http://help.github.com/create-a-repo/">Create a Repo</A>
-</LI>
-<LI><A NAME="tex2html1342"
-  HREF="http://help.github.com/fork-a-repo/">Fork a Repo</A>
-</LI>
-<LI><A NAME="tex2html1343"
-  HREF="http://help.github.com/be-social/">Be Social</A>
-</LI>
-</OL>
+  HREF="http://blog.codefront.net/2007/02/28/debugging-ssh-public-key-authentication-problems/">Debugging SSH public key authentication problems</A>
 </LI>
 </UL>
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html13080"
+  HREF="node600.html#SECTION064100010000000000000">Lista de Comprobaciones en Caso de Error</A>
+<LI><A NAME="tex2html13081"
+  HREF="node600.html#SECTION064100020000000000000">Véase también</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html13078"
+  HREF="node601.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html13072"
+  HREF="node590.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html13066"
+  HREF="node599.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html13074"
+  HREF="node734.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html13076"
+  HREF="node737.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html13079"
+  HREF="node601.html">Los Ficheros de Configuración</A>
+<B> Subir:</B> <A NAME="tex2html13073"
+  HREF="node590.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13067"
+  HREF="node599.html">Consideraciones sobre la Seguridad</A>
+ &nbsp; <B>  <A NAME="tex2html13075"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13077"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

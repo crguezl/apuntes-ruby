@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Retirando una Gema</TITLE>
-<META NAME="description" CONTENT="Retirando una Gema">
+<TITLE>Jerarquía de Ficheros y Directorios, Nombres y Requires</TITLE>
+<META NAME="description" CONTENT="Jerarquía de Ficheros y Directorios, Nombres y Requires">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node648.html">
 <LINK REL="previous" HREF="node646.html">
-<LINK REL="up" HREF="node636.html">
+<LINK REL="up" HREF="node642.html">
 <LINK REL="next" HREF="node648.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13780"
+<A NAME="tex2html13828"
   HREF="node648.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13774"
-  HREF="node636.html">
+<A NAME="tex2html13822"
+  HREF="node642.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13768"
+<A NAME="tex2html13816"
   HREF="node646.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13776"
-  HREF="node727.html">
+<A NAME="tex2html13824"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13778"
-  HREF="node730.html">
+<A NAME="tex2html13826"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,87 +96,174 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13781"
-  HREF="node648.html">Semantic Versioning</A>
-<B> Subir:</B> <A NAME="tex2html13775"
-  HREF="node636.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html13769"
-  HREF="node646.html">Gem Security</A>
- &nbsp; <B>  <A NAME="tex2html13777"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13779"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13829"
+  HREF="node648.html">Gemas con Un Gran</A>
+<B> Subir:</B> <A NAME="tex2html13823"
+  HREF="node642.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13817"
+  HREF="node646.html">Dependencias de la Gema</A>
+ &nbsp; <B>  <A NAME="tex2html13825"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13827"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0612110000000000000000">
-Retirando una Gema</A>
+<H1><A NAME="SECTION061250000000000000000"></A>
+<A NAME="subsection:nombresyrequires"></A>
+<BR>
+Jerarquía de Ficheros y Directorios, Nombres y Requires
 </H1>
 
+<UL>
+<LI>How you name your files and where you
+put them can  improve the usability of your library by other
+developers. 
+
 <P>
-In previous versions we had to install <code>gemcutter</code>.
-It will add global <code>yank</code> command for <A NAME="tex2html1453"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>.
+</LI>
+<LI>For instance, in a GitHub repository
+page <SPAN  CLASS="textbf">one can simply press <TT>t</TT> and start typing a filename, then look at
+the code for that file by pressing return</SPAN>. 
+
+<P>
+</LI>
+<LI>By creating sane, easily guessable filenames you are making it simple
+for others to read your code.
+</LI>
+</UL>
+
+<P>
+In general, you will have one class per file and one folder per module namespace, so for instance:
+
+<P>
+
+<UL>
+<LI><code>MyGem</code> becomes <code>lib/my_gem.rb</code> 
+</LI>
+<LI><code>MyGem::Widget</code> becomes <code>lib/my_gem/widget.rb</code>
+</LI>
+<LI><code>MyGem::Widgets::FooBar</code> becomes <code>lib/my_gem/widgets/foo_bar.rb</code>
+</LI>
+</UL>
+
+<P>
+<SPAN  CLASS="textbf">When a developer wants to use your library, they should be able to do
+so (in almost all cases) by making a single <TT>require</TT> statement that is
+identical to the gem name</SPAN>. 
+
+<P>
+That means that in the root file you need
+to make any additional require statements necessary for your gem to
+function. So if I have 
+a <code>MyGem</code> module, 
+a <code>MyGem::Widget</code> class, and a
+<code>MyGem::Widgets::FooBar</code> class, 
+the <code>lib/my_gem.rb</code> 
+file in my gem might
+look like this:
 
 <P>
 <PRE>
-$ rvm rubygems latest
-$ gem update --system
-$ gem install gemcutter
+require 'external_library' # require any external dependencies
+
+module MyGem # it is best to declare the base module at the top
+end
+
+require 'my_gem/version' # created by Bundler
+require 'my_gem/widget'
+require 'my_gem/widgets/foo_bar'
 </PRE>
-It seems that the current version of <A NAME="tex2html1454"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> 
-already includes <code>yank</code>.
+By requiring all of the files necessary for your gem to run in the
+base file you make it easier for developers to use your library. 
 
 <P>
-You can't push the same gem version twice. 
-Yanking just marks a particular version as <SPAN  CLASS="textbf">'invalid'</SPAN>:
 
-<P>
-<PRE>
-$ gem list tictactoe -ra
-*** REMOTE GEMS ***
-tic-tac.toe (0.3.4, 0.3.3, 0.3.2, 0.3.1)
-
-gem yank tic-tac-toe -v0.3.4
-</PRE>
-Veamos la página de ayuda:
-<PRE>
-[~/ruby_quiz/tictactoe/solutions/eduardo_segredo(john)]$ gem help yank
-Usage: gem yank GEM -v VERSION [-p PLATFORM] [--undo] [--key KEY_NAME] [options]
-
-  Options:
-    -v, --version VERSION            Specify version of gem to remove
-        --platform PLATFORM          Specify the platform of gem to remove
-        --undo
-    -k, --key KEY_NAME               Use API key from your gem credentials file
-
-
-  Common Options:
-    -h, --help                       Get help on this command
-    -V, --[no-]verbose               Set the verbose level of output
-    -q, --quiet                      Silence commands
-        --config-file FILE           Use this config file instead of default
-        --backtrace                  Show stack backtrace on errors
-        --debug                      Turn on Ruby debugging
-
-
-  Arguments:
-    GEM       name of gem
-
-  Summary:
-    Remove a specific gem version release from RubyGems.org
-
-  Description:
-    Remove a specific gem version release from RubyGems.org
-</PRE>
-
-<P>
-<BR><HR>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html13828"
+  HREF="node648.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html13822"
+  HREF="node642.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html13816"
+  HREF="node646.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html13824"
+  HREF="node734.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html13826"
+  HREF="node737.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html13829"
+  HREF="node648.html">Gemas con Un Gran</A>
+<B> Subir:</B> <A NAME="tex2html13823"
+  HREF="node642.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13817"
+  HREF="node646.html">Dependencias de la Gema</A>
+ &nbsp; <B>  <A NAME="tex2html13825"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13827"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

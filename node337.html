@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Gestión de Sesiones</TITLE>
-<META NAME="description" CONTENT="Gestión de Sesiones">
+<TITLE>Ejemplo con POST</TITLE>
+<META NAME="description" CONTENT="Ejemplo con POST">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node339.html">
 <LINK REL="previous" HREF="node336.html">
-<LINK REL="up" HREF="node317.html">
+<LINK REL="up" HREF="node334.html">
 <LINK REL="next" HREF="node338.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8570"
+<A NAME="tex2html8590"
   HREF="node338.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8564"
-  HREF="node317.html">
+<A NAME="tex2html8584"
+  HREF="node334.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8558"
+<A NAME="tex2html8580"
   HREF="node336.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8566"
-  HREF="node727.html">
+<A NAME="tex2html8586"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8568"
-  HREF="node730.html">
+<A NAME="tex2html8588"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,274 +95,172 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8571"
-  HREF="node338.html">Ejercicio</A>
-<B> Subir:</B> <A NAME="tex2html8565"
-  HREF="node317.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8559"
-  HREF="node336.html">Cookies y Rack</A>
- &nbsp; <B>  <A NAME="tex2html8567"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8569"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8591"
+  HREF="node338.html">Cookies y Rack</A>
+<B> Subir:</B> <A NAME="tex2html8585"
+  HREF="node334.html">Rack::Response</A>
+<B> Anterior:</B> <A NAME="tex2html8581"
+  HREF="node336.html">Ejemplo Simple</A>
+ &nbsp; <B>  <A NAME="tex2html8587"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8589"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03190000000000000000"></A>
-<A NAME="section:gestiondesesiones"></A>
-<BR>
-Gestión de Sesiones
-</H1>
-
-<P>
-
-<H4><A NAME="SECTION03190010000000000000">
-Introducción</A>
-</H4>
-  
-
-<P>
-
-<OL>
-<LI>Hypertext Transfer Protocol (HTTP) is stateless: a client computer
-running a web browser must establish a new Transmission Control
-Protocol (TCP) network connection to the web server with each new
-HTTP GET or POST request. 
-
-<P>
-</LI>
-<LI>The web server, therefore, cannot rely
-on an established TCP network connection for longer than a single
-HTTP GET or POST operation. 
-
-<P>
-</LI>
-<LI><A NAME="14033"></A><SPAN  CLASS="textbf">Session management</SPAN> is the technique
-used by the web developer to make the stateless HTTP protocol support
-session state. 
-
-<P>
-</LI>
-<LI>For example, once a user has been authenticated to
-the web server, the user's next HTTP request (GET or POST) should
-not cause the web server to ask for the user's account and password
-again. 
-
-<P>
-</LI>
-<LI>The session information is stored on the web server using the 
-<A NAME="14035"></A><SPAN  CLASS="textbf">session identifier</SPAN>
-generated as a result of the first (sometimes
-the first authenticated) request from the end user running a web
-browser. 
-
-<P>
-</LI>
-<LI>The "storage" of Session IDs and the associated session
-data (user name, account number, etc.) on the web server is
-accomplished using a variety of techniques including, but not limited
-to, local memory, flat files, and databases.
-
-<P>
-</LI>
-<LI>A <A NAME="14037"></A><SPAN  CLASS="textbf">session token</SPAN> is a unique identifier that is generated and sent
-from a server to a client to identify the current interaction
-session. 
-
-<P>
-</LI>
-<LI>The client usually stores and sends the token as an HTTP
-cookie and/or sends it as a parameter in GET or POST queries. The
-reason to use session tokens is that the client only has to handle
-the identifier—all session data is stored on the server (usually
-in a database, to which the client does not have direct access)
-linked to that identifier. 
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION03190020000000000000">
-Uso de Cookies para el manejo de sesiones</A>
-</H4>
-  
-
-<P>
-
-<OL>
-<LI>Allowing users to log into a website is a frequent use of
-    cookies. 
-</LI>
-<LI>A web server typically sends a cookie containing a unique 
-    <A NAME="14043"></A><SPAN  CLASS="textbf">session identifier</SPAN>. The web browser will send back that session identifier
-   with each subsequent request and related items are stored
-   associated with this unique session identifier.
-</LI>
-<LI>Typically the web server will first send a cookie
-    containing a unique session identifier. Users then submit their
-    credentials and the web application authenticates the session
-    and allows the user access to services.
-</LI>
-<LI>Applications today usually store the gathered information
-    in a database on the server side, rather than storing them 
-    in cookies
-  
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION03190030000000000000">
-Ejemplo</A>
-</H4>
-  
-
-<P>
-<A NAME="tex2html711"
-  HREF="http://rack.rubyforge.org/doc/Rack/Session/Cookie.html">Rack::Session::Cookie</A> proporciona un sencillo sistema para gestionar
-sesiones basado en cookies.
-
-<P>
-
-<OL>
-<LI>La sesión es un cookie que contiene un
-hash almacenado mediante marshalling codificado en base64.
-</LI>
-<LI>Por defecto el nombre del cookie es <code>rack.session</code> pero puede ser 
-modificado mediante el atributo <code>:key</code>.
-</LI>
-<LI>Dándole un valor a <code>secret_key</code> se garantiza que es comprobada 
-la integridad de los datos de la cookie
-</LI>
-<LI>Para acceder dentro de nuestro programa
-a la sesión accedemos al hash <code>env["rack.session"]</code> o bien
-<code>env["key-value"]</code> si hemos especificado el atributo
-<code>:key</code>
-</LI>
-</OL>
-
-<P>
-Sigue un ejemplo:
+<H2><A NAME="SECTION03173000000000000000">
+Ejemplo con <TT>POST</TT></A>
+</H2>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat configapp.ru 
-require 'pp'
-require './myapp'
+[~/local/src/ruby/sinatra/rack/rack-debugging]$ cat hello_response.rb 
+# encoding: utf-8
+require 'rack'
+require 'pry-debugger'
 
-use Rack::Session::Cookie, 
-      :key =&gt; 'rack.session', 
-      :domain =&gt; 'example.com',
-      :secret =&gt; 'some_secret'
+class HelloWorld
 
-run MyApp.new
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat myapp.rb 
-class MyApp
-
-  def set_env(env)
-    @env = env
-    @session = env['rack.session']
-  end
-
-  def some_key 
-    return @session['some_key'].to_i if @session['some_key']
-    @session['some_key'] = 0
-  end
-
-  def some_key=(value)
-    @session['some_key'] = value
-  end
-
-  def call(env)
-    set_env(env)
-    res = Rack::Response.new
-    req = Rack::Request.new env
-
-    self.some_key = self.some_key + 1 if req.path == '/'
-
-    res.write("some_key = #{@session['some_key']}\n")
-
+  def call env
+    req = Rack::Request.new(env)
+    res = Rack::Response.new 
+    binding.pry if ARGV[0]
+    res['Content-Type'] = 'text/html'
+    name = (req["firstname"] &amp;&amp; req["firstname"] != '') ? req["firstname"] :'World'
+    res.write &lt;&lt;-"EOS"
+      &lt;!DOCTYPE HTML&gt;
+      &lt;html&gt;
+        &lt;title&gt;Rack::Response&lt;/title&gt;
+        &lt;body&gt;
+          &lt;h1&gt;
+             Hello #{name}!
+             &lt;form action="/" method="post"&gt;
+               Your name: &lt;input type="text" name="firstname" autofocus&gt;&lt;br&gt;
+               &lt;input type="submit" value="Submit"&gt;
+             &lt;/form&gt;
+          &lt;/h1&gt;
+        &lt;/body&gt;
+      &lt;/html&gt;
+    EOS
     res.finish
   end
-
 end
+
+Rack::Server.start(
+  :app =&gt; HelloWorld.new,
+  :Port =&gt; 9292,
+  :server =&gt; 'thin'
+)
 </PRE>
 
 <P>
-Hagamos la prueba conectándonos a <code>www.example.com</code>. Para ello
-edtiamos <code>/etc/hosts</code> para que <code>localhost</code> apunte a
-<code>www.example.com</code>:
-
-<P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat /etc/hosts
-##
-# Host Database
-#
-# localhost is used to configure the loopback interface
-# when the system is booting.  Do not change this entry.
-##
-127.0.0.1 localhost www.example.com
-...
-</PRE>
-
-<P>
-Arrancamos el servidor:
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ rackup  configapp.ru 
+[~/local/src/ruby/sinatra/rack/rack-debugging]$ ruby hello_response.rb debug
 &gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
 &gt;&gt; Maximum connections set to 1024
 &gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
 </PRE>
 
 <P>
-Y visitamos <code>www.example.com</code> con nuestro navegador:
-
-<img src="rack_session_example.png" />
+Ahora cuando visitamos la página <code>http://localhost:9292</code> el navegador queda a la
+espera del servidor y el servidor alcanza la línea de break.
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+From: /Users/casiano/local/src/ruby/sinatra/rack/rack-debugging/hello_response.rb @ line 10 HelloWorld#call:
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html8572"
-  HREF="node337.html#SECTION03190010000000000000">Introducción</A>
-<LI><A NAME="tex2html8573"
-  HREF="node337.html#SECTION03190020000000000000">Uso de Cookies para el manejo de sesiones</A>
-<LI><A NAME="tex2html8574"
-  HREF="node337.html#SECTION03190030000000000000">Ejemplo</A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html8575"
-  HREF="node338.html">Ejercicio</A>
-</UL>
-<!--End of Table of Child-Links-->
+     7: def call env
+     8:   req = Rack::Request.new(env)
+     9:   res = Rack::Response.new 
+ =&gt; 10:   binding.pry if ARGV[0]
+    11:   res['Content-Type'] = 'text/html'
+    12:   name = (req["firstname"] &amp;&amp; req["firstname"] != '') ? req["firstname"] :'World'
+    13:   res.write &lt;&lt;-"EOS"
+    14:     &lt;!DOCTYPE HTML&gt;
+    15:     &lt;html&gt;
+    16:       &lt;title&gt;Rack::Response&lt;/title&gt;
+    17:       &lt;body&gt;
+    18:         &lt;h1&gt;
+    19:            Hello #{name}!
+    20:            &lt;form action="/" method="post"&gt;
+    21:              Your name: &lt;input type="text" name="firstname" autofocus&gt;&lt;br&gt;
+    22:              &lt;input type="submit" value="Submit"&gt;
+    23:            &lt;/form&gt;
+    24:         &lt;/h1&gt;
+    25:       &lt;/body&gt;
+    26:     &lt;/html&gt;
+    27:   EOS
+    28:   res.finish
+    29: end
+
+[1] pry(#&lt;HelloWorld&gt;)&gt;
+</PRE>
+Consultemos los contenidos de <code>res</code>:
+<PRE>
+[1] pry(#&lt;HelloWorld&gt;)&gt; res
+=&gt; #&lt;Rack::Response:0x007fe3fb1e6180
+ @block=nil,
+ @body=[],
+ @chunked=false,
+ @header={},
+ @length=0,
+ @status=200,
+ @writer=
+  #&lt;Proc:0x007fe3fb1e5f50@/Users/casiano/.rvm/gems/ruby-1.9.3-p392/gems/rack-1.5.2/lib/rack/response.rb:27 (lambda)&gt;&gt;
+</PRE>
+Después de un par de <code>continue</code> el servidor se queda a la espera:
+<PRE>
+[3] pry(#&lt;HelloWorld&gt;)&gt; continue
+...
+[1] pry(#&lt;HelloWorld&gt;)&gt; continue
+</PRE>
+
+<P>
+
+<img src="hellonamerack.png" />
+
+<P>
+Rellenamos la entrada con un nombre (Pedro) y de nuevo el servidor alcanza el punto de ruptura:
+<PRE>
+[2] pry(#&lt;HelloWorld&gt;)&gt; req.params
+=&gt; {"firstname"=&gt;"Pedro"}
+</PRE>
+
+<P>
+<PRE>
+[7] pry(#&lt;HelloWorld&gt;)&gt; break 28
+Breakpoint 1: /Users/casiano/local/src/ruby/sinatra/rack/rack-debugging/hello_response.rb @ line 28 (Enabled) :
+
+    26:       &lt;/html&gt;
+    27:     EOS
+ =&gt; 28:     res.finish
+    29:   end
+
+[8] pry(#&lt;HelloWorld&gt;)&gt; continue
+Breakpoint 1. First hit.
+...
+[9] pry(#&lt;HelloWorld&gt;)&gt; res.headers
+=&gt; {"Content-Type"=&gt;"text/html", "Content-Length"=&gt;"370"}
+[10] pry(#&lt;HelloWorld&gt;)&gt;
+</PRE>
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8570"
+<A NAME="tex2html8590"
   HREF="node338.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8564"
-  HREF="node317.html">
+<A NAME="tex2html8584"
+  HREF="node334.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8558"
+<A NAME="tex2html8580"
   HREF="node336.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8566"
-  HREF="node727.html">
+<A NAME="tex2html8586"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8568"
-  HREF="node730.html">
+<A NAME="tex2html8588"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -418,20 +315,20 @@ Y visitamos <code>www.example.com</code> con nuestro navegador:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8571"
-  HREF="node338.html">Ejercicio</A>
-<B> Subir:</B> <A NAME="tex2html8565"
-  HREF="node317.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8559"
-  HREF="node336.html">Cookies y Rack</A>
- &nbsp; <B>  <A NAME="tex2html8567"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8569"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8591"
+  HREF="node338.html">Cookies y Rack</A>
+<B> Subir:</B> <A NAME="tex2html8585"
+  HREF="node334.html">Rack::Response</A>
+<B> Anterior:</B> <A NAME="tex2html8581"
+  HREF="node336.html">Ejemplo Simple</A>
+ &nbsp; <B>  <A NAME="tex2html8587"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8589"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Bundler</TITLE>
-<META NAME="description" CONTENT="Bundler">
+<TITLE>6: Green</TITLE>
+<META NAME="description" CONTENT="6: Green">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node636.html">
-<LINK REL="previous" HREF="node631.html">
-<LINK REL="up" HREF="node562.html">
+<LINK REL="next" HREF="node634.html">
+<LINK REL="previous" HREF="node632.html">
+<LINK REL="up" HREF="node626.html">
 <LINK REL="next" HREF="node634.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13554"
+<A NAME="tex2html13598"
   HREF="node634.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13548"
-  HREF="node562.html">
+<A NAME="tex2html13592"
+  HREF="node626.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13542"
+<A NAME="tex2html13586"
   HREF="node632.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13550"
-  HREF="node727.html">
+<A NAME="tex2html13594"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13552"
-  HREF="node730.html">
+<A NAME="tex2html13596"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,49 +96,116 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13555"
-  HREF="node634.html">Introducción</A>
-<B> Subir:</B> <A NAME="tex2html13549"
-  HREF="node562.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html13543"
-  HREF="node632.html">umlify</A>
- &nbsp; <B>  <A NAME="tex2html13551"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13553"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13599"
+  HREF="node634.html">7: un poco mas</A>
+<B> Subir:</B> <A NAME="tex2html13593"
+  HREF="node626.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html13587"
+  HREF="node632.html">5: Red: should and</A>
+ &nbsp; <B>  <A NAME="tex2html13595"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13597"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061100000000000000000"></A>
-<A NAME="chapter:bundler"></A>
-<BR>
-Bundler
-</H1>
-In a nutshell, you'll be editing a file that describes what gems your
-project depends on and slightly modifying how you require those gems.
+<H2><A NAME="SECTION06817000000000000000">
+6: Green</A>
+</H2>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/math/rpcalc.rb
+module Math
+  class RPCalc
+    attr_accessor :stack
+
+    def initialize()
+      @stack = []
+    end
+
+    def calc(expr)
+      @stack = []
+      expr.split(/\s+/).each do |x|
+      case x
+        when '+', '*', '-', '/' 
+          op2 = @stack.pop
+          op1 = @stack.pop
+          @stack.push eval "(#{op1} #{x} #{op2})"
+        when /^-?\s*\d+(\.\d+)?([eE][+-]?\d+)?\s*$/
+          @stack.push x
+        else
+          raise SyntaxError, "Error. found '#{x}'. Expected number or operator"       
+        end
+      end
+      @stack.pop
+    end
+
+  end  # class RPCalc
+end    # Math
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/math/rpcalc_spec.rb 
+#require File.join(File.dirname(__FILE__), "/../spec_helper")
+require "spec_helper"
+module Math
+  describe RPCalc do
+    before :each do
+      @c = Math::RPCalc.new
+    end
+
+    context "When an erroneous input is given" do
+      before :each do
+        @e = proc { @c.calc('a') }
+      end
+      it "must raise an exception" do
+        expect { @e[] }.to raise_error(SyntaxError)
+        expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
+      end
+    end
+
+    context "When a correct input is given" do
+      it "must give the correct answer for integer expressions" do
+        r = @c.calc('2 3 + 4 *')
+        r.should eq 20
+        @c.stack.should eq []
+      end
+
+      it "must give the correct answer for float expressions" do
+        r = @c.calc('4 3 + 2.5 3.5 +')
+        r.should be_within(0.01).of(6.0)
+        @c.stack.should eq [ 7 ]
+      end
+    end
+
+  end    # RPCalc
+end      # Math
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
+rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
+
+Math::RPCalc
+  When an erroneous input is given
+    must raise an exception
+  When a correct input is given
+    must give the correct answer for integer expressions
+    must give the correct answer for float expressions
+
+Finished in 0.00457 seconds
+3 examples, 0 failures
+</PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html13556"
-  HREF="node634.html">Introducción</A>
-<UL>
-<LI><A NAME="tex2html13557"
-  HREF="node634.html#SECTION061110010000000000000">Que versión de una gema estamos usando</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html13558"
-  HREF="node635.html">La opción <TT>PATH</TT> (<TT>:path</TT>) de gem</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>

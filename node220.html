@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Clase Board</TITLE>
-<META NAME="description" CONTENT="La Clase Board">
+<TITLE>La Clase Player: Un Ejemplo de Strategy Pattern</TITLE>
+<META NAME="description" CONTENT="La Clase Player: Un Ejemplo de Strategy Pattern">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node221.html">
 <LINK REL="previous" HREF="node219.html">
-<LINK REL="up" HREF="node215.html">
+<LINK REL="up" HREF="node216.html">
 <LINK REL="next" HREF="node221.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6365"
+<A NAME="tex2html6389"
   HREF="node221.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6359"
-  HREF="node215.html">
+<A NAME="tex2html6383"
+  HREF="node216.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6353"
+<A NAME="tex2html6377"
   HREF="node219.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6361"
-  HREF="node727.html">
+<A NAME="tex2html6385"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6363"
-  HREF="node730.html">
+<A NAME="tex2html6387"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,157 +96,144 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6366"
-  HREF="node221.html">La Clase Row</A>
-<B> Subir:</B> <A NAME="tex2html6360"
-  HREF="node215.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html6354"
-  HREF="node219.html">La Clase Player: Un</A>
- &nbsp; <B>  <A NAME="tex2html6362"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6364"
-  HREF="node730.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6390"
+  HREF="node221.html">La Clase Board</A>
+<B> Subir:</B> <A NAME="tex2html6384"
+  HREF="node216.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6378"
+  HREF="node219.html">La Clase Game</A>
+ &nbsp; <B>  <A NAME="tex2html6386"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6388"
+  HREF="node737.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027175000000000000000"></A>
-<A NAME="subsection:board"></A>
-<BR>
-La Clase Board
+<H2><A NAME="SECTION027174000000000000000">
+La Clase Player: Un Ejemplo de <SPAN  CLASS="textbf">Strategy Pattern</SPAN></A>
 </H2>
-La clase <code>TicTacToe::Game</code> confía en la clase <code>Board</code> que describe las operaciones
-que se pueden efectuar sobre el tablero. Por ejemplo, el método <code>play</code> hace uso de 
-operaciones sobre el tablero:
-<PRE>
-    def play
-      until @board.won?
-        @board[@x_player.move(@board)] = @x_player.mark # @board["b2"] = "X"
-        break if @board.won?
-        
-        @board[@o_player.move(@board)] = @o_player.mark 
-      end
-      
-      @o_player.finish @board  
-      @x_player.finish @board
-    end
-</PRE>
-Eso significa que tenemos que definir en la clase <code>Board</code> predicados como <code>won?</code> y
-operaciones como <code>[]=(indice, value)</code> además del <code>initialize</code>:
-<PRE>
-  class Board
-    class Row
-      ....
-    end
-    
-    MOVES = %w{a1    a2   a3   b1   b2   b3   c1   c2   c3}
-    # Define constant INDICES
-    INDICES = Hash.new { |h, k| h[k] = MOVES.find_index(k) }
 
-    def self.name_to_index( name )# Receives "b2" and returns 4
-      INDICES[name]
-    end
-    
-    def self.index_to_name( index ) # Receives the index, like 4 and returns "b2"
-      MOVES[index]
-    end
-    
-    def initialize( squares )
-      @squares = squares # An array of Strings: [ " ", " ", " ", " ", "X", " ", " ", " ", "O"]
-    end
-      
-    include SquaresContainer
-    
-    def []( *indices )
-      if indices.size == 2                  # board[1,2] is @squares[7]
-        super indices[0] + indices[1] * 3   # calls SquaresContainer [] method
-      elsif indices[0].is_a? Fixnum         # board[7]
-        super indices[0]
-      else                                  # board["b2"]
-        super Board.name_to_index(indices[0].to_s)
-      end
-    end
-
-    def []=(indice, value)                  # board["b2"] = "X"
-      m = Board.name_to_index(indice)
-      @squares[m] = value
-    end
-    
-    ....
-    
-    def moves
-      moves = [ ]
-      @squares.each_with_index do |s, i|
-        moves &lt;&lt; Board.index_to_name(i) if s == " "
-      end
-      moves # returns the set of feasible moves [ "b3", "c2", ... ]
-    end
-    
-    ....
-    
-    BOARD =&lt;&lt;EOS
-
-  +---+---+---+
-a | 0 | 1 | 2 |
-  +---+---+---+
-b | 3 | 4 | 5 |
-  +---+---+---+
-c | 6 | 7 | 8 |
-  +---+---+---+
-    1   2   3
-
-EOS
-    def to_s
-      BOARD.gsub(/(\d)(?= \|)/) { |i| @squares[i.to_i] }
-    end
-
-  end
-end
-</PRE>
-El predicado  <code>won?</code> recorre todas las posibles filas con <code>each_row</code> comprobando 
-si hay tres alineadas:
+<P>
+El concepto de jugador es definido mediante una clase abstracta:
 
 <P>
 <PRE>
-    HORIZONTALS = [ [0, 1, 2], [3, 4, 5], [6, 7, 8] ]
-    COLUMNS     = [ [0, 3, 6], [1, 4, 7], [2, 5, 8] ]
-    DIAGONALS   = [ [0, 4, 8], [2, 4, 6] ]
-    ROWS = HORIZONTALS + COLUMNS + DIAGONALS
-
-    def each_row
-      ROWS.each do |e|
-        yield Row.new(@squares.values_at(*e), e)
-      end
+module TicTacToe
+  class Player
+    def initialize( mark )
+      @mark = mark # "X" or "O" or " "
     end
-
-    def won?
-      each_row do |row|
-        return "X" if row.xs == 3 # "X" wins
-        return "O" if row.os == 3 # "O" wins
-      end
-      return " " if blanks == 0   # tie
-      false
+····
+    attr_reader :mark
+····
+    def move( board )
+      raise NotImplementedError, "Player subclasses must define move()."
     end
+····
+    def finish( final_board )··
+    end
+  end
+end
 </PRE>
+de la que heredan los jugadores concretos.
+
+<P>
+Cada jugador es una clase. Por ejemplo, el jugador humano:
+<PRE>
+module TicTacToe
+  class HumanPlayer &lt; Player
+    def move( board )
+      print board
+      ....
+    end
+    
+    def finish( final_board )
+      ....
+    end
+  end
+end
+</PRE>
+Un par de jugadores mas, uno tonto y otro listo:
+<PRE>
+module TicTacToe
+  class DumbPlayer &lt; Player
+    def move( board )
+      moves = board.moves
+      moves[rand(moves.size)]
+    end
+  end
+
+  class SmartPlayer &lt; Player
+    def move( board )
+      ....
+    end
+  end
+end
+</PRE>
+La Banda de los Cuatro (<A NAME="7733"></A><SPAN  CLASS="textbf">The Gang of Four</SPAN> o <A NAME="7735"></A><SPAN  CLASS="textbf">GoF</SPAN>) 
+llama a esta idea de <SPAN  CLASS="textbf">implanta el algoritmo en clases separadas</SPAN> el 
+<A NAME="7737"></A><SPAN  CLASS="textbf">strategy pattern</SPAN> o <A NAME="7739"></A><SPAN  CLASS="textbf">patrón estrategia</SPAN> [<A
+ HREF="node738.html#DPR">6</A>], [<A
+ HREF="node738.html#GO4">7</A>].
+Esta estrategia puede aplicarse cuando ocurre que en medio de nuestra aplicación
+tenemos una parte que varía (el tipo de jugador). 
+A veces en esa parte queremos  hacer una cosa (usar el jugador <code>SmartPlayer</code>) y a veces
+otra (el jugador <code>HumanPlayer</code>). Es mas, es seguro que en el futuro se querrá
+otra cosa (¿que tal un jugador <code>MiniMaxPlayer</code>?).
+
+<OL>
+<LI>La idea clave es definir una familia de clases, las <A NAME="7741"></A><SPAN  CLASS="textbf">strategy</SPAN>
+o <A NAME="7743"></A><SPAN  CLASS="textbf">estrategias</SPAN> que hacen de distintas formas la misma cosa:
+en nuestro ejemplo son los distintos tipos de <code>Player</code> que lo
+que hacen es decidir la próxima jugada mediante  <code>move</code>.
+</LI>
+<LI>No sólo realizan la misma tarea sino que comparten la misma interfaz definida por la
+clase <code>Player</code>.
+</LI>
+<LI>Dado que todos los objetos <A NAME="7745"></A><SPAN  CLASS="textbf">strategy</SPAN>
+tiene la misma pinta vistos desde fuera, pueden ser usados
+por el usuario de la estrategia - Al que la GoF denomina <A NAME="7747"></A><SPAN  CLASS="textbf">context</SPAN>
+o <A NAME="7749"></A><SPAN  CLASS="textbf">contexto</SPAN> - como partes intercambiables. En nuestro caso el context
+es la clase 
+<code>Game</code>, que usa los <code>Player</code>s como objetos intercambiables
+</LI>
+<LI>Al separar la clase cliente <code>Game</code> - el contexto -
+de las clases estrategia <code>Player</code>s es necesario habilitar un mecanismo 
+de comunicación entre el contexto y la estrategia. En este ejemplo se ha optado por 
+pasar  esa información - el tablero - como argumento:
+<PRE>
+  @board[@x_player.move(@board)] = @x_player.mark # dentro del método play de la clase Game
+</PRE>
+La estrategia - el jugador <code>@x_player</code> - recibe el tablero <code>@board</code> 
+y retorna su decisión - la jugada <code>@x_player.move(@board)</code> (algo como <code>"b2"</code>)
+</LI>
+<LI>Un ejemplo de uso práctico del patrón Strategy puede verse en el código de <code>rdoc</code>, 
+la herramienta que se usa en Ruby para extraer documentación
+de los programas: por un lado hay una variación en los parsers que soporta: C, Ruby y FORTRAN.
+Por otro lado la salida puede hacerse en diversos formatos: XML, distintas versiones de HTML, CHM, <code>ri</code>, etc.
+En <code>rdoc</code> cada uno de los formatos de salida es manejado mediante una estrategia.
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6365"
+<A NAME="tex2html6389"
   HREF="node221.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6359"
-  HREF="node215.html">
+<A NAME="tex2html6383"
+  HREF="node216.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6353"
+<A NAME="tex2html6377"
   HREF="node219.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6361"
-  HREF="node727.html">
+<A NAME="tex2html6385"
+  HREF="node734.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6363"
-  HREF="node730.html">
+<A NAME="tex2html6387"
+  HREF="node737.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -301,20 +288,20 @@ si hay tres alineadas:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6366"
-  HREF="node221.html">La Clase Row</A>
-<B> Subir:</B> <A NAME="tex2html6360"
-  HREF="node215.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html6354"
-  HREF="node219.html">La Clase Player: Un</A>
- &nbsp; <B>  <A NAME="tex2html6362"
-  HREF="node727.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6364"
-  HREF="node730.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6390"
+  HREF="node221.html">La Clase Board</A>
+<B> Subir:</B> <A NAME="tex2html6384"
+  HREF="node216.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6378"
+  HREF="node219.html">La Clase Game</A>
+ &nbsp; <B>  <A NAME="tex2html6386"
+  HREF="node734.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6388"
+  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-02-28
+2014-04-03
 </ADDRESS>
 </BODY>
 </HTML>
