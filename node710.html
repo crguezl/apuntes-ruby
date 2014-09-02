@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Showoff</TITLE>
-<META NAME="description" CONTENT="Showoff">
+<TITLE>Despliegue de una Aplicación Web en la ETSII</TITLE>
+<META NAME="description" CONTENT="Despliegue de una Aplicación Web en la ETSII">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node711.html">
-<LINK REL="previous" HREF="node703.html">
-<LINK REL="up" HREF="node568.html">
+<LINK REL="previous" HREF="node709.html">
+<LINK REL="up" HREF="node708.html">
 <LINK REL="next" HREF="node711.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14776"
+<A NAME="tex2html14900"
   HREF="node711.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14770"
-  HREF="node568.html">
+<A NAME="tex2html14894"
+  HREF="node708.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14764"
+<A NAME="tex2html14888"
   HREF="node709.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14772"
-  HREF="node735.html">
+<A NAME="tex2html14896"
+  HREF="node751.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14774"
-  HREF="node738.html">
+<A NAME="tex2html14898"
+  HREF="node754.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,88 +96,105 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14777"
-  HREF="node711.html">GitHub</A>
-<B> Subir:</B> <A NAME="tex2html14771"
-  HREF="node568.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14765"
-  HREF="node709.html">Jekyll en Heroku</A>
- &nbsp; <B>  <A NAME="tex2html14773"
-  HREF="node735.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14775"
-  HREF="node738.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14901"
+  HREF="node711.html">Gemas instaladas en local</A>
+<B> Subir:</B> <A NAME="tex2html14895"
+  HREF="node708.html">ETSII</A>
+<B> Anterior:</B> <A NAME="tex2html14889"
+  HREF="node709.html">Prácticas: Centro de Cálculo</A>
+ &nbsp; <B>  <A NAME="tex2html14897"
+  HREF="node751.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14899"
+  HREF="node754.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION062900000000000000000"></A>
-<A NAME="chapter:showoff"></A>
-<BR>
-Showoff
+<H1><A NAME="SECTION062320000000000000000">
+Despliegue de una Aplicación Web en la ETSII</A>
 </H1>
-ShowOff is a Sinatra web app that reads simple configuration files for a presentation. 
+Para desplegar una aplicación web usaremos <code>exthost2</code> (en 2013).
 
 <P>
-The idea is that you setup your markdown slide files in section
-subdirectories and then startup the showoff server in that directory.
-It will read in your showoff.json file for which sections go in
-which order and then will give you a URL to present from.
+Veamos que puertos están libres usando  <TT>netstat</TT> :
+<PRE>
+casiano@exthost2:~$ netstat -an | less
+</PRE>
+o bien usamos  <TT>lsof</TT> : 
+<PRE>
+lsof -i | less
+</PRE>
+y después - si es necesario - terminamos el proceso que ya estuviera escuchando en el puerto
+<PRE>
+kill -9 PID
+</PRE>
 
 <P>
+Veamos una simple aplicación usando <code>rack</code>:
+<PRE>
+casiano@exthost2:~/src/ruby/simplewebapp$ cat hello.rb 
+require 'rack'
+
+app = lambda { |env| [200, {"Content-Type" =&gt; "text/plain"}, ["Hello. The time is #{Time.now}"]] }
+Rack::Handler::WEBrick.run app,:Port =&gt; 4567
+</PRE>
+La ejecutamos:
+<PRE>
+casiano@exthost2:~/src/ruby/simplewebapp$ ruby hello.rb 
+[2013-10-28 09:58:54] INFO  WEBrick 1.3.1
+[2013-10-28 09:58:54] INFO  ruby 1.9.3 (2011-10-30) [i686-linux]
+[2013-10-28 09:58:54] WARN  TCPServer Error: Address already in use - bind(2)
+[2013-10-28 09:58:54] INFO  WEBrick::HTTPServer#start: pid=16597 port=4567
+</PRE>
+Ya tenemos disponible la página en <code>exthost2</code> en el puerto correspondiente.
+
+<P>
+El acceso al servidor está limitado a
+la red de la ULL.
+
+<P>
+
+<H4><A NAME="SECTION062320010000000000000">
+Véase también</A>
+</H4>
+  
 
 <OL>
-<LI><A NAME="tex2html1644"
-  HREF="https://github.com/schacon/showoff">https://github.com/schacon/showoff</A>
-</LI>
-<LI><A NAME="tex2html1645"
-  HREF="https://github.com/crguezl/showoff">https://github.com/crguezl/showoff</A>
+<LI><I>Gemas instaladas en local</I> <A HREF="node711.html#section:gemasinstaladasenlocal">95.3</A>
 </LI>
 </OL>
 
 <P>
-<PRE>
-[~/sinatra/showoff(master)]$ showoff --help
-NAME
-    showoff - 
-
-SYNOPSIS
-    showoff [global options] command [command options] [arguments...]
-
-VERSION
-    0.7.0
-
-GLOBAL OPTIONS
-    --help    - Show this message
-    --version - Display the program version
-
-COMMANDS
-    add, new     - Add a new slide at the end in a given dir
-    create, init - Create new showoff presentation
-    github       - Puts your showoff presentation into a gh-pages branch
-    help         - Shows a list of commands or help for one command
-    heroku       - Setup your presentation to serve on Heroku
-    serve        - Serves the showoff presentation in the specified (or current) directory
-    static       - Generate static version of presentation
-</PRE>
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14902"
+  HREF="node710.html#SECTION062320010000000000000">Véase también</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14776"
+<A NAME="tex2html14900"
   HREF="node711.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14770"
-  HREF="node568.html">
+<A NAME="tex2html14894"
+  HREF="node708.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14764"
+<A NAME="tex2html14888"
   HREF="node709.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14772"
-  HREF="node735.html">
+<A NAME="tex2html14896"
+  HREF="node751.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14774"
-  HREF="node738.html">
+<A NAME="tex2html14898"
+  HREF="node754.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -232,16 +249,16 @@ COMMANDS
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14777"
-  HREF="node711.html">GitHub</A>
-<B> Subir:</B> <A NAME="tex2html14771"
-  HREF="node568.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14765"
-  HREF="node709.html">Jekyll en Heroku</A>
- &nbsp; <B>  <A NAME="tex2html14773"
-  HREF="node735.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14775"
-  HREF="node738.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14901"
+  HREF="node711.html">Gemas instaladas en local</A>
+<B> Subir:</B> <A NAME="tex2html14895"
+  HREF="node708.html">ETSII</A>
+<B> Anterior:</B> <A NAME="tex2html14889"
+  HREF="node709.html">Prácticas: Centro de Cálculo</A>
+ &nbsp; <B>  <A NAME="tex2html14897"
+  HREF="node751.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14899"
+  HREF="node754.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
