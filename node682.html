@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>MacOS homebrew Package Manager</TITLE>
-<META NAME="description" CONTENT="MacOS homebrew Package Manager">
+<TITLE>Deploy your app to Heroku using the Cloud9 console</TITLE>
+<META NAME="description" CONTENT="Deploy your app to Heroku using the Cloud9 console">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node683.html">
-<LINK REL="previous" HREF="node674.html">
-<LINK REL="up" HREF="node568.html">
+<LINK REL="previous" HREF="node681.html">
+<LINK REL="up" HREF="node675.html">
 <LINK REL="next" HREF="node683.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14350"
+<A NAME="tex2html14361"
   HREF="node683.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14344"
-  HREF="node568.html">
+<A NAME="tex2html14355"
+  HREF="node675.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14338"
+<A NAME="tex2html14351"
   HREF="node681.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14346"
-  HREF="node734.html">
+<A NAME="tex2html14357"
+  HREF="node735.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14348"
-  HREF="node737.html">
+<A NAME="tex2html14359"
+  HREF="node738.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,226 +95,125 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14351"
-  HREF="node683.html">PostgreSQL</A>
-<B> Subir:</B> <A NAME="tex2html14345"
-  HREF="node568.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14339"
-  HREF="node681.html">Deploy your app to</A>
- &nbsp; <B>  <A NAME="tex2html14347"
-  HREF="node734.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14349"
-  HREF="node737.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14362"
+  HREF="node683.html">MacOS homebrew Package Manager</A>
+<B> Subir:</B> <A NAME="tex2html14356"
+  HREF="node675.html">Cloud9</A>
+<B> Anterior:</B> <A NAME="tex2html14352"
+  HREF="node681.html">Cloud9 y GitHub: How</A>
+ &nbsp; <B>  <A NAME="tex2html14358"
+  HREF="node735.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14360"
+  HREF="node738.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061700000000000000000">
-MacOS homebrew Package Manager</A>
-</H1>
-
-<H4><A NAME="SECTION061700010000000000000">
-Homebrew installs packages to their own directory</A>
-</H4>
-  
+<H1><A NAME="SECTION061770000000000000000">
+Deploy your app to Heroku using the Cloud9 console</A>
+</H1> 
 
 <P>
-Homebrew installs the stuff you need that Apple didn’t.
-
-<P>
-<PRE>
-$ brew install wget
-</PRE>
-Homebrew installs packages to their own directory and then symlinks their files into <code>/usr/local</code>.
-
-<P>
-<PRE>
-$ cd /usr/local
-$ find Cellar
-Cellar/wget/1.12
-Cellar/wget/1.12/bin/wget
-Cellar/wget/1.12/share/man/man1/wget.1
-</PRE>
-
-<P>
-<PRE>
-$ ls -l bin
-bin/wget -&gt; ../Cellar/wget/1.12/bin/wget
-</PRE>
-
-<P>
-Homebrew won’t install files outside its prefix, and you can place
-a Homebrew installation wherever you like.
-
-<P>
-
-<H4><A NAME="SECTION061700020000000000000">
-Create your own Homebrew packages</A>
-</H4>
-  
-
-<P>
-Trivially create your own Homebrew packages.
-
-<P>
-<PRE>
-$ brew create http://foo.com/bar-1.0.tgz
-Created /usr/local/Library/Formula/bar.rb
-</PRE>
-It's all git and ruby underneath, so hack away with the knowledge
-that you can easily revert your modifications and merge upstream
-updates.
-
-<P>
-<PRE>
-$ brew edit wget # opens in $EDITOR!
-</PRE>
-Homebrew formulae are simple Ruby scripts:
-
-<P>
-<PRE>
-require 'formula'
-
-class Wget &lt; Formula
-  homepage 'http://www.gnu.org/wget/'
-  url 'http://ftp.gnu.org/wget-1.12.tar.gz'
-  md5 '308a5476fc096a8a525d07279a6f6aa3'
-
-  def install
-    system "./configure --prefix=#{prefix}"
-    system 'make install'
-  end
-end
-</PRE>
-Homebrew complements OS X. Install your gems with gem, and their
-dependencies with brew.
-
-<P>
-
-<H4><A NAME="SECTION061700030000000000000">
-Comandos</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/jump-start-sinatra]$ brew --help
-Example usage:
-  brew [info | home | options ] [FORMULA...]
-  brew install FORMULA...
-  brew uninstall FORMULA...
-  brew search [foo]
-  brew list [FORMULA...]
-  brew update
-  brew upgrade [FORMULA...]
-
-Troubleshooting:
-  brew doctor
-  brew install -vd FORMULA
-  brew [--env | --config]
-
-Brewing:
-  brew create [URL [--no-fetch]]
-  brew edit [FORMULA...]
-  open https://github.com/mxcl/homebrew/wiki/Formula-Cookbook
-
-Further help:
-  man brew
-  brew home
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION061700040000000000000">
-HOMEBREW_GITHUB_API_TOKEN</A>
-</H4>
-  
-
-<P>
-A personal GitHub API Access token, which
-you can create at 
-<A NAME="tex2html1571"
-  HREF="https://github.com/settings/applications">https://github.com/settings/applications</A>.
-If set,
-GitHub will allow you a greater number of API requests. See
+Véase el post de 
 <A NAME="tex2html1572"
-  HREF="http://developer.github.com/v3/#rate-limiting">http://developer.github.com/v3/#rate-limiting</A>
-for more information.
+  HREF="http://support.c9.io/entries/21468947-Deploy-your-app-to-Heroku-using-the-Cloud9-console">Daniela Gavidia</A>.
 
 <P>
-Homebrew uses the GitHub API for features such as <code>brew search</code>.
-
-<P>
-<PRE>
-$ brew search postgress
-Error: GitHub Server Error
-You may want to create an API token: https://github.com/settings/applications
-and then set HOMEBREW_GITHUB_API_TOKEN.
-</PRE>
-Vete a la página y crea el token.
-Luego añade una línea como esta en tu <code>.bashrc</code>:
-<PRE>
-$ export HOMEBREW_GITHUB_API_TOKEN fx0001111111111111111111111eeeeeeeeeeeee
-$ brew search postgress
-No formula found for "postgress". Searching open pull requests...
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION061700050000000000000">
-Véase</A>
-</H4>
-  
-
-<P>
+You can use the Cloud9 console to deploy your app. To do so, please
+follow these instructions:
 
 <OL>
-<LI><A NAME="tex2html1573"
-  HREF="https://github.com/mxcl/homebrew/blob/master/Library/Contributions/manpages/brew.1.md">brew(1) - The missing package manager for OS X</A>
+<LI>Create a Heroku deploy server. You can do that using the Cloud9
+integration (choose "Create new" in the "Add deploy target" window; el icono del
+"globito"):
+<PRE>
+https://skitch.com/c9support/85qpk/hello-world-cloud9
+</PRE>
 </LI>
-<LI><A NAME="tex2html1574"
-  HREF="http://mac.tutsplus.com/tutorials/terminal/homebrew-demystified-os-xs-ultimate-package-manager/">Homebrew Demystified: OS X’s Ultimate Package Manager</A>
+<LI>Verify that the deploy target was created by logging in to your Heroku
+account (at heroku.com) and verifying that the deploy target exists under
+<code>My Apps</code>
+</LI>
+<LI>In the Cloud9 console, add the Heroku deploy target as a remote with git:
+<PRE>
+git remote add heroku-target git@heroku.com:c9testhelloworld.git|
+</PRE>
+
+<P>
+where <code>heroku-target</code> is the name you want to give to your deploy target
+(you can name it whatever you want) and
+<PRE>
+git@heroku.com:c9testhelloworld.git
+</PRE>
+is the git repo in Heroku for your deploy target. You can get the git repo
+by going to 
+<PRE>
+Heroku.com -&gt; My Apps,
+</PRE>
+clicking on <code>General info</code> for the app.
+</LI>
+<LI>Create a <code>package.json</code> file and a <code>Procfile</code> for your app. 
+For more info
+on the format of these files, see the link below. You only need to add
+these two files. Ignore the other steps at the link:
+<A NAME="tex2html1573"
+  HREF="https://devcenter.heroku.com/articles/nodejs">https://devcenter.heroku.com/articles/nodejs</A>
+<P>
+Please make sure you use the correct name in the <code>Procfile</code>. 
+On the link they use <code>web.js</code>, 
+but you probably have <code>server.js</code> as your main node file. 
+</LI>
+<LI>Commit all your files with git: 
+<PRE>
+git add . 
+git commit -m "Adding all my files"
+</PRE>
+</LI>
+<LI>Push to Heroku: 
+<PRE>
+git push heroku-target master
+</PRE>
+If pushing the file succeeds, you will get a link to the deployed
+app. Otherwise, you should get some informative error messages from
+Heroku.
 </LI>
 </OL>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+Véase también
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html14352"
-  HREF="node682.html#SECTION061700010000000000000">Homebrew installs packages to their own directory</A>
-<LI><A NAME="tex2html14353"
-  HREF="node682.html#SECTION061700020000000000000">Create your own Homebrew packages</A>
-<LI><A NAME="tex2html14354"
-  HREF="node682.html#SECTION061700030000000000000">Comandos</A>
-<LI><A NAME="tex2html14355"
-  HREF="node682.html#SECTION061700040000000000000">HOMEBREW_GITHUB_API_TOKEN</A>
-<LI><A NAME="tex2html14356"
-  HREF="node682.html#SECTION061700050000000000000">Véase</A>
-</UL></UL></UL></UL>
-<!--End of Table of Child-Links-->
+<UL>
+<LI><A NAME="tex2html1574"
+  HREF="http://support.c9.io/entries/20710298-deploy-your-application-to-heroku">Deploy your application to Heroku</A>
+en cloud9 IDE/Forums/Using Cloud9 IDE/How To
+</LI>
+<LI><A NAME="tex2html1575"
+  HREF="http://stackoverflow.com/questions/5340709/how-can-i-push-changes-directly-from-cloud9-ide-to-heroku">How can I push changes directly from Cloud9 IDE to Heroku?</A>
+</LI>
+<LI><A NAME="tex2html1576"
+  HREF="http://stackoverflow.com/questions/9630064/how-to-rake-database-to-heroku-on-cloud9">How to rake database to Heroku on cloud9</A>
+en Stackoverflow
+</LI>
+</UL>
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14350"
+<A NAME="tex2html14361"
   HREF="node683.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14344"
-  HREF="node568.html">
+<A NAME="tex2html14355"
+  HREF="node675.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14338"
+<A NAME="tex2html14351"
   HREF="node681.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14346"
-  HREF="node734.html">
+<A NAME="tex2html14357"
+  HREF="node735.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14348"
-  HREF="node737.html">
+<A NAME="tex2html14359"
+  HREF="node738.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -370,20 +268,20 @@ Véase</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14351"
-  HREF="node683.html">PostgreSQL</A>
-<B> Subir:</B> <A NAME="tex2html14345"
-  HREF="node568.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14339"
-  HREF="node681.html">Deploy your app to</A>
- &nbsp; <B>  <A NAME="tex2html14347"
-  HREF="node734.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14349"
-  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14362"
+  HREF="node683.html">MacOS homebrew Package Manager</A>
+<B> Subir:</B> <A NAME="tex2html14356"
+  HREF="node675.html">Cloud9</A>
+<B> Anterior:</B> <A NAME="tex2html14352"
+  HREF="node681.html">Cloud9 y GitHub: How</A>
+ &nbsp; <B>  <A NAME="tex2html14358"
+  HREF="node735.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14360"
+  HREF="node738.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-04-03
+2014-09-02
 </ADDRESS>
 </BODY>
 </HTML>

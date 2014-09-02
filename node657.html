@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Controlando nuestras dependencias</TITLE>
-<META NAME="description" CONTENT="Controlando nuestras dependencias">
+<TITLE>Pessimistic version constraint</TITLE>
+<META NAME="description" CONTENT="Pessimistic version constraint">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node658.html">
 <LINK REL="previous" HREF="node656.html">
-<LINK REL="up" HREF="node642.html">
+<LINK REL="up" HREF="node643.html">
 <LINK REL="next" HREF="node658.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13968"
+<A NAME="tex2html13979"
   HREF="node658.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13962"
-  HREF="node642.html">
+<A NAME="tex2html13973"
+  HREF="node643.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13956"
+<A NAME="tex2html13967"
   HREF="node656.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13964"
-  HREF="node734.html">
+<A NAME="tex2html13975"
+  HREF="node735.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13966"
-  HREF="node737.html">
+<A NAME="tex2html13977"
+  HREF="node738.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,145 +96,157 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13969"
-  HREF="node658.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html13963"
-  HREF="node642.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html13957"
-  HREF="node656.html">Pessimistic version constraint</A>
- &nbsp; <B>  <A NAME="tex2html13965"
-  HREF="node734.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13967"
-  HREF="node737.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13980"
+  HREF="node658.html">Controlando nuestras dependencias</A>
+<B> Subir:</B> <A NAME="tex2html13974"
+  HREF="node643.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13968"
+  HREF="node656.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html13976"
+  HREF="node735.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13978"
+  HREF="node738.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0612150000000000000000"></A>
-<A NAME="section:controlandonuestrasdependencias"></A>
-<BR>
-Controlando nuestras dependencias
+<H1><A NAME="SECTION0613140000000000000000">
+Pessimistic version constraint</A>
 </H1>
+If your gem properly follows <A NAME="25576"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
+scheme, then other Ruby developers can take advantage of this when
+choosing a version constraint to lock down your gem in their
+application.
 
 <P>
-
-<H4><A NAME="SECTION0612150010000000000000">
-bundle outdated</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/ruby/faye]$ bundle help outdated
-Usage:
-  bundle outdated [GEM]
-
-Options:
-      [--pre=Check for newer pre-release gems]                                       
-      [--source=Check against a specific source]                                     
-      [--local=Do not attempt to fetch gems remotely and use the gem cache instead]  
-      [--no-color=Disable colorization in output]                                    
-  -V, [--verbose=Enable verbose output mode]                                         
-
-Description:
-  Outdated lists the names and versions of gems that have a newer version available in the given source. 
-  Calling outdated with [GEM [GEM]] will only check for newer versions of the given gems. Prerelease gems are 
-  ignored by default. If your gems are up to date, Bundler will exit with a status of 0. Otherwise, it will 
-  exit 1.
-</PRE>
+Let’s say the following releases of a gem exist:
 
 <P>
 <PRE>
-[~/ruby/faye]$ ls -l Gemfile*
--rw-r--r--  1 casiano  staff   267 15 nov 18:01 Gemfile
--rw-r--r--  1 casiano  staff  2373 15 nov 18:02 Gemfile.lock
-[~/ruby/faye]$ bundle outdated
-Fetching gem metadata from https://rubygems.org/.........
-Fetching gem metadata from https://rubygems.org/..
-Resolving dependencies...
-
-Outdated gems included in the bundle:
-  * em-websocket (0.5.0 &gt; 0.3.8)
-  * rainbows (4.5.0 &gt; 4.4.3)
+Version 2.1.0 — Baseline
+Version 2.2.0 — Introduced some new (backward compatible) features.
+Version 2.2.1 — Removed some bugs
+Version 2.2.2 — Streamlined your code
+Version 2.3.0 — More new features (but still backwards compatible).
+Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
 </PRE>
-
-<P>
-
-<H4><A NAME="SECTION0612150020000000000000">
-Gemnasium</A>
-</H4>
-  
-
-<A NAME="parrafo:gemnasium"></A>
-<P>
-Gemnasium 
-<A NAME="tex2html1472"
-  HREF="https://gemnasium.com">https://gemnasium.com</A>
-is a service that learns your gem dependencies, listens
-for new versions of those gems and notifies you when they’re released.
-
-<P>
-Gemnasium sends you an email whenever a new version is released for a gem that you use.
-You can turn off notifications for particular gems or for entire repositories,
-or  choose to receive them in a digest email on a daily or weekly basis.
-
-<P>
-Gemnasium represents the statuses of your dependencies with three colors:
-
-<P>
+Someone who wants to use your gem has determined that 
 
 <OL>
-<LI>green =&gt; dependency is up to date with latest version available
+<LI>version 2.2.0
+works with their software, 
 </LI>
-<LI>yellow =&gt; there is at least one newer stable version available
+<LI>but version 2.1.0 doesn’t have a feature
+they need. 
 </LI>
-<LI>red =&gt; the dependency is behind a security fix or an important update (broken API, deprecation, …)
+<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
+might look like:
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  '&gt;= 2.2.0'
+</PRE>
+or 
+<PRE>
+# bundler
+gem 'library', '&gt;= 2.2.0'
+</PRE>
+This is an <A NAME="25578"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
+
+<P>
+It’s saying that all
+changes from <code>2.x</code> on will work with my software, 
+but for version
+<code>3.0.0</code> this will not be true.
+
+<P>
+</LI>
+<LI>The alternative here is to use <A NAME="25580"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
+
+<P>
+This explicitly excludes the version that might break your code.
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  ['&gt;= 2.2.0', '&lt; 3.0']
+</PRE>
+or
+
+<P>
+<PRE>
+# bundler
+gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
+</PRE>
+</LI>
+<LI><A NAME="tex2html1477"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> provides a shortcut for this, commonly known as the <A NAME="25585"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  '~&gt; 2.2'
+</PRE>
+
+<P>
+<PRE>
+# bundler
+gem 'library', '~&gt; 2.2'
+</PRE>
+Notice that we dropped the <code>PATCH</code> level of the version number. 
+
+<P>
+</LI>
+<LI>Had
+we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
+<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
+
+<P>
+</LI>
+<LI>If you want to allow use of newer backwards-compatible versions but
+need a specific bug fix you can use a compound requirement:
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+</PRE>
+
+<P>
+<PRE>
+# bundler
+gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+</PRE>
+</LI>
+<LI>The important note to take home here is to be aware others will be
+using your gems, so guard yourself from potential bugs/failures in
+future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
+if at all possible.
 </LI>
 </OL>
 
 <P>
-Gemnasium looks the Gemfile.lock files. If your repository has one, Gemnasium will use it. They’re informational and easily parsed with a little help from Bundler.
-
-<P>
-Unfortunately, it’s not always wise to commit your Gemfile.lock. In those cases, Gemnasium looks for a Gemfile instead.
-
-<P>
-If all else fails, Gemnasium looks for a gemspec file in your repository’s root directory.
-
-<P>
-If any of these files exists, Gemnasium parses them to determine your repository’s gem dependencies.
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html13970"
-  HREF="node657.html#SECTION0612150010000000000000">bundle outdated</A>
-<LI><A NAME="tex2html13971"
-  HREF="node657.html#SECTION0612150020000000000000">Gemnasium</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13968"
+<A NAME="tex2html13979"
   HREF="node658.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13962"
-  HREF="node642.html">
+<A NAME="tex2html13973"
+  HREF="node643.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13956"
+<A NAME="tex2html13967"
   HREF="node656.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13964"
-  HREF="node734.html">
+<A NAME="tex2html13975"
+  HREF="node735.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13966"
-  HREF="node737.html">
+<A NAME="tex2html13977"
+  HREF="node738.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -289,20 +301,20 @@ If any of these files exists, Gemnasium parses them to determine your repository
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13969"
-  HREF="node658.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html13963"
-  HREF="node642.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html13957"
-  HREF="node656.html">Pessimistic version constraint</A>
- &nbsp; <B>  <A NAME="tex2html13965"
-  HREF="node734.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13967"
-  HREF="node737.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13980"
+  HREF="node658.html">Controlando nuestras dependencias</A>
+<B> Subir:</B> <A NAME="tex2html13974"
+  HREF="node643.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html13968"
+  HREF="node656.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html13976"
+  HREF="node735.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13978"
+  HREF="node738.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-04-03
+2014-09-02
 </ADDRESS>
 </BODY>
 </HTML>

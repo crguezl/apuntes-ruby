@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>PostgreSQL</TITLE>
-<META NAME="description" CONTENT="PostgreSQL">
+<TITLE>MacOS homebrew Package Manager</TITLE>
+<META NAME="description" CONTENT="MacOS homebrew Package Manager">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,7 +20,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node684.html">
-<LINK REL="previous" HREF="node682.html">
+<LINK REL="previous" HREF="node675.html">
 <LINK REL="up" HREF="node568.html">
 <LINK REL="next" HREF="node684.html">
 </HEAD>
@@ -28,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14369"
+<A NAME="tex2html14375"
   HREF="node684.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14363"
+<A NAME="tex2html14369"
   HREF="node568.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14357"
+<A NAME="tex2html14363"
   HREF="node682.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14365"
-  HREF="node734.html">
+<A NAME="tex2html14371"
+  HREF="node735.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14367"
-  HREF="node737.html">
+<A NAME="tex2html14373"
+  HREF="node738.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,95 +96,294 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14370"
-  HREF="node684.html">SASS (Syntactically Awesome StyleSheets)</A>
-<B> Subir:</B> <A NAME="tex2html14364"
+<B> Siguiente:</B> <A NAME="tex2html14376"
+  HREF="node684.html">PostgreSQL</A>
+<B> Subir:</B> <A NAME="tex2html14370"
   HREF="node568.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14358"
-  HREF="node682.html">MacOS homebrew Package Manager</A>
- &nbsp; <B>  <A NAME="tex2html14366"
-  HREF="node734.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14368"
-  HREF="node737.html">&#205;ndice de Materias</A></B> 
+<B> Anterior:</B> <A NAME="tex2html14364"
+  HREF="node682.html">Deploy your app to</A>
+ &nbsp; <B>  <A NAME="tex2html14372"
+  HREF="node735.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14374"
+  HREF="node738.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
 <H1><A NAME="SECTION061800000000000000000">
-PostgreSQL</A>
+MacOS homebrew Package Manager</A>
 </H1>
+
+<H4><A NAME="SECTION061800010000000000000">
+Homebrew installs packages to their own directory</A>
+</H4>
+  
+
+<P>
+Homebrew installs the stuff you need that Apple didn’t.
+
+<P>
+<PRE>
+$ brew install wget
+</PRE>
+Homebrew installs packages to their own directory and then symlinks their files into <code>/usr/local</code>.
+
+<P>
+<PRE>
+$ cd /usr/local
+$ find Cellar
+Cellar/wget/1.12
+Cellar/wget/1.12/bin/wget
+Cellar/wget/1.12/share/man/man1/wget.1
+</PRE>
+
+<P>
+<PRE>
+$ ls -l bin
+bin/wget -&gt; ../Cellar/wget/1.12/bin/wget
+</PRE>
+
+<P>
+Homebrew won’t install files outside its prefix, and you can place
+a Homebrew installation wherever you like.
+
+<P>
+
+<H4><A NAME="SECTION061800020000000000000">
+Create your own Homebrew packages</A>
+</H4>
+  
+
+<P>
+Trivially create your own Homebrew packages.
+
+<P>
+<PRE>
+$ brew create http://foo.com/bar-1.0.tgz
+Created /usr/local/Library/Formula/bar.rb
+</PRE>
+It's all git and ruby underneath, so hack away with the knowledge
+that you can easily revert your modifications and merge upstream
+updates.
+
+<P>
+<PRE>
+$ brew edit wget # opens in $EDITOR!
+</PRE>
+Homebrew formulae are simple Ruby scripts:
+
+<P>
+<PRE>
+require 'formula'
+
+class Wget &lt; Formula
+  homepage 'http://www.gnu.org/wget/'
+  url 'http://ftp.gnu.org/wget-1.12.tar.gz'
+  md5 '308a5476fc096a8a525d07279a6f6aa3'
+
+  def install
+    system "./configure --prefix=#{prefix}"
+    system 'make install'
+  end
+end
+</PRE>
+Homebrew complements OS X. Install your gems with gem, and their
+dependencies with brew.
+
+<P>
+
+<H4><A NAME="SECTION061800030000000000000">
+Comandos</A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/jump-start-sinatra]$ brew --help
+Example usage:
+  brew [info | home | options ] [FORMULA...]
+  brew install FORMULA...
+  brew uninstall FORMULA...
+  brew search [foo]
+  brew list [FORMULA...]
+  brew update
+  brew upgrade [FORMULA...]
+
+Troubleshooting:
+  brew doctor
+  brew install -vd FORMULA
+  brew [--env | --config]
+
+Brewing:
+  brew create [URL [--no-fetch]]
+  brew edit [FORMULA...]
+  open https://github.com/mxcl/homebrew/wiki/Formula-Cookbook
+
+Further help:
+  man brew
+  brew home
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION061800040000000000000">
+HOMEBREW_GITHUB_API_TOKEN</A>
+</H4>
+  
+
+<P>
+A personal GitHub API Access token, which
+you can create at 
+<A NAME="tex2html1577"
+  HREF="https://github.com/settings/applications">https://github.com/settings/applications</A>.
+If set,
+GitHub will allow you a greater number of API requests. See
+<A NAME="tex2html1578"
+  HREF="http://developer.github.com/v3/#rate-limiting">http://developer.github.com/v3/#rate-limiting</A>
+for more information.
+
+<P>
+Homebrew uses the GitHub API for features such as <code>brew search</code>.
+
+<P>
+<PRE>
+$ brew search postgress
+Error: GitHub Server Error
+You may want to create an API token: https://github.com/settings/applications
+and then set HOMEBREW_GITHUB_API_TOKEN.
+</PRE>
+Vete a la página y crea el token.
+Luego añade una línea como esta en tu <code>.bashrc</code>:
+<PRE>
+$ export HOMEBREW_GITHUB_API_TOKEN fx0001111111111111111111111eeeeeeeeeeeee
+$ brew search postgress
+No formula found for "postgress". Searching open pull requests...
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION061800050000000000000">
+Véase</A>
+</H4>
+  
 
 <P>
 
 <OL>
-<LI><A NAME="tex2html1575"
-  HREF="http://postgresapp.com/">Postgres.app</A>
+<LI><A NAME="tex2html1579"
+  HREF="https://github.com/mxcl/homebrew/blob/master/Library/Contributions/manpages/brew.1.md">brew(1) - The missing package manager for OS X</A>
 </LI>
-<LI><A NAME="tex2html1576"
-  HREF="http://www.postgresql.org/docs/9.3/interactive/installation.html">Chapter 15. Installation from Source Code</A>
+<LI><A NAME="tex2html1580"
+  HREF="http://mac.tutsplus.com/tutorials/terminal/homebrew-demystified-os-xs-ultimate-package-manager/">Homebrew Demystified: OS X’s Ultimate Package Manager</A>
 </LI>
 </OL>
 
 <P>
-<PRE>
-$ brew update
-$ brew search postgresQL
-postgresql     postgresql8    postgresql9    postgresql91   postgresql92
-</PRE>
-
-<P>
-<PRE>
-$ brew install postgresql --no-tcl # fail
-</PRE>
-
-<P>
-<PRE>
-[/tmp]$ brew install postgresql92 --no-tcl
-Warning: It appears you have MacPorts or Fink installed.
-Software installed with other package managers causes known problems for
-Homebrew. If a formula fails to build, uninstall MacPorts/Fink and try again.
-==&gt; Downloading http://ftp.postgresql.org/pub/source/v9.2.4/postgresql-9.2.4.tar.bz2
-Already downloaded: /Library/Caches/Homebrew/postgresql92-9.2.4.tar.bz2
-==&gt; Patching
-patching file src/pl/plpython/Makefile
-patching file contrib/uuid-ossp/uuid-ossp.c
-==&gt; ./configure --prefix=/usr/local/Cellar/postgresql92/9.2.4 --datadir=/usr/local/Cellar/postgresql92/9.2.4/s
-==&gt; make install-world
-==&gt; Caveats
-initdb /usr/local/var/postgres -E utf8    # create a database
-postgres -D /usr/local/var/postgres       # serve that database
-PGDATA=/usr/local/var/postgres postgres   # …alternatively
-
-uilds of PostgreSQL 9 are failing and you have version 8.x installed,
-may need to remove the previous version first. See:
-tps://github.com/mxcl/homebrew/issues/issue/2510
-
-igrate existing data from a previous major version (pre-9.2) of PostgreSQL, see:
-tp://www.postgresql.org/docs/9.2/static/upgrading.html
-
- machines may require provisioning of shared memory:
-tp://www.postgresql.org/docs/9.2/static/kernel-resources.html#SYSVIPC
-
-When installing the postgres gem, including ARCHFLAGS is recommended:
-  ARCHFLAGS="-arch x86_64" gem install pg
-
-To install gems without sudo, see the Homebrew wiki.
-
-To have launchd start postgresql92 at login:
-    ln -sfv /usr/local/opt/postgresql92/*.plist ~/Library/LaunchAgents
-Then to load postgresql92 now:
-    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql92.plist
-Or, if you don't want/need launchctl, you can just run:
-    pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
-==&gt; Summary
-  /usr/local/Cellar/postgresql92/9.2.4: 2831 files, 38M, built in 2.8 minutes
-</PRE>
-
-<P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14377"
+  HREF="node683.html#SECTION061800010000000000000">Homebrew installs packages to their own directory</A>
+<LI><A NAME="tex2html14378"
+  HREF="node683.html#SECTION061800020000000000000">Create your own Homebrew packages</A>
+<LI><A NAME="tex2html14379"
+  HREF="node683.html#SECTION061800030000000000000">Comandos</A>
+<LI><A NAME="tex2html14380"
+  HREF="node683.html#SECTION061800040000000000000">HOMEBREW_GITHUB_API_TOKEN</A>
+<LI><A NAME="tex2html14381"
+  HREF="node683.html#SECTION061800050000000000000">Véase</A>
+</UL></UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14375"
+  HREF="node684.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14369"
+  HREF="node568.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14363"
+  HREF="node682.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html14371"
+  HREF="node735.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14373"
+  HREF="node738.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1102"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="http://campusvirtual.ull.es/1314/course/view.php?id=1091"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html14376"
+  HREF="node684.html">PostgreSQL</A>
+<B> Subir:</B> <A NAME="tex2html14370"
+  HREF="node568.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html14364"
+  HREF="node682.html">Deploy your app to</A>
+ &nbsp; <B>  <A NAME="tex2html14372"
+  HREF="node735.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14374"
+  HREF="node738.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-04-03
+2014-09-02
 </ADDRESS>
 </BODY>
 </HTML>
