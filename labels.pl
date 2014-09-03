@@ -506,16 +506,16 @@ $key = q/figure:rdoc1/;
 $external_labels{$key} = "$URL/" . q|node661.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/cite_RPL/;
-$external_labels{$key} = "$URL/" . q|node755.html|; 
-$noresave{$key} = "$nosave";
-
 $key = q/susubsection:extend/;
 $external_labels{$key} = "$URL/" . q|node226.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/seubsection:methodmissing/;
 $external_labels{$key} = "$URL/" . q|node239.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/cite_RPL/;
+$external_labels{$key} = "$URL/" . q|node755.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:bindings/;
