@@ -15,7 +15,7 @@ $ref_files{$key} = "$dir".q|node29.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_metaprogramming/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:rspecconrack/;
@@ -31,7 +31,7 @@ $ref_files{$key} = "$dir".q|node201.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_GO4/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/item:busca_clase/;
@@ -83,7 +83,7 @@ $ref_files{$key} = "$dir".q|node338.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_friedl/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:requestobject1/;
@@ -183,7 +183,7 @@ $ref_files{$key} = "$dir".q|node68.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_PRP/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:camping1png/;
@@ -219,7 +219,7 @@ $ref_files{$key} = "$dir".q|node230.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_ER/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:clausuras/;
@@ -247,7 +247,11 @@ $ref_files{$key} = "$dir".q|node645.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_RHG/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/cite_Chacon:2009:PG:1618548/;
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:requestobject/;
@@ -355,7 +359,7 @@ $ref_files{$key} = "$dir".q|node212.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_bastards/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:dandovaloresysuprimiendovariables/;
@@ -506,16 +510,16 @@ $key = q/figure:rdoc1/;
 $ref_files{$key} = "$dir".q|node661.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/cite_RPL/;
+$ref_files{$key} = "$dir".q|node772.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/susubsection:extend/;
 $ref_files{$key} = "$dir".q|node226.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/seubsection:methodmissing/;
 $ref_files{$key} = "$dir".q|node239.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/cite_RPL/;
-$ref_files{$key} = "$dir".q|node755.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:bindings/;
@@ -535,7 +539,7 @@ $ref_files{$key} = "$dir".q|node508.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_DPR/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:requestobject/;
@@ -611,7 +615,7 @@ $ref_files{$key} = "$dir".q|node643.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_aaltomwad/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:bundler/;
@@ -619,7 +623,7 @@ $ref_files{$key} = "$dir".q|node640.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_RBP/;
-$ref_files{$key} = "$dir".q|node755.html|; 
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:rackandhaml/;
