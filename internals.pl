@@ -510,16 +510,16 @@ $key = q/figure:rdoc1/;
 $ref_files{$key} = "$dir".q|node661.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/cite_RPL/;
-$ref_files{$key} = "$dir".q|node772.html|; 
-$noresave{$key} = "$nosave";
-
 $key = q/susubsection:extend/;
 $ref_files{$key} = "$dir".q|node226.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/seubsection:methodmissing/;
 $ref_files{$key} = "$dir".q|node239.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/cite_RPL/;
+$ref_files{$key} = "$dir".q|node772.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:bindings/;
