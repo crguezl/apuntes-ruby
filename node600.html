@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Depuración/Debugging</TITLE>
-<META NAME="description" CONTENT="Depuración/Debugging">
+<TITLE>Consideraciones sobre la Seguridad del Uso de Agentes</TITLE>
+<META NAME="description" CONTENT="Consideraciones sobre la Seguridad del Uso de Agentes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node601.html">
 <LINK REL="previous" HREF="node599.html">
-<LINK REL="up" HREF="node590.html">
+<LINK REL="up" HREF="node591.html">
 <LINK REL="next" HREF="node601.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13216"
+<A NAME="tex2html13223"
   HREF="node601.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13210"
-  HREF="node590.html">
+<A NAME="tex2html13217"
+  HREF="node591.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13204"
+<A NAME="tex2html13211"
   HREF="node599.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13212"
-  HREF="node768.html">
+<A NAME="tex2html13219"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13214"
-  HREF="node771.html">
+<A NAME="tex2html13221"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,190 +96,166 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13217"
-  HREF="node601.html">Los Ficheros de Configuración</A>
-<B> Subir:</B> <A NAME="tex2html13211"
-  HREF="node590.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13205"
-  HREF="node599.html">Consideraciones sobre la Seguridad</A>
- &nbsp; <B>  <A NAME="tex2html13213"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13215"
-  HREF="node771.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13224"
+  HREF="node601.html">Depuración/Debugging</A>
+<B> Subir:</B> <A NAME="tex2html13218"
+  HREF="node591.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13212"
+  HREF="node599.html">Redireccionado al Agente SSH</A>
+ &nbsp; <B>  <A NAME="tex2html13220"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13222"
+  HREF="node772.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION064100000000000000000">
-Depuración/Debugging</A>
+<H1><A NAME="SECTION06590000000000000000">
+Consideraciones sobre la Seguridad del Uso de Agentes</A>
 </H1>
 
 <P>
-La opción <code>-v</code> hace que los clientes <code>scp</code> y <code>ssh</code> proporcionen
-información de depuración. Observemos la siguiente copia remota:
+El uso de agentes previene que la passphrase o la clave 
+tengan que viajar por la red y nos proteje contra el róbo de la clave.
 
 <P>
-<PRE>
-pp2@nereida:~/Lbook$ scp procesos.tex orion:
-procesos.tex                         100%  250KB 249.5KB/s   00:01
-</PRE>
-La opción <code>-v</code> nos informa de la existencia de un problema:
+Sin embargo, existe la posibilidad de que alguien tenga 
+acceso al socket usado por el agente. Cualquiera que pueda
+leer/escribir en ese socket tiene la posibilidad de suplantarnos.
+En particular el administrador de un sistema tiene siempre 
+esa posibilidad. 
 
 <P>
-<PRE>
-pp2@nereida:~/Lbook$ scp -v procesos.tex orion:
-Executing: program /usr/bin/ssh host orion, user (unspecified), command scp -v -t .
-OpenSSH_4.3p2 Debian-9, OpenSSL 0.9.8c 05 Sep 2006
-debug1: Reading configuration data /home/pp2/.ssh/config
-debug1: Applying options for orion
-debug1: Reading configuration data /etc/ssh/ssh_config
-debug1: Applying options for *
-debug1: Connecting to orion [193.145.105.17] port 22.
-debug1: Connection established.
-debug1: identity file /home/pp2/.ssh/identity type -1
-debug1: identity file /home/pp2/.ssh/id_rsa type 1
-debug1: identity file /home/pp2/.ssh/id_dsa type 2
-debug1: Remote protocol version 2.0, remote software version OpenSSH_4.3p2 Debian-9
-debug1: match: OpenSSH_4.3p2 Debian-9 pat OpenSSH*
-debug1: Enabling compatibility mode for protocol 2.0
-debug1: Local version string SSH-2.0-OpenSSH_4.3p2 Debian-9
-debug1: An invalid name was supplied
-Configuration file does not specify default realm
-
-debug1: An invalid name was supplied
-A parameter was malformed
-Validation error
-
-debug1: An invalid name was supplied
-Configuration file does not specify default realm
-
-debug1: An invalid name was supplied
-A parameter was malformed
-Validation error
-
-debug1: SSH2_MSG_KEXINIT sent
-....................................................
-debug1: Transferred: stdin 0, stdout 0, stderr 0 bytes in 0.3 seconds
-debug1: Bytes per second: stdin 0.0, stdout 0.0, stderr 0.0
-debug1: Exit status 0
-</PRE>
+Supongamos que el usuario <code>casiano</code> tiene acceso a dos máquinas:
+<code>orion</code> y <code>beowulf</code> a las que accede desde <code>europa</code>. 
+Supongamos que el administrador de <code>orion</code> es malicioso e intenta
+obtener acceso a las máquinas  de sus usuarios. Supongamos que tanto
+<code>europa</code> como <code>beowulf</code> son máquinas fiables. 
+Asumimos también que la máquina <code>beowulf</code> contiene información 
+importante y es un servidor que el usuario <code>casiano</code> tiene en su casa.
 
 <P>
-Después de buscar en <code>Google</code> vemos
-cual es la causa del problema:
-
-<P>
-<BLOCKQUOTE>
-<I>What happens is that SSH will hang for a long period of time before
-providing a password prompt or performing key authentication. In either
-case the problem is the GSSAPI that is now being used by clients and
-not by most servers.
-</I>
-
-</BLOCKQUOTE>
-
-<P>
-La solución recomendada es desactivar <code>GSSAPIAuthentication</code>:
-<PRE>
-pp2@nereida:~/Lbook$ vi ~/.ssh/config
-pp2@nereida:~/Lbook$ grep -i gss ~/.ssh/config
-GSSAPIAuthentication no
-</PRE>
-Ejecutamos con <code>-v</code> de nuevo. El error ha desaparecido. La velocidad de transferencia
-a aumentado ligeramente:
-<PRE>
-pp2@nereida:~/Lbook$ scp procesos.tex orion:
-procesos.tex                              100%  253KB 252.9KB/s   00:00
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION064100010000000000000">
-Lista de Comprobaciones en Caso de Error</A>
-</H4>
-  
+La sesión que sigue muestra como el malvado administrador de <code>orion</code>
+puede secuestrar al agente utilizado por <code>casiano</code> para obtener acceso
+a <code>beowulf</code>:
 
 <P>
 
 <OL>
-<LI>Añada la opción <code>-v</code>  el número de veces que sea necesario
+<LI>Supongamos que cierto usuario <code>casiano</code> abre una conexión SSH
+con <code>orion</code> desde la máquina 
+<code>europa</code>, utilizando <A NAME="23006"></A><SPAN  CLASS="textbf">agent forwarding</SPAN>
+
+<P>
+<PRE>
+casiano@europa:~$ ps -fA | grep ssh-agent
+casiano   7618     1  0 Apr28 ?        00:00:00 /usr/bin/ssh-agent -s
+casiano  16288 16223  0 Apr29 ?        00:00:00 /usr/bin/ssh-agent x-session-manager
+casiano  16970 13271  0 17:25 pts/31   00:00:00 grep ssh-agent
+pp2      28048     1  0 May02 ?        00:00:00 ssh-agent
+casiano@europa:~$ ssh-add -l
+1024 49:Xc:eX:bX:Xa:ea:eX:XX:fc:aX:eX:Xb:XX:cX:da:XX /home/casiano/.ssh/id_dsa (DSA)
+1024 56:XX:XX:dX:XX:eX:ca:XX:Xd:Xf:Xb:XX:Xd:fX:Xc:XX /home/casiano/.ssh/orionbackupidentity (DSA)
+casiano@europa:~$ ssh -A orion
+Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+</PRE>
+Posteriormente el usuario se conecta a una tercera máquina <code>beowulf</code>
+desde su sesión en <code>orion</code>:
+<PRE>
+casiano@orion:~$                                                   
+casiano@orion:~$ ssh beowulf
+Linux beowulf 2.6.15-1-686-smp #2 SMP Mon Mar 6 15:34:50 UTC 2006 i686
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+No mail.
+Last login: Mon May  4 17:44:35 2009 from orion.pcg.ull.es
+casiano@beowulf:~$
+</PRE>
 </LI>
-<LI>Añada la opción de depuración al servidor; <code>/usr/sbin/sshd -d -p 2222</code>. 
-El número <code>2222</code> se refiere aquí al puerto.
+<LI>En otra sesión en <code>orion</code> el malvado administrador busca por sockets de agentes en <code>/tmp</code>:
+<PRE>
+root@orion:~# ls -ltr /tmp/ssh*
+total 0
+srwxr-xr-x 1 casiano casiano 0 2009-05-04 17:35 agent.7932
+root@orion:~# ls -ldtr /tmp/ssh*
+drwx------ 2 casiano casiano 4096 2009-05-04 17:35 /tmp/ssh-jrQQgf7932
+</PRE>
+El root puede ver que el usuario <code>casiano</code> tiene un agente arrancado.
+
+<P>
+En el caso del agente, la opción <TT>-a</TT> de <TT>ssh-agent</TT>
+permite definir un lugar alternativo para el socket Unix a usar:
+<PRE>
+lusasoft@LusaSoft:~$ eval `ssh-agent -a myagentsocket`
+Agent pid 6475
+lusasoft@LusaSoft:~$ ls -ltrd my*
+srw------- 1 lusasoft lusasoft 0 2009-05-02 08:56 myagentsocket
+</PRE>
+esta opción sin embargo no afecta al socket creado por el daemon en <code>orion</code>
+
+<P>
 </LI>
-<LI>Observe el fichero de log del servicio SSH usando <A NAME="tex2html1352"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?tail"><TT>tail</TT></A>
-<code>-f</code>: 
-<code>tail -f /var/log/auth.log</code> ( en el servidor)
+<LI><P>
+El malvado administrador vigila lo que hace el usuario casiano:
+<PRE>
+root@orion:~# ps -fu casiano
+UID        PID  PPID  C STIME TTY          TIME CMD
+casiano   7682  7680  0 17:16 ?        00:00:00 sshd: casiano@pts/1
+casiano   7683  7682  0 17:16 pts/1    00:00:00 -bash
+casiano   7932  7930  0 17:35 ?        00:00:00 sshd: casiano@pts/0
+casiano   7933  7932  0 17:35 pts/0    00:00:00 -bash
+casiano   7939  7933  0 17:35 pts/0    00:00:00 ssh beowulf
+</PRE>
+Ummmmhhh... tiene una conexión ssh a una máquina llamada <code>beowulf</code>? 
+demasiado breve para ser el nombre real de una máquina. 
+Debe estar definida en su fichero de configuración.
 </LI>
-<LI>Asegúrese que el agente se está ejecutando: <code>ps aux|grep ssh-agent</code>.  
-Si se está usando <code>keychain</code> asegúrese de que el agente, el PID y el socket
-están correctamente actualizados
+<LI>Bueno, el root decide usar el socket de casiano:
+<PRE>
+root@orion:~# export SSH_AUTH_SOCK=/tmp/ssh-jrQQgf7932/agent.7932
+</PRE>
 </LI>
-<LI>Asegúrese que su clave ha sido añadida al agente SSH.
-Use <code>ssh-add -l</code> para comprobarlo.  
-</LI>
-<LI>Compruebe los permisos en sus directorios <code>HOME</code>, <code>~/.ssh</code>
-y en el fichero <code>authorized_keys</code>. El servidor 
-rechazará el uso de claves públicas si 
-esta en modo <code>StrictModes on</code> si los permisos no son
-suficientemente restrictivos.
+<LI><P>
+El administrador malvado ya puede conectarse. Usará el fichero de configuración de <code>casiano</code> (opción <code>-F</code>)
+para que la conexión ocurra según la configuración de ese usuario (por supuesto, antes comprueba que
+existe tal configuración):
+
+<P>
+<PRE>
+root@orion:~# ssh -F ~casiano/.ssh/config casiano@beowulf
+casiano@beowulf:~$
+</PRE>
+
+<P>
+El administrador de orion ha conseguido acceso a una máquina
+en la que no tenía cuenta. Ahora podría proceder a instalar una autentificación automática
+en la cuenta de caiano en beowulf, de modo que le permita posteriores visitas.
 </LI>
 </OL>
 
 <P>
-<P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
-<I>Establezca una conexión SSH:
-¿Que protocolo se esta usando en la conexión?
-¿Que identidad se esta usando?</I></DIV><P></P>
-
-<P>
-
-<H4><A NAME="SECTION064100020000000000000">
-Véase también</A>
-</H4>
-  
-
-<P>
-
-<UL>
-<LI><A NAME="tex2html1353"
-  HREF="http://blog.codefront.net/2007/02/28/debugging-ssh-public-key-authentication-problems/">Debugging SSH public key authentication problems</A>
-</LI>
-</UL>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html13218"
-  HREF="node600.html#SECTION064100010000000000000">Lista de Comprobaciones en Caso de Error</A>
-<LI><A NAME="tex2html13219"
-  HREF="node600.html#SECTION064100020000000000000">Véase también</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13216"
+<A NAME="tex2html13223"
   HREF="node601.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13210"
-  HREF="node590.html">
+<A NAME="tex2html13217"
+  HREF="node591.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13204"
+<A NAME="tex2html13211"
   HREF="node599.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13212"
-  HREF="node768.html">
+<A NAME="tex2html13219"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13214"
-  HREF="node771.html">
+<A NAME="tex2html13221"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -334,20 +310,20 @@ Véase también</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13217"
-  HREF="node601.html">Los Ficheros de Configuración</A>
-<B> Subir:</B> <A NAME="tex2html13211"
-  HREF="node590.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13205"
-  HREF="node599.html">Consideraciones sobre la Seguridad</A>
- &nbsp; <B>  <A NAME="tex2html13213"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13215"
-  HREF="node771.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13224"
+  HREF="node601.html">Depuración/Debugging</A>
+<B> Subir:</B> <A NAME="tex2html13218"
+  HREF="node591.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13212"
+  HREF="node599.html">Redireccionado al Agente SSH</A>
+ &nbsp; <B>  <A NAME="tex2html13220"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13222"
+  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-10
+2014-09-11
 </ADDRESS>
 </BODY>
 </HTML>

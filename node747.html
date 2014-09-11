@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>flickr</TITLE>
-<META NAME="description" CONTENT="flickr">
+<TITLE>ostruct</TITLE>
+<META NAME="description" CONTENT="ostruct">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -28,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15482"
+<A NAME="tex2html15489"
   HREF="node748.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15476"
+<A NAME="tex2html15483"
   HREF="node568.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15470"
+<A NAME="tex2html15477"
   HREF="node746.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15478"
-  HREF="node768.html">
+<A NAME="tex2html15485"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15480"
-  HREF="node771.html">
+<A NAME="tex2html15487"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,48 +96,90 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15483"
-  HREF="node748.html">Camping</A>
-<B> Subir:</B> <A NAME="tex2html15477"
+<B> Siguiente:</B> <A NAME="tex2html15490"
+  HREF="node748.html">flickr</A>
+<B> Subir:</B> <A NAME="tex2html15484"
   HREF="node568.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html15471"
-  HREF="node746.html">ostruct</A>
- &nbsp; <B>  <A NAME="tex2html15479"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15481"
-  HREF="node771.html">&#205;ndice de Materias</A></B> 
+<B> Anterior:</B> <A NAME="tex2html15478"
+  HREF="node746.html">Ruport</A>
+ &nbsp; <B>  <A NAME="tex2html15486"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15488"
+  HREF="node772.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
 <H1><A NAME="SECTION063900000000000000000">
-flickr</A>
+ostruct</A>
 </H1>
-
-<P>
 <PRE>
-~$ sudo gem install flickr
-Password:
-Fetching: xml-simple-1.1.1.gem (100%)
-Fetching: flickr-1.0.2.gem (100%)
-WARNING: flickr-1.0.2 has an invalid nil value for @cert_chain
-Successfully installed xml-simple-1.1.1
-Successfully installed flickr-1.0.2
-2 gems installed
-Installing ri documentation for xml-simple-1.1.1...
-Installing ri documentation for flickr-1.0.2...
-Installing RDoc documentation for xml-simple-1.1.1...
-Installing RDoc documentation for flickr-1.0.2...
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n ostruct.rb 
+     1  require 'ostruct'
+     2  
+     3  alu = OpenStruct.new
+     4  alu.nombre = "Jose"
+     5  alu.apellidos = "Rodriguez Quintero"
+     6  alu.edad = 97
+     7  alu.calificacion = 10
+     8  
+     9  puts alu
 </PRE>
 
 <P>
-<A NAME="tex2html1737"
-  HREF="http://www.flickr.com/help/api/">http://www.flickr.com/help/api/</A>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ ruby ostruct.rb 
+#&lt;OpenStruct nombre="Jose", apellidos="Rodriguez Quintero", edad=97, calificacion=10&gt;
+</PRE>
+
+<P>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n my_ostruct.rb 
+     1  class MyOpenStruct
+     2    def initialize(h = {})
+     3      @attrs = h
+     4    end
+     5  
+     6    def method_missing(name, *args)
+     7      attr = name.to_s
+     8      if attr =~ /=$/
+     9        @attrs[attr.chop] = args[0]
+    10      else
+    11        @attrs[attr]
+    12      end
+    13    end
+    14  
+    15    def to_s
+    16      self.inspect
+    17    end
+    18  end
+    19  
+    20  alu = MyOpenStruct.new
+    21  alu.nombre = "Jose"
+    22  alu.apellidos = "Rodriguez Quintero"
+    23  alu.edad = 97
+    24  alu.calificacion =  10
+    25  
+    26  puts alu.nombre
+    27  puts alu.edad
+    28  puts alu.calificacion
+    29  puts alu
+</PRE>
+
+<P>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ ruby my_ostruct.rb 
+Jose
+97
+10
+#&lt;MyOpenStruct:0x10016a408 @attrs={"nombre"=&gt;"Jose", "calificacion"=&gt;10, "edad"=&gt;97, "apellidos"=&gt;"Rodriguez Quintero"}&gt;
+</PRE>
+
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-10
+2014-09-11
 </ADDRESS>
 </BODY>
 </HTML>

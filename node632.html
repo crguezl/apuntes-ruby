@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>5: Red: should and should_not</TITLE>
-<META NAME="description" CONTENT="5: Red: should and should_not">
+<TITLE>4: refactor</TITLE>
+<META NAME="description" CONTENT="4: refactor">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node633.html">
 <LINK REL="previous" HREF="node631.html">
-<LINK REL="up" HREF="node626.html">
+<LINK REL="up" HREF="node627.html">
 <LINK REL="next" HREF="node633.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13722"
+<A NAME="tex2html13728"
   HREF="node633.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13716"
-  HREF="node626.html">
+<A NAME="tex2html13722"
+  HREF="node627.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13710"
+<A NAME="tex2html13716"
   HREF="node631.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13718"
-  HREF="node768.html">
+<A NAME="tex2html13724"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13720"
-  HREF="node771.html">
+<A NAME="tex2html13726"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,27 +96,68 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13723"
-  HREF="node633.html">6: Green</A>
-<B> Subir:</B> <A NAME="tex2html13717"
-  HREF="node626.html">Introducción</A>
-<B> Anterior:</B> <A NAME="tex2html13711"
-  HREF="node631.html">4: refactor</A>
- &nbsp; <B>  <A NAME="tex2html13719"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13721"
-  HREF="node771.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13729"
+  HREF="node633.html">5: Red: should and</A>
+<B> Subir:</B> <A NAME="tex2html13723"
+  HREF="node627.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html13717"
+  HREF="node631.html">3: Green</A>
+ &nbsp; <B>  <A NAME="tex2html13725"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13727"
+  HREF="node772.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION06816000000000000000">
-5: Red:  should and should_not</A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html13730"
+  HREF="node632.html#SECTION06915010000000000000">Las Cuatro Reglas de Kent Beck para un Diseño Simple</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION06915000000000000000">
+4: refactor</A>
 </H2>
 
 <P>
+<BLOCKQUOTE>
+<A NAME="24584"></A><SPAN  CLASS="textbf">Refactoring</SPAN> is a disciplined technique for restructuring an existing
+body of code, altering its internal structure without changing its
+external behavior. 
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>Its heart is a series of small behavior preserving
+transformations. Each transformation (called a '<A NAME="24586"></A><SPAN  CLASS="textbf">refactoring</SPAN>') does
+little, but a sequence of transformations can produce a significant
+restructuring. Since each refactoring is small, it's less likely
+to go wrong. The system is also kept fully working after each small
+refactoring, reducing the chances that a system can get seriously
+broken during the restructuring.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>
+<DIV ALIGN="RIGHT">Martin Fowler
+
+</BLOCKQUOTE>
+
+<P>
+<DIV ALIGN="CENTER">
+
+<img src="refactoring.png" align="middle" />
+<br />
+"We don't have time for refactoring, there's still too much left to do"
+<br />
+
+</DIV>
+
+<P>
 <PRE>
-[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/math/rpcalc_spec.rb 
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat  spec/math/rpcalc_spec.rb
 #require File.join(File.dirname(__FILE__), "/../spec_helper")
 require "spec_helper"
 module Math
@@ -134,55 +175,9 @@ module Math
         expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
       end
     end
-
-    context "When a correct input is given" do
-      it "must compute the answer" do
-        r = @c.calc('2 3 + 4 *')
-        r.should eq 20
-        @c.stack.should eq []
-      end
-    end
-
-  end    # RPCalc
-end      # Math
+  end
+end
 </PRE>
-
-<P>
-<A NAME="tex2html1412"
-  HREF="http://rspec.info/"><TT>RSpec</TT></A> achieves a high level of expressiveness and readability
-by exploiting open classes in Ruby to add the methods <code>should()</code> 
-and <code>should_not( )</code> to every object in the system. Each
-method accepts either a <A NAME="24582"></A><SPAN  CLASS="textbf">matcher</SPAN> or a Ruby expression using a specific
-subset of Ruby operators. 
-
-<P>
-A matcher is an object that tries to match
-against an expected outcome.
-
-<P>
-Let’s take a look at an example using the equal matcher, which you
-can access through the method <code>eq</code>:
-<PRE>
-       r.should eq 20
-</PRE>
-When the Ruby interpreter encounters this line, it begins by evaluating <code>eq 20</code>. 
-
-<P>
-This is an RSpec method that returns a matcher object configured to match for equality with the value 20. 
-The matcher then becomes the argument to <code>r.should</code>.
-
-<P>
-Behind the scenes, the <code>should( )</code> method calls
-<code>matcher.matches?</code>, passing <code>self</code> (the result object)
-as the argument. Because <code>should( )</code> is added to every object,
-it can be any object. Similarly, the matcher can be any object that
-responds to <code>matches?(object)</code>.
-
-<P>
-If <code>matches?(self)</code> returns <code>true</code>, then the expectation is met and execution moves on to the next line in the example. 
-
-<P>
-If <code>matches?(self)</code> returns <code>false</code>, <code>should( )</code> asks the matcher for a failure message and raises an <code>ExpectationNotMetError</code> with that message.
 
 <P>
 <PRE>
@@ -192,47 +187,57 @@ rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
 Math::RPCalc
   When an erroneous input is given
     must raise an exception
-  When a correct input is given
-    must compute the answer (FAILED - 1)
 
-Failures:
-
-  1) Math::RPCalc When a correct input is given must compute the answer
-     Failure/Error: r = @c.calc('2 3 + 4 *')
-     SyntaxError:
-       Error. found '2'. Expected number or operator
-     # ./lib/math/rpcalc.rb:12:in `block in calc'
-     # ./lib/math/rpcalc.rb:11:in `each'
-     # ./lib/math/rpcalc.rb:11:in `calc'
-     # ./spec/math/rpcalc_spec.rb:21:in `block (3 levels) in &lt;module:Math&gt;'
-
-Finished in 0.00244 seconds
-2 examples, 1 failure
-
-Failed examples:
-
-rspec ./spec/math/rpcalc_spec.rb:20 # Math::RPCalc When a correct input is given must compute the answer
-rake aborted!
+Finished in 0.00184 seconds
+1 example, 0 failures
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$
 </PRE>
+
+<P>
+
+<H4><A NAME="SECTION06915010000000000000">
+Las Cuatro Reglas de Kent Beck para un Diseño Simple</A>
+</H4>
+  
+
+<P>
+Use <A NAME="24592"></A><SPAN  CLASS="textbf">Kent Beck</SPAN>'s <A NAME="24594"></A><SPAN  CLASS="textbf">four rules of simple design</SPAN> to guide you:
+
+<P>
+
+<OL>
+<LI>Run all the tests
+</LI>
+<LI>Contain no duplicate code
+</LI>
+<LI>Express all the ideas the author wants to express
+</LI>
+<LI>Minimize classes and methods
+</LI>
+</OL>
+
+<P>
+By re-running the test cases, the developer can be confident that code refactoring
+is not damaging any existing functionality.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13722"
+<A NAME="tex2html13728"
   HREF="node633.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13716"
-  HREF="node626.html">
+<A NAME="tex2html13722"
+  HREF="node627.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13710"
+<A NAME="tex2html13716"
   HREF="node631.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13718"
-  HREF="node768.html">
+<A NAME="tex2html13724"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13720"
-  HREF="node771.html">
+<A NAME="tex2html13726"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -287,20 +292,20 @@ rake aborted!
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13723"
-  HREF="node633.html">6: Green</A>
-<B> Subir:</B> <A NAME="tex2html13717"
-  HREF="node626.html">Introducción</A>
-<B> Anterior:</B> <A NAME="tex2html13711"
-  HREF="node631.html">4: refactor</A>
- &nbsp; <B>  <A NAME="tex2html13719"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13721"
-  HREF="node771.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13729"
+  HREF="node633.html">5: Red: should and</A>
+<B> Subir:</B> <A NAME="tex2html13723"
+  HREF="node627.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html13717"
+  HREF="node631.html">3: Green</A>
+ &nbsp; <B>  <A NAME="tex2html13725"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13727"
+  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-10
+2014-09-11
 </ADDRESS>
 </BODY>
 </HTML>

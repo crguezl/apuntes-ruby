@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Conexión SSH a Una máquina por Primera Vez</TITLE>
-<META NAME="description" CONTENT="Conexión SSH a Una máquina por Primera Vez">
+<TITLE>Introducción</TITLE>
+<META NAME="description" CONTENT="Introducción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node593.html">
 <LINK REL="previous" HREF="node591.html">
-<LINK REL="up" HREF="node590.html">
+<LINK REL="up" HREF="node591.html">
 <LINK REL="next" HREF="node593.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13072"
+<A NAME="tex2html13076"
   HREF="node593.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13066"
-  HREF="node590.html">
+<A NAME="tex2html13070"
+  HREF="node591.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13060"
+<A NAME="tex2html13064"
   HREF="node591.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13068"
-  HREF="node768.html">
+<A NAME="tex2html13072"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13070"
-  HREF="node771.html">
+<A NAME="tex2html13074"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,214 +96,180 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13073"
-  HREF="node593.html">Claves Pública y Privada:</A>
-<B> Subir:</B> <A NAME="tex2html13067"
-  HREF="node590.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13061"
-  HREF="node591.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html13069"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13071"
-  HREF="node771.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13077"
+  HREF="node593.html">Conexión SSH a Una</A>
+<B> Subir:</B> <A NAME="tex2html13071"
+  HREF="node591.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13065"
+  HREF="node591.html">ssh</A>
+ &nbsp; <B>  <A NAME="tex2html13073"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13075"
+  HREF="node772.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06420000000000000000"></A>
-<A NAME="subsection:sshfirsttime"></A>
-<BR>
-Conexión SSH a Una máquina por Primera Vez
+<H1><A NAME="SECTION06510000000000000000">
+Introducción</A>
 </H1>
 
 <P>
-SSH utiliza cifrado de clave pública para autentificar
-la máquina remota y permitir a la máquina remota la
-autentificación del usuario.
 
-<P>
-
-<H4><A NAME="SECTION06420010000000000000">
-El Fichero <TT>.ssh/known_hosts</TT></A>
+<H4><A NAME="SECTION06510010000000000000">
+Definición</A>
 </H4>
   
 
 <P>
-En SSH1 y OpenSSH las claves de máquinas se mantienen en <code>etc/ssh_knownhosts</code>
-y en el directorio del usuario <code>~/.ssh/known_hosts</code>.
-Es posible cambiar la ubicación de estos ficheros
-usando  en el fichero de configuración <code>~/.ssh/config</code>
-la opción <code>UserKnownHostsFile</code>.
+<A NAME="22681"></A><SPAN  CLASS="textbf">SSH</SPAN> es un protocolo de red y un conjunto de estándares 
+que permiten una conexión encriptada entre dos computadoras.
+Usa criptografía de clave pública para autentificar al computador 
+y al usuario. Por defecto suele usar el puerto TCP
+22.
 
 <P>
-Al establecer por primera vez una conexión con  <TT>ssh</TT>  o  <TT>sftp</TT> 
-se nos avisa de la posibilidad de que la máquina no sea quien aparenta:
+SSH se usa para acceder a una máquina remota y ejecutar comandos en una
+máquina remota. También sirve para proteger conexiones inseguras
+y transferir ficheros de manera segura.
+SSH utiliza un modelo cliente-servidor.
+Un programa cliente (normalmente denominado <code>ssh</code>) 
+es utilizado para establecer una conexión a otro programa que da el
+servicio y que se ejecuta en la máquina remota (normalmente denominado <code>sshd</code>
+o SSH daemon).
 
 <P>
-<PRE>
-nereida:~&gt; sftp user@machine.ull.es
-Connecting to machine.ull.es...
-The authenticity of host 'machine.ull.es (193.312.112.190)' can't be established.
-RSA key fingerprint is a4:1e:f1:35:0d:b1:6c:7d:5c:3e:86:ef:4c:17:8a:a9.
-Are you sure you want to continue connecting (yes/no)? yes
-</PRE>
-Si respondemos <code>yes</code> la conexión continúa:
-<PRE>
-Warning: Permanently added 'machine.ull.es' (RSA) to the list of known hosts.
-user@machine.ull.es's password:
-sftp&gt; bye
-</PRE>
+SSH soporta autentificación basada en RSA y DSA.
+<A NAME="22683"></A><SPAN  CLASS="textbf">RSA</SPAN> fué el primer algoritmo 
+publicado que permite el cifrado y la firma digital. Se cree que es seguro
+si las claves son lo suficientemente largas. Se usa aún en comercio electrónico.
+La alternativa mas usada es <A NAME="22685"></A><SPAN  CLASS="textbf">DSA</SPAN> cuyas inciales corresponden 
+a <A NAME="22687"></A><SPAN  CLASS="textbf"> Digital Signature Algorithm</SPAN>. DSA
+es propiedad del gobierno de los Estados Unidos de America.
+
+<P>
+Hay criptosistemas -a los que RSA pertenece - en los cuales el cifrado
+y desencriptado se hace utilizando claves separadas y no es posible derivar la clave de
+desencriptado del conocimiento de la clave de encriptado. 
+El cliente utiliza un par de claves pública/privada para la autentificación.
+El servidor sólo conoce la clave pública. Funciona como una pareja llave/cerradura
+en la que el conocimiento de la cerradura no permite deducir
+la forma de la llave.
 
 <P>
 
-<H4><A NAME="SECTION06420020000000000000">
-Algoritmo de Autentificación de las Máquinas</A>
+<H4><A NAME="SECTION06510020000000000000">
+Historia</A>
 </H4>
   
-
-<P>
-Esta precaución se toma por si el adversario subvierte el servidor de nombre
-para que <code>machine.ull.es</code> sea resuelta a su máquina. A continuación puede
-hacer un forward de la conexión solicitada a la verdadera máquina <code>machine.ull.es</code>.
-Este es un caso de <A NAME="22697"></A><SPAN  CLASS="textbf">man-in-the-middle-attack</SPAN>.
 
 <P>
 
 <UL>
-<LI>Cuando un cliente SSH hace una conexión cada una de las máquinas
-prueba su identidad a la otra utilizando criptografía de clave 
-pública. 
+<LI>Tatu Ylönen diseña y publica la primera versión del protocolo SSH (SSH-1)
+
+<P>
 </LI>
-<LI>Cada servidor SSH dispone de un único ID secreto que se 
-denomina <A NAME="22699"></A><SPAN  CLASS="textbf">host key</SPAN> que utiliza para identificarse ante los 
-clientes. 
+<LI>Ylönen funda  <I>SSH Communications Security</I> a finales de 1995. La versión original - que usaba software libre - evoluciona
+a software propietario
+
+<P>
 </LI>
-<LI>La primera vez que nos conectamos a una máquina remota
-el cliente obtiene y almacena la parte pública de la <I>host key</I> 
-en su fichero <code>~/.ssh/known_hosts</code>.
+<LI>Aparece en 1996 el protocolo SSH-2, que es incompatible con SSH-1. 
+Se mejora la seguridad (via el algoritmo Diffie-Hellman para 
+el intercambio de claves) y la comprobación de la integridad via mensajes de autentificación.
+Además permite ejecutar un número arbitrario de sesiones shell sobre una única conexión
+SSH.
+
+<P>
 </LI>
-<LI>Cada vez que nos conectamos con esa máquina el cliente comprueba
-la identidad del servidor remoto utilizando su correspondiente
-clave pública.
+<LI>En  1998 se encuentra una vulnerabilidad en SSH 1.5. El fallo ha sido resuelto
+en la mayoría de las implementaciones
+
+<P>
+</LI>
+<LI>En 1999 comienza el desarrollo de lo que será la primera versión abierta de SSH: OpenSSH
+
+<P>
+</LI>
+<LI>En 2005 OpenSSH se convierte en la implementation ssh mas popular
+
+<P>
+</LI>
+<LI>El protocolo SSH-2 protocol es propuesto como Internet estandard en 2006
+
+<P>
+</LI>
+<LI>En el 2008 se descubre una vulnerabilidad en el cifrado en SSH-2:
+Fue resuelta en OpenSSH 5.2.
 </LI>
 </UL>
 
 <P>
-El cliente  <TT>ssh</TT>  mantiene en <code>~/.ssh/known_hosts</code>
-una base de datos conteniendo las máquinas a las que el usuario
-se ha conectado. Cualquier nuevo hosts es añadido al fichero 
-del usuario:
 
-<P>
-<PRE>
-nereida:~&gt; grep 'machine.ull.es' ~/.ssh/known_hosts
-machine.ull.es ssh-rsa KEY.....
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06420030000000000000">
-Borrando una Entrada de <TT>.ssh/known_hosts</TT></A>
+<H4><A NAME="SECTION06510030000000000000">
+Arquitectura</A>
 </H4>
   
 
 <P>
-Si la relación entre la IP de la máquina y su nombre cambian <code>ssh</code> nos avisa.
-Si confiamos en el cambio podemos borrar
-la entrada en el fichero <code>~/.ssh/known_hosts</code>. De otro
-modo <code>ssh</code> se negará a efectuar la conexión.
-Podemos borrarla manualmente o con el comando:
-<PRE>
-casiano@cc116:~$ ssh-keygen -R rala
-/home/casiano/.ssh/known_hosts updated.
-Original contents retained as /home/casiano/.ssh/known_hosts.old
-</PRE>
+El protocolo SSH-2 tiene una arquitectura de capas.
+Las capas son:
 
 <P>
 
-<H4><A NAME="SECTION06420040000000000000">
-Hashing</A>
-</H4>
-  
+<UL>
+<LI>La <A NAME="22697"></A><SPAN  CLASS="textbf">capa de transporte</SPAN>. Esta capa maneja el intercambio inicial de claves y la autentificación del servidor
+y establece los métodos de cifrado, compresión y verificación de la integridad.
+Deja visible a la capa superior una interfaz para el envío y recepción de paquetes de 
+texto plano de hasta 32 768 bytes cada uno. La capa de transporte también organiza 
+el reintercambio de claves - normalmente despues de que haya pasado una hora o se haya 
+transferido mas de 1 GB de datos.
 
 <P>
-Supongamos que el atacante ha descubierto nuestra clave y ha entrado
-en nuestro servidor: ahora puede hacer <code>cat ~/.ssh/known_hosts</code>
-y deducir que otros servidores solemos visitar.
-Es incluso probable que la clave sea la misma o que tengamos
-un sistema de autentificación sin passphrase.
-
-<P>
-Si se quiere proteger el fichero  <TT>known_hosts</TT>  se puede usar la opción <code>-H</code>
-de  <TT>ssh-keygen</TT> :
-<PRE>
-casiano@cc116:~/.ssh$ ssh-keygen -H
-/home/casiano/.ssh/known_hosts updated.
-Original contents retained as /home/casiano/.ssh/known_hosts.old
-WARNING: /home/casiano/.ssh/known_hosts.old contains unhashed entries
-Delete this file to ensure privacy of hostnames
-</PRE>
-
-<P>
-Este comando reemplaza los nombres de los servidores y las direcciones con representaciones
-hash. Estas versiones hash pueden ser usadas por <code>ssh</code> pero son ilegibles
-para un humano. Es posible usar un fichero con una combinacion de entradas hash y 
-entradas legibles.
-
-<P>
-La opción  <TT>HashKnownHosts</TT>  permite en los ficheros de configuración
-permite indicarle a <code>ssh</code> que debe hacer hashing sobre los nombres y 
-las direcciones en <code>~/.ssh/known_hosts</code>. 
-Esto no afecta a las ya existentens en el fichero.
-
-<P>
-Es posible asociar varios nombres/direcciones con la misma clave
-(o repetirlas):
-
-<P>
-<PRE>
-foo1,foo,192.168.1.1,192.168.1.10 ssh-rsa AAAAB3Nsomething[...]
-foo2,foo,192.168.1.2,192.168.1.10 ssh-rsa AAAAB3Nsomethingelse[...]
-</PRE>
+</LI>
+<LI>La <A NAME="22699"></A><SPAN  CLASS="textbf">capa de autentificación</SPAN>. Maneja la autentificación del cliente y proporciona un conjunto de métodos
+de autentificación.
+Entre los métodos de autentificación están:
 
 <P>
 
-<H4><A NAME="SECTION06420050000000000000">
-Búsqueda de Entradas Hash</A>
-</H4>
-  
+<UL>
+<LI>password
+</LI>
+<LI>publickey:  para el uso de parejas DSA o RSA
+</LI>
+<LI>keyboard-interactive
+</LI>
+<LI>GSSAPI: permite el uso de mecanismos externos como Kerberos 5 
+</LI>
+</UL>
+El proceso de autentificación es dirigido por el cliente. 
 
 <P>
-Es posible encontrar las entradas en un fichero hash con la opción <code>-F</code>
+</LI>
+<LI>La <A NAME="22701"></A><SPAN  CLASS="textbf">capa de conexión</SPAN>. 
+Esta capa define el concepto de canal, peticiones de canal y peticiones globales para el uso de los servicios 
+proporcionados por SSH. Una única sesión SSH puede alojar simultáneamente múltiples canales. 
+Los canales transfieren datos en ambas direcciones. Las peticiones de canal son usadas 
+para pasar datos específicos fuera-del-canal como el cambio de tamaño de una ventana de terminal
+o el código de salida de un proceso que se ejecuta en el servidor. 
+El cliente SSH usa una petición global para solicitar la redirección de un puerto del lado
+del servidor. Entre los tipos estandar de canal se encuentran: 
 
-<P>
-<PRE>
-casiano@cc116:~/.ssh$ ssh-keygen -F millo
-# Host millo found: line 10 type RSA
-|1|BXG98oZImAlC02AQMAmuDb0jadQ=...
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06420060000000000000">
-Ejercicios con <TT>known_hosts</TT></A>
-</H4>
-  
-
-<P>
-<P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
-<I>Elimine una entrada en el fichero si existe e intente la conexión ¿que ocurre?</I></DIV><P></P>
-
-<P>
-<P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN></B> &nbsp; 
-<I>Pase a modo hashed su fichero</I></DIV><P></P>
-
-<P>
-<P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">76</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN></B> &nbsp; 
-<I>Busque por una entrada en el fichero hashed</I></DIV><P></P>
+<UL>
+<LI>canal shell: para las shell de terminales y peticones SFTP y exec (incluyendo transferencias vía SCP)
+</LI>
+<LI>canal direct-tcpip: para la redirección de conexiones cliente-servidor
+</LI>
+<LI>canal forwarded-tcpip: para la redirección de conexiones servidor-clientes
+</LI>
+</UL>
+</LI>
+<LI>Los registros SSHFP DNS proporcionan las huellas (fingerprints) para las claves 
+públicas de las máquinas para ser usadas en el proceso de autentificación de las máquinas.
+</LI>
+</UL>
 
 <P>
 <BR><HR>
@@ -313,37 +279,31 @@ Ejercicios con <TT>known_hosts</TT></A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html13074"
-  HREF="node592.html#SECTION06420010000000000000">El Fichero <TT>.ssh/known_hosts</TT></A>
-<LI><A NAME="tex2html13075"
-  HREF="node592.html#SECTION06420020000000000000">Algoritmo de Autentificación de las Máquinas</A>
-<LI><A NAME="tex2html13076"
-  HREF="node592.html#SECTION06420030000000000000">Borrando una Entrada de <TT>.ssh/known_hosts</TT></A>
-<LI><A NAME="tex2html13077"
-  HREF="node592.html#SECTION06420040000000000000">Hashing</A>
 <LI><A NAME="tex2html13078"
-  HREF="node592.html#SECTION06420050000000000000">Búsqueda de Entradas Hash</A>
+  HREF="node592.html#SECTION06510010000000000000">Definición</A>
 <LI><A NAME="tex2html13079"
-  HREF="node592.html#SECTION06420060000000000000">Ejercicios con <TT>known_hosts</TT></A>
+  HREF="node592.html#SECTION06510020000000000000">Historia</A>
+<LI><A NAME="tex2html13080"
+  HREF="node592.html#SECTION06510030000000000000">Arquitectura</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13072"
+<A NAME="tex2html13076"
   HREF="node593.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13066"
-  HREF="node590.html">
+<A NAME="tex2html13070"
+  HREF="node591.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13060"
+<A NAME="tex2html13064"
   HREF="node591.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13068"
-  HREF="node768.html">
+<A NAME="tex2html13072"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13070"
-  HREF="node771.html">
+<A NAME="tex2html13074"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -398,20 +358,20 @@ Ejercicios con <TT>known_hosts</TT></A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13073"
-  HREF="node593.html">Claves Pública y Privada:</A>
-<B> Subir:</B> <A NAME="tex2html13067"
-  HREF="node590.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13061"
-  HREF="node591.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html13069"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13071"
-  HREF="node771.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13077"
+  HREF="node593.html">Conexión SSH a Una</A>
+<B> Subir:</B> <A NAME="tex2html13071"
+  HREF="node591.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13065"
+  HREF="node591.html">ssh</A>
+ &nbsp; <B>  <A NAME="tex2html13073"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13075"
+  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-10
+2014-09-11
 </ADDRESS>
 </BODY>
 </HTML>

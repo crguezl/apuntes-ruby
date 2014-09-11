@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Pessimistic version constraint</TITLE>
-<META NAME="description" CONTENT="Pessimistic version constraint">
+<TITLE>Declaring dependencies: Runtime vs. development</TITLE>
+<META NAME="description" CONTENT="Declaring dependencies: Runtime vs. development">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node658.html">
 <LINK REL="previous" HREF="node656.html">
-<LINK REL="up" HREF="node643.html">
+<LINK REL="up" HREF="node644.html">
 <LINK REL="next" HREF="node658.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14107"
+<A NAME="tex2html14114"
   HREF="node658.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14101"
-  HREF="node643.html">
+<A NAME="tex2html14108"
+  HREF="node644.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14095"
+<A NAME="tex2html14102"
   HREF="node656.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14103"
-  HREF="node768.html">
+<A NAME="tex2html14110"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14105"
-  HREF="node771.html">
+<A NAME="tex2html14112"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,157 +96,97 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14108"
-  HREF="node658.html">Controlando nuestras dependencias</A>
-<B> Subir:</B> <A NAME="tex2html14102"
-  HREF="node643.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14096"
-  HREF="node656.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html14104"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14106"
-  HREF="node771.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14115"
+  HREF="node658.html">Pessimistic version constraint</A>
+<B> Subir:</B> <A NAME="tex2html14109"
+  HREF="node644.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14103"
+  HREF="node656.html">Semantic Versioning</A>
+ &nbsp; <B>  <A NAME="tex2html14111"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14113"
+  HREF="node772.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0613140000000000000000">
-Pessimistic version constraint</A>
+<H1><A NAME="SECTION0614130000000000000000">
+Declaring dependencies: Runtime vs. development</A>
 </H1>
-If your gem properly follows <A NAME="25659"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
-scheme, then other Ruby developers can take advantage of this when
-choosing a version constraint to lock down your gem in their
-application.
 
 <P>
-Let’s say the following releases of a gem exist:
+<A NAME="tex2html1494"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> provides two main types of dependencies: 
+runtime and development. 
 
 <P>
-<PRE>
-Version 2.1.0 — Baseline
-Version 2.2.0 — Introduced some new (backward compatible) features.
-Version 2.2.1 — Removed some bugs
-Version 2.2.2 — Streamlined your code
-Version 2.3.0 — More new features (but still backwards compatible).
-Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
-</PRE>
-Someone who wants to use your gem has determined that 
 
 <OL>
-<LI>version 2.2.0
-works with their software, 
+<LI>Runtime dependencies are what your gem needs to work (such as rails needing activesupport).
 </LI>
-<LI>but version 2.1.0 doesn’t have a feature
-they need. 
-</LI>
-<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
-might look like:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '&gt;= 2.2.0'
-</PRE>
-or 
-<PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0'
-</PRE>
-This is an <A NAME="25661"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
-
-<P>
-It’s saying that all
-changes from <code>2.x</code> on will work with my software, 
-but for version
-<code>3.0.0</code> this will not be true.
-
-<P>
-</LI>
-<LI>The alternative here is to use <A NAME="25663"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
-
-<P>
-This explicitly excludes the version that might break your code.
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  ['&gt;= 2.2.0', '&lt; 3.0']
-</PRE>
-or
-
-<P>
-<PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
-</PRE>
-</LI>
-<LI><A NAME="tex2html1490"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> provides a shortcut for this, commonly known as the <A NAME="25668"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '~&gt; 2.2'
-</PRE>
-
-<P>
-<PRE>
-# bundler
-gem 'library', '~&gt; 2.2'
-</PRE>
-Notice that we dropped the <code>PATCH</code> level of the version number. 
-
-<P>
-</LI>
-<LI>Had
-we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
-<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
-
-<P>
-</LI>
-<LI>If you want to allow use of newer backwards-compatible versions but
-need a specific bug fix you can use a compound requirement:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
-</PRE>
-
-<P>
-<PRE>
-# bundler
-gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
-</PRE>
-</LI>
-<LI>The important note to take home here is to be aware others will be
-using your gems, so guard yourself from potential bugs/failures in
-future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
-if at all possible.
+<LI>Development dependencies are useful for when someone wants to make modifications to your gem. 
 </LI>
 </OL>
+
+<P>
+When you specify development dependencies, another developer can run 
+
+<P>
+<PRE>
+gem install --dev your_gem
+</PRE>
+
+<P>
+and RubyGems will grab both sets of dependencies (runtime and development). 
+
+<P>
+Typical development dependencies include test frameworks (like <code>rspec</code>) and build systems
+(like <code>rake</code>).
+
+<P>
+Setting dependencies in your gemspec is easy. 
+
+<P>
+Just use <code>add_runtime_dependency</code> and <code>add_development_dependency</code>:
+<PRE>
+Gem::Specification.new do |s|
+  s.name = "hola"
+  s.version = "2.0.0"
+  s.add_runtime_dependency "daemons",
+    ["= 1.1.0"]
+  s.add_development_dependency "bourne",
+    ["&gt;= 0"]
+</PRE>
+
+<P>
+Inside the <code>Gemfile</code> we can also specify groups.
+Each  gem  may  specify  membership in one or more groups. 
+Any gem that does not specify membership in any  group  is  placed  in  the
+default group.
+<PRE>
+   gem "rspec", :group =&gt; :test
+   gem "wirble", :groups =&gt; [:development, :test]
+</PRE>
+then we can run <code>bundle install --without development test</code> to omit some groups.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14107"
+<A NAME="tex2html14114"
   HREF="node658.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14101"
-  HREF="node643.html">
+<A NAME="tex2html14108"
+  HREF="node644.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14095"
+<A NAME="tex2html14102"
   HREF="node656.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14103"
-  HREF="node768.html">
+<A NAME="tex2html14110"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14105"
-  HREF="node771.html">
+<A NAME="tex2html14112"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -301,20 +241,20 @@ if at all possible.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14108"
-  HREF="node658.html">Controlando nuestras dependencias</A>
-<B> Subir:</B> <A NAME="tex2html14102"
-  HREF="node643.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14096"
-  HREF="node656.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html14104"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14106"
-  HREF="node771.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14115"
+  HREF="node658.html">Pessimistic version constraint</A>
+<B> Subir:</B> <A NAME="tex2html14109"
+  HREF="node644.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14103"
+  HREF="node656.html">Semantic Versioning</A>
+ &nbsp; <B>  <A NAME="tex2html14111"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14113"
+  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-10
+2014-09-11
 </ADDRESS>
 </BODY>
 </HTML>

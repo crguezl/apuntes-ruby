@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Mezclando Ficheros Específicos desde otra Rama</TITLE>
-<META NAME="description" CONTENT="Mezclando Ficheros Específicos desde otra Rama">
+<TITLE>Diferencias entre fetch y pull</TITLE>
+<META NAME="description" CONTENT="Diferencias entre fetch y pull">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node611.html">
 <LINK REL="previous" HREF="node609.html">
-<LINK REL="up" HREF="node605.html">
+<LINK REL="up" HREF="node606.html">
 <LINK REL="next" HREF="node611.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13391"
+<A NAME="tex2html13398"
   HREF="node611.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13385"
-  HREF="node605.html">
+<A NAME="tex2html13392"
+  HREF="node606.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13379"
+<A NAME="tex2html13386"
   HREF="node609.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13387"
-  HREF="node768.html">
+<A NAME="tex2html13394"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13389"
-  HREF="node771.html">
+<A NAME="tex2html13396"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,96 +96,72 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13392"
-  HREF="node611.html">Configuración y Algunos alias</A>
-<B> Subir:</B> <A NAME="tex2html13386"
-  HREF="node605.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html13380"
-  HREF="node609.html">Diferencias entre fetch y</A>
- &nbsp; <B>  <A NAME="tex2html13388"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13390"
-  HREF="node771.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13399"
+  HREF="node611.html">Mezclando Ficheros Específicos desde</A>
+<B> Subir:</B> <A NAME="tex2html13393"
+  HREF="node606.html">Git</A>
+<B> Anterior:</B> <A NAME="tex2html13387"
+  HREF="node609.html">Tutoriales de Git</A>
+ &nbsp; <B>  <A NAME="tex2html13395"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13397"
+  HREF="node772.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06550000000000000000"></A>
-<A NAME="section:mergespecificfilesfromanbotherbranch"></A>
-<BR>
-Mezclando Ficheros Específicos desde otra Rama
+<H1><A NAME="SECTION06640000000000000000">
+Diferencias entre fetch y pull</A>
 </H1>
+Git was designed to support a distributed model with no need for a central
+repository (though you can certainly use one if you like.) Also git was
+designed so that the client and the "server"
+don't need to be online at the same time. 
+
+<P>
+Git was designed so that people on an unreliable link could exchange
+code via email, even. 
+
+<P>
+In order to support this model git maintains 
+a local repository with your
+code and also an additional local repository that mirrors the state of
+the remote repository. 
+By keeping a copy of the remote
+repository locally, git can figure out the changes needed even when the remote repository is not reachable. 
+
+<P>
+Later when you need to send the changes to someone else, git can transfer them as a set of
+changes from a point in time known to the remote repository.
+
+<P>
 
 <UL>
-<LI><PRE>
-(master)$git checkout branchname file1 file2 files3
-
-  git checkout [-p|--patch] [&lt;tree-ish&gt;] [--] &lt;pathspec&gt;...
-
-   When &lt;paths&gt; or --patch are given, git checkout does not switch
-   branches. It updates the named paths in the working tree from the
-   index file or from a named &lt;tree-ish&gt; (most often a commit). 
-   The &lt;tree-ish&gt; argument can be
-   used to specify a specific tree-ish (i.e. commit, tag or tree) to
-   update the index for the given paths before updating the working
-   tree.
-</PRE>
-
-<P>
+<LI>The command <code>git fetch</code> is the command that says <I>bring my local copy of the remote repository up to date.</I> 
 </LI>
-<LI>The following sequence checks out the master branch, reverts the Makefile to two
-revisions back, deletes hello.c by mistake, and gets it back from the index.
-<PRE>
-               $ git checkout master             (1)
-               $ git checkout master~2 Makefile  (2)
-               $ rm -f hello.c
-               $ git checkout hello.c            (3)
-</PRE>
-
-<OL>
-<LI>switch branch
+<LI>The command <code>git pull</code> says "bring the changes in the remote repository where I keep my own
+code." 
 </LI>
-<LI>take a file out of another commit
+</UL>
+
+<P>
+Normally <code>git pull</code> does this by doing a <code>git fetch</code> to bring
+the local copy of the remote repository up to date, and then merging
+the changes into your own code repository and possibly your
+working copy.
+
+<P>
+The take away is to keep in mind that there are often at least <SPAN  CLASS="textbf">three copies</SPAN> 
+of a project on your workstation. 
+
+<UL>
+<LI>One copy is your own repository
+with your own commit history. 
 </LI>
-<LI>restore hello.c from the index
+<LI>The second copy is your
+working copy where you are editing and building. 
 </LI>
-</OL>
-
-<P>
-</LI>
-<LI>If you want to check out all C source files out of the index, you can say
-<PRE>
-               $ git checkout -- '*.c'
-</PRE>
-Note the quotes around <code>*.c</code>. 
-
-<P>
-The removed file <code>hello.c</code> will also be checked out, even though it is
-no longer in the working tree, because the file globbing is used to match entries in the
-<SPAN ID="txt24106">index</SPAN> (not in the working tree by the shell).
-
-<P>
-</LI>
-<LI>If you have an unfortunate branch that is named <code>hello.c</code>, this step:
-
-<P>
-<PRE>
-       $ git checkout hello.c
-</PRE>
-would be confused as
-an instruction to switch to that branch. 
-
-<P>
-You should instead write:
-
-<P>
-<PRE>
-               $ git checkout -- hello.c
-</PRE>
-</LI>
-<LI><A NAME="tex2html1381"
-  HREF="http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/">Git Tip: How to "Merge" Specific Files from Another Branch</A>
-<P>
+<LI>The third copy is your local "cached" copy of a remote repository.
 </LI>
 </UL>
 
@@ -193,20 +169,20 @@ You should instead write:
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13391"
+<A NAME="tex2html13398"
   HREF="node611.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13385"
-  HREF="node605.html">
+<A NAME="tex2html13392"
+  HREF="node606.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13379"
+<A NAME="tex2html13386"
   HREF="node609.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13387"
-  HREF="node768.html">
+<A NAME="tex2html13394"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13389"
-  HREF="node771.html">
+<A NAME="tex2html13396"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -261,20 +237,20 @@ You should instead write:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13392"
-  HREF="node611.html">Configuración y Algunos alias</A>
-<B> Subir:</B> <A NAME="tex2html13386"
-  HREF="node605.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html13380"
-  HREF="node609.html">Diferencias entre fetch y</A>
- &nbsp; <B>  <A NAME="tex2html13388"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13390"
-  HREF="node771.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13399"
+  HREF="node611.html">Mezclando Ficheros Específicos desde</A>
+<B> Subir:</B> <A NAME="tex2html13393"
+  HREF="node606.html">Git</A>
+<B> Anterior:</B> <A NAME="tex2html13387"
+  HREF="node609.html">Tutoriales de Git</A>
+ &nbsp; <B>  <A NAME="tex2html13395"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13397"
+  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-10
+2014-09-11
 </ADDRESS>
 </BODY>
 </HTML>

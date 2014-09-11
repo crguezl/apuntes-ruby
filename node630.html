@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>3: Green</TITLE>
-<META NAME="description" CONTENT="3: Green">
+<TITLE>2: Red</TITLE>
+<META NAME="description" CONTENT="2: Red">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node631.html">
 <LINK REL="previous" HREF="node629.html">
-<LINK REL="up" HREF="node626.html">
+<LINK REL="up" HREF="node627.html">
 <LINK REL="next" HREF="node631.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13693"
+<A NAME="tex2html13700"
   HREF="node631.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13687"
-  HREF="node626.html">
+<A NAME="tex2html13694"
+  HREF="node627.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13681"
+<A NAME="tex2html13688"
   HREF="node629.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13689"
-  HREF="node768.html">
+<A NAME="tex2html13696"
+  HREF="node769.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13691"
-  HREF="node771.html">
+<A NAME="tex2html13698"
+  HREF="node772.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,65 +96,84 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13694"
-  HREF="node631.html">4: refactor</A>
-<B> Subir:</B> <A NAME="tex2html13688"
-  HREF="node626.html">Introducción</A>
-<B> Anterior:</B> <A NAME="tex2html13682"
-  HREF="node629.html">2: Red</A>
- &nbsp; <B>  <A NAME="tex2html13690"
-  HREF="node768.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13692"
-  HREF="node771.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13701"
+  HREF="node631.html">3: Green</A>
+<B> Subir:</B> <A NAME="tex2html13695"
+  HREF="node627.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html13689"
+  HREF="node629.html">1: Green</A>
+ &nbsp; <B>  <A NAME="tex2html13697"
+  HREF="node769.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13699"
+  HREF="node772.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION06814000000000000000">
-3: Green</A>
+<H2><A NAME="SECTION06913000000000000000">
+2: Red</A>
 </H2>
 
 <P>
 <PRE>
-[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/math/rpcalc.rb 
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(1)]$ cat spec/math/rpcalc_spec.rb 
+#require File.join(File.dirname(__FILE__), "/../spec_helper")
+require "spec_helper"
 module Math
-  class RPCalc
-    attr_accessor :stack
-
-    def initialize()
-      @stack = []
+  describe RPCalc do
+    before :each do
+      @c = Math::RPCalc.new
     end
 
-    def calc(expr)
-      @stack = []
-      expr.split(/\s+/).each do |x|
-        raise SyntaxError, "Error. found '#{x}'. Expected number or operator" 
+    context "When an erroneous input is given" do
+      it "must raise an exception" do
+        expect { @c.calc('a') }.to raise_error(SyntaxError)
+        expect { @c.calc('a') }.to raise_error("Error. found 'a'. Expected number or operator")
       end
-      @stack.pop
     end
-
-  end  # class RPCalc
-end    # Math
+  end
 </PRE>
 
 <P>
 <PRE>
-[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(1)]$ rake spec
 rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
 
 Math::RPCalc
   When an erroneous input is given
-    must raise an exception
+    must raise an exception (FAILED - 1)
 
-Finished in 0.0018 seconds
-1 example, 0 failures
+Failures:
+
+  1) Math::RPCalc When an erroneous input is given must raise an exception
+     Failure/Error: expect { @c.calc('a') }.to raise_error(SyntaxError)
+       expected SyntaxError, got #&lt;NoMethodError: undefined method `calc' for #&lt;Math::RPCalc:0x007fd4aabfb180&gt;&gt; with backtrace:
+         # ./spec/math/rpcalc_spec.rb:11:in `block (4 levels) in &lt;module:Math&gt;'
+         # ./spec/math/rpcalc_spec.rb:11:in `block (3 levels) in &lt;module:Math&gt;'
+     # ./spec/math/rpcalc_spec.rb:11:in `block (3 levels) in &lt;module:Math&gt;'
+
+Finished in 0.00196 seconds
+1 example, 1 failure
+
+Failed examples:
+
+rspec ./spec/math/rpcalc_spec.rb:10 # Math::RPCalc When an erroneous input is given must raise an exception
 </PRE>
 
 <P>
+
+<OL>
+<LI><A NAME="tex2html1415"
+  HREF="http://rubydoc.info/gems/rspec-expectations/2.4.0/RSpec/Matchers#expect-instance_method">expect</A>
+</LI>
+<LI><A NAME="tex2html1416"
+  HREF="http://rubydoc.info/gems/rspec-expectations/2.4.0/RSpec/Matchers#raise_error-instance_method">raise_error</A>
+</LI>
+</OL>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-10
+2014-09-11
 </ADDRESS>
 </BODY>
 </HTML>
