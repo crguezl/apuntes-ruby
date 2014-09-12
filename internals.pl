@@ -258,6 +258,10 @@ $key = q/figure:requestobject/;
 $ref_files{$key} = "$dir".q|node410.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/chapter:rest/;
+$ref_files{$key} = "$dir".q|node484.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/subsection:creaciondeprocs/;
 $ref_files{$key} = "$dir".q|node133.html|; 
 $noresave{$key} = "$nosave";
@@ -510,16 +514,16 @@ $key = q/figure:rdoc1/;
 $ref_files{$key} = "$dir".q|node662.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/seubsection:methodmissing/;
-$ref_files{$key} = "$dir".q|node239.html|; 
-$noresave{$key} = "$nosave";
-
 $key = q/cite_RPL/;
 $ref_files{$key} = "$dir".q|node773.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/susubsection:extend/;
 $ref_files{$key} = "$dir".q|node226.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/seubsection:methodmissing/;
+$ref_files{$key} = "$dir".q|node239.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:bindings/;
@@ -796,6 +800,10 @@ $noresave{$key} = "$nosave";
 
 $key = q/section:singleton_y_eigenclass/;
 $ref_files{$key} = "$dir".q|node211.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/rubyenwindows/;
+$ref_files{$key} = "$dir".q|node569.html|; 
 $noresave{$key} = "$nosave";
 
 1;

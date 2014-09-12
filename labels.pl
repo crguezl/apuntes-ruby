@@ -258,6 +258,10 @@ $key = q/figure:requestobject/;
 $external_labels{$key} = "$URL/" . q|node410.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/chapter:rest/;
+$external_labels{$key} = "$URL/" . q|node484.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/subsection:creaciondeprocs/;
 $external_labels{$key} = "$URL/" . q|node133.html|; 
 $noresave{$key} = "$nosave";
@@ -510,16 +514,16 @@ $key = q/figure:rdoc1/;
 $external_labels{$key} = "$URL/" . q|node662.html|; 
 $noresave{$key} = "$nosave";
 
-$key = q/seubsection:methodmissing/;
-$external_labels{$key} = "$URL/" . q|node239.html|; 
-$noresave{$key} = "$nosave";
-
 $key = q/cite_RPL/;
 $external_labels{$key} = "$URL/" . q|node773.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/susubsection:extend/;
 $external_labels{$key} = "$URL/" . q|node226.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/seubsection:methodmissing/;
+$external_labels{$key} = "$URL/" . q|node239.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:bindings/;
@@ -798,6 +802,10 @@ $key = q/section:singleton_y_eigenclass/;
 $external_labels{$key} = "$URL/" . q|node211.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/rubyenwindows/;
+$external_labels{$key} = "$URL/" . q|node569.html|; 
+$noresave{$key} = "$nosave";
+
 1;
 
 
@@ -1031,6 +1039,10 @@ $noresave{$key} = "$nosave";
 
 $key = q/figure:requestobject/;
 $external_latex_labels{$key} = q|26.27|; 
+$noresave{$key} = "$nosave";
+
+$key = q/chapter:rest/;
+$external_latex_labels{$key} = q|47|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:procsylambdas/;
@@ -1547,6 +1559,10 @@ $noresave{$key} = "$nosave";
 
 $key = q/section:singleton_y_eigenclass/;
 $external_latex_labels{$key} = q|13.12|; 
+$noresave{$key} = "$nosave";
+
+$key = q/rubyenwindows/;
+$external_latex_labels{$key} = q|73|; 
 $noresave{$key} = "$nosave";
 
 1;
