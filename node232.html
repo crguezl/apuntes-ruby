@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Variables y Constantes</TITLE>
-<META NAME="description" CONTENT="Variables y Constantes">
+<TITLE>Bindings (encarpetados) y eval</TITLE>
+<META NAME="description" CONTENT="Bindings (encarpetados) y eval">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node234.html">
-<LINK REL="previous" HREF="node228.html">
-<LINK REL="up" HREF="node224.html">
+<LINK REL="next" HREF="node233.html">
+<LINK REL="previous" HREF="node231.html">
+<LINK REL="up" HREF="node231.html">
 <LINK REL="next" HREF="node233.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6768"
+<A NAME="tex2html6796"
   HREF="node233.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6762"
-  HREF="node224.html">
+<A NAME="tex2html6790"
+  HREF="node231.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6756"
+<A NAME="tex2html6784"
   HREF="node231.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6764"
-  HREF="node769.html">
+<A NAME="tex2html6792"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6766"
-  HREF="node772.html">
+<A NAME="tex2html6794"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,122 +96,171 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6769"
-  HREF="node233.html">Buscando, Dando Valores y</A>
-<B> Subir:</B> <A NAME="tex2html6763"
-  HREF="node224.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html6757"
-  HREF="node231.html">instance_exec y class_exec</A>
- &nbsp; <B>  <A NAME="tex2html6765"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6767"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6797"
+  HREF="node233.html">instance_eval y class_eval</A>
+<B> Subir:</B> <A NAME="tex2html6791"
+  HREF="node231.html">Evaluando Strings y Bloques</A>
+<B> Anterior:</B> <A NAME="tex2html6785"
+  HREF="node231.html">Evaluando Strings y Bloques</A>
+ &nbsp; <B>  <A NAME="tex2html6793"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6795"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-
-<H1><A NAME="SECTION02830000000000000000">
-Variables y Constantes</A>
-</H1>
-
-<P>
-Existen métodos para listar los nombres (como cadenas)
-de 
-
-<UL>
-<LI>las variables globales que estén definidas (<A NAME="9864"></A><A NAME="tex2html487"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-global_variables"><TT>global_variables</TT></A>, definido en <A NAME="tex2html488"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A>) 
-</LI>
-<LI>de las variables locales que estén actualmente definidas (<A NAME="9871"></A><A NAME="tex2html489"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-local_variables"><TT>local_variables</TT></A>, definido en <A NAME="tex2html490"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A>)
-</LI>
-<LI>de las variables de instancia de un objeto (<A NAME="9878"></A><A NAME="tex2html491"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-instance_variables"><TT>instance_variables</TT></A>, definido en <A NAME="tex2html492"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>)
-</LI>
-<LI>de las variables de clase o módulo (<A NAME="9885"></A><A NAME="tex2html493"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html#method-i-class_variables"><TT>class_variables</TT></A>, definido en <A NAME="tex2html494"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>)
-</LI>
-<LI>y de las constantes de una clase o módulo (<A NAME="9892"></A><A NAME="tex2html495"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-constants"><TT>constants</TT></A>, definido en <A NAME="tex2html496"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>)
-</LI>
-</UL>
-
-<P>
-<PRE>
-~/chapter8ReflectionandMetaprogramming$ cat -n variablesAndConstants.rb 
- 1  class Tutu
- 2    def initialize(x,y); @x, @y = x, y; end
- 3    @@classvar = 1
- 4    ORIGIN = Tutu.new(0, 0)
- 5  end
- 6  
- 7  puts "Globals variables with 'D': "
- 8  puts("  "+global_variables.select { |w| w =~/D/ }.inspect) #  [:$KCODE, :$LOAD_PATH, :$LOADED_FEATURES, :$DEBUG]
- 9  x = 1
-10  puts "Local variables:"
-11  puts "  #{local_variables.inspect}" # [:x]
-12  
-13  puts "Instance variable names: "
-14  Tutu::ORIGIN.instance_variables.each { |v|
-15    puts "  #{v}"                     #   @x @y
-16  }
-17  puts "Class variables names: "
-18  Tutu.class_variables.each { |v|
-19    puts "  #{v}"                     # @@classvar
-20  }
-21  puts "Constant names: "
-22  Tutu.constants.each { |c|
-23    puts "  #{c}"                     # ORIGIN
-24  }
-</PRE>
-Ejecución:
-<PRE>
-~/chapter8ReflectionandMetaprogramming$ ruby variablesAndConstants.rb 
-Globals variables with 'D': 
-  ["$KCODE", "$LOAD_PATH", "$DEBUG", "$LOADED_FEATURES"]
-Local variables:
-  ["x"]
-Instance variable names: 
-  @x
-  @y
-Class variables names: 
-  @@classvar
-Constant names: 
-  ORIGIN
-</PRE>
-
-<P>
-<BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6770"
-  HREF="node233.html">Buscando, Dando Valores y Suprimiendo Variables y Constantes</A>
+<LI><A NAME="tex2html6798"
+  HREF="node232.html#SECTION02821100000000000000">Procs y Bindings</A>
 </UL>
 <!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02821000000000000000"></A>
+  <A NAME="subsection:bindings"></A>
+<BR>
+Bindings (encarpetados) y eval
+</H2>
+
+<P>
+
+<OL>
+<LI>Un <A NAME="9867"></A><A NAME="tex2html454"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
+es un objeto que representa el estado de los bindings 
+definidos por las variables en un instante dado.
+
+<P>
+</LI>
+<LI>El método <A NAME="9871"></A><A NAME="tex2html455"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-binding"><TT>binding</TT></A>
+retorna un objeto <A NAME="tex2html456"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> describiendo
+los bindings en efecto en el punto de la llamada.
+
+<P>
+</LI>
+<LI>Es posible pasarle a <A NAME="9878"></A><A NAME="tex2html457"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
+un segundo argumento de la clase <A NAME="9882"></A><A NAME="tex2html458"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
+que especifique el contexto en que es evaluada la cadena:
+</LI>
+</OL>
+<PRE>
+~/Chapter8ReflectionandMetaprogramming$ cat -n bindingsAndEval.rb 
+     1  class Demo
+     2    def initialize(n)
+     3      @secret = n
+     4    end
+     5    def getBinding
+     6      return binding()
+     7    end
+     8  end
+     9  
+    10  k1 = Demo.new(99)
+    11  b1 = k1.getBinding
+    12  k2 = Demo.new(-3)
+    13  b2 = k2.getBinding
+    14  
+    15  puts eval("@secret", b1)   #=&gt; 99
+    16  puts eval("@secret", b2)   #=&gt; -3
+    17  puts eval("@secret")       #=&gt; nil
+</PRE>
+Ejecución:
+<PRE>
+~/Chapter8ReflectionandMetaprogramming$ ruby bindingsAndEval.rb 
+99
+-3
+nil
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02821100000000000000">
+Procs y Bindings</A>
+</H3>
+
+<P>
+
+<OL>
+<LI>La clase <A NAME="9886"></A><A NAME="tex2html459"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>
+define un método <A NAME="9890"></A><A NAME="tex2html460"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html#method-i-binding"><TT>binding</TT></A>.
+Cuando se llama dentro de un proc o de una lambda retorna un objeto 
+<A NAME="9894"></A><A NAME="tex2html461"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
+que representa los bindings en efecto en la clausura
+de ese <A NAME="tex2html462"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>.
+
+<P>
+</LI>
+<LI>Además, el método de <A NAME="tex2html463"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> <A NAME="9904"></A><A NAME="tex2html464"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
+nos permite pasar como segundo argumento un <A NAME="tex2html465"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> en vez de un <A NAME="tex2html466"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
+(Véase la sección <A HREF="node146.html#subsection:clausurasybindings">12.6.2</A>).
+
+<P>
+</LI>
+<LI>Además, Ruby 1.9 define un método <A NAME="9914"></A><A NAME="tex2html467"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html#method-i-eval"><TT>eval</TT></A>
+para los objetos <A NAME="tex2html468"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>.
+</LI>
+</OL>
+
+<P>
+
+    <pre>
+
+    </pre>
+
+<P>
+ejecución:
+<PRE>
+~/Chapter8ReflectionandMetaprogramming$ ruby procsAndBindings.rb 
+99
+99
+********************************
+2
+4
+6
+********************************
+3
+6
+9
+********************************
+5
+10
+15
+</PRE>
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6768"
+<A NAME="tex2html6796"
   HREF="node233.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6762"
-  HREF="node224.html">
+<A NAME="tex2html6790"
+  HREF="node231.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6756"
+<A NAME="tex2html6784"
   HREF="node231.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6764"
-  HREF="node769.html">
+<A NAME="tex2html6792"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6766"
-  HREF="node772.html">
+<A NAME="tex2html6794"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -266,20 +315,20 @@ Constant names:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6769"
-  HREF="node233.html">Buscando, Dando Valores y</A>
-<B> Subir:</B> <A NAME="tex2html6763"
-  HREF="node224.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html6757"
-  HREF="node231.html">instance_exec y class_exec</A>
- &nbsp; <B>  <A NAME="tex2html6765"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6767"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6797"
+  HREF="node233.html">instance_eval y class_eval</A>
+<B> Subir:</B> <A NAME="tex2html6791"
+  HREF="node231.html">Evaluando Strings y Bloques</A>
+<B> Anterior:</B> <A NAME="tex2html6785"
+  HREF="node231.html">Evaluando Strings y Bloques</A>
+ &nbsp; <B>  <A NAME="tex2html6793"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6795"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

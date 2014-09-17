@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Gestión de Sesiones</TITLE>
-<META NAME="description" CONTENT="Gestión de Sesiones">
+<TITLE>Ejemplo Simple</TITLE>
+<META NAME="description" CONTENT="Ejemplo Simple">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node341.html">
+<LINK REL="next" HREF="node340.html">
 <LINK REL="previous" HREF="node338.html">
-<LINK REL="up" HREF="node319.html">
+<LINK REL="up" HREF="node337.html">
 <LINK REL="next" HREF="node340.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8758"
+<A NAME="tex2html8777"
   HREF="node340.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8752"
-  HREF="node319.html">
+<A NAME="tex2html8771"
+  HREF="node337.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8746"
+<A NAME="tex2html8765"
   HREF="node338.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8754"
-  HREF="node769.html">
+<A NAME="tex2html8773"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8756"
-  HREF="node772.html">
+<A NAME="tex2html8775"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,342 +96,58 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8759"
-  HREF="node340.html">Ejercicio</A>
-<B> Subir:</B> <A NAME="tex2html8753"
-  HREF="node319.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8747"
-  HREF="node338.html">Cookies y Rack</A>
- &nbsp; <B>  <A NAME="tex2html8755"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8757"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8778"
+  HREF="node340.html">Ejemplo con POST</A>
+<B> Subir:</B> <A NAME="tex2html8772"
+  HREF="node337.html">Rack::Response</A>
+<B> Anterior:</B> <A NAME="tex2html8766"
+  HREF="node338.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html8774"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8776"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03190000000000000000"></A>
-<A NAME="section:gestiondesesiones"></A>
-<BR>
-Gestión de Sesiones
-</H1>
-
-<P>
-
-<H4><A NAME="SECTION03190010000000000000">
-Introducción</A>
-</H4>
-  
-
-<P>
-
-<OL>
-<LI>Hypertext Transfer Protocol (HTTP) is stateless: a client computer
-running a web browser must establish a new Transmission Control
-Protocol (TCP) network connection to the web server with each new
-HTTP GET or POST request. 
-
-<P>
-</LI>
-<LI>The web server, therefore, cannot rely
-on an established TCP network connection for longer than a single
-HTTP GET or POST operation. 
-
-<P>
-</LI>
-<LI><A NAME="14231"></A><SPAN  CLASS="textbf">Session management</SPAN> is the technique
-used by the web developer to make the stateless HTTP protocol support
-session state. 
-
-<P>
-</LI>
-<LI>For example, once a user has been authenticated to
-the web server, the user's next HTTP request (GET or POST) should
-not cause the web server to ask for the user's account and password
-again. 
-
-<P>
-</LI>
-<LI>The session information is stored on the web server using the 
-<A NAME="14233"></A><SPAN  CLASS="textbf">session identifier</SPAN>
-generated as a result of the first (sometimes
-the first authenticated) request from the end user running a web
-browser. 
-
-<P>
-</LI>
-<LI>The "storage" of Session IDs and the associated session
-data (user name, account number, etc.) on the web server is
-accomplished using a variety of techniques including, but not limited
-to, local memory, flat files, and databases.
-
-<P>
-</LI>
-<LI>A <A NAME="14235"></A><SPAN  CLASS="textbf">session token</SPAN> is a unique identifier that is generated and sent
-from a server to a client to identify the current interaction
-session. 
-
-<P>
-</LI>
-<LI>The client usually stores and sends the token as an HTTP
-cookie and/or sends it as a parameter in GET or POST queries. The
-reason to use session tokens is that the client only has to handle
-the identifier—all session data is stored on the server (usually
-in a database, to which the client does not have direct access)
-linked to that identifier. 
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION03190020000000000000">
-Uso de Cookies para el manejo de sesiones</A>
-</H4>
-  
-
-<P>
-
-<OL>
-<LI>Allowing users to log into a website is a frequent use of
-    cookies. 
-</LI>
-<LI>A web server typically sends a cookie containing a unique 
-    <A NAME="14241"></A><SPAN  CLASS="textbf">session identifier</SPAN>. The web browser will send back that session identifier
-   with each subsequent request and related items are stored
-   associated with this unique session identifier.
-</LI>
-<LI>Typically the web server will first send a cookie
-    containing a unique session identifier. Users then submit their
-    credentials and the web application authenticates the session
-    and allows the user access to services.
-</LI>
-<LI>Applications today usually store the gathered information
-    in a database on the server side, rather than storing them 
-    in cookies
-  
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION03190030000000000000">
-Ejemplo</A>
-</H4>
-  
-
-<P>
-<A NAME="tex2html729"
-  HREF="http://rack.rubyforge.org/doc/Rack/Session/Cookie.html">Rack::Session::Cookie</A> proporciona un sencillo sistema para gestionar
-sesiones basado en cookies.
-
-<P>
-
-<OL>
-<LI>La sesión es un cookie que contiene un
-hash almacenado mediante marshalling codificado en base64.
-</LI>
-<LI>Por defecto el nombre del cookie es <code>rack.session</code> pero puede ser 
-modificado mediante el atributo <code>:key</code>.
-</LI>
-<LI>Dándole un valor a <code>secret_key</code> se garantiza que es comprobada 
-la integridad de los datos de la cookie
-</LI>
-<LI>Para acceder dentro de nuestro programa
-a la sesión accedemos al hash <code>env["rack.session"]</code> o bien
-<code>env["key-value"]</code> si hemos especificado el atributo
-<code>:key</code>
-</LI>
-</OL>
-
-<P>
-Sigue un ejemplo:
+<H2><A NAME="SECTION03172000000000000000">
+Ejemplo Simple</A>
+</H2>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat configapp.ru 
-require 'pp'
-require './myapp'
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat body_bytesize.rb 
+require 'rack'
+require 'thin'
 
-use Rack::Session::Cookie, 
-      :key =&gt; 'rack.session', 
-      :domain =&gt; 'example.com',
-      :secret =&gt; 'some_secret'
+app = lambda do |env|
+  req = Rack::Request.new env
+  res = Rack::Response.new
 
-run MyApp.new
-</PRE>
+  body = "--------------- Header ------------------\n"
 
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat myapp.rb 
-class MyApp
-
-  def set_env(env)
-    @env = env
-    @session = env['rack.session']
+  if req.path_info == '/hello'
+    body &lt;&lt; "hi "
+    name = req['name']
+    body &lt;&lt; name if name 
+    body &lt;&lt; "\n"
+  else
+    body &lt;&lt; "Instead of #{req.url} visit something like "+
+            "http://localhost:8080/hello?name=Casiano\n"
   end
-
-  def some_key 
-    return @session['some_key'].to_i if @session['some_key']
-    @session['some_key'] = 0
-  end
-
-  def some_key=(value)
-    @session['some_key'] = value
-  end
-
-  def call(env)
-    set_env(env)
-    res = Rack::Response.new
-    req = Rack::Request.new env
-
-    self.some_key = self.some_key + 1 if req.path == '/'
-
-    res.write("some_key = #{@session['some_key']}\n")
-
-    res.finish
-  end
-
+  res['Content-Type'] = 'text/plain'
+  res["Content-Length"] = body.bytesize.to_s
+  #res["Content-Length"] = Rack::Utils.bytesize(body).to_s
+  res.body = [ body ]
+  res.finish
 end
+
+Rack::Handler::Thin.run app
 </PRE>
-
-<P>
-Hagamos la prueba conectándonos a <code>www.example.com</code>. Para ello
-edtiamos <code>/etc/hosts</code> para que <code>localhost</code> apunte a
-<code>www.example.com</code>:
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat /etc/hosts
-##
-# Host Database
-#
-# localhost is used to configure the loopback interface
-# when the system is booting.  Do not change this entry.
-##
-127.0.0.1 localhost www.example.com
-...
-</PRE>
-
-<P>
-Arrancamos el servidor:
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ rackup  configapp.ru 
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-</PRE>
-
-<P>
-Y visitamos <code>www.example.com</code> con nuestro navegador:
-
-<img src="rack_session_example.png" />
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html8760"
-  HREF="node339.html#SECTION03190010000000000000">Introducción</A>
-<LI><A NAME="tex2html8761"
-  HREF="node339.html#SECTION03190020000000000000">Uso de Cookies para el manejo de sesiones</A>
-<LI><A NAME="tex2html8762"
-  HREF="node339.html#SECTION03190030000000000000">Ejemplo</A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html8763"
-  HREF="node340.html">Ejercicio</A>
-</UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html8758"
-  HREF="node340.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8752"
-  HREF="node319.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8746"
-  HREF="node338.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8754"
-  HREF="node769.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8756"
-  HREF="node772.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="logoLPP.png"
- ALT="LPP"></A><A NAME="tex2html30"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html31"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html32"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html33"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html34"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html35"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html36"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html37"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html39"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html8759"
-  HREF="node340.html">Ejercicio</A>
-<B> Subir:</B> <A NAME="tex2html8753"
-  HREF="node319.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8747"
-  HREF="node338.html">Cookies y Rack</A>
- &nbsp; <B>  <A NAME="tex2html8755"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8757"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

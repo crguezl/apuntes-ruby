@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>7: un poco mas tarde ...</TITLE>
-<META NAME="description" CONTENT="7: un poco mas tarde ...">
+<TITLE>1: Green</TITLE>
+<META NAME="description" CONTENT="1: Green">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node636.html">
 <LINK REL="previous" HREF="node634.html">
-<LINK REL="up" HREF="node627.html">
+<LINK REL="up" HREF="node633.html">
 <LINK REL="next" HREF="node636.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13770"
+<A NAME="tex2html13817"
   HREF="node636.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13764"
-  HREF="node627.html">
+<A NAME="tex2html13811"
+  HREF="node633.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13760"
+<A NAME="tex2html13805"
   HREF="node634.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13766"
-  HREF="node769.html">
+<A NAME="tex2html13813"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13768"
-  HREF="node772.html">
+<A NAME="tex2html13815"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,54 +96,47 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13771"
-  HREF="node636.html">Resumen y Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html13765"
-  HREF="node627.html">Introducción</A>
-<B> Anterior:</B> <A NAME="tex2html13761"
-  HREF="node634.html">6: Green</A>
- &nbsp; <B>  <A NAME="tex2html13767"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13769"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13818"
+  HREF="node636.html">2: Red</A>
+<B> Subir:</B> <A NAME="tex2html13812"
+  HREF="node633.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html13806"
+  HREF="node634.html">0: Red</A>
+ &nbsp; <B>  <A NAME="tex2html13814"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13816"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION06918000000000000000">
-7: un poco mas tarde ...</A>
+<H2><A NAME="SECTION06912000000000000000">
+1: Green</A>
 </H2>
 
 <P>
 <PRE>
-[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/math/rpcalc.rb 
-module Math
-  class RPCalc
-    attr_accessor :stack
+/Users/casiano/local/src/ruby/LPP/rspec_examples/rpcalculator/
+|~lib/                         
+| |~math/                      
+| | `-rpcalc.rb                
+| `-rpcalc.rb                  
+|~spec/                        
+| |~math/                      
+| | `-rpcalc_spec.rb
+| `-spec_helper.rb  
+|-Rakefile      
+`-README.md
+</PRE>
 
-    def initialize()
-      @stack = []
-    end
-
-    def calc(expr)
-      @stack = []
-      expr.split(/\s+/).each do |x|
-      case x
-        when '+', '*', '-', '/' 
-          op2 = @stack.pop or raise SyntaxError, "No first argument for '#{x}'"
-          op1 = @stack.pop or raise SyntaxError, "No second argument for '#{x}'"
-          @stack.push eval "(#{op1} #{x} #{op2})"
-        when /^-?\s*\d+(\.\d+)?([eE][+-]?\d+)?\s*$/
-          @stack.push x
-        else
-          raise SyntaxError, "Error. found '#{x}'. Expected number or operator"       
-        end
-      end
-      @stack.pop
-    end
-
-  end  # class RPCalc
-end    # Math
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(0)]$ cat Rakefile 
+desc 'run rspec tests'
+task :spec do
+  sh "rspec -Ilib -Ispec spec/math/rpcalc_spec.rb"
+end
+...
 </PRE>
 
 <P>
@@ -152,72 +146,49 @@ end    # Math
 require "spec_helper"
 module Math
   describe RPCalc do
-    before :each do
-      @c = Math::RPCalc.new
-    end
 
-    context "When an erroneous input is given" do
-      context "not numeric input" do
-        before :each do
-          @e = proc { @c.calc('a') }
-        end
-
-        it "must raise an exception for not numeric input" do
-          expect { @e[] }.to raise_error(SyntaxError)
-          expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
-        end
-      end
-
-      context "not enough operands" do
-        it "must raise an exception when not enough operands" do
-          expect { @c.calc('2 3 + *') }.to raise_error(SyntaxError)
-          expect { @c.calc('2 3 + *') }.to raise_error("No second argument for '*'")
-        end
-      end
-    end
-
-    context "When a correct input is given" do
-      it "must give the correct answer for integer expressions" do
-        r = @c.calc('2 3 + 4 *')
-        r.should eq 20
-        @c.stack.should eq []
-      end
-
-      it "must give the correct answer for float expressions" do
-        r = @c.calc('4 3 + 2.5 3.5 +')
-        r.should be_within(0.01).of(6.0)
-        @c.stack.should eq [ 7 ]
-      end
-    end
-
-  end    # RPCalc
-end      # Math
+  end
+end
 </PRE>
 
 <P>
 <PRE>
-[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/spec_helper.rb 
+#$: &lt;&lt; File.join(File.dirname(__FILE__), "../../lib")
+require "rspec"
+require "rpcalc"
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/math/rpcalc.rb 
+module Math
+  class RPCalc
+  end  # class RPCalc
+end    # Math
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/rpcalc.rb 
+require 'math/rpcalc'
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(1)]$ rake spec
 rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
+No examples found.
 
-Math::RPCalc
-  When an erroneous input is given
-    not numeric input
-      must raise an exception for not numeric input
-    not enough operands
-      must raise an exception when not enough operands
-  When a correct input is given
-    must give the correct answer for integer expressions
-    must give the correct answer for float expressions
-
-Finished in 0.00526 seconds
-4 examples, 0 failures
+Finished in 0.00005 seconds
+0 examples, 0 failures
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

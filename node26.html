@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>pry</TITLE>
-<META NAME="description" CONTENT="pry">
+<TITLE>Ejercicios: Expresiones Regulares. Un programa que convierte de Celsius a Farenheit</TITLE>
+<META NAME="description" CONTENT="Ejercicios: Expresiones Regulares. Un programa que convierte de Celsius a Farenheit">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node27.html">
 <LINK REL="previous" HREF="node25.html">
-<LINK REL="up" HREF="node15.html">
+<LINK REL="up" HREF="node18.html">
 <LINK REL="next" HREF="node27.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html3316"
+<A NAME="tex2html3343"
   HREF="node27.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html3310"
-  HREF="node15.html">
+<A NAME="tex2html3337"
+  HREF="node18.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html3304"
+<A NAME="tex2html3331"
   HREF="node25.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html3312"
-  HREF="node769.html">
+<A NAME="tex2html3339"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html3314"
-  HREF="node772.html">
+<A NAME="tex2html3341"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,45 +96,162 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html3317"
-  HREF="node27.html">Bloques</A>
-<B> Subir:</B> <A NAME="tex2html3311"
-  HREF="node15.html">Introduccion</A>
-<B> Anterior:</B> <A NAME="tex2html3305"
-  HREF="node25.html">irb</A>
- &nbsp; <B>  <A NAME="tex2html3313"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html3315"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html3344"
+  HREF="node27.html">Ejercicio: Excepciones y Expresiones</A>
+<B> Subir:</B> <A NAME="tex2html3338"
+  HREF="node18.html">Introduccion</A>
+<B> Anterior:</B> <A NAME="tex2html3332"
+  HREF="node25.html">Ejecución de un Programa</A>
+ &nbsp; <B>  <A NAME="tex2html3340"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html3342"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02190000000000000000"></A>
-<A NAME="section:pry"></A>
+<H1><A NAME="SECTION02160000000000000000"></A>
+<A NAME="section:c2f"></A>
 <BR>
-pry
+Ejercicios: Expresiones Regulares. Un programa que convierte de Celsius a Farenheit
 </H1>
 
 <P>
-
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">7</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>El siguiente programa convierte de Celsius a Farenheit y viceversa:
+</I><PRE>
+MacBookdeCasiano:rubytesting casiano$ ruby -d f2c.rb 32F 
+32F
+Matches num = 32 kind= F
+celsius = 0.0 farenheit = 32.0
+</PRE>
+<P><PRE>
+MacBookdeCasiano:rubytesting casiano$ ruby f2c.rb 32F 
+celsius = 0.0 farenheit = 32.0
+</PRE><I>
+Ejecútelo con el debugger e intente averiguar el significado de cada una de las sentencias.
+</I>
+<P><PRE>
+$ cat -n f2c.rb 
+     1  #!/usr/bin/env ruby
+     2  
+     3  t = ARGV[0] || '0C'
+     4  puts t if $DEBUG
+     5  
+     6  if t =~ /^\s*(\d+(?:\.?\d+)?)([CF])\s*$/i
+     7    puts "Matches num = #{$1} kind= #{$2}" if $DEBUG
+     8    num, type = $1.to_f, $2
+     9  
+    10    if (type == 'C') 
+    11      celsius = num
+    12      farenheit = (celsius*9/5)+32
+    13    else
+    14      farenheit = num
+    15      celsius = (farenheit-32)*5/9
+    16    end
+    17    puts "celsius = #{celsius} farenheit = #{farenheit}"
+    18  else
+    19    puts "does not match" if $DEBUG
+    20  end
+</PRE><I>
+para entenderlo un poco consulte las siguientes secciones de la guía de usuario:
+</I>
 <UL>
-<LI><A NAME="tex2html93"
-  HREF="http://pryrepl.org/">pry</A>
+<LI><A NAME="tex2html85"
+  HREF="http://www.rubyist.net/~slagell/ruby/strings.html">Strings</A>
 </LI>
-<LI><A NAME="tex2html94"
-  HREF="https://vimeo.com/23535249">A basic introduction to using Pry, an IRB alternative for Ruby de Banister Fiend</A>
+<LI><A NAME="tex2html86"
+  HREF="http://www.rubyist.net/~slagell/ruby/regexp.html">Expresiones Regulares</A>
 </LI>
-<LI><A NAME="tex2html95"
-  HREF="https://vimeo.com/57863917">Ruby Debugging with Pry de Jason Madsen</A>
-</LI>
-</UL>
+</UL></DIV><P></P>
 
 <P>
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html3343"
+  HREF="node27.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3337"
+  HREF="node18.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3331"
+  HREF="node25.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html3339"
+  HREF="node775.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html3341"
+  HREF="node778.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html3344"
+  HREF="node27.html">Ejercicio: Excepciones y Expresiones</A>
+<B> Subir:</B> <A NAME="tex2html3338"
+  HREF="node18.html">Introduccion</A>
+<B> Anterior:</B> <A NAME="tex2html3332"
+  HREF="node25.html">Ejecución de un Programa</A>
+ &nbsp; <B>  <A NAME="tex2html3340"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html3342"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

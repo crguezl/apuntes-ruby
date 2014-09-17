@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Agentes SSH</TITLE>
-<META NAME="description" CONTENT="Agentes SSH">
+<TITLE>Introducción</TITLE>
+<META NAME="description" CONTENT="Introducción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node598.html">
 <LINK REL="previous" HREF="node596.html">
-<LINK REL="up" HREF="node591.html">
+<LINK REL="up" HREF="node596.html">
 <LINK REL="next" HREF="node598.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13165"
+<A NAME="tex2html13192"
   HREF="node598.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13159"
-  HREF="node591.html">
+<A NAME="tex2html13186"
+  HREF="node596.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13153"
+<A NAME="tex2html13180"
   HREF="node596.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13161"
-  HREF="node769.html">
+<A NAME="tex2html13188"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13163"
-  HREF="node772.html">
+<A NAME="tex2html13190"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,269 +96,178 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13166"
-  HREF="node598.html">Mejor un Sólo Agente</A>
-<B> Subir:</B> <A NAME="tex2html13160"
-  HREF="node591.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13154"
-  HREF="node596.html">Deshabilitar la Asignación de</A>
- &nbsp; <B>  <A NAME="tex2html13162"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13164"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13193"
+  HREF="node598.html">Conexión SSH a Una</A>
+<B> Subir:</B> <A NAME="tex2html13187"
+  HREF="node596.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13181"
+  HREF="node596.html">ssh</A>
+ &nbsp; <B>  <A NAME="tex2html13189"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13191"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06560000000000000000">
-Agentes SSH</A>
+<H1><A NAME="SECTION06510000000000000000">
+Introducción</A>
 </H1>
 
 <P>
-Un agente SSH es un programa que guarda de forma segura 
-las frases-clave asociadas con las claves privadas y responde a consultas 
-autentificadas de los clientes SSH.
-El agente recuerda la passphrase de manera que el usuario 
-no tenga que teclearla cada vez que la clave es usada.
 
-<P>
-El agente crea un socket en un subdirectorio de <code>/tmp</code> 
-en el que escucha las peticiones de conexión SSH.
-Cualquiera que tenga acceso a dicho socket puede acceder al agente. Los permisos
-unix para el socket son suficientemente restrictivos.
-
-<P>
-Los programas que se usan son  <TT>ssh-agent</TT>  y  <TT>ssh-add</TT> . 
-Utilizamos <A NAME="tex2html1319"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
-para añadir claves privadas a la cache del agente
-ssh. A partir de ese momento el cliente ssh no nos importunará
-solicitando la passphrase, comúnicandose con el agente 
-para superar el proceso de autentificación.
-El agente <code>ssh-agent</code> actúa como un daemon que permanece dando el
-servicio de autentificación a los clientes SSH.
-
-<P>
-
-<H4><A NAME="SECTION06560010000000000000">
-ssh-add</A>
+<H4><A NAME="SECTION06510010000000000000">
+Definición</A>
 </H4>
   
 
 <P>
-El programa
-<code>ssh-add</code> permite añadir, listar y suprimir claves de la cache del agente:
+<A NAME="23031"></A><SPAN  CLASS="textbf">SSH</SPAN> es un protocolo de red y un conjunto de estándares 
+que permiten una conexión encriptada entre dos computadoras.
+Usa criptografía de clave pública para autentificar al computador 
+y al usuario. Por defecto suele usar el puerto TCP
+22.
 
 <P>
-<PRE>
-someone@localhost:~/.ssh$ ssh-add ~/.ssh/conpass
-Enter passphrase for /home/someone/.ssh/conpass: **********
-Identity added: /home/someone/.ssh/conpass (/home/someone/.ssh/conpass)
-someone@localhost:~/.ssh$ ssh-add -l
-2048 da:13:....:ee /home/someone/.ssh/conpass (RSA)
-</PRE>
-Una vez establecida la clave en el agente es posible conectarse sin necesidad
-de proporcionar la frase clave:
+SSH se usa para acceder a una máquina remota y ejecutar comandos en una
+máquina remota. También sirve para proteger conexiones inseguras
+y transferir ficheros de manera segura.
+SSH utiliza un modelo cliente-servidor.
+Un programa cliente (normalmente denominado <code>ssh</code>) 
+es utilizado para establecer una conexión a otro programa que da el
+servicio y que se ejecuta en la máquina remota (normalmente denominado <code>sshd</code>
+o SSH daemon).
 
 <P>
-<PRE>
-someone@localhost:~/.kde/shutdown$ ssh remote.machine
-Linux remote.machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-Last login: Tue Mar 11 14:03:59 2008 from localhost.deioc.ull.es
-user@remote.machine:~$
-</PRE>
+SSH soporta autentificación basada en RSA y DSA.
+<A NAME="23033"></A><SPAN  CLASS="textbf">RSA</SPAN> fué el primer algoritmo 
+publicado que permite el cifrado y la firma digital. Se cree que es seguro
+si las claves son lo suficientemente largas. Se usa aún en comercio electrónico.
+La alternativa mas usada es <A NAME="23035"></A><SPAN  CLASS="textbf">DSA</SPAN> cuyas inciales corresponden 
+a <A NAME="23037"></A><SPAN  CLASS="textbf"> Digital Signature Algorithm</SPAN>. DSA
+es propiedad del gobierno de los Estados Unidos de America.
 
 <P>
-
-<H4><A NAME="SECTION06560020000000000000">
-Arrancando un Agente SSH</A>
-</H4>
-  
-
-<P>
-Para arrancar el agente SSH se ejecuta el comando:
-<PRE>
-eval `ssh-agent`
-</PRE>
-Esto se hace asi porque el resultado retornado por <code>ssh-agent</code>
-es una cadena conteniendo un script <A NAME="tex2html1320"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?bash"><TT>bash</TT></A>. Este guión establece las variables de 
-entorno necesarias para que las futuras llamadas a clientes SSH 
-puedan encontrar al agente. Observe el resultado de una ejecución sin <code>eval</code> ni backticks:
-<PRE>
-$ ssh-agent
-SSH_AUTH_SOCK=/tmp/ssh-jaDVTd5583/agent.5583; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=5584; export SSH_AGENT_PID;
-echo Agent pid 5584;
-</PRE>
-
-<P>
-La variable <code>SSH_AUTH_SOCK</code> contiene el camino al socket de dominio UNIX que será 
-utilizado por los clientes <code>ssh</code>, <code>scp</code>, etc. para comunicarse 
-con el agente.
-
-<P>
-El pid proporcionado en <code>SSH_AGENT_PID</code> nos permite eliminar al agente mediante <code>kill</code>. 
-Sin embargo una llamada a <code>kill</code> no elimina 
-las variables de entorno establecidas.
-La forma correcta de terminar el agente es usando la opción <code>-k</code>
-de <code>ssh-agent</code>:
-<PRE>
-pp2@localhost:~/Lbook$ eval `ssh-agent`
-Agent pid 5606
-pp2@localhost:~/Lbook$ env | grep -i ssh
-SSH_AGENT_PID=5606
-SSH_AUTH_SOCK=/tmp/ssh-ALUJyJ5605/agent.5605
-CVS_RSH=/usr/bin/ssh
-pp2@localhost:~/Lbook$ eval `ssh-agent -k`
-Agent pid 5606 killed
-pp2@localhost:~/Lbook$ env | grep -i ssh
-CVS_RSH=/usr/bin/ssh
-pp2@localhost:~/Lbook$
-</PRE>
+Hay criptosistemas -a los que RSA pertenece - en los cuales el cifrado
+y desencriptado se hace utilizando claves separadas y no es posible derivar la clave de
+desencriptado del conocimiento de la clave de encriptado. 
+El cliente utiliza un par de claves pública/privada para la autentificación.
+El servidor sólo conoce la clave pública. Funciona como una pareja llave/cerradura
+en la que el conocimiento de la cerradura no permite deducir
+la forma de la llave.
 
 <P>
 
-<H4><A NAME="SECTION06560030000000000000">
-El Protocolo</A>
-</H4>
-  
-
-<P>
-
-<OL>
-<LI>El usuario escribe el comando que da lugar a la conexión inicial y especifica el username asi como 
-la petición de usar una clave. El programa cliente envía el username y la petición de uso
-de  la clave.
-
-<P>
-</LI>
-<LI>El demonio de SSH mira en el fichero <code>authorized_keys</code> y
-construye un reto basado en esa clave y lo envía al cliente.
-
-<P>
-</LI>
-<LI>El cliente recibe el reto asociado con la clave y lo redirige al
-agente. Supongamos que la clave fué previamente cargada con <A NAME="tex2html1321"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
-<P>
-</LI>
-<LI>El agente construye la respuesta y la devuelve al proceso <A NAME="tex2html1322"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
-el cual la envía al proceso <A NAME="tex2html1323"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
-que escucha en el otro extremo.
-El cliente <A NAME="tex2html1324"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
-nunca ve la clave privada, lo que ve 
-es la respuesta. 
-
-<P>
-</LI>
-<LI>El servidor <A NAME="tex2html1325"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
-valida la respuesta. Si es correcta permite 
-el acceso al sistema.
-
-<P>
-</LI>
-</OL>
-
-<P>
-<P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
-<I>Establezca claves con passphrase, instale un agente ssh y compruebe su buen
-funcionamiento.</I></DIV><P></P>
-
-<P>
-
-<H4><A NAME="SECTION06560040000000000000">
-Bloqueando el acceso a un Agente</A>
-</H4>
-  
-
-<P>
-Es posible cerrar el acceso al agente usando la opción <code>-x</code> de <A NAME="tex2html1326"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
-<PRE>
-pp2@europa:~$ ssh-add -x
-Enter lock password:
-Again:
-Agent locked.
-pp2@europa:~$ ssh orion
-Enter passphrase for key '/home/pp2/.ssh/id_dsa': ********
-Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-Last login: Mon Apr 27 13:29:32 2009 from europa.deioc.ull.es
-casiano@orion:~$
-</PRE>
-
-<P>
-Para abrir el acceso al agente usaremos la opción <code>-X</code> de <A NAME="tex2html1327"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
-<PRE>
-pp2@europa:~$ ssh-add -X
-Enter lock password: ****************
-Agent unlocked.
-pp2@europa:~$
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06560050000000000000">
-Poniendo Fecha de Caducidad</A>
-</H4>
-  
-
-<P>
-La opción <code>-t lifetime</code> de <A NAME="tex2html1328"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>
-puede ser utilizada para 
-limitar el tiempo de caducidad de las identidades en un agente. El tiempo
-se expresará en segundos o bien de la forma <code>time[qualifier]</code>, donde
-<code>time</code> es un entero positivo y <code>qualifier</code> es:
-
-<P>
-<PRE>
-           nada    segundos
-           s | S   segundos
-           m | M   minutos
-           h | H   horas
-           d | D   dias
-           w | W   semanas
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06560060000000000000">
-Véase también</A>
+<H4><A NAME="SECTION06510020000000000000">
+Historia</A>
 </H4>
   
 
 <P>
 
 <UL>
-<LI>Wikipedia <A NAME="tex2html1329"
-  HREF="http://en.wikipedia.org/wiki/Ssh-agent">Ssh-agent</A>
+<LI>Tatu Ylönen diseña y publica la primera versión del protocolo SSH (SSH-1)
+
+<P>
 </LI>
-<LI><A NAME="tex2html1330"
-  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+<LI>Ylönen funda  <I>SSH Communications Security</I> a finales de 1995. La versión original - que usaba software libre - evoluciona
+a software propietario
+
+<P>
 </LI>
-<LI><A NAME="tex2html1331"
-  HREF="http://mah.everybody.org/docs/ssh">Using ssh-agent with ssh</A>
+<LI>Aparece en 1996 el protocolo SSH-2, que es incompatible con SSH-1. 
+Se mejora la seguridad (via el algoritmo Diffie-Hellman para 
+el intercambio de claves) y la comprobación de la integridad via mensajes de autentificación.
+Además permite ejecutar un número arbitrario de sesiones shell sobre una única conexión
+SSH.
+
+<P>
+</LI>
+<LI>En  1998 se encuentra una vulnerabilidad en SSH 1.5. El fallo ha sido resuelto
+en la mayoría de las implementaciones
+
+<P>
+</LI>
+<LI>En 1999 comienza el desarrollo de lo que será la primera versión abierta de SSH: OpenSSH
+
+<P>
+</LI>
+<LI>En 2005 OpenSSH se convierte en la implementation ssh mas popular
+
+<P>
+</LI>
+<LI>El protocolo SSH-2 protocol es propuesto como Internet estandard en 2006
+
+<P>
+</LI>
+<LI>En el 2008 se descubre una vulnerabilidad en el cifrado en SSH-2:
+Fue resuelta en OpenSSH 5.2.
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION06510030000000000000">
+Arquitectura</A>
+</H4>
+  
+
+<P>
+El protocolo SSH-2 tiene una arquitectura de capas.
+Las capas son:
+
+<P>
+
+<UL>
+<LI>La <A NAME="23047"></A><SPAN  CLASS="textbf">capa de transporte</SPAN>. Esta capa maneja el intercambio inicial de claves y la autentificación del servidor
+y establece los métodos de cifrado, compresión y verificación de la integridad.
+Deja visible a la capa superior una interfaz para el envío y recepción de paquetes de 
+texto plano de hasta 32 768 bytes cada uno. La capa de transporte también organiza 
+el reintercambio de claves - normalmente despues de que haya pasado una hora o se haya 
+transferido mas de 1 GB de datos.
+
+<P>
+</LI>
+<LI>La <A NAME="23049"></A><SPAN  CLASS="textbf">capa de autentificación</SPAN>. Maneja la autentificación del cliente y proporciona un conjunto de métodos
+de autentificación.
+Entre los métodos de autentificación están:
+
+<P>
+
+<UL>
+<LI>password
+</LI>
+<LI>publickey:  para el uso de parejas DSA o RSA
+</LI>
+<LI>keyboard-interactive
+</LI>
+<LI>GSSAPI: permite el uso de mecanismos externos como Kerberos 5 
+</LI>
+</UL>
+El proceso de autentificación es dirigido por el cliente. 
+
+<P>
+</LI>
+<LI>La <A NAME="23051"></A><SPAN  CLASS="textbf">capa de conexión</SPAN>. 
+Esta capa define el concepto de canal, peticiones de canal y peticiones globales para el uso de los servicios 
+proporcionados por SSH. Una única sesión SSH puede alojar simultáneamente múltiples canales. 
+Los canales transfieren datos en ambas direcciones. Las peticiones de canal son usadas 
+para pasar datos específicos fuera-del-canal como el cambio de tamaño de una ventana de terminal
+o el código de salida de un proceso que se ejecuta en el servidor. 
+El cliente SSH usa una petición global para solicitar la redirección de un puerto del lado
+del servidor. Entre los tipos estandar de canal se encuentran: 
+
+<UL>
+<LI>canal shell: para las shell de terminales y peticones SFTP y exec (incluyendo transferencias vía SCP)
+</LI>
+<LI>canal direct-tcpip: para la redirección de conexiones cliente-servidor
+</LI>
+<LI>canal forwarded-tcpip: para la redirección de conexiones servidor-clientes
+</LI>
+</UL>
+</LI>
+<LI>Los registros SSHFP DNS proporcionan las huellas (fingerprints) para las claves 
+públicas de las máquinas para ser usadas en el proceso de autentificación de las máquinas.
 </LI>
 </UL>
 
@@ -370,37 +279,31 @@ Véase también</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html13167"
-  HREF="node597.html#SECTION06560010000000000000">ssh-add</A>
-<LI><A NAME="tex2html13168"
-  HREF="node597.html#SECTION06560020000000000000">Arrancando un Agente SSH</A>
-<LI><A NAME="tex2html13169"
-  HREF="node597.html#SECTION06560030000000000000">El Protocolo</A>
-<LI><A NAME="tex2html13170"
-  HREF="node597.html#SECTION06560040000000000000">Bloqueando el acceso a un Agente</A>
-<LI><A NAME="tex2html13171"
-  HREF="node597.html#SECTION06560050000000000000">Poniendo Fecha de Caducidad</A>
-<LI><A NAME="tex2html13172"
-  HREF="node597.html#SECTION06560060000000000000">Véase también</A>
+<LI><A NAME="tex2html13194"
+  HREF="node597.html#SECTION06510010000000000000">Definición</A>
+<LI><A NAME="tex2html13195"
+  HREF="node597.html#SECTION06510020000000000000">Historia</A>
+<LI><A NAME="tex2html13196"
+  HREF="node597.html#SECTION06510030000000000000">Arquitectura</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13165"
+<A NAME="tex2html13192"
   HREF="node598.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13159"
-  HREF="node591.html">
+<A NAME="tex2html13186"
+  HREF="node596.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13153"
+<A NAME="tex2html13180"
   HREF="node596.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13161"
-  HREF="node769.html">
+<A NAME="tex2html13188"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13163"
-  HREF="node772.html">
+<A NAME="tex2html13190"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -455,20 +358,20 @@ Véase también</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13166"
-  HREF="node598.html">Mejor un Sólo Agente</A>
-<B> Subir:</B> <A NAME="tex2html13160"
-  HREF="node591.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13154"
-  HREF="node596.html">Deshabilitar la Asignación de</A>
- &nbsp; <B>  <A NAME="tex2html13162"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13164"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13193"
+  HREF="node598.html">Conexión SSH a Una</A>
+<B> Subir:</B> <A NAME="tex2html13187"
+  HREF="node596.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13181"
+  HREF="node596.html">ssh</A>
+ &nbsp; <B>  <A NAME="tex2html13189"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13191"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

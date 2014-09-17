@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Templates Inline</TITLE>
-<META NAME="description" CONTENT="Templates Inline">
+<TITLE>Verbos HTTP en Sinatra/Base</TITLE>
+<META NAME="description" CONTENT="Verbos HTTP en Sinatra/Base">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,7 +19,6 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node381.html">
 <LINK REL="previous" HREF="node379.html">
 <LINK REL="up" HREF="node379.html">
 <LINK REL="next" HREF="node381.html">
@@ -28,20 +27,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9477"
+<A NAME="tex2html9499"
   HREF="node381.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9471"
+<A NAME="tex2html9493"
   HREF="node379.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9465"
+<A NAME="tex2html9489"
   HREF="node379.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9473"
-  HREF="node769.html">
+<A NAME="tex2html9495"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9475"
-  HREF="node772.html">
+<A NAME="tex2html9497"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,142 +95,69 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9478"
-  HREF="node381.html">Named Templates</A>
-<B> Subir:</B> <A NAME="tex2html9472"
-  HREF="node379.html">Vistas</A>
-<B> Anterior:</B> <A NAME="tex2html9466"
-  HREF="node379.html">Vistas</A>
- &nbsp; <B>  <A NAME="tex2html9474"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9476"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9500"
+  HREF="node381.html">Ficheros Estáticos</A>
+<B> Subir:</B> <A NAME="tex2html9494"
+  HREF="node379.html">Rutas/Routes</A>
+<B> Anterior:</B> <A NAME="tex2html9490"
+  HREF="node379.html">Rutas/Routes</A>
+ &nbsp; <B>  <A NAME="tex2html9496"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9498"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03341000000000000000">
-Templates Inline</A>
+<H2><A NAME="SECTION03321000000000000000">
+Verbos HTTP en Sinatra/Base</A>
 </H2>
 
 <P>
-Templates may be defined at the end of the source file.
-En este ejemplo trabajamos con varios templates inline en diferentes ficheros:
+<A NAME="tex2html863"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L1351">Método <TT>get</TT></A>
 <PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat example2-14.rb 
-require 'sinatra/base'
+      def get(path, opts = {}, &amp;block)
+        conditions = @conditions.dup
+        route('GET', path, opts, &amp;block)
 
-class App &lt; Sinatra::Base
-  enable :inline_templates
-  get '/index' do 
-    puts "Visiting #{request.url}"
-    erb :index
-  end
-end
-
-require './another'
-__END__
-@@index
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Inline template&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Worked!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
+        @conditions = conditions
+        route('HEAD', path, opts, &amp;block)
+      end
 </PRE>
 
 <P>
-En este fichero tenemos un segundo template inline:
 <PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat another.rb 
-class App 
-  enable :inline_templates
-  get '/' do
-    erb :another
-  end
-end
-
-__END__
-@@another
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Separated file&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Inside another!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
+      def put(path, opts = {}, &amp;bk)     route 'PUT',     path, opts, &amp;bk end
+      def post(path, opts = {}, &amp;bk)    route 'POST',    path, opts, &amp;bk end
+      def delete(path, opts = {}, &amp;bk)  route 'DELETE',  path, opts, &amp;bk end
+      def head(path, opts = {}, &amp;bk)    route 'HEAD',    path, opts, &amp;bk end
+      def options(path, opts = {}, &amp;bk) route 'OPTIONS', path, opts, &amp;bk end
+      def patch(path, opts = {}, &amp;bk)   route 'PATCH',   path, opts, &amp;bk end
+      def link(path, opts = {}, &amp;bk)    route 'LINK',    path, opts, &amp;bk end
+      def unlink(path, opts = {}, &amp;bk)  route 'UNLINK',  path, opts, &amp;bk end
 </PRE>
 
 <P>
-Este es nuestro config.ru:
-
-<P>
+<A NAME="tex2html864"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L1563">Método <TT>route</TT></A>
 <PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat config.ru 
-require './example2-14'
-
-run App
-</PRE>
-Para simplificar las cosas hemos hecho un <code>Rakefile</code>:
-<PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat Rakefile 
-task :default =&gt; :server
-
-desc "run server"
-task :server do
-  sh "rackup"
-end
-
-desc "make a get / request via curl"
-task :root do
-  sh "curl -v localhost:9292"
-end
-
-desc "make a get /index request via curl"
-task :index do 
-  sh "curl -v localhost:9292/index"
-end
-</PRE>
-
-<P>
-El resultado de la ejecución es:
-<PRE>
-[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/index
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Inline template&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Worked!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
-[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Separated file&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Inside another!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
+      def route(verb, path, options = {}, &amp;block)
+        # Because of self.options.host
+        host_name(options.delete(:host)) if options.key?(:host)
+        enable :empty_path_info if path == "" and empty_path_info.nil?
+        signature = compile!(verb, path, block, options)
+        (@routes[verb] ||= []) &lt;&lt; signature
+        invoke_hook(:route_added, verb, path, block)
+        signature
+      end
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

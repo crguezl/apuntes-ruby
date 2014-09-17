@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Filtros</TITLE>
-<META NAME="description" CONTENT="Filtros">
+<TITLE>Variables en las Vistas</TITLE>
+<META NAME="description" CONTENT="Variables en las Vistas">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node388.html">
-<LINK REL="previous" HREF="node379.html">
-<LINK REL="up" HREF="node374.html">
+<LINK REL="previous" HREF="node386.html">
+<LINK REL="up" HREF="node382.html">
 <LINK REL="next" HREF="node388.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9574"
+<A NAME="tex2html9605"
   HREF="node388.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9568"
-  HREF="node374.html">
+<A NAME="tex2html9599"
+  HREF="node382.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9562"
+<A NAME="tex2html9593"
   HREF="node386.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9570"
-  HREF="node769.html">
+<A NAME="tex2html9601"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9572"
-  HREF="node772.html">
+<A NAME="tex2html9603"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,149 +96,173 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9575"
-  HREF="node388.html">Manejo de Errores</A>
-<B> Subir:</B> <A NAME="tex2html9569"
-  HREF="node374.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9563"
-  HREF="node386.html">Opciones pasadas a los</A>
- &nbsp; <B>  <A NAME="tex2html9571"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9573"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9606"
+  HREF="node388.html">Pasando variables a la</A>
+<B> Subir:</B> <A NAME="tex2html9600"
+  HREF="node382.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html9594"
+  HREF="node386.html">Templates Externos en Subcarpetas</A>
+ &nbsp; <B>  <A NAME="tex2html9602"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9604"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-
-<H1><A NAME="SECTION03350000000000000000">
-Filtros</A>
-</H1>
-
-<P>
-
-<H4><A NAME="SECTION03350010000000000000">
-Before Filters</A>
-</H4>
-  
-
-<A NAME="15806"></A><SPAN  CLASS="textbf">Before filters</SPAN> are evaluated before each request within the
-same context as the routes will be and can modify the request and
-response. 
-
-<P>
-Instance variables set in filters are accessible by routes
-and templates:
-
-<P>
-<PRE>
-before do
-  @note = 'Hi!'
-  request.path_info = '/foo/bar/baz'
-end
-
-get '/foo/*' do
-  @note #=&gt; 'Hi!'
-  params[:splat] #=&gt; 'bar/baz'
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03350020000000000000">
-After Filters</A>
-</H4>
-  
-
-<A NAME="15812"></A><SPAN  CLASS="textbf">After filters</SPAN> are evaluated after each request within the same
-context and can also modify the request and response. 
-
-<P>
-Instance
-variables set in before filters and routes are accessible by after
-filters:
-
-<P>
-<PRE>
-after do
-  puts response.status
-end
-</PRE>
-Note: Unless you use the <code>body</code> method rather than just returning a
-String from the routes, the body will not yet be available in the
-after filter, since it is generated later on.
-
-<P>
-
-<H4><A NAME="SECTION03350030000000000000">
-Filters can take a Pattern</A>
-</H4>
-  
-
-Filters optionally take a pattern, causing them to be evaluated
-only if the request path matches that pattern:
-<PRE>
-before '/protected/*' do
-  authenticate!
-end
-
-after '/create/:slug' do |slug|
-  session[:last_slug] = slug
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03350040000000000000">
-Filters can take a Condition</A>
-</H4>
-  
-
-Like routes, filters also take conditions:
-<PRE>
-before :agent =&gt; /Songbird/ do
-  # ...
-end
-
-after '/blog/*', :host_name =&gt; 'example.com' do
-  # ...
-end
-</PRE>
-
-<P>
-<BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
 <LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html9576"
-  HREF="node387.html#SECTION03350010000000000000">Before Filters</A>
-<LI><A NAME="tex2html9577"
-  HREF="node387.html#SECTION03350020000000000000">After Filters</A>
-<LI><A NAME="tex2html9578"
-  HREF="node387.html#SECTION03350030000000000000">Filters can take a Pattern</A>
-<LI><A NAME="tex2html9579"
-  HREF="node387.html#SECTION03350040000000000000">Filters can take a Condition</A>
-</UL></UL></UL>
+<LI><A NAME="tex2html9607"
+  HREF="node387.html#SECTION03345010000000000000">Comunicación vía variables de instancia</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION03345000000000000000">
+Variables en las Vistas</A>
+</H2>
+
+<P>
+
+<H4><A NAME="SECTION03345010000000000000">
+Comunicación vía variables de instancia</A>
+</H4>
+  
+
+Los templates se evaluan en el mismo contexto que los manejadores de las rutas.
+Las variables de instancia son accesibles directamente en los templates.
+
+<P>
+<PRE>
+get '/:id' do
+  @foo = Foo.find(params[:id])
+  haml '%h1= @foo.name'
+end
+</PRE>
+Veamos un ejemplo de comunicación via variables de instancia entre el manejador de la ruta
+y el template:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ ls
+Rakefile        config.ru       via_instance.rb
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ cat via_instance.rb 
+require 'sinatra/base'
+
+
+class App &lt; Sinatra::Base
+  get '/*' do |name|
+    def some_template
+       &lt;&lt;-'HAMLTEMP'
+%ol
+  - @foo.each do |item|
+    %li 
+      %i #{item}
+HAMLTEMP
+    end
+
+    puts "*---***#{name}*---****"
+    @foo = name.split('/')
+    haml some_template
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ cat config.ru 
+require './via_instance'
+
+run App
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ cat Rakefile 
+task :default =&gt; :server
+
+desc "run server"
+task :server do
+  sh "rackup"
+end
+
+desc "make a get /juan/leon/hernandez request via curl"
+task :client do
+  sh "curl -v localhost:9292/juan/leon/hernandez"
+end
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/sinatraupandrunning/chapter2/views/passing_data_into_views(master)]$ rake server
+rackup
+&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+*---***juan/leon/hernandez*---****
+127.0.0.1 - - [05/Jul/2013 17:06:05] "GET /juan/leon/hernandez HTTP/1.1" 200 109 0.3502
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ rake client
+curl -v localhost:9292/juan/leon/hernandez
+* About to connect() to localhost port 9292 (#0)
+*   Trying 127.0.0.1... connected
+* Connected to localhost (127.0.0.1) port 9292 (#0)
+&gt; GET /juan/leon/hernandez HTTP/1.1
+&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8x zlib/1.2.5
+&gt; Host: localhost:9292
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html;charset=utf-8
+&lt; Content-Length: 109
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Content-Type-Options: nosniff
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Connection: keep-alive
+&lt; Server: thin 1.5.1 codename Straight Razor
+&lt; 
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;i&gt;juan&lt;/i&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;i&gt;leon&lt;/i&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;i&gt;hernandez&lt;/i&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+* Connection #0 to host localhost left intact
+* Closing connection #0
+</PRE>
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9574"
+<A NAME="tex2html9605"
   HREF="node388.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9568"
-  HREF="node374.html">
+<A NAME="tex2html9599"
+  HREF="node382.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9562"
+<A NAME="tex2html9593"
   HREF="node386.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9570"
-  HREF="node769.html">
+<A NAME="tex2html9601"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9572"
-  HREF="node772.html">
+<A NAME="tex2html9603"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -293,20 +317,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9575"
-  HREF="node388.html">Manejo de Errores</A>
-<B> Subir:</B> <A NAME="tex2html9569"
-  HREF="node374.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9563"
-  HREF="node386.html">Opciones pasadas a los</A>
- &nbsp; <B>  <A NAME="tex2html9571"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9573"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9606"
+  HREF="node388.html">Pasando variables a la</A>
+<B> Subir:</B> <A NAME="tex2html9600"
+  HREF="node382.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html9594"
+  HREF="node386.html">Templates Externos en Subcarpetas</A>
+ &nbsp; <B>  <A NAME="tex2html9602"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9604"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

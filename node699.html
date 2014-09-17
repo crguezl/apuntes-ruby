@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Authentication using the Google APIs Client Library for JavaScript</TITLE>
-<META NAME="description" CONTENT="Authentication using the Google APIs Client Library for JavaScript">
+<TITLE>Using OAuth 2.0 to Access Google APIs</TITLE>
+<META NAME="description" CONTENT="Using OAuth 2.0 to Access Google APIs">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node700.html">
 <LINK REL="previous" HREF="node698.html">
-<LINK REL="up" HREF="node684.html">
+<LINK REL="up" HREF="node690.html">
 <LINK REL="next" HREF="node700.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14779"
+<A NAME="tex2html14825"
   HREF="node700.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14773"
-  HREF="node684.html">
+<A NAME="tex2html14819"
+  HREF="node690.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14769"
+<A NAME="tex2html14813"
   HREF="node698.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14775"
-  HREF="node769.html">
+<A NAME="tex2html14821"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14777"
-  HREF="node772.html">
+<A NAME="tex2html14823"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,33 +96,168 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14780"
-  HREF="node700.html">MacOS homebrew Package Manager</A>
-<B> Subir:</B> <A NAME="tex2html14774"
-  HREF="node684.html">OAuth</A>
-<B> Anterior:</B> <A NAME="tex2html14770"
-  HREF="node698.html">Google+ Sign-In for server-side</A>
- &nbsp; <B>  <A NAME="tex2html14776"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14778"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14826"
+  HREF="node700.html">Google OAuth 2.0 Playground</A>
+<B> Subir:</B> <A NAME="tex2html14820"
+  HREF="node690.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html14814"
+  HREF="node698.html">The gem omniauth-google-oauth2</A>
+ &nbsp; <B>  <A NAME="tex2html14822"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14824"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0619120000000000000000">
-Authentication using the Google APIs Client Library for JavaScript</A>
+<H1><A NAME="SECTION061960000000000000000">
+Using OAuth 2.0 to Access Google APIs</A>
 </H1>
 
 <P>
-<A NAME="tex2html1644"
-  HREF="https://developers.google.com/api-client-library/javascript/features/authentication">See</A>.
+Véase 
+<A NAME="tex2html1634"
+  HREF="https://developers.google.com/accounts/docs/OAuth2">Using OAuth 2.0 to Access Google APIs</A>.
 
 <P>
-<BR><HR>
+Google APIs use the  <A NAME="tex2html1635"
+  HREF="http://oauth.net/">OAuth</A>
+ 2.0 protocol for authentication and
+authorization. Google supports common  <A NAME="tex2html1636"
+  HREF="http://oauth.net/">OAuth</A>
+ 2.0 scenarios such as those
+for web server, installed, and client-side applications.
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html1637"
+  HREF="http://oauth.net/">OAuth</A>
+ 2.0 is a relatively simple protocol. To begin, you obtain  <A NAME="tex2html1638"
+  HREF="http://oauth.net/">OAuth</A>
+
+2.0 credentials from the 
+<A NAME="tex2html1639"
+  HREF="https://cloud.google.com/console">Google Developers Console</A>. 
+</LI>
+<LI>See the Video in YouTube 
+<A NAME="tex2html1640"
+  HREF="http://youtu.be/Im69kzhpR3I">Obtaining a developer key for the YouTube Data API v3 and the Analytics API</A>
+</LI>
+<LI>Then your client
+application requests an 
+<FONT COLOR="#0000ff"> access token</FONT> from the 
+
+<FONT COLOR="#0000ff"> Google Authorization Server</FONT>,
+extracts a token from the response, and sends the token to the 
+
+<FONT COLOR="#0000ff"> Google API</FONT> 
+that you want to access.
+</LI>
+</OL>
+
+<P>
+To get access keys, go to the Google APIs Console and specify your
+<A NAME="tex2html1641"
+  HREF="https://cloud.google.com/console">Google Developers Console</A>. 
+application's name and the Google APIs it will access. For simple access,
+Google generates an API key that uniquely identifies your application
+in its transactions with the Google Auth server.
+
+<P>
+For authorized access, you must also tell Google your website's protocol
+and domain. In return, Google generates a client ID. Your application
+submits this to the Google Auth server to get an  <A NAME="tex2html1642"
+  HREF="http://oauth.net/">OAuth</A>
+ 2.0 access
+token.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14825"
+  HREF="node700.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14819"
+  HREF="node690.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14813"
+  HREF="node698.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html14821"
+  HREF="node775.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14823"
+  HREF="node778.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html14826"
+  HREF="node700.html">Google OAuth 2.0 Playground</A>
+<B> Subir:</B> <A NAME="tex2html14820"
+  HREF="node690.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html14814"
+  HREF="node698.html">The gem omniauth-google-oauth2</A>
+ &nbsp; <B>  <A NAME="tex2html14822"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14824"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

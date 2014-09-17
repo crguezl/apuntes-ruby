@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Usando PATH_INFO y erubis para construir una aplicación (Noah Gibbs)</TITLE>
-<META NAME="description" CONTENT="Usando PATH_INFO y erubis para construir una aplicación (Noah Gibbs)">
+<TITLE>Introducción</TITLE>
+<META NAME="description" CONTENT="Introducción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node326.html">
 <LINK REL="previous" HREF="node324.html">
-<LINK REL="up" HREF="node319.html">
+<LINK REL="up" HREF="node324.html">
 <LINK REL="next" HREF="node326.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8528"
+<A NAME="tex2html8560"
   HREF="node326.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8522"
-  HREF="node319.html">
+<A NAME="tex2html8554"
+  HREF="node324.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8516"
+<A NAME="tex2html8548"
   HREF="node324.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8524"
-  HREF="node769.html">
+<A NAME="tex2html8556"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8526"
-  HREF="node772.html">
+<A NAME="tex2html8558"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,194 +96,176 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8529"
-  HREF="node326.html">HTTP</A>
-<B> Subir:</B> <A NAME="tex2html8523"
-  HREF="node319.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8517"
-  HREF="node324.html">Detectando el Proceso que</A>
- &nbsp; <B>  <A NAME="tex2html8525"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8527"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8561"
+  HREF="node326.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
+<B> Subir:</B> <A NAME="tex2html8555"
+  HREF="node324.html">Analizando env con pry-debugger</A>
+<B> Anterior:</B> <A NAME="tex2html8549"
+  HREF="node324.html">Analizando env con pry-debugger</A>
+ &nbsp; <B>  <A NAME="tex2html8557"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8559"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03140000000000000000">
-Usando <TT>PATH_INFO</TT> y <TT>erubis</TT> para construir una aplicación (Noah Gibbs)</A>
-</H1>
+<H2><A NAME="SECTION03121000000000000000">
+Introducción</A>
+</H2>
 
 <P>
-
-<H4><A NAME="SECTION03140010000000000000">
-config.ru</A>
-</H4>
-  
+Tenemos esta sencilla aplicación:
 
 <P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/hangout-framework(master)]$ cat config.ru 
-require "erubis"
+~/local/src/ruby/sinatra/rack/rack-debugging]$ cat hello.rb 
+require 'rack'
+require 'pry-debugger'
 
-use Rack::ContentType
-
-def output(text, options = {})
-  [ options[:status] || 200,
-    {}, [ text ].flatten ]
-end
-
-def from_erb(file, vars = {})
-  eruby = Erubis::Eruby.new File.read(file)
-  output eruby.result vars
-end
-
-run proc { |env|
-  path = env['PATH_INFO']
-  if path =~ %r{^/foo}
-    from_erb "template.html.erb"
-  else
-    output "Not found!", :status =&gt; 400
+class HelloWorld
+  def call env
+    binding.pry
+    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world"]]
   end
-}
+end
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION03140020000000000000">
-Template erb</A>
-</H4>
-  
-
-<P>
+Arrancamos un servidor:
 <PRE>
-[~/local/src/ruby/sinatra/rack/hangout-framework(master)]$ cat template.html.erb 
-&lt;p&gt; A template! &lt;/p&gt;
-&lt;% 10.times do -%&gt; &lt;p&gt; Pretty cool! &lt;/p&gt; &lt;% end -%&gt;
+[~/local/src/ruby/sinatra/rack/rack-debugging]$ pry
+[1] pry(main)&gt; require './hello'
+=&gt; true
+[6] pry(main)&gt; Rack::Handler::WEBrick.run HelloWorld.new
+[2013-09-23 12:36:21] INFO  WEBrick 1.3.1
+[2013-09-23 12:36:21] INFO  ruby 1.9.3 (2013-02-22) [x86_64-darwin11.4.2]
+[2013-09-23 12:36:21] INFO  WEBrick::HTTPServer#start: pid=9458 port=8080
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION03140030000000000000">
-Arrancando el Servidor</A>
-</H4>
-  
-
+En otra ventana arrancamos un cliente:
 <PRE>
-[~/local/src/ruby/sinatra/rack/hangout-framework(master)]$ rackup
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop}
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03140040000000000000">
-Ejecutando un cliente</A>
-</H4>
-  
-
-<PRE>
-[~/local/src/ruby/sinatra/rack/hangout-framework(master)]$ curl -v http://localhost:9292/foochazam
-* About to connect() to localhost port 9292 (#0)
-*   Trying ::1... Connection refused
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET /foochazam HTTP/1.1
+[~/local/src/ruby/sinatra/rack/rack-testing/bindaddress(master)]$ curl -v localhost:8080
+* About to connect() to localhost port 8080 (#0)
+*   Trying ::1... connected
+* Connected to localhost (::1) port 8080 (#0)
+&gt; GET / HTTP/1.1
 &gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
-&gt; Host: localhost:9292
+&gt; Host: localhost:8080
 &gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html
-&lt; Transfer-Encoding: chunked
-&lt; Connection: close
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-&lt;p&gt; A template! &lt;/p&gt;
- &lt;p&gt; Pretty cool! &lt;/p&gt;  &lt;p&gt; Pretty cool! &lt;/p&gt;  &lt;p&gt; Pretty cool! &lt;/p&gt;  
- &lt;p&gt; Pretty cool! &lt;/p&gt;  &lt;p&gt; Pretty cool! &lt;/p&gt;  &lt;p&gt; Pretty cool! &lt;/p&gt;  
- &lt;p&gt; Pretty cool! &lt;/p&gt;  &lt;p&gt; Pretty cool! &lt;/p&gt;  &lt;p&gt; Pretty cool! &lt;/p&gt;  
- &lt;p&gt; Pretty cool! &lt;/p&gt; 
-* Closing connection #0
+&gt;
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION03140050000000000000">
-Logs del servidor</A>
-</H4>
-  
-
-<P>
+En la ventana del servidor ahora aparece:
 <PRE>
-[~/local/src/ruby/sinatra/rack/hangout-framework(master)]$ rackup
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
- 127.0.0.1 - - [20/Oct/2013 12:22:37] "GET /foochazam HTTP/1.1" 200 - 0.0014
+From: /Users/casiano/local/src/ruby/sinatra/rack/rack-debugging/hello.rb @ line 6 HelloWorld#call:
+
+    5: def call env
+ =&gt; 6:   binding.pry
+    7:   [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world"]]
+    8: end
 </PRE>
-
-<P>
-
-<H4><A NAME="SECTION03140060000000000000">
-Véase</A>
-</H4>
-  
+Ahora podemos inspeccionar las variables:
+<PRE>
+[1] pry(#&lt;HelloWorld&gt;)&gt; env
+=&gt; {"GATEWAY_INTERFACE"=&gt;"CGI/1.1",
+ "PATH_INFO"=&gt;"/",
+ "QUERY_STRING"=&gt;"",
+ "REMOTE_ADDR"=&gt;"::1",
+ "REMOTE_HOST"=&gt;"localhost",
+ "REQUEST_METHOD"=&gt;"GET",
+ "REQUEST_URI"=&gt;"http://localhost:8080/",
+ "SCRIPT_NAME"=&gt;"",
+ "SERVER_NAME"=&gt;"localhost",
+ "SERVER_PORT"=&gt;"8080",
+ "SERVER_PROTOCOL"=&gt;"HTTP/1.1",
+ "SERVER_SOFTWARE"=&gt;"WEBrick/1.3.1 (Ruby/1.9.3/2013-02-22)",
+ "HTTP_USER_AGENT"=&gt;
+  "curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5",
+ "HTTP_HOST"=&gt;"localhost:8080",
+ "HTTP_ACCEPT"=&gt;"*/*",
+ "rack.version"=&gt;[1, 2],
+ "rack.input"=&gt;#&lt;StringIO:0x007fbba40263b0&gt;,
+ "rack.errors"=&gt;#&lt;IO:&lt;STDERR&gt;&gt;,
+ "rack.multithread"=&gt;true,
+ "rack.multiprocess"=&gt;false,
+ "rack.run_once"=&gt;false,
+ "rack.url_scheme"=&gt;"http",
+ "HTTP_VERSION"=&gt;"HTTP/1.1",
+ "REQUEST_PATH"=&gt;"/"}
+[2] pry(#&lt;HelloWorld&gt;)&gt;
+</PRE>
+Hay tres categorías de variables en <A NAME="13252"></A><SPAN  CLASS="textbf">env</SPAN>:
 
 <P>
 
 <OL>
-<LI><A NAME="tex2html713"
-  HREF="http://www.kuwata-lab.com/erubis/">erubis</A>
+<LI>Variables CGI
 </LI>
-<LI>Noah Gibbs <A NAME="tex2html714"
-  HREF="https://github.com/noahgibbs/hangout-framework">Demo Rack framework for March 6th, 2013 Ruby Hangout.</A>
+<LI>Variables específicas de Rack (empiezan por <code>rack.</code>)
 </LI>
-<LI><A NAME="tex2html715"
-  HREF="http://youtu.be/evDJMLb1d28">Ruby Hangout 3-13 Noah Gibbs</A>
+<LI>Un tercer tipo de variables son las de la aplicación y/o el servidor.
+En este ejemplo no aparecen
 </LI>
 </OL>
+Véase <A NAME="tex2html716"
+  HREF="http://rack.rubyforge.org/doc/SPEC.html">la especificación Rack</A>.
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+Le indicamos al servidor que continue:
+<PRE>
+[2] pry(#&lt;HelloWorld&gt;)&gt; co&lt;TABULADOR&gt;
+cohen-poem  continue    
+[2] pry(#&lt;HelloWorld&gt;)&gt; continue
+localhost - - [23/Sep/2013:12:36:48 WEST] "GET / HTTP/1.1" 200 11
+- -&gt; /
+</PRE>
+después de entregar la respuesta el servidor cierra la conexión HTTP. Esto es así porque
+HTTP es un protocolo sin estado, esto es, no se mantiene información de la conexión entre 
+transacciones.
+En la ventana del cliente obtenemos la siguiente salida:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-testing/bindaddress(master)]$ curl -v localhost:8080
+* About to connect() to localhost port 8080 (#0)
+*   Trying ::1... connected
+* Connected to localhost (::1) port 8080 (#0)
+&gt; GET / HTTP/1.1
+&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
+&gt; Host: localhost:8080
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK 
+&lt; Content-Type: text/plain
+&lt; Server: WEBrick/1.3.1 (Ruby/1.9.3/2013-02-22)
+&lt; Date: Mon, 23 Sep 2013 11:45:00 GMT
+&lt; Content-Length: 11
+&lt; Connection: Keep-Alive
+&lt; 
+* Connection #0 to host localhost left intact
+* Closing connection #0
+Hello world
+</PRE>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html8530"
-  HREF="node325.html#SECTION03140010000000000000">config.ru</A>
-<LI><A NAME="tex2html8531"
-  HREF="node325.html#SECTION03140020000000000000">Template erb</A>
-<LI><A NAME="tex2html8532"
-  HREF="node325.html#SECTION03140030000000000000">Arrancando el Servidor</A>
-<LI><A NAME="tex2html8533"
-  HREF="node325.html#SECTION03140040000000000000">Ejecutando un cliente</A>
-<LI><A NAME="tex2html8534"
-  HREF="node325.html#SECTION03140050000000000000">Logs del servidor</A>
-<LI><A NAME="tex2html8535"
-  HREF="node325.html#SECTION03140060000000000000">Véase</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8528"
+<A NAME="tex2html8560"
   HREF="node326.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8522"
-  HREF="node319.html">
+<A NAME="tex2html8554"
+  HREF="node324.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8516"
+<A NAME="tex2html8548"
   HREF="node324.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8524"
-  HREF="node769.html">
+<A NAME="tex2html8556"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8526"
-  HREF="node772.html">
+<A NAME="tex2html8558"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -338,20 +320,20 @@ Véase</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8529"
-  HREF="node326.html">HTTP</A>
-<B> Subir:</B> <A NAME="tex2html8523"
-  HREF="node319.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8517"
-  HREF="node324.html">Detectando el Proceso que</A>
- &nbsp; <B>  <A NAME="tex2html8525"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8527"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8561"
+  HREF="node326.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
+<B> Subir:</B> <A NAME="tex2html8555"
+  HREF="node324.html">Analizando env con pry-debugger</A>
+<B> Anterior:</B> <A NAME="tex2html8549"
+  HREF="node324.html">Analizando env con pry-debugger</A>
+ &nbsp; <B>  <A NAME="tex2html8557"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8559"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

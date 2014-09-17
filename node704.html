@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Modos de Uso</TITLE>
-<META NAME="description" CONTENT="Modos de Uso">
+<TITLE>Google+ Sign-In for server-side apps</TITLE>
+<META NAME="description" CONTENT="Google+ Sign-In for server-side apps">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node705.html">
 <LINK REL="previous" HREF="node703.html">
-<LINK REL="up" HREF="node702.html">
+<LINK REL="up" HREF="node690.html">
 <LINK REL="next" HREF="node705.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14857"
+<A NAME="tex2html14897"
   HREF="node705.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14851"
-  HREF="node702.html">
+<A NAME="tex2html14891"
+  HREF="node690.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14845"
+<A NAME="tex2html14885"
   HREF="node703.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14853"
-  HREF="node769.html">
+<A NAME="tex2html14893"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14855"
-  HREF="node772.html">
+<A NAME="tex2html14895"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,140 +96,68 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14858"
-  HREF="node705.html">Referencias</A>
-<B> Subir:</B> <A NAME="tex2html14852"
-  HREF="node702.html">SASS (Syntactically Awesome StyleSheets)</A>
-<B> Anterior:</B> <A NAME="tex2html14846"
-  HREF="node703.html">Introduccion</A>
- &nbsp; <B>  <A NAME="tex2html14854"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14856"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14898"
+  HREF="node705.html">Authentication using the Google</A>
+<B> Subir:</B> <A NAME="tex2html14892"
+  HREF="node690.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html14886"
+  HREF="node703.html">Google + API for</A>
+ &nbsp; <B>  <A NAME="tex2html14894"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14896"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION062220000000000000000">
-Modos de Uso</A>
+<H1><A NAME="SECTION0619110000000000000000">
+Google+ Sign-In for server-side apps</A>
 </H1>
-Sass can be used in three ways: 
+
+<P>
+To take advantage of all of the benefits of Google+ Sign-In you must
+use a hybrid server-side flow where a user authorizes your app on the
+client side using the JavaScript API client and you send a
+special one-time authorization code to your server. 
+
+<P>
+Your server exchanges this one-time-use code to acquire its own access and
+refresh tokens from Google for the server to be able to make its own API
+calls, which can be done while the user is offline. 
+
+<P>
+This one-time code flow has security advantages over both a pure
+server-side flow and over sending access tokens to your server.
 
 <P>
 
-<OL>
-<LI>as a command-line tool,
-</LI>
-<LI>as a
-standalone Ruby module,
-</LI>
-<LI>and as a plugin for any Rack-enabled
-framework, including Ruby on Rails and Sinatra. i
-</LI>
-</OL>
-The first step for all
-of these is to install the Sass gem:
+<FONT COLOR="#ff0000"> The Google+ Sign-In server-side flow differs from the  <A NAME="tex2html1657"
+  HREF="http://oauth.net/">OAuth</A>
+ 2.0
+for Web server applications flow.</FONT>
 
 <P>
-<PRE>
-gem install sass
-</PRE>
 
-<P>
-To run Sass from the command line, just use
-
-<P>
-<PRE>
-sass input.scss output.css
-</PRE>
-You can also tell Sass to watch the file and update the CSS every time the Sass file changes:
-
-<P>
-<PRE>
-sass --watch input.scss:output.css
-</PRE>
-If you have a directory with many Sass files, you can also tell Sass to watch the entire directory:
-
-<P>
-<PRE>
-sass --watch app/sass:public/stylesheets
-</PRE>
-Use <code>sass --help</code> for full documentation.
-<PRE>
-[~/sinatra/sinatra-tictactoe/sinatra-tictactoe-ajax(master)]$ sass --help
-Usage: sass [options] [INPUT] [OUTPUT]
-
-Description:
-  Converts SCSS or Sass files to CSS.
-
-Options:
-    -s, --stdin                      Read input from standard input instead of an input file
-        --trace                      Show a full traceback on error
-        --unix-newlines              Use Unix-style newlines in written files.
-        --scss                       Use the CSS-superset SCSS syntax.
-        --watch                      Watch files or directories for changes.
-                                     The location of the generated CSS can be set using a colon:
-                                       sass --watch input.sass:output.css
-                                       sass --watch input-dir:output-dir
-        --update                     Compile files or directories to CSS.
-                                     Locations are set like --watch.
-        --stop-on-error              If a file fails to compile, exit immediately.
-                                     Only meaningful for --watch and --update.
-        --poll                       Check for file changes manually, rather than relying on the OS.
-                                     Only meaningful for --watch.
-    -f, --force                      Recompile all Sass files, even if the CSS file is newer.
-                                     Only meaningful for --update.
-    -c, --check                      Just check syntax, don't evaluate.
-    -t, --style NAME                 Output style. Can be nested (default), compact, compressed, or expanded.
-        --precision NUMBER_OF_DIGITS How many digits of precision to use when outputting decimal numbers. Defaults to 3.
-    -q, --quiet                      Silence warnings and status messages during compilation.
-        --compass                    Make Compass imports available and load project configuration.
-    -g, --debug-info                 Emit extra information in the generated CSS that can be used by the FireSass Firebug plugin.
-    -l, --line-numbers               Emit comments in the generated CSS indicating the corresponding source line.
-        --line-comments
-    -i, --interactive                Run an interactive SassScript shell.
-    -I, --load-path PATH             Add a sass import path.
-    -r, --require LIB                Require a Ruby library before running Sass.
-        --cache-location PATH        The path to put cached Sass files. Defaults to .sass-cache.
-    -C, --no-cache                   Don't cache to sassc files.
-    -E encoding                      Specify the default encoding for Sass files.
-    -?, -h, --help                   Show this message
-    -v, --version                    Print version
-</PRE>
-
-<P>
-Using Sass in Ruby code is very simple. After installing the Sass
-gem, you can use it by running <code>require "sass"</code> 
-and using <A NAME="tex2html1652"
-  HREF="http://sass-lang.com/documentation/Sass/Engine.html"><TT>Saas::Engine</TT></A>
-like so:
-
-<P>
-<PRE>
-template = File.load('stylesheets/sassy.sass')
-sass_engine = Sass::Engine.new(template)
-output = sass_engine.render
-puts output
-</PRE>
+<img src="server_side_code_flow.png" />
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14857"
+<A NAME="tex2html14897"
   HREF="node705.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14851"
-  HREF="node702.html">
+<A NAME="tex2html14891"
+  HREF="node690.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14845"
+<A NAME="tex2html14885"
   HREF="node703.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14853"
-  HREF="node769.html">
+<A NAME="tex2html14893"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14855"
-  HREF="node772.html">
+<A NAME="tex2html14895"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -284,20 +212,20 @@ puts output
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14858"
-  HREF="node705.html">Referencias</A>
-<B> Subir:</B> <A NAME="tex2html14852"
-  HREF="node702.html">SASS (Syntactically Awesome StyleSheets)</A>
-<B> Anterior:</B> <A NAME="tex2html14846"
-  HREF="node703.html">Introduccion</A>
- &nbsp; <B>  <A NAME="tex2html14854"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14856"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14898"
+  HREF="node705.html">Authentication using the Google</A>
+<B> Subir:</B> <A NAME="tex2html14892"
+  HREF="node690.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html14886"
+  HREF="node703.html">Google + API for</A>
+ &nbsp; <B>  <A NAME="tex2html14894"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14896"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

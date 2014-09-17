@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Módulos Espacio de Nombres Incluíbles</TITLE>
-<META NAME="description" CONTENT="Módulos Espacio de Nombres Incluíbles">
+<TITLE>Los Módulos como Espacios de Nombres</TITLE>
+<META NAME="description" CONTENT="Los Módulos como Espacios de Nombres">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node204.html">
 <LINK REL="previous" HREF="node202.html">
-<LINK REL="up" HREF="node199.html">
+<LINK REL="up" HREF="node202.html">
 <LINK REL="next" HREF="node204.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6269"
+<A NAME="tex2html6292"
   HREF="node204.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6263"
-  HREF="node199.html">
+<A NAME="tex2html6286"
+  HREF="node202.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6259"
+<A NAME="tex2html6280"
   HREF="node202.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6265"
-  HREF="node769.html">
+<A NAME="tex2html6288"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6267"
-  HREF="node772.html">
+<A NAME="tex2html6290"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,105 +96,270 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6270"
-  HREF="node204.html">Prepend</A>
-<B> Subir:</B> <A NAME="tex2html6264"
-  HREF="node199.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6260"
-  HREF="node202.html">Ejemplo</A>
- &nbsp; <B>  <A NAME="tex2html6266"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6268"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6293"
+  HREF="node204.html">Los Módulos como Mixins</A>
+<B> Subir:</B> <A NAME="tex2html6287"
+  HREF="node202.html">Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6281"
+  HREF="node202.html">Módulos</A>
+ &nbsp; <B>  <A NAME="tex2html6289"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6291"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02774000000000000000"></A>
-<A NAME="subsection:modulosespaciodenombresincluibles"></A>
-<BR>
-Módulos Espacio de Nombres Incluíbles
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html6294"
+  HREF="node203.html#SECTION02771100000000000000">Ejemplo Simple</A>
+<LI><A NAME="tex2html6295"
+  HREF="node203.html#SECTION02771200000000000000">Ejemplo: Codificar y Decodificar Datos Usando Base64</A>
+<LI><A NAME="tex2html6296"
+  HREF="node203.html#SECTION02771300000000000000">Espacios de Nombres Anidados</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02771000000000000000">
+Los Módulos como Espacios de Nombres</A>
 </H2>
+  Al definir un módulo se crea una constante con el mismo nombre del módulo.
+  El valor de dicha constante es el objeto <code>Module</code> que representa al módulo.
+
+<P>
+
+<H3><A NAME="SECTION02771100000000000000">
+Ejemplo Simple</A>
+</H3>
+
+<P>
+<BLOCKQUOTE>
+Say you write a set of the trigonometry functions <code>sin</code>, cos,
+and so on. You stuff them all into a file, <code>trig.rb</code>, for
+future generations to enjoy. Meanwhile, Sally is working on a
+simulation of good and evil, and she codes a set of her own useful
+routines, including <code>be_good</code> and <code>sin</code>, and sticks them
+into <code>moral.rb</code>. Joe, who wants to write a program to find out
+how many angels can dance on the head of a pin, needs to load both
+<code>trig.rb</code> and <code>moral.rb</code> into his program. But both define
+a method called <code>sin</code>. Bad news.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>The answer is the module mechanism. Modules define a namespace, a
+sandbox in which your methods and constants can play without having
+to worry about being stepped on by other methods and constants. The
+trig functions can go into one module:
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>
+<DIV ALIGN="RIGHT">Dave Thomas
+</BLOCKQUOTE>
+<P>
+
+<P>
 <PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ irb
-ruby-1.9.2-head :001 &gt; Math.sin(Math::PI/2)
- =&gt; 1.0 
-ruby-1.9.2-head :002 &gt; include Math
- =&gt; Object 
-ruby-1.9.2-head :003 &gt; sin(PI/2)
- =&gt; 1.0
+module Trig
+  PI = 3.141592654
+  def Trig.sin(x)
+   # ..
+  end
+  def Trig.cos(x)
+   # ..
+  end
+end
 </PRE>
 
-<UL>
-<LI>Para crear un módulo que funcione como <A NAME="7721"></A><SPAN  CLASS="textbf">Math</SPAN> define
-tus métodos como métodos de instancia dentro del módulo
+<P>
+<PRE>
+# Sample code from Programing Ruby, page 111
+module Moral
+  VERY_BAD = 0
+  BAD      = 1
+  def Moral.sin(badness)
+    # ...
+  end
+end
+</PRE>
+If a third program wants to use these modules, it can simply load
+the two files (using the Ruby require statement. In order to reference
+the name sin unambiguously, our code can then qualify the name using
+the name of the module containing the implementation we want,
+followed by <code>::</code>, the scope resolution operator:
+
+<P>
+<PRE>
+$: &lt;&lt; '.'
+require 'trig'
+require 'moral'
+
+y = Trig.sin(Trig::PI/4)
+wrongdoing = Moral.sin(Moral::VERY_BAD)
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02771200000000000000">
+Ejemplo: Codificar y Decodificar Datos Usando Base64</A>
+</H3>
+Supongamos que estamos un método para codificar y decodificar datos
+binarios utilizando la codificación <code>Base64</code>. Puesto que <code>encode</code> y <code>decode</code>
+son dos nombres muy comunes, 
+para preveer colisiones de nombres definimos nuestros dos métodos
+dentro de un módulo:
+
+<P>
+<PRE>
+casiano@exthost:~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules$ cat -n base64_mod_self.rb
+     1   module Base64
+     2    
+     3   puts self  # Base64
+     4  
+     5   DIGITS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+     6            'abcdefghijklmnopqrstuvwxyz' +
+     7            '0123456789+/'
+     8    @x = "hello"
+     9            
+    10    def self.encode
+    11       "self.encode #@x"
+    12    end 
+    13  
+    14    def self.decode
+    15      "self.decode #@x"
+    16    end 
+    17  end
+    18  if $0 == __FILE__
+    19    puts Base64::DIGITS
+    20    puts Base64.encode
+    21    puts Base64.decode
+    22  end
+</PRE>
+
+<P>
+
+<OL>
+<LI>Note that we define our methods with a <code>self.prefix</code>, which makes them 
+“class methods” of the module. 
 </LI>
-<LI>Usa la función <code>module_function</code>, un método de instancia privado
-de <code>Module</code> para convertir en <A NAME="7723"></A><SPAN  CLASS="textbf">module functions</SPAN> a los métodos
-cuyos nombres le pases como argumentos
+<LI>Outside the <code>Base64</code> module, this constant can be referred to
+as <code>Base64::DIGITS</code>. 
 </LI>
-<LI>El resultado de llamar a <A NAME="7725"></A><SPAN  CLASS="textbf">module_function</SPAN> es que: 
+<LI>Inside the module, our encode and decode
+methods can refer to it by its simple name <code>DIGITS</code>. 
+</LI>
+<LI>If the
+two methods had some need to share nonconstant data, they could use
+a class variable (with a <code>@@</code> prefix), just as they could if
+they were defined in a class.
+</LI>
+</OL>
+
+<P>
+<PRE>
+[~/local/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules]$ cat client.rb 
+require 'base64_mod_self'
+
+class A
+  def self.tutu
+    Base64::encode
+  end
+end
+
+if $0 == __FILE__
+  puts A.tutu
+  puts Base64::DIGITS
+end
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules]$ ruby -I. client.rb 
+Base64
+self.encode hello
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02771300000000000000">
+Espacios de Nombres Anidados</A>
+</H3>
 
 <UL>
-<LI>construye métodos
-de clase equivalentes para cada uno de los métodos de instancia especificados
+<LI>Los módulos y las clases pueden anidarse creando espacios de nombres anidados.
+
+<P>
 </LI>
-<LI>Hace privados a los métodos de instancia implicados
-</LI>
-</UL>
+<LI>Una clase o módulo anidado dentro de otro no tiene acceso especial al módulo o clase en la que se anida.
 </LI>
 </UL>
 
 <P>
 <PRE>
-~/srcLPP/Chapter7ClassesAndModules/modules]$ cat module_function.rb 
-module SpaceOdissey
+module Base64
+  DIGITS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
-  THE_UNIVERSE = 1
-
-  def tutu
-    "inside tutu"
+  class Encoder
+    def encode
+    end
   end
 
-  module_function :tutu
+  class Decoder
+    def decode
+    end
+  end
+
+  # A utility function for use by both classes
+  def Base64.helper
+  end
 end
-
-puts SpaceOdissey::THE_UNIVERSE
-puts SpaceOdissey::tutu
-
-include SpaceOdissey
-puts THE_UNIVERSE
-puts tutu
 </PRE>
-Ejecución:
-<PRE>
-[~/srcLPP/Chapter7ClassesAndModules/modules]$ ruby module_function.rb 
-1
-inside tutu
-1
-inside tutu
-</PRE>
-Cuando se define una función-módulo se debe evitar hacer uso de <code>self</code>
-ya que el valor de <code>self</code> hará que dependa de como es invocada.
+
+<OL>
+<LI>Tenemos dos clases: <code>Base64::encoder</code> y <code>Base64::Decoder</code>.
+Dentro del módulo las clases pueden referirse la una a la otra y a la constante <code>DIGITS</code> por
+sus nombres simples, sin cualificar.
+
+<P>
+</LI>
+<LI>Sin embargo, para llamar a <code>Base64.helper</code> deben referirse a él por
+su nombre completo: <code>Base64.helper</code>.
+
+<P>
+</LI>
+<LI>Las clases pueden también anidarse.
+Anidar una clase dentro de otra no le da a la clase ningún privilegio especial de acceso a los 
+métodos y variables en la clase mas externa.
+Su único efecto es en el espacio de nombres de la clase interna.
+
+<P>
+</LI>
+<LI>Cuando escribimos una gema es conveniente anidar las clases y módulos - especialmente aquellas clases
+que no forman parte de la API pública -
+para no contaminar los espacios de nombres públicos.
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6269"
+<A NAME="tex2html6292"
   HREF="node204.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6263"
-  HREF="node199.html">
+<A NAME="tex2html6286"
+  HREF="node202.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6259"
+<A NAME="tex2html6280"
   HREF="node202.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6265"
-  HREF="node769.html">
+<A NAME="tex2html6288"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6267"
-  HREF="node772.html">
+<A NAME="tex2html6290"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -248,20 +414,20 @@ ya que el valor de <code>self</code> hará que dependa de como es invocada.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6270"
-  HREF="node204.html">Prepend</A>
-<B> Subir:</B> <A NAME="tex2html6264"
-  HREF="node199.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6260"
-  HREF="node202.html">Ejemplo</A>
- &nbsp; <B>  <A NAME="tex2html6266"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6268"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6293"
+  HREF="node204.html">Los Módulos como Mixins</A>
+<B> Subir:</B> <A NAME="tex2html6287"
+  HREF="node202.html">Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6281"
+  HREF="node202.html">Módulos</A>
+ &nbsp; <B>  <A NAME="tex2html6289"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6291"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

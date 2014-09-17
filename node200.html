@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Los Módulos como Espacios de Nombres</TITLE>
-<META NAME="description" CONTENT="Los Módulos como Espacios de Nombres">
+<TITLE>Métodos y Clases: Construyendo un Iterador</TITLE>
+<META NAME="description" CONTENT="Métodos y Clases: Construyendo un Iterador">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node201.html">
-<LINK REL="previous" HREF="node199.html">
-<LINK REL="up" HREF="node199.html">
+<LINK REL="previous" HREF="node195.html">
+<LINK REL="up" HREF="node160.html">
 <LINK REL="next" HREF="node201.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6222"
+<A NAME="tex2html6239"
   HREF="node201.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6216"
-  HREF="node199.html">
+<A NAME="tex2html6233"
+  HREF="node160.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6210"
+<A NAME="tex2html6227"
   HREF="node199.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6218"
-  HREF="node769.html">
+<A NAME="tex2html6235"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6220"
-  HREF="node772.html">
+<A NAME="tex2html6237"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,338 +96,148 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6223"
-  HREF="node201.html">Los Módulos como Mixins</A>
-<B> Subir:</B> <A NAME="tex2html6217"
-  HREF="node199.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6211"
-  HREF="node199.html">Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6219"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6221"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6240"
+  HREF="node201.html">Práctica: Conjuntos</A>
+<B> Subir:</B> <A NAME="tex2html6234"
+  HREF="node160.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6228"
+  HREF="node199.html">Limitando el Número de</A>
+ &nbsp; <B>  <A NAME="tex2html6236"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6238"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6224"
-  HREF="node200.html#SECTION02771100000000000000">Ejemplo Simple</A>
-<LI><A NAME="tex2html6225"
-  HREF="node200.html#SECTION02771200000000000000">Ejemplo: Codificar y Decodificar Datos Usando Base64</A>
-<LI><A NAME="tex2html6226"
-  HREF="node200.html#SECTION02771300000000000000">Espacios de Nombres Anidados</A>
-</UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02771000000000000000">
-Los Módulos como Espacios de Nombres</A>
-</H2>
-  Al definir un módulo se crea una constante con el mismo nombre del módulo.
-  El valor de dicha constante es el objeto <code>Module</code> que representa al módulo.
-
-<P>
-
-<H3><A NAME="SECTION02771100000000000000">
-Ejemplo Simple</A>
-</H3>
-
-<P>
-<BLOCKQUOTE>
-Say you write a set of the trigonometry functions <code>sin</code>, cos,
-and so on. You stuff them all into a file, <code>trig.rb</code>, for
-future generations to enjoy. Meanwhile, Sally is working on a
-simulation of good and evil, and she codes a set of her own useful
-routines, including <code>be_good</code> and <code>sin</code>, and sticks them
-into <code>moral.rb</code>. Joe, who wants to write a program to find out
-how many angels can dance on the head of a pin, needs to load both
-<code>trig.rb</code> and <code>moral.rb</code> into his program. But both define
-a method called <code>sin</code>. Bad news.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>The answer is the module mechanism. Modules define a namespace, a
-sandbox in which your methods and constants can play without having
-to worry about being stepped on by other methods and constants. The
-trig functions can go into one module:
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>
-<DIV ALIGN="RIGHT">Dave Thomas
-</BLOCKQUOTE>
-<P>
+<H1><A NAME="SECTION02750000000000000000">
+Métodos y Clases: Construyendo un Iterador</A>
+</H1>
 
 <P>
 <PRE>
-module Trig
-  PI = 3.141592654
-  def Trig.sin(x)
-   # ..
-  end
-  def Trig.cos(x)
-   # ..
-  end
-end
+lpp@nereida:~/src/rubytesting/TheRubyProgrammingLanguage$ cat -n useSequence.rb 
+     1  #!/usr/bin/env ruby
+     2  require "Sequence.rb"
+     3
+     4  a = Sequence.new(1,10,2)
+     5  a.each { |x| print x,"\n" }
+     6
+     7  puts "Length = #{a.length}"
+     8  puts "Size = #{a.size}"
+     9
+    10  (0..(a.size-1)).each { |i|
+    11    puts "a[#{i}] = '#{a[i]}'"
+    12  }
+    13
+    14  puts ""
+    15
+    16  b = a * 2
+    17  b.each { |x| print x,"\n" }
+    18
+    19  puts ""
+    20
+    21  b = a + 2
+    22  b.each { |x| print x,"\n" }
 </PRE>
 
 <P>
 <PRE>
-# Sample code from Programing Ruby, page 111
-module Moral
-  VERY_BAD = 0
-  BAD      = 1
-  def Moral.sin(badness)
-    # ...
-  end
-end
-</PRE>
-If a third program wants to use these modules, it can simply load
-the two files (using the Ruby require statement. In order to reference
-the name sin unambiguously, our code can then qualify the name using
-the name of the module containing the implementation we want,
-followed by <code>::</code>, the scope resolution operator:
+lpp@nereida:~/src/rubytesting/TheRubyProgrammingLanguage$ ./useSequence.rb 
+1
+3
+5
+7
+9
+Length = 5
+Size = 5
+a[0] = '1'
+a[1] = '3'
+a[2] = '5'
+a[3] = '7'
+a[4] = '9'
 
-<P>
-<PRE>
-$: &lt;&lt; '.'
-require 'trig'
-require 'moral'
+2
+6
+10
+14
+18
 
-y = Trig.sin(Trig::PI/4)
-wrongdoing = Moral.sin(Moral::VERY_BAD)
-</PRE>
-
-<P>
-
-<H3><A NAME="SECTION02771200000000000000">
-Ejemplo: Codificar y Decodificar Datos Usando Base64</A>
-</H3>
-Supongamos que estamos un método para codificar y decodificar datos
-binarios utilizando la codificación <code>Base64</code>. Puesto que <code>encode</code> y <code>decode</code>
-son dos nombres muy comunes, 
-para preveer colisiones de nombres definimos nuestros dos métodos
-dentro de un módulo:
-
-<P>
-<PRE>
-casiano@exthost:~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules$ cat -n base64_mod_self.rb
-     1   module Base64
-     2    
-     3   puts self  # Base64
-     4  
-     5   DIGITS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-     6            'abcdefghijklmnopqrstuvwxyz' +
-     7            '0123456789+/'
-     8    @x = "hello"
-     9            
-    10    def self.encode
-    11       "self.encode #@x"
-    12    end 
-    13  
-    14    def self.decode
-    15      "self.decode #@x"
-    16    end 
-    17  end
-    18  if $0 == __FILE__
-    19    puts Base64::DIGITS
-    20    puts Base64.encode
-    21    puts Base64.decode
-    22  end
-</PRE>
-
-<P>
-
-<OL>
-<LI>Note that we define our methods with a <code>self.prefix</code>, which makes them 
-“class methods” of the module. 
-</LI>
-<LI>Outside the <code>Base64</code> module, this constant can be referred to
-as <code>Base64::DIGITS</code>. 
-</LI>
-<LI>Inside the module, our encode and decode
-methods can refer to it by its simple name <code>DIGITS</code>. 
-</LI>
-<LI>If the
-two methods had some need to share nonconstant data, they could use
-a class variable (with a <code>@@</code> prefix), just as they could if
-they were defined in a class.
-</LI>
-</OL>
-
-<P>
-<PRE>
-[~/local/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules]$ cat client.rb 
-require 'base64_mod_self'
-
-class A
-  def self.tutu
-    Base64::encode
-  end
-end
-
-if $0 == __FILE__
-  puts A.tutu
-  puts Base64::DIGITS
-end
+3
+5
+7
+9
+11
 </PRE>
 
 <P>
 <PRE>
-[~/local/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules]$ ruby -I. client.rb 
-Base64
-self.encode hello
-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
+lpp@nereida:~/src/rubytesting/TheRubyProgrammingLanguage$ cat -n Sequence.rb 
+     1  # The Ruby programming Language Flanagan &amp; Matsumoto
+     2  # page 8
+     3  class Sequence
+     4    include Enumerable
+     5    def initialize(from, to, by)
+     6      @from, @to, @by = from, to, by
+     7    end
+     8
+     9    def each
+    10      x = @from
+    11      while x &lt;= @to
+    12        yield x                                                                                       
+    13        x +=@by
+    14      end                                                                                                             
+    15    end
+    16                                                                                                                              
+    17    def length
+    18      return 0 if @from &gt; @to                                                                                                             
+    19      Integer((@to-@from)/@by)+1                                                                                                          
+    20    end
+    21                                                                                                                                                    
+    22    alias size length
+    23
+    24    # override the array-access operator to give random access to the sequence                                                                               
+    25
+    26    def [](index)                                                                                                                                              
+    27      return nil if index &lt; 0
+    28      v = @from+index*@by
+    29      return v if v &lt;= @to
+    30      return nil
+    31    end
+    32
+    33    def *(factor) 
+    34      Sequence.new(@from*factor, @to*factor, @by*factor)
+    35    end
+    36
+    37    def +(offset) 
+    38      Sequence.new(@from+offset, @to+offset, @by)
+    39    end
+    40  end
 </PRE>
 
 <P>
-
-<H3><A NAME="SECTION02771300000000000000">
-Espacios de Nombres Anidados</A>
-</H3>
 
 <UL>
-<LI>Los módulos y las clases pueden anidarse creando espacios de nombres anidados.
-
-<P>
+<LI><A NAME="tex2html385"
+  HREF="http://www.ruby-doc.org/core/classes/Enumerable.html">The Enumerable Module</A>
 </LI>
-<LI>Una clase o módulo anidado dentro de otro no tiene acceso especial al módulo o clase en la que se anida.
+<LI><A NAME="tex2html386"
+  HREF="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_modules.html">Modules: Programming Ruby
+The Pragmatic Programmer's Guide</A>
+</LI>
+<LI>Vea la sección <A NAME="tex2html387"
+  HREF="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_containers.html">Containers, Blocks, and Iterators</A>
+</LI>
+<LI><A NAME="tex2html388"
+  HREF="http://ruby.about.com/od/rubyfeatures/a/aliasing.htm">alias</A>
 </LI>
 </UL>
 
 <P>
-<PRE>
-module Base64
-  DIGITS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-
-  class Encoder
-    def encode
-    end
-  end
-
-  class Decoder
-    def decode
-    end
-  end
-
-  # A utility function for use by both classes
-  def Base64.helper
-  end
-end
-</PRE>
-
-<OL>
-<LI>Tenemos dos clases: <code>Base64::encoder</code> y <code>Base64::Decoder</code>.
-Dentro del módulo las clases pueden referirse la una a la otra y a la constante <code>DIGITS</code> por
-sus nombres simples, sin cualificar.
-
-<P>
-</LI>
-<LI>Sin embargo, para llamar a <code>Base64.helper</code> deben referirse a él por
-su nombre completo: <code>Base64.helper</code>.
-
-<P>
-</LI>
-<LI>Las clases pueden también anidarse.
-Anidar una clase dentro de otra no le da a la clase ningún privilegio especial de acceso a los 
-métodos y variables en la clase mas externa.
-Su único efecto es en el espacio de nombres de la clase interna.
-
-<P>
-</LI>
-<LI>Cuando escribimos una gema es conveniente anidar las clases y módulos - especialmente aquellas clases
-que no forman parte de la API pública -
-para no contaminar los espacios de nombres públicos.
-</LI>
-</OL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html6222"
-  HREF="node201.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6216"
-  HREF="node199.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6210"
-  HREF="node199.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6218"
-  HREF="node769.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6220"
-  HREF="node772.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="logoLPP.png"
- ALT="LPP"></A><A NAME="tex2html30"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html31"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html32"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html33"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html34"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html35"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html36"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html37"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html39"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html6223"
-  HREF="node201.html">Los Módulos como Mixins</A>
-<B> Subir:</B> <A NAME="tex2html6217"
-  HREF="node199.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6211"
-  HREF="node199.html">Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6219"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6221"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

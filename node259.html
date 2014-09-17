@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Lenguaje de Dominio Específico para Describir Recetas de Cocina</TITLE>
-<META NAME="description" CONTENT="Un Lenguaje de Dominio Específico para Describir Recetas de Cocina">
+<TITLE>Definiendo Métodos con define_methods</TITLE>
+<META NAME="description" CONTENT="Definiendo Métodos con define_methods">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node260.html">
 <LINK REL="previous" HREF="node258.html">
-<LINK REL="up" HREF="node258.html">
+<LINK REL="up" HREF="node257.html">
 <LINK REL="next" HREF="node260.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7184"
+<A NAME="tex2html7193"
   HREF="node260.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7178"
-  HREF="node258.html">
+<A NAME="tex2html7187"
+  HREF="node257.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7172"
+<A NAME="tex2html7183"
   HREF="node258.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7180"
-  HREF="node769.html">
+<A NAME="tex2html7189"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7182"
-  HREF="node772.html">
+<A NAME="tex2html7191"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,289 +95,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7185"
-  HREF="node260.html">Un DSL para Procesar</A>
-<B> Subir:</B> <A NAME="tex2html7179"
-  HREF="node258.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7173"
-  HREF="node258.html">Lenguajes de Dominio Específico.</A>
- &nbsp; <B>  <A NAME="tex2html7181"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7183"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7194"
+  HREF="node260.html">Encadenamiento de Alias</A>
+<B> Subir:</B> <A NAME="tex2html7188"
+  HREF="node257.html">Creando Métodos Dinámicamente</A>
+<B> Anterior:</B> <A NAME="tex2html7184"
+  HREF="node258.html">Definiendo Métodos con class_eval</A>
+ &nbsp; <B>  <A NAME="tex2html7190"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7192"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION028121000000000000000"></A>
-<A NAME="subsection:instanceeval"></A>
-<BR>
-Un Lenguaje de Dominio Específico para Describir Recetas de Cocina
+<H2><A NAME="SECTION028102000000000000000">
+Definiendo Métodos con <TT>define_methods</TT></A>
 </H2>
 
 <P>
-Supongamos que queremos crear una Clase <code>Recipe</code> cuyo constructor entienda 
-un  Lenguaje de Dominio Específico (Domain Specific Language, DSL) para describir recetas
-de cocina.
-Queremos que sea posible especificar con facilidad  los ingredientes y los
-pasos de la forma mas simple posible.
-La API debería ser parecida a esta:
-
-<P>
-<PRE>
-puts Recipe.new("Noodles and Cheese") {
-  ingredient "Water",   amount =&gt; "2 cups"
-  ingredient "Noodles", amount =&gt; "1 cup"
-  ingredient "Cheese",  amount =&gt; "1/2 cup"
-
-  step "Heat water to boiling.",        during =&gt; "5 minutes"
-  step "Add noodles to boiling water.", during =&gt; "6 minutes"
-  step "Drain water."
-  step "Mix cheese in with noodles."
-}
-</PRE>
-
-<P>
-y el resultado de ejecutar el código anterior debería ser similar a este:
-
-<P>
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ ruby recipes.rb 
-Noodles and Cheese
-==================
-
-Ingredients: Water (2 cups), Noodles (1 cup), Cheese (1/2 cup)
-
-1) Heat water to boiling. (5 minutes)
-2) Add noodles to boiling water. (6 minutes)
-3) Drain water.
-4) Mix cheese in with noodles.
-</PRE>
-
-<P>
-Como se ve en el ejemplo de uso, el constructor de la clase recibe un bloque que describe la receta.
-Una solución es usar <code>yield</code> para llamar al bloque:
-
-<P>
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ cat -n recipes2.rb 
-     1  class Recipe2
-     2    attr_accessor :name, :ingredients, :instructions
-     3  
-     4    def initialize(name)
-     5      self.name = name
-     6      self.ingredients = []
-     7      self.instructions = []
-     8  
-     9      yield self
-    10    end
-    11  
-    12    def to_s
-    13      output = name
-    14      output &lt;&lt; "\n#{'=' * name.size}\n\n"
-    15      output &lt;&lt; "Ingredients: #{ingredients.join(', ')}\n\n"
-    16  
-    17      instructions.each_with_index do |instruction, index|
-    18        output &lt;&lt; "#{index + 1}) #{instruction}\n"
-    19      end
-    20  
-    21      output
-    22    end
-    23  
-    24    def ingredient(name, options = {})
-    25      ingredient = name
-    26      ingredient &lt;&lt; " (#{options[:amount]})" if options[:amount]
-    27  
-    28      ingredients &lt;&lt; ingredient
-    29    end
-    30  
-    31    def step(text, options = {})
-    32      instruction = text
-    33      instruction &lt;&lt; " (#{options[:during]})" if options[:during]
-    34  
-    35      instructions &lt;&lt; instruction
-    36    end
-    37  end
-</PRE>
-Los métodos <code>ingredient</code> y <code>step</code> nos ayudan en el proceso de construcción de la cadena
-de presentación.
-
-<P>
-Sin embargo, esta solución no es satisfactoria, ya que debemos pasar 
-al bloque de definición el objeto receta que esta siendo construido:
-<PRE>
-    39  noodles_and_cheese = Recipe2.new("Noodles and Cheese") do |r|
-    40    r.ingredient "Water",   :amount =&gt; "2 cups"
-    41    r.ingredient "Noodles", :amount =&gt; "1 cup"
-    42    r.ingredient "Cheese",  :amount =&gt; "1/2 cup"
-    43  
-    44    r.step "Heat water to boiling.",        :during =&gt; "5 minutes"
-    45    r.step "Add noodles to boiling water.", :during =&gt; "6 minutes"
-    46    r.step "Drain water."
-    47    r.step "Mix cheese in with noodles."
-    48  end
-    49  
-    50  puts noodles_and_cheese
-</PRE>
-Peor aún, debemos repetir constantemente el objeto <code>r.ingredient</code>
-y <code>r.step</code>.
-Sabemos que <A NAME="10013"></A><A NAME="tex2html523"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
-evalúa el bloque que se le pasa en el contexto del objeto
-en el que es llamado (<code>self</code> en la línea 9 abajo):
-
-<P>
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ cat -n recipes.rb 
-     1  class Recipe
-     2    attr_accessor :name, :ingredients, :instructions
-     3  
-     4    def initialize(name, &amp;block)
-     5      self.name = name
-     6      self.ingredients = []
-     7      self.instructions = []
-     8  
-     9      instance_eval &amp;block
-    10    end
-    11  
-    12    def to_s
-    13      output = &lt;&lt;"EORECIPE"
-    14  #{name}
-    15  #{'=' * name.size}
-    16  
-    17  Ingredients: #{ingredients.join(', ')}
-    18  
-    19  #{
-    20      out = ""
-    21      instructions.each_with_index do |instruction, index|
-    22        out &lt;&lt; "#{index + 1}) #{instruction}\n"
-    23      end
-    24      out
-    25  }
-    26  EORECIPE
-    27    end
-    28  
-    29    def ingredient(name, options = {})
-    30      ingredient = name
-    31      ingredient &lt;&lt; " (#{options[:amount]})" if options[:amount]
-    32  
-    33      ingredients &lt;&lt; ingredient
-    34    end
-    35  
-    36    def step(text, options = {})
-    37      instruction = text
-    38      instruction &lt;&lt; " (#{options[:for]})" if options[:for]
-    39  
-    40      instructions &lt;&lt; instruction
-    41    end
-    42  
-    43    def amount 
-    44     :amount 
-    45    end
-    46  
-    47    def during 
-    48     :for
-    49    end
-    50  end
-    51  
-    52  puts Recipe.new("Noodles and Cheese") {
-    53    ingredient "Water",   amount =&gt; "2 cups"
-    54    ingredient "Noodles", amount =&gt; "1 cup"
-    55    ingredient "Cheese",  amount =&gt; "1/2 cup"
-    56  
-    57    step "Heat water to boiling.",        during =&gt; "5 minutes"
-    58    step "Add noodles to boiling water.", during =&gt; "6 minutes"
-    59    step "Drain water."
-    60    step "Mix cheese in with noodles."
-    61  }
-</PRE>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html7184"
-  HREF="node260.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7178"
-  HREF="node258.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7172"
-  HREF="node258.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7180"
-  HREF="node769.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7182"
-  HREF="node772.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="logoLPP.png"
- ALT="LPP"></A><A NAME="tex2html30"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html31"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html32"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html33"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html34"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html35"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html36"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html37"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html39"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html7185"
-  HREF="node260.html">Un DSL para Procesar</A>
-<B> Subir:</B> <A NAME="tex2html7179"
-  HREF="node258.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7173"
-  HREF="node258.html">Lenguajes de Dominio Específico.</A>
- &nbsp; <B>  <A NAME="tex2html7181"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7183"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

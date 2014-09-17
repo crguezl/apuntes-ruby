@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Procs y Lambdas</TITLE>
-<META NAME="description" CONTENT="Procs y Lambdas">
+<TITLE>Hashes para Argumentos con Nombre</TITLE>
+<META NAME="description" CONTENT="Hashes para Argumentos con Nombre">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node141.html">
-<LINK REL="previous" HREF="node125.html">
-<LINK REL="up" HREF="node116.html">
+<LINK REL="next" HREF="node133.html">
+<LINK REL="previous" HREF="node131.html">
+<LINK REL="up" HREF="node128.html">
 <LINK REL="next" HREF="node133.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5062"
+<A NAME="tex2html5086"
   HREF="node133.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5056"
-  HREF="node116.html">
+<A NAME="tex2html5080"
+  HREF="node128.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5050"
+<A NAME="tex2html5074"
   HREF="node131.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5058"
-  HREF="node769.html">
+<A NAME="tex2html5082"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5060"
-  HREF="node772.html">
+<A NAME="tex2html5084"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,131 +96,118 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5063"
-  HREF="node133.html">Creacion de Procs</A>
-<B> Subir:</B> <A NAME="tex2html5057"
-  HREF="node116.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5051"
-  HREF="node131.html">Argumentos Bloque</A>
- &nbsp; <B>  <A NAME="tex2html5059"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5061"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5087"
+  HREF="node133.html">Named Parameters in Ruby</A>
+<B> Subir:</B> <A NAME="tex2html5081"
+  HREF="node128.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5075"
+  HREF="node131.html">Asignando Argumentos a los</A>
+ &nbsp; <B>  <A NAME="tex2html5083"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5085"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02650000000000000000"></A>
-<A NAME="section:procsylambdas"></A>
+<H2><A NAME="SECTION02644000000000000000"></A>
+<A NAME="subsection:hashesparaargumentosconnombre"></A>
 <BR>
-Procs y Lambdas
-</H1>
+Hashes para Argumentos con Nombre
+</H2>
+Es difícil recordar el orden de los argumentos de un método que
+requiere mas de tres argumentos.
+Cuando el número de argumentos es grande, haremos que los argumentos se empaqueten en un hash.
+Este es un ejemplo:
 
 <P>
-
-<UL>
-<LI>Los <A NAME="5311"></A><SPAN  CLASS="textit">bloques</SPAN> son estructuras sintácticas en Ruby; 
-</LI>
-<LI>Los bloques
-<SPAN  CLASS="textit">no son objetos y no pueden ser manipulados como objetos</SPAN>. 
-</LI>
-<LI>Es sin embargo posible crear objetos que representan a un bloque.
-</LI>
-<LI>Dependiendo de como se crea el objeto se le denomina <A NAME="5313"></A><SPAN  CLASS="textit">proc</SPAN> o <A NAME="5315"></A><SPAN  CLASS="textit">lambda</SPAN>
-</LI>
-<LI>Tanto las lambdas como los proc son objetos de la clase <A NAME="tex2html215"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>
-</LI>
-</UL>
+<PRE>
+~/rubytesting$ cat -n shell.rb 
+     1  
+     2  def ls(args) 
+     3    hidden    = args[:hidden]?    '-a' : ''
+     4    dir       = args[:dir]?       '-d' : ''
+     5    reverse   = args[:reverse]?   '-r' : ''
+     6    time      = args[:time]?      '-t' : ''
+     7    recursive = args[:recursive]? '-R' : ''
+     8    regexp    = args[:regexp] || Regexp.new('.')
+     9  
+    10    files = %x{ls #{hidden} #{reverse} #{dir} #{recursive} #{time} 2&gt;&amp;1}.split(/\n/)
+    11    files.select { |f| f =~ regexp }
+    12  end
+    13  
+    14  puts  ls(:reverse =&gt;1, :time =&gt; 1, :regexp =&gt; /^m/)
+    15  puts  '***********************************************'
+    16  puts  ls(:hidden =&gt;1,  :regexp =&gt; /^.[ms]/)
+</PRE>
+Podríamos haber llamado a <code>ls</code> así
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+    ls({:reverse =&gt;1, :time =&gt; 1, :regexp =&gt; /^m/})
+</PRE>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html5064"
-  HREF="node133.html">Creacion de <TT>Proc</TT>s</A>
-<UL>
-<LI><A NAME="tex2html5065"
-  HREF="node133.html#SECTION02651100000000000000">Asociando un bloque con argumento prefijado por &amp;</A>
-<LI><A NAME="tex2html5066"
-  HREF="node133.html#SECTION02651200000000000000"><TT>Proc</TT>.new</A>
-<LI><A NAME="tex2html5067"
-  HREF="node133.html#SECTION02651300000000000000">Kernel.lambda</A>
-<LI><A NAME="tex2html5068"
-  HREF="node133.html#SECTION02651400000000000000">Kernel.proc</A>
-<LI><A NAME="tex2html5069"
-  HREF="node133.html#SECTION02651500000000000000">Lambda Literals</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html5070"
-  HREF="node134.html">Invocación de <TT>Proc</TT>s y Lambdas</A>
-<LI><A NAME="tex2html5071"
-  HREF="node135.html">La Aridad de un <TT>Proc</TT></A>
-<LI><A NAME="tex2html5072"
-  HREF="node136.html">Igualdad de <TT>Proc</TT>s</A>
-<LI><A NAME="tex2html5073"
-  HREF="node137.html">En que Forma las Lambdas Difieren de los <TT>Proc</TT>s</A>
-<UL>
-<LI><A NAME="tex2html5074"
-  HREF="node137.html#SECTION02655100000000000000">Return en bloques, procs y lambdas</A>
-<LI><A NAME="tex2html5075"
-  HREF="node137.html#SECTION02655200000000000000">Break en bloques, procs y lambdas</A>
-<LI><A NAME="tex2html5076"
-  HREF="node137.html#SECTION02655300000000000000">Otras sentencias de control en bloques, procs y lambdas</A>
-<LI><A NAME="tex2html5077"
-  HREF="node137.html#SECTION02655400000000000000">Paso de argumentos en procs y lambdas</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html5078"
-  HREF="node138.html">Enumeradores</A>
-<UL>
-<LI><A NAME="tex2html5079"
-  HREF="node138.html#SECTION02656010000000000000">Iteradores Externos</A>
-<LI><A NAME="tex2html5080"
-  HREF="node138.html#SECTION02656020000000000000">with_index</A>
-<LI><A NAME="tex2html5081"
-  HREF="node138.html#SECTION02656030000000000000">Construcción de un Enumerador</A>
-<LI><A NAME="tex2html5082"
-  HREF="node138.html#SECTION02656040000000000000">Enumeradores Infinitos</A>
-<LI><A NAME="tex2html5083"
-  HREF="node138.html#SECTION02656050000000000000">Enumeradores Perezosos</A>
-<LI><A NAME="tex2html5084"
-  HREF="node138.html#SECTION02656060000000000000">Véase</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html5085"
-  HREF="node139.html">Bloques para las Transacciones</A>
-<UL>
-<LI><A NAME="tex2html5086"
-  HREF="node139.html#SECTION02657010000000000000">Véase</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html5087"
-  HREF="node140.html">Ejemplo: La Clase <TT>Filter</TT></A>
-<UL>
-<LI><A NAME="tex2html5088"
-  HREF="node140.html#SECTION02658010000000000000">Véase</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
+<P>
+Pero ruby nos permite omitir las llavitas cuando el último argumento del método es el hash
+(o si es el único argumento que le sigue es un argumento bloque prefijado de <code>&amp;</code>).
+Un hash sin llaves se denomina <A NAME="5409"></A><SPAN  CLASS="textit">bare hash</SPAN>.
+
+<P>
+<PRE>
+    ls(:time =&gt; 1, :reverse =&gt;1, :regexp =&gt; /^m/)
+</PRE>
+
+<P>
+Es posible también omitir los paréntesis en la llamada:
+<PRE>
+puts  ls :hidden =&gt;1,  :regexp =&gt; /^.[ms]/
+</PRE>
+Si se omiten los paréntesis se <SPAN  CLASS="textit">deberán también omitir las llaves</SPAN> ya que
+<SPAN  CLASS="textit">si unas llaves siguen a un nombre de método Ruby lo interpreta como que estamos pasando un argumento de tipo
+bloque</SPAN>.
+
+<P>
+Ejecución:
+
+<P>
+<PRE>
+~/rubytesting$ ruby shell.rb 
+myutf.rb
+methodmethod.rb
+memoize
+map2funcWithLambdas.rb
+map2func.rb
+***********************************************
+.myutfstring.rb.swp
+.shell.rb.swp
+.svn
+useGreeter.rb
+useSudoku.rb
+</PRE>
+
+<P>
+Ruby 2.0 admite parámetros con nombre.
+Véase 
+<A NAME="tex2html209"
+  HREF="http://youtu.be/jjwbzVkYT5w">Ruby 2.0 - Getting Started and Named Parameters</A>
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5062"
+<A NAME="tex2html5086"
   HREF="node133.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5056"
-  HREF="node116.html">
+<A NAME="tex2html5080"
+  HREF="node128.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5050"
+<A NAME="tex2html5074"
   HREF="node131.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5058"
-  HREF="node769.html">
+<A NAME="tex2html5082"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5060"
-  HREF="node772.html">
+<A NAME="tex2html5084"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -275,20 +262,20 @@ Procs y Lambdas
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5063"
-  HREF="node133.html">Creacion de Procs</A>
-<B> Subir:</B> <A NAME="tex2html5057"
-  HREF="node116.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5051"
-  HREF="node131.html">Argumentos Bloque</A>
- &nbsp; <B>  <A NAME="tex2html5059"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5061"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5087"
+  HREF="node133.html">Named Parameters in Ruby</A>
+<B> Subir:</B> <A NAME="tex2html5081"
+  HREF="node128.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5075"
+  HREF="node131.html">Asignando Argumentos a los</A>
+ &nbsp; <B>  <A NAME="tex2html5083"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5085"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Manejo de Errores</TITLE>
-<META NAME="description" CONTENT="Manejo de Errores">
+<TITLE>Pasando variables a la vista explícitamente via un hash</TITLE>
+<META NAME="description" CONTENT="Pasando variables a la vista explícitamente via un hash">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node389.html">
 <LINK REL="previous" HREF="node387.html">
-<LINK REL="up" HREF="node374.html">
+<LINK REL="up" HREF="node382.html">
 <LINK REL="next" HREF="node389.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9592"
+<A NAME="tex2html9620"
   HREF="node389.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9586"
-  HREF="node374.html">
+<A NAME="tex2html9614"
+  HREF="node382.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9580"
+<A NAME="tex2html9608"
   HREF="node387.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9588"
-  HREF="node769.html">
+<A NAME="tex2html9616"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9590"
-  HREF="node772.html">
+<A NAME="tex2html9618"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,151 +96,175 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9593"
-  HREF="node389.html">The methods body, status</A>
-<B> Subir:</B> <A NAME="tex2html9587"
-  HREF="node374.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9581"
-  HREF="node387.html">Filtros</A>
- &nbsp; <B>  <A NAME="tex2html9589"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9591"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9621"
+  HREF="node389.html">Opciones pasadas a los</A>
+<B> Subir:</B> <A NAME="tex2html9615"
+  HREF="node382.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html9609"
+  HREF="node387.html">Variables en las Vistas</A>
+ &nbsp; <B>  <A NAME="tex2html9617"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9619"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03360000000000000000">
-Manejo de Errores</A>
-</H1>
+<H2><A NAME="SECTION03346000000000000000">
+Pasando variables a la vista explícitamente via un hash</A>
+</H2>
 
 <P>
-
-<OL>
-<LI>The HTTP specification states that response status in the range  200-299
-indicate success in processing a request
-</LI>
-<LI>500-599 is reserved for server errors
-</LI>
-<LI>Sinatra  offers helpers for the 404 (Not Found) and 500 (Internal Server Error) status
-</LI>
-</OL>
+También es posible pasar en la llamada un hash especificando 
+las variables locales:
+<PRE>
+get '/:id' do
+  foo = Foo.find(params[:id])
+  haml '%h1= bar.name', :locals =&gt; { :bar =&gt; foo }
+end
+</PRE>
+This is typically used when rendering templates as partials from within other templates.
 
 <P>
-
-<H4><A NAME="SECTION03360010000000000000">
-not_found</A>
-</H4>
-  
-
-When a <code>Sinatra::NotFound</code> exception is raised, or the response’s
-status code is 404, the <code>not_found</code> handler is invoked:
+Veamos un ejemplo:
 
 <P>
 <PRE>
-not_found do
-  'This is nowhere to be found.'
+$ ls
+Rakefile    config.ru   via_hash.rb views
+</PRE>
+
+<P>
+<PRE>
+$ cat via_hash.rb
+require 'sinatra/base'
+
+class App &lt; Sinatra::Base
+  get '/*' do |name|
+    def some_template
+       &lt;&lt;-'ERBTEMP'
+&lt;ul&gt;&lt;% name.each do |item| %&gt;
+      &lt;li&gt; &lt;i&gt; &lt;%= item %&gt; &lt;/i&gt; &lt;/li&gt;
+    &lt;% end %&gt;
+&lt;/ul&gt;
+ERBTEMP
+    end # method some_template
+
+    puts "*---***#{name}*---****"
+    erb some_template, :locals =&gt; { :name =&gt; name.split('/')}
+  end
 end
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION03360020000000000000">
-error</A>
-</H4>
-  
-
-The <code>error</code> handler is invoked any time an exception is raised from
-a route block or a filter. 
-
-<P>
-The exception object can be obtained
-from the <code>sinatra.error</code> Rack variable:
+<PRE>
+$ cat views/layout.erb 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+        &lt;title&gt;Sinatra&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Accesing variables in templates via a parameter hash&lt;/h1&gt;
+    &lt;%= yield %&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</PRE>
 
 <P>
 <PRE>
-error do
-  'Sorry there was a nasty error - ' + env['sinatra.error'].name
-end
+$ cat config.ru 
+require './via_hash'
+
+run App
 </PRE>
-Custom errors:
 
 <P>
 <PRE>
-error MyCustomError do
-  'So what happened was...' + env['sinatra.error'].message
+$ cat Rakefile task :default =&gt; :server
+
+desc "run server"
+task :server do
+  sh "rackup"
+end
+
+desc "make a get /juan/leon/hernandez request via curl"
+task :client do
+  sh "curl -v localhost:9292/juan/leon/hernandez"
 end
 </PRE>
-Then, if this happens:
 
 <P>
 <PRE>
-get '/' do
-  raise MyCustomError, 'something bad'
-end
+$ rake serverrackup
+&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+*---***juan/leon/hernandez*---****
+127.0.0.1 - - [05/Jul/2013 17:50:20] "GET /juan/leon/hernandez HTTP/1.1" 200 290 0.0352
 </PRE>
-You get this:
 
 <P>
 <PRE>
-So what happened was... something bad
+$ rake client
+curl -v localhost:9292/juan/leon/hernandez
+* About to connect() to localhost port 9292 (#0)
+*   Trying 127.0.0.1... connected
+* Connected to localhost (127.0.0.1) port 9292 (#0)
+&gt; GET /juan/leon/hernandez HTTP/1.1
+&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8x zlib/1.2.5
+&gt; Host: localhost:9292
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html;charset=utf-8
+&lt; Content-Length: 290
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Content-Type-Options: nosniff
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Connection: keep-alive
+&lt; Server: thin 1.5.1 codename Straight Razor
+&lt; 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+        &lt;title&gt;Sinatra&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Accesing variables in templates via a parameter hash&lt;/h1&gt;
+    &lt;ul&gt;
+      &lt;li&gt; &lt;i&gt; juan &lt;/i&gt; &lt;/li&gt;
+    
+      &lt;li&gt; &lt;i&gt; leon &lt;/i&gt; &lt;/li&gt;
+    
+      &lt;li&gt; &lt;i&gt; hernandez &lt;/i&gt; &lt;/li&gt;
+    
+&lt;/ul&gt;
+
+  &lt;/body&gt;
+&lt;/html&gt;
+* Connection #0 to host localhost left intact
+* Closing connection #0
 </PRE>
-Alternatively, you can install an error handler for a status code:
 
 <P>
-<PRE>
-error 403 do
-  'Access forbidden'
-end
-
-get '/secret' do
-  403
-end
-</PRE>
-Or a range:
-
-<P>
-<PRE>
-error 400..510 do
-  'Boom'
-end
-</PRE>
-Sinatra installs special <code>not_found</code> and <code>error</code> handlers 
-when running under the development environment to display nice stack
-traces and additional debugging information in your browser (esto es,
-en producción estos handlers son mucho mas "parcos").
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html9594"
-  HREF="node388.html#SECTION03360010000000000000">not_found</A>
-<LI><A NAME="tex2html9595"
-  HREF="node388.html#SECTION03360020000000000000">error</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9592"
+<A NAME="tex2html9620"
   HREF="node389.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9586"
-  HREF="node374.html">
+<A NAME="tex2html9614"
+  HREF="node382.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9580"
+<A NAME="tex2html9608"
   HREF="node387.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9588"
-  HREF="node769.html">
+<A NAME="tex2html9616"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9590"
-  HREF="node772.html">
+<A NAME="tex2html9618"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -295,20 +319,20 @@ en producción estos handlers son mucho mas "parcos").
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9593"
-  HREF="node389.html">The methods body, status</A>
-<B> Subir:</B> <A NAME="tex2html9587"
-  HREF="node374.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9581"
-  HREF="node387.html">Filtros</A>
- &nbsp; <B>  <A NAME="tex2html9589"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9591"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9621"
+  HREF="node389.html">Opciones pasadas a los</A>
+<B> Subir:</B> <A NAME="tex2html9615"
+  HREF="node382.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html9609"
+  HREF="node387.html">Variables en las Vistas</A>
+ &nbsp; <B>  <A NAME="tex2html9617"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9619"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

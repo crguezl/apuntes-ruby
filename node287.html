@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Programación distribuída/Distributed Programming</TITLE>
-<META NAME="description" CONTENT="Programación distribuída/Distributed Programming">
+<TITLE>Deferrable</TITLE>
+<META NAME="description" CONTENT="Deferrable">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node290.html">
-<LINK REL="previous" HREF="node279.html">
-<LINK REL="up" HREF="node14.html">
+<LINK REL="next" HREF="node288.html">
+<LINK REL="previous" HREF="node286.html">
+<LINK REL="up" HREF="node285.html">
 <LINK REL="next" HREF="node288.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7626"
+<A NAME="tex2html7658"
   HREF="node288.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7620"
-  HREF="node14.html">
+<A NAME="tex2html7652"
+  HREF="node285.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7614"
+<A NAME="tex2html7646"
   HREF="node286.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7622"
-  HREF="node769.html">
+<A NAME="tex2html7654"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7624"
-  HREF="node772.html">
+<A NAME="tex2html7656"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,41 +96,285 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7627"
-  HREF="node288.html">DRb</A>
-<B> Subir:</B> <A NAME="tex2html7621"
-  HREF="node14.html">EL LENGUAJE DE PROGRAMACIÓN</A>
-<B> Anterior:</B> <A NAME="tex2html7615"
-  HREF="node286.html">Véase</A>
- &nbsp; <B>  <A NAME="tex2html7623"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7625"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7659"
+  HREF="node288.html">Véase</A>
+<B> Subir:</B> <A NAME="tex2html7653"
+  HREF="node285.html">EventMachine</A>
+<B> Anterior:</B> <A NAME="tex2html7647"
+  HREF="node286.html">Un server</A>
+ &nbsp; <B>  <A NAME="tex2html7655"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7657"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021100000000000000000">
-Programación distribuída/Distributed Programming</A>
-</H1>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<H2><A NAME="SECTION021032000000000000000">
+Deferrable</A>
+</H2>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html7628"
-  HREF="node288.html">DRb</A>
-<LI><A NAME="tex2html7629"
-  HREF="node289.html">Distributed Ruby and SSH: drbssh</A>
-<UL>
-<LI><A NAME="tex2html7630"
-  HREF="node289.html#SECTION021120010000000000000">Ejecución</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+<P>
+<A NAME="tex2html583"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>’s Deferrable borrows heavily from the deferred object
+in Python’s Twisted event-handling framework. Here’s a minimal
+example that illustrates Deferrable:
+
+<P>
+<PRE>
+ require 'eventmachine'
+
+ class MyClass
+   include EM::Deferrable
+
+   def print_value x
+     puts "MyClass instance received #{x}"
+   end
+ end
+
+ EM.run {
+   df = MyClass.new
+   df.callback {|x|
+     df.print_value(x)
+     EM.stop
+   }
+
+   EM::Timer.new(2) {
+     df.set_deferred_status :succeeded, 100
+   }
+ }
+</PRE>
+
+<P>
+This program will spin for two seconds, print out the string 
+<code>MyClass instance received 100</code> and then exit. 
+
+<P>
+The Deferrable pattern allows you to specify any number of Ruby
+code blocks (callbacks or errbacks) that will be executed at some
+future time when the status of the Deferrable object changes.
+
+<P>
+How might that be useful? 
+
+<OL>
+<LI>Well, imagine that you’re implementing
+an HTTP server, 
+</LI>
+<LI>but you need to make a call to some other server
+in order to fulfill a client request.
+</LI>
+<LI>When you receive a request from one of your clients, you can create
+and return a Deferrable object.
+</LI>
+<LI>Some other section of your program
+can add a callback to the Deferrable that will cause the client’s
+request to be fulfilled.
+</LI>
+<LI>Simultaneously, you initiate an event-driven
+or threaded client request to some different server. 
+</LI>
+<LI>And then your
+EM program will continue to process other events and service other
+client requests.
+</LI>
+<LI>When your client request to the other server completes some time
+later, you will call the <code>set_deferred_status</code> method on the Deferrable
+object, passing either a <code>success</code> or <code>failure</code> status, and an arbitrary
+number of parameters (which might include the data you received
+from the other server).
+</LI>
+<LI>At that point, the status of the Deferrable object becomes known,
+and its callback or errback methods are immediately executed.
+</LI>
+<LI>Callbacks and errbacks are code blocks that are attached to Deferrable
+objects at any time through the methods callback and errback.
+
+<P>
+</LI>
+<LI>The deep beauty of this pattern is that it decouples the disposition
+of one operation (such as a client request to an outboard server)
+from the subsequent operations that depend on that disposition
+(which may include responding to a different client or any other
+operation).
+
+<P>
+</LI>
+<LI>The code which invokes the deferred operation (that will eventually
+result in a success or failure status together with associated data)
+is completely separate from the code which depends on that status
+and data. 
+
+<P>
+</LI>
+<LI>This achieves one of the primary goals for which threading
+is typically used in sophisticated applications, with none of the
+nondeterminacy or debugging difficulties of threads.
+
+<P>
+</LI>
+<LI>As soon as the deferred status of a Deferrable becomes known by way
+of a call to <code>set_deferred_status</code>, the Deferrable will IMMEDIATELY
+execute all of its callbacks or errbacks in the order in which they
+were added to the Deferrable.
+
+<P>
+</LI>
+<LI>Callbacks and errbacks can be added to a Deferrable object at any
+time, not just when the object is created. They can even be added
+after the status of the object has been determined! (In this case,
+they will be executed immediately when they are added.)
+
+<P>
+</LI>
+<LI>A call to <code>Deferrable#set_deferred_status</code> takes <code>:succeeded</code> 
+or <code>:failed</code>
+as its first argument. (This determines whether the object will
+call its callbacks or its errbacks.) <code>set_deferred_status</code> also takes
+zero or more additional parameters, that will in turn be passed as
+parameters to the callbacks or errbacks.
+
+<P>
+</LI>
+<LI>In general, you can only call <code>set_deferred_status</code> ONCE on a Deferrable
+object. A call to <code>set_deferred_status</code> will not return until all of
+the associated callbacks or errbacks have been called. If you add
+callbacks or errbacks AFTER making a call to <code>set_deferred_status</code>,
+those additional callbacks or errbacks will execute IMMEDIATELY.
+Any given callback or errback will be executed AT MOST once.
+
+<P>
+</LI>
+<LI>It’s possible to call <code>set_deferred_status</code> AGAIN, during the
+execution a callback or errback. This makes it possible to change
+the parameters which will be sent to the callbacks or errbacks
+farther down the chain, enabling some extremely elegant use-cases.
+You can transform the data returned from a deferred operation in
+arbitrary ways as needed by subsequent users, without changing any
+of the code that generated the original data.
+
+<P>
+</LI>
+<LI>A call to <code>set_deferred_status</code> will not return until all of
+the associated callbacks or errbacks have been called. If you add
+callbacks or errbacks AFTER making a call to <code>set_deferred_status</code>,
+those additional callbacks or errbacks will execute IMMEDIATELY.
+</LI>
+</OL>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/deferrable(master)]$ cat defaultdeferrable.rb 
+require 'eventmachine'
+EM.run do
+ df = EM::DefaultDeferrable.new
+   df.callback do |x|
+     puts "got #{x}"
+   end
+   df.callback do |x|
+     EM.stop
+   end
+   EM.add_timer(1) do
+     df.set_deferred_status :succeeded, "monkeys"
+   end
+end
+</PRE>
+DefaultDeferrable is an otherwise empty class that includes Deferrable. 
+
+<P>
+This is useful when you just need to return a Deferrable object 
+as a way of communicating deferred status to some other part of a program.
+<PRE>
+[~/ruby/eventmachine/deferrable(master)]$ ruby defaultdeferrable.rb 
+got monkeys
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html7658"
+  HREF="node288.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7652"
+  HREF="node285.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7646"
+  HREF="node286.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html7654"
+  HREF="node775.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html7656"
+  HREF="node778.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html7659"
+  HREF="node288.html">Véase</A>
+<B> Subir:</B> <A NAME="tex2html7653"
+  HREF="node285.html">EventMachine</A>
+<B> Anterior:</B> <A NAME="tex2html7647"
+  HREF="node286.html">Un server</A>
+ &nbsp; <B>  <A NAME="tex2html7655"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7657"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

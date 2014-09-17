@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Heredando Métodos</TITLE>
-<META NAME="description" CONTENT="Heredando Métodos">
+<TITLE>Ejemplo de Visibilidad</TITLE>
+<META NAME="description" CONTENT="Ejemplo de Visibilidad">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -28,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5964"
+<A NAME="tex2html5982"
   HREF="node184.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5958"
+<A NAME="tex2html5976"
   HREF="node182.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5952"
+<A NAME="tex2html5970"
   HREF="node182.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5960"
-  HREF="node769.html">
+<A NAME="tex2html5978"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5962"
-  HREF="node772.html">
+<A NAME="tex2html5980"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,56 +96,95 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5965"
-  HREF="node184.html">super</A>
-<B> Subir:</B> <A NAME="tex2html5959"
-  HREF="node182.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html5953"
-  HREF="node182.html">Subclases y Herencia</A>
- &nbsp; <B>  <A NAME="tex2html5961"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5963"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5983"
+  HREF="node184.html">Ejemplo de Visibilidad</A>
+<B> Subir:</B> <A NAME="tex2html5977"
+  HREF="node182.html">Visibilidad de los métodos:</A>
+<B> Anterior:</B> <A NAME="tex2html5971"
+  HREF="node182.html">Visibilidad de los métodos:</A>
+ &nbsp; <B>  <A NAME="tex2html5979"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5981"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02731000000000000000"></A>
-<A NAME="subsection:heredandometodos"></A>
-<BR>
-Heredando Métodos
+<H2><A NAME="SECTION02721000000000000000">
+Ejemplo de Visibilidad</A>
 </H2>
-
-<P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n Point3D.rb 
-     1  require "Point"
-     2  class Point3D &lt; Point
-     3  end
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n SubClass.rb 
+     1  class Point
+     2  
+     3    def chuchu
+     4      "Point: chuchu"
+     5    end
+     6  
+     7    def chachi
+     8      "Point: chachi"
+     9    end
+    10  
+    11    private   :chuchu
+    12    protected :chachi
+    13  end
+    14  
+    15  class SubClass &lt; Point
+    16  
+    17    def titi1 
+    18      chuchu
+    19    end
+    20  
+    21    def titi2 
+    22      self.chuchu
+    23    end
+    24  
+    25    def titi3
+    26      chachi 
+    27    end
+    28  
+    29    def titi4
+    30      self.chachi 
+    31    end
+    32  end
+    33  
+    34  if __FILE__ == $0
+    35    x = SubClass.new
+    36    puts x.titi1
+    37    begin
+    38      puts x.titi2
+    39      rescue 
+    40        puts "Can't call private meth. via 'self'. Exception type: &lt;#{$!.class}&gt; message: &lt;#{$!}&gt;"
+    41    end
+    42  
+    43    puts x.titi3
+    44  
+    45    puts x.titi4
+    46  
+    47    begin
+    48      puts x.chachi
+    49      rescue
+    50        puts "Can't call protected meth. from outside. Exception type: &lt;#{$!.class}&gt; message: &lt;#{$!}&gt;"
+    51    end
+    52  end
 </PRE>
 
 <P>
+La ejecución del programa produce la salida:
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ irb
-&gt;&gt; require "Point3D"
-=&gt; true
-&gt;&gt; p1 = Point3D.new(1,2)
-=&gt; #&lt;Point3D:0x10057d5e0 @y=2, @x=1&gt;
-&gt;&gt; p2 = Point.new(1,2)
-=&gt; #&lt;Point:0x10056a440 @y=2, @x=1&gt;
-&gt;&gt; p1.class
-=&gt; Point3D
-&gt;&gt; p2.class
-=&gt; Point
-&gt;&gt; p1.to_s
-=&gt; "(1,2)"
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby SubClass.rb 
+Point: chuchu
+Can't call private meth. via 'self'. Exception type: &lt;NoMethodError&gt; message: &lt;private method `chuchu' called for #&lt;SubClass:0x1001685b8&gt;&gt;
+Point: chachi
+Point: chachi
+Can't call protected meth. from outside. Exception type: &lt;NoMethodError&gt; message: &lt;protected method `chachi' called for #&lt;SubClass:0x1001685b8&gt;&gt;
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

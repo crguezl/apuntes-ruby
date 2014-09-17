@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Bundler</TITLE>
-<META NAME="description" CONTENT="Bundler">
+<TITLE>7: un poco mas tarde ...</TITLE>
+<META NAME="description" CONTENT="7: un poco mas tarde ...">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node644.html">
-<LINK REL="previous" HREF="node639.html">
-<LINK REL="up" HREF="node568.html">
+<LINK REL="previous" HREF="node640.html">
+<LINK REL="up" HREF="node633.html">
 <LINK REL="next" HREF="node642.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13861"
+<A NAME="tex2html13900"
   HREF="node642.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13855"
-  HREF="node568.html">
+<A NAME="tex2html13894"
+  HREF="node633.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13849"
+<A NAME="tex2html13890"
   HREF="node640.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13857"
-  HREF="node769.html">
+<A NAME="tex2html13896"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13859"
-  HREF="node772.html">
+<A NAME="tex2html13898"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,49 +95,129 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13862"
-  HREF="node642.html">Introducción</A>
-<B> Subir:</B> <A NAME="tex2html13856"
-  HREF="node568.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html13850"
-  HREF="node640.html">umlify</A>
- &nbsp; <B>  <A NAME="tex2html13858"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13860"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13901"
+  HREF="node642.html">Resumen y Enlaces</A>
+<B> Subir:</B> <A NAME="tex2html13895"
+  HREF="node633.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html13891"
+  HREF="node640.html">6: Green</A>
+ &nbsp; <B>  <A NAME="tex2html13897"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13899"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061300000000000000000"></A>
-<A NAME="chapter:bundler"></A>
-<BR>
-Bundler
-</H1>
-In a nutshell, you'll be editing a file that describes what gems your
-project depends on and slightly modifying how you require those gems.
+<H2><A NAME="SECTION06918000000000000000">
+7: un poco mas tarde ...</A>
+</H2>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/math/rpcalc.rb 
+module Math
+  class RPCalc
+    attr_accessor :stack
+
+    def initialize()
+      @stack = []
+    end
+
+    def calc(expr)
+      @stack = []
+      expr.split(/\s+/).each do |x|
+      case x
+        when '+', '*', '-', '/' 
+          op2 = @stack.pop or raise SyntaxError, "No first argument for '#{x}'"
+          op1 = @stack.pop or raise SyntaxError, "No second argument for '#{x}'"
+          @stack.push eval "(#{op1} #{x} #{op2})"
+        when /^-?\s*\d+(\.\d+)?([eE][+-]?\d+)?\s*$/
+          @stack.push x
+        else
+          raise SyntaxError, "Error. found '#{x}'. Expected number or operator"       
+        end
+      end
+      @stack.pop
+    end
+
+  end  # class RPCalc
+end    # Math
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/math/rpcalc_spec.rb 
+#require File.join(File.dirname(__FILE__), "/../spec_helper")
+require "spec_helper"
+module Math
+  describe RPCalc do
+    before :each do
+      @c = Math::RPCalc.new
+    end
+
+    context "When an erroneous input is given" do
+      context "not numeric input" do
+        before :each do
+          @e = proc { @c.calc('a') }
+        end
+
+        it "must raise an exception for not numeric input" do
+          expect { @e[] }.to raise_error(SyntaxError)
+          expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
+        end
+      end
+
+      context "not enough operands" do
+        it "must raise an exception when not enough operands" do
+          expect { @c.calc('2 3 + *') }.to raise_error(SyntaxError)
+          expect { @c.calc('2 3 + *') }.to raise_error("No second argument for '*'")
+        end
+      end
+    end
+
+    context "When a correct input is given" do
+      it "must give the correct answer for integer expressions" do
+        r = @c.calc('2 3 + 4 *')
+        r.should eq 20
+        @c.stack.should eq []
+      end
+
+      it "must give the correct answer for float expressions" do
+        r = @c.calc('4 3 + 2.5 3.5 +')
+        r.should be_within(0.01).of(6.0)
+        @c.stack.should eq [ 7 ]
+      end
+    end
+
+  end    # RPCalc
+end      # Math
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
+rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
+
+Math::RPCalc
+  When an erroneous input is given
+    not numeric input
+      must raise an exception for not numeric input
+    not enough operands
+      must raise an exception when not enough operands
+  When a correct input is given
+    must give the correct answer for integer expressions
+    must give the correct answer for float expressions
+
+Finished in 0.00526 seconds
+4 examples, 0 failures
+</PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html13863"
-  HREF="node642.html">Introducción</A>
-<UL>
-<LI><A NAME="tex2html13864"
-  HREF="node642.html#SECTION061310010000000000000">Que versión de una gema estamos usando</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html13865"
-  HREF="node643.html">La opción <TT>PATH</TT> (<TT>:path</TT>) de gem</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

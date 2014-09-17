@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Servicio de Syntax Highlighting</TITLE>
-<META NAME="description" CONTENT="Práctica: Servicio de Syntax Highlighting">
+<TITLE>Sinatra como Middleware</TITLE>
+<META NAME="description" CONTENT="Sinatra como Middleware">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node414.html">
 <LINK REL="previous" HREF="node412.html">
-<LINK REL="up" HREF="node374.html">
+<LINK REL="up" HREF="node377.html">
 <LINK REL="next" HREF="node414.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9971"
+<A NAME="tex2html9994"
   HREF="node414.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9965"
-  HREF="node374.html">
+<A NAME="tex2html9988"
+  HREF="node377.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9961"
+<A NAME="tex2html9982"
   HREF="node412.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9967"
-  HREF="node769.html">
+<A NAME="tex2html9990"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9969"
-  HREF="node772.html">
+<A NAME="tex2html9992"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,296 +96,153 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9972"
-  HREF="node414.html">Sinatra desde Dentro</A>
-<B> Subir:</B> <A NAME="tex2html9966"
-  HREF="node374.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9962"
-  HREF="node412.html">Práctica: TicTacToe usando DataMapper</A>
- &nbsp; <B>  <A NAME="tex2html9968"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9970"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9995"
+  HREF="node414.html">Práctica: TicTacToe</A>
+<B> Subir:</B> <A NAME="tex2html9989"
+  HREF="node377.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9983"
+  HREF="node412.html">Autentificación Básica</A>
+ &nbsp; <B>  <A NAME="tex2html9991"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9993"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033300000000000000000"></A>
-   <A NAME="16924"></A>
-<BR>
-Práctica: Servicio de Syntax Highlighting
+<H1><A NAME="SECTION033270000000000000000">
+Sinatra como Middleware</A>
 </H1>
-  
-Construya una aplicación que provee syntax higlighting
-para un código que se vuelca en un formulario.
-Use la gema <A NAME="tex2html908"
-  HREF="http://syntaxi.rubyforge.org/">syntaxi</A>.
 
 <P>
-El siguiente ejemplo muestra como funciona la gema <code>syntaxi</code>:
+Not only is Sinatra able to use other Rack middleware, any Sinatra
+application can in turn be added in front of any Rack endpoint as
+middleware itself. 
 
 <P>
-<PRE>
-[~/rubytesting/syntax_highlighting]$ cat ex_syntaxi.rb 
-require 'syntaxi'
-text = &lt;&lt;"EOF"
-[code lang="ruby"]
-  def foo
-    puts 'bar'
-  end
-[/code]
-EOF
-formatted_text = Syntaxi.new(text).process
-puts formatted_text
-</PRE>
-Ejecución:
-<PRE>
-[~/rubytesting/syntax_highlighting]$ ruby ex_syntaxi.rb 
-&lt;pre&gt;
-&lt;code&gt;
-&lt;span class="line_number"&gt;1&lt;/span&gt; &lt;span class="keyword"&gt;def &lt;/span&gt;&lt;span class="method"&gt;foo&lt;/span&gt;
-&lt;span class="line_number"&gt;2&lt;/span&gt; &lt;span class="ident"&gt;puts&lt;/span&gt; 
-&lt;span class="punct"&gt;'&lt;/span&gt;&lt;span class="string"&gt;bar&lt;/span&gt;&lt;span class="punct"&gt;'&lt;/span&gt;
-&lt;span class="line_number"&gt;3&lt;/span&gt; &lt;span class="keyword"&gt;end&lt;/span&gt;
-&lt;/code&gt;
-&lt;/pre&gt;
-</PRE>
-La gema <code>syntaxi</code> usa la gema <code>syntax</code>:
-<PRE>
-[~/rubytesting/syntax_highlighting]$ gem which syntaxi/Users/casiano/.rvm/gems/ruby-1.9.2-head/gems/syntaxi-0.5.0/lib/syntaxi.rb
-[~/rubytesting/syntax_highlighting]$ grep "require.*'" /Users/casiano/.rvm/gems/ruby-1.9.2-head/gems/syntaxi-0.5.0/lib/syntaxi.rb 
-require 'syntax/convertors/html'
-</PRE>
-Es en esta gema que se definen las hojas de estilo:
-<PRE>
-[~/rubytesting/syntax_highlighting]$ gem which syntax
-/Users/casiano/.rvm/gems/ruby-1.9.2-head/gems/syntax-1.0.0/lib/syntax.rb
-[~/rubytesting/syntax_highlighting]$ tree /Users/casiano/.rvm/gems/ruby-1.9.2-head/gems/syntax-1.0.0/
-/Users/casiano/.rvm/gems/ruby-1.9.2-head/gems/syntax-1.0.0/
-|-- data
-|   |-- ruby.css
-|   |-- xml.css
-|   `-- yaml.css
-|-- lib
-|   |-- syntax
-|   |   |-- common.rb
-|   |   |-- convertors
-|   |   |   |-- abstract.rb
-|   |   |   `-- html.rb
-|   |   |-- lang
-|   |   |   |-- ruby.rb
-|   |   |   |-- xml.rb
-|   |   |   `-- yaml.rb
-|   |   `-- version.rb
-|   `-- syntax.rb
-`-- test
-    |-- ALL-TESTS.rb
-    |-- syntax
-    |   |-- tc_ruby.rb
-    |   |-- tc_xml.rb
-    |   |-- tc_yaml.rb
-    |   `-- tokenizer_testcase.rb
-    `-- tc_syntax.rb
-
-7 directories, 17 files
-</PRE>
+This endpoint could be another Sinatra application,
+or any other Rack-based application (Rails/Ramaze/Camping/…):
 
 <P>
-En el esquema incompleto que sigue se ha hecho para el lenguaje
-Ruby. Añada que se pueda elegir el lenguaje a colorear (xml, yaml).
+
+<OL>
+<LI>When a request comes in, all <code>before</code> filters are triggered
+</LI>
+<LI>Then, if a route matches, the corresponding block will be executed
+</LI>
+<LI>If no route matches, the request is handed off to the wrapped application
+</LI>
+<LI>The <code>after</code> filters are executed after we've got a response back from the
+route or  the wrapped app
+</LI>
+</OL>
+Thus, our Sinatra app is a middleware.
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figure:requestobject"></A><A NAME="16522"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figura 26.2:</STRONG>
+La pila Rack</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+[scale=0.6]sinatra/rack_stack.png
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
 
 <P>
 <PRE>
-$ tree -A
-.
-|-- Gemfile
-|-- Gemfile.lock
-|-- toopaste.rb
-`-- views
-    |-- layout.erb
-    |-- new.erb
-    `-- show.erb
-</PRE>
+[~/sinatra/sinatra-as-middleware]$ cat app.rb
+require 'sinatra/base'
+require 'haml'
+require 'pp'
 
-<P>
-<PRE>
-$ cat Gemfile
-source 'https://rubygems.org'
+class LoginScreen &lt; Sinatra::Base
+  enable :sessions
+  enable :inline_templates
 
-# Specify your gem's dependencies in my-gem.gemspec
-# gemspec
-# gem 'guard'
-# gem 'guard-rspec'
-# gem 'guard-bundler'
-# gem 'rb-fsevent', '~&gt; 0.9.1''
+  get('/login') { haml :login }
 
-gem 'syntaxi'
-</PRE>
-
-<P>
-Este es un fragmento de la aplicación:
-<PRE>
-[~/srcSTW/syntax_highlighting(withoutdm)]$ cat  toopaste.rb 
-require 'sinatra'
-require 'syntaxi'
-
-class String
-  def formatted_body
-    source = "[code lang='ruby']
-                #{self}
-              [/code]"
-    html = Syntaxi.new(source).process
-    %Q{
-      &lt;div class="syntax syntax_ruby"&gt;
-        #{html}
-      &lt;/div&gt;
-    }
+  post('/login') do
+    if params[:name] == 'admin' &amp;&amp; params[:password] == 'admin'
+      puts "params = "
+      pp params
+      session['user_name'] = params[:name]
+      redirect '/'
+    else
+      redirect '/login'
+    end
   end
 end
 
-get '/' do
-  erb :new
+class MyApp &lt; Sinatra::Base
+  enable :inline_templates
+  # middleware will run before filters
+  use LoginScreen
+
+  before do
+    unless session['user_name']
+      halt haml :denied
+    end
+  end
+
+  get('/') do
+    haml :cheer, :locals =&gt; { :name =&gt; session['user_name'] }
+  end
+
+  run!
 end
 
-post '/' do
-  .....
-end
-</PRE>
-Una versión simple de lo que puede ser <code>new.erb</code>:
-<PRE>
-[~/srcSTW/syntax_highlighting(withoutdm)]$ cat views/new.erb 
-&lt;div class="snippet"&gt;
-  &lt;form action="/" method="POST"&gt;
-    &lt;textarea name="body" id="body" rows="20"&gt;&lt;/textarea&gt;
-    &lt;br/&gt;&lt;input type="submit" value="Save"/&gt;
-  &lt;/form&gt;
-&lt;/div&gt;
-</PRE>
+__END__
 
-<P>
-Véase la página  HTML generada por el programa para la entrada <code>a = 5</code>:
-<PRE>
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
-&lt;head&gt;
-  &lt;title&gt;Toopaste!&lt;/title&gt;
-  &lt;style&gt;
-    html {
-      background-color: #eee;
-    }
-    .snippet {
-      margin: 5px;
-    }
-    .snippet textarea, .snippet .sbody {
-      border: 5px dotted #eee;
-      padding: 5px;
-      width: 700px;
-      color: #fff;
-      background-color: #333;
-    }
-    .snippet textarea {
-      padding: 20px;
-    }
-    .snippet input, .snippet .sdate {
-      margin-top: 5px;
-    }
+@@ layout
+!!!
+%html
+  %head
+    %title Sinatra as Middleware
+  %body
+    %h1 Sinatra as Middleware
+    = yield
 
-    /* Syntax highlighting */
-    #content .syntax_ruby .normal {}
-    #content .syntax_ruby .comment { color: #CCC; font-style: italic; border: none; margin: none; }
-    #content .syntax_ruby .keyword { color: #C60; font-weight: bold; }
-    #content .syntax_ruby .method { color: #9FF; }
-    #content .syntax_ruby .class { color: #074; }
-    #content .syntax_ruby .module { color: #050; }
-    #content .syntax_ruby .punct { color: #0D0; font-weight: bold; }
-    #content .syntax_ruby .symbol { color: #099; }
-    #content .syntax_ruby .string { color: #C03; }
-    #content .syntax_ruby .char { color: #F07; }
-    #content .syntax_ruby .ident { color: #0D0; }
-    #content .syntax_ruby .constant { color: #07F; }
-    #content .syntax_ruby .regex { color: #B66; }
-    #content .syntax_ruby .number { color: #FF0; }
-    #content .syntax_ruby .attribute { color: #7BB; }
-    #content .syntax_ruby .global { color: #7FB; }
-    #content .syntax_ruby .expr { color: #909; }
-    #content .syntax_ruby .escape { color: #277; }
-    #content .syntax {
-      background-color: #333;
-      padding: 2px;
-      margin: 5px;
-      margin-left: 1em;
-      margin-bottom: 1em;
-    }
-    #content .syntax .line_number {
-      text-align: right;
-      font-family: monospace;
-      padding-right: 1em;
-      color: #999;
-    }
-  &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;div class="snippet"&gt;
-  &lt;div class="snippet"&gt;
-  &lt;div class="sbody" id="content"&gt;
-      &lt;div class="syntax syntax_ruby"&gt;
-        &lt;pre&gt;
-           &lt;code&gt;
-              &lt;span class="line_number"&gt;1&lt;/span&gt;  
-              &lt;span class="ident"&gt;a&lt;/span&gt; 
-              &lt;span class="punct"&gt;=&lt;/span&gt; 
-              &lt;span class="number"&gt;5&lt;/span&gt;
-            &lt;/code&gt;
-         &lt;/pre&gt;
-      &lt;/div&gt;
-  &lt;/div&gt;
-  &lt;br/&gt;&lt;a href="/"&gt;New Paste!&lt;/a&gt;
-&lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+@@ login
+%form{:action=&gt;'/login', :method=&gt;'post'}
+  %label{:for=&gt;'name'} Name
+  %input#name{:type=&gt;"text",     :name=&gt;"name", :autofocus =&gt; true }
+  %br
+  %label{:for=&gt;'password'} Password
+  %input#password{:type=&gt;"password", :name=&gt;"password"}
+  %br
+  %button#go{:type=&gt;"submit",  :name=&gt;"submit", :value=&gt;"submit"} Click me!
+
+@@ cheer
+%h1
+  Hello #{name}
+  %br
+
+@@ denied
+%h1 
+  Access denied, please 
+  %a{:href=&gt;'/login'}login.
 </PRE>
-
-<P>
-La gema
-
-<P>
-<PRE>
-</PRE>
-Una versión resumida de <code>layout.erb</code>:
-<PRE>
-[~/srcSTW/syntax_highlighting(withoutdm)]$ cat views/layout.erb 
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
-&lt;head&gt;
-  &lt;title&gt;&lt;%= @title || 'Toopaste!' %&gt;&lt;/title&gt;
-  &lt;style&gt;
-    ..............
-  &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;%= yield %&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</PRE>
-
-<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9971"
+<A NAME="tex2html9994"
   HREF="node414.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9965"
-  HREF="node374.html">
+<A NAME="tex2html9988"
+  HREF="node377.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9961"
+<A NAME="tex2html9982"
   HREF="node412.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9967"
-  HREF="node769.html">
+<A NAME="tex2html9990"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9969"
-  HREF="node772.html">
+<A NAME="tex2html9992"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -439,20 +297,20 @@ Una versión resumida de <code>layout.erb</code>:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9972"
-  HREF="node414.html">Sinatra desde Dentro</A>
-<B> Subir:</B> <A NAME="tex2html9966"
-  HREF="node374.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9962"
-  HREF="node412.html">Práctica: TicTacToe usando DataMapper</A>
- &nbsp; <B>  <A NAME="tex2html9968"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9970"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9995"
+  HREF="node414.html">Práctica: TicTacToe</A>
+<B> Subir:</B> <A NAME="tex2html9989"
+  HREF="node377.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9983"
+  HREF="node412.html">Autentificación Básica</A>
+ &nbsp; <B>  <A NAME="tex2html9991"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9993"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Definiendo Clases y Módulos</TITLE>
-<META NAME="description" CONTENT="Definiendo Clases y Módulos">
+<TITLE>Reflexión y Metaprogramación</TITLE>
+<META NAME="description" CONTENT="Reflexión y Metaprogramación">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="previous" HREF="node226.html">
-<LINK REL="up" HREF="node225.html">
+<LINK REL="next" HREF="node274.html">
+<LINK REL="previous" HREF="node160.html">
+<LINK REL="up" HREF="node17.html">
 <LINK REL="next" HREF="node228.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6692"
+<A NAME="tex2html6640"
   HREF="node228.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6686"
-  HREF="node225.html">
+<A NAME="tex2html6634"
+  HREF="node17.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6682"
+<A NAME="tex2html6628"
   HREF="node226.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6688"
-  HREF="node769.html">
+<A NAME="tex2html6636"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6690"
-  HREF="node772.html">
+<A NAME="tex2html6638"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,184 +96,297 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6693"
-  HREF="node228.html">Evaluando Strings y Bloques</A>
-<B> Subir:</B> <A NAME="tex2html6687"
-  HREF="node225.html">Tipos, Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6683"
-  HREF="node226.html">Antepasados y Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6689"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6691"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6641"
+  HREF="node228.html">Tipos, Clases y Módulos</A>
+<B> Subir:</B> <A NAME="tex2html6635"
+  HREF="node17.html">EL LENGUAJE DE PROGRAMACIÓN</A>
+<B> Anterior:</B> <A NAME="tex2html6629"
+  HREF="node226.html">Código Completo del TicTacToe</A>
+ &nbsp; <B>  <A NAME="tex2html6637"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6639"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION02800000000000000000">
+Reflexión y Metaprogramación</A>
+</H1>
+Mucho del material de este capítulo es tomado de 
+[<A
+ HREF="node779.html#PRP">8</A>],
+[<A
+ HREF="node779.html#RPL">3</A>],
+[<A
+ HREF="node779.html#metaprogramming">9</A>]
+y de
+[<A
+ HREF="node779.html#ER">10</A>].
+
+<P>
+
+<UL>
+<LI>La <A NAME="9712"></A><SPAN  CLASS="textbf">metaprogramación</SPAN> consiste en escribir programas y frameworks que nos ayudan a escribir programas
+</LI>
+<LI>La Wikipedia dice:
+
+<P>
+<BLOCKQUOTE>
+<A NAME="tex2html418"
+  HREF="http://en.wikipedia.org/wiki/Metaprogramming">Metaprogramming</A>
+is the writing of computer programs that write or manipulate other programs (or themselves) as their data
+
+</BLOCKQUOTE>
+</LI>
+<LI>The language in which the metaprogram is written is called the <A NAME="9716"></A><SPAN  CLASS="textbf">metalanguage</SPAN> 
+</LI>
+<LI>The language of the programs that are manipulated is called the <A NAME="9718"></A><SPAN  CLASS="textbf">object language</SPAN> 
+</LI>
+<LI>The ability of a programming language to
+be its own metalanguage is called <A NAME="9720"></A><SPAN  CLASS="textbf">reflection</SPAN> or <A NAME="9722"></A><SPAN  CLASS="textbf">reflexivity</SPAN>
+</LI>
+<LI>Metaprogramación es un conjunto de técnicas que permiten extender la sintáxis de Ruby para hacer mas fácil la programación
+</LI>
+<LI>La metaprogramación esta fuertemente relacionada con la idea de escribir lenguajes de dominio específico (DSL)s (piensa en <A NAME="tex2html419"
+  HREF="http://rake.rubyforge.org/"><TT>Rake</TT></A>, <A NAME="tex2html420"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A>, <code>Gemfile</code>, etc.)
+</LI>
+</UL>
+
+<P>
+<BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6694"
-  HREF="node227.html#SECTION02812100000000000000"><TT>Class</TT>.new, <TT>Module</TT>.new, <TT>define_method</TT>
+<LI><A NAME="tex2html6642"
+  HREF="node228.html">Tipos, Clases y Módulos</A>
+<UL>
+<LI><A NAME="tex2html6643"
+  HREF="node229.html">Antepasados y Módulos</A>
+<UL>
+<LI><A NAME="tex2html6644"
+  HREF="node229.html#SECTION02811100000000000000">El método <TT>extend</TT>
+de la clase <TT>Object</TT></A>
+<LI><A NAME="tex2html6645"
+  HREF="node229.html#SECTION02811200000000000000">El Método <TT>nesting</TT>
+de la clase <TT>Module</TT></A>
+</UL>
+<LI><A NAME="tex2html6646"
+  HREF="node230.html">Definiendo Clases y Módulos</A>
+<UL>
+<LI><A NAME="tex2html6647"
+  HREF="node230.html#SECTION02812100000000000000"><TT>Class</TT>.new, <TT>Module</TT>.new, <TT>define_method</TT>
 y Ambitos</A>
 </UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02812000000000000000">
-Definiendo Clases y Módulos</A>
-</H2>
-
-<P>
-Las clases y los módulos son instancias de las clases <A NAME="9666"></A><A NAME="tex2html435"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>
-y <A NAME="9670"></A><A NAME="tex2html436"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.
-Por tanto, es posible crearlos dinámicamente:
-<PRE>
-M = Module.new      # Define a new module M
-C = Class.new       # Define a new class C
-D = Class.new(C) {  # Define a subclass of C
-  include M         # that includes module M
-}
-D.to_s              # =&gt; "D": class gets constant name by magic
-</PRE>
-
-<P>
-Cuando un módulo o clase dinámicamente creado es asignado a una constante el nombre de esa 
-constante es usado como nombre del módulo o clase.
-
-<P>
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ cat -n dynamicclassesandmodules.rb 
-     1  Fred = Module.new do
-     2    def meth1
-     3      "hello #{args.inspect}"
-     4    end
-     5    def meth2
-     6      "bye #{args.inspect}"
-     7    end
-     8  end
-     9  
-    10  Klass = Class.new do
-    11    include Fred
-    12    attr_accessor 'args'
-    13  
-    14    def initialize(*args)
-    15      @args = args
-    16    end
-    17  end
-    18  
-    19  puts Fred.to_s     # Fred
-    20  puts Klass.name    # Klass
-    21  
-    22  a = Klass.new(4, 5)
-    23  
-    24  puts a.meth1     # hello [4, 5] 
-    25  puts a.meth2     # bye [4, 5]
-</PRE>
-
-<UL>
-<LI>Cuando una clase o módulo es creado dinámicamente y asignado a una constante, el nombre de la constante
-es utilizado como nombre de la clase 
-
-<P>
-</LI>
-<LI>Si fuera asignado a una
-variable, el método <A NAME="9674"></A><A NAME="tex2html437"
-  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-to_s"><TT>to_s</TT></A>
-devolvería algo del estilo
-<code>#&lt;Class:0x10016a868&gt;</code> y <A NAME="9678"></A><A NAME="tex2html438"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-name"><TT>name</TT></A>
-devolvería <code>nil</code>.
-</LI>
 </UL>
-
-<P>
-
-<H3><A NAME="SECTION02812100000000000000"></A><A NAME="9688"></A>
 <BR>
-<A NAME="tex2html439"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>.new, <A NAME="tex2html440"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.new, <A NAME="tex2html441"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
-y Ambitos
-</H3>
-
-<P>
-
-<OL>
-<LI>El método <A NAME="9692"></A><A NAME="tex2html442"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-local_variables"><TT>local_variables</TT></A>
-del módulo <A NAME="tex2html443"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> nos permite acceder
-a las variables locales visibles en un punto.
-</LI>
-<LI>Algunos lenguajes permiten a un <A NAME="9699"></A><SPAN  CLASS="textbf">ámbito</SPAN> interno ver las variables
-de un ámbito mas externo. Este tipo de visibilidad no ocurre en Ruby
-</LI>
-<LI>Hay tres puntos en los que un programa abandona el ámbito previo y
-abre un nuevo ámbito (<A NAME="9701"></A><SPAN  CLASS="textbf">scope gates</SPAN> en al terminología del libro <SPAN  CLASS="textbf">Metaprogramming Ruby</SPAN>
-[<A
- HREF="node773.html#metaprogramming">9</A>]):
-
-<OL>
-<LI>Definiciones de clase
-</LI>
-<LI>Definiciones de módulo
-</LI>
-<LI>Definiciones de método
-</LI>
-</OL>
-</LI>
-<LI>Las variables globales son visibles desde cualquier ámbito
-</LI>
-<LI>las variables de instancia son visibles desde cualquier punto en el que 
-<code>self</code> se refiere al mismo objeto
-</LI>
-</OL>
-
-<P>
-
-    <pre>
-
-    </pre>
-
-<P>
-Puesto que <A NAME="tex2html444"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>.new, <A NAME="tex2html445"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.new y <A NAME="9709"></A><A NAME="tex2html446"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
-usan el bloque que les sigue y los bloques no abandonan el <A NAME="9713"></A><SPAN  CLASS="textbf">ámbito</SPAN> previo (aunque 
-crean uno nuevo),
-podemos jugar con estos tres métodos para crear clausuras en las que se comparten
-variables locales entre clases, métodos y ámbitos. Observe como en esta
-reescritura del programa anterior cambia la visibilidad:
-
-<P>
-
-    <pre>
-
-    </pre>
-
-<P>
+<LI><A NAME="tex2html6648"
+  HREF="node231.html">Evaluando Strings y Bloques</A>
+<UL>
+<LI><A NAME="tex2html6649"
+  HREF="node232.html">Bindings (encarpetados) y eval</A>
+<UL>
+<LI><A NAME="tex2html6650"
+  HREF="node232.html#SECTION02821100000000000000">Procs y Bindings</A>
+</UL>
+<LI><A NAME="tex2html6651"
+  HREF="node233.html">instance_eval y class_eval</A>
+<UL>
+<LI><A NAME="tex2html6652"
+  HREF="node233.html#SECTION02822100000000000000">Creando accessors con class_eval</A>
+</UL>
+<LI><A NAME="tex2html6653"
+  HREF="node234.html">instance_exec y class_exec</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6654"
+  HREF="node235.html">Variables y Constantes</A>
+<UL>
+<LI><A NAME="tex2html6655"
+  HREF="node236.html">Buscando, Dando Valores y Suprimiendo Variables y Constantes</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6656"
+  HREF="node237.html">Métodos</A>
+<UL>
+<LI><A NAME="tex2html6657"
+  HREF="node238.html">Listando y Comprobando Métodos</A>
+<LI><A NAME="tex2html6658"
+  HREF="node239.html">Obteniendo los Métodos de Objetos</A>
+<LI><A NAME="tex2html6659"
+  HREF="node240.html">Llamando a los Métodos Dinámicamente</A>
+<UL>
+<LI><A NAME="tex2html6660"
+  HREF="node240.html#SECTION02843100000000000000">send: Rendimiento</A>
+</UL>
+<LI><A NAME="tex2html6661"
+  HREF="node241.html">Definiendo, Suprimiendo y Haciendo Alias de Métodos</A>
+<UL>
+<LI><A NAME="tex2html6662"
+  HREF="node241.html#SECTION02844100000000000000">Definiendo Métodos con define_method</A>
+</UL>
+<LI><A NAME="tex2html6663"
+  HREF="node242.html">Manejando Métodos No Definidos: method_missing</A>
+<UL>
+<LI><A NAME="tex2html6664"
+  HREF="node242.html#SECTION02845010000000000000">Véase También</A>
+</UL>
+<LI><A NAME="tex2html6665"
+  HREF="node243.html">Ejercicios</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6666"
+  HREF="node244.html">Hooks (Ganchos)</A>
+<UL>
+<LI><A NAME="tex2html6667"
+  HREF="node245.html">El Hook <TT>inherited</TT></A>
+<LI><A NAME="tex2html6668"
+  HREF="node246.html">El Hook <TT>included</TT></A>
+<UL>
+<LI><A NAME="tex2html6669"
+  HREF="node246.html#SECTION02852010000000000000">Creando declaraciones de métodos abstractos</A>
+<LI><A NAME="tex2html6670"
+  HREF="node246.html#SECTION02852100000000000000">Incluyendo Métodos de Instancia y de Clase de un Módulo</A>
+<UL>
+<LI><A NAME="tex2html6671"
+  HREF="node246.html#SECTION02852110000000000000">El Problema</A>
+<LI><A NAME="tex2html6672"
+  HREF="node246.html#SECTION02852120000000000000">Primeras Solución</A>
+<LI><A NAME="tex2html6673"
+  HREF="node246.html#SECTION02852130000000000000">Segunda Solución: Usando el Gancho <TT>included</TT></A>
+</UL>
+</UL>
+<LI><A NAME="tex2html6674"
+  HREF="node247.html">Ganchos/Hooks: Sustituyendo (y delegando en) un método existente</A>
+<LI><A NAME="tex2html6675"
+  HREF="node248.html">Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6676"
+  HREF="node249.html">Traza</A>
+<UL>
+<LI><A NAME="tex2html6677"
+  HREF="node250.html">set_trace_func</A>
+<LI><A NAME="tex2html6678"
+  HREF="node251.html">caller</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6679"
+  HREF="node252.html">Los Módulos ObjectSpace y GC</A>
+<LI><A NAME="tex2html6680"
+  HREF="node253.html">Estructuras de Control a la Carta</A>
+<UL>
+<LI><A NAME="tex2html6681"
+  HREF="node254.html">Creando una <I>Palabra Clave</I></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6682"
+  HREF="node255.html">Métodos Missing y Constantes Missing</A>
+<UL>
+<LI><A NAME="tex2html6683"
+  HREF="node256.html">Creando Dinámicamente los Métodos dentro de method_missing</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6684"
+  HREF="node257.html">Creando Métodos Dinámicamente</A>
+<UL>
+<LI><A NAME="tex2html6685"
+  HREF="node258.html">Definiendo Métodos con <TT>class_eval</TT></A>
+<LI><A NAME="tex2html6686"
+  HREF="node259.html">Definiendo Métodos con <TT>define_methods</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6687"
+  HREF="node260.html">Encadenamiento de Alias</A>
+<LI><A NAME="tex2html6688"
+  HREF="node261.html">Lenguajes de Dominio Específico. Domain Specific Languages. DSL</A>
+<UL>
+<LI><A NAME="tex2html6689"
+  HREF="node262.html">Un Lenguaje de Dominio Específico para Describir Recetas de Cocina</A>
+<LI><A NAME="tex2html6690"
+  HREF="node263.html">Un DSL para Procesar Documentos XML usando <TT>instance_eval</TT></A>
+<UL>
+<LI><A NAME="tex2html6691"
+  HREF="node263.html#SECTION028122010000000000000">XML</A>
+<LI><A NAME="tex2html6692"
+  HREF="node263.html#SECTION028122020000000000000">REXML</A>
+<LI><A NAME="tex2html6693"
+  HREF="node263.html#SECTION028122030000000000000">Un DSL para XML: Primera Versión. Modo de Uso</A>
+<LI><A NAME="tex2html6694"
+  HREF="node263.html#SECTION028122040000000000000">La Clase XmlRipper: Primera Aproximación</A>
+<LI><A NAME="tex2html6695"
+  HREF="node263.html#SECTION028122050000000000000">Un DSL para XML: Segunda Versión</A>
+<LI><A NAME="tex2html6696"
+  HREF="node263.html#SECTION028122060000000000000">Nueva versión de <TT>initialize</TT></A>
+<LI><A NAME="tex2html6697"
+  HREF="node263.html#SECTION028122070000000000000">Un Ejecutable para Interpretar Guiones en nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN></A>
+<LI><A NAME="tex2html6698"
+  HREF="node263.html#SECTION028122080000000000000">Un Guión Escrito en Nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN> para Nuestro Intérprete <TT>xripper</TT></A>
+<LI><A NAME="tex2html6699"
+  HREF="node263.html#SECTION028122090000000000000">Ejecutando el Intérprete <SPAN  CLASS="textbf">XRipper</SPAN></A>
+</UL>
+<LI><A NAME="tex2html6700"
+  HREF="node264.html">Dos DSLs: Generando XML con Validación via Generación de Métodos</A>
+<UL>
+<LI><A NAME="tex2html6701"
+  HREF="node264.html#SECTION028123010000000000000">Primer DSL: Lenguaje para la Generación de XML</A>
+<LI><A NAME="tex2html6702"
+  HREF="node264.html#SECTION028123020000000000000">XML Generado</A>
+<LI><A NAME="tex2html6703"
+  HREF="node264.html#SECTION028123030000000000000">Visualización del HTML Generado</A>
+<LI><A NAME="tex2html6704"
+  HREF="node264.html#SECTION028123040000000000000">Segundo DSL: Lenguaje para la Generación del DSL Anterior y su Validación</A>
+<LI><A NAME="tex2html6705"
+  HREF="node264.html#SECTION028123050000000000000">La Clase <TT>XMLGrammar</TT></A>
+<LI><A NAME="tex2html6706"
+  HREF="node264.html#SECTION028123060000000000000">Código Completo</A>
+</UL>
+<LI><A NAME="tex2html6707"
+  HREF="node265.html">Creando un ORM</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6708"
+  HREF="node266.html">Práctica: DSL: Redacción de Cuestionarios I (Sin Contexto)</A>
+<LI><A NAME="tex2html6709"
+  HREF="node267.html">Práctica: DSL: Redacción de Cuestionarios II (Con Contexto)</A>
+<LI><A NAME="tex2html6710"
+  HREF="node268.html">Práctica: HTML DSL</A>
+<UL>
+<LI><A NAME="tex2html6711"
+  HREF="node268.html#SECTION028150010000000000000">Solución</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html6712"
+  HREF="node269.html">Práctica: HTML DSL con Git y Rake</A>
+<LI><A NAME="tex2html6713"
+  HREF="node270.html">Repaso</A>
+<LI><A NAME="tex2html6714"
+  HREF="node271.html">Repaso</A>
+<LI><A NAME="tex2html6715"
+  HREF="node272.html">Repaso</A>
+<LI><A NAME="tex2html6716"
+  HREF="node273.html">Referencias. Véase También</A>
+</UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6692"
+<A NAME="tex2html6640"
   HREF="node228.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6686"
-  HREF="node225.html">
+<A NAME="tex2html6634"
+  HREF="node17.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6682"
+<A NAME="tex2html6628"
   HREF="node226.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6688"
-  HREF="node769.html">
+<A NAME="tex2html6636"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6690"
-  HREF="node772.html">
+<A NAME="tex2html6638"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -327,20 +441,20 @@ reescritura del programa anterior cambia la visibilidad:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6693"
-  HREF="node228.html">Evaluando Strings y Bloques</A>
-<B> Subir:</B> <A NAME="tex2html6687"
-  HREF="node225.html">Tipos, Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6683"
-  HREF="node226.html">Antepasados y Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6689"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6691"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6641"
+  HREF="node228.html">Tipos, Clases y Módulos</A>
+<B> Subir:</B> <A NAME="tex2html6635"
+  HREF="node17.html">EL LENGUAJE DE PROGRAMACIÓN</A>
+<B> Anterior:</B> <A NAME="tex2html6629"
+  HREF="node226.html">Código Completo del TicTacToe</A>
+ &nbsp; <B>  <A NAME="tex2html6637"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6639"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

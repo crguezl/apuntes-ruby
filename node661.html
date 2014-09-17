@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Integración Contínua: Travis</TITLE>
-<META NAME="description" CONTENT="Integración Contínua: Travis">
+<TITLE>Retirando una Gema</TITLE>
+<META NAME="description" CONTENT="Retirando una Gema">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node668.html">
-<LINK REL="previous" HREF="node644.html">
-<LINK REL="up" HREF="node568.html">
+<LINK REL="next" HREF="node662.html">
+<LINK REL="previous" HREF="node660.html">
+<LINK REL="up" HREF="node650.html">
 <LINK REL="next" HREF="node662.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14171"
+<A NAME="tex2html14217"
   HREF="node662.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14165"
-  HREF="node568.html">
+<A NAME="tex2html14211"
+  HREF="node650.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14159"
+<A NAME="tex2html14205"
   HREF="node660.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14167"
-  HREF="node769.html">
+<A NAME="tex2html14213"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14169"
-  HREF="node772.html">
+<A NAME="tex2html14215"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,197 +96,87 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14172"
-  HREF="node662.html">Uso de Travis</A>
-<B> Subir:</B> <A NAME="tex2html14166"
-  HREF="node568.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14160"
-  HREF="node660.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html14168"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14170"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14218"
+  HREF="node662.html">Semantic Versioning</A>
+<B> Subir:</B> <A NAME="tex2html14212"
+  HREF="node650.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14206"
+  HREF="node660.html">Gem Security</A>
+ &nbsp; <B>  <A NAME="tex2html14214"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14216"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061500000000000000000"></A>
-<A NAME="chapter:travis"></A>
-<BR>
-Integración Contínua: Travis
+<H1><A NAME="SECTION0614110000000000000000">
+Retirando una Gema</A>
 </H1>
 
 <P>
-<A NAME="25754"></A><SPAN  CLASS="textbf">Continuous integration</SPAN> (<A NAME="25756"></A><SPAN  CLASS="textbf">CI</SPAN>) is the practice, in software engineering,
-of merging all developer workspaces with a shared mainline several
-times a day. It was first named and proposed as part of extreme
-programming (<A NAME="25758"></A><SPAN  CLASS="textbf">XP</SPAN>). 
+In previous versions we had to install <code>gemcutter</code>.
+It will add global <code>yank</code> command for <A NAME="tex2html1504"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>.
 
 <P>
-Its main aim is to prevent integration problems,
-referred to as "integration hell" in early descriptions of XP. 
+<PRE>
+$ rvm rubygems latest
+$ gem update --system
+$ gem install gemcutter
+</PRE>
+It seems that the current version of <A NAME="tex2html1505"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> 
+already includes <code>yank</code>.
 
 <P>
-CI
-can be seen as an intensification of practices of periodic integration
-advocated by earlier published methods of incremental and iterative
-software development. 
+You can't push the same gem version twice. 
+Yanking just marks a particular version as <SPAN  CLASS="textbf">'invalid'</SPAN>:
 
 <P>
+<PRE>
+$ gem list tictactoe -ra
+*** REMOTE GEMS ***
+tic-tac.toe (0.3.4, 0.3.3, 0.3.2, 0.3.1)
 
-<OL>
-<LI>CI was originally intended to be used in combination with automated
-unit tests written through the practices of test-driven development.
-</LI>
-<LI>Initially this was conceived of as running all unit tests and
-verifying they all passed before committing to the mainline. 
-</LI>
-<LI>Later
-elaborations of the concept introduced build servers, which
-automatically run the unit tests periodically or even after every
-commit and report the results to the developers. 
-</LI>
-<LI>In the same vein the practice of <A NAME="25760"></A><SPAN  CLASS="textbf">continuous delivery</SPAN> 
-further extends CI by making sure the software checked in 
-on the mainline is always in a state that can be deployed 
-to users and makes the actual deployment process very rapid.
-</LI>
-</OL>
+gem yank tic-tac-toe -v0.3.4
+</PRE>
+Veamos la página de ayuda:
+<PRE>
+[~/ruby_quiz/tictactoe/solutions/eduardo_segredo(john)]$ gem help yank
+Usage: gem yank GEM -v VERSION [-p PLATFORM] [--undo] [--key KEY_NAME] [options]
 
-<P>
-<SPAN  CLASS="textbf">The use of build
-servers (not necessarily running unit tests) had already been
-practised by some teams outside the XP community. Now, many
-organisations have adopted CI without adopting all of XP.</SPAN>
+  Options:
+    -v, --version VERSION            Specify version of gem to remove
+        --platform PLATFORM          Specify the platform of gem to remove
+        --undo
+    -k, --key KEY_NAME               Use API key from your gem credentials file
+
+
+  Common Options:
+    -h, --help                       Get help on this command
+    -V, --[no-]verbose               Set the verbose level of output
+    -q, --quiet                      Silence commands
+        --config-file FILE           Use this config file instead of default
+        --backtrace                  Show stack backtrace on errors
+        --debug                      Turn on Ruby debugging
+
+
+  Arguments:
+    GEM       name of gem
+
+  Summary:
+    Remove a specific gem version release from RubyGems.org
+
+  Description:
+    Remove a specific gem version release from RubyGems.org
+</PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html14173"
-  HREF="node662.html">Uso de Travis</A>
-<UL>
-<LI><A NAME="tex2html14174"
-  HREF="node662.html#SECTION061510010000000000000">Step one: Sign in</A>
-<LI><A NAME="tex2html14175"
-  HREF="node662.html#SECTION061510020000000000000">Step two: Activate GitHub Service Hook</A>
-<LI><A NAME="tex2html14176"
-  HREF="node662.html#SECTION061510030000000000000">Step three: Add <TT>.travis.yml</TT> file to your repository</A>
-<LI><A NAME="tex2html14177"
-  HREF="node662.html#SECTION061510040000000000000">Validate Your <TT>.travis.yml</TT></A>
-<LI><A NAME="tex2html14178"
-  HREF="node662.html#SECTION061510050000000000000">Default Test Script</A>
-<LI><A NAME="tex2html14179"
-  HREF="node662.html#SECTION061510060000000000000">Testing Against Multiple Versions of Gems</A>
-<LI><A NAME="tex2html14180"
-  HREF="node662.html#SECTION061510070000000000000">Custom Bundler arguments and Gemfile locations</A>
-<LI><A NAME="tex2html14181"
-  HREF="node662.html#SECTION061510080000000000000">Rakefile</A>
-<LI><A NAME="tex2html14182"
-  HREF="node662.html#SECTION061510090000000000000">Ejemplo de Jerarquía</A>
-<LI><A NAME="tex2html14183"
-  HREF="node662.html#SECTION0615100100000000000000">Página de Travis Mostrando los Resultados de unas Pruebas con Rspec</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html14184"
-  HREF="node663.html">Enlaces</A>
-<LI><A NAME="tex2html14185"
-  HREF="node664.html">Notificaciones/Notifications</A>
-<LI><A NAME="tex2html14186"
-  HREF="node665.html">Limites de Timepo/Build Timeouts</A>
-<LI><A NAME="tex2html14187"
-  HREF="node666.html">Databases and other services</A>
-<LI><A NAME="tex2html14188"
-  HREF="node667.html">Travis en la Línea de Comandos</A>
-</UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html14171"
-  HREF="node662.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14165"
-  HREF="node568.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14159"
-  HREF="node660.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14167"
-  HREF="node769.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14169"
-  HREF="node772.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="logoLPP.png"
- ALT="LPP"></A><A NAME="tex2html30"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html31"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html32"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html33"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html34"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html35"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html36"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html37"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html39"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html14172"
-  HREF="node662.html">Uso de Travis</A>
-<B> Subir:</B> <A NAME="tex2html14166"
-  HREF="node568.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14160"
-  HREF="node660.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html14168"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14170"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

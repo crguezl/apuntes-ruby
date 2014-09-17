@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: La Calculadora</TITLE>
-<META NAME="description" CONTENT="Práctica: La Calculadora">
+<TITLE>Memoización</TITLE>
+<META NAME="description" CONTENT="Memoización">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node155.html">
-<LINK REL="previous" HREF="node147.html">
-<LINK REL="up" HREF="node116.html">
+<LINK REL="previous" HREF="node153.html">
+<LINK REL="up" HREF="node150.html">
 <LINK REL="next" HREF="node155.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5425"
+<A NAME="tex2html5451"
   HREF="node155.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5419"
-  HREF="node116.html">
+<A NAME="tex2html5445"
+  HREF="node150.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5413"
+<A NAME="tex2html5439"
   HREF="node153.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5421"
-  HREF="node769.html">
+<A NAME="tex2html5447"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5423"
-  HREF="node772.html">
+<A NAME="tex2html5449"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,169 +96,172 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5426"
-  HREF="node155.html">Ejercicios</A>
-<B> Subir:</B> <A NAME="tex2html5420"
-  HREF="node116.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5414"
-  HREF="node153.html">Véase También</A>
- &nbsp; <B>  <A NAME="tex2html5422"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5424"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5452"
+  HREF="node155.html">Símbolos, Métodos y Procs</A>
+<B> Subir:</B> <A NAME="tex2html5446"
+  HREF="node150.html">Programación Funcional</A>
+<B> Anterior:</B> <A NAME="tex2html5440"
+  HREF="node153.html">Aplicación Parcial de Funciones</A>
+ &nbsp; <B>  <A NAME="tex2html5448"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5450"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H1><A NAME="SECTION026100000000000000000"></A>
-   <A NAME="5742"></A>
-  
-<A NAME="practica:lacalculadora2"></A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html5453"
+  HREF="node154.html#SECTION02694010000000000000">El método <TT>benchmark</TT></A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02694000000000000000"></A>
+<A NAME="subsection:memoizacion"></A>
 <BR>
-Práctica: La Calculadora
-</H1>
+Memoización
+</H2>
 
 <P>
-Se trata de extender la calculadora en postfijo realizada en la práctica
-<A HREF="node31.html#practica:postfijo">7.13</A>.
+La <A NAME="5789"></A><SPAN  CLASS="textit">memoizacion</SPAN> es una técnica que se usa para acelerar el cómputo de una función cuando:
+
+<OL>
+<LI>La función retorna siempre el mismo valor cuando se le pasa la misma lista de argumentos (es <A NAME="5791"></A><SPAN  CLASS="textit">pura</SPAN>, 
+no depende de efectos laterales)
+</LI>
+<LI>Tenemos razones para creer que la función será llamada con los mismos argumentos muchas veces
+</LI>
+<LI>La función tarda bastante en computar el resultado
+</LI>
+</OL>
 
 <P>
-La nueva calculadora deberá estar implantada mediante una clase 
-<code>PostfixCalc</code> y dispone de dos operadores <code>=</code> y <code>!</code> que permiten respectivamente 
-asignar valores a variables
-y obtener el valor ligado a una variable.
+En esta sección aumentamos el módulo <code>Functional</code> con el operador unario 
+<code>+lambda</code> 
+que retorna una lambda equivalente a su argumento
+pero que cachea la relación entre argumentos y el valor retornado.
 
 <P>
-Los objetos <code>PostfixCalc</code>  disponen de un atributo <code>stack</code> (de sólo lectura),
-de un atributo <code>st</code> que contiene la tabla de símbolos.
+Veamos un ejemplo de uso.
+Las circustancias enumeradas anteriormente
+se dan en el cálculo de la función de <A NAME="5793"></A><SPAN  CLASS="textit">Fibonacci</SPAN>.
 
 <P>
-El objeto dispone también de un hash privado 
-que mantiene las lambdas (véase la seccion <A HREF="node155.html#ejercicios:lambda">12.11</A>)
-que implantan las operaciones de  suma, resta, multiplicación, división,
-etc.
+
+<DIV ALIGN="CENTER"><A NAME="figure:fibonacci"></A><A NAME="5179"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
+Arbol de llamadas para la función de Fibonacci</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+[scale=1]chapter6/fibonacci.png
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
 <PRE>
-    @f = {
-      '+' =&gt; lambda { |a,b| a+b},
-      '*' =&gt; lambda { |a,b| a*b},
-      ...
+require './functional_partial'
+require 'benchmark'
+....
+if $0 == __FILE__
+  fib  = lambda { |n| n &lt; 2 ? n : fib[n-1] + fib[n-2] }
+  fibm = +fib
+
+  n = 35
+  Benchmark.benchmark(CAPTION, 7, FORMAT) do |x|
+    tf = x.report("computed:") { fib[n]  }
+    tt = x.report("memoized:") { fibm[n] }
+  end
+end
+</PRE>
+La ejecución compara las dos versiones, con y sin memoizar:
+<PRE>
+[~/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ ruby functional_memoize.rb 
+              user     system      total        real
+computed:  6.500000   0.010000   6.510000 (  6.520144)
+memoized:  6.140000   0.000000   6.140000 (  6.153518)
+</PRE>
+Este es el código de <code>memoize</code>:
+<PRE>
+[~/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat functional_memoize.rb 
+require './functional_partial'
+require 'benchmark'
+include Benchmark
+
+module Functional
+  #
+  # Return a new lambda that caches the results of this function and 
+  # only calls the function when new arguments are supplied.
+  #
+  def memoize
+    cache = {}  # An empty cache. The lambda captures this in its closure.
+    lambda {|*args|
+      # notice that the hash key is the entire array of arguments!
+      cache[args] = self[*args] unless cache.has_key?(args)  
+      cache[args]
     }
-</PRE>
-
-<P>
-El siguiente ejemplo muestra un código que usa la clase:
-
-<P>
-<PRE>
- 43 if __FILE__ == $0
- 44   include Math
- 45 
- 46   expr = ARGV.join(" ")
- 47   c = PostfixCalc.new({'sin'   =&gt; lambda { |a| sin(a) }})
- 48 
- 49   c.eval(expr)
- 50 
- 51   puts "----stack------"
- 52   c.stack.each { |m| puts m }
- 53   puts "----symbol table------"
- 54   c.st.each { |k,v|  puts "#{k} =&gt; #{v}" }
- 55 end
-</PRE>
-
-<P>
-Siguen varias ejecuciones:
-
-<P>
-<PRE>
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '3.14159 2 / sin'
-----stack------
-0.99999999999912
-</PRE>
-Por defecto la calculadora contiene un conjunto básico de operaciones.
-El programa cliente puede añadir nuevas operaciones como ocurre en el ejemplo:
-<PRE>
-  c = PostfixCalc.new({'sin'   =&gt; lambda { |a| sin(a) }})
-</PRE>
-El siguiente ejemplo muestra el uso del operador de asignación <code>=</code>
-y del operador de carga (fetch) <code>!</code>:
-<PRE>
-----symbol table------
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '2 a = 3 b = a ! b ! *'
-----stack------
-6.0
-----symbol table------
-a =&gt; 2.0
-b =&gt; 3.0
-</PRE>
-La expresión <code>2 a =</code> retira el <code>2</code> y la <code>a</code> de la pila y
-almacena en la entrada <code>a</code> de la tabla de símbolos de la calculadora
-un <code>2</code>. No añade nada al top de la pila.
-
-<P>
-La expresión <code>a !</code> empuja en el top de la pila el valor asociado 
-con la entrada <code>a</code> de la tabla de símbolos.
-
-<P>
-La función <code>p</code> imprime el elemento en el top de la pila:
-<PRE>
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '2 a = 3 a ! 4 + p'
-6.0
-----stack------
-3.0
-6.0
-----symbol table------
-a =&gt; 2.0
+  end
+  
+  alias +@ memoize        # cached_f = +f
+end
 </PRE>
 
 <P>
 
-<UL>
-<LI>Consulte el método <code>merge!</code> de la clase <A NAME="tex2html331"
-  HREF="http://www.ruby-doc.org/core-1.9.2/Hash.html">Hash</A>
+<H4><A NAME="SECTION02694010000000000000">
+El método <TT>benchmark</TT></A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html305"
+  HREF="http://www.ruby-doc.org/stdlib-2.0/libdoc/benchmark/rdoc/Benchmark.html#method-c-benchmark">benchmark</A><code>(caption = "", label_width = nil, format = nil, *labels)</code>
+
+<P>
 </LI>
-<LI>Generalize el programa para que los operadores <code>=</code> y <code>!</code> puedan ir pegados al identificador:
-<PRE>
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '2 a= 3 a! 4 + p'
-6.0
-----stack------
-3.0
-6.0
-----symbol table------
-a =&gt; 2.0
-</PRE>
-Hay varias soluciones. Una es usar <code>scan</code>:
-<PRE>
-&gt;&gt; "12 -3+ 4- 5*".scan(/-?\d+|[-+*]/)
-=&gt; ["12", "-3", "+", "4", "-", "5", "*"]
-&gt;&gt;
-</PRE>
-Otra es usar <code>gsub</code>. Consulte el método <code>gsub</code> de la clase <A NAME="5743"></A><A NAME="tex2html332"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>, que permite sustituciones
-globales:
-<PRE>
-expr.gsub!(/([a-zA-Z_]\w)*([!=])/, '\1 \2')
-</PRE>
+<LI>Invokes the block with a <code>Benchmark::Report</code> object, which may be
+used to collect and report on the results of individual benchmark
+tests. 
+
+<P>
 </LI>
-</UL>
+<LI>Reserves <code>label_width</code> leading spaces for labels on each line.
+
+<P>
+</LI>
+<LI>Prints <code>caption</code> at the top of the report, and uses format to format
+each line. 
+
+<P>
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5425"
+<A NAME="tex2html5451"
   HREF="node155.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5419"
-  HREF="node116.html">
+<A NAME="tex2html5445"
+  HREF="node150.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5413"
+<A NAME="tex2html5439"
   HREF="node153.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5421"
-  HREF="node769.html">
+<A NAME="tex2html5447"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5423"
-  HREF="node772.html">
+<A NAME="tex2html5449"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -313,20 +316,20 @@ expr.gsub!(/([a-zA-Z_]\w)*([!=])/, '\1 \2')
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5426"
-  HREF="node155.html">Ejercicios</A>
-<B> Subir:</B> <A NAME="tex2html5420"
-  HREF="node116.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5414"
-  HREF="node153.html">Véase También</A>
- &nbsp; <B>  <A NAME="tex2html5422"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5424"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5452"
+  HREF="node155.html">Símbolos, Métodos y Procs</A>
+<B> Subir:</B> <A NAME="tex2html5446"
+  HREF="node150.html">Programación Funcional</A>
+<B> Anterior:</B> <A NAME="tex2html5440"
+  HREF="node153.html">Aplicación Parcial de Funciones</A>
+ &nbsp; <B>  <A NAME="tex2html5448"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5450"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Clausuras y Bindings</TITLE>
-<META NAME="description" CONTENT="Clausuras y Bindings">
+<TITLE>Ejemplo: La Clase Filter</TITLE>
+<META NAME="description" CONTENT="Ejemplo: La Clase Filter">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,27 +20,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="previous" HREF="node142.html">
-<LINK REL="up" HREF="node141.html">
+<LINK REL="up" HREF="node135.html">
 <LINK REL="next" HREF="node144.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5257"
+<A NAME="tex2html5283"
   HREF="node144.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5251"
-  HREF="node141.html">
+<A NAME="tex2html5277"
+  HREF="node135.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5247"
+<A NAME="tex2html5273"
   HREF="node142.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5253"
-  HREF="node769.html">
+<A NAME="tex2html5279"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5255"
-  HREF="node772.html">
+<A NAME="tex2html5281"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,16 +95,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5258"
-  HREF="node144.html">Repaso</A>
-<B> Subir:</B> <A NAME="tex2html5252"
-  HREF="node141.html">Clausuras</A>
-<B> Anterior:</B> <A NAME="tex2html5248"
-  HREF="node142.html">Clausuras y Variables Compartidas</A>
- &nbsp; <B>  <A NAME="tex2html5254"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5256"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5284"
+  HREF="node144.html">Clausuras</A>
+<B> Subir:</B> <A NAME="tex2html5278"
+  HREF="node135.html">Procs y Lambdas</A>
+<B> Anterior:</B> <A NAME="tex2html5274"
+  HREF="node142.html">Bloques para las Transacciones</A>
+ &nbsp; <B>  <A NAME="tex2html5280"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5282"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
@@ -113,97 +113,114 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <UL CLASS="ChildLinks">
 <LI><UL>
-<LI><A NAME="tex2html5259"
-  HREF="node143.html#SECTION02662010000000000000">Véase</A>
+<LI><A NAME="tex2html5285"
+  HREF="node143.html#SECTION02658010000000000000">Véase</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H2><A NAME="SECTION02662000000000000000"></A>
-<A NAME="subsection:clausurasybindings"></A>
-<BR>
-Clausuras y Bindings
+<H2><A NAME="SECTION02658000000000000000">
+Ejemplo: La Clase <TT>Filter</TT></A>
 </H2>
-La clase <A NAME="tex2html254"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> define un método denominado <code>binding</code>.
-Cuando se llama este método en un proc o en una lambda retorna un objeto
-<A NAME="tex2html255"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> que representa las ligaduras en efecto para esa clausura.
-
-<P>
-<TABLE CELLPADDING=3 BORDER="1">
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=397>Los <A NAME="5491"></A><SPAN  CLASS="textit">bindings</SPAN> conllevan mas que variables: <SPAN  CLASS="textit">guardan toda la
-información necesaria para poder ejecutar el método incluyendo el
-valor de</SPAN> <code>self</code> <SPAN  CLASS="textit">y - si existe - el bloque que será
-ejecutado con</SPAN>
-<code>yield</code></TD>
-</TR>
-</TABLE>
-
-<P>
+En este ejemplo - modificado de uno en el libro [<A
+ HREF="node779.html#RBP">4</A>] - 
+creamos una clase <code>Filter</code> que proveee un pequeño DSL 
+para especificar restricciones que puedan ser usados sobre objetos <A NAME="tex2html254"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerable.html"><TT>Enumerable</TT></A>
+para filtrar los elementos producidos por el objeto <A NAME="tex2html255"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerable.html"><TT>Enumerable</TT></A>:
 <PRE>
-# Return a lambda that retains or "closes over" the argument n
-def multiplier(n) 
-  lambda {|data| data.collect{|x| x*n } }
-end
-doubler = multiplier(2)     # Get a lambda that knows how to double
-puts doubler.call([1,2,3])  # Prints 2,4,6
+19    f = Filter.new
+20    f.constraint { |x| x &gt; 10 } .and { |x| x.even? } .and { |x| x % 3 == 0 }
+21   
+22    puts (8..24).select(&amp;f)
 </PRE>
+Del uso del objeto <code>Filter</code> deducimos que los objetos <code>Filter</code> debe tener
+métodos
 
-<P>
-El Módulo <A NAME="tex2html256"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> proporciona la función global <A NAME="5496"></A><A NAME="tex2html257"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
-que admite como segundo argumento un objeto <A NAME="tex2html258"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> que provee el 
-contexto para evaluar la cadena de código Ruby:
+<OL>
+<LI><code>constraint</code> (línea 20)
+</LI>
+<LI><code>and</code> (línea 20)
+</LI>
+<LI>Además por la forma de uso (línea 20) podemos ver que <code>constraint</code> devuelve un
+objeto <code>Filter</code>, lo mismo que <code>and</code>
+</LI>
+<LI><code>to_proc</code> (línea 22)
+</LI>
+</OL>
+La ejecución resulta en:
 <PRE>
-eval("n=3", doubler.binding) # Or doubler.binding.eval("n=3") in Ruby 1.9
-puts doubler.call([1,2,3])   # Now this prints 3,6,9!
+[~/srcLPP/rubytesting/ruby_best_practices/chapter5_functional_programming_techniques]$ ruby filter.rb 
+12
+18
+24
 </PRE>
-Como atajo, el método <A NAME="5503"></A><A NAME="tex2html259"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
-nos permite pasar directamente un objeto <A NAME="tex2html260"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>
-en vez de pasar el  <A NAME="tex2html261"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> del objeto <A NAME="tex2html262"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>:
+Este es el código de la clase:
 <PRE>
-eval("n=3", doubler)
-</PRE>
-
-<P>
-El método <A NAME="5516"></A><A NAME="tex2html263"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-binding"><TT>binding</TT></A>
-de <A NAME="tex2html264"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> retorna un objeto <A NAME="tex2html265"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> que representa 
-los bindings en efecto en el punto de la llamada.
-
-<P>
-<PRE>
-[~/Chapter6MethodsProcsLambdasAndClosures]$ cat binding.rb 
-def tutu(p)
-  x = 4
-  x = 2*p
-  return [p, binding]
-end
-p, b = tutu(8)
-p eval("p", b) #  8  
-p eval("x", b) # 16
+[~/srcLPP/rubytesting/ruby_best_practices/chapter5_functional_programming_techniques]$ cat -n filter.rb 
+ 1  class Filter
+ 2    def initialize
+ 3      @constraints = []
+ 4    end
+ 5  
+ 6    def constraint(&amp;block)
+ 7      @constraints &lt;&lt; block
+ 8      self
+ 9    end
+10    alias and constraint
+11  
+12    def to_proc
+13      -&gt;(e) { @constraints.all? { |fn| fn[e] } }
+14    end
+15  
+16  end
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION02662010000000000000">
+<OL>
+<LI><A NAME="5607"></A><SPAN  CLASS="textit">Method chaining</SPAN>, is a common syntax for invoking multiple method calls in object-oriented programming languages. 
+
+<P>
+</LI>
+<LI>Each method returns an object, allowing the calls to be chained together in a single statement.
+
+<P>
+</LI>
+<LI>Chaining is <A NAME="5609"></A><SPAN  CLASS="textit">syntactic sugar</SPAN> which eliminates the need for intermediate variables. 
+
+<P>
+</LI>
+<LI>A similar syntax is <A NAME="5611"></A><SPAN  CLASS="textit">method cascading</SPAN>, where after the method call the expression evaluates to the current object, not the natural return value of the method. 
+
+<P>
+</LI>
+<LI>Cascading can be implemented using method chaining by having the method return the current object itself (<code>self</code>). 
+
+<P>
+</LI>
+<LI>Cascading is a key technique in fluent interfaces, and since chaining
+is widely implemented in object-oriented languages while cascading
+isn't, this form of <A NAME="5613"></A><SPAN  CLASS="textit">cascading-by-chaining</SPAN> by returning
+<code>self</code> is often referred to simply as <A NAME="5615"></A><SPAN  CLASS="textit">chaining</SPAN>.
+
+<P>
+</LI>
+<LI>Both chaining and cascading come from the Smalltalk language.
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION02658010000000000000">
 Véase</A>
 </H4>
   
 
 <OL>
-<LI><A NAME="tex2html266"
-  HREF="http://youtu.be/VBC-G6hahWA">An Introduction to Procs, Lambdas and Closures in Ruby</A>
-(CooperPress) (YouTube)
+<LI><A NAME="tex2html256"
+  HREF="http://martinfowler.com/bliki/FluentInterface.html">FluentInterface.  Martin Fowler.  20 December 2005</A>
 </LI>
 </OL>
 
@@ -211,20 +228,20 @@ Véase</A>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5257"
+<A NAME="tex2html5283"
   HREF="node144.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5251"
-  HREF="node141.html">
+<A NAME="tex2html5277"
+  HREF="node135.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5247"
+<A NAME="tex2html5273"
   HREF="node142.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5253"
-  HREF="node769.html">
+<A NAME="tex2html5279"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5255"
-  HREF="node772.html">
+<A NAME="tex2html5281"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -279,20 +296,20 @@ Véase</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5258"
-  HREF="node144.html">Repaso</A>
-<B> Subir:</B> <A NAME="tex2html5252"
-  HREF="node141.html">Clausuras</A>
-<B> Anterior:</B> <A NAME="tex2html5248"
-  HREF="node142.html">Clausuras y Variables Compartidas</A>
- &nbsp; <B>  <A NAME="tex2html5254"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5256"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5284"
+  HREF="node144.html">Clausuras</A>
+<B> Subir:</B> <A NAME="tex2html5278"
+  HREF="node135.html">Procs y Lambdas</A>
+<B> Anterior:</B> <A NAME="tex2html5274"
+  HREF="node142.html">Bloques para las Transacciones</A>
+ &nbsp; <B>  <A NAME="tex2html5280"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5282"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

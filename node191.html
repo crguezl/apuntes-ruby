@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Delegación</TITLE>
-<META NAME="description" CONTENT="Delegación">
+<TITLE>Herencia y Variables de la Instancia</TITLE>
+<META NAME="description" CONTENT="Herencia y Variables de la Instancia">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node192.html">
 <LINK REL="previous" HREF="node190.html">
-<LINK REL="up" HREF="node182.html">
+<LINK REL="up" HREF="node185.html">
 <LINK REL="next" HREF="node192.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6076"
+<A NAME="tex2html6106"
   HREF="node192.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6070"
-  HREF="node182.html">
+<A NAME="tex2html6100"
+  HREF="node185.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6066"
+<A NAME="tex2html6094"
   HREF="node190.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6072"
-  HREF="node769.html">
+<A NAME="tex2html6102"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6074"
-  HREF="node772.html">
+<A NAME="tex2html6104"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,183 +96,111 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6077"
-  HREF="node192.html">Creación e Inicialización de</A>
-<B> Subir:</B> <A NAME="tex2html6071"
-  HREF="node182.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6067"
-  HREF="node190.html">Herencia y Constantes</A>
- &nbsp; <B>  <A NAME="tex2html6073"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6075"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6107"
+  HREF="node192.html">Herencia y Variables de</A>
+<B> Subir:</B> <A NAME="tex2html6101"
+  HREF="node185.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6095"
+  HREF="node190.html">Herencia y Métodos de</A>
+ &nbsp; <B>  <A NAME="tex2html6103"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6105"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html6078"
-  HREF="node191.html#SECTION02739010000000000000">Véase</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02739000000000000000">
-Delegación</A>
+<H2><A NAME="SECTION02736000000000000000">
+Herencia y Variables de la Instancia</A>
 </H2>
 
 <P>
-La delegación es un patrón de diseño que consiste en que ciertas tareas, en vez de ser realizadas por el objeto
-son delegadas en ciertos objetos asistentes.
-
-<P>
-Una forma de delegar en Ruby consiste en que la clase sea una subclase de <code>DelegateClass</code>,
-a la que se le pasa el nombre de la clase en la que se delega como parámetro (<code>Flintstone</code> en el ejemplo).
+Considere el siguiente ejemplo:
 <PRE>
-class Fred &lt; DelegateClass(Flintstone)
-  def initialize
-    # ...
-    super(Flintstone.new(...))
+[~/srcLPP/inheritance]$ cat VariableInheritance.rb 
+class Point
+  def initialize(x,y)
+    @x,@y = x, y
   end
-  # ...
- end
-</PRE>
-Luego, en el <code>initialize</code> llamamos al de la superclase, pasandole como argumento el objeto en el que se delega.
 
-<P>
-Por ejemplo, podríamos reescribir la práctica de los conjuntos delegando en la clase <code>Array</code> los métodos <code>length</code>
-e <code>include?</code>:
+  def to_s
+    "#@x #@y"
+  end
+end
+
+class Point3D &lt; Point
+  def initialize(x, y, z)
+    super(x, y)
+    @z = z
+  end
+
+  def to_s
+    "#@x #@y #@z"
+  end
+end
+
+if __FILE__ == $0
+  q, r, s = Point3D.new(1,1,1), Point3D.new(2,2,2), Point3D.new(3,3,3)
+  puts q, r, s
+
+  print "The instance variables of point 'q' are: "
+  puts q.instance_variables.join(',')
+end
+</PRE>
+Observe como en la línea 18 accedemos a las referencias <code>@x</code> y <code>@y</code> de la superclase <code>Point</code>.
+Este código funciona como cabría esperar:
 
 <P>
 <PRE>
-~/rubytesting/sets$ cat -n setsdelegate.rb 
-     1  require 'delegate'
-     2  class Set2 &lt; DelegateClass(Array)
-     3  
-     4    attr_accessor :sep
-     5    attr_reader :a
-     6    protected :a
-     7  
-     8    def initialize(a)
-     9      @sep = ', '
-    10      @a = a.uniq.sort
-    11      super(@a)
-    12    end
-    13  
-    14    def to_s
-    15      @a.join(@sep)
-    16    end
-    17  
-    18    # delegated
-    19    #def length 
-    20    #  @a.length
-    21    #end
-    22  
-    23    alias cardinal length
-    24  
-    25    # delegated
-    26    #def include?(x)
-    27    #  @a.include? x
-    28    #end
-    29  
-    30  end
-    31  
-    32  if __FILE__  == $0
-    33    x = Set2.new [1, 2, 3, 3, 4]
-    34    puts "x = #{x}"
-    35    puts "x.length = #{x.length}"              # x.length = 4 
-    36    puts "x.cardinal = #{x.cardinal}"          # x.cardinal = 4
-    37  
-    38    puts "x includes 2 = #{x.include? 2}"      # x includes 2 = true
-    39    puts "x includes 8 = #{x.include? 8}"      # x includes 8 = false
-    40  end
-</PRE>
-En realidad <code>DelegateClass(Array)</code> es una llamada al método <code>DelegateClass</code>
-del package <A NAME="tex2html377"
-  HREF="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/delegate/rdoc/"><TT>delegate</TT></A>. Esta llamada crea y retorna una nueva clase, la cual define un <code>method_missing</code> que redirecciona las llamadas al objeto en el que se 
-delega.
-<PRE>
-~/rubytesting/sets$ ruby setsdelegate.rb 
-x = 1, 2, 3, 4
-x.length = 4
-x.cardinal = 4
-x includes 2 = true
-x includes 8 = false
-</PRE>
-
-<P>
-Otra forma de delegar es usar el método <code>delegate</code> de <code>Rails</code>.
-Podemos instalar <code>rails</code> usando <code>gem</code>:
-<PRE>
-~$ sudo gem install rails
-Password:
-Successfully installed rails-3.1.1
-1 gem installed
-Installing ri documentation for rails-3.1.1...
-file 'lib' not found
-Installing RDoc documentation for rails-3.1.1...
-file 'lib' not found
-~$
-</PRE>
-
-<P>
-El método <code>delegate</code> recibe la lista de nombres de los métodos (especificados como
-símbolos o strings) a delegar
-y el nombre del objeto atributo en el que se delega, especificado mediante
-la clave <code>:to</code>.
-
-<P>
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n delegation2.rb 
-   1  require "rails"
-   2  module I
-   3    def f
-   4      puts "#{self.class}: doing f()"
-   5    end
-   6   
-   7    def g
-   8      puts "#{self.class}: doing g()"
-   9    end
-  10  end
-  11   
-  13  class A
-  14    include I
-  15  end
-  16   
-  18  class B
-  19    include I
-  20  end
-  22   
-  23  class C
-  24    attr_accessor :i
-  25    delegate :f, :g, :to =&gt; :i
-  26   
-  27    def initialize(klass = A)
-  28      self.i = klass.new
-  29    end
-  30  end
-  32   
-  33  c = C.new
-  34  c.f         # output: A: doing f()
-  35  c.g         # output: A: doing g()
-  36  c = C.new(B)
-  37  c.f         # output: B: doing f()
-  38  c.g         # output: B: doing g()
+[~/srcLPP/inheritance]$ ruby VariableInheritance.rb 
+1 1 1
+2 2 2
+3 3 3
+The instance variables of point 'q' are: @x,@y,@z
+[~/srcLPP/inheritance]$
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION02739010000000000000">
-Véase</A>
-</H4>
-  
+<UL>
+<LI>Una variable de un objeto/instancia
+se crea en el momento en el que se le asigna
+un valor
+</LI>
+<LI>Las variables de la instancia no son definidas por la clase
+y no están relacionadas con los mecanismos de herencia
+</LI>
+<LI>Si una subclase utiliza el mismo  nombre 
+para una variable de instancia que alguno de sus ancestros la variable
+será <SPAN  CLASS="textbf">sobreescrita</SPAN>
+</LI>
+</UL>
+
+<P>
+Puesto que las variables de instancia no están relacionadas con la
+herencia, se deduce que una variable de instancia usada por una
+subclase no puede
+<SPAN  CLASS="textbf">ocultar</SPAN> una variable de instancia definida usada en la superclase.
+Si una subclase usa una variable de instancia con el mismo nombre que una variable utilizada por uno de sus
+ancestros, sobreescribirá el valor de la variable de su ancestro.
+<SPAN  CLASS="textbf">Esto puede ser que se haga con intencionalidad, para cambiar la conducta del ancestro
+o puede que ocurra por accidente. En este último caso seguramente dará lugar a bugs</SPAN>.
+
+<P>
 
 <OL>
-<LI><A NAME="tex2html378"
-  HREF="http://gdakram.com/past/2010/12/2/multiple_ways_in_implementing_delegation_pattern_in_ruby/">Multiple ways in implementing delegation pattern in ruby DEC 2010 by shahrier akram gdakram</A>
+<LI>Observe que, como en el ejemplo, 
+podemos siempre averiguar cuales son las variables de instancia
+de un objeto <code>q</code> llamando a <code>q.instance_variables</code>
+</LI>
+<LI>En general, el mecanismo de herencia debe ser usado para extender clases en Ruby
+sólo cuando estamos familiarizados y tenemos control de la superclase.
+</LI>
+<LI>Compruebe que nombres usa la superclase para sus variables de instancia y evítelos
+</LI>
+<LI>Documente sus variables de instancia en la sección para desarrolladores
+</LI>
+<LI>Prefije los nombres de sus variables de instancia con el nombre de la clase. 
 </LI>
 </OL>
 
@@ -279,20 +208,20 @@ Véase</A>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6076"
+<A NAME="tex2html6106"
   HREF="node192.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6070"
-  HREF="node182.html">
+<A NAME="tex2html6100"
+  HREF="node185.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6066"
+<A NAME="tex2html6094"
   HREF="node190.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6072"
-  HREF="node769.html">
+<A NAME="tex2html6102"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6074"
-  HREF="node772.html">
+<A NAME="tex2html6104"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -347,20 +276,20 @@ Véase</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6077"
-  HREF="node192.html">Creación e Inicialización de</A>
-<B> Subir:</B> <A NAME="tex2html6071"
-  HREF="node182.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6067"
-  HREF="node190.html">Herencia y Constantes</A>
- &nbsp; <B>  <A NAME="tex2html6073"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6075"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6107"
+  HREF="node192.html">Herencia y Variables de</A>
+<B> Subir:</B> <A NAME="tex2html6101"
+  HREF="node185.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6095"
+  HREF="node190.html">Herencia y Métodos de</A>
+ &nbsp; <B>  <A NAME="tex2html6103"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6105"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

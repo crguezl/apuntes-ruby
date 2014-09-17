@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Generadores</TITLE>
-<META NAME="description" CONTENT="Generadores">
+<TITLE>Grape</TITLE>
+<META NAME="description" CONTENT="Grape">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -28,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11321"
+<A NAME="tex2html11362"
   HREF="node495.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11315"
+<A NAME="tex2html11356"
   HREF="node492.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11309"
+<A NAME="tex2html11350"
   HREF="node493.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11317"
-  HREF="node769.html">
+<A NAME="tex2html11358"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11319"
-  HREF="node772.html">
+<A NAME="tex2html11360"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,387 +96,38 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11322"
-  HREF="node495.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html11316"
-  HREF="node492.html">Padrino</A>
-<B> Anterior:</B> <A NAME="tex2html11310"
-  HREF="node493.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html11318"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11320"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11363"
+  HREF="node495.html">Ramaze</A>
+<B> Subir:</B> <A NAME="tex2html11357"
+  HREF="node492.html">Alternativas a Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html11351"
+  HREF="node493.html">Cuba</A>
+ &nbsp; <B>  <A NAME="tex2html11359"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11361"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION032920000000000000000">
-Generadores</A>
+<H1><A NAME="SECTION032720000000000000000">
+Grape</A>
 </H1>
-
-<P>
-The usage for the project generator is quite simple:
-
-<P>
-<PRE>
-$ padrino g project &lt;the_app_name&gt; &lt;/path/to/create/app&gt; --&lt;component-name&gt; &lt;value&gt;
-</PRE>
-The simplest possible command to generate a base application would be:
-
-<P>
-<PRE>
-$ padrino g project demo_project
-</PRE>
-
-<P>
-Esto crea un <code>config.ru</code> como este:
-<PRE>
-  1 #!/usr/bin/env rackup
-  2 
-  3 require File.expand_path("../config/boot.rb", __FILE__)
-  4 
-  5 run Padrino.application
-</PRE>
-El fichero <code>boot.rb</code> contiene:
-<PRE>
-  1 PADRINO_ENV  = ENV['PADRINO_ENV'] ||= ENV['RACK_ENV'] ||= 'development'  unless defined?(PADRINO_ENV)
-  2 PADRINO_ROOT = File.expand_path('../..', __FILE__) unless defined?(PADRINO_ROOT)
-  3 
-  4 require 'rubygems' unless defined?(Gem)
-  5 require 'bundler/setup'
-  6 Bundler.require(:default, PADRINO_ENV)
-  7 
-  8 Padrino.before_load do
-  9 end
- 10 
- 11 Padrino.after_load do
- 12 end
- 13 
- 14 Padrino.load!
-</PRE>
-La que parece ser la aplicación contiene este código:
-<PRE>
-[~/srcpadrino/demo_project]$ cat app/app.rb 
-module DemoProject
-  class App &lt; Padrino::Application
-    register Padrino::Rendering
-    register Padrino::Mailer
-    register Padrino::Helpers
-
-    enable :sessions
-
-  end
-end
-</PRE>
-You can also define specific components to be used:
-
-<P>
-<PRE>
-$ padrino g project demo_project -t rspec -e haml -m rr -s jquery -d datamapper -c sass
-</PRE>
-You can also instruct the generator to skip a certain component to avoid using one at all (or to use your own):
-
-<P>
-<PRE>
-$ padrino g project demo_project --test none --renderer none
-</PRE>
-You can also specify an alternate name for your core application using the <code>--app</code> option:
-
-<P>
-<PRE>
-$ padrino g project demo_project --app alternate_app_name # alias -n
-</PRE>
-The generator uses the <code>bundler</code> gem to resolve any application
-dependencies when the application is newly created. The necessary
-<code>bundler</code> command can be executed automatically through the generator
-with:
-
-<P>
-<PRE>
-$ padrino g project demo_project --run_bundler # alias -b
-</PRE>
-or this can be done manually through executing command 
-<code>bundle install</code>
-in the terminal at the root of the generated application.
-
-<P>
-For more examples of using the project generator in common cases, check out the 
-<A NAME="tex2html1149"
-  HREF="http://www.padrinorb.com/guides/basic-projects">Basic Projects</A>
-guide.
-
-<P>
-The generator framework within Padrino is extensible and additional
-components and tools can be added easily.
-
-<P>
-This would be achieved through forking our project and reading
-through the code in <code>lib/generators/project.rb</code> and the setup
-instructions inside the relevant files within <code>lib/generators/components/</code>.
+Grape es una alternativa a Sinatra.
 
 <P>
 
-<H4><A NAME="SECTION032920010000000000000">
-configuration options</A>
-</H4>
-  
-
-<P>
-The project generator has several available configuration options:
-
-<P>
-<TABLE CELLPADDING=3 BORDER="1">
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>Options</code></TD>
-<TD ALIGN="LEFT">Default</TD>
-<TD ALIGN="LEFT">Aliases</TD>
-<TD ALIGN="LEFT">Description</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>bundle</code></TD>
-<TD ALIGN="LEFT">false</TD>
-<TD ALIGN="LEFT">-b</TD>
-<TD ALIGN="LEFT">execute bundlerer dependencies installation</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>root</code></TD>
-<TD ALIGN="LEFT">.</TD>
-<TD ALIGN="LEFT">-r</TD>
-<TD ALIGN="LEFT">the root destination path forward the project</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>dev</code></TD>
-<TD ALIGN="LEFT">false</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">use edge version from local git checkout</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>app</code></TD>
-<TD ALIGN="LEFT">nil</TD>
-<TD ALIGN="LEFT">-n</TD>
-<TD ALIGN="LEFT">specify app name different from the project name</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>tiny</code></TD>
-<TD ALIGN="LEFT">false</TD>
-<TD ALIGN="LEFT">-i</TD>
-<TD ALIGN="LEFT">generate tiny project skeleton</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>adapter</code></TD>
-<TD ALIGN="LEFT">sqlite</TD>
-<TD ALIGN="LEFT">-a</TD>
-<TD ALIGN="LEFT">specify orrm db adapter (mysql, sqlite, postgres)</TD>
-</TR>
-</TABLE>
-
-<P>
-The available components and their default options are listed below:
-
-<P>
-<TABLE CELLPADDING=3 BORDER="1">
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>Component</TD>
-<TD ALIGN="LEFT">Default</TD>
-<TD ALIGN="LEFT">Aliases</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>Options</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>orm</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-d</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>mongoid, activerecord,below minirecord, datamapper, couchrest, mongomatic, mongomapper, ohm, ripple, sequel</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>test</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-t</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>bacon, shoulda, cucumber, testspec, riot, rspec, minitest</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>script</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-s</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>prototype, rightjs,            jquery, mootools, extcore, dojo</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>renderer</TD>
-<TD ALIGN="LEFT">slim</TD>
-<TD ALIGN="LEFT">-e</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>erb, erubis, haml,       slim, liquid</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>stylesheet</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-c</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>sass, less, scss, compass</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>mock</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-m</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>rr, mocha</TD>
-</TR>
-</TABLE>
-Note: Be careful with your naming when using generators and do not
-have your project name, or any models or controllers overlap. Avoid
-naming your app <code>Posts</code> and then your controller or subapp
-with the same name. 
-
-<P>
-
-<H4><A NAME="SECTION032920020000000000000">
-Some examples</A>
-</H4>
-  
-
-<P>
-Generate a project with a different application name from the project path
-
-<P>
-<PRE>
-padrino g my_project -n blog
-</PRE>
-this will generate the project at path <code>my_project/</code> but the applications name will be <code>Blog</code>.
-<PRE>
-  1 module MyProject
-  2   class Blog &lt; Padrino::Application
-  3     register Padrino::Rendering
-  4     register Padrino::Mailer
-  5     register Padrino::Helpers
-  6 
-  7     enable :sessions
-  8 
-  9   end
- 10 end
-</PRE>
-
-<P>
-Generate a project with mongoid and run bundler after
-
-<P>
-<PRE>
-padrino g project your_project -d mongoid -b
-</PRE>
-Generate a project with riot test and rr mocking
-
-<P>
-<PRE>
-padrino g project your_project -t riot -m rr
-</PRE>
-Generate a project with sequel with mysql
-
-<P>
-<PRE>
-padrino g project your_project -d sequel -a mysql
-</PRE>
-Generate a tiny project skeleton
-
-<P>
-<PRE>
-padrino g project your_project --tiny
-</PRE>
-Choose a root for your project
-
-<P>
-<PRE>
-padrino g project your_project -r /usr/local/padrino
-</PRE>
-This will create a new padrino project in <code>/usr/local/padrino/your_project/</code>
-
-<P>
-Use Padrino from a git cloned repository
-
-<P>
-<PRE>
-padrino g project your_project [--dev] # Use padrino from a git checkout
-</PRE>
+<OL>
+<LI><A NAME="tex2html1153"
+  HREF="https://github.com/intridea/grape">Grape</A>
+</LI>
+</OL>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html11323"
-  HREF="node494.html#SECTION032920010000000000000">configuration options</A>
-<LI><A NAME="tex2html11324"
-  HREF="node494.html#SECTION032920020000000000000">Some examples</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html11321"
-  HREF="node495.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11315"
-  HREF="node492.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11309"
-  HREF="node493.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11317"
-  HREF="node769.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11319"
-  HREF="node772.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="logoLPP.png"
- ALT="LPP"></A><A NAME="tex2html30"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html31"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html32"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html33"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html34"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html35"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html36"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html37"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html39"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html11322"
-  HREF="node495.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html11316"
-  HREF="node492.html">Padrino</A>
-<B> Anterior:</B> <A NAME="tex2html11310"
-  HREF="node493.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html11318"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11320"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

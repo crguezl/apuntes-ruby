@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Hashes para Argumentos con Nombre</TITLE>
-<META NAME="description" CONTENT="Hashes para Argumentos con Nombre">
+<TITLE>Parámetros por Defecto</TITLE>
+<META NAME="description" CONTENT="Parámetros por Defecto">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node130.html">
 <LINK REL="previous" HREF="node128.html">
-<LINK REL="up" HREF="node125.html">
+<LINK REL="up" HREF="node128.html">
 <LINK REL="next" HREF="node130.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5016"
+<A NAME="tex2html5042"
   HREF="node130.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5010"
-  HREF="node125.html">
+<A NAME="tex2html5036"
+  HREF="node128.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5004"
+<A NAME="tex2html5030"
   HREF="node128.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5012"
-  HREF="node769.html">
+<A NAME="tex2html5038"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5014"
-  HREF="node772.html">
+<A NAME="tex2html5040"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,118 +96,81 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5017"
-  HREF="node130.html">Named Parameters in Ruby</A>
-<B> Subir:</B> <A NAME="tex2html5011"
-  HREF="node125.html">Argumentos de un Método</A>
-<B> Anterior:</B> <A NAME="tex2html5005"
-  HREF="node128.html">Asignando Argumentos a los</A>
- &nbsp; <B>  <A NAME="tex2html5013"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5015"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5043"
+  HREF="node130.html">Listas de Argumentos de</A>
+<B> Subir:</B> <A NAME="tex2html5037"
+  HREF="node128.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5031"
+  HREF="node128.html">Argumentos de un Método</A>
+ &nbsp; <B>  <A NAME="tex2html5039"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5041"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02644000000000000000"></A>
-<A NAME="subsection:hashesparaargumentosconnombre"></A>
-<BR>
-Hashes para Argumentos con Nombre
+<H2><A NAME="SECTION02641000000000000000">
+Parámetros por Defecto</A>
 </H2>
-Es difícil recordar el orden de los argumentos de un método que
-requiere mas de tres argumentos.
-Cuando el número de argumentos es grande, haremos que los argumentos se empaqueten en un hash.
-Este es un ejemplo:
 
 <P>
 <PRE>
-~/rubytesting$ cat -n shell.rb 
-     1  
-     2  def ls(args) 
-     3    hidden    = args[:hidden]?    '-a' : ''
-     4    dir       = args[:dir]?       '-d' : ''
-     5    reverse   = args[:reverse]?   '-r' : ''
-     6    time      = args[:time]?      '-t' : ''
-     7    recursive = args[:recursive]? '-R' : ''
-     8    regexp    = args[:regexp] || Regexp.new('.')
-     9  
-    10    files = %x{ls #{hidden} #{reverse} #{dir} #{recursive} #{time} 2&gt;&amp;1}.split(/\n/)
-    11    files.select { |f| f =~ regexp }
-    12  end
-    13  
-    14  puts  ls(:reverse =&gt;1, :time =&gt; 1, :regexp =&gt; /^m/)
-    15  puts  '***********************************************'
-    16  puts  ls(:hidden =&gt;1,  :regexp =&gt; /^.[ms]/)
+def prefix(s, len=1)
+  s[0,len]
+end
 </PRE>
-Podríamos haber llamado a <code>ls</code> así
 
 <P>
 <PRE>
-    ls({:reverse =&gt;1, :time =&gt; 1, :regexp =&gt; /^m/})
+prefix("Ruby", 3)    # =&gt; "Rub"
+prefix("Ruby")       # =&gt; "R"
 </PRE>
 
 <P>
-Pero ruby nos permite omitir las llavitas cuando el último argumento del método es el hash
-(o si es el único argumento que le sigue es un argumento bloque prefijado de <code>&amp;</code>).
-Un hash sin llaves se denomina <A NAME="5268"></A><SPAN  CLASS="textit">bare hash</SPAN>.
+Los valores por defecto pueden ser expresiones arbitrarias
+en las que aparezcan parámetros previos:
 
 <P>
 <PRE>
-    ls(:time =&gt; 1, :reverse =&gt;1, :regexp =&gt; /^m/)
+# Return the last character of s or the substring from index to the end
+def suffix(s, index=s.size-1)
+  s[index, s.size-index]
+end
 </PRE>
 
 <P>
-Es posible también omitir los paréntesis en la llamada:
+Los parámetros por defecto son evaluados cuando se invoca al método, no cuando es compilado.
+
+<P>
+En este ejemplo el valor por defecto <code>a = []</code> produce un nuevo array en cada invocación 
+en vez de reutilizar un único array que fuera creado cuando se define el método:
 <PRE>
-puts  ls :hidden =&gt;1,  :regexp =&gt; /^.[ms]/
-</PRE>
-Si se omiten los paréntesis se <SPAN  CLASS="textit">deberán también omitir las llaves</SPAN> ya que
-<SPAN  CLASS="textit">si unas llaves siguen a un nombre de método Ruby lo interpreta como que estamos pasando un argumento de tipo
-bloque</SPAN>.
-
-<P>
-Ejecución:
-
-<P>
-<PRE>
-~/rubytesting$ ruby shell.rb 
-myutf.rb
-methodmethod.rb
-memoize
-map2funcWithLambdas.rb
-map2func.rb
-***********************************************
-.myutfstring.rb.swp
-.shell.rb.swp
-.svn
-useGreeter.rb
-useSudoku.rb
+# Append the value x to the array a, return a.
+# If no array is specified, start with an empty one.
+def append(x, a=[])
+  a &lt;&lt; x
+end
 </PRE>
 
-<P>
-Ruby 2.0 admite parámetros con nombre.
-Véase 
-<A NAME="tex2html205"
-  HREF="http://youtu.be/jjwbzVkYT5w">Ruby 2.0 - Getting Started and Named Parameters</A>
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5016"
+<A NAME="tex2html5042"
   HREF="node130.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5010"
-  HREF="node125.html">
+<A NAME="tex2html5036"
+  HREF="node128.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5004"
+<A NAME="tex2html5030"
   HREF="node128.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5012"
-  HREF="node769.html">
+<A NAME="tex2html5038"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5014"
-  HREF="node772.html">
+<A NAME="tex2html5040"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -262,20 +225,20 @@ Véase
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5017"
-  HREF="node130.html">Named Parameters in Ruby</A>
-<B> Subir:</B> <A NAME="tex2html5011"
-  HREF="node125.html">Argumentos de un Método</A>
-<B> Anterior:</B> <A NAME="tex2html5005"
-  HREF="node128.html">Asignando Argumentos a los</A>
- &nbsp; <B>  <A NAME="tex2html5013"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5015"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5043"
+  HREF="node130.html">Listas de Argumentos de</A>
+<B> Subir:</B> <A NAME="tex2html5037"
+  HREF="node128.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5031"
+  HREF="node128.html">Argumentos de un Método</A>
+ &nbsp; <B>  <A NAME="tex2html5039"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5041"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

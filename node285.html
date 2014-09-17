@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Véase</TITLE>
-<META NAME="description" CONTENT="Véase">
+<TITLE>EventMachine</TITLE>
+<META NAME="description" CONTENT="EventMachine">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,6 +19,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node289.html">
 <LINK REL="previous" HREF="node284.html">
 <LINK REL="up" HREF="node282.html">
 <LINK REL="next" HREF="node286.html">
@@ -27,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7600"
+<A NAME="tex2html7619"
   HREF="node286.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7594"
+<A NAME="tex2html7613"
   HREF="node282.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7590"
+<A NAME="tex2html7607"
   HREF="node284.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7596"
-  HREF="node769.html">
+<A NAME="tex2html7615"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7598"
-  HREF="node772.html">
+<A NAME="tex2html7617"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -95,40 +96,462 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7601"
-  HREF="node286.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html7595"
-  HREF="node282.html">EventMachine</A>
-<B> Anterior:</B> <A NAME="tex2html7591"
-  HREF="node284.html">Deferrable</A>
- &nbsp; <B>  <A NAME="tex2html7597"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7599"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7620"
+  HREF="node286.html">Un server</A>
+<B> Subir:</B> <A NAME="tex2html7614"
+  HREF="node282.html">Programación Orientada a Eventos</A>
+<B> Anterior:</B> <A NAME="tex2html7608"
+  HREF="node284.html">Building our own I/O</A>
+ &nbsp; <B>  <A NAME="tex2html7616"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7618"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION021033000000000000000">
-Véase</A>
-</H2>
+<H1><A NAME="SECTION021030000000000000000">
+EventMachine</A>
+</H1>
+
+<P>
+<A NAME="tex2html576"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A> is an event-driven I/O and lightweight concurrency library for Ruby. It provides event-driven I/O using the <A NAME="11414"></A><SPAN  CLASS="textbf">Reactor pattern</SPAN>.
+
+<P>
+The reactor is the core of <A NAME="tex2html577"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>. 
+All of EM's processing happens in the reactor. 
+Your application will create code that hooks into the reactor, using timers, socket connections or various other means. 
+Typically you'll wrap your entire application inside an <code>EM#run</code> block.
+
+<P>
+<PRE>
+EventMachine.run do
+  EventMachine.start_server ...
+end
+</PRE>
+
+<P>
+This block won't complete until <code>EM#stop</code> is called. The
+reactor will loop infinitely.
+
+<P>
+
+<H4><A NAME="SECTION021030010000000000000">
+run y stop_event_loop</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat timer.rb 
+require 'rubygems'
+require 'eventmachine'
+puts "Start"
+EM.run do
+ puts "Init"
+ EM.add_timer(1) do
+   puts "Quitting"
+   EM.stop_event_loop
+ end
+end
+puts "Done"
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ ruby timer.rb 
+Start
+Init
+Quitting
+Done
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021030020000000000000">
+reactor_running?</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat reactor_running.rb 
+require 'rubygems'
+require 'eventmachine'
+puts EM.reactor_running?  # false
+EM.run do
+ puts EM.reactor_running? # true
+ EM.next_tick do
+   puts EM.reactor_running? # true
+   EM.stop
+ end
+end
+puts EM.reactor_running?  # false
+</PRE>
 
 <P>
 
 <OL>
-<LI><A NAME="tex2html580"
-  HREF="http://www.igvita.com/2008/05/27/ruby-eventmachine-the-speed-demon/">Ruby EventMachine - The Speed Demon by Ilya Grigorik on May 27, 2008</A>
+<LI><code>reactor_running?</code>
+Tells you whether the EventMachine reactor loop is currently running.
+
+<P>
+Useful when writing libraries that want to run event-driven code,
+but may be running in programs that are already event-driven. 
+
+<P>
+In
+such cases, if <code>reactor_running?</code> returns <code>false</code>, 
+your code can invoke
+<code>run</code> and run your application code inside the block passed to that
+method. If this method returns true, just execute your event-aware
+code.
+
+<P>
 </LI>
-<LI><A NAME="tex2html581"
-  HREF="http://everburning.com/news/eventmachine-introductions/">EventMachine Introductions, 27 Feb 2009</A>
+<LI><code>(Object) next_tick(pr = nil, &amp;block)</code>
+
+<P>
+Schedules a proc for execution immediately after the next "turn"
+through the reactor core. 
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION021030030000000000000">
+add_timer</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat add_timer_family.rb 
+require "eventmachine"
+EM.run do
+ EM.add_periodic_timer(1) do
+   puts "Tick..."
+ end
+ EM.add_timer(5) do
+   puts "BOOM"
+   EM.stop_event_loop
+ end
+end
+[~/ruby/eventmachine/simple(master)]$ ruby add_timer_family.rb 
+Tick...
+Tick...
+Tick...
+Tick...
+BOOM
+</PRE>
+
+<P>
+
+<OL>
+<LI><code>(Object) add_timer(*args, &amp;block)</code>
+
+<P>
+Adds a one-shot timer to the event loop. 
+Call it with one or two parameters. 
+The first parameters is a delay-time expressed in seconds (not milliseconds). 
+The second parameter, if present, must be an object that responds to <code>:call</code>. 
+If 2nd parameter is not given, then you can also simply pass a block to the method call.
+
+<P>
+This method may be called from the block passed to <code>run</code> or from any
+callback method. It schedules execution of the <code>proc</code> or block passed
+to it, after the passage of an interval of time equal to at least
+the number of seconds specified in the first parameter to the call.
+
+<P>
+<code>add_timer</code> is a non-blocking method. Callbacks can and will
+be called during the interval of time that the timer is in effect.
+There is no built-in limit to the number of timers that can be
+outstanding at any given time.
+
+<P>
+</LI>
+<LI><code>(Object) add_periodic_timer(*args, &amp;block)</code>
+
+<P>
+Adds a periodic timer to the event loop. It takes the same parameters
+as the one-shot timer method, <code>add_timer</code>. This method schedules
+execution of the given block repeatedly, at intervals of time at
+least as great as the number of seconds given in the first parameter
+to the call.
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION021030040000000000000">
+next_tick</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat next_tick.rb 
+require 'eventmachine'
+EM.run do
+ EM.add_periodic_timer(1) do
+   puts "Hai"
+ end
+ EM.add_timer(5) do
+   EM.next_tick do
+     EM.stop_event_loop
+   end
+ end
+end
+</PRE>
+<code>(Object) next_tick(pr = nil, &amp;block)</code>
+Schedules a proc for execution immediately after the next "turn" through the reactor core.
+
+<P>
+This can be useful for improving memory management and/or application responsiveness, especially when scheduling large amounts of data for writing to a network connection.
+
+<P>
+This method takes either a single argument (which must be a callable object) or a block.
+
+<P>
+Parameters:
+<PRE>
+pr (#call) (defaults to: nil) — A callable object to run
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ ruby next_tick.rb 
+Hai
+Hai
+Hai
+Hai
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021030050000000000000">
+defer</A>
+</H4>
+  
+
+<code>EM.defer</code> is used to push a otherwise blocking operation on an EM internal queue whose jobs are then processed by a thread pool of 20 threads (by default). 
+
+<P>
+You can use <code>EM.defer</code> with operations which aren’t made to work asynchronously.
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat defer.rb 
+require 'eventmachine'
+require 'thread'
+EM.run do
+ EM.add_timer(2) do
+   puts "Main #{Thread.current}"
+   EM.stop_event_loop
+ end
+ EM.defer(proc do
+   puts "Defer #{Thread.current}"
+ end)
+end
+</PRE>
+<code>(Object) defer(op = nil, callback = nil, &amp;blk)</code>
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html578"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>.defer is used for integrating blocking operations
+into <A NAME="tex2html579"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>'s control flow. 
+
+<P>
+</LI>
+<LI>The action of <A NAME="11442"></A><SPAN  CLASS="textbf">defer</SPAN> is to take
+the block specified in the first parameter (the "operation") and
+schedule it for asynchronous execution on an internal thread pool
+maintained by <A NAME="tex2html580"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>. 
+
+<P>
+</LI>
+<LI>When the operation completes, it will
+pass the result computed by the block (if any) back to the <A NAME="tex2html581"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>
+reactor. 
+
+<P>
+</LI>
+<LI>Then, <A NAME="tex2html582"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A> calls the block specified in the second
+parameter to defer (the "callback"), as part of its normal event
+handling loop. 
+
+<P>
+</LI>
+<LI>The result computed by the operation block is passed
+as a parameter to the callback. 
+
+<P>
+</LI>
+<LI>You may omit the callback parameter
+if you don't need to execute any code after the operation completes.
+</LI>
+</OL>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ ruby defer.rb 
+Defer #&lt;Thread:0x007fd9c3826960&gt;
+Main #&lt;Thread:0x007fd9c38bcd98&gt;
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021030060000000000000">
+next_tick versus defer</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>The loop runs on a single thread. 
+</LI>
+<LI>What this means is that apart from I/O - at any time, only one task/event is processed by the event loop. 
+</LI>
+<LI>You can imagine this event loop to be a queue of callbacks that are processed on every tick of the event loop. 
+</LI>
+<LI>So, even if you are running on a multi-core machine, you will not get any parallelism in terms of actual processing - all events will be processed only one at a time. 
+</LI>
+<LI>For every I/O bound task, you can simply define a callback that will get added to the event queue. 
+</LI>
+<LI>The callback will fire when the I/O operation is done, and in the mean time, the application can continue to process other I/O bound requests.
+</LI>
+<LI>Given this model, what <code>process.nextTick()</code> 
+actually does is defer the execution of an action till the next pass around the event loop.
 </LI>
 </OL>
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html7621"
+  HREF="node285.html#SECTION021030010000000000000">run y stop_event_loop</A>
+<LI><A NAME="tex2html7622"
+  HREF="node285.html#SECTION021030020000000000000">reactor_running?</A>
+<LI><A NAME="tex2html7623"
+  HREF="node285.html#SECTION021030030000000000000">add_timer</A>
+<LI><A NAME="tex2html7624"
+  HREF="node285.html#SECTION021030040000000000000">next_tick</A>
+<LI><A NAME="tex2html7625"
+  HREF="node285.html#SECTION021030050000000000000">defer</A>
+<LI><A NAME="tex2html7626"
+  HREF="node285.html#SECTION021030060000000000000">next_tick versus defer</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html7627"
+  HREF="node286.html">Un server</A>
+<UL>
+<LI><A NAME="tex2html7628"
+  HREF="node286.html#SECTION021031010000000000000">callback y errback</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html7629"
+  HREF="node287.html">Deferrable</A>
+<LI><A NAME="tex2html7630"
+  HREF="node288.html">Véase</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html7619"
+  HREF="node286.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7613"
+  HREF="node282.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7607"
+  HREF="node284.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html7615"
+  HREF="node775.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html7617"
+  HREF="node778.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="logoLPP.png"
+ ALT="LPP"></A><A NAME="tex2html30"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html31"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html32"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html33"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html34"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html35"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html36"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html37"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html39"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html7620"
+  HREF="node286.html">Un server</A>
+<B> Subir:</B> <A NAME="tex2html7614"
+  HREF="node282.html">Programación Orientada a Eventos</A>
+<B> Anterior:</B> <A NAME="tex2html7608"
+  HREF="node284.html">Building our own I/O</A>
+ &nbsp; <B>  <A NAME="tex2html7616"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7618"
+  HREF="node778.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Ejemplo Simple: Piedra, Papel, tijeras</TITLE>
-<META NAME="description" CONTENT="Un Ejemplo Simple: Piedra, Papel, tijeras">
+<TITLE>La Estructura de una Aplicación Rack: Ejemplo de Middleware</TITLE>
+<META NAME="description" CONTENT="La Estructura de una Aplicación Rack: Ejemplo de Middleware">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node352.html">
+<LINK REL="next" HREF="node349.html">
 <LINK REL="previous" HREF="node347.html">
-<LINK REL="up" HREF="node319.html">
+<LINK REL="up" HREF="node322.html">
 <LINK REL="next" HREF="node349.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8903"
+<A NAME="tex2html8924"
   HREF="node349.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8897"
-  HREF="node319.html">
+<A NAME="tex2html8918"
+  HREF="node322.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8891"
+<A NAME="tex2html8912"
   HREF="node347.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8899"
-  HREF="node769.html">
+<A NAME="tex2html8920"
+  HREF="node775.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8901"
-  HREF="node772.html">
+<A NAME="tex2html8922"
+  HREF="node778.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
   WIDTH="35" ALIGN="BOTTOM" BORDER="0"
@@ -96,503 +96,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8904"
-  HREF="node349.html">Práctica: Rock, Paper, Scissors:</A>
-<B> Subir:</B> <A NAME="tex2html8898"
-  HREF="node319.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8892"
-  HREF="node347.html">Rack::Static</A>
- &nbsp; <B>  <A NAME="tex2html8900"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8902"
-  HREF="node772.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8925"
+  HREF="node349.html">rackup</A>
+<B> Subir:</B> <A NAME="tex2html8919"
+  HREF="node322.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html8913"
+  HREF="node347.html">Redirección</A>
+ &nbsp; <B>  <A NAME="tex2html8921"
+  HREF="node775.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8923"
+  HREF="node778.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031170000000000000000">
-Un Ejemplo Simple: Piedra, Papel, tijeras</A>
+<H1><A NAME="SECTION031140000000000000000">
+La Estructura de una Aplicación Rack: Ejemplo de Middleware</A>
 </H1>
 
 <P>
 <PRE>
-[~/rack/rack-rock-paper-scissors(simple)]$ cat -n rps.rb
- 1  require 'rack/request'
- 2  require 'rack/response'
- 3  
- 4  module RockPaperScissors
- 5    class App 
- 6  
- 7      def initialize(app = nil)
- 8        @app = app
- 9        @content_type = :html
-10        @defeat = {'rock' =&gt; 'scissors', 'paper' =&gt; 'rock', 'scissors' =&gt; 'paper'}
-11        @throws = @defeat.keys
-12        @choose = @throws.map { |x| 
-13           %Q{ &lt;li&gt;&lt;a href="/?choice=#{x}"&gt;#{x}&lt;/a&gt;&lt;/li&gt; }
-14        }.join("\n")
-15        @choose = "&lt;p&gt;\n&lt;ul&gt;\n#{@choose}\n&lt;/ul&gt;"
-16      end
-17  
-18      def call(env)
-19        req = Rack::Request.new(env)
-20  
-21        req.env.keys.sort.each { |x| puts "#{x} =&gt; #{req.env[x]}" }
-22  
-23        computer_throw = @throws.sample
-24        player_throw = req.GET["choice"]
-25        anwser = if !@throws.include?(player_throw)
-26            "Choose one of the following:"
-27          elsif player_throw == computer_throw
-28            "You tied with the computer"
-29          elsif computer_throw == @defeat[player_throw]
-30            "Nicely done; #{player_throw} beats #{computer_throw}"
-31          else
-32            "Ouch; #{computer_throw} beats #{player_throw}. Better luck next time!"
-33          end
-34  
-35        res = Rack::Response.new
-36        res.write &lt;&lt;-"EOS"
-37        &lt;html&gt;
-38          &lt;title&gt;rps&lt;/title&gt;
-39          &lt;body&gt;
-40            &lt;h1&gt;
-41               #{anwser}
-42               #{@choose}
-43            &lt;/h1&gt;
-44          &lt;/body&gt;
-45        &lt;/html&gt;
-46        EOS
-47        res.finish
-48      end # call
-49    end   # App
-50  end     # RockPaperScissors
-51  
-52  if $0 == __FILE__
-53    require 'rack'
-54    require 'rack/showexceptions'
-55    Rack::Server.start(
-56      :app =&gt; Rack::ShowExceptions.new(
-57                Rack::Lint.new(
-58                  RockPaperScissors::App.new)), 
-59      :Port =&gt; 9292,
-60      :server =&gt; 'thin'
-61    )
-62  end
-</PRE>
-<H4><A NAME="SECTION031170010000000000000">
-El Objeto <TT>req</TT></A>
-</H4>
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat middlefoo.rb 
+require 'rack'
+
+class MiddleFoo
   
+  def initialize(app)
+    @app = app
+  end
 
-El objeto <code>req</code> pertenece a la clase <code>Rack::Request</code>. Tiene 
-un único atributo <code>env</code>:
-
-<P>
-<PRE>
-(rdb:1)  req
-#&lt;Rack::Request:0x007f8d735b1410 
-@env={
-"SERVER_SOFTWARE"=&gt;"thin 1.5.1 codename Straight Razor", 
-"SERVER_NAME"=&gt;"0.0.0.0", 
-"rack.input"=&gt;#&lt;Rack::Lint::InputWrapper:0x007f8d735776c0 
-                @input=#&lt;StringIO:0x007f8d735426a0&gt;&gt;, "rack.version"=&gt;[1, 0], 
-                "rack.errors"=&gt;#&lt;Rack::Lint::ErrorWrapper:0x007f8d73577620 @error=#&lt;IO:&lt;STDERR&gt;&gt;
-              &gt;, 
-"rack.multithread"=&gt;false, 
-"rack.multiprocess"=&gt;false, 
-"rack.run_once"=&gt;false, 
-"REQUEST_METHOD"=&gt;"GET", 
-"REQUEST_PATH"=&gt;"/", 
-"PATH_INFO"=&gt;"/", 
-"REQUEST_URI"=&gt;"/", 
-"HTTP_VERSION"=&gt;"HTTP/1.1", 
-"HTTP_HOST"=&gt;"0.0.0.0:9292", 
-"HTTP_CONNECTION"=&gt;"keep-alive", 
-"HTTP_ACCEPT"=&gt;"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 
-"HTTP_USER_AGENT"=&gt;"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.76 Safari/537.36", 
-"HTTP_ACCEPT_ENCODING"=&gt;"gzip,deflate,sdch", 
-"HTTP_ACCEPT_LANGUAGE"=&gt;"es-ES,es;q=0.8", 
-"GATEWAY_INTERFACE"=&gt;"CGI/1.2", 
-"SERVER_PORT"=&gt;"9292", 
-"QUERY_STRING"=&gt;"", 
-"SERVER_PROTOCOL"=&gt;"HTTP/1.1", 
-"rack.url_scheme"=&gt;"http", 
-"SCRIPT_NAME"=&gt;"", 
-"REMOTE_ADDR"=&gt;"127.0.0.1", 
-"async.callback"=&gt;#&lt;Method: Thin::Connection#post_process&gt;, 
-"async.close"=&gt;#&lt;EventMachine::DefaultDeferrable:0x007f8d735603f8&gt;}&gt;
-</PRE>
-Cuando llamamos a <code>GET</code> para obtener el valor del parámetro <code>choice</code>:
-<PRE>
-player_throw = req.GET["choice"]
-</PRE>
-Si visitamos la página <code>http://0.0.0.0:9292/</code> el entorno contiene algo como esto:
-<PRE>
-rdb:1) p @env
-{"SERVER_SOFTWARE"=&gt;"thin 1.5.1 codename Straight Razor",
- ...
- "QUERY_STRING"=&gt;"",
- "REQUEST_URI"=&gt;"/"
- ...
-}
-</PRE>
-el código de <code>GET</code> nos da los datos almacenados en <code>QUERY_STRING</code>:
-<PRE>
-   def GET 
-      if @env["rack.request.query_string"] == query_string
-        @env["rack.request.query_hash"]
-      else
-        @env["rack.request.query_string"] = query_string
-        @env["rack.request.query_hash"]   = parse_query(query_string)
-      end 
-    end 
-
-   def query_string;    @env["QUERY_STRING"].to_s                end
-</PRE>
-si es la primera vez, <code>@env["rack.request.query_string"]</code> está a 
-<code>nil</code> y se ejecuta el <code>else</code> inicializando <code>@env["rack.request.query_string"]</code>
-y <code>@env["rack.request.query_hash"]</code>
-
-<P>
-Si por ejemplo visitamos la URL:
-<code>http://localhost:9292?choice=rock</code>
-entonces <code>env</code> contendrá:
-<PRE>
-rdb:1) p env
-{ ... 
-  "QUERY_STRING"=&gt;"choice=rock", 
-  "REQUEST_URI"=&gt;"/?choice=rock", 
-  ...
-}
-</PRE>
-Familiaricemonos con algunos de los métodos de <code>Rack::Request</code>:
-<PRE>
-(rdb:1) req.GET
-{"choice"=&gt;"paper"}
-(rdb:1)  req.GET["choice"]
-"paper"
-(rdb:1) req.POST
-{}
-(rdb:1) req.params
-{"choice"=&gt;"paper"}
-(rdb:1) req["choice"]
-"paper"
-(rdb:1) req[:choice]
-"paper"
-(rdb:1) req.cookies()
-{}
-(rdb:1) req.get?
-true
-(rdb:1) req.post?
-false
-(rdb:1) req.fullpath
-"/?choice=paper"
-(rdb:1) req.host
-"0.0.0.0"
-(rdb:1) req.host_with_port
-"0.0.0.0:9292"
-(rdb:1) req.body
-#&lt;Rack::Lint::InputWrapper:0x007f8d7369b5d8 @input=#&lt;StringIO:0x007f8d73690318&gt;&gt;
-(rdb:1) req.cookies()
-{}
-(rdb:1) req.get?
-true
-(rdb:1) req.post?
-false
-(rdb:1) req.fullpath
-"/?choice=paper"
-(rdb:1) req.host
-"0.0.0.0"
-(rdb:1) req.host_with_port
-"0.0.0.0:9292"
-(rdb:1) req.ip
-"127.0.0.1"
-(rdb:1) req.params
-{"choice"=&gt;"paper"}
-(rdb:1) req.path
-"/"
-(rdb:1) req.path_info
-"/"
-(rdb:1) req.port
-9292
-(rdb:1) req.request_method
-"GET"
-(rdb:1) req.scheme
-"http"
-(rdb:1) req.url
-"http://0.0.0.0:9292/?choice=paper"
-(rdb:1) req.user_agent
-"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) 
-Chrome/29.0.1547.76 Safari/537.36"
-(rdb:1) req.values_at("choice")
-["paper"]
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031170020000000000000">
-Rakefile</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/rack/rack-rock-paper-scissors(simple)]$ cat Rakefile 
-desc "run the server"
-task :default do
-  sh "ruby rps.rb"
-end
-
-desc "run the client with rock"
-task :rock do
-  sh %q{curl -v 'http://localhost:9292?choice=rock'}
-end
-
-desc "run the client with paper"
-task :paper do
-  sh %q{curl -v 'http://localhost:9292?choice=paper'}
-end
-
-desc "run the client with scissors"
-task :scissors do
-  sh %q{curl -v 'http://localhost:9292?choice=scissors'}
+  def call env
+    # Podemos modificar el request (env) aqui
+    env['chuchu'] = 'SYTW'
+    status, headers, body = @app.call(env)
+    # Podemos modificar la respuesta aqui
+    newbody = body.map(&amp;:upcase)
+    [status, headers, newbody]
+  end
 end
 </PRE>
 
 <P>
-
-<OL>
-<LI><A NAME="tex2html759"
-  HREF="http://en.wikipedia.org/wiki/CURL">curl</A>
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION031170030000000000000">
-Ejecuciones</A>
-</H4>
-  
-
 <PRE>
-[~/rack/rack-rock-paper-scissors(simple)]$ rake
-ruby rps.rb
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat hello_middle.rb 
+require 'rack'
+require './middlefoo'
+
+class HelloWorld
+  def call env
+    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world\nchuchu=#{env['chuchu']}\n"]]
+  end
+end
+
+Rack::Handler::WEBrick::run MiddleFoo.new(HelloWorld.new)
 </PRE>
 
 <P>
+Cuando ejecutamos el programa produce la salida:
 <PRE>
-[~/rack/rack-rock-paper-scissors(simple)]$ rake rock
-curl -v 'http://localhost:9292?choice=rock'
-* About to connect() to localhost port 9292 (#0)
-*   Trying ::1... Connection refused
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET /?choice=rock HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8x zlib/1.2.5
-&gt; Host: localhost:9292
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Length: 332
-&lt; Connection: keep-alive
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-      &lt;html&gt;
-        &lt;title&gt;rps&lt;/title&gt;
-        &lt;body&gt;
-          &lt;h1&gt;
-             Nicely done; rock beats scissors
-             &lt;p&gt;
-&lt;ul&gt;
- &lt;li&gt;&lt;a href="/?choice=rock"&gt;rock&lt;/a&gt;&lt;/li&gt; 
- &lt;li&gt;&lt;a href="/?choice=paper"&gt;paper&lt;/a&gt;&lt;/li&gt; 
- &lt;li&gt;&lt;a href="/?choice=scissors"&gt;scissors&lt;/a&gt;&lt;/li&gt; 
-&lt;/ul&gt;
-          &lt;/h1&gt;
-        &lt;/body&gt;
-      &lt;/html&gt;
-* Connection #0 to host localhost left intact
-* Closing connection #0
+HELLO WORLD
+CHUCHU=SYTW
 </PRE>
-
-<P>
-<PRE>
-[~/rack/rack-rock-paper-scissors(simple)]$ rake
-ruby rps.rb
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-GATEWAY_INTERFACE =&gt; CGI/1.2
-HTTP_ACCEPT =&gt; */*
-HTTP_HOST =&gt; localhost:9292
-HTTP_USER_AGENT =&gt; curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8x zlib/1.2.5
-HTTP_VERSION =&gt; HTTP/1.1
-PATH_INFO =&gt; /
-QUERY_STRING =&gt; choice=rock
-REMOTE_ADDR =&gt; 127.0.0.1
-REQUEST_METHOD =&gt; GET
-REQUEST_PATH =&gt; /
-REQUEST_URI =&gt; /?choice=rock
-SCRIPT_NAME =&gt; 
-SERVER_NAME =&gt; localhost
-SERVER_PORT =&gt; 9292
-SERVER_PROTOCOL =&gt; HTTP/1.1
-SERVER_SOFTWARE =&gt; thin 1.5.1 codename Straight Razor
-async.callback =&gt; #&lt;Method: Thin::Connection#post_process&gt;
-async.close =&gt; #&lt;EventMachine::DefaultDeferrable:0x007ff4e2bf8e78&gt;
-rack.errors =&gt; #&lt;Rack::Lint::ErrorWrapper:0x007ff4e2c04b88&gt;
-rack.input =&gt; #&lt;Rack::Lint::InputWrapper:0x007ff4e2c04c00&gt;
-rack.multiprocess =&gt; false
-rack.multithread =&gt; false
-rack.run_once =&gt; false
-rack.url_scheme =&gt; http
-rack.version =&gt; [1, 0]
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031170040000000000000">
-Véase También</A>
-</H4>
-  
-
-<P>
-Véase la documentación de las siguientes clases:
-
-<OL>
-<LI><A NAME="tex2html760"
-  HREF="http://rack.rubyforge.org/doc/Rack/Request.html">Rack::Request</A>
-</LI>
-<LI><A NAME="tex2html761"
-  HREF="http://rack.rubyforge.org/doc/Rack/Response.html">Rack::Response</A>
-</LI>
-<LI><A NAME="tex2html762"
-  HREF="http://rack.rubyforge.org/doc/Rack/Server.html">Rack::Server</A>
-</LI>
-<LI><A NAME="tex2html763"
-  HREF="http://rack.rubyforge.org/doc/Rack/ShowExceptions.html">Rack::ShowExceptions</A>
-</LI>
-<LI><A NAME="tex2html764"
-  HREF="http://rack.rubyforge.org/doc/Rack/Lint.html">Rack::Lint</A>
-</LI>
-</OL>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html8905"
-  HREF="node348.html#SECTION031170010000000000000">El Objeto <TT>req</TT></A>
-<LI><A NAME="tex2html8906"
-  HREF="node348.html#SECTION031170020000000000000">Rakefile</A>
-<LI><A NAME="tex2html8907"
-  HREF="node348.html#SECTION031170030000000000000">Ejecuciones</A>
-<LI><A NAME="tex2html8908"
-  HREF="node348.html#SECTION031170040000000000000">Véase También</A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html8909"
-  HREF="node349.html">Práctica: Rock, Paper, Scissors: Debugging</A>
-<LI><A NAME="tex2html8910"
-  HREF="node350.html">Práctica: Añadir Template Haml a Rock, Paper, Scissors</A>
-<LI><A NAME="tex2html8911"
-  HREF="node351.html">Práctica: Añada Hojas de Estilo a Piedra Papel Tijeras</A>
-</UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html8903"
-  HREF="node349.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8897"
-  HREF="node319.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8891"
-  HREF="node347.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8899"
-  HREF="node769.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8901"
-  HREF="node772.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://nereida.deioc.ull.es/~lpp/index.html"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="logoLPP.png"
- ALT="LPP"></A><A NAME="tex2html30"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html31"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html32"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html33"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html34"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html35"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html36"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html37"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html39"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html41"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html8904"
-  HREF="node349.html">Práctica: Rock, Paper, Scissors:</A>
-<B> Subir:</B> <A NAME="tex2html8898"
-  HREF="node319.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8892"
-  HREF="node347.html">Rack::Static</A>
- &nbsp; <B>  <A NAME="tex2html8900"
-  HREF="node769.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8902"
-  HREF="node772.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-11
+2014-09-17
 </ADDRESS>
 </BODY>
 </HTML>
