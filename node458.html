@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Programa para Experimentar con las Expresiones Regulares Usando Ajax</TITLE>
-<META NAME="description" CONTENT="Un Programa para Experimentar con las Expresiones Regulares Usando Ajax">
+<TITLE>Bootstrap your Web Application with Ruby and Sinatra</TITLE>
+<META NAME="description" CONTENT="Bootstrap your Web Application with Ruby and Sinatra">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node459.html">
-<LINK REL="previous" HREF="node457.html">
-<LINK REL="up" HREF="node457.html">
+<LINK REL="next" HREF="node460.html">
+<LINK REL="previous" HREF="node456.html">
+<LINK REL="up" HREF="node321.html">
 <LINK REL="next" HREF="node459.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10741"
+<A NAME="tex2html10757"
   HREF="node459.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10735"
-  HREF="node457.html">
+<A NAME="tex2html10751"
+  HREF="node321.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10729"
+<A NAME="tex2html10745"
   HREF="node457.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10737"
-  HREF="node777.html">
+<A NAME="tex2html10753"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10739"
-  HREF="node780.html">
+<A NAME="tex2html10755"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,73 +92,43 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10742"
-  HREF="node459.html">Un Ejemplo Simple</A>
-<B> Subir:</B> <A NAME="tex2html10736"
-  HREF="node457.html">Ajax in Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html10730"
-  HREF="node457.html">Ajax in Sinatra</A>
- &nbsp; <B>  <A NAME="tex2html10738"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10740"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10758"
+  HREF="node459.html">BootStrap</A>
+<B> Subir:</B> <A NAME="tex2html10752"
+  HREF="node321.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html10746"
+  HREF="node457.html">Referencias. Véase Tambien</A>
+ &nbsp; <B>  <A NAME="tex2html10754"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10756"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031210000000000000000">
-Un Programa para Experimentar con las Expresiones Regulares Usando Ajax</A>
+<H1><A NAME="SECTION031100000000000000000"></A>
+<A NAME="chapter:bootstrap"></A>
+<BR>
+Bootstrap your Web Application with Ruby and Sinatra
 </H1>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-<A NAME="tex2html1039"
-  HREF="https://gist.github.com/blazeeboy/9259204">regular expression testing playground with ruby and sinatra</A>
-<P>
-<PRE>
-[~/sinatra/regexp(master)]$ cat regex-tester.rb 
-require 'sinatra' # gem install sinatra --no-ri --no-rdoc
-set :port, 3000
-html = &lt;&lt;-EOT
-&lt;html&gt;&lt;head&gt;&lt;style&gt;
-#regex,#text{ width:100%; font-size:15px; display:block; margin-bottom:5px; }
-#text{ height: 200px; }
-span{ background:rgb(230,191,161); display:inline-block; border-radius:3px;}
-&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
- 
-  &lt;input id="regex" placeholder="Regex"/&gt;
-  &lt;textarea id="text" placeholder="Text"&gt;&lt;/textarea&gt;
-  &lt;div id="result"&gt;&lt;/div&gt;
- 
-  &lt;script src="http://code.jquery.com/jquery-1.11.0.min.js"&gt;&lt;/script&gt;
-  &lt;script&gt;
-  $('#regex,#text').keyup(function(){
-      $.get('/preview',{
-        reg:$('#regex').val(),
-        text:$('#text').val()
-      },function(r){
-        $('#result').html(r);
-      });
-  });
-  &lt;/script&gt;
- 
-&lt;/body&gt;&lt;/html&gt;
-EOT
- 
-get('/'){ html }
-get '/preview' do 
-  begin
-    params['text'].gsub(/(#{params['reg']})/,'&lt;span&gt;\1&lt;/span&gt;')
-  rescue
-    'Your regex is invalid'
-  end
-end
-</PRE>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html10759"
+  HREF="node459.html">BootStrap</A>
+<UL>
+<LI><A NAME="tex2html10760"
+  HREF="node459.html#SECTION031110010000000000000">Usando Bootstrap con Sinatra</A>
+<LI><A NAME="tex2html10761"
+  HREF="node459.html#SECTION031110020000000000000">Tutoriales de BootStrap</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

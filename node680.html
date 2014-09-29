@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>tmux</TITLE>
-<META NAME="description" CONTENT="tmux">
+<TITLE>Guard</TITLE>
+<META NAME="description" CONTENT="Guard">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node682.html">
-<LINK REL="previous" HREF="node678.html">
-<LINK REL="up" HREF="node677.html">
+<LINK REL="next" HREF="node681.html">
+<LINK REL="previous" HREF="node673.html">
+<LINK REL="up" HREF="node578.html">
 <LINK REL="next" HREF="node681.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14541"
+<A NAME="tex2html14590"
   HREF="node681.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14535"
-  HREF="node677.html">
+<A NAME="tex2html14584"
+  HREF="node578.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14529"
+<A NAME="tex2html14578"
   HREF="node679.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14537"
-  HREF="node777.html">
+<A NAME="tex2html14586"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14539"
-  HREF="node780.html">
+<A NAME="tex2html14588"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,60 +92,317 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14542"
-  HREF="node681.html">Utilidades para Pair Programming</A>
-<B> Subir:</B> <A NAME="tex2html14536"
-  HREF="node677.html">Herramientas para la Programacion</A>
-<B> Anterior:</B> <A NAME="tex2html14530"
-  HREF="node679.html">Remote pair programming</A>
- &nbsp; <B>  <A NAME="tex2html14538"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14540"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14591"
+  HREF="node681.html">Herramientas para la Programacion</A>
+<B> Subir:</B> <A NAME="tex2html14585"
+  HREF="node578.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html14579"
+  HREF="node679.html">Travis en la Línea</A>
+ &nbsp; <B>  <A NAME="tex2html14587"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14589"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061720000000000000000">
-tmux</A>
+<H1><A NAME="SECTION061600000000000000000"></A>
+<A NAME="section:guard"></A>
+<BR>
+Guard
 </H1>
+<A NAME="tex2html1571"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> is a gem that allows you to observe your project's files for
+change and perform actions based on that change. The first thing you
+will need to do is add <A NAME="tex2html1572"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> (and its helpers for <A NAME="tex2html1573"
+  HREF="http://bundler.io//"><TT>Bundler</TT></A> and <A NAME="tex2html1574"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A>)
+to the end of your <code>Gemfile</code>:
 
-<UL>
-<LI><A NAME="tex2html1587"
-  HREF="http://youtu.be/wKEGA8oEWXw">tmux Quick Start</A>
+<P>
+<PRE>
+$ cat Gemfile
+source 'https://rubygems.org'
+
+gem 'guard'
+gem 'guard-rspec'
+gem 'guard-bundler'
+gem 'guard-gitpusher'
+</PRE>
+You should now run <code>bundle install</code> in your project root to install <A NAME="tex2html1575"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> if it
+isn't already.
+<PRE>
+[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard version
+Guard version 2.2.2
+</PRE>
+
+<P>
+<PRE>
+[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard help
+Commands:
+  guard help [COMMAND]  # Describe available commands or one specific command
+  guard init [GUARDS]   # Generates a Guardfile at the current directory (if it is not already there) and a...
+  guard list            # Lists Guard plugins that can be used with init
+  guard notifiers       # Lists notifiers and its options
+  guard show            # Show all defined Guard plugins and their options
+  guard start           # Starts Guard
+  guard version         # Show the Guard version
+</PRE>
+
+<P>
+Now we need to initialize <A NAME="tex2html1576"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> and configure it for our project. Luckily,
+<A NAME="tex2html1577"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> comes with its own command line helpers:
+<PRE>
+[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard help init
+Usage:
+  guard init [GUARDS]
+
+Options:
+  -b, [--bare=Generate a bare Guardfile without adding any installed plugin into it]  
+
+Generates a Guardfile at the current directory (if it is not already there) and adds all installed Guard plugins or the given GUARDS into it
+</PRE>
+
+<P>
+Si solo queremos generar código para vigilar el <code>Gemfile</code> usando <code>guard-bundler</code>:
+<PRE>
+[/tmp]$ guard init bundler
+^[[A18:22:37 - INFO - Writing new Guardfile to /private/tmp/Guardfile
+18:22:37 - INFO - bundler guard added to Guardfile, feel free to edit it
+</PRE>
+
+<P>
+<PRE>
+[/tmp]$ cat Guardfile 
+# A sample Guardfile
+# More info at https://github.com/guard/guard#readme
+
+guard :bundler do
+  watch('Gemfile')
+  # Uncomment next line if your Gemfile contains the `gemspec' command.
+  # watch(/^.+\.gemspec/)
+end
+`]]
+</PRE>
+Si solo queremos generar código para vigilar las pruebas usando <code>guard-rspec</code>:
+<PRE>
+guard init rspec
+</PRE>
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html1578"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> works similarly to <A NAME="tex2html1579"
+  HREF="http://bundler.io//"><TT>Bundler</TT></A> and Rake by creating a Guardfile in
+your project's root directory. 
+
+<P>
 </LI>
+<LI>These commands automatically add example
+configuration for each guard type to the Guardfile (after guard init
+creates the file to begin with). 
+
+<P>
+</LI>
+<LI>While I'm going to tell you explicitly
+what to put in your Guardfile, the <code>init</code> commands can really help jog
+your memory if you're trying to do it from scratch. 
+</LI>
+</OL>
+
+<P>
+Let's modify our
+Guardfile to look like this:
+
+<P>
+<PRE>
+guard 'bundler' do
+  watch('Gemfile')
+end
+
+guard 'rspec', :version =&gt; 2 do
+  watch(%r{^spec/.+_spec\.rb$})
+  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }
+  watch('spec/spec_helper.rb')  { "spec" }
+end
+</PRE>
+<SPAN  CLASS="textbf"><A NAME="tex2html1570"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> works by watching certain files in your project and then performing
+actions when those files change</SPAN>. 
+
+<P>
+
+<OL>
+<LI>The first guard 
+<PRE>
+guard 'bundler' do
+  watch('Gemfile')
+end
+</PRE>
+tells us to watch for
+the <code>Gemfile</code> to change, and run <code>bundle install</code>
+when that happens. 
+
+<P>
+</LI>
+<LI>The second guard tells us to watch all of our <A NAME="tex2html1580"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A>
+test files, our <code>spec_helper</code>, and the corresponding library files for
+each of our <A NAME="tex2html1581"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A> tests. 
+
+<P>
+</LI>
+<LI>This means that when you change a file, <A NAME="tex2html1582"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A>
+can automatically re-run the tests for that specific file only.
+
+<P>
+</LI>
+<LI>Now that your Guardfile is properly configured, you can just run 
+<code>bundle exec guard start</code> from your project's root directory. 
+
+<P>
+<PRE>
+[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard help start
+Usage:
+  guard start
+
+Options:
+  -c, [--clear=Auto clear shell before each action]                            
+  -n, [--notify=Notifications feature]                                         
+  -d, [--debug=Show debug information]                                         
+  -g, [--group=Run only the passed groups]                                     
+  -P, [--plugin=Run only the passed plugins]                                   
+  -w, [--watchdir=Specify the directories to watch]                            
+  -G, [--guardfile=Specify a Guardfile]                                        
+  -i, [--no-interactions=Turn off completely any Guard terminal interactions]  
+  -B, [--no-bundler-warning=Turn off warning when Bundler is not present]      
+      [--show-deprecations=Turn on deprecation warnings]                       
+  -l, [--latency=Overwrite Listen's default latency]                           
+  -p, [--force-polling=Force usage of the Listen polling listener]             
+
+Starts Guard
+</PRE>
+</LI>
+<LI>When excuting <code>guard</code>, it shows a <code>pry</code> console,
+with some Guard specific <code>pry</code> commands:
+<PRE>
+[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard
+17:41:40 - INFO - Guard here! It looks like your project has a Gemfile, yet you are running
+&gt; [#] `guard` outside of Bundler. If this is your intent, feel free to ignore this
+&gt; [#] message. Otherwise, consider using `bundle exec guard` to ensure your
+&gt; [#] dependencies are loaded correctly.
+&gt; [#] (You can run `guard` with --no-bundler-warning to get rid of this message.)
+17:41:40 - WARN - Guard::RSpec DEPRECATION WARNING: The :version option is deprecated. Only RSpec ~&gt; 2.14 is now supported.
+17:41:40 - INFO - Guard is using TerminalTitle to send notifications.
+17:41:40 - INFO - Bundle already up-to-date
+17:41:40 - INFO - Guard::RSpec is running
+17:41:40 - INFO - Guard is now watching at '/Users/casiano/local/src/ruby/building_gems/bleigh_tutorial_to_building_gems/my-gem'
+[1] guard(main)&gt;
+</PRE>
+</LI>
+</OL>
+This will get <A NAME="tex2html1583"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> up
+and running and you will now automatically run tests and re-bundle as
+you build your application. 
+
+<P>
+Si ahora en una terminal modificamos uno de los ficheros vigilados:
+<PRE>
+$ touch spec/spec_helper.rb
+</PRE>
+Guard dispara la correspondiente acción, que en este caso es ejecutar <A NAME="tex2html1584"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A>:
+<PRE>
+17:50:28 - INFO - Running: spec
+Run options: include {:focus=&gt;true}
+
+All examples were filtered out; ignoring {:focus=&gt;true}
+*
+
+Pending:
+  MyGem requires additional testing
+    # Not yet implemented
+    # ./spec/my_gem_spec.rb:5
+
+Finished in 0.00062 seconds
+1 example, 0 failures, 1 pending
+
+
+Randomized with seed 46343
+
+[1] guard(main)&gt;
+</PRE>
+
+<P>
+Running <A NAME="tex2html1585"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> makes the development feedback loop
+as tight and automatic as possible.
+
+<P>
+
+<H4><A NAME="SECTION061600010000000000000">
+Enlaces Relacionados</A>
+</H4>
+  
+
+<P>
+Gemas
+
+<OL>
+<LI><A NAME="tex2html1586"
+  HREF="https://github.com/crguezl/bleigh-tutorial-to-building-gems">crguezl / bleigh-tutorial-to-building-gems</A>
+en GitHub
+</LI>
+</OL>
+
+<P>
+Testing
+
+<OL>
+<LI><A NAME="tex2html1587"
+  HREF="http://www.intridea.com/blog/2012/3/23/polishing-rubies-part-iii">Polishing Rubies (Part 3): Tools for Testing</A>
+</LI>
+</OL>
+
+<P>
+Guard
+
+<OL>
 <LI><A NAME="tex2html1588"
-  HREF="http://youtu.be/za8FMIWYtUc"><SPAN  CLASS="textbf">Tmux</SPAN> Screencast</A>
-por Flaviu Simihaian
+  HREF="http://www.intridea.com/blog/2011/8/25/hire-a-guard-for-your-project">Hire a Guard for Your Project</A>
 </LI>
 <LI><A NAME="tex2html1589"
-  HREF="http://blog.stevenhaddox.com/2012/04/11/remote-pairing-with-ssh-tmux-vim/"><SPAN  CLASS="textbf">Remote Pairing With SSH</SPAN>, Tmux, and Vim</A>
+  HREF="http://michaelvanrooijen.com/articles/2011/06/19-automate-your-applications-development-environment-with-guard/">Automate your application's development environment with Guard</A>
+by Michael van Rooijen
 </LI>
 <LI><A NAME="tex2html1590"
-  HREF="http://evan.tiggerpalace.com/articles/2011/10/17/some-people-call-me-the-remote-pairing-guy-/">Some people call me "the remote pairing guy"...</A>
-por Evan Light,
-<A NAME="tex2html1591"
-  HREF="http://evan.tiggerpalace.com/">The Hippy Hacker</A>
+  HREF="https://github.com/guard">Guard en GitHub</A>
+</LI>
+<LI><A NAME="tex2html1591"
+  HREF="https://github.com/guard/guard/wiki">Guard Wiki</A>
 </LI>
 <LI><A NAME="tex2html1592"
-  HREF="http://blog.hawkhost.com/tag/tmux-tutorial/">TMUX – The Terminal Multiplexer (Part 1)</A>
+  HREF="https://github.com/guard/guard-rspec">Guard Rspec</A>
 </LI>
 <LI><A NAME="tex2html1593"
-  HREF="http://blog.hawkhost.com/2010/07/02/tmux-%E2%80%93-the-terminal-multiplexer-part-2/">TMUX – The Terminal Multiplexer (Part 2)</A>
+  HREF="https://github.com/hatone/guard-gitpusher">guard-gitpusher</A>
 </LI>
 <LI><A NAME="tex2html1594"
-  HREF="http://youtu.be/vHdiXoHKSgU">LA Ruby Conf 2013 - Impressive Ruby Productivity with Vim and Tmux by Chris Hunt</A>
-<UL>
+  HREF="https://github.com/johnbintz/rack-livereload">Guard and Rack-livereload With Sinatra</A>
+</LI>
 <LI><A NAME="tex2html1595"
-  HREF="https://github.com/chrishunt/dot-files/blob/master/.tmux.conf">dot-files</A>
+  HREF="http://net.tutsplus.com/tutorials/tools-and-tips/guard-is-your-best-friend/">Guard is Your Best Friend</A>
+Jeffrey Way  NetTuts Screencast
 </LI>
-<LI><A NAME="tex2html1596"
-  HREF="https://github.com/kien/ctrlp.vim">ctrlp</A>
-Full path fuzzy file, buffer, mru, tag, ... finder for Vim
-</LI>
-</UL>
-</LI>
-</UL>
+</OL>
 
 <P>
 <BR><HR>
@@ -153,27 +410,30 @@ Full path fuzzy file, buffer, mru, tag, ... finder for Vim
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html14543"
-  HREF="node681.html">Utilidades para Pair Programming con tmux</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14592"
+  HREF="node680.html#SECTION061600010000000000000">Enlaces Relacionados</A>
+</UL></UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14541"
+<A NAME="tex2html14590"
   HREF="node681.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14535"
-  HREF="node677.html">
+<A NAME="tex2html14584"
+  HREF="node578.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14529"
+<A NAME="tex2html14578"
   HREF="node679.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14537"
-  HREF="node777.html">
+<A NAME="tex2html14586"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14539"
-  HREF="node780.html">
+<A NAME="tex2html14588"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -224,20 +484,20 @@ Full path fuzzy file, buffer, mru, tag, ... finder for Vim
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14542"
-  HREF="node681.html">Utilidades para Pair Programming</A>
-<B> Subir:</B> <A NAME="tex2html14536"
-  HREF="node677.html">Herramientas para la Programacion</A>
-<B> Anterior:</B> <A NAME="tex2html14530"
-  HREF="node679.html">Remote pair programming</A>
- &nbsp; <B>  <A NAME="tex2html14538"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14540"
-  HREF="node780.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14591"
+  HREF="node681.html">Herramientas para la Programacion</A>
+<B> Subir:</B> <A NAME="tex2html14585"
+  HREF="node578.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html14579"
+  HREF="node679.html">Travis en la Línea</A>
+ &nbsp; <B>  <A NAME="tex2html14587"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14589"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

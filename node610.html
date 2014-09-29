@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Copia Segura de un Fichero</TITLE>
-<META NAME="description" CONTENT="Copia Segura de un Fichero">
+<TITLE>Consideraciones sobre la Seguridad del Uso de Agentes</TITLE>
+<META NAME="description" CONTENT="Consideraciones sobre la Seguridad del Uso de Agentes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node611.html">
 <LINK REL="previous" HREF="node609.html">
-<LINK REL="up" HREF="node598.html">
+<LINK REL="up" HREF="node601.html">
 <LINK REL="next" HREF="node611.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13441"
+<A NAME="tex2html13477"
   HREF="node611.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13435"
-  HREF="node598.html">
+<A NAME="tex2html13471"
+  HREF="node601.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13431"
+<A NAME="tex2html13465"
   HREF="node609.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13437"
-  HREF="node777.html">
+<A NAME="tex2html13473"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13439"
-  HREF="node780.html">
+<A NAME="tex2html13475"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,182 +92,166 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13442"
-  HREF="node611.html">Transferencia de ficheros por</A>
-<B> Subir:</B> <A NAME="tex2html13436"
-  HREF="node598.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13432"
-  HREF="node609.html">Los Ficheros de Configuración</A>
- &nbsp; <B>  <A NAME="tex2html13438"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13440"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13478"
+  HREF="node611.html">Depuración/Debugging</A>
+<B> Subir:</B> <A NAME="tex2html13472"
+  HREF="node601.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13466"
+  HREF="node609.html">Redireccionado al Agente SSH</A>
+ &nbsp; <B>  <A NAME="tex2html13474"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13476"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION065120000000000000000">
-Copia Segura de un Fichero</A>
+<H1><A NAME="SECTION06590000000000000000">
+Consideraciones sobre la Seguridad del Uso de Agentes</A>
 </H1>
 
 <P>
-
-<H4><A NAME="SECTION065120010000000000000">
-Transferencia de Ficheros con <TT>scp</TT></A>
-</H4>
-  
+El uso de agentes previene que la passphrase o la clave 
+tengan que viajar por la red y nos proteje contra el róbo de la clave.
 
 <P>
-El protocolo <A NAME="23520"></A><SPAN  CLASS="textbf">SCP</SPAN> implementa la transferencia de ficheros.
-El cliente se conecta a la máquina remota usando SSH y solicita la ejecución 
-de un programa servidor  (normalmente el mismo programa cliente <code>scp</code> es capaz de funcionar
-como servidor).
+Sin embargo, existe la posibilidad de que alguien tenga 
+acceso al socket usado por el agente. Cualquiera que pueda
+leer/escribir en ese socket tiene la posibilidad de suplantarnos.
+En particular el administrador de un sistema tiene siempre 
+esa posibilidad. 
 
 <P>
-Para la subida de ficheros el cliente alimenta al servidor
-con los ficheros que deberán ser cargados, incluyendo opcionalmente los 
-atributos básicos como permisos y fechas.
+Supongamos que el usuario <code>casiano</code> tiene acceso a dos máquinas:
+<code>orion</code> y <code>beowulf</code> a las que accede desde <code>europa</code>. 
+Supongamos que el administrador de <code>orion</code> es malicioso e intenta
+obtener acceso a las máquinas  de sus usuarios. Supongamos que tanto
+<code>europa</code> como <code>beowulf</code> son máquinas fiables. 
+Asumimos también que la máquina <code>beowulf</code> contiene información 
+importante y es un servidor que el usuario <code>casiano</code> tiene en su casa.
 
 <P>
-Para las descargas el cliente envía una solicitud indicando los ficheros y directorios que
-deben ser descargados. 
-
-<P>
-Veamos un ejemplo:
-<PRE>
-nereida:~&gt; scp mm.c orion:/tmp/
-mm.c
-</PRE>
-La sintáxis de <A NAME="tex2html1385"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?scp"><TT>scp</TT></A>
-es:
-<PRE>
-scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file] 
-    [-l limit] [-o ssh_option] [-P port] [-S program]
-    [[user@]host1:]file1 ... [[user@]host2:]file2
-</PRE>
-Es posible copiar entre dos máquinas remotas  emitiendo
-la orden desde una tercera máquina:
-<PRE>
-portatil@user:/tmp$ scp europa:/tmp/prueba.batch nereida:/tmp/prueba.batch
-</PRE>
-Es posible usar comodines (wildcards), protegiéndolos de la shell local:
-<PRE>
-portatil@user:/tmp$ scp 'europa:/tmp/*.tex' nereida:/tmp/
-</PRE>
-Es posible copiar de dos máquinas remotas a una tercera:
-<PRE>
-pp2@europa:~/Lnet-parscp$ scp orion:Makefile.PL nereida:texput.log beowulf:
-pp2@europa:~/Lnet-parscp$ ssh beowulf ls -ltr | tail -2
--rw-r--r--  1 casiano casiano    615 mar 26 13:56 texput.log
--rw-r--r--  1 casiano casiano   1485 mar 26 13:56 Makefile.PL
-</PRE>
-Hemos copiado desde la máquina orion y desde la máquina nereida
-diferentes ficheros. La máquina <code>beowulf</code> es la máquina de destino
-a la que fueron transferidos.
-
-<P>
-La opción <code>-r</code> permite copiar subdirectorios.
-La opción <code>-p</code> permite preservar permisos.
+La sesión que sigue muestra como el malvado administrador de <code>orion</code>
+puede secuestrar al agente utilizado por <code>casiano</code> para obtener acceso
+a <code>beowulf</code>:
 
 <P>
 
-<H4><A NAME="SECTION065120020000000000000">
-Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
-</H4>
-  
-
-<P>
-Un comando como este edita dos ficheros en sendos tabs:
+<OL>
+<LI>Supongamos que cierto usuario <code>casiano</code> abre una conexión SSH
+con <code>orion</code> desde la máquina 
+<code>europa</code>, utilizando <A NAME="23595"></A><SPAN  CLASS="textbf">agent forwarding</SPAN>
 
 <P>
 <PRE>
-vi -p scp://orion/AUTOMATICBACKUPCHECKOUT /home/casiano/europabackup.log
+casiano@europa:~$ ps -fA | grep ssh-agent
+casiano   7618     1  0 Apr28 ?        00:00:00 /usr/bin/ssh-agent -s
+casiano  16288 16223  0 Apr29 ?        00:00:00 /usr/bin/ssh-agent x-session-manager
+casiano  16970 13271  0 17:25 pts/31   00:00:00 grep ssh-agent
+pp2      28048     1  0 May02 ?        00:00:00 ssh-agent
+casiano@europa:~$ ssh-add -l
+1024 49:Xc:eX:bX:Xa:ea:eX:XX:fc:aX:eX:Xb:XX:cX:da:XX /home/casiano/.ssh/id_dsa (DSA)
+1024 56:XX:XX:dX:XX:eX:ca:XX:Xd:Xf:Xb:XX:Xd:fX:Xc:XX /home/casiano/.ssh/orionbackupidentity (DSA)
+casiano@europa:~$ ssh -A orion
+Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
 </PRE>
-
-<P>
-El primero es un fichero <code>~/AUTOMATICBACKUPCHECKOUT</code>
-en una máquina remota con nombre <code>orion</code>. El segundo
-es un fichero local. El editor <code>vim</code> emite el comando <code>scp</code> 
-apropiado para copiar el fichero remoto en un fichero temporal.
-
-<P>
-Durantre la edición, cada vez que salve el fichero
-<code>~/AUTOMATICBACKUPCHECKOUT</code> de <code>orion</code>, <code>vim</code>
-tasladará la orden <code>:w</code> en el comando <code>scp</code> adecuado:
+Posteriormente el usuario se conecta a una tercera máquina <code>beowulf</code>
+desde su sesión en <code>orion</code>:
 <PRE>
-:!scp -q '/tmp/v611122/1' 'orion:AUTOMATICBACKUPCHECKOUT'
-</PRE>
+casiano@orion:~$                                                   
+casiano@orion:~$ ssh beowulf
+Linux beowulf 2.6.15-1-686-smp #2 SMP Mon Mar 6 15:34:50 UTC 2006 i686
 
-<P>
-o bien podemos emitir una orden de edición de un nuevo fichero remoto:
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+No mail.
+Last login: Mon May  4 17:44:35 2009 from orion.pcg.ull.es
+casiano@beowulf:~$
+</PRE>
+</LI>
+<LI>En otra sesión en <code>orion</code> el malvado administrador busca por sockets de agentes en <code>/tmp</code>:
 <PRE>
-:vsplit scp://casiano@some.machine.com/somefile.txt
+root@orion:~# ls -ltr /tmp/ssh*
+total 0
+srwxr-xr-x 1 casiano casiano 0 2009-05-04 17:35 agent.7932
+root@orion:~# ls -ldtr /tmp/ssh*
+drwx------ 2 casiano casiano 4096 2009-05-04 17:35 /tmp/ssh-jrQQgf7932
 </PRE>
+El root puede ver que el usuario <code>casiano</code> tiene un agente arrancado.
 
 <P>
-Es incluso posible ver los contenidos de un directorio:
+En el caso del agente, la opción <TT>-a</TT> de <TT>ssh-agent</TT>
+permite definir un lugar alternativo para el socket Unix a usar:
 <PRE>
-:tabedit scp://orion/pp2/
+lusasoft@LusaSoft:~$ eval `ssh-agent -a myagentsocket`
+Agent pid 6475
+lusasoft@LusaSoft:~$ ls -ltrd my*
+srw------- 1 lusasoft lusasoft 0 2009-05-02 08:56 myagentsocket
+</PRE>
+esta opción sin embargo no afecta al socket creado por el daemon en <code>orion</code>
+
+<P>
+</LI>
+<LI><P>
+El malvado administrador vigila lo que hace el usuario casiano:
+<PRE>
+root@orion:~# ps -fu casiano
+UID        PID  PPID  C STIME TTY          TIME CMD
+casiano   7682  7680  0 17:16 ?        00:00:00 sshd: casiano@pts/1
+casiano   7683  7682  0 17:16 pts/1    00:00:00 -bash
+casiano   7932  7930  0 17:35 ?        00:00:00 sshd: casiano@pts/0
+casiano   7933  7932  0 17:35 pts/0    00:00:00 -bash
+casiano   7939  7933  0 17:35 pts/0    00:00:00 ssh beowulf
+</PRE>
+Ummmmhhh... tiene una conexión ssh a una máquina llamada <code>beowulf</code>? 
+demasiado breve para ser el nombre real de una máquina. 
+Debe estar definida en su fichero de configuración.
+</LI>
+<LI>Bueno, el root decide usar el socket de casiano:
+<PRE>
+root@orion:~# export SSH_AUTH_SOCK=/tmp/ssh-jrQQgf7932/agent.7932
+</PRE>
+</LI>
+<LI><P>
+El administrador malvado ya puede conectarse. Usará el fichero de configuración de <code>casiano</code> (opción <code>-F</code>)
+para que la conexión ocurra según la configuración de ese usuario (por supuesto, antes comprueba que
+existe tal configuración):
+
+<P>
+<PRE>
+root@orion:~# ssh -F ~casiano/.ssh/config casiano@beowulf
+casiano@beowulf:~$
 </PRE>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+El administrador de orion ha conseguido acceso a una máquina
+en la que no tenía cuenta. Ahora podría proceder a instalar una autentificación automática
+en la cuenta de caiano en beowulf, de modo que le permita posteriores visitas.
+</LI>
+</OL>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html13443"
-  HREF="node610.html#SECTION065120010000000000000">Transferencia de Ficheros con <TT>scp</TT></A>
-<LI><A NAME="tex2html13444"
-  HREF="node610.html#SECTION065120020000000000000">Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html13445"
-  HREF="node611.html">Transferencia de ficheros por <TT>sftp</TT></A>
-<LI><A NAME="tex2html13446"
-  HREF="node612.html">Copias de Seguridad con <TT>rsync</TT></A>
-<UL>
-<LI><A NAME="tex2html13447"
-  HREF="node612.html#SECTION065122010000000000000">El Algoritmo</A>
-<LI><A NAME="tex2html13448"
-  HREF="node612.html#SECTION065122020000000000000">Mode de Uso</A>
-<LI><A NAME="tex2html13449"
-  HREF="node612.html#SECTION065122030000000000000">Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
-<LI><A NAME="tex2html13450"
-  HREF="node612.html#SECTION065122040000000000000">Backups con <TT>rsync</TT> en un Medio Externo</A>
-<LI><A NAME="tex2html13451"
-  HREF="node612.html#SECTION065122050000000000000">El fichero <TT>/etc/fstab</TT></A>
-<LI><A NAME="tex2html13452"
-  HREF="node612.html#SECTION065122060000000000000">El Programa de Copia</A>
-<LI><A NAME="tex2html13453"
-  HREF="node612.html#SECTION065122070000000000000">Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
-<LI><A NAME="tex2html13454"
-  HREF="node612.html#SECTION065122080000000000000">El fichero de <TT>cron</TT></A>
-<LI><A NAME="tex2html13455"
-  HREF="node612.html#SECTION065122090000000000000">Comprobación de la Copia</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13441"
+<A NAME="tex2html13477"
   HREF="node611.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13435"
-  HREF="node598.html">
+<A NAME="tex2html13471"
+  HREF="node601.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13431"
+<A NAME="tex2html13465"
   HREF="node609.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13437"
-  HREF="node777.html">
+<A NAME="tex2html13473"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13439"
-  HREF="node780.html">
+<A NAME="tex2html13475"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -317,20 +302,20 @@ Es incluso posible ver los contenidos de un directorio:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13442"
-  HREF="node611.html">Transferencia de ficheros por</A>
-<B> Subir:</B> <A NAME="tex2html13436"
-  HREF="node598.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13432"
-  HREF="node609.html">Los Ficheros de Configuración</A>
- &nbsp; <B>  <A NAME="tex2html13438"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13440"
-  HREF="node780.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13478"
+  HREF="node611.html">Depuración/Debugging</A>
+<B> Subir:</B> <A NAME="tex2html13472"
+  HREF="node601.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13466"
+  HREF="node609.html">Redireccionado al Agente SSH</A>
+ &nbsp; <B>  <A NAME="tex2html13474"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13476"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

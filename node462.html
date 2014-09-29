@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Redis y Sinatra</TITLE>
-<META NAME="description" CONTENT="Redis y Sinatra">
+<TITLE>Un Ejemplo Simple</TITLE>
+<META NAME="description" CONTENT="Un Ejemplo Simple">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node463.html">
-<LINK REL="previous" HREF="node457.html">
-<LINK REL="up" HREF="node321.html">
+<LINK REL="previous" HREF="node461.html">
+<LINK REL="up" HREF="node460.html">
 <LINK REL="next" HREF="node463.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10809"
+<A NAME="tex2html10834"
   HREF="node463.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10803"
-  HREF="node321.html">
+<A NAME="tex2html10828"
+  HREF="node460.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10797"
+<A NAME="tex2html10822"
   HREF="node461.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10805"
-  HREF="node777.html">
+<A NAME="tex2html10830"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10807"
-  HREF="node780.html">
+<A NAME="tex2html10832"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,56 +92,593 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10810"
-  HREF="node463.html">MongoDB y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html10804"
-  HREF="node321.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html10798"
-  HREF="node461.html">Práctica: TicTactoe Usando Ajax</A>
- &nbsp; <B>  <A NAME="tex2html10806"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10808"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10835"
+  HREF="node463.html">Ajax, Sinatra y RightJS</A>
+<B> Subir:</B> <A NAME="tex2html10829"
+  HREF="node460.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html10823"
+  HREF="node461.html">Un Programa para Experimentar</A>
+ &nbsp; <B>  <A NAME="tex2html10831"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10833"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031300000000000000000"></A>
-<A NAME="chapter:redisysinatra"></A>
-<BR>
-Redis y Sinatra
+<H1><A NAME="SECTION031220000000000000000">
+Un Ejemplo Simple</A>
 </H1>
+
+<P>
+Véase 
+<A NAME="tex2html1050"
+  HREF="https://github.com/crguezl/sinatra-jquery-ajax">sinatra-jquery-ajax</A>
+en GitHub.
+
+<P>
+<PRE>
+~/sinatra/sinatra-jquery-ajax(master)]$ tree
+.
+|--- Gemfile
+|--- Gemfile.lock
+|--- README
+|--- config.ru
+|--- public
+|   |--- css
+|   |   `--- style.css
+|   `--- js
+|       `--- app.js
+|--- sinatra_jquery_test.rb
+`--- views
+    |--- app.erb
+    `--- layout.erb
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/sinatra-jquery-ajax(master)]$ cat sinatra_jquery_test.rb 
+require 'sinatra'
+
+get '/' do
+  erb :app
+end
+
+get '/play' do 
+  if request.xhr?
+    %q{&lt;h1 class="blue"&gt;Hello! &lt;a href="/"&gt;back&lt;/a&gt;&lt;/h1&gt;}
+  else
+    "&lt;h1&gt;Not an Ajax request!&lt;/h1&gt;"
+  end
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031220010000000000000">
+request.xhr?</A>
+</H4>
+  
+
+<P>
+El predicado
+<code>request.xhr?</code> nos permite saber si este es una request ajax.
+
+<P>
+<PRE>
+[~/sinatra/sinatra-jquery-ajax(master)]$ cat views/layout.erb 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;link rel="stylesheet" type="text/css" href="css/style.css"&gt;
+    &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;
+    &lt;script src="js/app.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;%= yield %&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031220020000000000000">
+Content Delivery Network (CDN)</A>
+</H4>
+  
+
+A <A NAME="18974"></A><SPAN  CLASS="textbf">Content Delivery Network</SPAN> (<A NAME="18976"></A><SPAN  CLASS="textbf">CDN</SPAN>) is a distributed system of web servers 
+that aim to deliver content to users quickly and efficiently. 
+
+<P>
+A large number of CDNs are available for JavaScript libraries. 
+
+<P>
+The idea is that if lots of sites use the same CDN or <A NAME="18978"></A><SPAN  CLASS="textbf">hotlink</SPAN>
+(véase
+<A NAME="tex2html1051"
+  HREF="http://simple.wikipedia.org/wiki/Hotlinking">Hotlinking</A>), 
+it will be cached locally on the user’s machine, saving the user 
+from an extra download across all those sites. 
+
+<P>
+The downside is a loss of control and the chance (however small) 
+that the CDN might go down and be unavailable.
 
 <P>
 
 <OL>
-<LI><A NAME="tex2html1070"
-  HREF="http://redis.io/topics/quickstart">Redis Quick Start</A>
+<LI><A NAME="tex2html1052"
+  HREF="https://developers.google.com/speed/libraries/devguide">Google Hosted Libraries - Developer's Guide</A>
 </LI>
-<LI><A NAME="tex2html1071"
-  HREF="http://net.tutsplus.com/tutorials/ruby/how-to-build-a-shortlink-app-with-ruby-and-redis/">How to Build a Shortlink App with Ruby and Redis
-Charlie Somerville</A>
-en http://net.tutsplus.com/
-</LI>
-<LI><A NAME="tex2html1072"
-  HREF="https://github.com/crguezl/Sinatra-Redis-Heroku-App">Sinatra-Redis-Heroku-App</A>
-en GitHub
-</LI>
-<LI><A NAME="tex2html1073"
-  HREF="https://github.com/bmizerany/sinatra-redis">sinatra-redis</A>
-extension
-</LI>
-<LI><A NAME="tex2html1074"
-  HREF="https://devcenter.heroku.com/articles/rediscloud">Redis Cloud</A>
-Redis Cloud is a managed cloud service for hosting and running your Redis dataset through its add-on for Heroku
+<LI><A NAME="tex2html1053"
+  HREF="http://jquery.com/download/">jQuery download</A>
 </LI>
 </OL>
 
 <P>
+
+<H4><A NAME="SECTION031220030000000000000">
+views/app.erb</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra/sinatra-jquery-ajax(master)]$ cat views/app.erb 
+&lt;div id="div1"&gt;
+  &lt;h2 class="pink"&gt;Let jQuery AJAX Change This Text&lt;/h2&gt;
+  &lt;button type="button"&gt;Get External Content&lt;/button&gt;
+&lt;/div&gt;
+</PRE>
+Inside a <code>&lt;button&gt;</code> element you can put content, like text or images. This is the difference between this element and buttons created with the <code>&lt;input&gt;</code> element.
+
+<P>
+Always specify the type attribute for a <code>&lt;button&gt;</code> element. Different browsers use different default types for the <code>&lt;button&gt;</code> element.
+
+<P>
+HTML5 has the following new attributes: <code>autofocus</code>, <code>form</code>, <code>formaction</code>, <code>formenctype</code>, <code>formmethod</code>, <code>formnovalidate</code>, and <code>formtarget</code>.
+
+<P>
+
+<H4><A NAME="SECTION031220040000000000000">
+public/js/app.js</A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/sinatra/sinatra-jquery-ajax(master)]$ cat public/js/app.js 
+$(document).ready(function(){
+  $("button").click(function(){
+    $("#div1").load("/play",function(responseTxt,statusTxt,xhr){
+      /* if(statusTxt=="success") alert("External content loaded successfully!"); */
+      if(statusTxt=="error")
+        alert("Error: "+xhr.status+": "+xhr.statusText);
+    });
+  });
+});
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031220050000000000000">
+$(document).ready(function(){ ... })</A>
+</H4>
+  
+
+No es posible interactuar de forma segura con el contenido de una página hasta que el documento no se encuentre preparado para su manipulación. 
+
+<P>
+jQuery permite detectar dicho estado a través de la declaración 
+<PRE>
+$(document).ready()
+</PRE>
+de forma tal que el bloque se ejecutará sólo una vez que la página este disponible.
+
+<P>
+
+<H4><A NAME="SECTION031220060000000000000">
+selectores CSS</A>
+</H4>
+  
+
+El concepto más básico de jQuery es el de 
+<SPAN  CLASS="textbf">seleccionar algunos elementos y realizar acciones con ellos</SPAN>.
+
+<P>
+La biblioteca soporta gran parte de los selectores CSS3 y varios más no estandarizados. 
+
+<P>
+<PRE>
+    $("#div1").load("/play",function(responseTxt,statusTxt,xhr){ ... }
+</PRE>
+
+<P>
+En 
+<A NAME="tex2html1054"
+  HREF="http://api.jquery.com/category/selectors/ ">http://api.jquery.com/category/selectors/ </A>
+se puede encontrar una completa referencia sobre los selectores de la biblioteca.
+
+<P>
+
+<H4><A NAME="SECTION031220070000000000000">
+Controladores de Eventos (Event Handlers)</A>
+</H4>
+  
+
+<P>
+jQuery provee métodos para asociar <A NAME="19000"></A><SPAN  CLASS="textbf">controladores de eventos</SPAN> (en inglés <A NAME="19002"></A><SPAN  CLASS="textbf">event handlers</SPAN>) 
+a selectores. 
+
+<P>
+Cuando un evento ocurre, la función provista es ejecutada. 
+<PRE>
+  $("button").click(function(){ ... })
+</PRE>
+
+<P>
+Dentro de la función, la palabra clave <code>this</code> hace referencia al elemento en que el evento ocurre.
+
+<P>
+Para más detalles sobre los eventos en jQuery, puede consultar 
+<A NAME="tex2html1055"
+  HREF="http://api.jquery.com/category/events/">http://api.jquery.com/category/events/.</A>
+<P>
+
+<H4><A NAME="SECTION031220080000000000000">
+El Evento</A>
+</H4>
+  
+
+La función del controlador de eventos puede recibir un objeto. 
+
+<P>
+Este objeto puede ser utilizado para determinar la naturaleza del
+evento o, por ejemplo, prevenir el comportamiento predeterminado
+de éste.
+
+<P>
+Para más detalles sobre el objeto del evento, visite 
+
+<P>
+
+<H4><A NAME="SECTION031220090000000000000">
+XMLHttpRequest(XHR)</A>
+</H4>
+  
+
+<P>
+<A NAME="tex2html1056"
+  HREF="http://api.jquery.com/category/events/event-object/">http://api.jquery.com/category/events/event-object/</A>
+<P>
+El método <code>XMLHttpRequest(XHR)</code> permite a los navegadores comunicarse con el servidor sin la necesidad de recargar la página. 
+
+<P>
+Este método, también conocido como <A NAME="19012"></A><SPAN  CLASS="textbf">Ajax</SPAN> (<A NAME="19014"></A><SPAN  CLASS="textbf">Asynchronous JavaScript and XML</SPAN>), permite la creación de aplicaciones ricas en interactividad.
+
+<P>
+Las peticiones Ajax son ejecutadas por el código JavaScript, el cual 
+
+<P>
+
+<OL>
+<LI>envía una petición a una URL y 
+</LI>
+<LI>cuando recibe una respuesta, una <A NAME="19016"></A><SPAN  CLASS="textbf">función de devolución</SPAN> (<A NAME="19018"></A><SPAN  CLASS="textbf">callback</SPAN>) 
+puede ser ejecutada 
+</LI>
+<LI>Esta función recibe como argumento la respuesta del servidor y realiza algo con ella. 
+</LI>
+<LI>Debido a que la respuesta es asíncrona, 
+el resto del código de la aplicación continua ejecutándose, por lo cual, es imperativo que una función de devolución sea ejecutada para manejar la respuesta.
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION0312200100000000000000">
+Métodos jQuery para Ajax</A>
+</H4>
+  
+
+A través de varios métodos, jQuery provee soporte para Ajax, 
+permitiendo abstraer las diferencias que pueden existir entre navegadores. 
+
+<P>
+Los métodos en cuestión son 
+
+<P>
+
+<OL>
+<LI><code>$.get()</code>
+<A NAME="tex2html1057"
+  HREF="http://api.jquery.com/jQuery.get/">.get()</A>
+</LI>
+<LI><code>$.getScript()</code>
+<A NAME="tex2html1058"
+  HREF="http://api.jquery.com/jQuery.getScript/">.getScript()</A>
+</LI>
+<LI><code>$.getJSON()</code>
+<A NAME="tex2html1059"
+  HREF="http://api.jquery.com/jQuery.getJSON/">.getJSON()</A>
+</LI>
+<LI><code>$.post()</code>
+<A NAME="tex2html1060"
+  HREF="http://api.jquery.com/jQuery.post/">.post()</A>
+</LI>
+<LI><code>$().load()</code>
+<A NAME="tex2html1061"
+  HREF="http://api.jquery.com/load/">.load()</A>
+</LI>
+<LI><code>$().ajax()</code>
+<A NAME="tex2html1062"
+  HREF="http://api.jquery.com/jQuery.ajax/">jQuery.ajax()</A>
+</LI>
+</OL>
+
+<P>
+A pesar que la definición de Ajax posee la palabra <code>XML</code>, la
+mayoría de las aplicaciones no utilizan dicho formato para el
+transporte de datos, sino que en su lugar se utiliza HTML plano o
+información en formato <A NAME="19024"></A><SPAN  CLASS="textbf">JSON</SPAN> (<A NAME="tex2html1063"
+  HREF="http://en.wikipedia.org/wiki/,">JSON</A>
+<A NAME="19028"></A><SPAN  CLASS="textbf">JavaScript Object Notation</SPAN>).
+
+<P>
+Generalmente, jQuery necesita algunas instrucciones sobre el tipo de información 
+que se espera recibir cuando se realiza una petición Ajax. 
+
+<P>
+En algunos casos, el tipo de dato es especificado por el nombre del método, 
+pero en otros casos se lo debe detallar como parte de la configuración del método:
+
+<P>
+
+<OL>
+<LI><code>text</code> Para el transporte de cadenas de caracteres simples.
+</LI>
+<LI><code>html</code> Para el transporte de bloques de código HTML que serán ubicados en la página.
+</LI>
+<LI><code>script</code> Para añadir un nuevo script con código JavaScript a la página.
+</LI>
+<LI><code>json</code> Para transportar información en formato JSON, el cual puede incluir cadenas de caracteres, arreglos y objetos.
+
+<P>
+Es recomendable utilizar los mecanismos que posea el lenguaje del
+lado de servidor para la generación de información en JSON.
+</LI>
+<LI><code>jsonp</code> Para transportar información JSON de un dominio a otro. 
+</LI>
+<LI><code>xml</code> Para transportar información en formato XML.
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION0312200110000000000000">
+.load()</A>
+</H4>
+  
+
+La sintáxis de 
+<A NAME="tex2html1064"
+  HREF="http://api.jquery.com/load/">.load()</A>
+es:
+<PRE>
+.load( url [, data ] [, complete(responseText, textStatus, XMLHttpRequest) ] )
+</PRE>
+
+<P>
+En nuestro ejemplo lo hemos usado así:
+
+<P>
+<PRE>
+    $("#div1").load("/play",function(responseTxt,statusTxt,xhr){
+      /* if(statusTxt=="success") alert("External content loaded successfully!"); */
+      if(statusTxt=="error")
+        alert("Error: "+xhr.status+": "+xhr.statusText);
+    });
+</PRE>
+Load data from the server and place the returned HTML into the matched element.
+Por ejemplo:
+<PRE>
+$( "#result" ).load( "ajax/test.html" );
+</PRE>
+If no element is matched by the selector, in this case, 
+<PRE>
+.load( url [, data ] [, complete(responseText, textStatus, XMLHttpRequest) ] )
+</PRE>
+if the document does not contain an element with <code>id="result"</code>,
+the Ajax request will not be sent.
+
+<P>
+
+<H4><A NAME="SECTION0312200120000000000000">
+.load() usa GET si no se especifica <TT>data</TT></A>
+</H4>
+  
+
+The <code>POST</code> method is used if <code>data</code> <SPAN  CLASS="textbf">is provided as an
+object</SPAN>; otherwise, <code>GET</code> is assumed.
+
+<P>
+
+<H4><A NAME="SECTION0312200130000000000000">
+Especificando un Objeto del Documento Remoto via un Selector</A>
+</H4>
+  
+
+The <code>.load()</code> method, unlike <code>$.get()</code>, 
+allows us to specify a portion of the remote document to be inserted. 
+
+<P>
+This is achieved with a special syntax for the <code>url</code> 
+parameter. 
+
+<P>
+If one or more space characters are included in the string, 
+the portion of the string following the first space is assumed 
+to be a jQuery selector that determines the content to be loaded.
+
+<P>
+<PRE>
+$( "#result" ).load( "ajax/test.html #container" );
+</PRE>
+
+<P>
+When this method executes, it retrieves the content of <code>ajax/test.html</code>,
+but then jQuery parses the returned document to find the element
+with an ID of <code>container</code>. 
+
+<P>
+This element, along with its contents, is
+inserted into the element with an ID of <code>result</code>, and the rest of the
+retrieved document is discarded.
+
+<P>
+We could modify the example above to use only part of the document that is fetched:
+
+<P>
+
+<H4><A NAME="SECTION0312200140000000000000">
+.innerHTML y .load</A>
+</H4>
+  
+
+<P>
+jQuery uses the browser's 
+<A NAME="tex2html1065"
+  HREF="http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_elmnt_innerhtml">.innerHTML</A>
+property to parse 
+the retrieved document and insert it into the current document. 
+
+<P>
+During this process, browsers often filter elements from the document such as 
+<code>&lt;html&gt;</code>, 
+<code>&lt;title&gt;</code>, or 
+<code>&lt;head&gt;</code> elements. As a result, the elements retrieved by 
+<code>.load()</code> may not be exactly the same as if the 
+document were retrieved directly by the browser.
+
+<P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html10836"
+  HREF="node462.html#SECTION031220010000000000000">request.xhr?</A>
+<LI><A NAME="tex2html10837"
+  HREF="node462.html#SECTION031220020000000000000">Content Delivery Network (CDN)</A>
+<LI><A NAME="tex2html10838"
+  HREF="node462.html#SECTION031220030000000000000">views/app.erb</A>
+<LI><A NAME="tex2html10839"
+  HREF="node462.html#SECTION031220040000000000000">public/js/app.js</A>
+<LI><A NAME="tex2html10840"
+  HREF="node462.html#SECTION031220050000000000000">$(document).ready(function(){ ... })</A>
+<LI><A NAME="tex2html10841"
+  HREF="node462.html#SECTION031220060000000000000">selectores CSS</A>
+<LI><A NAME="tex2html10842"
+  HREF="node462.html#SECTION031220070000000000000">Controladores de Eventos (Event Handlers)</A>
+<LI><A NAME="tex2html10843"
+  HREF="node462.html#SECTION031220080000000000000">El Evento</A>
+<LI><A NAME="tex2html10844"
+  HREF="node462.html#SECTION031220090000000000000">XMLHttpRequest(XHR)</A>
+<LI><A NAME="tex2html10845"
+  HREF="node462.html#SECTION0312200100000000000000">Métodos jQuery para Ajax</A>
+<LI><A NAME="tex2html10846"
+  HREF="node462.html#SECTION0312200110000000000000">.load()</A>
+<LI><A NAME="tex2html10847"
+  HREF="node462.html#SECTION0312200120000000000000">.load() usa GET si no se especifica <TT>data</TT></A>
+<LI><A NAME="tex2html10848"
+  HREF="node462.html#SECTION0312200130000000000000">Especificando un Objeto del Documento Remoto via un Selector</A>
+<LI><A NAME="tex2html10849"
+  HREF="node462.html#SECTION0312200140000000000000">.innerHTML y .load</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10834"
+  HREF="node463.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10828"
+  HREF="node460.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10822"
+  HREF="node461.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html10830"
+  HREF="node783.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html10832"
+  HREF="node786.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html10835"
+  HREF="node463.html">Ajax, Sinatra y RightJS</A>
+<B> Subir:</B> <A NAME="tex2html10829"
+  HREF="node460.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html10823"
+  HREF="node461.html">Un Programa para Experimentar</A>
+ &nbsp; <B>  <A NAME="tex2html10831"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10833"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

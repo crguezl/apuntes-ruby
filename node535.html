@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>El Objeto module y module.exports</TITLE>
-<META NAME="description" CONTENT="El Objeto module y module.exports">
+<TITLE>Carga desde Carpetas node_modules</TITLE>
+<META NAME="description" CONTENT="Carga desde Carpetas node_modules">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node536.html">
 <LINK REL="previous" HREF="node534.html">
-<LINK REL="up" HREF="node528.html">
+<LINK REL="up" HREF="node531.html">
 <LINK REL="next" HREF="node536.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12070"
+<A NAME="tex2html12107"
   HREF="node536.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12064"
-  HREF="node528.html">
+<A NAME="tex2html12101"
+  HREF="node531.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12058"
+<A NAME="tex2html12095"
   HREF="node534.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12066"
-  HREF="node777.html">
+<A NAME="tex2html12103"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12068"
-  HREF="node780.html">
+<A NAME="tex2html12105"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,104 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12071"
-  HREF="node536.html">Algoritmo de Búsqueda Ejecutado</A>
-<B> Subir:</B> <A NAME="tex2html12065"
-  HREF="node528.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html12059"
-  HREF="node534.html">Caching</A>
- &nbsp; <B>  <A NAME="tex2html12067"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12069"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12108"
+  HREF="node536.html">Las Carpetas Usadas Como</A>
+<B> Subir:</B> <A NAME="tex2html12102"
+  HREF="node531.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12096"
+  HREF="node534.html">Especificación de Ficheros Conteniendo</A>
+ &nbsp; <B>  <A NAME="tex2html12104"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12106"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04587000000000000000">
-El Objeto <TT>module</TT> y <TT>module.exports</TT></A>
+<H2><A NAME="SECTION04584000000000000000">
+Carga desde Carpetas <TT>node_modules</TT></A>
 </H2>
 
 <P>
 
 <OL>
-<LI>In each module, the <code>module</code> free variable is a reference to the object
-representing the current module. 
+<LI>If the module identifier passed to <code>require()</code> is not a native module,
+and does not begin with <code>'/'</code>, <code>'../'</code>, or <code>'./'</code>, then node starts at the
+parent directory of the current module, and adds <code>/node_mo1dules</code>, and
+attempts to load the module from that location.
 
 <P>
 </LI>
-<LI>In particular <code>module.exports</code> is the
-same as the exports object. 
-
-<P>
-</LI>
-<LI><code>module</code> isn't actually a global but rather
-local to each module.
-
-<P>
-</LI>
-<LI>The exports object is created by the <code>Module</code> system. 
-Sometimes this is not acceptable, 
-many want their module to be an instance of some class. 
-To do this assign the desired export object to <code>module.exports</code>. 
-
-<P>
-
-<UL>
-<LI><PRE>
-[~/javascript/node.js/creating_modules/module_exports(master)]$ cat a.js
-var EventEmitter = require('events').EventEmitter;
-
-module.exports = new EventEmitter();
-
-// Do some work, and after some time emit
-// the 'ready' event from the module itself.
-setTimeout(function() {
-  module.exports.emit('ready');
-}, 1000);
-</PRE>
-
-<P>
-</LI>
-<LI><PRE>
-$ cat main.js 
-var a = require('./a');
-a.on('ready', function() {
-  console.log('module a is ready');
-});
-</PRE>
-</LI>
-<LI><PRE>
-$ node main.js 
-module a is ready
-</PRE>
-</LI>
-</UL>
-La asignación a <code>module.exports</code> debe hacerse inmediatamente. 
-No puede hacerse en un callback.
-
-<P>
+<LI>If it is not found there, then it moves to the parent directory, and so
+on, until the root of the tree is reached.
 </LI>
 </OL>
+
+<P>
+For example, if the file at <code>'/home/ry/projects/foo.js'</code> called
+require(<code>'bar.js'</code>), then node would look in the following locations,
+in this order:
+
+<P>
+<PRE>
+/home/ry/projects/node_modules/bar.js
+/home/ry/node_modules/bar.js
+/home/node_modules/bar.js
+/node_modules/bar.js
+</PRE>
+
+<P>
+This allows programs to localize their dependencies, so that they do not clash.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12070"
+<A NAME="tex2html12107"
   HREF="node536.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12064"
-  HREF="node528.html">
+<A NAME="tex2html12101"
+  HREF="node531.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12058"
+<A NAME="tex2html12095"
   HREF="node534.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12066"
-  HREF="node777.html">
+<A NAME="tex2html12103"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12068"
-  HREF="node780.html">
+<A NAME="tex2html12105"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -240,20 +209,20 @@ No puede hacerse en un callback.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12071"
-  HREF="node536.html">Algoritmo de Búsqueda Ejecutado</A>
-<B> Subir:</B> <A NAME="tex2html12065"
-  HREF="node528.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html12059"
-  HREF="node534.html">Caching</A>
- &nbsp; <B>  <A NAME="tex2html12067"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12069"
-  HREF="node780.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12108"
+  HREF="node536.html">Las Carpetas Usadas Como</A>
+<B> Subir:</B> <A NAME="tex2html12102"
+  HREF="node531.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12096"
+  HREF="node534.html">Especificación de Ficheros Conteniendo</A>
+ &nbsp; <B>  <A NAME="tex2html12104"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12106"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

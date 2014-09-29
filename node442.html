@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Asynchronous responses in Rack</TITLE>
-<META NAME="description" CONTENT="Asynchronous responses in Rack">
+<TITLE>Práctica: Chat con TicTacToe</TITLE>
+<META NAME="description" CONTENT="Práctica: Chat con TicTacToe">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node443.html">
 <LINK REL="previous" HREF="node441.html">
-<LINK REL="up" HREF="node426.html">
+<LINK REL="up" HREF="node429.html">
 <LINK REL="next" HREF="node443.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10481"
+<A NAME="tex2html10516"
   HREF="node443.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10475"
-  HREF="node426.html">
+<A NAME="tex2html10510"
+  HREF="node429.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10471"
+<A NAME="tex2html10504"
   HREF="node441.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10477"
-  HREF="node777.html">
+<A NAME="tex2html10512"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10479"
-  HREF="node780.html">
+<A NAME="tex2html10514"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,111 +92,70 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10482"
-  HREF="node443.html">Deferred or streaming response</A>
-<B> Subir:</B> <A NAME="tex2html10476"
-  HREF="node426.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10472"
-  HREF="node441.html">Ejemplo de Server Sent</A>
- &nbsp; <B>  <A NAME="tex2html10478"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10480"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10517"
+  HREF="node443.html">Embedding Sinatra within EventMachine</A>
+<B> Subir:</B> <A NAME="tex2html10511"
+  HREF="node429.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html10505"
+  HREF="node441.html">Práctica: Chat con Estilo</A>
+ &nbsp; <B>  <A NAME="tex2html10513"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10515"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION038140000000000000000">
-Asynchronous responses in Rack</A>
+<H1><A NAME="SECTION038110000000000000000"></A>
+   <A NAME="18024"></A>
+<BR>
+Práctica: Chat con TicTacToe
 </H1>
+  
+Modifique la práctica anterior añadiendo un nuevo contenedor en la vista 
+con el tablero del tictactoe.
 
 <P>
-<A NAME="tex2html1010"
-  HREF="http://polycrystal.org/2012/04/15/asynchronous_responses_in_rack.html">Asynchronous responses in Rack</A>
-<P>
-With the Rack  synchronous interface protocol, the entire body must
-be prepared immediately, or be otherwise quickly available, for
-example by reading from file. A response that must be waited upon
-will tie up the process or thread executing the HTTP request. In a
-multi-process Rack server such as Unicorn, this will block the
-entire worker process, making in unavailable to server other requests.
+
+<OL>
+<LI>Los usuarios tiene dos estados <code>jugando</code> (en rojo)
+o libres (en <code>verde</code>).
 
 <P>
-Some Rack servers provide an alternate interface that allows the
-request to be suspended, unblocking the worker. At some later time,
-the request may be resumed, and the response sent to the client.
+</LI>
+<LI>Al cliquear en un usuario libre elegimos jugar con él. 
+Se le mostrará a este la opción de aceptar o rechazar
+la oferta. 
 
 <P>
-While there is not yet an async interface in the Rack specification,
-several Rack servers have implemented 
-<A NAME="tex2html1011"
-  HREF="https://github.com/raggi/thin/blob/async_for_rack/example/async_app.ru">James Tucker's async scheme.</A>
-<P>
-Rather than returning <code>[status, headers, body]</code>, the app returns a
-status of <code>-1</code>, or throws the symbol <code>:async</code>. 
+</LI>
+<LI>Si acepta se comenzará con el juego a dos del tictactoe
+actualizando el estado de estos usuarios.
 
 <P>
-The server provides
-<code>env['async.callback']</code> 
-which the app saves and later calls with the
-usual <code>[status, headers, body]</code> 
-to send the response.
+</LI>
+<LI>Al finalizar la partida los jugadores pasan al estado de libres
+</LI>
+</OL>
 
 <P>
-Note: returning a status of <code>-1</code> is illegal as far as <code>Rack::Lint</code> is
-concerned. <code>throw :async</code> is not flagged as an <code>error</code>.
-<PRE>
-class AsyncApp
-  def call(env)
-    Thread.new do
-      sleep 5  # simulate waiting for some event
-      response = [200, {'Content-Type' =&gt; 'text/plain'}, ['Hello, World!']]
-      env['async.callback'].call response
-    end
-    
-    [-1, {}, []]  # or throw :async
-  end
-end
-</PRE>
-
-<P>
-In the example above, the request is suspended, nothing is sent
-back to the client, the connection remains open, and the client
-waits for a response. 
-
-<P>
-The app returns the special status, and the
-worker process is able to handle more HTTP requests (i.e. it is not
-blocked). Later, inside the thread, the full response is prepared
-and sent to the client.
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html10483"
-  HREF="node443.html">Deferred or streaming response bodies</A>
-</UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10481"
+<A NAME="tex2html10516"
   HREF="node443.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10475"
-  HREF="node426.html">
+<A NAME="tex2html10510"
+  HREF="node429.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10471"
+<A NAME="tex2html10504"
   HREF="node441.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10477"
-  HREF="node777.html">
+<A NAME="tex2html10512"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10479"
-  HREF="node780.html">
+<A NAME="tex2html10514"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -246,20 +206,20 @@ and sent to the client.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10482"
-  HREF="node443.html">Deferred or streaming response</A>
-<B> Subir:</B> <A NAME="tex2html10476"
-  HREF="node426.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10472"
-  HREF="node441.html">Ejemplo de Server Sent</A>
- &nbsp; <B>  <A NAME="tex2html10478"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10480"
-  HREF="node780.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10517"
+  HREF="node443.html">Embedding Sinatra within EventMachine</A>
+<B> Subir:</B> <A NAME="tex2html10511"
+  HREF="node429.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html10505"
+  HREF="node441.html">Práctica: Chat con Estilo</A>
+ &nbsp; <B>  <A NAME="tex2html10513"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10515"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

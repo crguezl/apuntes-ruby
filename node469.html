@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</TITLE>
-<META NAME="description" CONTENT="Configurando la Base de Datos en Heroku con DataMapper. Despliegue">
+<TITLE>Introducción a Los Object Relational Mappers (ORM)</TITLE>
+<META NAME="description" CONTENT="Introducción a Los Object Relational Mappers (ORM)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node470.html">
 <LINK REL="previous" HREF="node468.html">
-<LINK REL="up" HREF="node465.html">
+<LINK REL="up" HREF="node468.html">
 <LINK REL="next" HREF="node470.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10951"
+<A NAME="tex2html10969"
   HREF="node470.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10945"
-  HREF="node465.html">
+<A NAME="tex2html10963"
+  HREF="node468.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10941"
+<A NAME="tex2html10957"
   HREF="node468.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10947"
-  HREF="node777.html">
+<A NAME="tex2html10965"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10949"
-  HREF="node780.html">
+<A NAME="tex2html10967"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,131 +92,97 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10952"
-  HREF="node470.html">Sequel y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html10946"
-  HREF="node465.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html10942"
-  HREF="node468.html">Ejemplo de Uso de</A>
- &nbsp; <B>  <A NAME="tex2html10948"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10950"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10970"
+  HREF="node470.html">Introducción al Patrón DataMapper</A>
+<B> Subir:</B> <A NAME="tex2html10964"
+  HREF="node468.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html10958"
+  HREF="node468.html">DataMapper y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html10966"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10968"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031640000000000000000">
-Configurando la Base de Datos en Heroku con DataMapper. Despliegue</A>
+<H1><A NAME="SECTION031610000000000000000">
+Introducción a Los Object Relational Mappers (ORM)</A>
 </H1>
 
 <P>
-<A NAME="tex2html1099"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A> utiliza la base de datos PostgreSQL y una URL en una variable 
-de entorno <code>ENV['DATABASE_URL']</code>.
+What is a Object Relational Mapper?
+
+<P>
+A simple answer is that you wrap your tables or stored procedures
+in classes in your programming language, so that instead of writing
+SQL statements to interact with your database, you use methods and
+properties of objects.
+
+<P>
+In other words, instead of something like this:
 
 <P>
 <PRE>
-configure :development do
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
-end
-
-configure :production do
-  DataMapper.setup(:default, ENV['DATABASE_URL'])
-end
+  String sql = "SELECT ... FROM persons WHERE id = 10"
+  DbCommand cmd = new DbCommand(connection, sql);
+  Result res = cmd.Execute();
+  String name = res[0]["FIRST_NAME"];
 </PRE>
-
-<P>
-Estas líneas especifican que se usa SQLite en desarrollo y PostgreSQL en producción.
-Obsérvese que el <code>Gemfile</code> debe estar coherente:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ cat Gemfile
-source 'https://rubygems.org'
-gem "sinatra"
-gem "slim"
-gem "sass"
-gem "dm-core"
-gem "dm-migrations"
-gem "thin"
-gem "pg", :group =&gt; :production
-gem "dm-postgres-adapter", :group =&gt; :production
-gem "dm-sqlite-adapter", :group =&gt; :development
-</PRE>
-o mejor:
-<PRE>
-group :production do
-    gem "pg"
-    gem "dm-postgres-adapter"
-end
-</PRE>
+you do something like this:
 
 <P>
 <PRE>
-heroku create ...
+  Person p = Person.Get(10);
 </PRE>
 
 <P>
-<PRE>
-git push heroku master
-</PRE>
+or similar code (lots of variations here). 
+The framework is what makes this code possible.
 
 <P>
-<PRE>
-heroku open
-</PRE>
+Now, benefits:
 
 <P>
-<PRE>
-heroku logs --source app
-</PRE>
 
-<P>
-Ahora ejecutamos la consola de heroku:
-
-<P>
-<PRE>
-heroku run console
-</PRE>
-lo que nos abre una sesión <code>irb</code>.
-
-<P>
-Ahora creamos la base de datos en <A NAME="tex2html1100"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ heroku run console
-Running `console` attached to terminal... up, run.8011
-irb(main):001:0&gt; require './main'
-=&gt; true
-irb(main):002:0&gt; DataMapper.auto_migrate!
-=&gt; #&lt;DataMapper::DescendantSet:0x007fb89c878230 @descendants=#&lt;DataMapper::SubjectSet:0x007fb89c8781b8 @entries=#&lt;DataMapper::OrderedSet:0x007fb89c878190 @cache=#&lt;DataMapper::SubjectSet::NameCache:0x007fb89c878168 @cache={"Song"=&gt;0}&gt;, @entries=[Song]&gt;&gt;&gt;
-irb(main):003:0&gt;
-</PRE>
-Véase también 
-la practica TicTacToe
-<A HREF="node415.html#practica:ticatactoe">26.29</A>
-y
-el capítulo <I>Despliegue en Heroku</I> 
-<A HREF="node479.html#chapter:despliegueenheroku">45</A>.
-.
+<OL>
+<LI>First of all, you hide the SQL away from your logic
+code
+</LI>
+<LI>This has the benefit of allowing you to more easily support
+more database engines 
+</LI>
+<LI>For instance, MS SQL Server and Oracle have
+different names on typical functions, and different ways to do
+calculations with dates.
+This difference can be put away from your
+logic code.
+</LI>
+<LI>Additionally, you can focus on writing the logic, instead of getting all the SQL right.
+</LI>
+<LI>The code will typically be more readable as well, since it doesn't
+contain all the plumbing necessary to talk to the database.
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10951"
+<A NAME="tex2html10969"
   HREF="node470.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10945"
-  HREF="node465.html">
+<A NAME="tex2html10963"
+  HREF="node468.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10941"
+<A NAME="tex2html10957"
   HREF="node468.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10947"
-  HREF="node777.html">
+<A NAME="tex2html10965"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10949"
-  HREF="node780.html">
+<A NAME="tex2html10967"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -266,20 +233,20 @@ el capítulo <I>Despliegue en Heroku</I>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10952"
-  HREF="node470.html">Sequel y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html10946"
-  HREF="node465.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html10942"
-  HREF="node468.html">Ejemplo de Uso de</A>
- &nbsp; <B>  <A NAME="tex2html10948"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10950"
-  HREF="node780.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10970"
+  HREF="node470.html">Introducción al Patrón DataMapper</A>
+<B> Subir:</B> <A NAME="tex2html10964"
+  HREF="node468.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html10958"
+  HREF="node468.html">DataMapper y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html10966"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10968"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

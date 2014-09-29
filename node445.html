@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>WebSockets</TITLE>
-<META NAME="description" CONTENT="WebSockets">
+<TITLE>Asynchronous responses in Rack</TITLE>
+<META NAME="description" CONTENT="Asynchronous responses in Rack">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node448.html">
 <LINK REL="previous" HREF="node444.html">
-<LINK REL="up" HREF="node444.html">
+<LINK REL="up" HREF="node429.html">
 <LINK REL="next" HREF="node446.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10536"
+<A NAME="tex2html10560"
   HREF="node446.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10530"
-  HREF="node444.html">
+<A NAME="tex2html10554"
+  HREF="node429.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10524"
+<A NAME="tex2html10550"
   HREF="node444.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10532"
-  HREF="node777.html">
+<A NAME="tex2html10556"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10534"
-  HREF="node780.html">
+<A NAME="tex2html10558"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,23 +91,83 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10537"
-  HREF="node446.html">Que es WebSocket y</A>
-<B> Subir:</B> <A NAME="tex2html10531"
-  HREF="node444.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html10525"
-  HREF="node444.html">Web Sockets</A>
- &nbsp; <B>  <A NAME="tex2html10533"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10535"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10561"
+  HREF="node446.html">Deferred or streaming response</A>
+<B> Subir:</B> <A NAME="tex2html10555"
+  HREF="node429.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html10551"
+  HREF="node444.html">Ejemplo de Server Sent</A>
+ &nbsp; <B>  <A NAME="tex2html10557"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10559"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03910000000000000000">
-WebSockets</A>
+<H1><A NAME="SECTION038140000000000000000">
+Asynchronous responses in Rack</A>
 </H1>
+
+<P>
+<A NAME="tex2html1020"
+  HREF="http://polycrystal.org/2012/04/15/asynchronous_responses_in_rack.html">Asynchronous responses in Rack</A>
+<P>
+With the Rack  synchronous interface protocol, the entire body must
+be prepared immediately, or be otherwise quickly available, for
+example by reading from file. A response that must be waited upon
+will tie up the process or thread executing the HTTP request. In a
+multi-process Rack server such as Unicorn, this will block the
+entire worker process, making in unavailable to server other requests.
+
+<P>
+Some Rack servers provide an alternate interface that allows the
+request to be suspended, unblocking the worker. At some later time,
+the request may be resumed, and the response sent to the client.
+
+<P>
+While there is not yet an async interface in the Rack specification,
+several Rack servers have implemented 
+<A NAME="tex2html1021"
+  HREF="https://github.com/raggi/thin/blob/async_for_rack/example/async_app.ru">James Tucker's async scheme.</A>
+<P>
+Rather than returning <code>[status, headers, body]</code>, the app returns a
+status of <code>-1</code>, or throws the symbol <code>:async</code>. 
+
+<P>
+The server provides
+<code>env['async.callback']</code> 
+which the app saves and later calls with the
+usual <code>[status, headers, body]</code> 
+to send the response.
+
+<P>
+Note: returning a status of <code>-1</code> is illegal as far as <code>Rack::Lint</code> is
+concerned. <code>throw :async</code> is not flagged as an <code>error</code>.
+<PRE>
+class AsyncApp
+  def call(env)
+    Thread.new do
+      sleep 5  # simulate waiting for some event
+      response = [200, {'Content-Type' =&gt; 'text/plain'}, ['Hello, World!']]
+      env['async.callback'].call response
+    end
+    
+    [-1, {}, []]  # or throw :async
+  end
+end
+</PRE>
+
+<P>
+In the example above, the request is suspended, nothing is sent
+back to the client, the connection remains open, and the client
+waits for a response. 
+
+<P>
+The app returns the special status, and the
+worker process is able to handle more HTTP requests (i.e. it is not
+blocked). Later, inside the thread, the full response is prepared
+and sent to the client.
 
 <P>
 <BR><HR>
@@ -116,16 +175,91 @@ WebSockets</A>
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html10538"
-  HREF="node446.html">Que es WebSocket y para que sirve</A>
-<LI><A NAME="tex2html10539"
-  HREF="node447.html">Negociación del protocolo WebSocket</A>
+<LI><A NAME="tex2html10562"
+  HREF="node446.html">Deferred or streaming response bodies</A>
 </UL>
 <!--End of Table of Child-Links-->
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10560"
+  HREF="node446.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10554"
+  HREF="node429.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10550"
+  HREF="node444.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html10556"
+  HREF="node783.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html10558"
+  HREF="node786.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html10561"
+  HREF="node446.html">Deferred or streaming response</A>
+<B> Subir:</B> <A NAME="tex2html10555"
+  HREF="node429.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html10551"
+  HREF="node444.html">Ejemplo de Server Sent</A>
+ &nbsp; <B>  <A NAME="tex2html10557"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10559"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

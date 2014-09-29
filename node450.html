@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</TITLE>
-<META NAME="description" CONTENT="Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo">
+<TITLE>Negociación del protocolo WebSocket</TITLE>
+<META NAME="description" CONTENT="Negociación del protocolo WebSocket">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node452.html">
 <LINK REL="previous" HREF="node449.html">
-<LINK REL="up" HREF="node444.html">
+<LINK REL="up" HREF="node448.html">
 <LINK REL="next" HREF="node451.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10609"
+<A NAME="tex2html10643"
   HREF="node451.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10603"
-  HREF="node444.html">
+<A NAME="tex2html10637"
+  HREF="node448.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10597"
+<A NAME="tex2html10633"
   HREF="node449.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10605"
-  HREF="node777.html">
+<A NAME="tex2html10639"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10607"
-  HREF="node780.html">
+<A NAME="tex2html10641"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,281 +91,110 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10610"
-  HREF="node451.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html10604"
-  HREF="node444.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html10598"
-  HREF="node449.html">Ruby y WebSockets: TCP</A>
- &nbsp; <B>  <A NAME="tex2html10606"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10608"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10644"
+  HREF="node451.html">websocket/rack</A>
+<B> Subir:</B> <A NAME="tex2html10638"
+  HREF="node448.html">WebSockets</A>
+<B> Anterior:</B> <A NAME="tex2html10634"
+  HREF="node449.html">Que es WebSocket y</A>
+ &nbsp; <B>  <A NAME="tex2html10640"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10642"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03940000000000000000">
-Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</A>
-</H1>
+<H2><A NAME="SECTION03912000000000000000">
+Negociación del protocolo WebSocket</A>
+</H2>
 
 <P>
+Para establecer una conexión WebSocket, el cliente manda una petición de
+negociación WebSocket, y el servidor manda una respuesta de negociación
+WebSocket, como se puede ver en el siguiente ejemplo:
 
-<H4><A NAME="SECTION03940010000000000000">
-server.rb</A>
-</H4>
+<P>
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
+Petición del navegador al servidor:
+GET /demo HTTP/1.1
+Host: example.com
+Connection: Upgrade
+Sec-WebSocket-Key2: 12998 5 Y3 1 .P00
+Sec-WebSocket-Protocol: sample
+Upgrade: WebSocket
+Sec-WebSocket-Key1: 4 @1 46546xW%0l 1 5
+Origin: http://example.com
+ 
+ ^n:ds[4U
+</PRE></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
+ Respuesta del servidor:
+ HTTP/1.1 101 WebSocket Protocol Handshake
+ Upgrade: WebSocket
+ Connection: Upgrade
+ Sec-WebSocket-Origin: http://example.com
+ Sec-WebSocket-Location: ws://example.com/demo
+ Sec-WebSocket-Protocol: sample
   
-
-<P>
-<PRE>
-[19:36][~/srcSTW/streaming/websocketsDrawEM(master)]$ cat -n server.rb 
-     1  require 'em-websocket'
-     2  require 'json'
-     3  require 'sinatra/base'
-     4  
-     5  EventMachine.run {
-     6    @channel = EM::Channel.new
-     7    @users = {}
-     8    @messages = []
-     9  
-    10    EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
-    11        
-    12      ws.onopen {
-    13        #Subscribe the new user to the channel with the callback function for the push action
-    14        new_user = @channel.subscribe { |msg| ws.send msg }
-    15        
-    16        #Add the new user to the user list
-    17        @users[ws.object_id] = new_user
-    18        
-    19        #Push the last messages to the user
-    20        @messages.each do |message|
-    21          ws.send message
-    22        end
-    23     }
-    24  
-    25      ws.onmessage { |msg|
-    26        
-    27        #append the message at the end of the queue
-    28        @messages &lt;&lt; msg
-    29        @messages.shift if @messages.length &gt; 10
-    30  
-    31        #Broadcast the message to all users connected to the channel
-    32        @channel.push msg
-    33      }
-    34  
-    35      ws.onclose { 
-    36        @channel.unsubscribe(@users[ws.object_id])
-    37        @users.delete(ws.object_id)
-    38      }
-    39    end
-    40  
-    41    #Run a Sinatra server for serving index.html
-    42    class App &lt; Sinatra::Base
-    43      set :public_folder, settings.root
-    44      
-    45      get '/' do
-    46        send_file 'index.html'
-    47      end
-    48    end
-    49    App.run!
-    50  }
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03940020000000000000">
-index.html.haml</A>
-</H4>
-  
-
-<PRE>
-!!! 5
-%html
-  %head
-    %meta(charset="utf-8")
-    %meta(content="IE=edge,chrome=1" http-equiv="X-UA-Compatible")
-    %meta(name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;")  
-    %link(rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css")
-    %script(type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js")
-    %script(type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js")
-    %title
-      WebSockets Drawing
-  %body
-    :javascript
-      var WebSocket = window.WebSocket || window.MozWebSocket;
-
-      $(function() {
-
-        var socket = new WebSocket("ws://" + location.hostname + ":8080");
-       
-        var currentX = 0;
-        var currentY = 0;
-        var lastX;
-        var lastY;
-        var lastReceivedX;
-        var lastReceivedY;
-        
-        var ctx = $('#canvas')[0].getContext('2d');
-
-        $('#canvas').bind('vmousemove',function(ev){
-          ev = ev || window.event;
-          currentX = ev.pageX || ev.clientX;
-          currentY = ev.pageY || ev.clientY;
-        });
-        
-        socket.onopen = function(event) {
-          setInterval(function(){
-            if(currentX !== lastX || currentY !== lastY){
-              lastX = currentX;
-              lastY = currentY;
-              socket.send( JSON.stringify({x:currentX, y: currentY}) );
-            }
-          }, 30); // send every 300 milliseconds if position has changed
-        }
-        socket.onmessage = function(event) {
-          var msg = $.parseJSON(event.data);
-          
-          ctx.beginPath();
-          ctx.moveTo(lastReceivedX,lastReceivedY);
-          ctx.lineTo(msg.x,msg.y);
-          ctx.closePath();
-          ctx.stroke();
-          lastReceivedX = msg.x;
-          lastReceivedY = msg.y;
-        }
-      });
-
-    %div(data-role="page")
-      %canvas#canvas(width='1000' height='1000')
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03940030000000000000">
-index.html</A>
-</H4>
-  
-
-<PRE>
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;meta charset='utf-8' /&gt;
-    &lt;meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible' /&gt;
-    &lt;meta content='width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;' name='viewport' /&gt;
-    &lt;link href='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css' rel='stylesheet' /&gt;
-    &lt;script src='http://code.jquery.com/jquery-1.6.4.min.js' type='text/javascript'&gt;&lt;/script&gt;
-    &lt;script src='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js' type='text/javascript'&gt;&lt;/script&gt;
-    &lt;title&gt;
-      WebSockets Drawing
-    &lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;script type='text/javascript'&gt;
-      //&lt;![CDATA[
-        var WebSocket = window.WebSocket || window.MozWebSocket;
-        
-        $(function() {
-        
-          var socket = new WebSocket("ws://" + location.hostname + ":8080");
-         
-          var currentX = 0;
-          var currentY = 0;
-          var lastX;
-          var lastY;
-          var lastReceivedX;
-          var lastReceivedY;
-          
-          var ctx = $('#canvas')[0].getContext('2d');
-        
-          $('#canvas').bind('vmousemove',function(ev){
-            ev = ev || window.event;
-            currentX = ev.pageX || ev.clientX;
-            currentY = ev.pageY || ev.clientY;
-          });
-          
-          socket.onopen = function(event) {
-            setInterval(function(){
-              if(currentX !== lastX || currentY !== lastY){
-                lastX = currentX;
-                lastY = currentY;
-                socket.send( JSON.stringify({x:currentX, y: currentY}) );
-              }
-            }, 30); // send every 300 milliseconds if position has changed
-          }
-          socket.onmessage = function(event) {
-            var msg = $.parseJSON(event.data);
-            
-            ctx.beginPath();
-            ctx.moveTo(lastReceivedX,lastReceivedY);
-            ctx.lineTo(msg.x,msg.y);
-            ctx.closePath();
-            ctx.stroke();
-            lastReceivedX = msg.x;
-            lastReceivedY = msg.y;
-          }
-        });
-      //]]&gt;
-    &lt;/script&gt;
-    &lt;div data-role='page'&gt;
-      &lt;canvas height='1000' id='canvas' width='1000'&gt;&lt;/canvas&gt;
-    &lt;/div&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</PRE>
-
-<P>
-
-<DIV ALIGN="CENTER"><A NAME="figure:websockets"></A><A NAME="18403"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
-Múltiples clientes pueden dibujar en el lienzo</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.7]sinatra/chapter2fundamentos/websockets.png
-
-</DIV></TD></TR>
+  8jKS'y:G*Co,Wxa-
+</PRE></TD>
+</TR>
 </TABLE>
-</DIV>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+The WebSocket protocol was designed to work well with the existing
+Web infrastructure. As part of this design principle, the protocol
+specification defines that the WebSocket connection starts its
+life as an HTTP connection, guaranteeing full backwards compatibility
+with the pre-WebSocket world. 
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html10611"
-  HREF="node450.html#SECTION03940010000000000000">server.rb</A>
-<LI><A NAME="tex2html10612"
-  HREF="node450.html#SECTION03940020000000000000">index.html.haml</A>
-<LI><A NAME="tex2html10613"
-  HREF="node450.html#SECTION03940030000000000000">index.html</A>
+<P>
+The protocol switch from HTTP to WebSocket
+is referred to as a the WebSocket handshake.
+
+<P>
+Una vez establecida, las tramas WebSocket de datos pueden empezar
+a enviarse en ambos sentidos entre el cliente y el servidor en modo
+full-duplex. 
+
+<P>
+Las tramas de texto pueden ser enviadas en modo full-duplex
+también, en ambas direcciones al mismo tiempo. 
+
+<P>
+Tramas de datos binarios no están soportadas todavía en el API. 
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1022"
+  HREF="http://www.websocket.org/aboutwebsocket.html">About HTML5 WebSockets</A>
+en 
+<A NAME="tex2html1023"
+  HREF="http://www.websocket.org">http://www.websocket.org</A>
+</LI>
 </UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html10614"
-  HREF="node451.html">Enlaces Relacionados</A>
-</UL>
-<!--End of Table of Child-Links-->
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10609"
+<A NAME="tex2html10643"
   HREF="node451.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10603"
-  HREF="node444.html">
+<A NAME="tex2html10637"
+  HREF="node448.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10597"
+<A NAME="tex2html10633"
   HREF="node449.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10605"
-  HREF="node777.html">
+<A NAME="tex2html10639"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10607"
-  HREF="node780.html">
+<A NAME="tex2html10641"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -417,20 +245,20 @@ Múltiples clientes pueden dibujar en el lienzo</CAPTION>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10610"
-  HREF="node451.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html10604"
-  HREF="node444.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html10598"
-  HREF="node449.html">Ruby y WebSockets: TCP</A>
- &nbsp; <B>  <A NAME="tex2html10606"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10608"
-  HREF="node780.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10644"
+  HREF="node451.html">websocket/rack</A>
+<B> Subir:</B> <A NAME="tex2html10638"
+  HREF="node448.html">WebSockets</A>
+<B> Anterior:</B> <A NAME="tex2html10634"
+  HREF="node449.html">Que es WebSocket y</A>
+ &nbsp; <B>  <A NAME="tex2html10640"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10642"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

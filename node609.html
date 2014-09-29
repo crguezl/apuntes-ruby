@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Los Ficheros de Configuración</TITLE>
-<META NAME="description" CONTENT="Los Ficheros de Configuración">
+<TITLE>Redireccionado al Agente SSH</TITLE>
+<META NAME="description" CONTENT="Redireccionado al Agente SSH">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node610.html">
 <LINK REL="previous" HREF="node608.html">
-<LINK REL="up" HREF="node598.html">
+<LINK REL="up" HREF="node601.html">
 <LINK REL="next" HREF="node610.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13425"
+<A NAME="tex2html13462"
   HREF="node610.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13419"
-  HREF="node598.html">
+<A NAME="tex2html13456"
+  HREF="node601.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13413"
+<A NAME="tex2html13450"
   HREF="node608.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13421"
-  HREF="node777.html">
+<A NAME="tex2html13458"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13423"
-  HREF="node780.html">
+<A NAME="tex2html13460"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,322 +92,147 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13426"
-  HREF="node610.html">Copia Segura de un</A>
-<B> Subir:</B> <A NAME="tex2html13420"
-  HREF="node598.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13414"
-  HREF="node608.html">Depuración/Debugging</A>
- &nbsp; <B>  <A NAME="tex2html13422"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13424"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13463"
+  HREF="node610.html">Consideraciones sobre la Seguridad</A>
+<B> Subir:</B> <A NAME="tex2html13457"
+  HREF="node601.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13451"
+  HREF="node608.html">Mejor un Sólo Agente</A>
+ &nbsp; <B>  <A NAME="tex2html13459"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13461"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION065110000000000000000">
-Los Ficheros de Configuración</A>
+<H1><A NAME="SECTION06580000000000000000">
+Redireccionado al Agente SSH</A>
 </H1>
 
 <P>
-En vez de llenar nuestra llamada a <code>ssh</code> de parámetros lo aconsejable
-es configurar la llamada en uno de los ficheros de configuración (<code>man ssh_config</code>).
-SSH consulta las opciones en el siguiente orden:
+El mismo agente SSH puede servir los retos producidos por conexiones SSH indirectas, es decir conexiones SSH arrancadas desde una conexión SSH.
+La idea general es que el reto producido por el servidor SSH será redirigido via los servidores intermedios hasta el agente en la máquina
+local. El reto será resuelto por este último y la solución emprenderá el camino de vuelta hasta el último servidor en la lista de saltos.
+
+<P>
+Para habilitar <A NAME="23585"></A><SPAN  CLASS="textbf">Agent forwarding</SPAN> 
+usamos la opción <code>-A</code>.
+
+<P>
+<PRE>
+  desktop$ ssh -A user@remotehost
+</PRE>
+
+<P>
+Si se quiere habilitar agent-forwarding desde el fichero de configuración
+pondremos <code>ForwardAgent yes</code> en la correspondiente
+entrada para ese host en <code>~/.ssh/config</code>:
+
+<P>
+<PRE>
+  $ cat ~/.ssh/config
+  Host shellserver
+    ForwardAgent yes
+  
+  Host management-server
+    ForwardAgent yes
+  
+  Host *
+    ForwardAgent no
+</PRE>
+
+<P>
+Obsérvese la presencia de la sección restrictiva <code>Host *</code>
+en el fichero de configuración.
+
+<P>
+Veamos un ejemplo:
 
 <P>
 
 <OL>
-<LI>Línea de comandos
+<LI>El cliente <code>ssh</code> conecta con el servidor SSH remoto, se produce la autentificación via el agente
+que previamente ha sido cargado  con la identidad.  Se le solicita al servidor agent-forwarding.
+
+<P>
+<PRE>
+lusasoft@LusaSoft:~$ ssh -A orion
+Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+</PRE>
+El servidor crea un socket en <code>/tmp/ssh-XXXXXXX/agent.#####</code> y 
+inicializa la variable <code>SSH_AUTH_SOCK</code>.
+El  daemon SSH abre nuestra shell y comenzamos a trabajar en el servidor.
+
+<P>
+<PRE>
+Last login: Fri May  1 10:21:38 2009 from 85.155.13.48.dyn.user.ono.com
+casiano@orion:~$ env | grep -i SSH
+SSH_CLIENT=85.155.13.48 35107 22
+SSH_TTY=/dev/pts/3
+SSH_AUTH_SOCK=/tmp/ssh-ngwpX26103/agent.26103
+SSH_CONNECTION=85.155.13.48 35107 193.145.105.17 22
+casiano@orion:~$ ls -lR /tmp/ssh-ngwpX26103/agent.26103
+srwxr-xr-x 1 casiano casiano 0 2009-05-01 10:53 /tmp/ssh-ngwpX26103/agent.26103
+</PRE>
+En la máquina en la que estamos no existen ningunas identidades operativas:
+<PRE>
+casiano@orion:~$ ls -ltra .ssh
+total 60
+-rw-rw-r--  1 casiano casiano   505 2009-03-30 08:53 config
+-rw-r--r--  1 casiano casiano  4960 2009-04-04 11:43 known_hosts
+-rw-------  1 casiano casiano  6466 2009-04-04 11:43 authorized_keys
+drwx------  2 casiano casiano  4096 2009-05-01 10:19 .
+drwxr-x--x 50 casiano casiano 12288 2009-05-01 11:13 ..
+</PRE>
 </LI>
-<LI>Fichero de configuración del usuario <code>~/.ssh/config</code>
-	     Este fichero debe tener permisos de lectura/escritura para el usuario
-       y no ser accesible al resto. 
-</LI>
-<LI>Fichero de configuración global <code>/etc/ssh/ssh_config</code>
+<LI>Ahora decidimos conectarnos en orion via <code>ssh</code> a otra máquina <code>europa</code>. El cliente
+<code>ssh</code> observa la presencia de la variable
+<code>SSH_AUTH_SOCK</code> y se conecta al socket. El cliente le indica 
+al servidor que quiere usar la misma clave que se ha usado
+para esta conexión.
+
+<P>
+<PRE>
+casiano@orion:~$ ssh europa
+Linux europa 2.6.24-23-generic #1 SMP Wed Apr 1 21:43:24 UTC 2009 x86_64
+casiano@europa:~$
+</PRE>
+Vemos que hemos entrado sin necesidad de introducir una clave por teclado.
+La clave pública de la identidad que reside en la máquina inicial
+ha sido instalada también en <code>europa</code>. ¿Que ha ocurrido?
+
+<P>
+El servidor en <code>europa</code> prepara el reto y se lo envía al cliente. 
+El cliente en <code>orion</code> recibe el reto y se lo pasa a su servidor el cual actúa 
+- desde el punto de vista del cliente - como si fuera un agente.
+El servidro <code>sshd</code> en <code>orion</code> mueve el reto al cliente de la primera conexión.
+Este primer cliente se lo pasa al agente inicial que es quien conoce
+la clave privada. La solución es preparada por el agente.
+Ahora la solución recorre el camino de vuelta.
+
+<P>
 </LI>
 </OL>
 
 <P>
 
-<H4><A NAME="SECTION065110010000000000000">
-Estructura de un Fichero de Configuración</A>
+<H4><A NAME="SECTION06580010000000000000">
+Véase También</A>
 </H4>
   
-
-<P>
-Para cada parámetro el primer valor encontrado será el utilizado. 
-Los ficheros de configuración contienen secciones. Cada sección comienza con una
-especificación de <code>Host</code>. Las especificaciones en esa sección sólo 
-se aplican a los máquinas (tal y como se especifico en la línea de comandos)
-que casen con el patrón especificado en  <TT>Host</TT> . Por ejemplo, si escribo en la
-línea de comandos:
-
-<P>
-<PRE>
-pp2@nereida:~/Lbook$ ssh rbeo
-</PRE>
-
-<P>
-Se buscará en mi fichero de configuración <code>~/.ssh/config</code> por una especificación
-<code>Host rbeo</code>. En efecto, en mi fichero existe una:
-
-<P>
-<PRE>
-...
-
-Host rbeo
-user otheruser
-Hostname localhost
-Port 2048
-IdentityFile /home/pp2/.ssh/ursu
-
-...
-</PRE>
-
-<P>
-La sección dice que opciones deben aplicarse cuando nos conectamos a <code>rbeo</code>:
-
-<UL>
-<LI>La opción  <TT>user</TT>  indica que debo proporcionar como usuario <code>otheruser</code>
-</LI>
-<LI>La opción  <TT>Hostname</TT>  dice que el nombre auténtico de la máquina es <code>localhost</code>
-</LI>
-<LI>La opción  <TT>Port</TT>  indica que nos debemos conectar via el puerto 2048
-</LI>
-<LI>La opción  <TT>IdentityFile</TT>  nos dice que debemos usar autentificación automática
-con fichero de identidad (que fué previamente generado con <code>ssh-keygen</code>)
-<code>/home/pp2/.ssh/ursu</code>
-</LI>
-</UL>
-
-<P>
-Las líneas que comienzan por el carácter <code>#</code> son tratadas como comentarios.
-Es posible añadir líneas en blanco para aumentar la legibilidad.
-
-<P>
-El resto de las líneas deben seguir el patrón 
-
-<P>
-<PRE>
-PALABRACLAVE argumentos
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION065110020000000000000">
-Palabras Clave</A>
-</H4>
-  
-
-<P>
-Algunas palabras clave importantes son:
 
 <P>
 
 <UL>
-<LI><TT>Host</TT>  Se pueden usar patrones como <code>*</code> y <code>?</code>. 
-     Define la sección. Si el nombre proveído en la línea de comandos 
-     casa con él las reglas de la sección serán aplicadas.
-
-<P>
+<LI><A NAME="tex2html1387"
+  HREF="http://www.securityfocus.com/infocus/1812">ssh and ssh-agent</A>
+por Brian Hatch
 </LI>
-<LI><TT>BatchMode</TT> 
-Se desactivará la petición de <code>passphrase/password</code>.
-
-<P>
-Además las opciones  <TT>ServerAliveInterval</TT> <A NAME="tex2html1381"
-  HREF="footnode.html#foot23087"><SUP><SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> 
-y  <TT>SetupTimeOut</TT> <A NAME="tex2html1382"
-  HREF="footnode.html#foot23088"><SUP><SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> 
-se establecen a 300 segundos. Esta opción es útil cuando se usan 
-procesos por lotes o programas - por ejemplo cuando se usa <A NAME="tex2html1384"
-  HREF="http://search.cpan.org/perldoc?GRID::Machine"><TT>GRID::Machine</TT></A>
--
-en los que no hay un usuario presente para proporcionar
-una clave y es necesario detectar la caída de la red. El argumento 
-debe ser <code>yes</code> o <code>no</code>. El valor por defecto es <code>no</code>
-
-<P>
-</LI>
-<LI><TT>BindAddress</TT> 
-Se usa para especificar la dirección de la máquina local. Sólo es útil
-si la máquina dispone de mas de una dirección. Esta opción no funciona
-si  <TT>UsePrivilegedPort</TT> <A NAME="tex2html1383"
-  HREF="footnode.html#foot23089"><SUP><SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>se pone a <code>yes</code>.
-
-<P>
-</LI>
-<LI><TT>Compression</TT>  y  <TT>CompressionLevel</TT> 
-
-<P>
-Si se establece la opción
-<TT>Compression</TT> se compactarán los datos según diga  <TT>CompressionLevel</TT>  (de 1 a 9)
-
-<P>
-</LI>
-<LI><TT>ConnectionAttempts</TT> 
-Especifica el número de intentos antes de abandonar. El argumento debe ser un número 
-(por defecto 1). Puede ser útil cuando se esta usando un
-procesado por lotes y la conexión falla a menudo.
-
-<P>
-</LI>
-<LI><TT>ConnectTimeout</TT> 
-Especifica el límite de tiempo (segundos) antes de abandonar
-cuando se conecta a un servidor <code>ssh</code>
-
-<P>
-</LI>
-<LI><TT>HostName</TT> 
-El nombre real del <code>host</code> al que entramos. Esto nos permite
-tener apodos y abreviaciones. El valor usado por defecto es el
-proveído en la línea de comandos. Se permite poner direciones IP
-numéricas.
-
-<P>
-</LI>
-<LI><TT>IdentityFile</TT> 
-Especifica el fichero conteniendo la identidad de autentificación (RSA o DSA)
-a ser usado. Por defecto toma el valor <code>~/.ssh/identity</code> para la versión 1
-del protocolo y <code>~/.ssh/id_rsa</code> y <code>~/.ssh/id_dsa</code> para la versión
-2. Si hay un agente cargado el agente intentará también las otras identidades.
-Es posible especificar múltiples identidades, las cuales serán intentadas
-en secuencia.
-
-<P>
-</LI>
-<LI><TT>NoHostAuthenticationForLocalhost</TT> 
-
-<P>
-Esta opción es conveniente cuando el directorio <code>home</code> 
-es compartido entre un conjunto de máquinas (via NFS por ejemplo).
-En ese caso  <TT>localhost</TT>  refiere a una máquina distinta
-en cada una de las máquinas del conjunto.
-En tal caso, las conexiones a <code>localhost</code>
-dan lugar a un buen número de warnings indicando
-que la clave ha cambiado. 
-
-<P>
-</LI>
-<LI><TT>Port</TT>  Especifica el número de puerto.
-
-<P>
-</LI>
-<LI><TT>ServerAliveInterval</TT> 
-Si después del intervalo especificado en segundos no 
-se obtiene respuesta alguna del servidor, se envía un mensaje
-al servidor para solicitar una respuesta del mismo.
-Por defecto es 0, indicando que estos mensajes no deben ser emitidos.
-
-<P>
-Es útil probar con esta opción si la conexión se desconecta después de un corto periodo
-de inactividad.
-Ciertos administradores configuran sus servidores
-de manera que responden muy tardíamente.
-Sigue un fragmento de mi configuración desde fuera de la Universidad:
-
-<P>
-<PRE>
-Host cardon
-user pepito
-Hostname cardon.ull.es
-ForwardX11 yes
-ServerAliveInterval=30
-</PRE>
-
-<P>
-</LI>
-<LI><TT>ServerAliveCountMax</TT> 
-
-<P>
-Establece el número de mensajes <SPAN  CLASS="textbf">alive</SPAN> que
-pueden ser enviados por el cliente <code>ssh</code> sin que este reciba 
-respuesta desde el servidor. Si se supera este umbral el
-cliente abandona, finalizando la sesión. El valor por
-defecto es 3. (Sólo para el protocolo 2).
-
-<P>
-</LI>
-<LI><TT>TCPKeepAlive</TT> 
-
-<P>
-Especifica si se deben enviar mensajes TCP  <TT>keepalive</TT> 
-al otro lado. Si se envían se podrán detectar los fallos
-en las máquinas remotas. El valor por defecto es <code>yes</code>,
-de modo que el cliente se percate de la caída del remoto.
-
-<P>
-</LI>
-<LI><TT>User</TT>  El usuario
-
-<P>
-</LI>
-<LI><TT>UserKnownHostsFile</TT>  especifica un fichero alternativo
-a <code>~/.ssh/known_hosts</code> para las claves de máquinas
-
-<P>
+<LI><A NAME="tex2html1388"
+  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
 </LI>
 </UL>
-
-<P>
-
-<H4><A NAME="SECTION065110030000000000000">
-Ejemplo</A>
-</H4>
-  
-
-<P>
-Sigue un ejemplo de fichero de configuración de usuario:
-
-<P>
-<PRE>
-pp2@nereida:~/.ssh$ cat -n config
- 1  # man  ssh_config
- 2
- 3  GSSAPIAuthentication no
- 4
- 5  Host somemachine
- 6  user myname
- 7  Hostname somemachine.pcg.ull.es
- 8  #ForwardX11 yes
- 9
-10  Host ursu
-11  user otheruser
-12  Hostname somemachine.pcg.ull.es
-13  IdentityFile /home/pp2/.ssh/ursu
-14  #ForwardX11 yes
-15
-16  Host chazam chazam.pcg.ull.es chazam.deioc.ull.es chum
-17  user myname
-18  # The real name of the machine
-19  Hostname chazam.pcg.ull.es
-20
-21  # Example to be used when connecting via reverse tunneling
-22  # myname@somemachine:~$ ssh -R2048:localhost:22 pp2@nereida
-23  # Logic name for the machine
-24  Host rbeo
-25  # user in the remote machine
-26  user otheruser
-27  # The 'real name' of the machine after the tunnel
-28  Hostname localhost
-29  # Port to connect to
-30  Port 2048
-31  IdentityFile /home/pp2/.ssh/ursu
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION065110040000000000000">
-El fichero <TT>rc</TT></A>
-</H4>
-  
-
-<P>
-Cada vez que ocurre una conexión SSH el servidor ejecuta el script
-en <code>/etc/sshrc</code>. Si existe un fichero <code>~/.ssh/rc</code> (SSH1, OpenSSH) o <code>~/.ssh2/rc</code> (SSH2),
-será invocado. Su presencia inhibe la ejecución de <code>/etc/sshrc</code>.
-Se ejecuta tanto si la sesión es interactiva como si es un comando.
 
 <P>
 <BR><HR>
@@ -417,33 +242,27 @@ Se ejecuta tanto si la sesión es interactiva como si es un comando.
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html13427"
-  HREF="node609.html#SECTION065110010000000000000">Estructura de un Fichero de Configuración</A>
-<LI><A NAME="tex2html13428"
-  HREF="node609.html#SECTION065110020000000000000">Palabras Clave</A>
-<LI><A NAME="tex2html13429"
-  HREF="node609.html#SECTION065110030000000000000">Ejemplo</A>
-<LI><A NAME="tex2html13430"
-  HREF="node609.html#SECTION065110040000000000000">El fichero <TT>rc</TT></A>
+<LI><A NAME="tex2html13464"
+  HREF="node609.html#SECTION06580010000000000000">Véase También</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13425"
+<A NAME="tex2html13462"
   HREF="node610.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13419"
-  HREF="node598.html">
+<A NAME="tex2html13456"
+  HREF="node601.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13413"
+<A NAME="tex2html13450"
   HREF="node608.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13421"
-  HREF="node777.html">
+<A NAME="tex2html13458"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13423"
-  HREF="node780.html">
+<A NAME="tex2html13460"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -494,20 +313,20 @@ Se ejecuta tanto si la sesión es interactiva como si es un comando.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13426"
-  HREF="node610.html">Copia Segura de un</A>
-<B> Subir:</B> <A NAME="tex2html13420"
-  HREF="node598.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13414"
-  HREF="node608.html">Depuración/Debugging</A>
- &nbsp; <B>  <A NAME="tex2html13422"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13424"
-  HREF="node780.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13463"
+  HREF="node610.html">Consideraciones sobre la Seguridad</A>
+<B> Subir:</B> <A NAME="tex2html13457"
+  HREF="node601.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13451"
+  HREF="node608.html">Mejor un Sólo Agente</A>
+ &nbsp; <B>  <A NAME="tex2html13459"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13461"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Agentes SSH</TITLE>
-<META NAME="description" CONTENT="Agentes SSH">
+<TITLE>Claves Pública y Privada: Estableciendo Autentificación No Interactiva</TITLE>
+<META NAME="description" CONTENT="Claves Pública y Privada: Estableciendo Autentificación No Interactiva">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node605.html">
 <LINK REL="previous" HREF="node603.html">
-<LINK REL="up" HREF="node598.html">
+<LINK REL="up" HREF="node601.html">
 <LINK REL="next" HREF="node605.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13336"
+<A NAME="tex2html13367"
   HREF="node605.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13330"
-  HREF="node598.html">
+<A NAME="tex2html13361"
+  HREF="node601.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13324"
+<A NAME="tex2html13355"
   HREF="node603.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13332"
-  HREF="node777.html">
+<A NAME="tex2html13363"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13334"
-  HREF="node780.html">
+<A NAME="tex2html13365"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,254 +92,365 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13337"
-  HREF="node605.html">Mejor un Sólo Agente</A>
-<B> Subir:</B> <A NAME="tex2html13331"
-  HREF="node598.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13325"
-  HREF="node603.html">Deshabilitar la Asignación de</A>
- &nbsp; <B>  <A NAME="tex2html13333"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13335"
-  HREF="node780.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13368"
+  HREF="node605.html">El fichero authorized_keys</A>
+<B> Subir:</B> <A NAME="tex2html13362"
+  HREF="node601.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13356"
+  HREF="node603.html">Conexión SSH a Una</A>
+ &nbsp; <B>  <A NAME="tex2html13364"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13366"
+  HREF="node786.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06560000000000000000">
-Agentes SSH</A>
+<H1><A NAME="SECTION06530000000000000000"></A>
+<A NAME="subsection:automaticauthentication"></A>
+<BR>
+Claves Pública y Privada: Estableciendo Autentificación No Interactiva
 </H1>
 
 <P>
-Un agente SSH es un programa que guarda de forma segura 
-las frases-clave asociadas con las claves privadas y responde a consultas 
-autentificadas de los clientes SSH.
-El agente recuerda la passphrase de manera que el usuario 
-no tenga que teclearla cada vez que la clave es usada.
 
-<P>
-El agente crea un socket en un subdirectorio de <code>/tmp</code> 
-en el que escucha las peticiones de conexión SSH.
-Cualquiera que tenga acceso a dicho socket puede acceder al agente. Los permisos
-unix para el socket son suficientemente restrictivos.
-
-<P>
-Los programas que se usan son  <TT>ssh-agent</TT>  y  <TT>ssh-add</TT> . 
-Utilizamos <A NAME="tex2html1340"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
-para añadir claves privadas a la cache del agente
-ssh. A partir de ese momento el cliente ssh no nos importunará
-solicitando la passphrase, comúnicandose con el agente 
-para superar el proceso de autentificación.
-El agente <code>ssh-agent</code> actúa como un daemon que permanece dando el
-servicio de autentificación a los clientes SSH.
-
-<P>
-
-<H4><A NAME="SECTION06560010000000000000">
-ssh-add</A>
+<H4><A NAME="SECTION06530010000000000000">
+ssh-keygen</A>
 </H4>
   
 
 <P>
-El programa
-<code>ssh-add</code> permite añadir, listar y suprimir claves de la cache del agente:
+Recordemos como se establece una autentificación 
+por clave pública-privada.
+La generación de una pareja de claves pública-privada 
+se realiza ejecutando en el cliente <A NAME="tex2html1334"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-keygen"><TT>ssh-keygen</TT></A>:
 
 <P>
 <PRE>
-someone@localhost:~/.ssh$ ssh-add ~/.ssh/conpass
-Enter passphrase for /home/someone/.ssh/conpass: **********
-Identity added: /home/someone/.ssh/conpass (/home/someone/.ssh/conpass)
-someone@localhost:~/.ssh$ ssh-add -l
-2048 da:13:....:ee /home/someone/.ssh/conpass (RSA)
+$ ssh-keygen  -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/user/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/user/.ssh/id_rsa.
+Your public key has been saved in /home/user/.ssh/id_rsa.pub.
+The key fingerprint is:
+xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx user@machine
 </PRE>
-Una vez establecida la clave en el agente es posible conectarse sin necesidad
-de proporcionar la frase clave:
+
+<P>
+En esta ocasión no indicamos passphrase. 
+
+<P>
+Las claves generadas por  <TT>ssh-keygen</TT>  
+se almacenan por defecto en <code>~/.ssh/</code>, 
+quedando el directorio así:
 
 <P>
 <PRE>
-someone@localhost:~/.kde/shutdown$ ssh remote.machine
-Linux remote.machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-Last login: Tue Mar 11 14:03:59 2008 from localhost.deioc.ull.es
-user@remote.machine:~$
+$ ls -l
+total 12
+-rw-------  1 user user  883 2005-08-13 14:16 id_rsa
+-rw-r--r--  1 user user  223 2005-08-13 14:16 id_rsa.pub
+-rw-r--r--  1 user user 1344 2005-08-04 02:14 known_hosts
 </PRE>
 
 <P>
+Los ficheros <code>id_rsa</code> e <code>id_rsa.pub</code> contienen respectivamente
+las claves privada y pública. El
+fichero <code>known_hosts</code> contiene
+la lista de las claves públicas de las máquinas
+reconocidas.
 
-<H4><A NAME="SECTION06560020000000000000">
-Arrancando un Agente SSH</A>
+<P>
+Estas son alguas de las opciones que admite <code>ssh-keygen</code>:
+
+<UL>
+<LI><code>-b 2048</code> establece el número de bits en la clave a 2048. Por defecto es 1024.
+</LI>
+<LI><code>-f mykey</code> establece el nombre del fichero de clave: <code>mykey</code> y <code>mykey.pub</code>.
+Si se omite, pregunta
+</LI>
+<LI><code>-N passphrase</code> la passphrase a utilizar. Si se omite, pregunta
+</LI>
+<LI><code>-C comentario</code> el comentario a añadir en la correspondiente 
+línea de la clave pública. Si se omite es <code>username@host</code>:
+<PRE>
+ssh-dss AAAAB3N... pepe@machinon
+</PRE>
+</LI>
+<LI>La opción <code>-p</code> puede ser usada para cambiar la passphrase de una determinada identidad:
+<PRE>
+pp2@europa:~/.ssh$ ssh-keygen -p -f id_dsa
+Key has comment 'id_dsa'
+Enter new passphrase (empty for no passphrase):
+</PRE>
+o bien:
+
+<P>
+<PRE>
+ssh-keygen -p -f mykeyfile -P mysecretpassword -N mynewsecretpassword
+</PRE>
+
+<P>
+</LI>
+<LI>Es posible cambiar el comentario para una clave utilizando <code>-c</code>:
+<PRE>
+ssh-keygen -c -f mykeyfile -P mysecretpassword -C 'my new comment'
+</PRE>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION06530020000000000000">
+Computando la Huella de una Máquina</A>
 </H4>
   
 
 <P>
-Para arrancar el agente SSH se ejecuta el comando:
+Es posible generar el  <TT>fingerprint</TT>  de una clave pública usando la opción <code>-l</code>:
 <PRE>
-eval `ssh-agent`
-</PRE>
-Esto se hace asi porque el resultado retornado por <code>ssh-agent</code>
-es una cadena conteniendo un script <A NAME="tex2html1341"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?bash"><TT>bash</TT></A>. Este guión establece las variables de 
-entorno necesarias para que las futuras llamadas a clientes SSH 
-puedan encontrar al agente. Observe el resultado de una ejecución sin <code>eval</code> ni backticks:
-<PRE>
-$ ssh-agent
-SSH_AUTH_SOCK=/tmp/ssh-jaDVTd5583/agent.5583; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=5584; export SSH_AGENT_PID;
-echo Agent pid 5584;
+$ ssh-keygen -l -f mykeyfile.pub
 </PRE>
 
 <P>
-La variable <code>SSH_AUTH_SOCK</code> contiene el camino al socket de dominio UNIX que será 
-utilizado por los clientes <code>ssh</code>, <code>scp</code>, etc. para comunicarse 
-con el agente.
+Ya vimos que cuando nos conectabamos a un host por primera vez 
+via ssh obteníamos un mensaje como:
 
 <P>
-El pid proporcionado en <code>SSH_AGENT_PID</code> nos permite eliminar al agente mediante <code>kill</code>. 
-Sin embargo una llamada a <code>kill</code> no elimina 
-las variables de entorno establecidas.
-La forma correcta de terminar el agente es usando la opción <code>-k</code>
-de <code>ssh-agent</code>:
 <PRE>
-pp2@localhost:~/Lbook$ eval `ssh-agent`
-Agent pid 5606
-pp2@localhost:~/Lbook$ env | grep -i ssh
-SSH_AGENT_PID=5606
-SSH_AUTH_SOCK=/tmp/ssh-ALUJyJ5605/agent.5605
-CVS_RSH=/usr/bin/ssh
-pp2@localhost:~/Lbook$ eval `ssh-agent -k`
-Agent pid 5606 killed
-pp2@localhost:~/Lbook$ env | grep -i ssh
-CVS_RSH=/usr/bin/ssh
-pp2@localhost:~/Lbook$
+teide:~$ ssh teide
+The authenticity of host 'teide (134.2.14.48)' can't be established.
+RSA key fingerprint is 9e:1a:5e:27:16:4d:2a:13:90:2c:64:41:bd:25:fd:35.
+Are you sure you want to continue connecting (yes/no)?
 </PRE>
 
 <P>
+Normalmente respondemos <code>yes</code> y entramos nuestra clave.
+¿Cómo podemos comprobar que el fingerprint es auténtico?
 
-<H4><A NAME="SECTION06560030000000000000">
-El Protocolo</A>
+<P>
+¿Donde están los ficheros de claves del servidor?
+Normalmente en el directorio <code>/etc/ssh/</code>.
+
+<P>
+<PRE>
+teide:~$ ls /etc/ssh/*key*
+/etc/ssh/ssh_host_dsa_key      /etc/ssh/ssh_host_key.pub
+/etc/ssh/ssh_host_dsa_key.pub  /etc/ssh/ssh_host_rsa_key
+/etc/ssh/ssh_host_key          /etc/ssh/ssh_host_rsa_key.pub
+</PRE>
+
+<P>
+Este servidor tiene tres claves.
+Sólo el root puede leer las privadas, 
+pero las públicas tienen permisos de lectura.
+En el mensaje anterior, el cliente <code>ssh</code>
+muestra el fingerprint esperado.
+Podemos obtenerlo con:
+
+<P>
+<PRE>
+teide:~$ ssh-keygen -lf /etc/ssh/ssh_host_rsa_key.pub 
+2048 9e:1a:5e:27:16:4d:2a:13:90:2c:64:41:bd:25:fd:35 /etc/ssh/ssh_host_rsa_key.pub
+</PRE>
+
+<P>
+El primer número (2048) es la longitud en
+bits de la clave. El segundo <code>9e:1a:...:fd:35</code>
+es la huella, el último <code>/etc/ssh/ssh_host_rsa_key.pub</code> 
+es el nombre del fichero con la clave pública.
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Este método es inseguro. ¿Por qué?
+</I>
+<P>
+<I>El método seguro es contactar al administrador para obtener la huella
+(se supone que el administrador la guardó en lugar seguro) en vez de
+utilizar un canal que pueda estar comprometido.</I></DIV><P></P>
+
+<P>
+
+<H4><A NAME="SECTION06530030000000000000">
+ssh-copy-id</A>
 </H4>
   
 
 <P>
-
-<OL>
-<LI>El usuario escribe el comando que da lugar a la conexión inicial y especifica el username asi como 
-la petición de usar una clave. El programa cliente envía el username y la petición de uso
-de  la clave.
+Ahora se debe copiar la clave pública al servidor, 
+al fichero <code>~/.ssh/authorized_keys</code>. 
+El fichero <A NAME="tex2html1335"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?authorized_keys"><TT>authorized_keys</TT></A>
+es el fichero que contiene las claves públicas utilizadas durante el proceso
+de autentificación pública.
 
 <P>
+Para la copia se utiliza el comando <A NAME="tex2html1336"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-copy-id"><TT>ssh-copy-id</TT></A>:
+
+<P>
+<PRE>
+$ssh-copy-id -i ~/.ssh/id_rsa.pub user@machine1
+$ssh-copy-id -i ~/.ssh/id_rsa.pub user@machine2
+</PRE>
+
+<P>
+ <TT>ssh-copy-id</TT>  es un script que se conecta a la máquina 
+y copia el archivo (indicado por la opción <code>-i</code>) en 
+<code>~/.ssh/authorized_keys</code>, y ajusta los permisos de forma adecuada:
+
+<UL>
+<LI>El home del usuario en la máquina remota
 </LI>
-<LI>El demonio de SSH mira en el fichero <code>authorized_keys</code> y
-construye un reto basado en esa clave y lo envía al cliente.
-
-<P>
+<LI>El directorio <code>~/.ssh</code>
 </LI>
-<LI>El cliente recibe el reto asociado con la clave y lo redirige al
-agente. Supongamos que la clave fué previamente cargada con <A NAME="tex2html1342"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
-<P>
+<LI>El fichero <code>~/.ssh/authorized_keys</code>
 </LI>
-<LI>El agente construye la respuesta y la devuelve al proceso <A NAME="tex2html1343"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
-el cual la envía al proceso <A NAME="tex2html1344"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
-que escucha en el otro extremo.
-El cliente <A NAME="tex2html1345"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
-nunca ve la clave privada, lo que ve 
-es la respuesta. 
+</UL>
+Una configuración de permisos inadecuada puede 
+prevenir que podamos acceder a la máquina,
+sobre todo si la configuración del servicio SSH tiene 
+activado <code>StrictModes</code> (que suele ser la opción por
+defecto):
 
 <P>
-</LI>
-<LI>El servidor <A NAME="tex2html1346"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
-valida la respuesta. Si es correcta permite 
-el acceso al sistema.
+<PRE>
+root@server:/etc/ssh# grep -i strictmode *
+sshd_config:StrictModes yes
+</PRE>
 
 <P>
-</LI>
-</OL>
+Si se desea publicar la clave en un cierto número de máquinas que comparten
+la misma clave es posible (pero no recomendable) hacerlo
+usando el programa <A NAME="tex2html1337"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=sshpass"><TT>sshpass</TT></A>
+con un comando como este:
 
 <P>
-<P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
-<I>Establezca claves con passphrase, instale un agente ssh y compruebe su buen
-funcionamiento.</I></DIV><P></P>
+<PRE>
+$ for i in host1 host2 ... hostN; do sshpass -pmipassword ssh-copy-id -i .ssh/identity $i; done
+</PRE>
 
 <P>
 
-<H4><A NAME="SECTION06560040000000000000">
-Bloqueando el acceso a un Agente</A>
+<H4><A NAME="SECTION06530040000000000000">
+Copia Manual</A>
 </H4>
   
 
 <P>
-Es posible cerrar el acceso al agente usando la opción <code>-x</code> de <A NAME="tex2html1347"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
+Si no se dispone del programa <code>ssh-copy-id</code> se puede realizar una
+copia manual a la máquina remota del fichero conteniendo la clave 
+pública (por ejemplo usando <A NAME="tex2html1338"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?scp"><TT>scp</TT></A>
+o <A NAME="tex2html1339"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sftp"><TT>sftp</TT></A>)
+y añadir su contenido al fichero <code>~/.ssh/authorized_keys</code>.
+
+<P>
+En la máquina servidor añadimos una línea en el fichero
+<code>~/.ssh/authorized_keys</code> que contiene exactamente la única 
+línea que estaba en el fichero en el que se guardó la clave pública
+(<code>id_rsa.pub</code> o <code>filename.pub</code> o como se llamara).
+Después de eso el fichero <code>.ssh/authorized_keys</code> tendría
+una línea parecida a esta:
 <PRE>
-pp2@europa:~$ ssh-add -x
-Enter lock password:
-Again:
-Agent locked.
-pp2@europa:~$ ssh orion
-Enter passphrase for key '/home/pp2/.ssh/id_dsa': ********
-Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-Last login: Mon Apr 27 13:29:32 2009 from europa.deioc.ull.es
-casiano@orion:~$
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAybmcqaU/Xos/GhYCzkV+kDsK8+A5OjaK
+5WgLMqmu38aPo56Od10RQ3EiB42DjRVY8trXS1NH4jbURQPERr2LHCCYq6tHJYfJNhUX
+/COwHs+ozNPE83CYDhK4AhabahnltFE5ZbefwXW4FoKOO+n8AdDfSXOazpPas8jXi5bE
+wNf7heZT++a/Qxbu9JHF1huThuDuxOtIWl07G+tKqzggFVknM5CoJCFxaik91lNGgu2O
+TKfY94c/ieETOXE5L+fVrbtOh7DTFMjIYAWNxy4tlMR/59UVw5dapAxH9J2lZglkj0w0
+LwFI+7hZu9XvNfMKMKg+ERAz9XHYH3608RL1RQ== Este comentario describe la
+clave
 </PRE>
 
 <P>
-Para abrir el acceso al agente usaremos la opción <code>-X</code> de <A NAME="tex2html1348"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
+excepto que he descompuesto la línea en varias líneas para hacerla
+mas legible. 
+
+<P>
+La forma usual de completar el proceso 
+requeriría de dos autentificaciones: 
+una para la copia con <code>scp</code>
+y otra para añadir la identidad
+en el fichero <code>.ssh/authorized_keys</code> y asegurarse de
+los permisos.
+
+<P>
+Una forma de realizar el proceso con una sola autentificación
+es la siguiente:
 <PRE>
-pp2@europa:~$ ssh-add -X
-Enter lock password: ****************
-Agent unlocked.
-pp2@europa:~$
+europa:~/.ssh$ cat prueba.pub | \
+  ssh nereida "umask u=rwx,g=,o=; test -d .ssh || mkdir .ssh ; cat &gt;&gt; .ssh/authorized_keys"
 </PRE>
 
 <P>
+La máscara por defecto <code>umask u=rwx,g=,o=</code>
+se ha establecido de manera que los ficheros
+creados tengan permisos <code>rw-------</code> y los
+nuevos directorios tengan permisos <code>rwx-----</code> (véase la entrada de <A NAME="tex2html1340"
+  HREF="http://en.wikipedia.org/wiki/Umask">umask</A>
+en la Wikipedia).
 
-<H4><A NAME="SECTION06560050000000000000">
-Poniendo Fecha de Caducidad</A>
+<P>
+
+<H4><A NAME="SECTION06530050000000000000">
+Conexión sin Clave</A>
 </H4>
   
 
 <P>
-La opción <code>-t lifetime</code> de <A NAME="tex2html1349"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>
-puede ser utilizada para 
-limitar el tiempo de caducidad de las identidades en un agente. El tiempo
-se expresará en segundos o bien de la forma <code>time[qualifier]</code>, donde
-<code>time</code> es un entero positivo y <code>qualifier</code> es:
+Ahora la conexión debería funcionar sin necesidad de introducir la
+clave. 
+<PRE>
+   ssh -i ~/.ssh/filename remotehost
+</PRE>
+o bien:
+<PRE>
+   slogin -i ~/.ssh/filename remotehost
+</PRE>
+Una vez que se ha establecido un esquema de autentificación
+automática es trivial ejecutar un comando en la máquina 
+remota:
 
 <P>
 <PRE>
-           nada    segundos
-           s | S   segundos
-           m | M   minutos
-           h | H   horas
-           d | D   dias
-           w | W   semanas
+pp2@nereida:/tmp$ ssh remotename@machine uname -a
+Linux machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION06560060000000000000">
+<H4><A NAME="SECTION06530060000000000000">
+Permisos en <TT>.ssh</TT></A>
+</H4>
+  
+
+<P>
+Si no funciona es posible que sea un problema de permisos
+en los ficheros. Los permisos correctos deben ser similares a estos:
+
+<P>
+<PRE>
+    $ chmod go-w $HOME $HOME/.ssh
+    $ chmod 600 $HOME/.ssh/authorized_keys
+</PRE>
+
+<P>
+Inténtelo de nuevo usando la opción <code>-v</code> de <code>ssh</code>:
+
+<P>
+<PRE>
+pp2@nereida:/tmp$ ssh -v -v remotename@machine uname -a
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06530070000000000000">
 Véase también</A>
 </H4>
   
@@ -347,16 +458,68 @@ Véase también</A>
 <P>
 
 <UL>
-<LI>Wikipedia <A NAME="tex2html1350"
-  HREF="http://en.wikipedia.org/wiki/Ssh-agent">Ssh-agent</A>
-</LI>
-<LI><A NAME="tex2html1351"
-  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
-</LI>
-<LI><A NAME="tex2html1352"
-  HREF="http://mah.everybody.org/docs/ssh">Using ssh-agent with ssh</A>
+<LI><A NAME="tex2html1341"
+  HREF="http://www.openssh.com/faq.html">OpenSSH FAQ (Frequently asked questions)</A>
 </LI>
 </UL>
+
+<P>
+
+<H4><A NAME="SECTION06530080000000000000">
+Ejercicios</A>
+</H4>
+  
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN></B> &nbsp; 
+<I>Cree una identidad y transfierala manualmente.</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">3</SPAN></B> &nbsp; 
+<I>Cámbiele la passphrase a una identidad</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN></B> &nbsp; 
+<I>Cámbiele el comentario a una identidad</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">5</SPAN></B> &nbsp; 
+<I>Copie el fichero de clave privada de su cuenta de usuario <code>u1</code> 
+en <code>m1</code> a otra cuenta <code>u2</code> en la máquina <code>m1</code>.
+Intente ahora conectarse siendo el usuario <code>u2</code> de <code>m1</code>
+a la máquina <code>rm</code> en la que situó la clave pública como usuario <code>ru</code>:
+</I>
+<P><PRE>
+u2@m1:~/$ ssh ru@rm
+</PRE>
+<P>
+<I>¿Sigue funcionando la autentificación automática?</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">6</SPAN></B> &nbsp; 
+<I>Copie ahora el fichero de clave privada de su cuenta de usuario <code>u1</code> en <code>m1</code>
+a otra cuenta <code>w1</code> en una máquina distinta <code>mw</code>.
+Conéctese desde <code>mw</code> a <code>rm</code> en la que situó la clave pública como usuario <code>ru</code>:
+</I><PRE>
+mw@w1:~/$ ssh ru@rm
+</PRE><I>
+¿Funciona? ¿Como afectan los resultados a su percepción de la seguridad de las comunicaciones
+con <code>ssh</code>?</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">7</SPAN></B> &nbsp; 
+<I>Considere una intranet en la que su <code>HOME</code> de usuario esta en un sistema de archivos
+compartido. Genere (si no la ha echo ya) su pareja de claves privada y pública.
+Publique la clave usando <code>$ssh-copy-id</code> o bien - si <code>$ssh-copy-id</code> no está
+disponible - copiando la clave pública en
+el fichero <code>authorized_keys</code>. ¿Se obtiene autorización automática entre 
+dos máquinas cualesquiera de la red?</I></DIV><P></P>
 
 <P>
 <BR><HR>
@@ -366,37 +529,41 @@ Véase también</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html13338"
-  HREF="node604.html#SECTION06560010000000000000">ssh-add</A>
-<LI><A NAME="tex2html13339"
-  HREF="node604.html#SECTION06560020000000000000">Arrancando un Agente SSH</A>
-<LI><A NAME="tex2html13340"
-  HREF="node604.html#SECTION06560030000000000000">El Protocolo</A>
-<LI><A NAME="tex2html13341"
-  HREF="node604.html#SECTION06560040000000000000">Bloqueando el acceso a un Agente</A>
-<LI><A NAME="tex2html13342"
-  HREF="node604.html#SECTION06560050000000000000">Poniendo Fecha de Caducidad</A>
-<LI><A NAME="tex2html13343"
-  HREF="node604.html#SECTION06560060000000000000">Véase también</A>
+<LI><A NAME="tex2html13369"
+  HREF="node604.html#SECTION06530010000000000000">ssh-keygen</A>
+<LI><A NAME="tex2html13370"
+  HREF="node604.html#SECTION06530020000000000000">Computando la Huella de una Máquina</A>
+<LI><A NAME="tex2html13371"
+  HREF="node604.html#SECTION06530030000000000000">ssh-copy-id</A>
+<LI><A NAME="tex2html13372"
+  HREF="node604.html#SECTION06530040000000000000">Copia Manual</A>
+<LI><A NAME="tex2html13373"
+  HREF="node604.html#SECTION06530050000000000000">Conexión sin Clave</A>
+<LI><A NAME="tex2html13374"
+  HREF="node604.html#SECTION06530060000000000000">Permisos en <TT>.ssh</TT></A>
+<LI><A NAME="tex2html13375"
+  HREF="node604.html#SECTION06530070000000000000">Véase también</A>
+<LI><A NAME="tex2html13376"
+  HREF="node604.html#SECTION06530080000000000000">Ejercicios</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13336"
+<A NAME="tex2html13367"
   HREF="node605.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13330"
-  HREF="node598.html">
+<A NAME="tex2html13361"
+  HREF="node601.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13324"
+<A NAME="tex2html13355"
   HREF="node603.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13332"
-  HREF="node777.html">
+<A NAME="tex2html13363"
+  HREF="node783.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13334"
-  HREF="node780.html">
+<A NAME="tex2html13365"
+  HREF="node786.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -447,20 +614,20 @@ Véase también</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13337"
-  HREF="node605.html">Mejor un Sólo Agente</A>
-<B> Subir:</B> <A NAME="tex2html13331"
-  HREF="node598.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13325"
-  HREF="node603.html">Deshabilitar la Asignación de</A>
- &nbsp; <B>  <A NAME="tex2html13333"
-  HREF="node777.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13335"
-  HREF="node780.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13368"
+  HREF="node605.html">El fichero authorized_keys</A>
+<B> Subir:</B> <A NAME="tex2html13362"
+  HREF="node601.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13356"
+  HREF="node603.html">Conexión SSH a Una</A>
+ &nbsp; <B>  <A NAME="tex2html13364"
+  HREF="node783.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13366"
+  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-24
+2014-09-29
 </ADDRESS>
 </BODY>
 </HTML>
