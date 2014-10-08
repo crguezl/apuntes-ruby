@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo de un servicio RESTfull en Sinatra</TITLE>
-<META NAME="description" CONTENT="Ejemplo de un servicio RESTfull en Sinatra">
+<TITLE>Troubleshooting</TITLE>
+<META NAME="description" CONTENT="Troubleshooting">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node495.html">
 <LINK REL="previous" HREF="node493.html">
-<LINK REL="up" HREF="node492.html">
+<LINK REL="up" HREF="node491.html">
 <LINK REL="next" HREF="node495.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11419"
+<A NAME="tex2html11460"
   HREF="node495.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11413"
-  HREF="node492.html">
+<A NAME="tex2html11454"
+  HREF="node491.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11409"
+<A NAME="tex2html11448"
   HREF="node493.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11415"
-  HREF="node783.html">
+<A NAME="tex2html11456"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11417"
-  HREF="node786.html">
+<A NAME="tex2html11458"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,116 +92,191 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11420"
-  HREF="node495.html">Sinatra + Sprockets +</A>
-<B> Subir:</B> <A NAME="tex2html11414"
-  HREF="node492.html">Rest</A>
-<B> Anterior:</B> <A NAME="tex2html11410"
-  HREF="node493.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html11416"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11418"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11461"
+  HREF="node495.html">Configuration</A>
+<B> Subir:</B> <A NAME="tex2html11455"
+  HREF="node491.html">Despliegue en Heroku</A>
+<B> Anterior:</B> <A NAME="tex2html11449"
+  HREF="node493.html">Logging</A>
+ &nbsp; <B>  <A NAME="tex2html11457"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11459"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION032420000000000000000">
-Ejemplo de un servicio RESTfull en Sinatra</A>
+<H1><A NAME="SECTION032230000000000000000">
+Troubleshooting</A>
 </H1>
 
 <P>
-
-<H4><A NAME="SECTION032420010000000000000">
-Donde</A>
-</H4>
-  
-
-<OL>
-<LI><A NAME="tex2html1164"
-  HREF="http://www.sitepoint.com/uno-use-sinatra-implement-rest-api/?utm_source=googleplus&amp;utm_medium=post&amp;utm_campaign=gp_0311">Uno! Use Sinatra to Implement a REST API.</A>
-by Dan Schaefer.  Published March 10, 2014
-</LI>
-<LI>Código en GitHub
-<A NAME="tex2html1165"
-  HREF="https://github.com/crguezl/sinatra-rest-api-example">https://github.com/crguezl/sinatra-rest-api-example</A>
-</LI>
-<LI><PRE>
-[~/sinatra/sinatra-rest-api-example(master)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/sinatra-rest-api-example
+If you push your app and it crashes, 
+<code>heroku ps</code> shows state crashed:
+<PRE>
+=== web (1X): `bundle exec thin start -R config.ru -e $RACK_ENV -p $PORT`
+web.1: crashed 2013/10/24 20:21:34 (~ 1h ago)
 </PRE>
-</LI>
-</OL>
+check your logs to find out what went wrong. 
+
+<P>
+Here are some common
+problems.
 
 <P>
 
-<H4><A NAME="SECTION032420020000000000000">
-Ejecución del servidor</A>
+<H4><A NAME="SECTION032230010000000000000">
+Failed to require a sourcefile</A>
 </H4>
   
+
+<P>
+If your app failed to require a sourcefile, chances are good you’re
+running Ruby 1.9.1 or 1.8 in your local environment. 
+
+<P>
+The load paths
+have changed in Ruby 1.9 which applies to Ruby 2.0. 
+
+<P>
+Port your app
+forward to Ruby 2.0.0 making certain it works locally before trying
+to push to Cedar again.
+
+<P>
+
+<H4><A NAME="SECTION032230020000000000000">
+Encoding error</A>
+</H4>
+  
+
+Ruby 1.9 added more sophisticated encoding support to the language
+which applies to Ruby 2.0. 
+
+<P>
+Not all gems work with Ruby 2.0. If you
+hit an encoding error, you probably haven’t fully tested your app
+with Ruby 2.0.0 in your local environment. 
+
+<P>
+Port your app forward
+to Ruby 2.0.0 making certain it works locally before trying to push
+to Cedar again.
+
+<P>
+
+<H4><A NAME="SECTION032230030000000000000">
+Missing a gem</A>
+</H4>
+  
+
+<P>
+If your app crashes due to missing a gem, you may have it installed
+locally but not specified in your Gemfile. 
+
+<P>
+You must isolate all
+local testing using <code>bundle exec</code>. 
+
+<P>
+For example, don’t run <code>ruby web.rb</code>,
+run 
 
 <P>
 <PRE>
-[~/sinatra/sinatra-rest-api-example(master)]$ ruby uno-server.rb 
-[2014-09-13 15:41:24] INFO  WEBrick 1.3.1
-[2014-09-13 15:41:24] INFO  ruby 2.1.2 (2014-05-08) [x86_64-darwin13.0]
-== Sinatra/1.4.5 has taken the stage on 4567 for production with backup from WEBrick
-[2014-09-13 15:41:24] INFO  WEBrick::HTTPServer#start: pid=94715 port=4567
+bundle exec ruby web.rb
+</PRE>
+Don’t run <code>rake db:migrate</code>, run 
+<PRE>
+bundle exec rake db:migrate.
+</PRE>
+Another approach is to create a blank RVM gemset to be absolutely
+sure you’re not touching any system-installed gems:
+<PRE>
+$ rvm gemset create myapp
+$ rvm gemset use myapp
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION032420030000000000000">
-Ejecución del cliente</A>
+<H4><A NAME="SECTION032230040000000000000">
+Runtime dependencies on development/test gems</A>
 </H4>
   
 
+<P>
+If you’re still missing a gem when you deploy, check your Bundler
+groups.
+
+<P>
+Heroku builds your app without the <code>development</code> or <code>test</code>
+groups, and if you app depends on a gem from one of these groups
+to run, you should move it out of the group.
+
+<P>
+One common example using the <code>RSpec tasks</code> in your Rakefile. 
+If you see this in your Heroku deploy:
 <PRE>
-[~/sinatra/sinatra-rest-api-example(master)]$ pry
-[1] pry(main)&gt; require './uno-client'
-=&gt; true
-[2] pry(main)&gt; bob = UnoClient.new 'bob'
-=&gt; #&lt;UnoClient:0x007fbde4459468 @name="bob"&gt;
-[3] pry(main)&gt; carol = UnoClient.new 'carol'
-=&gt; #&lt;UnoClient:0x007fbde43f1de0 @name="carol"&gt;
-[4] pry(main)&gt; ted = UnoClient.new 'ted'
-=&gt; #&lt;UnoClient:0x007fbde438aa50 @name="ted"&gt;
-[5] pry(main)&gt; alice = UnoClient.new 'alice'
-=&gt; #&lt;UnoClient:0x007fbde4323b48 @name="alice"&gt;
-[6] pry(main)&gt; ralph = UnoClient.new 'ralph'
-=&gt; #&lt;UnoClient:0x007fbde42c0250 @name="ralph"&gt;
-[7] pry(main)&gt; bob.join_game
-{:status=&gt;"welcome"}
-=&gt; nil
-[8] pry(main)&gt; carol.join_game
-{:status=&gt;"welcome"}
-=&gt; nil
-[9] pry(main)&gt; ted.join_game
-{:status=&gt;"welcome"}
-=&gt; nil
-[10] pry(main)&gt; alice.join_game
-{:status=&gt;"welcome"}
-=&gt; nil
-[11] pry(main)&gt; ralph.join_game
-{:status=&gt;"sorry - game not accepting new players"}
-=&gt; nil
-[12] pry(main)&gt; bob.deal
-{"status":"success"}
-=&gt; nil
-[13] pry(main)&gt; bob.get_cards
-{"cards":["6-heart","jack-diamond","7-spade","queen-club","jack-spade"]}
-=&gt; nil
-[14] pry(main)&gt; carol.get_cards
-{"cards":["9-heart","4-spade","10-spade","9-spade","10-club"]}
-=&gt; nil
-[15] pry(main)&gt; ted.get_cards
-{"cards":["6-spade","ace-diamond","ace-club","3-heart","2-heart"]}
-=&gt; nil
-[16] pry(main)&gt; alice.get_cards
-{"cards":["9-diamond","8-spade","8-club","8-heart","jack-club"]}
-=&gt; nil
-[17] pry(main)&gt;
+$ heroku run rake -T
+Running `rake -T` attached to terminal... up, ps.3
+rake aborted!
+no such file to load -- rspec/core/rake_task
 </PRE>
+Then you’ve hit this problem. 
+
+<P>
+First, duplicate the problem locally like so:
+<PRE>
+$ bundle install --without development:test
+...
+$ bundle exec rake -T
+rake aborted!
+no such file to load -- rspec/core/rake_task
+</PRE>
+Now you can fix it by making these Rake tasks conditional on the gem load. 
+For example:
+<PRE>
+begin
+  require "rspec/core/rake_task"
+
+  desc "Run all examples"
+  RSpec::Core::RakeTask.new(:spec) do |t|
+    t.rspec_opts = %w[--color]
+    t.pattern = 'spec/*_spec.rb'
+  end
+rescue LoadError
+end
+</PRE>
+Confirm it works locally, then push to Heroku.
+
+<P>
+
+<H4><A NAME="SECTION032230050000000000000">
+Rack::Sendfile</A>
+</H4>
+  
+
+<P>
+Heroku does not support the use of Rack::Sendfile. 
+
+<P>
+Rack:Sendfile
+usually requires that there is a frontend webserver like nginx or
+apache is running on the same machine as the application server.
+
+<P>
+This is not how Heroku is architected. Using the Rack::Sendfile
+middleware will cause your file downloads to fail since it will
+send a body with Content-Length of 0.
+
+<P>
+
+<H4><A NAME="SECTION032230060000000000000">
+Número máximo de aplicaciones</A>
+</H4>
+  
+
+If you have unverified account then the maximum number of apps is 5 only and for verified account number is 100.
 
 <P>
 <BR><HR>
@@ -210,31 +286,37 @@ Ejecución del cliente</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html11421"
-  HREF="node494.html#SECTION032420010000000000000">Donde</A>
-<LI><A NAME="tex2html11422"
-  HREF="node494.html#SECTION032420020000000000000">Ejecución del servidor</A>
-<LI><A NAME="tex2html11423"
-  HREF="node494.html#SECTION032420030000000000000">Ejecución del cliente</A>
+<LI><A NAME="tex2html11462"
+  HREF="node494.html#SECTION032230010000000000000">Failed to require a sourcefile</A>
+<LI><A NAME="tex2html11463"
+  HREF="node494.html#SECTION032230020000000000000">Encoding error</A>
+<LI><A NAME="tex2html11464"
+  HREF="node494.html#SECTION032230030000000000000">Missing a gem</A>
+<LI><A NAME="tex2html11465"
+  HREF="node494.html#SECTION032230040000000000000">Runtime dependencies on development/test gems</A>
+<LI><A NAME="tex2html11466"
+  HREF="node494.html#SECTION032230050000000000000">Rack::Sendfile</A>
+<LI><A NAME="tex2html11467"
+  HREF="node494.html#SECTION032230060000000000000">Número máximo de aplicaciones</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11419"
+<A NAME="tex2html11460"
   HREF="node495.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11413"
-  HREF="node492.html">
+<A NAME="tex2html11454"
+  HREF="node491.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11409"
+<A NAME="tex2html11448"
   HREF="node493.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11415"
-  HREF="node783.html">
+<A NAME="tex2html11456"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11417"
-  HREF="node786.html">
+<A NAME="tex2html11458"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -285,20 +367,20 @@ Ejecución del cliente</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11420"
-  HREF="node495.html">Sinatra + Sprockets +</A>
-<B> Subir:</B> <A NAME="tex2html11414"
-  HREF="node492.html">Rest</A>
-<B> Anterior:</B> <A NAME="tex2html11410"
-  HREF="node493.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html11416"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11418"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11461"
+  HREF="node495.html">Configuration</A>
+<B> Subir:</B> <A NAME="tex2html11455"
+  HREF="node491.html">Despliegue en Heroku</A>
+<B> Anterior:</B> <A NAME="tex2html11449"
+  HREF="node493.html">Logging</A>
+ &nbsp; <B>  <A NAME="tex2html11457"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11459"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

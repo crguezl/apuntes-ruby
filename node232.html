@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Bindings (encarpetados) y eval</TITLE>
-<META NAME="description" CONTENT="Bindings (encarpetados) y eval">
+<TITLE>La Clase Player: Un Ejemplo de Strategy Pattern</TITLE>
+<META NAME="description" CONTENT="La Clase Player: Un Ejemplo de Strategy Pattern">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node233.html">
 <LINK REL="previous" HREF="node231.html">
-<LINK REL="up" HREF="node231.html">
+<LINK REL="up" HREF="node228.html">
 <LINK REL="next" HREF="node233.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6837"
+<A NAME="tex2html6810"
   HREF="node233.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6831"
-  HREF="node231.html">
+<A NAME="tex2html6804"
+  HREF="node228.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6825"
+<A NAME="tex2html6798"
   HREF="node231.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6833"
-  HREF="node783.html">
+<A NAME="tex2html6806"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6835"
-  HREF="node786.html">
+<A NAME="tex2html6808"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,171 +92,144 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6838"
-  HREF="node233.html">instance_eval y class_eval</A>
-<B> Subir:</B> <A NAME="tex2html6832"
-  HREF="node231.html">Evaluando Strings y Bloques</A>
-<B> Anterior:</B> <A NAME="tex2html6826"
-  HREF="node231.html">Evaluando Strings y Bloques</A>
- &nbsp; <B>  <A NAME="tex2html6834"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6836"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6811"
+  HREF="node233.html">La Clase Board</A>
+<B> Subir:</B> <A NAME="tex2html6805"
+  HREF="node228.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6799"
+  HREF="node231.html">La Clase Game</A>
+ &nbsp; <B>  <A NAME="tex2html6807"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6809"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6839"
-  HREF="node232.html#SECTION02821100000000000000">Procs y Bindings</A>
-</UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02821000000000000000"></A>
-  <A NAME="subsection:bindings"></A>
-<BR>
-Bindings (encarpetados) y eval
+<H2><A NAME="SECTION027174000000000000000">
+La Clase Player: Un Ejemplo de <SPAN  CLASS="textbf">Strategy Pattern</SPAN></A>
 </H2>
 
 <P>
+El concepto de jugador es definido mediante una clase abstracta:
+
+<P>
+<PRE>
+module TicTacToe
+  class Player
+    def initialize( mark )
+      @mark = mark # "X" or "O" or " "
+    end
+····
+    attr_reader :mark
+····
+    def move( board )
+      raise NotImplementedError, "Player subclasses must define move()."
+    end
+····
+    def finish( final_board )··
+    end
+  end
+end
+</PRE>
+de la que heredan los jugadores concretos.
+
+<P>
+Cada jugador es una clase. Por ejemplo, el jugador humano:
+<PRE>
+module TicTacToe
+  class HumanPlayer &lt; Player
+    def move( board )
+      print board
+      ....
+    end
+    
+    def finish( final_board )
+      ....
+    end
+  end
+end
+</PRE>
+Un par de jugadores mas, uno tonto y otro listo:
+<PRE>
+module TicTacToe
+  class DumbPlayer &lt; Player
+    def move( board )
+      moves = board.moves
+      moves[rand(moves.size)]
+    end
+  end
+
+  class SmartPlayer &lt; Player
+    def move( board )
+      ....
+    end
+  end
+end
+</PRE>
+La Banda de los Cuatro (<A NAME="8261"></A><SPAN  CLASS="textbf">The Gang of Four</SPAN> o <A NAME="8263"></A><SPAN  CLASS="textbf">GoF</SPAN>) 
+llama a esta idea de <SPAN  CLASS="textbf">implanta el algoritmo en clases separadas</SPAN> el 
+<A NAME="8265"></A><SPAN  CLASS="textbf">strategy pattern</SPAN> o <A NAME="8267"></A><SPAN  CLASS="textbf">patrón estrategia</SPAN> [<A
+ HREF="node796.html#DPR">5</A>], [<A
+ HREF="node796.html#GO4">6</A>].
+Esta estrategia puede aplicarse cuando ocurre que en medio de nuestra aplicación
+tenemos una parte que varía (el tipo de jugador). 
+A veces en esa parte queremos  hacer una cosa (usar el jugador <code>SmartPlayer</code>) y a veces
+otra (el jugador <code>HumanPlayer</code>). Es mas, es seguro que en el futuro se querrá
+otra cosa (¿que tal un jugador <code>MiniMaxPlayer</code>?).
 
 <OL>
-<LI>Un <A NAME="9861"></A><A NAME="tex2html453"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
-es un objeto que representa el estado de los bindings 
-definidos por las variables en un instante dado.
-
-<P>
+<LI>La idea clave es definir una familia de clases, las <A NAME="8269"></A><SPAN  CLASS="textbf">strategy</SPAN>
+o <A NAME="8271"></A><SPAN  CLASS="textbf">estrategias</SPAN> que hacen de distintas formas la misma cosa:
+en nuestro ejemplo son los distintos tipos de <code>Player</code> que lo
+que hacen es decidir la próxima jugada mediante  <code>move</code>.
 </LI>
-<LI>El método <A NAME="9865"></A><A NAME="tex2html454"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-binding"><TT>binding</TT></A>
-retorna un objeto <A NAME="tex2html455"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> describiendo
-los bindings en efecto en el punto de la llamada.
-
-<P>
+<LI>No sólo realizan la misma tarea sino que comparten la misma interfaz definida por la
+clase <code>Player</code>.
 </LI>
-<LI>Es posible pasarle a <A NAME="9872"></A><A NAME="tex2html456"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
-un segundo argumento de la clase <A NAME="9876"></A><A NAME="tex2html457"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
-que especifique el contexto en que es evaluada la cadena:
+<LI>Dado que todos los objetos <A NAME="8273"></A><SPAN  CLASS="textbf">strategy</SPAN>
+tiene la misma pinta vistos desde fuera, pueden ser usados
+por el usuario de la estrategia - Al que la GoF denomina <A NAME="8275"></A><SPAN  CLASS="textbf">context</SPAN>
+o <A NAME="8277"></A><SPAN  CLASS="textbf">contexto</SPAN> - como partes intercambiables. En nuestro caso el context
+es la clase 
+<code>Game</code>, que usa los <code>Player</code>s como objetos intercambiables
+</LI>
+<LI>Al separar la clase cliente <code>Game</code> - el contexto -
+de las clases estrategia <code>Player</code>s es necesario habilitar un mecanismo 
+de comunicación entre el contexto y la estrategia. En este ejemplo se ha optado por 
+pasar  esa información - el tablero - como argumento:
+<PRE>
+  @board[@x_player.move(@board)] = @x_player.mark # dentro del método play de la clase Game
+</PRE>
+La estrategia - el jugador <code>@x_player</code> - recibe el tablero <code>@board</code> 
+y retorna su decisión - la jugada <code>@x_player.move(@board)</code> (algo como <code>"b2"</code>)
+</LI>
+<LI>Un ejemplo de uso práctico del patrón Strategy puede verse en el código de <code>rdoc</code>, 
+la herramienta que se usa en Ruby para extraer documentación
+de los programas: por un lado hay una variación en los parsers que soporta: C, Ruby y FORTRAN.
+Por otro lado la salida puede hacerse en diversos formatos: XML, distintas versiones de HTML, CHM, <code>ri</code>, etc.
+En <code>rdoc</code> cada uno de los formatos de salida es manejado mediante una estrategia.
 </LI>
 </OL>
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ cat -n bindingsAndEval.rb 
-     1  class Demo
-     2    def initialize(n)
-     3      @secret = n
-     4    end
-     5    def getBinding
-     6      return binding()
-     7    end
-     8  end
-     9  
-    10  k1 = Demo.new(99)
-    11  b1 = k1.getBinding
-    12  k2 = Demo.new(-3)
-    13  b2 = k2.getBinding
-    14  
-    15  puts eval("@secret", b1)   #=&gt; 99
-    16  puts eval("@secret", b2)   #=&gt; -3
-    17  puts eval("@secret")       #=&gt; nil
-</PRE>
-Ejecución:
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ ruby bindingsAndEval.rb 
-99
--3
-nil
-</PRE>
-
-<P>
-
-<H3><A NAME="SECTION02821100000000000000">
-Procs y Bindings</A>
-</H3>
-
-<P>
-
-<OL>
-<LI>La clase <A NAME="9880"></A><A NAME="tex2html458"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>
-define un método <A NAME="9884"></A><A NAME="tex2html459"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html#method-i-binding"><TT>binding</TT></A>.
-Cuando se llama dentro de un proc o de una lambda retorna un objeto 
-<A NAME="9888"></A><A NAME="tex2html460"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
-que representa los bindings en efecto en la clausura
-de ese <A NAME="tex2html461"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>.
-
-<P>
-</LI>
-<LI>Además, el método de <A NAME="tex2html462"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> <A NAME="9898"></A><A NAME="tex2html463"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
-nos permite pasar como segundo argumento un <A NAME="tex2html464"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> en vez de un <A NAME="tex2html465"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
-(Véase la sección <A HREF="node146.html#subsection:clausurasybindings">12.6.2</A>).
-
-<P>
-</LI>
-<LI>Además, Ruby 1.9 define un método <A NAME="9908"></A><A NAME="tex2html466"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html#method-i-eval"><TT>eval</TT></A>
-para los objetos <A NAME="tex2html467"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>.
-</LI>
-</OL>
-
-<P>
-
-    <pre>
-
-    </pre>
-
-<P>
-ejecución:
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ ruby procsAndBindings.rb 
-99
-99
-********************************
-2
-4
-6
-********************************
-3
-6
-9
-********************************
-5
-10
-15
-</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6837"
+<A NAME="tex2html6810"
   HREF="node233.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6831"
-  HREF="node231.html">
+<A NAME="tex2html6804"
+  HREF="node228.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6825"
+<A NAME="tex2html6798"
   HREF="node231.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6833"
-  HREF="node783.html">
+<A NAME="tex2html6806"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6835"
-  HREF="node786.html">
+<A NAME="tex2html6808"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -307,20 +280,20 @@ ejecución:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6838"
-  HREF="node233.html">instance_eval y class_eval</A>
-<B> Subir:</B> <A NAME="tex2html6832"
-  HREF="node231.html">Evaluando Strings y Bloques</A>
-<B> Anterior:</B> <A NAME="tex2html6826"
-  HREF="node231.html">Evaluando Strings y Bloques</A>
- &nbsp; <B>  <A NAME="tex2html6834"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6836"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6811"
+  HREF="node233.html">La Clase Board</A>
+<B> Subir:</B> <A NAME="tex2html6805"
+  HREF="node228.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6799"
+  HREF="node231.html">La Clase Game</A>
+ &nbsp; <B>  <A NAME="tex2html6807"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6809"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

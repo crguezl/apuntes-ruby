@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Pessimistic version constraint</TITLE>
-<META NAME="description" CONTENT="Pessimistic version constraint">
+<TITLE>Jerarquía de Ficheros y Directorios, Nombres y Requires</TITLE>
+<META NAME="description" CONTENT="Jerarquía de Ficheros y Directorios, Nombres y Requires">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node671.html">
 <LINK REL="previous" HREF="node669.html">
-<LINK REL="up" HREF="node656.html">
+<LINK REL="up" HREF="node665.html">
 <LINK REL="next" HREF="node671.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14412"
+<A NAME="tex2html14469"
   HREF="node671.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14406"
-  HREF="node656.html">
+<A NAME="tex2html14463"
+  HREF="node665.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14400"
+<A NAME="tex2html14457"
   HREF="node669.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14408"
-  HREF="node783.html">
+<A NAME="tex2html14465"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14410"
-  HREF="node786.html">
+<A NAME="tex2html14467"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,157 +92,106 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14413"
-  HREF="node671.html">Controlando nuestras dependencias</A>
-<B> Subir:</B> <A NAME="tex2html14407"
-  HREF="node656.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14401"
-  HREF="node669.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html14409"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14411"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14470"
+  HREF="node671.html">Gemas con Un Gran</A>
+<B> Subir:</B> <A NAME="tex2html14464"
+  HREF="node665.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14458"
+  HREF="node669.html">Dependencias de la Gema</A>
+ &nbsp; <B>  <A NAME="tex2html14466"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14468"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0614140000000000000000">
-Pessimistic version constraint</A>
+<H1><A NAME="SECTION061450000000000000000"></A>
+<A NAME="subsection:nombresyrequires"></A>
+<BR>
+Jerarquía de Ficheros y Directorios, Nombres y Requires
 </H1>
-If your gem properly follows <A NAME="25920"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
-scheme, then other Ruby developers can take advantage of this when
-choosing a version constraint to lock down your gem in their
-application.
 
-<P>
-Let’s say the following releases of a gem exist:
-
-<P>
-<PRE>
-Version 2.1.0 — Baseline
-Version 2.2.0 — Introduced some new (backward compatible) features.
-Version 2.2.1 — Removed some bugs
-Version 2.2.2 — Streamlined your code
-Version 2.3.0 — More new features (but still backwards compatible).
-Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
-</PRE>
-Someone who wants to use your gem has determined that 
-
-<OL>
-<LI>version 2.2.0
-works with their software, 
-</LI>
-<LI>but version 2.1.0 doesn’t have a feature
-they need. 
-</LI>
-<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
-might look like:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '&gt;= 2.2.0'
-</PRE>
-or 
-<PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0'
-</PRE>
-This is an <A NAME="25922"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
-
-<P>
-It’s saying that all
-changes from <code>2.x</code> on will work with my software, 
-but for version
-<code>3.0.0</code> this will not be true.
+<UL>
+<LI>How you name your files and where you
+put them can  improve the usability of your library by other
+developers. 
 
 <P>
 </LI>
-<LI>The alternative here is to use <A NAME="25924"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
-
-<P>
-This explicitly excludes the version that might break your code.
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  ['&gt;= 2.2.0', '&lt; 3.0']
-</PRE>
-or
-
-<P>
-<PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
-</PRE>
-</LI>
-<LI><A NAME="tex2html1531"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> provides a shortcut for this, commonly known as the <A NAME="25929"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '~&gt; 2.2'
-</PRE>
-
-<P>
-<PRE>
-# bundler
-gem 'library', '~&gt; 2.2'
-</PRE>
-Notice that we dropped the <code>PATCH</code> level of the version number. 
+<LI>For instance, in a GitHub repository
+page <SPAN  CLASS="textbf">one can simply press <TT>t</TT> and start typing a filename, then look at
+the code for that file by pressing return</SPAN>. 
 
 <P>
 </LI>
-<LI>Had
-we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
-<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
+<LI>By creating sane, easily guessable filenames you are making it simple
+for others to read your code.
+</LI>
+</UL>
 
 <P>
+In general, you will have one class per file and one folder per module namespace, so for instance:
+
+<P>
+
+<UL>
+<LI><code>MyGem</code> becomes <code>lib/my_gem.rb</code> 
 </LI>
-<LI>If you want to allow use of newer backwards-compatible versions but
-need a specific bug fix you can use a compound requirement:
+<LI><code>MyGem::Widget</code> becomes <code>lib/my_gem/widget.rb</code>
+</LI>
+<LI><code>MyGem::Widgets::FooBar</code> becomes <code>lib/my_gem/widgets/foo_bar.rb</code>
+</LI>
+</UL>
+
+<P>
+<SPAN  CLASS="textbf">When a developer wants to use your library, they should be able to do
+so (in almost all cases) by making a single <TT>require</TT> statement that is
+identical to the gem name</SPAN>. 
+
+<P>
+That means that in the root file you need
+to make any additional require statements necessary for your gem to
+function. So if I have 
+a <code>MyGem</code> module, 
+a <code>MyGem::Widget</code> class, and a
+<code>MyGem::Widgets::FooBar</code> class, 
+the <code>lib/my_gem.rb</code> 
+file in my gem might
+look like this:
 
 <P>
 <PRE>
-# gemspec
-spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
-</PRE>
+require 'external_library' # require any external dependencies
 
-<P>
-<PRE>
-# bundler
-gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+module MyGem # it is best to declare the base module at the top
+end
+
+require 'my_gem/version' # created by Bundler
+require 'my_gem/widget'
+require 'my_gem/widgets/foo_bar'
 </PRE>
-</LI>
-<LI>The important note to take home here is to be aware others will be
-using your gems, so guard yourself from potential bugs/failures in
-future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
-if at all possible.
-</LI>
-</OL>
+By requiring all of the files necessary for your gem to run in the
+base file you make it easier for developers to use your library. 
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14412"
+<A NAME="tex2html14469"
   HREF="node671.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14406"
-  HREF="node656.html">
+<A NAME="tex2html14463"
+  HREF="node665.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14400"
+<A NAME="tex2html14457"
   HREF="node669.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14408"
-  HREF="node783.html">
+<A NAME="tex2html14465"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14410"
-  HREF="node786.html">
+<A NAME="tex2html14467"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -293,20 +242,20 @@ if at all possible.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14413"
-  HREF="node671.html">Controlando nuestras dependencias</A>
-<B> Subir:</B> <A NAME="tex2html14407"
-  HREF="node656.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14401"
-  HREF="node669.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html14409"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14411"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14470"
+  HREF="node671.html">Gemas con Un Gran</A>
+<B> Subir:</B> <A NAME="tex2html14464"
+  HREF="node665.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14458"
+  HREF="node669.html">Dependencias de la Gema</A>
+ &nbsp; <B>  <A NAME="tex2html14466"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14468"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

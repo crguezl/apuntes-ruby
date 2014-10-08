@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un server</TITLE>
-<META NAME="description" CONTENT="Un server">
+<TITLE>Cuando una assertion falla</TITLE>
+<META NAME="description" CONTENT="Cuando una assertion falla">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node287.html">
 <LINK REL="previous" HREF="node285.html">
-<LINK REL="up" HREF="node285.html">
+<LINK REL="up" HREF="node284.html">
 <LINK REL="next" HREF="node287.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7684"
+<A NAME="tex2html7718"
   HREF="node287.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7678"
-  HREF="node285.html">
+<A NAME="tex2html7712"
+  HREF="node284.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7672"
+<A NAME="tex2html7706"
   HREF="node285.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7680"
-  HREF="node783.html">
+<A NAME="tex2html7714"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7682"
-  HREF="node786.html">
+<A NAME="tex2html7716"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,211 +92,202 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7685"
-  HREF="node287.html">Deferrable</A>
-<B> Subir:</B> <A NAME="tex2html7679"
-  HREF="node285.html">EventMachine</A>
-<B> Anterior:</B> <A NAME="tex2html7673"
-  HREF="node285.html">EventMachine</A>
- &nbsp; <B>  <A NAME="tex2html7681"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7683"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7719"
+  HREF="node287.html">Organizando las pruebas</A>
+<B> Subir:</B> <A NAME="tex2html7713"
+  HREF="node284.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7707"
+  HREF="node285.html">Ejemplo Sencillo de uso</A>
+ &nbsp; <B>  <A NAME="tex2html7715"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7717"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html7686"
-  HREF="node286.html#SECTION021031010000000000000">callback y errback</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION021031000000000000000">
-Un server</A>
+<H2><A NAME="SECTION02912000000000000000">
+Cuando una assertion falla</A>
 </H2>
+
+<P>
 <PRE>
-~/ruby/eventmachine/simple_server]$ cat server.rb 
- require 'eventmachine'
-
- module EchoServer
-   def post_init
-     puts "-- someone connected to the echo server!"
-   end
-
-   def receive_data data
-     send_data "&gt;&gt;&gt;you sent: #{data}"
-     puts "received #{data}"
-     close_connection if data =~ /quit/i
-   end
-
-   def unbind
-     puts "-- someone disconnected from the echo server!"
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat test/tc_simple_number2.rb 
+# File:  tc_simple_number2.rb
+ 
+require "simple_number"
+require "test/unit"
+ 
+class TestSimpleNumber &lt; Test::Unit::TestCase
+ 
+  def test_simple
+    assert_equal(4, SimpleNumber.new(2).add(2) )
+    assert_equal(4, SimpleNumber.new(2).multiply(2) )
   end
-end
-
-# Note that this will block current thread.
-EventMachine.run {
-  EventMachine.start_server "127.0.0.1", 8081, EchoServer
-}
-</PRE>
-
-<P>
-<PRE>
-[~/ruby/eventmachine/simple_server]$ cat Rakefile 
-task :default =&gt; :server
-
-desc "run server"
-task :server do
- sh "ruby server.rb"
-end
-
-SERVER = "127.0.0.1 8081"
-M = %q{
-And now, the end is near 
-And so I face the final curtain 
-My friend, I'll say it clear 
-I'll state my case, of which I'm certain 
-I've lived a life that's full 
-I traveled each and ev'ry highway 
-And more, much more than this, I did it my way 
-quit
-}.split(/\n+/)
-
-desc "run a client"
-task :client do
-  IO.popen("telnet #{SERVER}", "r+", 
-           :external_encoding=&gt;"utf-8", 
-           :err=&gt;[:child, :out]) do |chan|
-    3.times do
-      output = chan.gets
-      puts "SERVER says: #{output}"
-    end
-
-    M.each do |line|
-      puts "client dending #{line}"
-      chan.puts line
-      output = chan.gets
-      puts "SERVER says: #{output}"
-    end
-  end # popen
-end
-</PRE>
-
-<P>
-<PRE>
-[~/ruby/eventmachine/simple_server]$ rake
-ruby server.rb
-</PRE>
-
-<P>
-<PRE>
-[~/ruby/eventmachine/simple_server]$ rake client
-SERVER says: Trying 127.0.0.1...
-SERVER says: Connected to localhost.
-SERVER says: Escape character is '^]'.
-client dending 
-SERVER says: &gt;&gt;&gt;you sent: 
-client dending And now, the end is near 
-SERVER says: &gt;&gt;&gt;you sent: And now, the end is near 
-client dending And so I face the final curtain 
-SERVER says: &gt;&gt;&gt;you sent: And so I face the final curtain &gt;&gt;&gt;you sent: 
-client dending My friend, I'll say it clear 
-SERVER says: &gt;&gt;&gt;you sent: My friend, I'll say it clear 
-client dending I'll state my case, of which I'm certain 
-SERVER says: &gt;&gt;&gt;you sent: I'll state my case, of which I'm certain 
-client dending I've lived a life that's full 
-SERVER says: &gt;&gt;&gt;you sent: I've lived a life that's full &gt;&gt;&gt;you sent: 
-client dending I traveled each and ev'ry highway 
-SERVER says: &gt;&gt;&gt;you sent: I traveled each and ev'ry highway 
-client dending And more, much more than this, I did it my way 
-SERVER says: &gt;&gt;&gt;you sent: And more, much more than this, I did it my way 
-client dending quit
-SERVER says: Connection closed by foreign host.
-</PRE>
-
-<P>
-<PRE>
-[~/ruby/eventmachine/simple_server]$ rake
-ruby server.rb
--- someone connected to the echo server!
-received 
-received And now, the end is near 
-received And so I face the final curtain 
-received 
-received My friend, I'll say it clear 
-received I'll state my case, of which I'm certain 
-received I've lived a life that's full 
-received 
-received I traveled each and ev'ry highway 
-received And more, much more than this, I did it my way 
-received quit
--- someone disconnected from the echo server!
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021031010000000000000">
-callback y errback</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/eventmachine/simple(master)]$ cat callback_errback.rb 
-require 'rubygems'
-require 'eventmachine'
-require 'em-http'
-
-urls = ARGV 
-if urls.size &lt; 1
-  puts "Usage: #{$0} &lt;url&gt; &lt;url&gt; &lt;...&gt;"
-  exit
-end
-
-pending = urls.size
-
-EM.run do
-  urls.each do |url|
-    http = EM::HttpRequest.new(url).get
-    http.callback {
-      puts "#{url}\n#{http.response_header.status} - #{http.response.length} bytes\n"
-      puts http.response
-
-      pending -= 1
-      EM.stop if pending &lt; 1
-    }
-    http.errback {
-      puts "#{url}\n" + http.error
-
-      pending -= 1
-      EM.stop if pending &lt; 1
-    }
+ 
+  def test_typecheck
+    assert_raise( RuntimeError ) { SimpleNumber.new('a') }
   end
+ 
+  def test_failure
+    assert_equal(3, SimpleNumber.new(2).add(2), "Adding doesn't work" )
+  end
+ 
 end
 </PRE>
 
 <P>
 <PRE>
-[~/ruby/eventmachine/simple(master)]$ ruby callback_errback.rb 'http://www.google.com'
-http://www.google.com
-302 - 258 bytes
-&lt;HTML&gt;&lt;HEAD&gt;&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
-&lt;TITLE&gt;302 Moved&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;
-&lt;H1&gt;302 Moved&lt;/H1&gt;
-The document has moved
-&lt;A HREF="http://www.google.es/?gws_rd=cr&amp;amp;ei=x2OSUtLYD4aatQb-74GgCQ"&gt;here&lt;/A&gt;.
-&lt;/BODY&gt;&lt;/HTML&gt;
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat Rakefile 
+desc "Test class SimpleNumber"
+task :test do
+  sh "ruby -Ilib -Itest test/tc_simple_number.rb"
+end
+
+desc "Test with test/tc_simple_number2.rb. Expect failures"
+task :test2 do
+  sh "ruby -Ilib -Itest test/tc_simple_number2.rb"
+end
 </PRE>
 
 <P>
-<BR><HR>
+<PRE>
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ rake test2
+ruby -Ilib -Itest test/tc_simple_number2.rb
+Run options: 
+
+# Running tests:
+
+F..
+
+Finished tests in 0.001706s, 1758.4994 tests/s, 2344.6659 assertions/s.
+
+  1) Failure:
+test_failure(TestSimpleNumber) [test/tc_simple_number2.rb:18]:
+Adding doesn't work.
+&lt;3&gt; expected but was
+&lt;4&gt;.
+
+3 tests, 4 assertions, 1 failures, 0 errors, 0 skips
+rake aborted!
+Command failed with status (1): [ruby -Ilib -Itest test/tc_simple_number2.r...]
+/Users/casiano/local/src/ruby/LPP/unit_testing/simple_example/Rakefile:8:in `block in &lt;top (required)&gt;'
+/Users/casiano/.rvm/gems/ruby-1.9.3-p392/bin/ruby_noexec_wrapper:14:in `eval'
+/Users/casiano/.rvm/gems/ruby-1.9.3-p392/bin/ruby_noexec_wrapper:14:in `&lt;main&gt;'
+Tasks: TOP =&gt; test2
+(See full trace by running task with --trace)
+</PRE>
+
+<OL>
+<LI>Now there are three tests (three member functions) in the class.
+
+<P>
+</LI>
+<LI>The function <code>test_typecheck</code> uses <code>assert_raise</code> to check for an
+exception. 
+
+<P>
+</LI>
+<LI>The function <code>test_failure</code> is set up to fail, which the
+Ruby output happily points out, not only telling us which test
+failed, but how it failed (<code>expected &lt;3&gt; but was &lt;4&gt;</code>). 
+
+<P>
+</LI>
+<LI>On this
+assertion, we've also added an final parameters which is a custom
+error message. It's strictly optional but can be helpful for
+debugging. 
+
+<P>
+</LI>
+<LI>All of the assertions include their own error messages
+which are usually sufficient for simple debugging.
+</LI>
+</OL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html7718"
+  HREF="node287.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7712"
+  HREF="node284.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7706"
+  HREF="node285.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html7714"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html7716"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html7719"
+  HREF="node287.html">Organizando las pruebas</A>
+<B> Subir:</B> <A NAME="tex2html7713"
+  HREF="node284.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7707"
+  HREF="node285.html">Ejemplo Sencillo de uso</A>
+ &nbsp; <B>  <A NAME="tex2html7715"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7717"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

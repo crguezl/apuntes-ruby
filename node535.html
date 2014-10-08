@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Carga desde Carpetas node_modules</TITLE>
-<META NAME="description" CONTENT="Carga desde Carpetas node_modules">
+<TITLE>Usando REPL desde un programa</TITLE>
+<META NAME="description" CONTENT="Usando REPL desde un programa">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node536.html">
 <LINK REL="previous" HREF="node534.html">
-<LINK REL="up" HREF="node531.html">
+<LINK REL="up" HREF="node532.html">
 <LINK REL="next" HREF="node536.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12107"
+<A NAME="tex2html12151"
   HREF="node536.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12101"
-  HREF="node531.html">
+<A NAME="tex2html12145"
+  HREF="node532.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12095"
+<A NAME="tex2html12139"
   HREF="node534.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12103"
-  HREF="node783.html">
+<A NAME="tex2html12147"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12105"
-  HREF="node786.html">
+<A NAME="tex2html12149"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,73 +92,136 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12108"
-  HREF="node536.html">Las Carpetas Usadas Como</A>
-<B> Subir:</B> <A NAME="tex2html12102"
-  HREF="node531.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html12096"
-  HREF="node534.html">Especificación de Ficheros Conteniendo</A>
- &nbsp; <B>  <A NAME="tex2html12104"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12106"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12152"
+  HREF="node536.html">Usando REPL via un</A>
+<B> Subir:</B> <A NAME="tex2html12146"
+  HREF="node532.html">JavaScript en el Lado</A>
+<B> Anterior:</B> <A NAME="tex2html12140"
+  HREF="node534.html">Primeros Pasos. Un Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html12148"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12150"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04584000000000000000">
-Carga desde Carpetas <TT>node_modules</TT></A>
-</H2>
+<H1><A NAME="SECTION04530000000000000000">
+Usando REPL desde un programa</A>
+</H1>
+
+<P>
+Es posible crear un bucle REPL en cualquier punto de nuestro programa - quizá para depurarlo.
+Para ello usamos la función 
+ <TT>repl.start</TT> .
+Esta función retorna una instancia REPLServer. Acepta como argumento un objeto
+<code>options</code> que toma los siguientes valores:
 
 <P>
 
 <OL>
-<LI>If the module identifier passed to <code>require()</code> is not a native module,
-and does not begin with <code>'/'</code>, <code>'../'</code>, or <code>'./'</code>, then node starts at the
-parent directory of the current module, and adds <code>/node_mo1dules</code>, and
-attempts to load the module from that location.
-
-<P>
+<LI><code>prompt</code> - the prompt and stream for all I/O. Defaults to &gt; .
 </LI>
-<LI>If it is not found there, then it moves to the parent directory, and so
-on, until the root of the tree is reached.
+<LI><code>input</code> - the readable stream to listen to. Defaults to process.stdin.
+</LI>
+<LI><code>output</code> - the writable stream to write readline data to. Defaults to process.stdout.
+</LI>
+<LI><code>terminal</code> - pass true if the stream should be treated
+like a TTY, and have ANSI/VT100 escape codes written to it. Defaults
+to checking isTTY on the output stream upon instantiation.
+</LI>
+<LI><code>eval</code> - function that will be used to eval each given
+line. Defaults to an async wrapper for eval(). 
+</LI>
+<LI><code>useColors</code> - a boolean which specifies whether or not
+the writer function should output colors. If a different writer
+function is set then this does nothing. Defaults to the repl's
+terminal value.
+</LI>
+<LI><code>useGlobal</code> - if set to true, then the repl will use the
+global object, instead of running scripts in a separate context.
+Defaults to false.
+</LI>
+<LI><code>ignoreUndefined</code> - if set to true, then the repl will
+not output the return value of command if it's undefined. Defaults
+to false.
+</LI>
+<LI><code>writer</code> - the function to invoke for each command that
+gets evaluated which returns the formatting (including coloring)
+to display. Defaults to util.inspect.
 </LI>
 </OL>
 
 <P>
-For example, if the file at <code>'/home/ry/projects/foo.js'</code> called
-require(<code>'bar.js'</code>), then node would look in the following locations,
-in this order:
-
-<P>
 <PRE>
-/home/ry/projects/node_modules/bar.js
-/home/ry/node_modules/bar.js
-/home/node_modules/bar.js
-/node_modules/bar.js
+[~/Dropbox/src/javascript/node.js/repl(master)]$ cat repl.js 
+var repl = require("repl");
+
+connections = 0;
+
+repl.start({
+  prompt: "node via stdin&gt; ",
+  input: process.stdin,
+  output: process.stdout
+});
 </PRE>
 
 <P>
-This allows programs to localize their dependencies, so that they do not clash.
+<PRE>
+[~/Dropbox/src/javascript/node.js/repl(master)]$ node repl.js 
+node via stdin&gt; 2+3
+5
+node via stdin&gt; .exit
+</PRE>
+
+<P>
+el bucle REPL proporciona acceso a las variables de ámbito global. Es posible
+hacer explícitamente visible una variable al REPL asignándosela al
+<code>context</code> asociado con el
+REPLServer. Por ejemplo:
+
+<P>
+<PRE>
+[~/Dropbox/src/javascript/node.js/repl(master)]$ cat repl2.js 
+var repl = require("repl");
+
+z = 4
+repl.start({
+  prompt: "node via stdin&gt; ",
+  input: process.stdin,
+  output: process.stdout
+}).context.m = "message";
+</PRE>
+Las variables en el objeto <code>context</code> se ven como locales 
+al  REPL:
+
+<P>
+<PRE>
+[~/Dropbox/src/javascript/node.js/repl(master)]$ node repl2.js 
+node via stdin&gt; z
+4
+node via stdin&gt; m
+'message'
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12107"
+<A NAME="tex2html12151"
   HREF="node536.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12101"
-  HREF="node531.html">
+<A NAME="tex2html12145"
+  HREF="node532.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12095"
+<A NAME="tex2html12139"
   HREF="node534.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12103"
-  HREF="node783.html">
+<A NAME="tex2html12147"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12105"
-  HREF="node786.html">
+<A NAME="tex2html12149"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -209,20 +272,20 @@ This allows programs to localize their dependencies, so that they do not clash.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12108"
-  HREF="node536.html">Las Carpetas Usadas Como</A>
-<B> Subir:</B> <A NAME="tex2html12102"
-  HREF="node531.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html12096"
-  HREF="node534.html">Especificación de Ficheros Conteniendo</A>
- &nbsp; <B>  <A NAME="tex2html12104"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12106"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12152"
+  HREF="node536.html">Usando REPL via un</A>
+<B> Subir:</B> <A NAME="tex2html12146"
+  HREF="node532.html">JavaScript en el Lado</A>
+<B> Anterior:</B> <A NAME="tex2html12140"
+  HREF="node534.html">Primeros Pasos. Un Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html12148"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12150"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

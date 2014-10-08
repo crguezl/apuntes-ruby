@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Módulos</TITLE>
-<META NAME="description" CONTENT="Módulos">
+<TITLE>Herencia y Constantes</TITLE>
+<META NAME="description" CONTENT="Herencia y Constantes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node207.html">
+<LINK REL="next" HREF="node203.html">
 <LINK REL="previous" HREF="node201.html">
-<LINK REL="up" HREF="node160.html">
+<LINK REL="up" HREF="node194.html">
 <LINK REL="next" HREF="node203.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6308"
+<A NAME="tex2html6358"
   HREF="node203.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6302"
-  HREF="node160.html">
+<A NAME="tex2html6352"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6296"
+<A NAME="tex2html6346"
   HREF="node201.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6304"
-  HREF="node783.html">
+<A NAME="tex2html6354"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6306"
-  HREF="node786.html">
+<A NAME="tex2html6356"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,100 +92,98 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6309"
-  HREF="node203.html">Los Módulos como Espacios</A>
-<B> Subir:</B> <A NAME="tex2html6303"
-  HREF="node160.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6297"
-  HREF="node201.html">Práctica: Conjuntos</A>
- &nbsp; <B>  <A NAME="tex2html6305"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6307"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6359"
+  HREF="node203.html">Delegación</A>
+<B> Subir:</B> <A NAME="tex2html6353"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6347"
+  HREF="node201.html">Herencia y Variables de</A>
+ &nbsp; <B>  <A NAME="tex2html6355"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6357"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02770000000000000000"></A>
-<A NAME="section:modulos"></A>
+<H2><A NAME="SECTION02738000000000000000"></A>
+<A NAME="subsection:herenciayconstantes"></A>
 <BR>
-Módulos
-</H1>
+Herencia y Constantes
+</H2>
 
 <P>
-Modules are a way of grouping together methods, classes, and constants. 
+Las constantes son heredadas y pueden ser sobredominadas en la misma forma que los métodos.
 
 <P>
-
-<UL>
-<LI>Al igual que una clase, un <A NAME="7833"></A><SPAN  CLASS="textbf">módulo</SPAN> es una colección de métodos, constantes y variables de clase.
-</LI>
-<LI>A diferencia de una clase, un módulo no puede ser instanciado y no puede ser heredado (aunque puede ser incluído),
-</LI>
-<LI>Los módulos pueden agrupar varias clases.
-</LI>
-<LI>Los módulos tienen dos usos: como espacios de nombres y como <A NAME="tex2html389"
-  HREF="http://en.wikipedia.org/wiki/Mixin">mixins</A>
-</LI>
-<LI>Los módulos son objetos de la clase <code>Module</code>
-</LI>
-<LI><code>Class</code> es una subclase de <code>Module</code>
-</LI>
-</UL>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n  InheritanceAndConstants.rb 
+     1  class Point
+     2    def initialize(x,y)
+     3      @x,@y = x, y
+     4    end
+     5  
+     6    ORIGIN = Point.new(0,0)   
+     7  
+     8    def to_s;  "#@x #@y" end
+     9  
+    10    def chuchu
+    11      puts ORIGIN
+    12    end
+    13  end
+    14  
+    15  class Point3D &lt; Point
+    16    def initialize(x, y, z)
+    17      super(x, y); @z = z
+    18    end
+    19    def to_s; super+" #@z" end
+    20  
+    21    puts ORIGIN                  # 0 0
+    22    ORIGIN = Point3D.new(0, 0, 0)
+    23    puts ORIGIN                  # 0 0 0
+    24    puts Point::ORIGIN           # 0 0
+    25  
+    26  end
+    27  
+    28  x = Point3D.new(1, 2, 3)
+    29  x.chuchu                       # 0 0
+</PRE>
+Obsérvese como la llamada al método <code>chuchu</code>
+de la línea 29  muestra <code>Point::ORIGIN</code> y no
+<code>Point3D::ORIGIN</code>:
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby InheritanceAndConstants.rb 
+0 0                 # linea 21
+0 0 0               #       23
+0 0                 #       24
+0 0                 #       29
+</PRE>
+<SPAN  CLASS="textbf">La diferencia entre constantes y métodos es que las constantes se buscan en el ámbito 
+léxico del lugar en el que son usadas antes de mirar en la jerarquía de herencia</SPAN>.
+Esto significa que si <code>Point3D</code> hereda de 
+<code>Point</code> métodos que usan la constante <code>ORIGIN</code>, la conducta de dichos métodos no cambia 
+cuando <code>Point3D</code> define su propia constante <code>ORIGIN</code>.
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6310"
-  HREF="node203.html">Los Módulos como Espacios de Nombres</A>
-<UL>
-<LI><A NAME="tex2html6311"
-  HREF="node203.html#SECTION02771100000000000000">Ejemplo Simple</A>
-<LI><A NAME="tex2html6312"
-  HREF="node203.html#SECTION02771200000000000000">Ejemplo: Codificar y Decodificar Datos Usando Base64</A>
-<LI><A NAME="tex2html6313"
-  HREF="node203.html#SECTION02771300000000000000">Espacios de Nombres Anidados</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6314"
-  HREF="node204.html">Los Módulos como Mixins</A>
-<UL>
-<LI><A NAME="tex2html6315"
-  HREF="node204.html#SECTION02772100000000000000">Variables de Instancia en Mixins</A>
-<LI><A NAME="tex2html6316"
-  HREF="node204.html#SECTION02772200000000000000">Colisiones</A>
-<LI><A NAME="tex2html6317"
-  HREF="node204.html#SECTION02772300000000000000">Composición frente a Herencia/Composition versus Inheritance</A>
-<LI><A NAME="tex2html6318"
-  HREF="node204.html#SECTION02772400000000000000">extend</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6319"
-  HREF="node205.html">Ejemplo</A>
-<LI><A NAME="tex2html6320"
-  HREF="node206.html">Módulos Espacio de Nombres Incluíbles</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6308"
+<A NAME="tex2html6358"
   HREF="node203.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6302"
-  HREF="node160.html">
+<A NAME="tex2html6352"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6296"
+<A NAME="tex2html6346"
   HREF="node201.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6304"
-  HREF="node783.html">
+<A NAME="tex2html6354"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6306"
-  HREF="node786.html">
+<A NAME="tex2html6356"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -236,20 +234,20 @@ Modules are a way of grouping together methods, classes, and constants.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6309"
-  HREF="node203.html">Los Módulos como Espacios</A>
-<B> Subir:</B> <A NAME="tex2html6303"
-  HREF="node160.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6297"
-  HREF="node201.html">Práctica: Conjuntos</A>
- &nbsp; <B>  <A NAME="tex2html6305"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6307"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6359"
+  HREF="node203.html">Delegación</A>
+<B> Subir:</B> <A NAME="tex2html6353"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6347"
+  HREF="node201.html">Herencia y Variables de</A>
+ &nbsp; <B>  <A NAME="tex2html6355"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6357"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

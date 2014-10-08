@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>ostruct</TITLE>
-<META NAME="description" CONTENT="ostruct">
+<TITLE>Configuring Apache</TITLE>
+<META NAME="description" CONTENT="Configuring Apache">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node762.html">
 <LINK REL="previous" HREF="node760.html">
-<LINK REL="up" HREF="node578.html">
+<LINK REL="up" HREF="node760.html">
 <LINK REL="next" HREF="node762.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15819"
+<A NAME="tex2html15871"
   HREF="node762.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15813"
-  HREF="node578.html">
+<A NAME="tex2html15865"
+  HREF="node760.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15807"
+<A NAME="tex2html15859"
   HREF="node760.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15815"
-  HREF="node783.html">
+<A NAME="tex2html15867"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15817"
-  HREF="node786.html">
+<A NAME="tex2html15869"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,90 +92,167 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15820"
-  HREF="node762.html">flickr</A>
-<B> Subir:</B> <A NAME="tex2html15814"
-  HREF="node578.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html15808"
-  HREF="node760.html">Ruport</A>
- &nbsp; <B>  <A NAME="tex2html15816"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15818"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15872"
+  HREF="node762.html">PHP</A>
+<B> Subir:</B> <A NAME="tex2html15866"
+  HREF="node760.html">Apache en Mac OS</A>
+<B> Anterior:</B> <A NAME="tex2html15860"
+  HREF="node760.html">Apache en Mac OS</A>
+ &nbsp; <B>  <A NAME="tex2html15868"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15870"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION063900000000000000000">
-ostruct</A>
-</H1>
+<H2><A NAME="SECTION063411000000000000000">
+Configuring Apache</A>
+</H2>
+
+<OL>
+<LI>The default system document root is still found at - 
+<code>http://localhost/</code>
+The files are shared in the filing system at -  
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n ostruct.rb 
-     1  require 'ostruct'
-     2  
-     3  alu = OpenStruct.new
-     4  alu.nombre = "Jose"
-     5  alu.apellidos = "Rodriguez Quintero"
-     6  alu.edad = 97
-     7  alu.calificacion = 10
-     8  
-     9  puts alu
+/Library/WebServer/Documents/
 </PRE>
+</LI>
+<LI>The other web root directory which is missing by default is the
+<code>~/Sites</code> folder in the User account. 
+
+<P>
+</LI>
+<LI>Check that you have a <code>username.conf</code> filed under:
+<PRE>
+/etc/apache2/users/
+</PRE>
+If you don’t (very likely), then create one named by the short
+username of the account with the suffix <code>.conf</code>, it's location and
+permissions/ownership is best tackled by using the Terminal:
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ ruby ostruct.rb 
-#&lt;OpenStruct nombre="Jose", apellidos="Rodriguez Quintero", edad=97, calificacion=10&gt;
+[~/LPPbook(master)]$ ls -l /etc/apache2/users/
+total 40
+-rw-r--r--  1 root  wheel  143 15 feb  2010 casiano.conf
 </PRE>
+
+<P>
+</LI>
+<LI><PRE>
+[~/LPPbook(master)]$ cat /etc/apache2/users/casiano.conf 
+&lt;Directory "/Users/casiano/Sites/"&gt;
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+&lt;/Directory&gt;
+</PRE>
+</LI>
+<LI>Permissions on the file should be:
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n my_ostruct.rb 
-     1  class MyOpenStruct
-     2    def initialize(h = {})
-     3      @attrs = h
-     4    end
-     5  
-     6    def method_missing(name, *args)
-     7      attr = name.to_s
-     8      if attr =~ /=$/
-     9        @attrs[attr.chop] = args[0]
-    10      else
-    11        @attrs[attr]
-    12      end
-    13    end
-    14  
-    15    def to_s
-    16      self.inspect
-    17    end
-    18  end
-    19  
-    20  alu = MyOpenStruct.new
-    21  alu.nombre = "Jose"
-    22  alu.apellidos = "Rodriguez Quintero"
-    23  alu.edad = 97
-    24  alu.calificacion =  10
-    25  
-    26  puts alu.nombre
-    27  puts alu.edad
-    28  puts alu.calificacion
-    29  puts alu
+-rw-r--r--   1 root  wheel  298 Jun 28 16:47 username.conf
 </PRE>
+</LI>
+<LI>Restart Apache for the new file to be read:
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ ruby my_ostruct.rb 
-Jose
-97
-10
-#&lt;MyOpenStruct:0x10016a408 @attrs={"nombre"=&gt;"Jose", "calificacion"=&gt;10, "edad"=&gt;97, "apellidos"=&gt;"Rodriguez Quintero"}&gt;
+sudo apachectl restart
 </PRE>
+</LI>
+<LI>Then this user level document root will be viewable at:
+<PRE>
+http://localhost/~username/
+</PRE>
+</LI>
+</OL>
 
 <P>
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15871"
+  HREF="node762.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15865"
+  HREF="node760.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15859"
+  HREF="node760.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html15867"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html15869"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html15872"
+  HREF="node762.html">PHP</A>
+<B> Subir:</B> <A NAME="tex2html15866"
+  HREF="node760.html">Apache en Mac OS</A>
+<B> Anterior:</B> <A NAME="tex2html15860"
+  HREF="node760.html">Apache en Mac OS</A>
+ &nbsp; <B>  <A NAME="tex2html15868"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15870"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

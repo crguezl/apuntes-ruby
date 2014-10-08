@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Depurando una Ejecución con Ruby</TITLE>
-<META NAME="description" CONTENT="Depurando una Ejecución con Ruby">
+<TITLE>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</TITLE>
+<META NAME="description" CONTENT="Configurando la Base de Datos en Heroku con DataMapper. Despliegue">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,27 +20,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="previous" HREF="node480.html">
-<LINK REL="up" HREF="node480.html">
+<LINK REL="up" HREF="node477.html">
 <LINK REL="next" HREF="node482.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11156"
+<A NAME="tex2html11213"
   HREF="node482.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11150"
-  HREF="node480.html">
+<A NAME="tex2html11207"
+  HREF="node477.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11146"
+<A NAME="tex2html11203"
   HREF="node480.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11152"
-  HREF="node783.html">
+<A NAME="tex2html11209"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11154"
-  HREF="node786.html">
+<A NAME="tex2html11211"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,154 +91,195 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11157"
-  HREF="node482.html">Despliegue en Heroku</A>
-<B> Subir:</B> <A NAME="tex2html11151"
-  HREF="node480.html">Depuración en Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11147"
-  HREF="node480.html">Depuración en Sinatra</A>
- &nbsp; <B>  <A NAME="tex2html11153"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11155"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11214"
+  HREF="node482.html">Sequel y Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html11208"
+  HREF="node477.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html11204"
+  HREF="node480.html">Ejemplo de Uso de</A>
+ &nbsp; <B>  <A NAME="tex2html11210"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11212"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION032110000000000000000"></A>
-<A NAME="section:depuracionsinatra"></A>
-<BR>
-Depurando una Ejecución con Ruby
+<H1><A NAME="SECTION031640000000000000000">
+Configurando la Base de Datos en Heroku con DataMapper. Despliegue</A>
 </H1>
 
 <P>
-<PRE>
-[~/sinatra/sinatra-debug/example1]$ ls 
-Gemfile           Rakefile          my_sinatra.rb
-Gemfile.lock      config.ru         rackmiddleware.rb
-</PRE>
+<A NAME="tex2html1127"
+  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A> utiliza la base de datos PostgreSQL y una URL en una variable 
+de entorno <code>ENV['DATABASE_URL']</code>.
 
 <P>
 <PRE>
-[~/sinatra/sinatra-debug/example1]$ cat Gemfile
-source 'http://rubygems.org'
+configure :development do
+  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
+end
 
-group :development, :test do
-  gem 'awesome_print'
-  gem 'racksh'
-  gem 'debugger'
-  gem 'pry'
-  gem 'pry-debugger'
+configure :production do
+  DataMapper.setup(:default, ENV['DATABASE_URL'])
+end
+</PRE>
+
+<P>
+Estas líneas especifican que se usa SQLite en desarrollo y PostgreSQL en producción.
+Obsérvese que el <code>Gemfile</code> debe estar coherente:
+<PRE>
+[~/sinatra/sinatra-datamapper-jump-start(master)]$ cat Gemfile
+source 'https://rubygems.org'
+gem "sinatra"
+gem "slim"
+gem "sass"
+gem "dm-core"
+gem "dm-migrations"
+gem "thin"
+gem "pg", :group =&gt; :production
+gem "dm-postgres-adapter", :group =&gt; :production
+gem "dm-sqlite-adapter", :group =&gt; :development
+</PRE>
+o mejor:
+<PRE>
+group :production do
+    gem "pg"
+    gem "dm-postgres-adapter"
 end
 </PRE>
 
 <P>
 <PRE>
-[~/sinatra/sinatra-debug/example1]$ cat my_sinatra.rb 
-# my_sinatra.rb
-require 'debugger'
-require 'sinatra'
-require './rackmiddleware'
-use RackMiddleware
-get '/:p' do |x|
-   # debugger
-  "Welcome to #{x}"
-end
+heroku create ...
 </PRE>
 
 <P>
 <PRE>
-[~/sinatra/sinatra-debug/example1]$ cat rackmiddleware.rb 
-class RackMiddleware
-  def initialize(appl)
-    @appl = appl
-  end
-
-  def call(env)
-    debugger
-    start = Time.now
-    status, headers, body = @appl.call(env) # call our Sinatra app
-    stop = Time.now
-    puts "Response Time: #{stop-start}" # display on console
-    [status, headers, body]
-  end
-end
+git push heroku master
 </PRE>
 
 <P>
 <PRE>
-[~/sinatra/sinatra-debug/example1]$ ruby my_sinatra.rb 
-== Sinatra/1.4.3 has taken the stage on 4567 for development with backup from Thin
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on localhost:4567, CTRL+C to stop
+heroku open
 </PRE>
 
 <P>
-Al conectar al servidor queda en espera:
 <PRE>
-[~/sinatra/sinatra-debug]$ curl 'http://localhost:4567/canarias'
+heroku logs --source app
 </PRE>
 
 <P>
-En la otra terminal el servidor se detiene en el primer breakpoint señalado:
+Ahora ejecutamos la consola de heroku:
+
+<P>
 <PRE>
-[~/sinatra/sinatra-debug/example1]$ ruby my_sinatra.rb 
-== Sinatra/1.4.3 has taken the stage on 4567 for development with backup from Thin
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on localhost:4567, CTRL+C to stop
-/Users/casiano/Dropbox/src/ruby/sinatra/sinatra-debug/example1/rackmiddleware.rb:8
-start = Time.now
-
-[3, 12] in /Users/casiano/Dropbox/src/ruby/sinatra/sinatra-debug/example1/rackmiddleware.rb
-   3      @appl = appl
-   4    end
-   5  
-   6    def call(env)
-   7      debugger
-=&gt; 8      start = Time.now
-   9      status, headers, body = @appl.call(env) # call our Sinatra app
-   10      stop = Time.now
-   11      puts "Response Time: #{stop-start}" # display on console
-   12      [status, headers, body]
+heroku run console
 </PRE>
+lo que nos abre una sesión <code>irb</code>.
 
 <P>
-Ahora podemos ir paso a paso e inspeccionar variables:
+Ahora creamos la base de datos en <A NAME="tex2html1128"
+  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>:
 <PRE>
-(rdb:1) p start
-2013-07-04 15:40:11 +0100
-(rdb:1) n
-/Users/casiano/Dropbox/src/ruby/sinatra/sinatra-debug/example1/rackmiddleware.rb:10
-stop = Time.now
-
-[5, 14] in /Users/casiano/Dropbox/src/ruby/sinatra/sinatra-debug/example1/rackmiddleware.rb
-   5  
-   6    def call(env)
-   7      debugger
-   8      start = Time.now
-   9      status, headers, body = @appl.call(env) # call our Sinatra app
-=&gt; 10      stop = Time.now
-   11      puts "Response Time: #{stop-start}" # display on console
-   12      [status, headers, body]
-   13    end
-   14  end
-(rdb:1) p body
-["Welcome to canarias"]
-(rdb:1) p status
-200
-(rdb:1) p headers
-{"Content-Type"=&gt;"text/html;charset=utf-8", "Content-Length"=&gt;"19"}
+[~/sinatra/sinatra-datamapper-jump-start(master)]$ heroku run console
+Running `console` attached to terminal... up, run.8011
+irb(main):001:0&gt; require './main'
+=&gt; true
+irb(main):002:0&gt; DataMapper.auto_migrate!
+=&gt; #&lt;DataMapper::DescendantSet:0x007fb89c878230 @descendants=#&lt;DataMapper::SubjectSet:0x007fb89c8781b8 @entries=#&lt;DataMapper::OrderedSet:0x007fb89c878190 @cache=#&lt;DataMapper::SubjectSet::NameCache:0x007fb89c878168 @cache={"Song"=&gt;0}&gt;, @entries=[Song]&gt;&gt;&gt;
+irb(main):003:0&gt;
 </PRE>
+Véase también 
+la practica TicTacToe
+<A HREF="node424.html#practica:ticatactoe">27.29</A>
+y
+el capítulo <I>Despliegue en Heroku</I> 
+<A HREF="node491.html#chapter:despliegueenheroku">46</A>.
+.
 
 <P>
 
-<P>
-<BR><HR>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11213"
+  HREF="node482.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11207"
+  HREF="node477.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11203"
+  HREF="node480.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html11209"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html11211"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html11214"
+  HREF="node482.html">Sequel y Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html11208"
+  HREF="node477.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html11204"
+  HREF="node480.html">Ejemplo de Uso de</A>
+ &nbsp; <B>  <A NAME="tex2html11210"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11212"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

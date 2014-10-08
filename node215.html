@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Búsqueda por Métodos</TITLE>
-<META NAME="description" CONTENT="La Búsqueda por Métodos">
+<TITLE>Módulos Espacio de Nombres Incluíbles</TITLE>
+<META NAME="description" CONTENT="Módulos Espacio de Nombres Incluíbles">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node216.html">
 <LINK REL="previous" HREF="node214.html">
-<LINK REL="up" HREF="node160.html">
+<LINK REL="up" HREF="node211.html">
 <LINK REL="next" HREF="node216.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6510"
+<A NAME="tex2html6563"
   HREF="node216.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6504"
-  HREF="node160.html">
+<A NAME="tex2html6557"
+  HREF="node211.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6498"
+<A NAME="tex2html6553"
   HREF="node214.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6506"
-  HREF="node783.html">
+<A NAME="tex2html6559"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6508"
-  HREF="node786.html">
+<A NAME="tex2html6561"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,148 +91,105 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6511"
-  HREF="node216.html">Búsqueda de Métodos de</A>
-<B> Subir:</B> <A NAME="tex2html6505"
-  HREF="node160.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6499"
-  HREF="node214.html">Los Métodos Singleton y</A>
- &nbsp; <B>  <A NAME="tex2html6507"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6509"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6564"
+  HREF="node216.html">Prepend</A>
+<B> Subir:</B> <A NAME="tex2html6558"
+  HREF="node211.html">Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6554"
+  HREF="node214.html">Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html6560"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6562"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION027130000000000000000"></A>
-<A NAME="section:la_busqueda_por_metodos"></A>
+<H2><A NAME="SECTION02774000000000000000"></A>
+<A NAME="subsection:modulosespaciodenombresincluibles"></A>
 <BR>
-La Búsqueda por Métodos
-</H1>
-
-<P>
-Cuando Ruby evalúa una expresión de invocación de un método (este proceso
-es conocido como <A NAME="7896"></A><SPAN  CLASS="textbf">method lookup</SPAN> o <A NAME="7898"></A><SPAN  CLASS="textbf">method resolution</SPAN>), por ejemplo
-<code>o.m</code> ocurren los siguientes pasos:
-
-<P>
-
-<OL>
-<LI><A NAME="item:busca_eigenclass"></A>Primero comprueba en la <A NAME="7900"></A><SPAN  CLASS="textbf">singleton class</SPAN> o <A NAME="7902"></A><SPAN  CLASS="textbf">eigenclass</SPAN> de <code>o</code> la existencia de un método <code>m</code>
-
-<P>
-</LI>
-<LI><A NAME="item:busca_clase"></A>Si no, busca en la clase de <code>o</code> por un método <code>m</code>
-
-<P>
-</LI>
-<LI><A NAME="item:busca_modulos"></A>Si no, busca en los módulos incluídos por la clase de <code>o</code>.
-Si la clase incluye mas de un módulo se buscan en orden inverso al orden en el que fueron incluídos
-
-<P>
-</LI>
-<LI>Si no, se mueve hacia arriba en la clase de herencia a la superclase.
-Los pasos
-<A HREF="#item:busca_clase">2</A>
-y
-<A HREF="#item:busca_modulos">3</A>
-se repiten para cada clase en la jerarquía de herencia hasta que todos los 
-antecesores y módulos incluídos han sido buscados.
-
-<P>
-</LI>
-<LI>Si no, se invoca a un método con nombre <A NAME="7904"></A><SPAN  CLASS="textbf">method_missing</SPAN>.
-Para encontrar dicho método se empieza en el paso
-<A HREF="#item:busca_eigenclass">1</A>.
-
-<P>
-El módulo <A NAME="tex2html400"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> provee una implementación por defecto de
-<code>method_missing</code> por lo que queda garantizado 
-el éxito de esta segunda pasada.
-</LI>
-</OL>
-
-<P>
-Let’s consider a concrete example of this algorithm. Suppose we have the following code:
+Módulos Espacio de Nombres Incluíbles
+</H2>
 <PRE>
-  message = "hello" 
-  message.world
+[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ irb
+ruby-1.9.2-head :001 &gt; Math.sin(Math::PI/2)
+ =&gt; 1.0 
+ruby-1.9.2-head :002 &gt; include Math
+ =&gt; Object 
+ruby-1.9.2-head :003 &gt; sin(PI/2)
+ =&gt; 1.0
 </PRE>
-We want to invoke a method named <code>world</code> on the String instance <code>"hello"</code>. 
-<PRE>
-[1] pry(main)&gt; String.ancestors
-=&gt; [String, Comparable, Object, PP::ObjectMixin, Kernel, BasicObject]
-</PRE>
-Name resolution proceeds as follows:
 
-<OL>
-<LI>Check the eigenclass for singleton methods. There aren’t any in this case.
+<UL>
+<LI>Para crear un módulo que funcione como <A NAME="8155"></A><SPAN  CLASS="textbf">Math</SPAN> define
+tus métodos como métodos de instancia dentro del módulo
 </LI>
-<LI>Check the <code>String</code> class. There is no instance method named <code>world</code>.
+<LI>Usa la función <code>module_function</code>, un método de instancia privado
+de <code>Module</code> para convertir en <A NAME="8157"></A><SPAN  CLASS="textbf">module functions</SPAN> a los métodos
+cuyos nombres le pases como argumentos
 </LI>
-<LI>Check the <code>Comparable</code> module of the <code>String</code> class for an instance method named <code>world</code>. 
-</LI>
-<LI>Check the superclass of <code>String</code>, which is <code>Object</code>. The <code>Object</code> class does not define a method named <code>world</code>, either.
-</LI>
-<LI>Check the <A NAME="tex2html401"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> module included by
-<code>Object</code>.
-The <code>world</code> method is not found here either, 
-so we now switch to looking for a method named <code>method_missing</code>.
-</LI>
-<LI>Look for <code>method_missing</code> in each of the spots above:
+<LI>El resultado de llamar a <A NAME="8159"></A><SPAN  CLASS="textbf">module_function</SPAN> es que: 
 
-<OL>
-<LI>the eigenclass of the <code>String</code> object, 
+<UL>
+<LI>construye métodos
+de clase equivalentes para cada uno de los métodos de instancia especificados
 </LI>
-<LI>the <code>String</code>
-class, 
+<LI>Hace privados a los métodos de instancia implicados
 </LI>
-<LI>the <code>Comparable</code> module, 
+</UL>
 </LI>
-<LI>the
-<code>Object</code> class, and the <A NAME="tex2html402"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> module
-</LI>
-</OL>
-The first definition
-of <code>method_missing</code> we find is in the <A NAME="tex2html403"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> module, so this
-is the method we invoke. What it does is raise an exception:
-<PRE>
-NoMethodError: undefined method `world' for "hello":String
-</PRE>
-</LI>
-</OL>
-This may seem like it requires Ruby to perform an exhaustive search
-every time it invokes a method. 
+</UL>
 
 <P>
-In typical implementations, however,
-successful method lookups will be cached so that subsequent lookups
-of the same name (with no intervening method definitions) will be
-very quick.
+<PRE>
+~/srcLPP/Chapter7ClassesAndModules/modules]$ cat module_function.rb 
+module SpaceOdissey
+
+  THE_UNIVERSE = 1
+
+  def tutu
+    "inside tutu"
+  end
+
+  module_function :tutu
+end
+
+puts SpaceOdissey::THE_UNIVERSE
+puts SpaceOdissey::tutu
+
+include SpaceOdissey
+puts THE_UNIVERSE
+puts tutu
+</PRE>
+Ejecución:
+<PRE>
+[~/srcLPP/Chapter7ClassesAndModules/modules]$ ruby module_function.rb 
+1
+inside tutu
+1
+inside tutu
+</PRE>
+Cuando se define una función-módulo se debe evitar hacer uso de <code>self</code>
+ya que el valor de <code>self</code> hará que dependa de como es invocada.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6510"
+<A NAME="tex2html6563"
   HREF="node216.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6504"
-  HREF="node160.html">
+<A NAME="tex2html6557"
+  HREF="node211.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6498"
+<A NAME="tex2html6553"
   HREF="node214.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6506"
-  HREF="node783.html">
+<A NAME="tex2html6559"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6508"
-  HREF="node786.html">
+<A NAME="tex2html6561"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -284,20 +240,20 @@ very quick.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6511"
-  HREF="node216.html">Búsqueda de Métodos de</A>
-<B> Subir:</B> <A NAME="tex2html6505"
-  HREF="node160.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6499"
-  HREF="node214.html">Los Métodos Singleton y</A>
- &nbsp; <B>  <A NAME="tex2html6507"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6509"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6564"
+  HREF="node216.html">Prepend</A>
+<B> Subir:</B> <A NAME="tex2html6558"
+  HREF="node211.html">Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6554"
+  HREF="node214.html">Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html6560"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6562"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

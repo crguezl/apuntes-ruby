@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Igualdad de Puntos</TITLE>
-<META NAME="description" CONTENT="Igualdad de Puntos">
+<TITLE>Inicializando un Punto</TITLE>
+<META NAME="description" CONTENT="Inicializando un Punto">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node174.html">
 <LINK REL="previous" HREF="node172.html">
-<LINK REL="up" HREF="node161.html">
+<LINK REL="up" HREF="node170.html">
 <LINK REL="next" HREF="node174.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5882"
+<A NAME="tex2html5934"
   HREF="node174.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5876"
-  HREF="node161.html">
+<A NAME="tex2html5928"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5870"
+<A NAME="tex2html5922"
   HREF="node172.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5878"
-  HREF="node783.html">
+<A NAME="tex2html5930"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5880"
-  HREF="node786.html">
+<A NAME="tex2html5932"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,138 +92,151 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5883"
-  HREF="node174.html">Ordenando Puntos</A>
-<B> Subir:</B> <A NAME="tex2html5877"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5871"
-  HREF="node172.html">Enumeración de Coordenadas</A>
- &nbsp; <B>  <A NAME="tex2html5879"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5881"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5935"
+  HREF="node174.html">Definiendo un método to_s</A>
+<B> Subir:</B> <A NAME="tex2html5929"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5923"
+  HREF="node172.html">Instanciando un Punto</A>
+ &nbsp; <B>  <A NAME="tex2html5931"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5933"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html5884"
-  HREF="node173.html#SECTION027112100000000000000"><TT>eql?</TT> y las Claves de un hash</A>
-</UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION027112000000000000000">
-Igualdad de Puntos</A>
+<H2><A NAME="SECTION02713000000000000000"></A>
+<A NAME="subsection:initialize"></A>
+<BR>
+Inicializando un Punto
 </H2>
-
-<P>
-Repáse la sección <A HREF="node62.html#section:objetos">9.8</A>.
+El método <code>initialize</code> es privado:
 
 <P>
 <PRE>
-def ==(o)               # Is self == o?
-  if o.is_a? Point      # If o is a Point object
-    @x==o.x &amp;&amp; @y==o.y  # then compare the fields.
-  elsif                 # If o is not a Point
-    false               # then, by definition, self != o.
-  end
-end
+$ cat -n calling_initialize.rb 
+     1  class Tutu
+     2    def initialize(a,b)
+     3      @a, @b = a,b
+     4    end
+     5  
+     6    def titi
+     7      initialize(2,3)
+     8    end
+     9  end
+    10  if __FILE__ == $0
+    11    x = Tutu.new(4,5)
+    12    z = x.titi()
+    13    puts z.class
+    14    puts z
+    15    x.initialize(4,2)
+    16  end
 </PRE>
 
 <P>
 <PRE>
-def ==(o)                  # Is self == o?
-  @x == o.x &amp;&amp; @y == o.y   # Assume o has proper x and y methods
-rescue                     # If that assumption fails
-  false                    # Then self != o
-end
+casiano@exthost:~/LPPsrc/151012$ ruby calling_initialize.rb 
+Array
+2
+3
+calling_initialize.rb:15:in `&lt;main&gt;': private method `initialize' called for #&lt;Tutu:0x8bb576c @a=2, @b=3&gt; (NoMethodError)
+casiano@exthost:~/LPPsrc/151012$
+</PRE>
+
+<P>
+<BLOCKQUOTE>
+The instance variables of an object can only be accessed by the
+instance methods of that object. Code that is not inside an instance
+method cannot read or set the value of an instance variable 
+
+</BLOCKQUOTE>
+
+<P>
+Aviso a los programadores Java:
+<PRE>
+casiano@exthost:~/LPPsrc/151012$ cat -n instance_variables_of_a_class.rb 
+     1  class Tutu
+     2    @x = 4
+     3    @y = 9
+     4  
+     5    def initialize(x,y)
+     6      @x, @y = x, y
+     7    end
+     8    def self.x
+     9      @x
+    10    end
+    11  
+    12    def self.y
+    13      @y
+    14    end
+    15  
+    16    def x
+    17      @x
+    18    end
+    19  
+    20    def y
+    21      @y
+    22    end
+    23  end
+    24  
+    25  if __FILE__ == $0
+    26    puts Tutu.x        # 4
+    27    puts Tutu.y        # 9
+    28    z = Tutu.new(5,7)
+    29    puts z.x           # 5
+    30    puts z.y           # 7
+    31  end
 </PRE>
 
 <P>
 <PRE>
-class Point
-  alias eql? ==
-end
+casiano@exthost:~/LPPsrc/151012$ ruby instance_variables_of_a_class.rb 
+4
+9
+5
+7
 </PRE>
 
 <P>
-<PRE>
-def eql?(o)             
-  if o.instance_of? Point      
-    @x.eql?(o.x) &amp;&amp; @y.eql?(o.y)
-  elsif
-    false
-  end
-end
-</PRE>
-
-<P>
-
-<H3><A NAME="SECTION027112100000000000000">
-<TT>eql?</TT> y las Claves de un hash</A>
-</H3>
-
-<P>
-El predicado <code>eql?</code>
-es usado por Ruby para comparar las claves de un hash.
-Por ello, si redefinimos <code>eql?</code> en nuestra clase,
-es conveniente que también definamos el método
-<code>hash</code> que es usado por Ruby para calcular el <I>hashcode</I>
-del objeto. 
-
-<P>
-Se debe cumplir siempre 
-que si dos objetos son iguales según <code>eql?</code> entonces sus hashcodes
-deben ser iguales.
-
-<P>
-No parece que sea una buena idea usar objetos mutables como índices de 
-hashes. Si es el caso, es mejor congelar el objeto
-(véase la sección <A HREF="node73.html#subsection:freezing">9.8.11</A>).
-
-<P>
-Véase  el código en 
-<A HREF="node167.html#subsection:definiendooperadores">13.1.6</A>
-
-<P>
-<PRE>
-def hash
-  @x.hash + @y.hash
-end
-</PRE>
-
-<P>
-<PRE>
-def hash
-  code = 17
-  code = 37*code + @x.hash
-  code = 37*code + @y.hash
-  # Add lines like this for each significant instance variable
-  code  # Return the resulting code
-end
-</PRE>
+<OL>
+<LI>This code does not do at all what a Java programmer expects. Instance
+variables are always resolved in the context of <code>self</code>.
+</LI>
+<LI>When the
+<code>initialize</code> method is invoked, <code>self</code> holds an instance of the <code>Tutu</code>
+class.
+</LI>
+<LI>But the code outside of that method is executed as part of
+the definition of the <code>Tutu</code> class. 
+</LI>
+<LI>When those first two assignments
+are executed, <code>self</code> refers to the <code>Tutu</code> class it<code>self</code>, not to an
+instance of the class. 
+</LI>
+<LI>The <code>@x</code> and <code>@y</code> variables inside the <code>initialize</code>
+method are completely different from those outside it.
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5882"
+<A NAME="tex2html5934"
   HREF="node174.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5876"
-  HREF="node161.html">
+<A NAME="tex2html5928"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5870"
+<A NAME="tex2html5922"
   HREF="node172.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5878"
-  HREF="node783.html">
+<A NAME="tex2html5930"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5880"
-  HREF="node786.html">
+<A NAME="tex2html5932"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -274,20 +287,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5883"
-  HREF="node174.html">Ordenando Puntos</A>
-<B> Subir:</B> <A NAME="tex2html5877"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5871"
-  HREF="node172.html">Enumeración de Coordenadas</A>
- &nbsp; <B>  <A NAME="tex2html5879"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5881"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5935"
+  HREF="node174.html">Definiendo un método to_s</A>
+<B> Subir:</B> <A NAME="tex2html5929"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5923"
+  HREF="node172.html">Instanciando un Punto</A>
+ &nbsp; <B>  <A NAME="tex2html5931"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5933"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

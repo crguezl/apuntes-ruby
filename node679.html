@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Travis en la Línea de Comandos</TITLE>
-<META NAME="description" CONTENT="Travis en la Línea de Comandos">
+<TITLE>Pessimistic version constraint</TITLE>
+<META NAME="description" CONTENT="Pessimistic version constraint">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node680.html">
 <LINK REL="previous" HREF="node678.html">
-<LINK REL="up" HREF="node673.html">
+<LINK REL="up" HREF="node665.html">
 <LINK REL="next" HREF="node680.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14569"
+<A NAME="tex2html14595"
   HREF="node680.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14563"
-  HREF="node673.html">
+<A NAME="tex2html14589"
+  HREF="node665.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14559"
+<A NAME="tex2html14583"
   HREF="node678.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14565"
-  HREF="node783.html">
+<A NAME="tex2html14591"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14567"
-  HREF="node786.html">
+<A NAME="tex2html14593"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,248 +92,157 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14570"
-  HREF="node680.html">Guard</A>
-<B> Subir:</B> <A NAME="tex2html14564"
-  HREF="node673.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html14560"
-  HREF="node678.html">Databases and other services</A>
- &nbsp; <B>  <A NAME="tex2html14566"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14568"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14596"
+  HREF="node680.html">Controlando nuestras dependencias</A>
+<B> Subir:</B> <A NAME="tex2html14590"
+  HREF="node665.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14584"
+  HREF="node678.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html14592"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14594"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061560000000000000000">
-Travis en la Línea de Comandos</A>
+<H1><A NAME="SECTION0614140000000000000000">
+Pessimistic version constraint</A>
 </H1>
-The <A NAME="tex2html1562"
-  HREF="https://rubygems.org/gems/travis">travis gem</A>
-includes both a
-<A NAME="tex2html1563"
-  HREF="https://github.com/travis-ci/travis/#command-line-client">command line client</A>
-and a 
-<A NAME="tex2html1564"
-  HREF="https://github.com/travis-ci/travis/#ruby-library">Ruby library</A>
-to interface with a Travis CI service. Both
-work with <A NAME="tex2html1565"
-  HREF="https://travis-ci.org">travis-ci.org</A>,
-<A NAME="tex2html1566"
-  HREF="https://travis-ci.com">travis-ci.com</A>
-or any custom Travis CI setup
-you might have. Check out the <A NAME="tex2html1567"
-  HREF="https://github.com/travis-ci/travis/#installation">installation instructions</A>
-to get it running in no time.
+If your gem properly follows <A NAME="26230"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
+scheme, then other Ruby developers can take advantage of this when
+choosing a version constraint to lock down your gem in their
+application.
 
 <P>
-
-<H4><A NAME="SECTION061560010000000000000">
-The Travis Client</A>
-</H4>
-  
-
-<P>
-Véase <A NAME="tex2html1568"
-  HREF="https://github.com/travis-ci/travis#command-line-client">The Travis Client</A>.
-
-<P>
-
-<H4><A NAME="SECTION061560020000000000000">
-login</A>
-</H4>
-  
-
-The <code>login</code> command 
-will ask you for your GitHub user name and password.
-
-<P>
-We can also create a GitHub token on our own and supply it via
-<code>--github-token</code>:
+Let’s say the following releases of a gem exist:
 
 <P>
 <PRE>
-$ travis login  --github-token xxxxxxxxxxxxxxxxxxxxxxxxxxxx  --pro
-Successfully logged in as crguezl!
-[~/sinatra/sinatra-number_cruncher(master)]$ travis whoami
-You are crguezl (Casiano Rodriguez-Leon)
+Version 2.1.0 — Baseline
+Version 2.2.0 — Introduced some new (backward compatible) features.
+Version 2.2.1 — Removed some bugs
+Version 2.2.2 — Streamlined your code
+Version 2.3.0 — More new features (but still backwards compatible).
+Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
 </PRE>
- Para obtener el token que usamos como argumento
-de <code>--github-token</code> nos vamos a GitHub -&gt; settings -&gt; Applications -&gt;
-Generate new token. Véase el tutorial
-<A NAME="tex2html1569"
-  HREF="https://help.github.com/articles/creating-an-access-token-for-command-line-use">Creating an access token for command-line use</A>.
+Someone who wants to use your gem has determined that 
 
-<P>
-
-<H4><A NAME="SECTION061560030000000000000">
-init</A>
-</H4>
-  
-
-<P>
-When setting up a new project, we can run <code>travis init</code> 
-to generate a <code>.travis.yml</code> and 
-<FONT COLOR="#0000ff"> enable the project</FONT>:
-<PRE>
-[~/sinatra/sinatra-number_cruncher(master)]$ travis init ruby --rvm 2.1.2 -r crguezl/number_cruncher
-.travis.yml file created!
-crguezl/number_cruncher: enabled :)
-</PRE>
-
-<P>
-A file called <code>.travis.yml</code> was created that contains information
-about our app. 
+<OL>
+<LI>version 2.2.0
+works with their software, 
+</LI>
+<LI>but version 2.1.0 doesn’t have a feature
+they need. 
+</LI>
+<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
+might look like:
 
 <P>
 <PRE>
-[~/sinatra/sinatra-number_cruncher(master)]$ cat .travis.yml
-language: ruby
-rvm: 2.1.2
+# gemspec
+spec.add_runtime_dependency 'library',
+  '&gt;= 2.2.0'
 </PRE>
+or 
+<PRE>
+# bundler
+gem 'library', '&gt;= 2.2.0'
+</PRE>
+This is an <A NAME="26232"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
 
 <P>
+It’s saying that all
+changes from <code>2.x</code> on will work with my software, 
+but for version
+<code>3.0.0</code> this will not be true.
 
-<H4><A NAME="SECTION061560040000000000000">
-Ejecutando las pruebas en Travis</A>
-</H4>
-  
+<P>
+</LI>
+<LI>The alternative here is to use <A NAME="26234"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
 
-A build on Travis is initialized when we push to our
-Github account, so do that now:
+<P>
+This explicitly excludes the version that might break your code.
 
 <P>
 <PRE>
-[~/sinatra/sinatra-number_cruncher(master)]$ git add .travis.yml Rakefile
-[~/sinatra/sinatra-number_cruncher(master)]$ git commit -am '.travis.ym added'
-[master b25b8e8] .travis.ym added
- 2 files changed, 7 insertions(+), 1 deletion(-)
-[~/sinatra/sinatra-number_cruncher(master)]$ git push origin master
-Counting objects: 7, done.
-Delta compression using up to 4 threads.
-Compressing objects: 100% (3/3), done.
-Writing objects: 100% (4/4), 466 bytes | 0 bytes/s, done.
-Total 4 (delta 2), reused 0 (delta 0)
-To git@github.com:crguezl/number_cruncher.git
-   5e51ec1..b25b8e8  master -&gt; master
+# gemspec
+spec.add_runtime_dependency 'library',
+  ['&gt;= 2.2.0', '&lt; 3.0']
 </PRE>
-
-<P>
-
-<H4><A NAME="SECTION061560050000000000000">
-show</A>
-</H4>
-  
-
-To check the status of the build, run the following command in a terminal:
+or
 
 <P>
 <PRE>
-[~/sinatra/sinatra-number_cruncher(master)]$ travis show -r crguezl/number_cruncher
-no build yet for crguezl/number_cruncher
+# bundler
+gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
 </PRE>
-Travis can take a while to run a build, so you might get a message like the one above. Let us try again:
+</LI>
+<LI><A NAME="tex2html1549"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> provides a shortcut for this, commonly known as the <A NAME="26239"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
 
 <P>
 <PRE>
-[~/sinatra/sinatra-number_cruncher(master)]$ travis show -r crguezl/number_cruncher
-Job #1.1:  .travis.ym added
-State:         passed
-Type:          push
-Branch:        master
-Compare URL:   https://github.com/crguezl/number_cruncher/compare/5e51ec1d8a3a...b25b8e8d7086
-Duration:      18 sec
-Started:       2014-09-24 17:09:38
-Finished:      2014-09-24 17:09:56
-Allow Failure: false
-Config:        rvm: 2.1.2
-[~/sinatra/sinatra-number_cruncher(master)]$
+# gemspec
+spec.add_runtime_dependency 'library',
+  '~&gt; 2.2'
 </PRE>
-This time we got confirmation that the build has passed successfully.
 
 <P>
-
-<H4><A NAME="SECTION061560060000000000000">
-logs</A>
-</H4>
-  
-
-Given a job number, <code>logs</code> simply prints out that job's logs. 
-By default it will display the first job of the latest build.
 <PRE>
-[~/sinatra/sinatra-number_cruncher(master)]$ travis logs -r crguezl/number_cruncher
-displaying logs for crguezl/number_cruncher#1.1
-Using worker: worker-linux-6-2.bb.travis-ci.org:travis-linux-2
-
-$ git clone --depth=50 --branch=master git://github.com/crguezl/number_cruncher.git crguezl/number_cruncher
-Cloning into 'crguezl/number_cruncher'...
-remote: Counting objects: 36, done.
-remote: Compressing objects: 100% (25/25), done.
-remote: Total 36 (delta 11), reused 28 (delta 7)
-Receiving objects: 100% (36/36), 4.63 KiB | 0 bytes/s, done.
-Resolving deltas: 100% (11/11), done.
-Checking connectivity... done.
-$ cd crguezl/number_cruncher
-$ git checkout -qf b25b8e8d70861b82c1399f87ebab036a180bc653
-couchdb stop/waiting
-$ rvm use 2.1.2 --install --binary --fuzzy
-.....
+# bundler
+gem 'library', '~&gt; 2.2'
 </PRE>
+Notice that we dropped the <code>PATCH</code> level of the version number. 
 
 <P>
+</LI>
+<LI>Had
+we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
+<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
 
-<H4><A NAME="SECTION061560070000000000000">
-open</A>
-</H4>
-  
+<P>
+</LI>
+<LI>If you want to allow use of newer backwards-compatible versions but
+need a specific bug fix you can use a compound requirement:
 
+<P>
 <PRE>
-travis open -r crguezl/number_cruncher
+# gemspec
+spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
 </PRE>
-Opens the project view in the Travis CI web interface.
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+# bundler
+gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+</PRE>
+</LI>
+<LI>The important note to take home here is to be aware others will be
+using your gems, so guard yourself from potential bugs/failures in
+future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
+if at all possible.
+</LI>
+</OL>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html14571"
-  HREF="node679.html#SECTION061560010000000000000">The Travis Client</A>
-<LI><A NAME="tex2html14572"
-  HREF="node679.html#SECTION061560020000000000000">login</A>
-<LI><A NAME="tex2html14573"
-  HREF="node679.html#SECTION061560030000000000000">init</A>
-<LI><A NAME="tex2html14574"
-  HREF="node679.html#SECTION061560040000000000000">Ejecutando las pruebas en Travis</A>
-<LI><A NAME="tex2html14575"
-  HREF="node679.html#SECTION061560050000000000000">show</A>
-<LI><A NAME="tex2html14576"
-  HREF="node679.html#SECTION061560060000000000000">logs</A>
-<LI><A NAME="tex2html14577"
-  HREF="node679.html#SECTION061560070000000000000">open</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14569"
+<A NAME="tex2html14595"
   HREF="node680.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14563"
-  HREF="node673.html">
+<A NAME="tex2html14589"
+  HREF="node665.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14559"
+<A NAME="tex2html14583"
   HREF="node678.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14565"
-  HREF="node783.html">
+<A NAME="tex2html14591"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14567"
-  HREF="node786.html">
+<A NAME="tex2html14593"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -383,20 +293,20 @@ Opens the project view in the Travis CI web interface.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14570"
-  HREF="node680.html">Guard</A>
-<B> Subir:</B> <A NAME="tex2html14564"
-  HREF="node673.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html14560"
-  HREF="node678.html">Databases and other services</A>
- &nbsp; <B>  <A NAME="tex2html14566"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14568"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14596"
+  HREF="node680.html">Controlando nuestras dependencias</A>
+<B> Subir:</B> <A NAME="tex2html14590"
+  HREF="node665.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14584"
+  HREF="node678.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html14592"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14594"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

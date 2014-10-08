@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Clase Player: Un Ejemplo de Strategy Pattern</TITLE>
-<META NAME="description" CONTENT="La Clase Player: Un Ejemplo de Strategy Pattern">
+<TITLE>Los Métodos Singleton y la Singleton Class o Eigenclass</TITLE>
+<META NAME="description" CONTENT="Los Métodos Singleton y la Singleton Class o Eigenclass">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node224.html">
 <LINK REL="previous" HREF="node222.html">
-<LINK REL="up" HREF="node219.html">
+<LINK REL="up" HREF="node169.html">
 <LINK REL="next" HREF="node224.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6627"
+<A NAME="tex2html6679"
   HREF="node224.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6621"
-  HREF="node219.html">
+<A NAME="tex2html6673"
+  HREF="node169.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6615"
+<A NAME="tex2html6667"
   HREF="node222.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6623"
-  HREF="node783.html">
+<A NAME="tex2html6675"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6625"
-  HREF="node786.html">
+<A NAME="tex2html6677"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,144 +92,148 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6628"
-  HREF="node224.html">La Clase Board</A>
-<B> Subir:</B> <A NAME="tex2html6622"
-  HREF="node219.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html6616"
-  HREF="node222.html">La Clase Game</A>
- &nbsp; <B>  <A NAME="tex2html6624"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6626"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6680"
+  HREF="node224.html">La Búsqueda por Métodos</A>
+<B> Subir:</B> <A NAME="tex2html6674"
+  HREF="node169.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6668"
+  HREF="node222.html">Práctica: Matrices Dispersas</A>
+ &nbsp; <B>  <A NAME="tex2html6676"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6678"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027174000000000000000">
-La Clase Player: Un Ejemplo de <SPAN  CLASS="textbf">Strategy Pattern</SPAN></A>
-</H2>
+<H1><A NAME="SECTION027120000000000000000"></A>
+<A NAME="section:singleton_y_eigenclass"></A>
+<BR>
+Los Métodos Singleton y la Singleton Class o Eigenclass
+</H1>
 
 <P>
-El concepto de jugador es definido mediante una clase abstracta:
+Vimos en la sección <A HREF="node133.html#subsection:metodos_singleton">13.1.4</A>
+que es posible definir <SPAN  CLASS="textbf">métodos singleton, métodos
+que están definidos para un único objeto mas que para toda una clase 
+de objetos</SPAN>.
 
 <P>
 <PRE>
-module TicTacToe
-  class Player
-    def initialize( mark )
-      @mark = mark # "X" or "O" or " "
-    end
-····
-    attr_reader :mark
-····
-    def move( board )
-      raise NotImplementedError, "Player subclasses must define move()."
-    end
-····
-    def finish( final_board )··
-    end
+def Point.sum
+  # Method body goes here
+end
+</PRE>
+
+<P>
+<SPAN  CLASS="textbf">Los métodos de clase de una clase no son mas que métodos singleton de la
+instancia de la clase <TT>Class</TT> que representa a la clase</SPAN>:
+
+<P>
+
+<UL>
+<LI>Los métodos singleton de un objeto no estan definidos en la clase del objeto
+</LI>
+<LI>Dichos métodos son métodos de una clase anónima asociada con el objeto.
+Dicha clase se conoce como <A NAME="8176"></A><SPAN  CLASS="textbf">Eigenclass</SPAN>, <A NAME="8178"></A><SPAN  CLASS="textbf">Singleton Class</SPAN> o <A NAME="8180"></A><SPAN  CLASS="textbf">Metaclass</SPAN>
+</LI>
+<LI>Ruby define una sintáxis alternativa para abrir la <A NAME="8182"></A><SPAN  CLASS="textbf">singleton class</SPAN> o <A NAME="8184"></A><SPAN  CLASS="textbf">eigenclass</SPAN> de un objeto y añadirle
+métodos. Para abrir la singleton class o eigenclass del objeto <code>obj</code> usamos <code>class &lt;&lt; obj</code>. Por
+ejemplo:
+<PRE>
+class &lt;&lt; Point
+  def class_method1      # This is an instance method of the eigenclass.
+  end                    # It is also a class method of Point.
+
+  def class_method2
   end
 end
 </PRE>
-de la que heredan los jugadores concretos.
+</LI>
+<LI>Si abrimos la singleton class o 
+eigenclass de un objeto clase dentro de la definición de la misma clase
+podemos usar <code>self</code> en vez del nombre de la clase:
+<PRE>
+class Point
+  # instance methods go here
+
+  class &lt;&lt; self
+    # class methods go here as instance methods of the eigenclass
+  end
+end
+</PRE>
+</LI>
+<LI>Obsérvese las diferencias entre estas 3 líneas:
+<PRE>
+class Point            # Create or open the class Point
+class Point3D &lt; Point  # Create a subclass of Point
+class &lt;&lt; Point         # Open the eigenclass of the object Point
+</PRE>
 
 <P>
-Cada jugador es una clase. Por ejemplo, el jugador humano:
+</LI>
+<LI>Una forma de obtener la singleton class o eigenclass es:
 <PRE>
-module TicTacToe
-  class HumanPlayer &lt; Player
-    def move( board )
-      print board
-      ....
-    end
-    
-    def finish( final_board )
-      ....
-    end
-  end
-end
+eigenclass = class &lt;&lt; o; self; end
 </PRE>
-Un par de jugadores mas, uno tonto y otro listo:
+</LI>
+<LI>Pero es mas fácil llamar al método <code>singleton_class</code> definido en la clase
+<A NAME="tex2html414"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
 <PRE>
-module TicTacToe
-  class DumbPlayer &lt; Player
-    def move( board )
-      moves = board.moves
-      moves[rand(moves.size)]
-    end
-  end
+[13] pry(main)&gt; w = String.singleton_class
+=&gt; #&lt;Class:String&gt;
+[14] pry(main)&gt; r = class &lt;&lt; String; self; end
+=&gt; #&lt;Class:String&gt;
+[15] pry(main)&gt; r == w
+=&gt; true
+</PRE>
+</LI>
+<LI>El método <code>singleton_methods</code> definido en la clase <A NAME="tex2html415"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A> 
+devuelve un <A NAME="tex2html416"
+  HREF="http://ruby-doc.org/core-2.0.0/Array.html"><TT>Array</TT></A>
+con la lista de métodos singleton del objeto:
+<PRE>
+[1] pry(main)&gt; z = [1,2,3]
+=&gt; [1, 2, 3]
+[2] pry(main)&gt; z.singleton_class
+=&gt; #&lt;Class:#&lt;Array:0x007ff93a647a90&gt;&gt;
+[3] pry(main)&gt; z.singleton_methods
+=&gt; []
+[4] pry(main)&gt; def z.tutu
+[4] pry(main)*   puts "one two three"
+[4] pry(main)* end  
+=&gt; nil
+[5] pry(main)&gt; z.singleton_methods
+=&gt; [:tutu]
+[6] pry(main)&gt; z.tutu
+one two three
+=&gt; nil
+</PRE>
 
-  class SmartPlayer &lt; Player
-    def move( board )
-      ....
-    end
-  end
-end
-</PRE>
-La Banda de los Cuatro (<A NAME="7962"></A><SPAN  CLASS="textbf">The Gang of Four</SPAN> o <A NAME="7964"></A><SPAN  CLASS="textbf">GoF</SPAN>) 
-llama a esta idea de <SPAN  CLASS="textbf">implanta el algoritmo en clases separadas</SPAN> el 
-<A NAME="7966"></A><SPAN  CLASS="textbf">strategy pattern</SPAN> o <A NAME="7968"></A><SPAN  CLASS="textbf">patrón estrategia</SPAN> [<A
- HREF="node787.html#DPR">6</A>], [<A
- HREF="node787.html#GO4">7</A>].
-Esta estrategia puede aplicarse cuando ocurre que en medio de nuestra aplicación
-tenemos una parte que varía (el tipo de jugador). 
-A veces en esa parte queremos  hacer una cosa (usar el jugador <code>SmartPlayer</code>) y a veces
-otra (el jugador <code>HumanPlayer</code>). Es mas, es seguro que en el futuro se querrá
-otra cosa (¿que tal un jugador <code>MiniMaxPlayer</code>?).
-
-<OL>
-<LI>La idea clave es definir una familia de clases, las <A NAME="7970"></A><SPAN  CLASS="textbf">strategy</SPAN>
-o <A NAME="7972"></A><SPAN  CLASS="textbf">estrategias</SPAN> que hacen de distintas formas la misma cosa:
-en nuestro ejemplo son los distintos tipos de <code>Player</code> que lo
-que hacen es decidir la próxima jugada mediante  <code>move</code>.
+<P>
 </LI>
-<LI>No sólo realizan la misma tarea sino que comparten la misma interfaz definida por la
-clase <code>Player</code>.
-</LI>
-<LI>Dado que todos los objetos <A NAME="7974"></A><SPAN  CLASS="textbf">strategy</SPAN>
-tiene la misma pinta vistos desde fuera, pueden ser usados
-por el usuario de la estrategia - Al que la GoF denomina <A NAME="7976"></A><SPAN  CLASS="textbf">context</SPAN>
-o <A NAME="7978"></A><SPAN  CLASS="textbf">contexto</SPAN> - como partes intercambiables. En nuestro caso el context
-es la clase 
-<code>Game</code>, que usa los <code>Player</code>s como objetos intercambiables
-</LI>
-<LI>Al separar la clase cliente <code>Game</code> - el contexto -
-de las clases estrategia <code>Player</code>s es necesario habilitar un mecanismo 
-de comunicación entre el contexto y la estrategia. En este ejemplo se ha optado por 
-pasar  esa información - el tablero - como argumento:
-<PRE>
-  @board[@x_player.move(@board)] = @x_player.mark # dentro del método play de la clase Game
-</PRE>
-La estrategia - el jugador <code>@x_player</code> - recibe el tablero <code>@board</code> 
-y retorna su decisión - la jugada <code>@x_player.move(@board)</code> (algo como <code>"b2"</code>)
-</LI>
-<LI>Un ejemplo de uso práctico del patrón Strategy puede verse en el código de <code>rdoc</code>, 
-la herramienta que se usa en Ruby para extraer documentación
-de los programas: por un lado hay una variación en los parsers que soporta: C, Ruby y FORTRAN.
-Por otro lado la salida puede hacerse en diversos formatos: XML, distintas versiones de HTML, CHM, <code>ri</code>, etc.
-En <code>rdoc</code> cada uno de los formatos de salida es manejado mediante una estrategia.
-</LI>
-</OL>
+</UL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6627"
+<A NAME="tex2html6679"
   HREF="node224.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6621"
-  HREF="node219.html">
+<A NAME="tex2html6673"
+  HREF="node169.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6615"
+<A NAME="tex2html6667"
   HREF="node222.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6623"
-  HREF="node783.html">
+<A NAME="tex2html6675"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6625"
-  HREF="node786.html">
+<A NAME="tex2html6677"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -280,20 +284,20 @@ En <code>rdoc</code> cada uno de los formatos de salida es manejado mediante una
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6628"
-  HREF="node224.html">La Clase Board</A>
-<B> Subir:</B> <A NAME="tex2html6622"
-  HREF="node219.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html6616"
-  HREF="node222.html">La Clase Game</A>
- &nbsp; <B>  <A NAME="tex2html6624"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6626"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6680"
+  HREF="node224.html">La Búsqueda por Métodos</A>
+<B> Subir:</B> <A NAME="tex2html6674"
+  HREF="node169.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6668"
+  HREF="node222.html">Práctica: Matrices Dispersas</A>
+ &nbsp; <B>  <A NAME="tex2html6676"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6678"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Los Módulos como Espacios de Nombres</TITLE>
-<META NAME="description" CONTENT="Los Módulos como Espacios de Nombres">
+<TITLE>Delegación</TITLE>
+<META NAME="description" CONTENT="Delegación">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node204.html">
 <LINK REL="previous" HREF="node202.html">
-<LINK REL="up" HREF="node202.html">
+<LINK REL="up" HREF="node194.html">
 <LINK REL="next" HREF="node204.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6333"
+<A NAME="tex2html6370"
   HREF="node204.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6327"
-  HREF="node202.html">
+<A NAME="tex2html6364"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6321"
+<A NAME="tex2html6360"
   HREF="node202.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6329"
-  HREF="node783.html">
+<A NAME="tex2html6366"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6331"
-  HREF="node786.html">
+<A NAME="tex2html6368"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,16 +91,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6334"
-  HREF="node204.html">Los Módulos como Mixins</A>
-<B> Subir:</B> <A NAME="tex2html6328"
-  HREF="node202.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6322"
-  HREF="node202.html">Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6330"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6332"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6371"
+  HREF="node204.html">Creación e Inicialización de</A>
+<B> Subir:</B> <A NAME="tex2html6365"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6361"
+  HREF="node202.html">Herencia y Constantes</A>
+ &nbsp; <B>  <A NAME="tex2html6367"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6369"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
@@ -109,232 +108,166 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6335"
-  HREF="node203.html#SECTION02771100000000000000">Ejemplo Simple</A>
-<LI><A NAME="tex2html6336"
-  HREF="node203.html#SECTION02771200000000000000">Ejemplo: Codificar y Decodificar Datos Usando Base64</A>
-<LI><A NAME="tex2html6337"
-  HREF="node203.html#SECTION02771300000000000000">Espacios de Nombres Anidados</A>
-</UL>
+<LI><UL>
+<LI><A NAME="tex2html6372"
+  HREF="node203.html#SECTION02739010000000000000">Véase</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H2><A NAME="SECTION02771000000000000000">
-Los Módulos como Espacios de Nombres</A>
+<H2><A NAME="SECTION02739000000000000000">
+Delegación</A>
 </H2>
-  Al definir un módulo se crea una constante con el mismo nombre del módulo.
-  El valor de dicha constante es el objeto <code>Module</code> que representa al módulo.
 
 <P>
-
-<H3><A NAME="SECTION02771100000000000000">
-Ejemplo Simple</A>
-</H3>
+La delegación es un patrón de diseño que consiste en que ciertas tareas, en vez de ser realizadas por el objeto
+son delegadas en ciertos objetos asistentes.
 
 <P>
-<BLOCKQUOTE>
-Say you write a set of the trigonometry functions <code>sin</code>, cos,
-and so on. You stuff them all into a file, <code>trig.rb</code>, for
-future generations to enjoy. Meanwhile, Sally is working on a
-simulation of good and evil, and she codes a set of her own useful
-routines, including <code>be_good</code> and <code>sin</code>, and sticks them
-into <code>moral.rb</code>. Joe, who wants to write a program to find out
-how many angels can dance on the head of a pin, needs to load both
-<code>trig.rb</code> and <code>moral.rb</code> into his program. But both define
-a method called <code>sin</code>. Bad news.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>The answer is the module mechanism. Modules define a namespace, a
-sandbox in which your methods and constants can play without having
-to worry about being stepped on by other methods and constants. The
-trig functions can go into one module:
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>
-<DIV ALIGN="RIGHT">Dave Thomas
-</BLOCKQUOTE>
-<P>
-
-<P>
+Una forma de delegar en Ruby consiste en que la clase sea una subclase de <code>DelegateClass</code>,
+a la que se le pasa el nombre de la clase en la que se delega como parámetro (<code>Flintstone</code> en el ejemplo).
 <PRE>
-module Trig
-  PI = 3.141592654
-  def Trig.sin(x)
-   # ..
-  end
-  def Trig.cos(x)
-   # ..
-  end
-end
-</PRE>
-
-<P>
-<PRE>
-# Sample code from Programing Ruby, page 111
-module Moral
-  VERY_BAD = 0
-  BAD      = 1
-  def Moral.sin(badness)
+class Fred &lt; DelegateClass(Flintstone)
+  def initialize
     # ...
+    super(Flintstone.new(...))
   end
-end
+  # ...
+ end
 </PRE>
-If a third program wants to use these modules, it can simply load
-the two files (using the Ruby require statement. In order to reference
-the name sin unambiguously, our code can then qualify the name using
-the name of the module containing the implementation we want,
-followed by <code>::</code>, the scope resolution operator:
+Luego, en el <code>initialize</code> llamamos al de la superclase, pasandole como argumento el objeto en el que se delega.
+
+<P>
+Por ejemplo, podríamos reescribir la práctica de los conjuntos delegando en la clase <code>Array</code> los métodos <code>length</code>
+e <code>include?</code>:
 
 <P>
 <PRE>
-$: &lt;&lt; '.'
-require 'trig'
-require 'moral'
-
-y = Trig.sin(Trig::PI/4)
-wrongdoing = Moral.sin(Moral::VERY_BAD)
-</PRE>
-
-<P>
-
-<H3><A NAME="SECTION02771200000000000000">
-Ejemplo: Codificar y Decodificar Datos Usando Base64</A>
-</H3>
-Supongamos que estamos un método para codificar y decodificar datos
-binarios utilizando la codificación <code>Base64</code>. Puesto que <code>encode</code> y <code>decode</code>
-son dos nombres muy comunes, 
-para preveer colisiones de nombres definimos nuestros dos métodos
-dentro de un módulo:
-
-<P>
-<PRE>
-casiano@exthost:~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules$ cat -n base64_mod_self.rb
-     1   module Base64
-     2    
-     3   puts self  # Base64
-     4  
-     5   DIGITS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-     6            'abcdefghijklmnopqrstuvwxyz' +
-     7            '0123456789+/'
-     8    @x = "hello"
-     9            
-    10    def self.encode
-    11       "self.encode #@x"
-    12    end 
+~/rubytesting/sets$ cat -n setsdelegate.rb 
+     1  require 'delegate'
+     2  class Set2 &lt; DelegateClass(Array)
+     3  
+     4    attr_accessor :sep
+     5    attr_reader :a
+     6    protected :a
+     7  
+     8    def initialize(a)
+     9      @sep = ', '
+    10      @a = a.uniq.sort
+    11      super(@a)
+    12    end
     13  
-    14    def self.decode
-    15      "self.decode #@x"
-    16    end 
-    17  end
-    18  if $0 == __FILE__
-    19    puts Base64::DIGITS
-    20    puts Base64.encode
-    21    puts Base64.decode
-    22  end
+    14    def to_s
+    15      @a.join(@sep)
+    16    end
+    17  
+    18    # delegated
+    19    #def length 
+    20    #  @a.length
+    21    #end
+    22  
+    23    alias cardinal length
+    24  
+    25    # delegated
+    26    #def include?(x)
+    27    #  @a.include? x
+    28    #end
+    29  
+    30  end
+    31  
+    32  if __FILE__  == $0
+    33    x = Set2.new [1, 2, 3, 3, 4]
+    34    puts "x = #{x}"
+    35    puts "x.length = #{x.length}"              # x.length = 4 
+    36    puts "x.cardinal = #{x.cardinal}"          # x.cardinal = 4
+    37  
+    38    puts "x includes 2 = #{x.include? 2}"      # x includes 2 = true
+    39    puts "x includes 8 = #{x.include? 8}"      # x includes 8 = false
+    40  end
+</PRE>
+En realidad <code>DelegateClass(Array)</code> es una llamada al método <code>DelegateClass</code>
+del package <A NAME="tex2html397"
+  HREF="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/delegate/rdoc/"><TT>delegate</TT></A>. Esta llamada crea y retorna una nueva clase, la cual define un <code>method_missing</code> que redirecciona las llamadas al objeto en el que se 
+delega.
+<PRE>
+~/rubytesting/sets$ ruby setsdelegate.rb 
+x = 1, 2, 3, 4
+x.length = 4
+x.cardinal = 4
+x includes 2 = true
+x includes 8 = false
 </PRE>
 
 <P>
+Otra forma de delegar es usar el método <code>delegate</code> de <code>Rails</code>.
+Podemos instalar <code>rails</code> usando <code>gem</code>:
+<PRE>
+~$ sudo gem install rails
+Password:
+Successfully installed rails-3.1.1
+1 gem installed
+Installing ri documentation for rails-3.1.1...
+file 'lib' not found
+Installing RDoc documentation for rails-3.1.1...
+file 'lib' not found
+~$
+</PRE>
+
+<P>
+El método <code>delegate</code> recibe la lista de nombres de los métodos (especificados como
+símbolos o strings) a delegar
+y el nombre del objeto atributo en el que se delega, especificado mediante
+la clave <code>:to</code>.
+
+<P>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n delegation2.rb 
+   1  require "rails"
+   2  module I
+   3    def f
+   4      puts "#{self.class}: doing f()"
+   5    end
+   6   
+   7    def g
+   8      puts "#{self.class}: doing g()"
+   9    end
+  10  end
+  11   
+  13  class A
+  14    include I
+  15  end
+  16   
+  18  class B
+  19    include I
+  20  end
+  22   
+  23  class C
+  24    attr_accessor :i
+  25    delegate :f, :g, :to =&gt; :i
+  26   
+  27    def initialize(klass = A)
+  28      self.i = klass.new
+  29    end
+  30  end
+  32   
+  33  c = C.new
+  34  c.f         # output: A: doing f()
+  35  c.g         # output: A: doing g()
+  36  c = C.new(B)
+  37  c.f         # output: B: doing f()
+  38  c.g         # output: B: doing g()
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION02739010000000000000">
+Véase</A>
+</H4>
+  
 
 <OL>
-<LI>Note that we define our methods with a <code>self.prefix</code>, which makes them 
-“class methods” of the module. 
-</LI>
-<LI>Outside the <code>Base64</code> module, this constant can be referred to
-as <code>Base64::DIGITS</code>. 
-</LI>
-<LI>Inside the module, our encode and decode
-methods can refer to it by its simple name <code>DIGITS</code>. 
-</LI>
-<LI>If the
-two methods had some need to share nonconstant data, they could use
-a class variable (with a <code>@@</code> prefix), just as they could if
-they were defined in a class.
-</LI>
-</OL>
-
-<P>
-<PRE>
-[~/local/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules]$ cat client.rb 
-require 'base64_mod_self'
-
-class A
-  def self.tutu
-    Base64::encode
-  end
-end
-
-if $0 == __FILE__
-  puts A.tutu
-  puts Base64::DIGITS
-end
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules]$ ruby -I. client.rb 
-Base64
-self.encode hello
-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
-</PRE>
-
-<P>
-
-<H3><A NAME="SECTION02771300000000000000">
-Espacios de Nombres Anidados</A>
-</H3>
-
-<UL>
-<LI>Los módulos y las clases pueden anidarse creando espacios de nombres anidados.
-
-<P>
-</LI>
-<LI>Una clase o módulo anidado dentro de otro no tiene acceso especial al módulo o clase en la que se anida.
-</LI>
-</UL>
-
-<P>
-<PRE>
-module Base64
-  DIGITS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-
-  class Encoder
-    def encode
-    end
-  end
-
-  class Decoder
-    def decode
-    end
-  end
-
-  # A utility function for use by both classes
-  def Base64.helper
-  end
-end
-</PRE>
-
-<OL>
-<LI>Tenemos dos clases: <code>Base64::encoder</code> y <code>Base64::Decoder</code>.
-Dentro del módulo las clases pueden referirse la una a la otra y a la constante <code>DIGITS</code> por
-sus nombres simples, sin cualificar.
-
-<P>
-</LI>
-<LI>Sin embargo, para llamar a <code>Base64.helper</code> deben referirse a él por
-su nombre completo: <code>Base64.helper</code>.
-
-<P>
-</LI>
-<LI>Las clases pueden también anidarse.
-Anidar una clase dentro de otra no le da a la clase ningún privilegio especial de acceso a los 
-métodos y variables en la clase mas externa.
-Su único efecto es en el espacio de nombres de la clase interna.
-
-<P>
-</LI>
-<LI>Cuando escribimos una gema es conveniente anidar las clases y módulos - especialmente aquellas clases
-que no forman parte de la API pública -
-para no contaminar los espacios de nombres públicos.
+<LI><A NAME="tex2html398"
+  HREF="http://gdakram.com/past/2010/12/2/multiple_ways_in_implementing_delegation_pattern_in_ruby/">Multiple ways in implementing delegation pattern in ruby DEC 2010 by shahrier akram gdakram</A>
 </LI>
 </OL>
 
@@ -342,20 +275,20 @@ para no contaminar los espacios de nombres públicos.
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6333"
+<A NAME="tex2html6370"
   HREF="node204.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6327"
-  HREF="node202.html">
+<A NAME="tex2html6364"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6321"
+<A NAME="tex2html6360"
   HREF="node202.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6329"
-  HREF="node783.html">
+<A NAME="tex2html6366"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6331"
-  HREF="node786.html">
+<A NAME="tex2html6368"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -406,20 +339,20 @@ para no contaminar los espacios de nombres públicos.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6334"
-  HREF="node204.html">Los Módulos como Mixins</A>
-<B> Subir:</B> <A NAME="tex2html6328"
-  HREF="node202.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6322"
-  HREF="node202.html">Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6330"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6332"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6371"
+  HREF="node204.html">Creación e Inicialización de</A>
+<B> Subir:</B> <A NAME="tex2html6365"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6361"
+  HREF="node202.html">Herencia y Constantes</A>
+ &nbsp; <B>  <A NAME="tex2html6367"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6369"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

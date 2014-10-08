@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejecución de un Programa</TITLE>
-<META NAME="description" CONTENT="Ejecución de un Programa">
+<TITLE>Ejemplo en Ruby: Accediendo a Twitter</TITLE>
+<META NAME="description" CONTENT="Ejemplo en Ruby: Accediendo a Twitter">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node49.html">
 <LINK REL="previous" HREF="node47.html">
-<LINK REL="up" HREF="node43.html">
+<LINK REL="up" HREF="node26.html">
 <LINK REL="next" HREF="node49.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html3733"
+<A NAME="tex2html3773"
   HREF="node49.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html3727"
-  HREF="node43.html">
+<A NAME="tex2html3767"
+  HREF="node26.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html3721"
+<A NAME="tex2html3761"
   HREF="node47.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html3729"
-  HREF="node783.html">
+<A NAME="tex2html3769"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html3731"
-  HREF="node786.html">
+<A NAME="tex2html3771"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,29 +92,646 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html3734"
-  HREF="node49.html">Práctica: Descarga Páginas de</A>
-<B> Subir:</B> <A NAME="tex2html3728"
-  HREF="node43.html">La Estructura y Ejecución</A>
-<B> Anterior:</B> <A NAME="tex2html3722"
-  HREF="node47.html">Codificación de un Programa</A>
- &nbsp; <B>  <A NAME="tex2html3730"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html3732"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html3774"
+  HREF="node49.html">Práctica: Contar la Popularidad</A>
+<B> Subir:</B> <A NAME="tex2html3768"
+  HREF="node26.html">Introduccion</A>
+<B> Anterior:</B> <A NAME="tex2html3762"
+  HREF="node47.html">Ejercicios</A>
+ &nbsp; <B>  <A NAME="tex2html3770"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html3772"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02250000000000000000">
-Ejecución de un Programa</A>
+<H1><A NAME="SECTION021150000000000000000"></A>
+<A NAME="section:accediendoatwitter"></A>
+<BR>
+Ejemplo en Ruby: Accediendo a Twitter
 </H1>
 
 <P>
+
+<H4><A NAME="SECTION021150010000000000000">
+Donde</A>
+</H4>
+
+<P>
+Puede encontrar una copia de este proyecto/ejercicio en:
+
+<UL>
+<LI><PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ git remote -v
+bb      ssh://git@bitbucket.org/casiano/twitter-test.git (fetch)
+bb      ssh://git@bitbucket.org/casiano/twitter-test.git (push)
+origin  git@github.com:crguezl/twitter-test.git (fetch)
+origin  git@github.com:crguezl/twitter-test.git (push)
+</PRE>
+</LI>
+<LI><A NAME="tex2html124"
+  HREF="https://github.com/crguezl/twitter-test">https://github.com/crguezl/twitter-test</A>
+</LI>
+<LI><A NAME="tex2html125"
+  HREF="https://bitbucket.org/casiano/twitter-test">https://bitbucket.org/casiano/twitter-test</A>
+(privado)
+</LI>
+<LI><PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ pwd -P
+/Users/casiano/local/src/ruby/rubytesting/twitter/twitter-test
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ date
+martes,  2 de septiembre de 2014, 12:44:00 WEST
+</PRE>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION021150020000000000000">
+README.md</A>
+</H4>
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ cat README.md 
+Testing twitter
+==============
+
+See:
+
+  *   http://sferik.github.io/twitter/
+  *   Register your application in twitter: https://dev.twitter.com/apps/new 
+  *   http://www.vogella.com/articles/Git/article.html
+
+Once you have registered your application in twitter fill 
+`configure.rb.template` with your [Oauth](http://blog.varonis.com/introduction-to-oauth/) data
+and rename it to `configure.rb`
+</PRE>
+Para saber más del formato Markdown:
+
+<OL>
+<LI><A NAME="tex2html126"
+  HREF="http://daringfireball.net/projects/markdown/basics">Markdown: Basics</A>
+</LI>
+<LI><A NAME="tex2html127"
+  HREF="http://daringfireball.net/projects/markdown/syntax">Markdown: Syntax</A>
+</LI>
+<LI><A NAME="tex2html128"
+  HREF="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown Cheatsheet</A>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION021150030000000000000">
+Ejecución con rvm</A>
+</H4>
+
+<P>
+Usaremos Ruby Version Manager ( <A NAME="tex2html129"
+  HREF="http://rvm.io/">rvm</A>
+) 
+para gestionar las diferentes versiones del intérprete ruby que mantendremos
+instaladas.
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ rvm list
+
+rvm rubies
+
+   jruby-1.7.3 [ x86_64 ]
+   opal [ x86_64 ]
+   rbx-head [ x86_64 ]
+   ruby-1.8.7-p352 [ i686 ]
+   ruby-1.9.3-head [ x86_64 ]
+   ruby-1.9.3-p392 [ x86_64 ]
+   ruby-1.9.3-p545 [ x86_64 ]
+   ruby-2.0.0-p353 [ x86_64 ]
+   ruby-2.0.0-p451 [ x86_64 ]
+   ruby-2.1.1 [ x86_64 ]
+=* ruby-2.1.2 [ x86_64 ]
+
+# =&gt; - current
+# =* - current &amp;&amp; default
+#  * - default
+</PRE>
+Vea la sección <A HREF="node589.html#chapter:rvm">75</A> para saber mas de  <A NAME="tex2html130"
+  HREF="http://rvm.io/">rvm</A>
+.
+
+<P>
+El intérprete Ruby que estoy usando es:
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ ruby -v
+ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-darwin13.0]
+</PRE>
+En el directorio actual existe un fichero <code>.ruby-version</code> que controla 
+la versión de Ruby con la que trabajaré en este directorio:
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ ls -la
+total 72
+drwxr-xr-x  12 casiano  staff  408  2 sep 13:29 .
+drwxr-xr-x   5 casiano  staff  170 18 sep  2013 ..
+drwxr-xr-x  14 casiano  staff  476  2 sep 13:11 .git
+-rw-r--r--   1 casiano  staff   26 23 sep  2013 .gitignore
+-rw-r--r--   1 casiano  staff    6  2 sep 13:03 .ruby-version
+-rw-r--r--   1 casiano  staff   45 23 sep  2013 Gemfile
+-rw-r--r--   1 casiano  staff  319 17 sep  2013 Gemfile.lock
+-rw-r--r--   1 casiano  staff  398  2 sep 13:10 README.md
+-rw-r--r--   1 casiano  staff  213 25 sep  2013 Rakefile
+-rw-r--r--   1 casiano  staff  318 25 sep  2013 configure.rb
+-rw-r--r--   1 casiano  staff  250 17 sep  2013 configure.rb.template
+-rw-r--r--   1 casiano  staff  558 25 sep  2013 twitt.rb
+</PRE>
+El contenido de dicho fichero es la versión de Ruby que será usada cada vez que se entra en ese directorio:
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ cat .ruby-version 
+2.1.2
+</PRE>
+Antes de ejecutar nuestro programa instalamos las librerías que son necesarias para su funcionamiento.
+Las librerías en Ruby se denominan gemas:
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ bundle install
+Fetching gem metadata from https://rubygems.org/.........
+Installing multipart-post 1.2.0
+Installing faraday 0.8.8
+Installing multi_json 1.8.0
+Installing simple_oauth 0.2.0
+Installing twitter 4.8.1
+Using bundler 1.6.2
+Your bundle is complete!
+Use `bundle show [gemname]` to see where a bundled gem is installed.
+</PRE>
+Ahora podemos proceder a ejecutar el programa:
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ ruby twitt.rb 
+Username   : timoreilly
+Name       : Tim O'Reilly
+Followers  : 1791686
+Friends    : 1238
+Location   : Sebastopol, CA
+URL        : http://t.co/5086iX7oyT 
+Verified   : true
+Tweet text : @matunos @jamesoreilly @TheEconomist True enough.
+Tweet time : 2014-09-02 04:39:14 +0100
+Tweet ID   : 506647513076482049
+</PRE>
+
+<P>
+
+<img src="timoreillyattwitter.png" width="30%" />
+
+
+<P>
+
+<H4><A NAME="SECTION021150040000000000000">
+.ruby-version</A>
+</H4>
+
+<P>
+Con este fichero determinamos con que versión del intérprete Ruby 
+se trabaja en este proyecto (Véase la sección
+<A HREF="node596.html#section:rvmrc">75.7</A>):
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ cat .ruby-version 
+2.1.2
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021150050000000000000">
+Gemfile</A>
+</H4>
+
+<P>
+El fichero Gemfile es usado en conjunción con <A NAME="tex2html131"
+  HREF="http://bundler.io//"><TT>Bundler</TT></A>
+para informar de que librerías o gemas depende nuestra aplicación
+(véase 
+<A HREF="node662.html#chapter:bundler">86</A>):
+<PRE>
+[~/local/src/ruby/rubytesting/twitter(master)]$ cat Gemfile
+source 'https://rubygems.org'
+
+gem 'faraday', '0.8.7'
+gem 'twitter'
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021150060000000000000">
+Bundle</A>
+</H4>
+
+<P>
+El comando <code>bundle install</code> instala las gemas que figuran en el <code>Gemfile</code>
+y sus dependencias:
+<PRE>
+[~/local/src/ruby/rubytesting/twitter(master)]$ bundle install
+ERROR: Gem bundler is not installed, run `gem install bundler` first.
+</PRE>
+Si <A NAME="tex2html132"
+  HREF="http://bundler.io//"><TT>Bundler</TT></A> no esta instalado como en este ejemplo, procederemos a instalarlo
+mediante el comando 
+<code>gem</code>.
+(Véase la sección <A HREF="node606.html#chapter:rubygems">77</A> para saber mas):
+<PRE>
+[~/local/src/ruby/rubytesting/twitter(master)]$ gem install bundler
+Fetching: bundler-1.3.5.gem (100%)
+Successfully installed bundler-1.3.5
+1 gem installed
+</PRE>
+Ahora si, instalamos las gemas con <code>bundle install</code>
+(véase <A HREF="node662.html#chapter:bundler">86</A>):
+<PRE>
+[~/local/src/ruby/rubytesting/twitter(master)]$ bundle install
+Fetching gem metadata from https://rubygems.org/.........
+Fetching gem metadata from https://rubygems.org/..
+Installing multipart-post (1.2.0) 
+Installing faraday (0.8.7) 
+Installing multi_json (1.8.0) 
+Installing simple_oauth (0.2.0) 
+Installing twitter (4.8.1) 
+Using bundler (1.3.5) 
+Your bundle is complete!
+Use `bundle show [gemname]` to see where a bundled gem is installed.
+[~/local/src/ruby/rubytesting/twitter(master)]$
+</PRE>
+
+<P>
+La opción <code>-a</code> de <code>gem search</code> muestra todas las versiones que existen de una gema:
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ gem search '^farad.y$' -r -a
+
+*** REMOTE GEMS ***
+
+faraday (0.9.0, 0.8.9, 0.8.8, 0.8.7, 0.8.6, 0.8.5, 0.8.4, 0.8.2, 0.8.1, 0.8.0, 0.7.6, 0.7.5, 0.7.4, 0.7.3, 0.7.2, 0.7.1, 0.7.0, 0.6.1, 0.6.0, 0.5.7, 0.5.6, 0.5.5, 0.5.4, 0.5.3, 0.5.2, 0.5.1, 0.5.0, 0.4.6, 0.4.5, 0.4.4, 0.4.3, 0.4.2, 0.4.1, 0.4.0, 0.3.1, 0.3.0, 0.2.4, 0.2.3, 0.2.2, 0.2.1, 0.2.0, 0.1.2, 0.1.1, 0.1.0, 0.0.2, 0.0.1)
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021150070000000000000">
+Véase También</A>
+</H4>
+Véase 
+
+<OL>
+<LI>La sección
+<A HREF="node768.html#chapter:twitter">110</A>
+en estos apuntes que describe la gema twitter
+</LI>
+<LI><A NAME="tex2html133"
+  HREF="https://github.com/crguezl/twitter-test">https://github.com/crguezl/twitter-test</A>
+los fuentes de este ejemplo en GitHub
+</LI>
+<LI><A NAME="tex2html134"
+  HREF="http://rdoc.info/gems/twitter">twitter gem</A>
+documentación de la gema twitter
+</LI>
+<LI>En este enlace registramos nuestra aplicación en Twitter:
+<A NAME="tex2html135"
+  HREF="https://dev.twitter.com/apps/new">Register your application in twitter</A>
+</LI>
+<LI>En la rama sinatra de este repo <A NAME="tex2html136"
+  HREF="https://github.com/crguezl/rack-last-twits/tree/sinatra">crguezl/rack-last-twits</A>
+se encuentra una versión webapp de este ejemplo, usando sinatra.
+</LI>
+<LI>En la rama master de este repo <A NAME="tex2html137"
+  HREF="https://github.com/crguezl/rack-last-twits/tree/master">crguezl/rack-last-twits</A>
+se encuentra una versión webapp de este ejemplo, usando rack.
+</LI>
+<LI>Un artículo sobre como usar la gema twitter:
+<A NAME="tex2html138"
+  HREF="http://www.ibm.com/developerworks/library/os-dataminingrubytwitter/">Data mining with Ruby and Twitter The interesting side to a Twitter API</A>
+por Tim Jones en IBM developerWorks
+</LI>
+<LI>Hay una versión de esta gema que provee 
+un programa llamado 
+<A NAME="tex2html139"
+  HREF="a interface://github.com/sferik/t">t</A>
+que nos da una interfaz de línea de comandos para acceder a twitter.
+</LI>
+<LI>Una gema relacionada:
+<A NAME="tex2html140"
+  HREF="https://github.com/tweetstream/tweetstream">TweetStream es una gema que proporciona acceso a la API de Twitter para streaming</A>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION021150080000000000000">
+Estructura de la Aplicación</A>
+</H4>
+<PRE>
+[~/local/src/ruby/rubytesting/twitter(master)]$ tree
+.
+|--- Gemfile
+|--- Gemfile.lock
+|--- README.md
+|--- configure.rb
+`--- twitt.rb
+
+0 directories, 6 files
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021150090000000000000">
+twitt.rb</A>
+</H4>
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ cat twitt.rb 
+require 'twitter'
+require './configure'
+
+screen_name = ARGV[0] || 'timoreilly'
+
+client = my_twitter_client()
+a_user = client.user(screen_name)
+
+puts &lt;&lt;"EOS"
+Username   : #{a_user.screen_name}
+Name       : #{a_user.name}
+Followers  : #{a_user.followers_count}
+Friends    : #{a_user.friends_count}
+Location   : #{a_user.location}
+URL        : #{a_user.url ? a_user.url : ""} 
+Verified   : #{a_user.verified}
+EOS
+
+tweet = client.user_timeline(screen_name).first
+
+if tweet
+  puts "Tweet text : #{tweet.text }"
+  puts "Tweet time : #{tweet.created_at}"
+  puts "Tweet ID   : #{tweet.id}"
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION0211500100000000000000">
+Autentificación con OAuth. dev.twitter.com/apps</A>
+</H4>
+
+<P>
+Algunos métodos de la API de Twitter requieren que estemos autenticados (log in),
+mientras que otros están disponibles sin login.
+Existen dos formas de autenticarse con la API de Twitter:
+
+<P>
+
+<OL>
+<LI>Basic HTTP authentication 
+</LI>
+<LI><A NAME="tex2html141"
+  HREF="http://oauth.net/">OAuth</A>
+</LI>
+</OL>
+Cuando se usa Basic HTTP authentication tenemos que preguntar al usuario 
+por su username y password en Twitter. Entonces usamos el password del usuario para ejecutar
+nuestra aplicación. Esto es inadecuado. Es probable que el usuario desconfíe de nuestra aplicación y 
+no esté dispuesto a darle su password a la aplicación.
+
+<P>
+ <A NAME="tex2html142"
+  HREF="http://oauth.net/">OAuth</A>
+ es un protocolo que no requiere que el usuario le de a las  
+aplicaciones sus passwords (de Twitter o del proveedor del servicio). 
+
+<P>
+Mediante  <A NAME="tex2html143"
+  HREF="http://oauth.net/">OAuth</A>
+ el usuario le da a tu
+aplicación permiso para interactuar con su cuenta de Twitter. Twitter nos da un 
+token con el que autenticarnos y nos evita tener que preguntar o que manejar las passwords
+de los usuarios.
+
+<P>
+Mas formalmente, <A NAME="3049"></A><SPAN  CLASS="textit">Oauth</SPAN> es un estandard abierto para autorización.
+ <A NAME="tex2html144"
+  HREF="http://oauth.net/">OAuth</A>
+ proporciona un método para que los clientes accedan a los
+recursos del servidor
+en nombre de un propietario del recurso
+(como un usuario final).
+
+<P>
+También proporciona un proceso para los usuarios finales para autorizar
+acceso a terceras partes a sus recursos en el servidor sin que haya 
+necesidad de compartir credenciales (el username y password típicos),
+utilizando redirecciones mediantes agentes.
+
+<P>
+En otras palabras,  <A NAME="tex2html145"
+  HREF="http://oauth.net/">OAuth</A>
+ permite a un usuario del sitio <code>A</code> compartir
+su información en el sitio <code>A</code> (proveedor de servicio) con el sitio
+<code>B</code> (llamado consumidor) sin compartir toda su identidad.
+
+<P>
+Una aplicación puede solicitar acceso de lectura o escritura a nuestra cuenta Twitter.
+Cuando le damos permiso a una aplicación, la aplicación es listada en nuestro Twitter
+en
+<A NAME="tex2html146"
+  HREF="https://twitter.com/account/connections">https://twitter.com/account/connections</A>.
+En esta página tenemos la posibilidad de revocar el acceso a las aplicaciones a las que le 
+hemos dado permiso en el pasado.
+
+<P>
+Para usar  <A NAME="tex2html147"
+  HREF="http://oauth.net/">OAuth</A>
+, es necesario registrar nuestra aplicación en twitter visitando
+el enlace
+<A NAME="tex2html148"
+  HREF="https://dev.twitter.com/apps/new">https://dev.twitter.com/apps/new</A>.
+
+<P>
+
+<img src="createanapplication.png" width="50%" />
+
+
+<P>
+Una vez rellenado el formulario 
+(deja vacío el campo <I>Callback URL</I>. Véase por ejemplo <A NAME="tex2html149"
+  HREF="https://developers.google.com/accounts/docs/OAuth#tokensCallback">OAuth 1.0 for Web Applications en Google</A>)
+Twitter nos asigna:
+
+<OL>
+<LI>Una clave de consumidor (consumer key)
+</LI>
+<LI>Un secreto de consumidor (consumer secret)
+</LI>
+</OL>
+Estas claves son únicas a nuestra aplicación.
+
+<P>
+Otra cosa es que una vez registrada nuestra aplicación en Twitter desde una cuenta 
+autorizada, el tweet contiene el nombre de nuestra aplicación y el enlace a nuestro sitio Web.
+
+<P>
+
+<img src="devtwittercomapps.png" width="70%" />
+
+
+<P>
+A continuación generamos el token y con ello 
+tenemos los datos para rellenar en el bloque:
+
+<P>
+<PRE>
+client = Twitter::REST::Client.new do |config|
+  config.consumer_key        = YOUR_CONSUMER_KEY
+  config.consumer_secret     = YOUR_CONSUMER_SECRET
+  config.access_token        = YOUR_OAUTH_TOKEN
+  config.access_token_secret = YOUR_OAUTH_TOKEN_SECRET
+end
+</PRE>
+
+<P>
+Véase la sección 
+<A HREF="node705.html#chapter:oauth">92</A>
+ <A NAME="tex2html150"
+  HREF="http://oauth.net/">OAuth</A>
+ en estos apuntes para saber mas sobre  <A NAME="tex2html151"
+  HREF="http://oauth.net/">OAuth</A>
+.
+
+<P>
+
+<H4><A NAME="SECTION0211500110000000000000">
+configure.rb</A>
+</H4>
+
+<P>
+Copia y pega tus datos  <A NAME="tex2html152"
+  HREF="http://oauth.net/">OAuth</A>
+:
+
+<P>
+<PRE>
+[~/src/ruby/rubytesting/twitter/twitter-test(master)]$ cat configure.rb
+def my_twitter_client
+  Twitter::REST::Client.new do |config|
+    config.consumer_key        = '******************'
+    config.consumer_secret     = '******************'
+    config.access_token        = '******************'
+    config.access_token_secret = '******************'
+  end
+end
+</PRE>
+
+<P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html3775"
+  HREF="node48.html#SECTION021150010000000000000">Donde</A>
+<LI><A NAME="tex2html3776"
+  HREF="node48.html#SECTION021150020000000000000">README.md</A>
+<LI><A NAME="tex2html3777"
+  HREF="node48.html#SECTION021150030000000000000">Ejecución con rvm</A>
+<LI><A NAME="tex2html3778"
+  HREF="node48.html#SECTION021150040000000000000">.ruby-version</A>
+<LI><A NAME="tex2html3779"
+  HREF="node48.html#SECTION021150050000000000000">Gemfile</A>
+<LI><A NAME="tex2html3780"
+  HREF="node48.html#SECTION021150060000000000000">Bundle</A>
+<LI><A NAME="tex2html3781"
+  HREF="node48.html#SECTION021150070000000000000">Véase También</A>
+<LI><A NAME="tex2html3782"
+  HREF="node48.html#SECTION021150080000000000000">Estructura de la Aplicación</A>
+<LI><A NAME="tex2html3783"
+  HREF="node48.html#SECTION021150090000000000000">twitt.rb</A>
+<LI><A NAME="tex2html3784"
+  HREF="node48.html#SECTION0211500100000000000000">Autentificación con OAuth. dev.twitter.com/apps</A>
+<LI><A NAME="tex2html3785"
+  HREF="node48.html#SECTION0211500110000000000000">configure.rb</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html3773"
+  HREF="node49.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html3767"
+  HREF="node26.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html3761"
+  HREF="node47.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html3769"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html3771"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html3774"
+  HREF="node49.html">Práctica: Contar la Popularidad</A>
+<B> Subir:</B> <A NAME="tex2html3768"
+  HREF="node26.html">Introduccion</A>
+<B> Anterior:</B> <A NAME="tex2html3762"
+  HREF="node47.html">Ejercicios</A>
+ &nbsp; <B>  <A NAME="tex2html3770"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html3772"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

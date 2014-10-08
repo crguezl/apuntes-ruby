@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Heredando Métodos</TITLE>
-<META NAME="description" CONTENT="Heredando Métodos">
+<TITLE>Un Método de Clase</TITLE>
+<META NAME="description" CONTENT="Un Método de Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node187.html">
 <LINK REL="previous" HREF="node185.html">
-<LINK REL="up" HREF="node185.html">
+<LINK REL="up" HREF="node170.html">
 <LINK REL="next" HREF="node187.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6075"
+<A NAME="tex2html6122"
   HREF="node187.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6069"
-  HREF="node185.html">
+<A NAME="tex2html6116"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6063"
+<A NAME="tex2html6110"
   HREF="node185.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6071"
-  HREF="node783.html">
+<A NAME="tex2html6118"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6073"
-  HREF="node786.html">
+<A NAME="tex2html6120"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,56 +92,207 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6076"
-  HREF="node187.html">super</A>
-<B> Subir:</B> <A NAME="tex2html6070"
-  HREF="node185.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6064"
-  HREF="node185.html">Subclases y Herencia</A>
- &nbsp; <B>  <A NAME="tex2html6072"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6074"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6123"
+  HREF="node187.html">Constantes</A>
+<B> Subir:</B> <A NAME="tex2html6117"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6111"
+  HREF="node185.html">Clases Mutables: Fácil y</A>
+ &nbsp; <B>  <A NAME="tex2html6119"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6121"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02731000000000000000"></A>
-<A NAME="subsection:heredandometodos"></A>
+<H2><A NAME="SECTION027116000000000000000"></A>
+<A NAME="subsection:unmetododeclase"></A>
 <BR>
-Heredando Métodos
+Un Método de Clase
 </H2>
 
 <P>
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n Point3D.rb 
-     1  require "Point"
-     2  class Point3D &lt; Point
-     3  end
-</PRE>
+Let's take another approach to adding <code>Point</code> objects together. Instead of invoking an instance method of one point and passing another point to that method, let's write a method named <code>sum</code> that takes any number of <code>Point</code> objects, adds them together, and returns a new <code>Point</code>. This method is not an instance method invoked on a <code>Point</code> object. Rather, it is a class method, invoked through the <code>Point</code> class itself. We might invoke the <code>sum</code> method like this:
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ irb
-&gt;&gt; require "Point3D"
-=&gt; true
-&gt;&gt; p1 = Point3D.new(1,2)
-=&gt; #&lt;Point3D:0x10057d5e0 @y=2, @x=1&gt;
-&gt;&gt; p2 = Point.new(1,2)
-=&gt; #&lt;Point:0x10056a440 @y=2, @x=1&gt;
-&gt;&gt; p1.class
-=&gt; Point3D
-&gt;&gt; p2.class
-=&gt; Point
-&gt;&gt; p1.to_s
-=&gt; "(1,2)"
+total = Point.sum(p1, p2, p3)  # p1, p2 and p3 are Point objects
 </PRE>
 
 <P>
-<BR><HR>
+Keep in mind that the expression <code>Point</code> refers to a Class
+object that represents our point class. To define a class method
+for the <code>Point</code> class, what we are really doing is defining a
+<A NAME="8054"></A><SPAN  CLASS="textbf">singleton method</SPAN> of the <code>Point</code> object. To define a singleton
+method, use the <code>def</code> statement as usual, but specify the
+object on which the method is to be defined as well as the name of
+the method. Our class method <code>sum</code> is defined like this:
+
+<P>
+<PRE>
+[~/point]$ cat -n point_with_sum.rb 
+     1  require 'point'
+     2  class Point
+     3    attr_reader :x, :y     # Define accessor methods for our instance variables
+     4  
+     5    def Point.sum(*points) # Return the sum of an arbitrary number of points
+     6      x = y = 0
+     7      points.each {|p| x += p.x; y += p.y }
+     8      Point.new(x,y)
+     9    end
+    10  end
+    11  
+    12  if __FILE__ == $0
+    13    z = [[1,1],[2,4],[3,2]].map { |p| Point.new(*p) }
+    14    p z
+    15    w = Point.sum(*z)
+    16    p w
+    17    r = Point.sum(z[0], z[1])
+    18    p r
+    19  end
+    20
+</PRE>
+
+<P>
+This definition of the class method names the class explicitly, and mirrors the syntax used to invoke the method. Class methods can also be defined using self instead of the class name. Thus, this method could also be written like this:
+
+<P>
+<PRE>
+def self.sum(*points)  # Return the sum of an arbitrary number of points
+  x = y = 0
+  points.each {|p| x += p.x; y += p.y }
+  Point.new(x,y)
+end
+</PRE>
+
+<P>
+Using <code>self</code> instead of <code>Point</code> makes the code slightly less clear, but it's an application of the <A NAME="8056"></A><SPAN  CLASS="textbf">DRY</SPAN> (Don't Repeat Yourself) principle. If you use <code>self</code> instead of the class name, you can change the name of a class without having to edit the definition of its class methods.
+
+<P>
+There is yet another technique for defining class methods. Though it is less clear than the previously shown technique, it can be handy when defining multiple class methods, and you are likely to see it used in existing code:
+
+<P>
+<PRE>
+# Open up the Point object so we can add methods to it
+class &lt;&lt; Point      # Syntax for adding methods to a single object
+  def sum(*points)  # This is the class method Point.sum
+    x = y = 0
+    points.each {|p| x += p.x; y += p.y }
+    Point.new(x,y)
+  end
+
+  # Other class methods can be defined here
+end
+</PRE>
+
+<P>
+This technique can also be used inside the class definition, where we can use <code>self</code> instead of repeating the class name:
+
+<P>
+<PRE>
+class Point
+  # Instance methods go here
+
+  class &lt;&lt; self
+    # Class methods go here
+  end
+end
+</PRE>
+
+<P>
+También podemos poner <code>self.sum</code> o bien <code>class &lt;&lt; self ... end</code>
+
+<P>
+<PRE>
+[~/point]$ ruby point_with_sum.rb 
+[(1,1), (2,4), (3,2)]
+(6,7)
+(3,5)
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html6122"
+  HREF="node187.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html6116"
+  HREF="node170.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html6110"
+  HREF="node185.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html6118"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html6120"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html6123"
+  HREF="node187.html">Constantes</A>
+<B> Subir:</B> <A NAME="tex2html6117"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6111"
+  HREF="node185.html">Clases Mutables: Fácil y</A>
+ &nbsp; <B>  <A NAME="tex2html6119"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6121"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

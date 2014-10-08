@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Conjuntos</TITLE>
-<META NAME="description" CONTENT="Práctica: Conjuntos">
+<TITLE>Herencia y Variables de Clase</TITLE>
+<META NAME="description" CONTENT="Herencia y Variables de Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node202.html">
 <LINK REL="previous" HREF="node200.html">
-<LINK REL="up" HREF="node160.html">
+<LINK REL="up" HREF="node194.html">
 <LINK REL="next" HREF="node202.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6294"
+<A NAME="tex2html6344"
   HREF="node202.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6288"
-  HREF="node160.html">
+<A NAME="tex2html6338"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6282"
+<A NAME="tex2html6332"
   HREF="node200.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6290"
-  HREF="node783.html">
+<A NAME="tex2html6340"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6292"
-  HREF="node786.html">
+<A NAME="tex2html6342"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,107 +92,146 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6295"
-  HREF="node202.html">Módulos</A>
-<B> Subir:</B> <A NAME="tex2html6289"
-  HREF="node160.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6283"
-  HREF="node200.html">Métodos y Clases: Construyendo</A>
- &nbsp; <B>  <A NAME="tex2html6291"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6293"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6345"
+  HREF="node202.html">Herencia y Constantes</A>
+<B> Subir:</B> <A NAME="tex2html6339"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6333"
+  HREF="node200.html">Herencia y Variables de</A>
+ &nbsp; <B>  <A NAME="tex2html6341"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6343"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02760000000000000000"></A>
-   <A NAME="7832"></A>
+<H2><A NAME="SECTION02737000000000000000"></A>
+<A NAME="subsection:herenciayvariablesdeclase"></A>
 <BR>
-Práctica: Conjuntos
-</H1>
+Herencia y Variables de Clase
+</H2>
 
 <P>
-Defina una clase Conjunto
-que disponga de métodos para:
-  
-<UL>
-<LI>Calcular el cardinal de un conjunto
-</LI>
-<LI>Determinar las relaciones pertenencia de un elemento y subconjunto
-</LI>
-<LI>La operaci&#243;n de uni&#243;n:
-</LI>
-<LI>La operaci&#243;n de intersecci&#243;n
-</LI>
-<LI>Diferencia de conjuntos
-</LI>
-<LI>Convertir un conjunto en una cadena
-  
-</LI>
-</UL>
-Debe funcionar  de manera similar a la clase <A NAME="tex2html388"
-  HREF="http://www.ruby-doc.org/stdlib/libdoc/set/rdoc/classes/Set.html">Set</A>
-proveída con Ruby:
+Las variables de clase (como <code>@@count</code>) 
+son compartidas por una clase y todas sus subclases.
+
+<P>
+Si una variable <code>@@a</code> es definida por una clase <code>A</code>
+entonces cualquier subclase <code>B</code> de <code>A</code> puede usar dicha variable.
+
+<P>
+Si una subclase asigna un valor a una variable de clase en uso por una superclase no es que cree una copia
+de dicha variable sino que altera el valor de la variable de la superclase.
+Ese será el valor que vean todas las otras subclases de la superclase.
+
+<P>
+Este ejemplo ilustra el comportamiento:
+<PRE>
+[~/srcLPP/inheritance]$ cat InheritanceAndClassVariables.rb 
+class A
+  @@value = 1
+  def A.value 
+    @@value
+  end
+end
+
+puts A.value
+
+class B &lt; A
+  @@value = 2
+end
+
+puts A.value
+puts B.value
+
+class C &lt; A; @@value = 3; end
+
+puts B.value
+puts C.value
+
+puts "A.class_variables = #{A.class_variables.inspect}"
+puts "B.class_variables = #{B.class_variables.inspect}"
+puts "C.class_variables = #{C.class_variables.inspect}"
+</PRE>
+Al ejecutar tenemos:
+<PRE>
+[~/srcLPP/inheritance]$ ruby InheritanceAndClassVariables.rb 
+1
+2
+2
+3
+3
+A.class_variables = [:@@value]
+B.class_variables = []
+C.class_variables = []
+</PRE>
+<SPAN  CLASS="textbf">Por esta razón es preferible usar variables de instancia de la clase en vez de variables de clase</SPAN>.
+Nótese que siempre podemos averiguar las variables de clase de una clase mediante el
+método <code>class_variables</code>.
+
+<P>
+Observa la diferencia cuando se usan variables de instancia de la clase:
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ irb
-&gt;&gt; require 'set'
-=&gt; true
-&gt;&gt; s1 = Set.new [1, 2]
-=&gt; #&lt;Set: {1, 2}&gt;
-&gt;&gt; s2 = Set.new [2, 4]
-=&gt; #&lt;Set: {2, 4}&gt;
-&gt;&gt; s1+s2
-=&gt; #&lt;Set: {1, 2, 4}&gt;
-&gt;&gt; s1^s2
-=&gt; #&lt;Set: {1, 4}&gt;
-&gt;&gt; s2-s1
-=&gt; #&lt;Set: {4}&gt;
-&gt;&gt; s1.include? 1
-=&gt; true
-&gt;&gt; s1.include? 6
-=&gt; false
+13:11][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat InheritanceAndClassInstanceVariables.rb
+class A
+  @value = 1
+  def self.value 
+    @value
+  end
+end
+
+puts A.value  # 1
+
+class B &lt; A
+  @value = 2
+end
+
+puts A.value  # 1
+puts B.value  # 2
+
+class C &lt; A; @value = 3; end
+
+puts B.value # 2
+puts C.value # 3
+[13:12][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby InheritanceAndClassInstanceVariables.rb
+1
+1
+2
+2
+3
 </PRE>
-Puede usar <code>Array</code>s para implementar los conjuntos.
-Asuma que los elementos del conjunto universal admiten un orden total.
-Esta sesión con <code>irb</code> sugiere una posible implementación:
-<PRE>
-&gt;&gt; a = [6, 4, 3, 4, 2, 1].uniq.sort
-=&gt; [1, 2, 3, 4, 6]
-&gt;&gt; b = [2, 3, 2, 4, 5].uniq.sort
-=&gt; [2, 3, 4, 5]
-&gt;&gt; (a | b).uniq.sort
-=&gt; [1, 2, 3, 4, 5, 6]
-&gt;&gt; (a &amp; b).uniq.sort
-=&gt; [2, 3, 4]
-</PRE>
-Esto es, puede guardar el conjunto como un <code>Array</code> ordenado
-en el que se han suprimido los elementos repetidos.
 
 <P>
-La relación de orden entre conjuntos es parcial: dados dos conjuntos <code>A</code> y <code>B</code>
-no necesariamente ocurre que <code>A &lt; B</code> o aque <code>B &lt; A</code>. 
+
+<OL>
+<LI>Véase  el excelente artículo
+<A NAME="tex2html396"
+  HREF="http://patshaughnessy.net/2012/12/17/ruby-smalltalk-and-class-variables">Ruby, Smalltalk and Class Variables</A>
+by Pat Shaughnessy 
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6294"
+<A NAME="tex2html6344"
   HREF="node202.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6288"
-  HREF="node160.html">
+<A NAME="tex2html6338"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6282"
+<A NAME="tex2html6332"
   HREF="node200.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6290"
-  HREF="node783.html">
+<A NAME="tex2html6340"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6292"
-  HREF="node786.html">
+<A NAME="tex2html6342"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -243,20 +282,20 @@ no necesariamente ocurre que <code>A &lt; B</code> o aque <code>B &lt; A</code>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6295"
-  HREF="node202.html">Módulos</A>
-<B> Subir:</B> <A NAME="tex2html6289"
-  HREF="node160.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6283"
-  HREF="node200.html">Métodos y Clases: Construyendo</A>
- &nbsp; <B>  <A NAME="tex2html6291"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6293"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6345"
+  HREF="node202.html">Herencia y Constantes</A>
+<B> Subir:</B> <A NAME="tex2html6339"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6333"
+  HREF="node200.html">Herencia y Variables de</A>
+ &nbsp; <B>  <A NAME="tex2html6341"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6343"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

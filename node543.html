@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>README y otros documentos</TITLE>
-<META NAME="description" CONTENT="README y otros documentos">
+<TITLE>Especificación de Ficheros Conteniendo Módulos</TITLE>
+<META NAME="description" CONTENT="Especificación de Ficheros Conteniendo Módulos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -28,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12226"
+<A NAME="tex2html12276"
   HREF="node544.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12220"
+<A NAME="tex2html12270"
   HREF="node540.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12214"
+<A NAME="tex2html12264"
   HREF="node542.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12222"
-  HREF="node783.html">
+<A NAME="tex2html12272"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12224"
-  HREF="node786.html">
+<A NAME="tex2html12274"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,283 +92,74 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12227"
-  HREF="node544.html">Véase También</A>
-<B> Subir:</B> <A NAME="tex2html12221"
-  HREF="node540.html">Como Crear tu Propio</A>
-<B> Anterior:</B> <A NAME="tex2html12215"
-  HREF="node542.html">Un Fichero package.json</A>
- &nbsp; <B>  <A NAME="tex2html12223"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12225"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12277"
+  HREF="node544.html">Carga desde Carpetas node_modules</A>
+<B> Subir:</B> <A NAME="tex2html12271"
+  HREF="node540.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12265"
+  HREF="node542.html">Ciclos</A>
+ &nbsp; <B>  <A NAME="tex2html12273"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12275"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04593000000000000000">
-README y otros documentos</A>
+<H2><A NAME="SECTION04583000000000000000">
+Especificación de Ficheros Conteniendo Módulos</A>
 </H2>
 
 <P>
-Pon la información basica acerca del módulo 
-en la raíz del proyecto.
-Como ejemplo veamos el <code>README.md</code> (observa que 
-está en formato <A NAME="tex2html1212"
-  HREF="http://daringfireball.net/projects/markdown/syntax"><TT>markdown</TT></A>) 
-del proyecto <A NAME="tex2html1213"
-  HREF="https://github.com/zaach/ebnf-parser"><TT>ebnf-parser</TT></A>:
+
+<OL>
+<LI>If the exact filename is not found, then node will attempt to
+load the required filename with the added extension of <code>.js</code>,
+<code>.json</code>, and then <code>.node</code>.
 
 <P>
-<PRE>
-$ cat README.md 
-
-# ebnf-parser
-
-A parser for BNF and EBNF grammars used by jison.
-
-## install
-
-    npm install ebnf-parser
-
-
-## build
-
-To build the parser yourself, clone the git repo then run:
-
-    make
-
-This will generate `parser.js`, which is required by `ebnf-parser.js`.
-
-## usage
-
-The parser translates a string grammar or JSON grammar into a JSON grammar that jison can use (ENBF is transformed into BNF).
-
-    var ebnfParser = require('ebnf-parser');
-
-    // parse a bnf or ebnf string grammar
-    ebnfParser.parse("%start ... %");
-
-    // transform an ebnf JSON gramamr
-    ebnfParser.transform({"ebnf": ...});
-
-
-## example grammar
-
-The parser can parse its own BNF grammar, shown below:
-
-    %start spec
-
-    /* grammar for parsing jison grammar files */
-
-    %{
-    var transform = require('./ebnf-transform').transform;
-    var ebnf = false;
-    %}
-
-    %%
-
-    spec
-        : declaration_list '%%' grammar optional_end_block EOF
-            {$$ = $1; return extend($$, $3);}
-        | declaration_list '%%' grammar '%%' CODE EOF
-            {$$ = $1; yy.addDeclaration($$,{include:$5}); return extend($$, $3);}
-        ;
-
-    optional_end_block
-        :
-        | '%%'
-        ;
-
-    declaration_list
-        : declaration_list declaration
-            {$$ = $1; yy.addDeclaration($$, $2);}
-        |
-            {$$ = {};}
-        ;
-
-    declaration
-        : START id
-            {$$ = {start: $2};}
-        | LEX_BLOCK
-            {$$ = {lex: $1};}
-        | operator
-            {$$ = {operator: $1};}
-        | ACTION
-            {$$ = {include: $1};}
-        ;
-
-    operator
-        : associativity token_list
-            {$$ = [$1]; $$.push.apply($$, $2);}
-        ;
-
-    associativity
-        : LEFT
-            {$$ = 'left';}
-        | RIGHT
-            {$$ = 'right';}
-        | NONASSOC
-            {$$ = 'nonassoc';}
-        ;
-
-    token_list
-        : token_list symbol
-            {$$ = $1; $$.push($2);}
-        | symbol
-            {$$ = [$1];}
-        ;
-
-    grammar
-        : production_list
-            {$$ = $1;}
-        ;
-
-    production_list
-        : production_list production
-            {$$ = $1;
-              if($2[0] in $$) $$[$2[0]] = $$[$2[0]].concat($2[1]);
-              else  $$[$2[0]] = $2[1];}
-        | production
-            {$$ = {}; $$[$1[0]] = $1[1];}
-        ;
-
-    production
-        : id ':' handle_list ';'
-            {$$ = [$1, $3];}
-        ;
-
-    handle_list
-        : handle_list '|' handle_action
-            {$$ = $1; $$.push($3);}
-        | handle_action
-            {$$ = [$1];}
-        ;
-
-    handle_action
-        : handle prec action
-            {$$ = [($1.length ? $1.join(' ') : '')];
-                if($3) $$.push($3);
-                if($2) $$.push($2);
-                if ($$.length === 1) $$ = $$[0];
-            }
-        ;
-
-    handle
-        : handle expression_suffix
-            {$$ = $1; $$.push($2)}
-        |
-            {$$ = [];}
-        ;
-
-    handle_sublist
-        : handle_sublist '|' handle
-            {$$ = $1; $$.push($3.join(' '));}
-        | handle
-            {$$ = [$1.join(' ')];}
-        ;
-
-    expression_suffix
-        : expression suffix
-            {$$ = $expression + $suffix; }
-        ;
-
-    expression
-        : ID
-            {$$ = $1; }
-        | STRING
-            {$$ = ebnf ? "'"+$1+"'" : $1; }
-        | '(' handle_sublist ')'
-            {$$ = '(' + $handle_sublist.join(' | ') + ')'; }
-        ;
-
-    suffix
-        : {$$ = ''}
-        | '*'
-        | '?'
-        | '+'
-        ;
-
-    prec
-        : PREC symbol
-            {$$ = {prec: $2};}
-        |
-            {$$ = null;}
-        ;
-
-    symbol
-        : id
-            {$$ = $1;}
-        | STRING
-            {$$ = yytext;}
-        ;
-
-    id
-        : ID
-            {$$ = yytext;}
-        ;
-
-    action
-        : '{' action_body '}'
-            {$$ = $2;}
-        | ACTION
-            {$$ = $1;}
-        | ARROW_ACTION
-            {$$ = '$$ ='+$1+';';}
-        |
-            {$$ = '';}
-        ;
-
-    action_body
-        :
-            {$$ = '';}
-        | ACTION_BODY
-            {$$ = yytext;}
-        | action_body '{' action_body '}' ACTION_BODY
-            {$$ = $1+$2+$3+$4+$5;}
-        | action_body '{' action_body '}'
-            {$$ = $1+$2+$3+$4;}
-        ;
-
-    %%
-
-    // transform ebnf to bnf if necessary
-    function extend (json, grammar) {
-        json.bnf = ebnf ? transform(grammar) : grammar;
-        return json;
-    }
-
-## license
-
-MIT
-</PRE>
+</LI>
+<LI><code>.js</code> files are interpreted as JavaScript text files, and <code>.json</code> files are parsed as JSON text files. <code>.node</code> files are interpreted as compiled addon modules 
 
 <P>
-En general se anima  a que uses el formato markdown. Salva el fichero como
-<code>README.md</code>.
+</LI>
+<LI>A module prefixed with <code>'/'</code> is an absolute path to the file. For example,
+<code>require('/home/marco/foo.js')</code> will load the file at <code>/home/marco/foo.js</code>.
 
 <P>
-La documentación adicional se pone en un directorio <code>./docs</code>. 
-Los ficheros markdown teminan en <code>.md</code> y los html en <code>.html</code>.
+</LI>
+<LI>A module prefixed with <code>'./'</code> is relative to the file calling require(). 
+
+<P>
+</LI>
+<LI>Without a leading verb|'/'| or <code>'./'</code> to indicate a file, the module is either a 
+<A NAME="21842"></A><SPAN  CLASS="textbf">core module</SPAN> or is loaded from a <code>node_modules</code> folder.
+
+<P>
+</LI>
+<LI>If the given path does not exist, <code>require()</code> 
+will throw an Error with its code property set to <code>MODULE_NOT_FOUND</code>.
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12226"
+<A NAME="tex2html12276"
   HREF="node544.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12220"
+<A NAME="tex2html12270"
   HREF="node540.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12214"
+<A NAME="tex2html12264"
   HREF="node542.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12222"
-  HREF="node783.html">
+<A NAME="tex2html12272"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12224"
-  HREF="node786.html">
+<A NAME="tex2html12274"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -419,20 +210,20 @@ Los ficheros markdown teminan en <code>.md</code> y los html en <code>.html</cod
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12227"
-  HREF="node544.html">Véase También</A>
-<B> Subir:</B> <A NAME="tex2html12221"
-  HREF="node540.html">Como Crear tu Propio</A>
-<B> Anterior:</B> <A NAME="tex2html12215"
-  HREF="node542.html">Un Fichero package.json</A>
- &nbsp; <B>  <A NAME="tex2html12223"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12225"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12277"
+  HREF="node544.html">Carga desde Carpetas node_modules</A>
+<B> Subir:</B> <A NAME="tex2html12271"
+  HREF="node540.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12265"
+  HREF="node542.html">Ciclos</A>
+ &nbsp; <B>  <A NAME="tex2html12273"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12275"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

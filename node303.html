@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Colas</TITLE>
-<META NAME="description" CONTENT="Colas">
+<TITLE>Celluloid</TITLE>
+<META NAME="description" CONTENT="Celluloid">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node304.html">
+<LINK REL="next" HREF="node305.html">
 <LINK REL="previous" HREF="node302.html">
-<LINK REL="up" HREF="node298.html">
+<LINK REL="up" HREF="node302.html">
 <LINK REL="next" HREF="node304.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7954"
+<A NAME="tex2html7982"
   HREF="node304.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7948"
-  HREF="node298.html">
+<A NAME="tex2html7976"
+  HREF="node302.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7942"
+<A NAME="tex2html7970"
   HREF="node302.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7950"
-  HREF="node783.html">
+<A NAME="tex2html7978"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7952"
-  HREF="node786.html">
+<A NAME="tex2html7980"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,162 +92,53 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7955"
-  HREF="node304.html">El Problema de los</A>
-<B> Subir:</B> <A NAME="tex2html7949"
-  HREF="node298.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html7943"
-  HREF="node302.html">Un Servidor Multithreaded (and</A>
- &nbsp; <B>  <A NAME="tex2html7951"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7953"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7983"
+  HREF="node304.html">DCell</A>
+<B> Subir:</B> <A NAME="tex2html7977"
+  HREF="node302.html">Actores</A>
+<B> Anterior:</B> <A NAME="tex2html7971"
+  HREF="node302.html">Actores</A>
+ &nbsp; <B>  <A NAME="tex2html7979"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7981"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021350000000000000000">
-Colas</A>
+<H1><A NAME="SECTION021210000000000000000">
+Celluloid</A>
 </H1>
+Celluloid provides a simple and natural way to build fault-tolerant
+concurrent programs in Ruby. With Celluloid, you can build systems out
+of concurrent objects just as easily as you build sequential
+programs out of regular objects. 
 
 <P>
-
-<H4><A NAME="SECTION021350010000000000000">
-Las Clases </A><A NAME="tex2html644"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A>y <A NAME="tex2html645"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/SizedQueue.html"><TT>SizedQueue</TT></A>
-</H4>
-  
-
-<OL>
-<LI>The standard <A NAME="tex2html646"
-  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A> library defines the <A NAME="tex2html647"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A> and <A NAME="tex2html648"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/SizedQueue.html"><TT>SizedQueue</TT></A> data
-structures specifically for concurrent programming. 
+Much of the difficulty with building concurrent programs in Ruby arises
+because the object-oriented mechanisms for structuring code, such as
+classes and inheritance, are separate from the concurrency
+mechanisms, such as threads and locks. Celluloid combines these into a
+single structure, an active object running within a thread, called an
+"actor", or in Celluloid vernacular, a "cell".
 
 <P>
-</LI>
-<LI>They implement
-thread-safe FIFO queues and are intended for a producer/consumer
-model of programming. 
-
-<P>
-</LI>
-<LI>Under this model, one thread
-produces values of some sort and places them on a queue with the <code>enq</code> (enqueue) method or its synonym <code>push</code>. 
-
-<P>
-</LI>
-<LI>Another thread “consumes” these values, removing them from the queue with the <code>deq</code> (dequeue) method as needed. 
-(The <code>pop</code> and <code>shift</code> methods are synonyms for <code>deq</code>.)
-
-<P>
-</LI>
-<LI>The key features of <A NAME="tex2html649"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A> that make it suitable for concurrent
-programming is that the <code>deq</code> method blocks if the queue is
-empty and waits until the producer thread adds a value to the queue.
-
-<P>
-</LI>
-<LI>The <A NAME="tex2html650"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A> and <A NAME="tex2html651"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/SizedQueue.html"><TT>SizedQueue</TT></A> classes implement the same basic
-API, but the <A NAME="tex2html652"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/SizedQueue.html"><TT>SizedQueue</TT></A> variant has a maximum size.
-</LI>
-<LI>If the queue
-is already at its maximum size, then the method for adding a value
-to the queue will block until the consumer thread removes a value
-from the queue.
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION021350020000000000000">
-Example: A Threaded Map-Reduce</A>
-</H4>
-  
+The Actor Model can be summarized as follows:
 
 <P>
 
 <OL>
-<LI>We now define a method that combines a concurrent <code>map</code> with
-a concurrent <code>inject</code>. 
-
-<P>
+<LI>Actors communicate by sending messages
 </LI>
-<LI>It creates a thread for each element
-of the enumerable collection and uses that thread to apply a mapping
-<A NAME="tex2html653"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>. 
-
-<P>
+<LI>Every actor has a mailbox with a unique address. 
 </LI>
-<LI>The value returned by that <A NAME="tex2html654"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> is enqueued on a <A NAME="tex2html655"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A>
-object. 
-
-<P>
+<LI>If you have an actor's address, you can send it messages
 </LI>
-<LI>One final thread acts as a consumer; it removes values from
-the queue and passes them to the injection <A NAME="tex2html656"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> as they become
-available.
+<LI>Actors can create other actors, and when they do they know their address so they can send the newly-created actors messages
+</LI>
+<LI>Actors can pass addresses (or handles) to themselves or other actors in messages
 </LI>
 </OL>
-
-<P>
-Ejemplo de uso:
-<PRE>
-if $0 == __FILE__
-  a = if ARGV.empty? 
-        [-2,-1,0,1,2]
-      else
-        ARGV.map &amp;:to_f 
-      end
-  mapper = lambda {|x| x*x }               # Compute squares
-  injector = lambda {|total,x| total+x }   # Compute sum
-  result = a.conject(0, mapper, injector)  # =&gt; 10
-  puts result
-end
-</PRE>
-
-<P>
-Código:
-<PRE>
-[~/ruby/threads(master)]$ cat conject.rb 
-require 'thread'
-
-module Enumerable
-  # Concurrent inject: expects an initial value and two Procs
-  def conject(initial, mapper, injector)
-    # Use a Queue to pass values from mapping threads to injector thread
-    q = Queue.new   
-    count = 0                 # How many items?
-    each do |item|            # For each item
-      Thread.new do           # Create a new thread
-        q.enq(mapper[item])   # Map and enqueue mapped value
-      end
-      count += 1              # Count items
-    end
-
-    t = Thread.new do         # Create injector thread
-      x = initial             # Start with specified initial value
-      while(count &gt; 0)        # Loop once for each item
-        x = injector[x,q.deq] # Dequeue value and inject
-        count -= 1            # Count down
-      end
-      x                       # Thread value is injected value
-    end
-
-    t.value   # Wait for injector thread and return its value
-  end
-end
-</PRE>
 
 <P>
 <BR><HR>
@@ -255,31 +146,27 @@ end
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html7956"
-  HREF="node303.html#SECTION021350010000000000000">Las Clases <TT>Queue</TT>y <TT>SizedQueue</TT></A>
-<LI><A NAME="tex2html7957"
-  HREF="node303.html#SECTION021350020000000000000">Example: A Threaded Map-Reduce</A>
-</UL></UL></UL>
+<LI><A NAME="tex2html7984"
+  HREF="node304.html">DCell</A>
+</UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7954"
+<A NAME="tex2html7982"
   HREF="node304.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7948"
-  HREF="node298.html">
+<A NAME="tex2html7976"
+  HREF="node302.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7942"
+<A NAME="tex2html7970"
   HREF="node302.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7950"
-  HREF="node783.html">
+<A NAME="tex2html7978"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7952"
-  HREF="node786.html">
+<A NAME="tex2html7980"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -330,20 +217,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7955"
-  HREF="node304.html">El Problema de los</A>
-<B> Subir:</B> <A NAME="tex2html7949"
-  HREF="node298.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html7943"
-  HREF="node302.html">Un Servidor Multithreaded (and</A>
- &nbsp; <B>  <A NAME="tex2html7951"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7953"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7983"
+  HREF="node304.html">DCell</A>
+<B> Subir:</B> <A NAME="tex2html7977"
+  HREF="node302.html">Actores</A>
+<B> Anterior:</B> <A NAME="tex2html7971"
+  HREF="node302.html">Actores</A>
+ &nbsp; <B>  <A NAME="tex2html7979"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7981"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

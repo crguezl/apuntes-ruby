@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un DSL para Procesar Documentos XML usando instance_eval</TITLE>
-<META NAME="description" CONTENT="Un DSL para Procesar Documentos XML usando instance_eval">
+<TITLE>Creando una Palabra Clave</TITLE>
+<META NAME="description" CONTENT="Creando una Palabra Clave">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node264.html">
 <LINK REL="previous" HREF="node262.html">
-<LINK REL="up" HREF="node261.html">
+<LINK REL="up" HREF="node262.html">
 <LINK REL="next" HREF="node264.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7309"
+<A NAME="tex2html7348"
   HREF="node264.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7303"
-  HREF="node261.html">
+<A NAME="tex2html7342"
+  HREF="node262.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7297"
+<A NAME="tex2html7338"
   HREF="node262.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7305"
-  HREF="node783.html">
+<A NAME="tex2html7344"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7307"
-  HREF="node786.html">
+<A NAME="tex2html7346"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,437 +91,314 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7310"
-  HREF="node264.html">Dos DSLs: Generando XML</A>
-<B> Subir:</B> <A NAME="tex2html7304"
-  HREF="node261.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7298"
-  HREF="node262.html">Un Lenguaje de Dominio</A>
- &nbsp; <B>  <A NAME="tex2html7306"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7308"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7349"
+  HREF="node264.html">Métodos Missing y Constantes</A>
+<B> Subir:</B> <A NAME="tex2html7343"
+  HREF="node262.html">Estructuras de Control a</A>
+<B> Anterior:</B> <A NAME="tex2html7339"
+  HREF="node262.html">Estructuras de Control a</A>
+ &nbsp; <B>  <A NAME="tex2html7345"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7347"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html7311"
-  HREF="node263.html#SECTION028122010000000000000">XML</A>
-<LI><A NAME="tex2html7312"
-  HREF="node263.html#SECTION028122020000000000000">REXML</A>
-<LI><A NAME="tex2html7313"
-  HREF="node263.html#SECTION028122030000000000000">Un DSL para XML: Primera Versión. Modo de Uso</A>
-<LI><A NAME="tex2html7314"
-  HREF="node263.html#SECTION028122040000000000000">La Clase XmlRipper: Primera Aproximación</A>
-<LI><A NAME="tex2html7315"
-  HREF="node263.html#SECTION028122050000000000000">Un DSL para XML: Segunda Versión</A>
-<LI><A NAME="tex2html7316"
-  HREF="node263.html#SECTION028122060000000000000">Nueva versión de <TT>initialize</TT></A>
-<LI><A NAME="tex2html7317"
-  HREF="node263.html#SECTION028122070000000000000">Un Ejecutable para Interpretar Guiones en nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN></A>
-<LI><A NAME="tex2html7318"
-  HREF="node263.html#SECTION028122080000000000000">Un Guión Escrito en Nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN> para Nuestro Intérprete <TT>xripper</TT></A>
-<LI><A NAME="tex2html7319"
-  HREF="node263.html#SECTION028122090000000000000">Ejecutando el Intérprete <SPAN  CLASS="textbf">XRipper</SPAN></A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION028122000000000000000"></A><A NAME="10152"></A>
-<BR>
-Un DSL para Procesar Documentos XML usando <A NAME="tex2html527"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
+<H2><A NAME="SECTION02881000000000000000">
+Creando una <I>Palabra Clave</I></A>
 </H2>
 
 <P>
-
-<OL>
-<LI>Ejemplo modificado de la sección <SPAN  CLASS="textbf">Dealing with XML</SPAN> del libro
-[<A
- HREF="node787.html#ER">10</A>]. 
-</LI>
-<LI>Véase también 
-<A NAME="tex2html528"
-  HREF="https://github.com/cocoa/eloquent-ruby">https://github.com/cocoa/eloquent-ruby</A>.
-</LI>
-</OL>
+Supongamos que estamos escribiendo 
+un programa <code>C# </code> que conecta con un servidor remoto
+y que tenemos un objeto que representa dicha conexión:
 
 <P>
-
-<H4><A NAME="SECTION028122010000000000000">
-XML</A>
-</H4>
-  
-
-<P>
-Un ejemplo de XML. Contenidos del fichero <code>fellowship.xml</code>:
 <PRE>
-&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
-&lt;document&gt;
-  &lt;title&gt;The Fellowship of the Ring&lt;/title&gt;
-  &lt;author&gt;J. R. R. Tolken&lt;/author&gt;
-  &lt;published&gt;1954&lt;/published&gt;
-  
-  &lt;chapter&gt;
-    &lt;title&gt;A Long Expected Party&lt;/title&gt;
-    &lt;content&gt;When Mr. Bilbo Bagins from Bag End ...&lt;/content&gt;
-  &lt;/chapter&gt;
-
-  &lt;chapter&gt;
-    &lt;title&gt;A Shadow Of The Past&lt;/title&gt;
-    &lt;content&gt;The talk did not die down ...&lt;/content&gt;
-  &lt;/chapter&gt;
-
-  &lt;!-- etc --&gt;
-&lt;/document&gt;
+RemoteConnection conn = new RemoteConnection("my_server"); 
+String stuff = conn.readStuff(); 
+conn.dispose(); // close the connection to avoid a leak
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION028122020000000000000">
-REXML</A>
-</H4>
-  
+Este código libera los recursos asociados a la conexión después de usarla.
+Sin embargo, no considera la presencia de excepciones.
+Si <code>readStuff( )</code> lanza una excepción, <code>conn.dispose()</code> no
+se ejecutará.
+<code>C#</code> proporciona una palabra clave  <code>using</code> 
+que simplifica el manejo de la liberación de recursos:
 
 <P>
-Véanse:
+<PRE>
+RemoteConnection conn = new RemoteConnection("some_remote_server"); 
+using (conn) {
+  conn.readSomeData(); 
+  doSomeMoreStuff();
+}
+</PRE>
+La palabra <code>using</code> espera que el objeto  <code>conn</code> tenga un método con nombre <code>dispose()</code>. 
+Este método es llamado automáticamente después del código entre llaves, 
+tanto si se genera una excepción como si no.
+
+<P>
+Supongamos que se nos pide como ejercicio que extendamos Ruby con una <I>palabra clave</I> <code>using</code>
+que funcione de manera similar al <code>using</code> de <code>C#</code>.
+
+<P>
+Para comprobar que lo hagamos correctamente se nos da el siguiente
+programa de test (véase <A NAME="tex2html537"
+  HREF="http://en.wikipedia.org/wiki/Unit_testing">Unit Testing</A>
+en la wikipedia 
+y la documentación de la librería 
+<A NAME="tex2html538"
+  HREF="http://ruby-doc.org/stdlib-1.9.3/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test::Unit</TT></A>
+<A NAME="tex2html539"
+  HREF="http://ruby-doc.org/stdlib-1.9.3/libdoc/test/unit/rdoc/Test/Unit/Assertions.html"><TT>Test::Unit::Assertions</TT></A>
+):
+
+<P>
+<PRE>
+~/rubytesting$ cat -n using_test.rb 
+   1  require 'test/unit'
+   2  
+   3  class TestUsing &lt; Test::Unit::TestCase
+   4    class Resource
+   5      def dispose
+   6        @disposed = true
+   7      end
+   8  
+   9      def disposed?
+  10        @disposed
+  11      end
+  12    end
+  13  
+  14    def test_disposes_of_resources
+  15      r = Resource.new
+  16      using(r) {}
+  17      assert r.disposed?
+  18    end
+  19    
+  20    def test_disposes_of_resources_in_case_of_exception
+  21      r = Resource.new
+  22      assert_raises(Exception) {
+  23        using(r) {
+  24          raise Exception
+  25        }
+  26      }
+  27      assert r.disposed?
+  28    end
+  29  end
+</PRE>
+
+<P>
+Las clases que representan tests deben ser subclases de 
+<code>Test::Unit::TestCase</code>. 
+Los métodos que contienen <code>assertions</code> deben empezar por la palabra <code>test</code>.
+<code>Test::Unit</code> utiliza introspección para decidir para encontrar que métodos debe ejecutar.
+
+<P>
+Por supuesto, si se ejecutan ahora, nuestras pruebas fallan:
+<PRE>
+~/rubytesting$ ruby  using_test.rb 
+Loaded suite using_test
+Started
+EF
+Finished in 0.005613 seconds.
+
+  1) Error:
+test_disposes_of_resources(TestUsing):
+NoMethodError: undefined method `using' for #&lt;TestUsing:0x100348608&gt;
+    using_test.rb:16:in `test_disposes_of_resources'
+
+  2) Failure:
+test_disposes_of_resources_in_case_of_exception(TestUsing) [using_test.rb:22]:
+&lt;Exception&gt; exception expected but was
+Class: &lt;NoMethodError&gt;
+Message: &lt;"undefined method `using' for #&lt;TestUsing:0x1003485e0&gt;"&gt;
+---Backtrace---
+using_test.rb:23:in `test_disposes_of_resources_in_case_of_exception'
+using_test.rb:22:in `test_disposes_of_resources_in_case_of_exception'
+---------------
+
+2 tests, 1 assertions, 1 failures, 1 errors
+</PRE>
+Idea: No podemos definir <code>using</code> como una palabra clave, por supuesto, pero podemos 
+producir un efecto parecido definiendo <code>using</code> como un método de <code>Kernel</code>:
+<PRE>
+~/rubytesting$ cat -n using1.rb 
+   1  module Kernel
+   2    def using(resource)       # resource: el recurso a liberar con dispose
+   3      begin                   # llamamos al bloque 
+   4        yield
+   5        resource.dispose      # liberamos
+   6      end
+   7    end
+   8  end
+</PRE>
+
+<P>
+Sin embargo, esta versión no está a prueba de excepciones. Cuando ejecutamos las pruebas 
+obtenemos:
+<PRE>
+~/rubytesting$ ruby -rusing1 using_test.rb 
+Loaded suite using_test
+Started
+.F
+Finished in 0.005043 seconds.
+
+  1) Failure:
+test_disposes_of_resources_in_case_of_exception(TestUsing) [using_test.rb:27]:
+&lt;nil&gt; is not true.
+
+2 tests, 3 assertions, 1 failures, 0 errors
+</PRE>
+El mensaje nos indica la causa del fallo:
+<PRE>
+test_disposes_of_resources_in_case_of_exception(TestUsing) [using_test.rb:27]: &lt;nil&gt; is not true.
+</PRE>
+Es posible también ejecutar un test específico:
+<PRE>
+~/rubytesting$  ruby -rusing1 -w using_test.rb --name test_disposes_of_resources
+Loaded suite using_test
+Started
+.
+Finished in 0.000196 seconds.
+
+1 tests, 1 assertions, 0 failures, 0 errors
+~/rubytesting$
+</PRE>
+(Para saber mas sobre Unit Testing en Ruby vea 
+<A NAME="tex2html540"
+  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Unit_testing#A_Simple_Introduction">Ruby Programming/Unit testing en Wikibooks</A>).
+
+<P>
+Volviendo a nuestro fallo, recordemos que
+la cláusula <code>rescue</code> es usada cuando queremos que un código se ejecute si se produce una excepción:
+<PRE>
+begin
+  file = open("/tmp/some_file", "w")
+  # ... write to the file ...
+  file.close
+rescue
+  file.close
+  fail # raise an exception
+end
+</PRE>
+Pero en este caso es mejor usar la cláusula <code>ensure</code>.
+El código bajo un <code>ensure</code> se ejecuta, tanto si se ha producido excepción como si no:
+
+<P>
+<PRE>
+begin
+  file = open("/tmp/some_file", "w")
+  # ... write to the file ...
+rescue
+  # ... handle the exceptions ...
+ensure
+  file.close   # ... and this always happens.
+end
+</PRE>
+Es posible utilizar <code>ensure</code> sin la cláusula <code>rescue</code>, y viceversa,
+pero si aparecen ambas en el mismo bloque <code>begin...end</code>
+entonces <code>rescue</code> debe preceder a <code>ensure</code>.
+
+<P>
+Reescribimos nuestro <code>using</code> usando <code>ensure</code>:
+<PRE>
+~/rubytesting$ cat -n using.rb 
+     1  module Kernel
+     2    def using(resource)
+     3      begin
+     4        yield
+     5      ensure
+     6        resource.dispose
+     7      end
+     8    end
+     9  end
+</PRE>
+Ahora los dos tests tienen éxito:
+<PRE>
+~/rubytesting$ ruby -rusing using_test.rb 
+Loaded suite using_test
+Started
+..
+Finished in 0.000346 seconds.
+
+2 tests, 3 assertions, 0 failures, 0 errors
+</PRE>
+
+<P>
+Lo normal durante el desarrollo es guardar las pruebas en una carpeta con nombtre <code>test</code> o <code>t</code>:
+
+<P>
+<PRE>
+project
+  |
+  `-lib/
+  |   |
+  |   `-using.rb
+  |   |
+  |   `-otros ficheros ...
+  `-test/ 
+      |
+      `-using_test
+      |
+      `-otros tests ..
+</PRE>
+El problema con esta estructura es que hay que decirle a Ruby donde debe encontrar la librería
+cuando se ejecutan las pruebas.
 
 <UL>
-<LI><A NAME="tex2html529"
-  HREF="http://www.germane-software.com/software/rexml/docs/tutorial.html">REXML Tutorial</A>
+<LI>Añadir el camino en el que están las librerías a <code>$LOAD_PATH</code>
 </LI>
-<LI><A NAME="tex2html530"
-  HREF="http://xml-simple.rubyforge.org/">XmlSimple - XML made easy</A>
-</LI>
-<LI>Veamos un ejemplo de uso de <code>rexml/document</code>:
-<PRE>
-#!/usr/bin/env ruby
-
-require 'rexml/document'
-filename = ARGV.shift || 'fellowship.xml'
-File.open(filename) do |f|
-  doc = REXML::Document.new(f)
-  author = REXML::XPath.first(doc, '/document/author')
-  print "Author: "
-  puts author.text       # J. R. R. Tolken
-
-  puts "Chapters:"
-  REXML::XPath.each(doc, '/document/chapter/title') do |title|
-    puts "  "+title.text # A Long Expected Party
-  end                    # A Shadow Of The Past
-end
-</PRE>
-
-<P>
-Ejecución:
+<LI>Ejecutar los tests siempre desde el directorio raíz e incluir en los tests una línea como esta:
 
 <P>
 <PRE>
-$ ruby find_author.rb 
-Author: J. R. R. Tolken
-Chapters:
-  A Long Expected Party
-  A Shadow Of The Past
+  $:.unshift File.join(File.dirname(__FILE__), "..", "lib") 
+  require ...
 </PRE>
-
-<P>
-</LI>
-<LI>También podemos arreglar la errata en el nombre del autor:
-<PRE>
-#!/usr/bin/env ruby
-
-require 'rexml/document'
-filename = ARGV.shift || 'fellowship.xml'
-File.open(filename) do |f|
-  doc = REXML::Document.new(f)
-  REXML::XPath.each(doc, '/document/author') do |author|
-    author.text = 'J.R.R. Tolkien'
-  end
-  puts doc
-end
-</PRE>
+La variable <code>$:</code> es una array conteniendo el PATH de búsqueda de librerías.
 </LI>
 </UL>
 
 <P>
-
-<H4><A NAME="SECTION028122030000000000000">
-Un DSL para XML: Primera Versión. Modo de Uso</A>
-</H4>
-  
-
-<A NAME="parrafo:dslxmlprimeraversion"></A>
-<P>
-Aunque  <code>REXML</code> es fácil de usar, nos gustaría disponer de un poco mas de expresividad de manera
-que podamos expresar un conjunto de acciones
-que se ejecuten cuando se produce cierto matching.
-El siguiente fragmento de código muestra una primera versión de nuestro DSL:
+Lo habitual, cuando un proyecto crece
+es que los tests se acumulen. Lo normal es clasificarlos 
+por afinidades en diferentes ficheros. 
+Los podemos agrupar en suites. Para ello creamos 
+un fichero con una lista de <code>require</code>s
 
 <P>
 <PRE>
-if $0 == __FILE__
-  ripper = XmlRipper.new do |r|
-    puts "Compiling  ..."
-    r.on_path '/document/title' do |t| 
-      puts "Title: "+t.text 
-    end
-    r.on_path '/document/author' do |a| 
-      puts "Author: "+a.text 
-    end
-    r.action { puts "Chapters: " }
-    r.on_path '/document/chapter/title' do |ct| 
-      puts "  "+ct.text 
-    end
-  end
-  filename = ARGV.shift || 'fellowship.xml'
-  ripper.run filename
-  #  Compiling  ...
-  #  Title: The Fellowship of the Ring
-  #  Author: J. R. R. Tolken
-  #  Chapters: 
-  #    A Long Expected Party
-  #    A Shadow Of The Past
-end
+require 'test/unit' 
+require 'tc_smoke' 
+require 'tc_client_requirements' 
+require 'tc_extreme'
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION028122040000000000000">
-La Clase XmlRipper: Primera Aproximación</A>
-</H4>
-  
-
-<P>
-<PRE>
-require 'rexml/document'
-
-class XmlRipper
-  def initialize()
-    @before_action = proc { } # do nothing
-    @path_action   = []       # Array: to preserve the order
-    @after_action  = proc { }
-    yield self if block_given?
-  end
-
-  def on_path(path, &amp;block)
-    @path_action &lt;&lt; [ path, block ]
-  end
-
-  def action(&amp;block)
-    @path_action &lt;&lt; [ '', block ]
-  end
-
-  def before(&amp;block)
-    @before_action = block
-  end
-
-  def after(&amp;block)
-    @after_action = block
-  end
-
-  def run_path_actions(doc)
-    @path_action.each do |path_action|
-      path, action = path_action
-      REXML::XPath.each(doc, path) do |element|
-        action[element]
-      end
-    end
-  end
-
-  def run(file_name)
-    File.open(file_name) do |f|
-      doc = REXML::Document.new(f)
-      @before_action[doc]
-      run_path_actions(doc)
-      @after_action[doc]
-    end
-  end
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122050000000000000">
-Un DSL para XML: Segunda Versión</A>
-</H4>
-  
-
-<P>
-Queremos  evitar esas cacofonías de uso del objeto <code>r</code>
-en la versión anterior (sección <A HREF="#parrafo:dslxmlprimeraversion">14.12.2</A>) y poder usarlo así:
-
-<P>
-<PRE>
-[~/chapter8ReflectionandMetaprogramming/DSL/xmlripper]$ cat sample.xr 
-puts "Compiling  ..."
-on_path '/document/title' do |t| 
-  puts "Title: "+t.text 
-end
-on_path '/document/author' do |a| 
-  a.text = "J.R.R. Tolkien"
-  puts "Author: "+a.text 
-end
-action { puts "Chapters: " }
-on_path '/document/chapter/title' do |ct| 
-  puts "  "+ct.text 
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122060000000000000">
-Nueva versión de <TT>initialize</TT></A>
-</H4>
-  
-
-<P>
-Casi lo único que hay que cambiar en la versión anterior es el método
-<code>initialize</code>:
-<PRE>
-  def initialize( path = nil, &amp;block )
-    @before_action = proc { } # do nothing
-    @path_action   = []       # Array: to preserve the order
-    @after_action  = proc { }
-
-    if path then
-      instance_eval( File.read( path ) )
-    else
-      instance_eval( &amp;block ) if block_given?
-    end
-  end
-</PRE>
-
-<P>
-Si queremos que nuestro DSL pueda ser llamado especificando el contexto para que el bloque se ejecute
-podemos usar esta versión ligeramente mas complicada:
-
-<P>
-<PRE>
-  def initialize( path = nil, &amp;block )
-    @before_action = proc { } # do nothing
-    @path_action   = []       # Array: to preserve the order
-    @after_action  = proc { }
-
-    if path then
-      instance_eval( File.read( path ) )
-    elsif block_given?
-      if block.arity &lt; 1
-        instance_eval( &amp;block ) 
-      else
-        block.call(self)
-      end
-    end
-  end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122070000000000000">
-Un Ejecutable para Interpretar Guiones en nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN></A>
-</H4>
-  
-
-<P>
-En la misma forma en que trabajan <code>rake</code> y <code>rspec</code> podemos crear un ejecutable
-que recibe como entrada un fichero escrito en el DSL <code>XRipper</code> y ejecuta las acciones
-asociadas:
-
-<P>
-<PRE>
-[~/DSL/xmlripper]$ cat xripper 
-#!/usr/bin/env ruby
-
-require 'xml_ripper_v2'
-
-scriptname = ARGV.shift
-xmlfile = ARGV.shift
-
-if scriptname and xmlfile and File.exists? scriptname and File.exists? xmlfile
-  XmlRipper.new(scriptname).run(xmlfile)
-else
-  puts "Usage:\n\t#$0 xripper_script file.xml"
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122080000000000000">
-Un Guión Escrito en Nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN> para Nuestro Intérprete <TT>xripper</TT></A>
-</H4>
-  
-
-<P>
-Ahora lo único que hay que hacer es ejecutar nuestro intérprete <code>xripper</code> sobre un fichero
-escrito en el DSL:
-
-<P>
-<PRE>
-[~/chapter8ReflectionandMetaprogramming/DSL/xmlripper]$ cat sample.xr 
-puts "Compiling  ..."
-on_path '/document/title' do |t| 
-  puts "Title: "+t.text 
-end
-on_path '/document/author' do |a| 
-  a.text = "J.R.R. Tolkien"
-  puts "Author: "+a.text 
-end
-action { puts "Chapters: " }
-on_path '/document/chapter/title' do |ct| 
-  puts "  "+ct.text 
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122090000000000000">
-Ejecutando el Intérprete <SPAN  CLASS="textbf">XRipper</SPAN></A>
-</H4>
-  
-
-Para llevar a cabo la ejecución escribimos un <code>Rakefile</code>:
-<PRE>
-[~/DSL/xmlripper]$ cat Rakefile 
-task :default =&gt; :run
-
-desc "run xripper "
-task :run do
-  sh "ruby -I. xripper sample.xr fellowship.xml"
-end
-</PRE>
-La ejecución produce esta salida:
-<PRE>
-[~/chapter8ReflectionandMetaprogramming/DSL/xmlripper]$ rake
-ruby -I. xripper sample.xr fellowship.xml
-Compiling  ...
-Title: The Fellowship of the Ring
-Author: J.R.R. Tolkien
-Chapters: 
-  A Long Expected Party
-  A Shadow Of The Past
-</PRE>
+Ahora, simplemente ejecutando este fichero ejecutaremos todos los casos en la suite.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7309"
+<A NAME="tex2html7348"
   HREF="node264.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7303"
-  HREF="node261.html">
+<A NAME="tex2html7342"
+  HREF="node262.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7297"
+<A NAME="tex2html7338"
   HREF="node262.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7305"
-  HREF="node783.html">
+<A NAME="tex2html7344"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7307"
-  HREF="node786.html">
+<A NAME="tex2html7346"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -573,20 +449,20 @@ Chapters:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7310"
-  HREF="node264.html">Dos DSLs: Generando XML</A>
-<B> Subir:</B> <A NAME="tex2html7304"
-  HREF="node261.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7298"
-  HREF="node262.html">Un Lenguaje de Dominio</A>
- &nbsp; <B>  <A NAME="tex2html7306"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7308"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7349"
+  HREF="node264.html">Métodos Missing y Constantes</A>
+<B> Subir:</B> <A NAME="tex2html7343"
+  HREF="node262.html">Estructuras de Control a</A>
+<B> Anterior:</B> <A NAME="tex2html7339"
+  HREF="node262.html">Estructuras de Control a</A>
+ &nbsp; <B>  <A NAME="tex2html7345"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7347"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

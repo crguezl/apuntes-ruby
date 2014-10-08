@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Construyendo Nuestro Propio Rack::Builder</TITLE>
-<META NAME="description" CONTENT="Construyendo Nuestro Propio Rack::Builder">
+<TITLE>La Estructura de una Aplicación Rack: Ejemplo de Middleware</TITLE>
+<META NAME="description" CONTENT="La Estructura de una Aplicación Rack: Ejemplo de Middleware">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node358.html">
 <LINK REL="previous" HREF="node356.html">
-<LINK REL="up" HREF="node322.html">
+<LINK REL="up" HREF="node331.html">
 <LINK REL="next" HREF="node358.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9115"
+<A NAME="tex2html9153"
   HREF="node358.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9109"
-  HREF="node322.html">
+<A NAME="tex2html9147"
+  HREF="node331.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9103"
+<A NAME="tex2html9141"
   HREF="node356.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9111"
-  HREF="node783.html">
+<A NAME="tex2html9149"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9113"
-  HREF="node786.html">
+<A NAME="tex2html9151"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,144 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9116"
-  HREF="node358.html">Código de Rack::Builder</A>
-<B> Subir:</B> <A NAME="tex2html9110"
-  HREF="node322.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9104"
-  HREF="node356.html">Ejemplo de Middleware: Rack::ETag</A>
- &nbsp; <B>  <A NAME="tex2html9112"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9114"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9154"
+  HREF="node358.html">rackup</A>
+<B> Subir:</B> <A NAME="tex2html9148"
+  HREF="node331.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9142"
+  HREF="node356.html">Redirección</A>
+ &nbsp; <B>  <A NAME="tex2html9150"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9152"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031200000000000000000">
-Construyendo Nuestro Propio Rack::Builder</A>
+<H1><A NAME="SECTION031140000000000000000">
+La Estructura de una Aplicación Rack: Ejemplo de Middleware</A>
 </H1>
 
 <P>
-Véase:
-
-<OL>
-<LI><A NAME="tex2html798"
-  HREF="https://github.com/crguezl/rack-mybuilder">https://github.com/crguezl/rack-mybuilder</A>
-</LI>
-</OL>
-
-<P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ cat mybuilder.rb 
-module Rack
-  class MyBuilder
-
-    def initialize(&amp;block)
-      @use = []
-      instance_eval(&amp;block) if block_given?
-    end
-
-    def use(middleware, *args, &amp;block)
-      @use &lt;&lt; proc { |app| middleware.new(app, *args, &amp;block) }
-    end
-
-    def run(app)
-      @run = app
-    end
-
-    def to_app
-      @use.reverse.inject(@run) { |app, middleware| middleware[app] }
-    end
-
-    def call(env)
-      to_app.call(env)
-    end
-
-  end
-end
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ cat decorator.rb 
-class Decorator
-
-  def initialize(app, *options, &amp;block)
-    @app = app
-    @options = (options[0] || {})
-  end
-
-  def call(env)
-    status, headers, body = @app.call(env)
-
-    new_body = ""
-    new_body &lt;&lt; (@options[:header] || "----Header----&lt;br/&gt;")
-    body.each {|str| new_body &lt;&lt; str}
-    new_body &lt;&lt; (@options[:footer] || "&lt;br/&gt;----Footer----")
-
-    [status, headers, [new_body]]
-  end
-end
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ cat app.rb 
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat middlefoo.rb 
 require 'rack'
-require 'thin'
 
-require 'mybuilder'
-require 'decorator'
+class MiddleFoo
+  
+  def initialize(app)
+    @app = app
+  end
 
-app = Rack::MyBuilder.new do
-  use Decorator, :header =&gt; "&lt;strong&gt;*********** header **********&lt;/strong&gt;&lt;br/&gt;"
-
-  cheer = ARGV.shift || "&lt;h1&gt;Hello world!&lt;/h1&gt;"
-  run lambda { |env| [200, { 'Content-Type' =&gt; 'text/html' }, [ "&lt;h1&gt;#{cheer}&lt;/h1&gt;" ]]}
-end
-
-Rack::Handler::Thin.run app, :Port =&gt; 3333, :Host =&gt; 'localhost'
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ cat Rakefile 
-desc "run app server"
-task :default =&gt; :server
-
-desc "run app server"
-task :server, :greet  do |t, args|
-  cheer = args[:greet] || 'bye, bye!'
-  sh "ruby -I. app.rb #{cheer}"
+  def call env
+    # Podemos modificar el request (env) aqui
+    env['chuchu'] = 'SYTW'
+    status, headers, body = @app.call(env)
+    # Podemos modificar la respuesta aqui
+    newbody = body.map(&amp;:upcase)
+    [status, headers, newbody]
+  end
 end
 </PRE>
 
 <P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ rake -T
-rake default        # run app server
-rake server[greet]  # run app server
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat hello_middle.rb 
+require 'rack'
+require './middlefoo'
+
+class HelloWorld
+  def call env
+    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world\nchuchu=#{env['chuchu']}\n"]]
+  end
+end
+
+Rack::Handler::WEBrick::run MiddleFoo.new(HelloWorld.new)
 </PRE>
 
 <P>
+Cuando ejecutamos el programa produce la salida:
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ rake server[tachaaaAAAAAANNN]
-ruby -I. app.rb tachaaaAAAAAANNN
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on localhost:3333, CTRL+C to stop
+HELLO WORLD
+CHUCHU=SYTW
 </PRE>
-
-<P>
-
-<img src="myrackbuilder.png" />
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

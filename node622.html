@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Diferencias entre fetch y pull</TITLE>
-<META NAME="description" CONTENT="Diferencias entre fetch y pull">
+<TITLE>Copia Segura de un Fichero</TITLE>
+<META NAME="description" CONTENT="Copia Segura de un Fichero">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node623.html">
 <LINK REL="previous" HREF="node621.html">
-<LINK REL="up" HREF="node616.html">
+<LINK REL="up" HREF="node610.html">
 <LINK REL="next" HREF="node623.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13682"
+<A NAME="tex2html13706"
   HREF="node623.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13676"
-  HREF="node616.html">
+<A NAME="tex2html13700"
+  HREF="node610.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13670"
+<A NAME="tex2html13696"
   HREF="node621.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13678"
-  HREF="node783.html">
+<A NAME="tex2html13702"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13680"
-  HREF="node786.html">
+<A NAME="tex2html13704"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,93 +91,182 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13683"
-  HREF="node623.html">Mezclando Ficheros Específicos desde</A>
-<B> Subir:</B> <A NAME="tex2html13677"
-  HREF="node616.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html13671"
-  HREF="node621.html">Véase: Tutoriales de Git</A>
- &nbsp; <B>  <A NAME="tex2html13679"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13681"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13707"
+  HREF="node623.html">Transferencia de ficheros por</A>
+<B> Subir:</B> <A NAME="tex2html13701"
+  HREF="node610.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13697"
+  HREF="node621.html">Los Ficheros de Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html13703"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13705"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06660000000000000000">
-Diferencias entre fetch y pull</A>
+<H1><A NAME="SECTION065120000000000000000">
+Copia Segura de un Fichero</A>
 </H1>
-Git was designed to support a distributed model with no need for a central
-repository (though you can certainly use one if you like.) Also git was
-designed so that the client and the "server"
-don't need to be online at the same time. 
-
-<P>
-Git was designed so that people on an unreliable link could exchange
-code via email, even. 
-
-<P>
-In order to support this model git maintains 
-a local repository with your
-code and also an additional local repository that mirrors the state of
-the remote repository. 
-By keeping a copy of the remote
-repository locally, git can figure out the changes needed even when the remote repository is not reachable. 
-
-<P>
-Later when you need to send the changes to someone else, git can transfer them as a set of
-changes from a point in time known to the remote repository.
 
 <P>
 
-<UL>
-<LI>The command <code>git fetch</code> is the command that says <I>bring my local copy of the remote repository up to date.</I> 
-</LI>
-<LI>The command <code>git pull</code> says "bring the changes in the remote repository where I keep my own
-code." 
-</LI>
+<H4><A NAME="SECTION065120010000000000000">
+Transferencia de Ficheros con <TT>scp</TT></A>
+</H4>
+  
+
+<P>
+El protocolo <A NAME="23971"></A><SPAN  CLASS="textbf">SCP</SPAN> implementa la transferencia de ficheros.
+El cliente se conecta a la máquina remota usando SSH y solicita la ejecución 
+de un programa servidor  (normalmente el mismo programa cliente <code>scp</code> es capaz de funcionar
+como servidor).
+
+<P>
+Para la subida de ficheros el cliente alimenta al servidor
+con los ficheros que deberán ser cargados, incluyendo opcionalmente los 
+atributos básicos como permisos y fechas.
+
+<P>
+Para las descargas el cliente envía una solicitud indicando los ficheros y directorios que
+deben ser descargados. 
+
+<P>
+Veamos un ejemplo:
+<PRE>
+nereida:~&gt; scp mm.c orion:/tmp/
+mm.c
+</PRE>
+La sintáxis de <A NAME="tex2html1413"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?scp"><TT>scp</TT></A>
+es:
+<PRE>
+scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file] 
+    [-l limit] [-o ssh_option] [-P port] [-S program]
+    [[user@]host1:]file1 ... [[user@]host2:]file2
+</PRE>
+Es posible copiar entre dos máquinas remotas  emitiendo
+la orden desde una tercera máquina:
+<PRE>
+portatil@user:/tmp$ scp europa:/tmp/prueba.batch nereida:/tmp/prueba.batch
+</PRE>
+Es posible usar comodines (wildcards), protegiéndolos de la shell local:
+<PRE>
+portatil@user:/tmp$ scp 'europa:/tmp/*.tex' nereida:/tmp/
+</PRE>
+Es posible copiar de dos máquinas remotas a una tercera:
+<PRE>
+pp2@europa:~/Lnet-parscp$ scp orion:Makefile.PL nereida:texput.log beowulf:
+pp2@europa:~/Lnet-parscp$ ssh beowulf ls -ltr | tail -2
+-rw-r--r--  1 casiano casiano    615 mar 26 13:56 texput.log
+-rw-r--r--  1 casiano casiano   1485 mar 26 13:56 Makefile.PL
+</PRE>
+Hemos copiado desde la máquina orion y desde la máquina nereida
+diferentes ficheros. La máquina <code>beowulf</code> es la máquina de destino
+a la que fueron transferidos.
+
+<P>
+La opción <code>-r</code> permite copiar subdirectorios.
+La opción <code>-p</code> permite preservar permisos.
+
+<P>
+
+<H4><A NAME="SECTION065120020000000000000">
+Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
+</H4>
+  
+
+<P>
+Un comando como este edita dos ficheros en sendos tabs:
+
+<P>
+<PRE>
+vi -p scp://orion/AUTOMATICBACKUPCHECKOUT /home/casiano/europabackup.log
+</PRE>
+
+<P>
+El primero es un fichero <code>~/AUTOMATICBACKUPCHECKOUT</code>
+en una máquina remota con nombre <code>orion</code>. El segundo
+es un fichero local. El editor <code>vim</code> emite el comando <code>scp</code> 
+apropiado para copiar el fichero remoto en un fichero temporal.
+
+<P>
+Durantre la edición, cada vez que salve el fichero
+<code>~/AUTOMATICBACKUPCHECKOUT</code> de <code>orion</code>, <code>vim</code>
+tasladará la orden <code>:w</code> en el comando <code>scp</code> adecuado:
+<PRE>
+:!scp -q '/tmp/v611122/1' 'orion:AUTOMATICBACKUPCHECKOUT'
+</PRE>
+
+<P>
+o bien podemos emitir una orden de edición de un nuevo fichero remoto:
+<PRE>
+:vsplit scp://casiano@some.machine.com/somefile.txt
+</PRE>
+
+<P>
+Es incluso posible ver los contenidos de un directorio:
+<PRE>
+:tabedit scp://orion/pp2/
+</PRE>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html13708"
+  HREF="node622.html#SECTION065120010000000000000">Transferencia de Ficheros con <TT>scp</TT></A>
+<LI><A NAME="tex2html13709"
+  HREF="node622.html#SECTION065120020000000000000">Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
 </UL>
-
-<P>
-Normally <code>git pull</code> does this by doing a <code>git fetch</code> to bring
-the local copy of the remote repository up to date, and then merging
-the changes into your own code repository and possibly your
-working copy.
-
-<P>
-The take away is to keep in mind that there are often at least <SPAN  CLASS="textbf">three copies</SPAN> 
-of a project on your workstation. 
-
-<UL>
-<LI>One copy is your own repository
-with your own commit history. 
-</LI>
-<LI>The second copy is your
-working copy where you are editing and building. 
-</LI>
-<LI>The third copy is your local "cached" copy of a remote repository.
-</LI>
 </UL>
-
-<P>
+<BR>
+<LI><A NAME="tex2html13710"
+  HREF="node623.html">Transferencia de ficheros por <TT>sftp</TT></A>
+<LI><A NAME="tex2html13711"
+  HREF="node624.html">Copias de Seguridad con <TT>rsync</TT></A>
+<UL>
+<LI><A NAME="tex2html13712"
+  HREF="node624.html#SECTION065122010000000000000">El Algoritmo</A>
+<LI><A NAME="tex2html13713"
+  HREF="node624.html#SECTION065122020000000000000">Mode de Uso</A>
+<LI><A NAME="tex2html13714"
+  HREF="node624.html#SECTION065122030000000000000">Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
+<LI><A NAME="tex2html13715"
+  HREF="node624.html#SECTION065122040000000000000">Backups con <TT>rsync</TT> en un Medio Externo</A>
+<LI><A NAME="tex2html13716"
+  HREF="node624.html#SECTION065122050000000000000">El fichero <TT>/etc/fstab</TT></A>
+<LI><A NAME="tex2html13717"
+  HREF="node624.html#SECTION065122060000000000000">El Programa de Copia</A>
+<LI><A NAME="tex2html13718"
+  HREF="node624.html#SECTION065122070000000000000">Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
+<LI><A NAME="tex2html13719"
+  HREF="node624.html#SECTION065122080000000000000">El fichero de <TT>cron</TT></A>
+<LI><A NAME="tex2html13720"
+  HREF="node624.html#SECTION065122090000000000000">Comprobación de la Copia</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13682"
+<A NAME="tex2html13706"
   HREF="node623.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13676"
-  HREF="node616.html">
+<A NAME="tex2html13700"
+  HREF="node610.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13670"
+<A NAME="tex2html13696"
   HREF="node621.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13678"
-  HREF="node783.html">
+<A NAME="tex2html13702"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13680"
-  HREF="node786.html">
+<A NAME="tex2html13704"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -229,20 +317,20 @@ working copy where you are editing and building.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13683"
-  HREF="node623.html">Mezclando Ficheros Específicos desde</A>
-<B> Subir:</B> <A NAME="tex2html13677"
-  HREF="node616.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html13671"
-  HREF="node621.html">Véase: Tutoriales de Git</A>
- &nbsp; <B>  <A NAME="tex2html13679"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13681"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13707"
+  HREF="node623.html">Transferencia de ficheros por</A>
+<B> Subir:</B> <A NAME="tex2html13701"
+  HREF="node610.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html13697"
+  HREF="node621.html">Los Ficheros de Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html13703"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13705"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

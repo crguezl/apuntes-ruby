@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Inicializando un Punto</TITLE>
-<META NAME="description" CONTENT="Inicializando un Punto">
+<TITLE>Símbolos, Métodos y Procs</TITLE>
+<META NAME="description" CONTENT="Símbolos, Métodos y Procs">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node165.html">
 <LINK REL="previous" HREF="node163.html">
-<LINK REL="up" HREF="node161.html">
+<LINK REL="up" HREF="node159.html">
 <LINK REL="next" HREF="node165.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5751"
+<A NAME="tex2html5690"
   HREF="node165.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5745"
-  HREF="node161.html">
+<A NAME="tex2html5684"
+  HREF="node159.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5739"
+<A NAME="tex2html5678"
   HREF="node163.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5747"
-  HREF="node783.html">
+<A NAME="tex2html5686"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5749"
-  HREF="node786.html">
+<A NAME="tex2html5688"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,151 +92,269 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5752"
-  HREF="node165.html">Definiendo un método to_s</A>
-<B> Subir:</B> <A NAME="tex2html5746"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5740"
-  HREF="node163.html">Instanciando un Punto</A>
- &nbsp; <B>  <A NAME="tex2html5748"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5750"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5691"
+  HREF="node165.html">Véase También</A>
+<B> Subir:</B> <A NAME="tex2html5685"
+  HREF="node159.html">Programación Funcional</A>
+<B> Anterior:</B> <A NAME="tex2html5679"
+  HREF="node163.html">Memoización</A>
+ &nbsp; <B>  <A NAME="tex2html5687"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5689"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02713000000000000000"></A>
-<A NAME="subsection:initialize"></A>
-<BR>
-Inicializando un Punto
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html5692"
+  HREF="node164.html#SECTION02695100000000000000">to_proc</A>
+<LI><A NAME="tex2html5693"
+  HREF="node164.html#SECTION02695200000000000000">Accediendo a una Clase como una Colección de Métodos</A>
+<LI><A NAME="tex2html5694"
+  HREF="node164.html#SECTION02695300000000000000">Viendo los (Nombres de) Métodos como Colecciones de Objetos</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02695000000000000000">
+Símbolos, Métodos y Procs</A>
 </H2>
-El método <code>initialize</code> es privado:
 
 <P>
-<PRE>
-$ cat -n calling_initialize.rb 
-     1  class Tutu
-     2    def initialize(a,b)
-     3      @a, @b = a,b
-     4    end
-     5  
-     6    def titi
-     7      initialize(2,3)
-     8    end
-     9  end
-    10  if __FILE__ == $0
-    11    x = Tutu.new(4,5)
-    12    z = x.titi()
-    13    puts z.class
-    14    puts z
-    15    x.initialize(4,2)
-    16  end
-</PRE>
+
+<H3><A NAME="SECTION02695100000000000000">
+to_proc</A>
+</H3>
 
 <P>
-<PRE>
-casiano@exthost:~/LPPsrc/151012$ ruby calling_initialize.rb 
-Array
-2
-3
-calling_initialize.rb:15:in `&lt;main&gt;': private method `initialize' called for #&lt;Tutu:0x8bb576c @a=2, @b=3&gt; (NoMethodError)
-casiano@exthost:~/LPPsrc/151012$
-</PRE>
 
-<P>
-<BLOCKQUOTE>
-The instance variables of an object can only be accessed by the
-instance methods of that object. Code that is not inside an instance
-method cannot read or set the value of an instance variable 
-
-</BLOCKQUOTE>
-
-<P>
-Aviso a los programadores Java:
-<PRE>
-casiano@exthost:~/LPPsrc/151012$ cat -n instance_variables_of_a_class.rb 
-     1  class Tutu
-     2    @x = 4
-     3    @y = 9
-     4  
-     5    def initialize(x,y)
-     6      @x, @y = x, y
-     7    end
-     8    def self.x
-     9      @x
-    10    end
-    11  
-    12    def self.y
-    13      @y
-    14    end
-    15  
-    16    def x
-    17      @x
-    18    end
-    19  
-    20    def y
-    21      @y
-    22    end
-    23  end
-    24  
-    25  if __FILE__ == $0
-    26    puts Tutu.x        # 4
-    27    puts Tutu.y        # 9
-    28    z = Tutu.new(5,7)
-    29    puts z.x           # 5
-    30    puts z.y           # 7
-    31  end
-</PRE>
-
-<P>
-<PRE>
-casiano@exthost:~/LPPsrc/151012$ ruby instance_variables_of_a_class.rb 
-4
-9
-5
-7
-</PRE>
-
-<P>
 <OL>
-<LI>This code does not do at all what a Java programmer expects. Instance
-variables are always resolved in the context of <code>self</code>.
+<LI>El método <A NAME="6093"></A><A NAME="tex2html322"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-method"><TT>method</TT></A>
+recibe un <A NAME="tex2html323"
+  HREF="http://ruby-doc.org/core-2.0.0/Symbol.html"><TT>Symbol</TT></A> que sea el nombre de un método y devuelve un objeto <A NAME="tex2html324"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A>
 </LI>
-<LI>When the
-<code>initialize</code> method is invoked, <code>self</code> holds an instance of the <code>Tutu</code>
-class.
+<LI>Ruby 1.9 añade el método <A NAME="6103"></A><A NAME="tex2html325"
+  HREF="http://ruby-doc.org/core-2.0.0/Symbol.html#method-i-to_proc"><TT>to_proc</TT></A>
+a la clase <A NAME="tex2html326"
+  HREF="http://ruby-doc.org/core-2.0.0/Symbol.html"><TT>Symbol</TT></A>
 </LI>
-<LI>But the code outside of that method is executed as part of
-the definition of the <code>Tutu</code> class. 
-</LI>
-<LI>When those first two assignments
-are executed, <code>self</code> refers to the <code>Tutu</code> class it<code>self</code>, not to an
-instance of the class. 
-</LI>
-<LI>The <code>@x</code> and <code>@y</code> variables inside the <code>initialize</code>
-method are completely different from those outside it.
+<LI>Este método <A NAME="6110"></A><A NAME="tex2html327"
+  HREF="http://ruby-doc.org/core-2.0.0/Symbol.html#method-i-to_proc"><TT>to_proc</TT></A>
+permite que un símbolo prefijado con <code>&amp;</code> pueda
+pasarse como bloque a un iterador
 </LI>
 </OL>
+
+<P>
+<PRE>
+# Increment an array of integers with the Fixnum.succ method
+[1,2,3].map(&amp;:succ)  # =&gt; [2,3,4]
+</PRE>
+que es equivalente a:
+<PRE>
+[1,2,3].map {|n| n.succ }
+</PRE>
+El método <code>to_proc</code> podría implementarse así:
+<PRE>
+class Symbol
+  def to_proc
+    lambda {|receiver, *args| receiver.send(self, *args)}
+  end
+end
+</PRE>
+
+<UL>
+<LI>El método <A NAME="6114"></A><A NAME="tex2html328"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-send"><TT>send</TT></A>
+es un método de la clase <A NAME="tex2html329"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>:
+<PRE>
+ruby-1.9.2-head :008 &gt; Object.instance_methods.select { |x| x =~ /send/ }
+ =&gt; [:send, :public_send, :__send__]
+</PRE>
+</LI>
+<LI><A NAME="6121"></A><A NAME="tex2html330"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-__send__"><TT>__send__</TT></A>
+es un sinónimo de <code>send</code>.
+</LI>
+<LI><A NAME="6125"></A><A NAME="tex2html331"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-public_send"><TT>public_send</TT></A>
+sólo invoca métodos públicos, no privados ni protegidos.
+</LI>
+</UL>
+
+<P>
+También podríamos implementar <code>to_proc</code> usando el método <A NAME="6129"></A><A NAME="tex2html332"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-method"><TT>method</TT></A>de la clase
+<A NAME="tex2html333"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>:
+<PRE>
+class Symbol
+  def to_proc
+    lambda {|receiver, *args| receiver.method(self)[*args]}
+  end
+end
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02695200000000000000">
+Accediendo a una Clase como una Colección de Métodos</A>
+</H3>
+En el siguiente ejemplo, definiremos <code>[]</code> en la clase <code>Module</code>
+para que podamos escribir:
+<PRE>
+     String[:reverse].bind("hello").call  # olleh
+</PRE>
+Para ello basta con hacer un <code>alias []</code> <A NAME="6136"></A><A NAME="tex2html334"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-instance_method"><TT>instance_method</TT></A>
+<PRE>
+[~/srcLPP/rubytesting/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat -n method_index1.rb 
+     1  class Module
+     2    alias [] instance_method
+     3  end
+     4  
+     5  puts String[:reverse].bind("hello").call  # olleh
+</PRE>
+El método retornado por <code>instance_method</code> es un <A NAME="tex2html335"
+  HREF="http://ruby-doc.org/core-2.0.0/UnboundMethod.html"><TT>UnboundMethod</TT></A>.
+Puesto que el método retornado no tiene <A NAME="tex2html336"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>,
+es necesario llamar al método <A NAME="6146"></A><A NAME="tex2html337"
+  HREF="http://ruby-doc.org/core-2.0.0/UnboundMethod.html#method-i-bind"><TT>bind</TT></A>
+sobre un objeto para ligarlo.
+
+<P>
+Es posible llevar esta analogía, usando el <A NAME="tex2html338"
+  HREF="http://ruby-doc.org/core-2.0.0/UnboundMethod.html"><TT>UnboundMethod</TT></A> a su vez como 
+hash usando este alias:
+<PRE>
+     7  class UnboundMethod
+     8    alias [] bind
+     9  end
+    10  
+    11  puts String[:reverse]["hello"][]         # olleh
+</PRE>
+
+<P>
+Resulta tentador definir también
+el operador  <SPAN  CLASS="textit">asignación a elementos de una colección</SPAN> <code>[]=</code> para definir métodos:
+<PRE>
+[~/srcLPP/rubytesting/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat -n method_index.rb 
+     1  class Module
+     2  
+     3    def []=(symbol, code)
+     4      define_method(symbol, code)
+     5    end
+     6  
+     7  end
+     8  
+     9  String[:chuchu] = lambda { |x| puts "Chuchu#{x}!"}
+    10  
+    11  "hello".chuchu("Cham") # ChuchuCham!
+</PRE>
+El método <code>define_method</code> es un método privado de <A NAME="tex2html339"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>:
+<PRE>
+ruby-1.9.2-head :009 &gt; Module.private_methods.select { |x| x =~ /define/ }
+ =&gt; [:method_undefined, :define_method, :singleton_method_undefined]
+</PRE>
+
+<P>
+En la línea 4 <code>self</code> es el objeto módulo sobre el que estamos definiendo el método (por ejemplo
+<A NAME="tex2html340"
+  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A> en la llamada de la línea 9: recuerde que toda clase es un módulo).
+
+<P>
+Con esta definición de <code>[]=</code>  podemos escribir:
+<PRE>
+Enumerable[:average] = lambda do
+  sum, n = 0.0, 0
+  self.each {|x| sum += x; n += 1 }
+  if n == 0
+    nil
+  else
+    sum/n
+  end
+end
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02695300000000000000">
+Viendo los (Nombres de) Métodos como Colecciones de Objetos</A>
+</H3>
+Visto lo anterior surge la idea de hacer algo similar para los métodos singleton de los objetos.
+La primera idea sería definir <code>[]</code> y <code>[]=</code> en la clase <A NAME="tex2html341"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>.
+El problema es que muchísimas clases redefinen <code>[]</code> y <code>[]=</code> y, por tanto,
+nuestra definición se perdería.
+
+<P>
+En vez de eso podemos hacerlo al revés: ver a los nombres de los métodos como colecciones
+y a los objetos como índices. No queda tan natural, pero tiene la ventaja de que la clase 
+<A NAME="tex2html342"
+  HREF="http://ruby-doc.org/core-2.0.0/Symbol.html"><TT>Symbol</TT></A> no es tan heredada como la clase <A NAME="tex2html343"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>.
+
+<P>
+Para hacerlo abrimos la clase <A NAME="tex2html344"
+  HREF="http://ruby-doc.org/core-2.0.0/Symbol.html"><TT>Symbol</TT></A> y definimos ahí los operadores:
+<PRE>
+[~/Chapter6MethodsProcsLambdasAndClosures]$ cat -n singleton_index.rb 
+     1  class Symbol
+     2    def [](obj)
+     3      obj.method(self)
+     4    end
+     5  
+     6    def []=(obj,f)
+     7      sym = self
+     8      eigenclass = class &lt;&lt; obj; self end
+     9      eigenclass.instance_eval do
+    10        define_method(sym, f)
+    11      end
+    12    end
+    13  end
+    14  
+    15  puts :length["Jane"][]  # 4
+    16  
+    17  x = "hello"
+    18  :tutu[x] = lambda { |z| puts "#{x} #{z}"}
+    19  x.tutu("Jane") # hello Jane
+end
+</PRE>
+Repase la sección
+<A HREF="node223.html#section:singleton_y_eigenclass">14.12</A>
+para recordar que para abrir la <A NAME="6171"></A><SPAN  CLASS="textit">eigenclass</SPAN> 
+del objeto <code>obj</code> usamos la sintáxis <code>class &lt;&lt; obj</code>. 
+Así, una forma de obtener la <A NAME="6173"></A><SPAN  CLASS="textit">eigenclass</SPAN> es:
+<PRE>
+eigenclass = class &lt;&lt; o; self; end
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5751"
+<A NAME="tex2html5690"
   HREF="node165.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5745"
-  HREF="node161.html">
+<A NAME="tex2html5684"
+  HREF="node159.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5739"
+<A NAME="tex2html5678"
   HREF="node163.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5747"
-  HREF="node783.html">
+<A NAME="tex2html5686"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5749"
-  HREF="node786.html">
+<A NAME="tex2html5688"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -287,20 +405,20 @@ method are completely different from those outside it.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5752"
-  HREF="node165.html">Definiendo un método to_s</A>
-<B> Subir:</B> <A NAME="tex2html5746"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5740"
-  HREF="node163.html">Instanciando un Punto</A>
- &nbsp; <B>  <A NAME="tex2html5748"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5750"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5691"
+  HREF="node165.html">Véase También</A>
+<B> Subir:</B> <A NAME="tex2html5685"
+  HREF="node159.html">Programación Funcional</A>
+<B> Anterior:</B> <A NAME="tex2html5679"
+  HREF="node163.html">Memoización</A>
+ &nbsp; <B>  <A NAME="tex2html5687"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5689"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

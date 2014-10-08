@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Encadenamiento de Alias</TITLE>
-<META NAME="description" CONTENT="Encadenamiento de Alias">
+<TITLE>caller</TITLE>
+<META NAME="description" CONTENT="caller">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node261.html">
-<LINK REL="previous" HREF="node257.html">
-<LINK REL="up" HREF="node227.html">
+<LINK REL="previous" HREF="node259.html">
+<LINK REL="up" HREF="node258.html">
 <LINK REL="next" HREF="node261.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7248"
+<A NAME="tex2html7307"
   HREF="node261.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7242"
-  HREF="node227.html">
+<A NAME="tex2html7301"
+  HREF="node258.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7236"
+<A NAME="tex2html7297"
   HREF="node259.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7244"
-  HREF="node783.html">
+<A NAME="tex2html7303"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7246"
-  HREF="node786.html">
+<A NAME="tex2html7305"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,29 +91,106 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7249"
-  HREF="node261.html">Lenguajes de Dominio Específico.</A>
-<B> Subir:</B> <A NAME="tex2html7243"
-  HREF="node227.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7237"
-  HREF="node259.html">Definiendo Métodos con define_methods</A>
- &nbsp; <B>  <A NAME="tex2html7245"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7247"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7308"
+  HREF="node261.html">Los Módulos ObjectSpace y</A>
+<B> Subir:</B> <A NAME="tex2html7302"
+  HREF="node258.html">Traza</A>
+<B> Anterior:</B> <A NAME="tex2html7298"
+  HREF="node259.html">set_trace_func</A>
+ &nbsp; <B>  <A NAME="tex2html7304"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7306"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION028110000000000000000">
-Encadenamiento de Alias</A>
-</H1>
+<H2><A NAME="SECTION02862000000000000000">
+caller</A>
+</H2>
+La llamada:
+
+<P>
+<PRE>
+caller(skip = 1)
+</PRE>
+
+<P>
+retorna un array de cadenas con el formato
+
+<P>
+<PRE>
+“file:line” o “file:line: in `method”‘
+</PRE>
+El parámetro opcional indica el número de pilas iniciales a saltarse.
+
+<P>
+Retorna <code>nil</code> si el numero de las que te saltas es mayor que el
+número de llamadas en la pila.
+
+<P>
+Ejemplo:
+<PRE>
+~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ cat -n ex0683.rb 
+     1  def cat_a
+     2    puts caller.join("\n")
+     3  end
+     4  def cat_b
+     5    cat_a
+     6  end
+     7  def cat_c
+     8    cat_b
+     9  end
+    10  cat_c
+</PRE>
+
+<P>
+<PRE>
+~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby ex0683.rb 
+ex0683.rb:5:in `cat_b'
+ex0683.rb:8:in `cat_c'
+ex0683.rb:10
+</PRE>
+
+<P>
+Veamos un ejemplo mas completo:
+
+<P>
+<PRE>
+~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ cat -n caller.rb 
+     1  def a(skip)
+     2    caller(skip)
+     3  end
+     4  def b(skip)
+     5    a(skip)
+     6  end
+     7  def c(skip)
+     8    b(skip)
+     9  end
+    10  puts c(0).inspect   
+    11  puts c(1).inspect   
+    12  puts c(2).inspect   
+    13  puts c(3).inspect   
+    14  puts c(4).inspect   
+    15  puts c(5).inspect
+</PRE>
+
+<P>
+<PRE>
+~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby caller.rb 
+["caller.rb:2:in `a'", "caller.rb:5:in `b'", "caller.rb:8:in `c'", "caller.rb:10"]
+["caller.rb:5:in `b'", "caller.rb:8:in `c'", "caller.rb:11"]
+["caller.rb:8:in `c'", "caller.rb:12"]
+["caller.rb:13"]
+[]
+nil
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

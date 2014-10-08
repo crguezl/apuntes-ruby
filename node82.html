@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Variables No Inicializadas</TITLE>
-<META NAME="description" CONTENT="Variables No Inicializadas">
+<TITLE>Congelación: freezing</TITLE>
+<META NAME="description" CONTENT="Congelación: freezing">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,27 +20,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="previous" HREF="node81.html">
-<LINK REL="up" HREF="node81.html">
+<LINK REL="up" HREF="node71.html">
 <LINK REL="next" HREF="node83.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html4309"
+<A NAME="tex2html4342"
   HREF="node83.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html4303"
-  HREF="node81.html">
+<A NAME="tex2html4336"
+  HREF="node71.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html4299"
+<A NAME="tex2html4332"
   HREF="node81.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html4305"
-  HREF="node783.html">
+<A NAME="tex2html4338"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html4307"
-  HREF="node786.html">
+<A NAME="tex2html4340"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,29 +91,91 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html4310"
-  HREF="node83.html">Constantes</A>
-<B> Subir:</B> <A NAME="tex2html4304"
-  HREF="node81.html">Variables</A>
-<B> Anterior:</B> <A NAME="tex2html4300"
-  HREF="node81.html">Variables</A>
- &nbsp; <B>  <A NAME="tex2html4306"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html4308"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html4343"
+  HREF="node83.html">Ejercicios</A>
+<B> Subir:</B> <A NAME="tex2html4337"
+  HREF="node71.html">Objetos</A>
+<B> Anterior:</B> <A NAME="tex2html4333"
+  HREF="node81.html">Objetos Manchados: Tainting</A>
+ &nbsp; <B>  <A NAME="tex2html4339"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html4341"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02421000000000000000">
-Variables No Inicializadas</A>
+<H2><A NAME="SECTION023811000000000000000"></A>
+<A NAME="subsection:freezing"></A>
+<BR>
+Congelación: freezing
 </H2>
+
+<P>
+<PRE>
+&gt;&gt; person2 = person1
+=&gt; "Wim"
+&gt;&gt; person1.freeze
+=&gt; "Wim"
+&gt;&gt; person2[0] = "R"
+TypeError: can't modify frozen string
+  from (irb):18:in `[]='
+  from (irb):18
+</PRE>
+
+<P>
+<PRE>
+~/rubytesting$ cat -n freeze.rb 
+     1  begin
+     2    a = [1,2,3].freeze
+     3    puts a
+     4    a &lt;&lt; [4,7] # this raises an exception
+     5    puts a
+     6  rescue
+     7    puts "Exception &lt;#{$!.class}&gt; raised &lt;#{$!}&gt;"
+     8  end
+~/rubytesting$ ruby freeze.rb 
+1
+2
+3
+Exception &lt;TypeError&gt; raised &lt;can't modify frozen array&gt;
+</PRE>
+
+<P>
+<PRE>
+pp@nereida:~/LPPbook$ irb
+irb(main):001:0&gt; 
+irb(main):002:0* 
+irb(main):003:0* quit
+lpp@nereida:~/LPPbook$ irb
+irb(main):001:0&gt; q = "hello"
+=&gt; "hello"
+irb(main):002:0&gt; q.freeze
+=&gt; "hello"
+irb(main):003:0&gt; q.object_id
+=&gt; 70233414821660
+irb(main):004:0&gt; q += " world"
+=&gt; "hello world"
+irb(main):005:0&gt; q.object_id
+=&gt; 70233414771300
+irb(main):006:0&gt; q.freeze
+=&gt; "hello world"
+irb(main):007:0&gt; q &lt;&lt; " world"
+TypeError: can't modify frozen string
+        from (irb):7:in `&lt;&lt;'
+        from (irb):7
+        from :0
+</PRE>
+
+<P>
+No hay manera de descongelar un objeto sobre el que ha sido llamado 
+<code>freeze</code>.
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

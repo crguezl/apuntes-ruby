@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Closure Tools</TITLE>
-<META NAME="description" CONTENT="Closure Tools">
+<TITLE>Algoritmo de Búsqueda Ejecutado por require</TITLE>
+<META NAME="description" CONTENT="Algoritmo de Búsqueda Ejecutado por require">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node550.html">
 <LINK REL="previous" HREF="node547.html">
-<LINK REL="up" HREF="node508.html">
+<LINK REL="up" HREF="node540.html">
 <LINK REL="next" HREF="node549.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12292"
+<A NAME="tex2html12344"
   HREF="node549.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12286"
-  HREF="node508.html">
+<A NAME="tex2html12338"
+  HREF="node540.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12280"
+<A NAME="tex2html12334"
   HREF="node547.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12288"
-  HREF="node783.html">
+<A NAME="tex2html12340"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12290"
-  HREF="node786.html">
+<A NAME="tex2html12342"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,38 +91,233 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12293"
-  HREF="node549.html">Véase También</A>
-<B> Subir:</B> <A NAME="tex2html12287"
-  HREF="node508.html">JAVASCRIPT, HTML y CSS</A>
-<B> Anterior:</B> <A NAME="tex2html12281"
-  HREF="node547.html">Backbone</A>
- &nbsp; <B>  <A NAME="tex2html12289"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12291"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12345"
+  HREF="node549.html">Como Crear tu Propio</A>
+<B> Subir:</B> <A NAME="tex2html12339"
+  HREF="node540.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12335"
+  HREF="node547.html">El Objeto module y</A>
+ &nbsp; <B>  <A NAME="tex2html12341"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12343"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-
-<H1><A NAME="SECTION04700000000000000000">
-Closure Tools</A>
-</H1>
-
-<P>
-<BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html12294"
-  HREF="node549.html">Véase También</A>
-</UL>
+<LI><UL>
+<LI><A NAME="tex2html12346"
+  HREF="node548.html#SECTION04588010000000000000">require(X) from module at path Y</A>
+<LI><A NAME="tex2html12347"
+  HREF="node548.html#SECTION04588020000000000000">LOAD_AS_FILE(X)</A>
+<LI><A NAME="tex2html12348"
+  HREF="node548.html#SECTION04588030000000000000">LOAD_AS_DIRECTORY(X)</A>
+<LI><A NAME="tex2html12349"
+  HREF="node548.html#SECTION04588040000000000000">LOAD_NODE_MODULES(X, START)</A>
+<LI><A NAME="tex2html12350"
+  HREF="node548.html#SECTION04588050000000000000">NODE_MODULES_PATHS(START)</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
-<BR><HR>
+<HR>
+
+<H2><A NAME="SECTION04588000000000000000">
+Algoritmo de Búsqueda Ejecutado por <TT>require</TT></A>
+</H2>
+
+<P>
+
+<H4><A NAME="SECTION04588010000000000000">
+require(X) from module at path Y</A>
+</H4>
+  
+
+<OL>
+<LI>If X is a core module,
+
+<OL>
+<LI>return the core module
+</LI>
+<LI>STOP
+</LI>
+</OL>
+</LI>
+<LI>If X begins with './' or '/' or '../'
+
+<OL>
+<LI><code>LOAD_AS_FILE(Y + X)</code>
+</LI>
+<LI><code>LOAD_AS_DIRECTORY(Y + X)</code>
+</LI>
+</OL>
+</LI>
+<LI><code>LOAD_NODE_MODULES(X, dirname(Y))</code>
+</LI>
+<LI>THROW "not found"
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION04588020000000000000">
+LOAD_AS_FILE(X)</A>
+</H4>
+  
+
+<OL>
+<LI>If X is a file, load X as JavaScript text.  STOP
+</LI>
+<LI>If X.js is a file, load X.js as JavaScript text.  STOP
+</LI>
+<LI>If X.node is a file, load X.node as binary addon.  STOP
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION04588030000000000000">
+LOAD_AS_DIRECTORY(X)</A>
+</H4>
+  
+
+<OL>
+<LI>If X/package.json is a file,
+   a. Parse X/package.json, and look for "main" field.
+   b. let M = X + (json main field)
+   c. <code>LOAD_AS_FILE(M)</code>
+</LI>
+<LI>If X/index.js is a file, load X/index.js as JavaScript text.  STOP
+</LI>
+<LI>If X/index.node is a file, load X/index.node as binary addon.  STOP
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION04588040000000000000">
+LOAD_NODE_MODULES(X, START)</A>
+</H4>
+  
+
+<OL>
+<LI>let <code>DIRS=NODE_MODULES_PATHS(START)</code>
+</LI>
+<LI>for each DIR in DIRS:
+   a. <code>LOAD_AS_FILE(DIR/X)</code>
+   b. <code>LOAD_AS_DIRECTORY(DIR/X)</code>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION04588050000000000000">
+NODE_MODULES_PATHS(START)</A>
+</H4>
+  
+
+<OL>
+<LI>let PARTS = path split(START)
+</LI>
+<LI>let ROOT = index of first instance of "node_modules" in PARTS, or 0
+</LI>
+<LI>let I = count of PARTS - 1
+</LI>
+<LI>let DIRS = []
+</LI>
+<LI>while I &gt; ROOT,
+   a. if PARTS[I] = "node_modules" CONTINUE
+   c. DIR = path join(PARTS[0 .. I] + "node_modules")
+   b. DIRS = DIRS + DIR
+   c. let I = I - 1
+</LI>
+<LI>return DIRS
+</LI>
+</OL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12344"
+  HREF="node549.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12338"
+  HREF="node540.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12334"
+  HREF="node547.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html12340"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html12342"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html12345"
+  HREF="node549.html">Como Crear tu Propio</A>
+<B> Subir:</B> <A NAME="tex2html12339"
+  HREF="node540.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12335"
+  HREF="node547.html">El Objeto module y</A>
+ &nbsp; <B>  <A NAME="tex2html12341"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12343"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

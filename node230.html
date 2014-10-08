@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Definiendo Clases y Módulos</TITLE>
-<META NAME="description" CONTENT="Definiendo Clases y Módulos">
+<TITLE>Programa Principal</TITLE>
+<META NAME="description" CONTENT="Programa Principal">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,6 +19,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node231.html">
 <LINK REL="previous" HREF="node229.html">
 <LINK REL="up" HREF="node228.html">
 <LINK REL="next" HREF="node231.html">
@@ -27,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6803"
+<A NAME="tex2html6782"
   HREF="node231.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6797"
+<A NAME="tex2html6776"
   HREF="node228.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6793"
+<A NAME="tex2html6770"
   HREF="node229.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6799"
-  HREF="node783.html">
+<A NAME="tex2html6778"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6801"
-  HREF="node786.html">
+<A NAME="tex2html6780"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,248 +92,45 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6804"
-  HREF="node231.html">Evaluando Strings y Bloques</A>
-<B> Subir:</B> <A NAME="tex2html6798"
-  HREF="node228.html">Tipos, Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6794"
-  HREF="node229.html">Antepasados y Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6800"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6802"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6783"
+  HREF="node231.html">La Clase Game</A>
+<B> Subir:</B> <A NAME="tex2html6777"
+  HREF="node228.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6771"
+  HREF="node229.html">Ejemplo de Partida</A>
+ &nbsp; <B>  <A NAME="tex2html6779"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6781"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6805"
-  HREF="node230.html#SECTION02812100000000000000"><TT>Class</TT>.new, <TT>Module</TT>.new, <TT>define_method</TT>
-y Ambitos</A>
-</UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02812000000000000000">
-Definiendo Clases y Módulos</A>
+<H2><A NAME="SECTION027172000000000000000">
+Programa Principal</A>
 </H2>
-
-<P>
-Las clases y los módulos son instancias de las clases <A NAME="9801"></A><A NAME="tex2html438"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>
-y <A NAME="9805"></A><A NAME="tex2html439"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.
-Por tanto, es posible crearlos dinámicamente:
+Este es el programa principal del <A NAME="8257"></A><SPAN  CLASS="textbf">TicTacToe</SPAN> o <A NAME="8259"></A><SPAN  CLASS="textbf">Tres en Raya</SPAN>. 
+Simplemente se llama al constructor de la clase 
+<code>TicTacToe::Game</code> el cual crea el objeto partida. Despúes llamamos al método <code>play</code>
+del objeto para que se juege la partida:
 <PRE>
-M = Module.new      # Define a new module M
-C = Class.new       # Define a new class C
-D = Class.new(C) {  # Define a subclass of C
-  include M         # that includes module M
-}
-D.to_s              # =&gt; "D": class gets constant name by magic
+if __FILE__ == $0
+  if ARGV.size &gt; 0 and ARGV[0] == "-d"
+    game = TicTacToe::Game.new TicTacToe::HumanPlayer,
+                   TicTacToe::DumbPlayer
+  else
+    game = TicTacToe::Game.new TicTacToe::HumanPlayer,
+                   TicTacToe::SmartPlayer
+  end 
+  game.play
+end
 </PRE>
 
 <P>
-Cuando un módulo o clase dinámicamente creado es asignado a una constante el nombre de esa 
-constante es usado como nombre del módulo o clase.
-
-<P>
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ cat -n dynamicclassesandmodules.rb 
-     1  Fred = Module.new do
-     2    def meth1
-     3      "hello #{args.inspect}"
-     4    end
-     5    def meth2
-     6      "bye #{args.inspect}"
-     7    end
-     8  end
-     9  
-    10  Klass = Class.new do
-    11    include Fred
-    12    attr_accessor 'args'
-    13  
-    14    def initialize(*args)
-    15      @args = args
-    16    end
-    17  end
-    18  
-    19  puts Fred.to_s     # Fred
-    20  puts Klass.name    # Klass
-    21  
-    22  a = Klass.new(4, 5)
-    23  
-    24  puts a.meth1     # hello [4, 5] 
-    25  puts a.meth2     # bye [4, 5]
-</PRE>
-
-<UL>
-<LI>Cuando una clase o módulo es creado dinámicamente y asignado a una constante, el nombre de la constante
-es utilizado como nombre de la clase 
-
-<P>
-</LI>
-<LI>Si fuera asignado a una
-variable, el método <A NAME="9809"></A><A NAME="tex2html440"
-  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-to_s"><TT>to_s</TT></A>
-devolvería algo del estilo
-<code>#&lt;Class:0x10016a868&gt;</code> y <A NAME="9813"></A><A NAME="tex2html441"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-name"><TT>name</TT></A>
-devolvería <code>nil</code>.
-</LI>
-</UL>
-
-<P>
-
-<H3><A NAME="SECTION02812100000000000000"></A><A NAME="9823"></A>
-<BR>
-<A NAME="tex2html442"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>.new, <A NAME="tex2html443"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.new, <A NAME="tex2html444"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
-y Ambitos
-</H3>
-
-<P>
-
-<OL>
-<LI>El método <A NAME="9827"></A><A NAME="tex2html445"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-local_variables"><TT>local_variables</TT></A>
-del módulo <A NAME="tex2html446"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> nos permite acceder
-a las variables locales visibles en un punto.
-</LI>
-<LI>Algunos lenguajes permiten a un <A NAME="9834"></A><SPAN  CLASS="textbf">ámbito</SPAN> interno ver las variables
-de un ámbito mas externo. Este tipo de visibilidad no ocurre en Ruby
-</LI>
-<LI>Hay tres puntos en los que un programa abandona el ámbito previo y
-abre un nuevo ámbito (<A NAME="9836"></A><SPAN  CLASS="textbf">scope gates</SPAN> en al terminología del libro <SPAN  CLASS="textbf">Metaprogramming Ruby</SPAN>
-[<A
- HREF="node787.html#metaprogramming">9</A>]):
-
-<OL>
-<LI>Definiciones de clase
-</LI>
-<LI>Definiciones de módulo
-</LI>
-<LI>Definiciones de método
-</LI>
-</OL>
-</LI>
-<LI>Las variables globales son visibles desde cualquier ámbito
-</LI>
-<LI>las variables de instancia son visibles desde cualquier punto en el que 
-<code>self</code> se refiere al mismo objeto
-</LI>
-</OL>
-
-<P>
-
-    <pre>
-
-    </pre>
-
-<P>
-Puesto que <A NAME="tex2html447"
-  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>.new, <A NAME="tex2html448"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.new y <A NAME="9844"></A><A NAME="tex2html449"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
-usan el bloque que les sigue y los bloques no abandonan el <A NAME="9848"></A><SPAN  CLASS="textbf">ámbito</SPAN> previo (aunque 
-crean uno nuevo),
-podemos jugar con estos tres métodos para crear clausuras en las que se comparten
-variables locales entre clases, métodos y ámbitos. Observe como en esta
-reescritura del programa anterior cambia la visibilidad:
-
-<P>
-
-    <pre>
-
-    </pre>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html6803"
-  HREF="node231.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6797"
-  HREF="node228.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6793"
-  HREF="node229.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6799"
-  HREF="node783.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6801"
-  HREF="node786.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html6804"
-  HREF="node231.html">Evaluando Strings y Bloques</A>
-<B> Subir:</B> <A NAME="tex2html6798"
-  HREF="node228.html">Tipos, Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6794"
-  HREF="node229.html">Antepasados y Módulos</A>
- &nbsp; <B>  <A NAME="tex2html6800"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6802"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

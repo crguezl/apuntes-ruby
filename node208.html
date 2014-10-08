@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Carga y Solicitud de Módulos</TITLE>
-<META NAME="description" CONTENT="Carga y Solicitud de Módulos">
+<TITLE>Limitando el Número de Instancias de una Clase</TITLE>
+<META NAME="description" CONTENT="Limitando el Número de Instancias de una Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node212.html">
 <LINK REL="previous" HREF="node207.html">
-<LINK REL="up" HREF="node160.html">
+<LINK REL="up" HREF="node204.html">
 <LINK REL="next" HREF="node209.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6409"
+<A NAME="tex2html6449"
   HREF="node209.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6403"
-  HREF="node160.html">
+<A NAME="tex2html6443"
+  HREF="node204.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6397"
+<A NAME="tex2html6439"
   HREF="node207.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6405"
-  HREF="node783.html">
+<A NAME="tex2html6445"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6407"
-  HREF="node786.html">
+<A NAME="tex2html6447"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,47 +91,81 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6410"
-  HREF="node209.html">El Camino de Búsqueda</A>
-<B> Subir:</B> <A NAME="tex2html6404"
-  HREF="node160.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6398"
-  HREF="node207.html">Prepend</A>
- &nbsp; <B>  <A NAME="tex2html6406"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6408"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6450"
+  HREF="node209.html">Métodos y Clases: Construyendo</A>
+<B> Subir:</B> <A NAME="tex2html6444"
+  HREF="node204.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6440"
+  HREF="node207.html">dup, clone e initialize_copy</A>
+ &nbsp; <B>  <A NAME="tex2html6446"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6448"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02790000000000000000">
-Carga y Solicitud de Módulos</A>
-</H1>
+<H2><A NAME="SECTION02744000000000000000">
+Limitando el Número de Instancias de una Clase</A>
+</H2>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n LimitingTheNumberOfInstances.rb 
+     1  class Season
+     2    NAMES = %w{ Spring Summer Autumn Winter }
+     3    INSTANCES = []
+     4  
+     5    def initialize(n)
+     6      @n = n
+     7    end
+     8  
+     9    def to_s
+    10      NAMES[@n]
+    11    end
+    12  
+    13    NAMES.each_with_index { |n,i|
+    14      season = new(i)
+    15      INSTANCES[i] = season
+    16      const_set n, season
+    17    }
+    18  
+    19    private_class_method :allocate, :new
+    20    private :dup, :clone
+    21  end
+    22  
+    23  if __FILE__ == $0
+    24    puts Season::Spring 
+    25    puts Season::Summer
+    26    puts Season::Autumn
+    27    puts Season::Winter
+    28  end
+</PRE>
+El método <A NAME="tex2html399"
+  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html#method-i-const_set">const_set</A>
+de la clase <A NAME="tex2html400"
+  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html">Module</A>
+establece el valor asociado con el nombre pasado como primer argumento al objeto dado como segundo argumento:
+<PRE>
+&gt;&gt; Math.const_set("HIGH_SCHOOL_PI", 22.0/7.0)
+=&gt; 3.14285714285714
+&gt;&gt; Math::HIGH_SCHOOL_PI
+=&gt; 3.14285714285714
+</PRE>
+
+<P>
+Cuando se ejecuta el programa anterior produce esta salida:
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby LimitingTheNumberOfInstances.rb 
+Spring
+Summer
+Autumn
+Winter
+</PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6411"
-  HREF="node209.html">El Camino de Búsqueda</A>
-<LI><A NAME="tex2html6412"
-  HREF="node210.html">Ejecutando Código Cargado</A>
-<UL>
-<LI><A NAME="tex2html6413"
-  HREF="node210.html#SECTION02792100000000000000">Envolviendo una Carga</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6414"
-  HREF="node211.html">Autoloading de Módulos</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

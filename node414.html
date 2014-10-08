@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Aplicación Web con Sinatra: Contar la Popularidad de Nuestros Amigos en Twitter</TITLE>
-<META NAME="description" CONTENT="Práctica: Aplicación Web con Sinatra: Contar la Popularidad de Nuestros Amigos en Twitter">
+<TITLE>Configuring attack protection</TITLE>
+<META NAME="description" CONTENT="Configuring attack protection">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node415.html">
 <LINK REL="previous" HREF="node413.html">
-<LINK REL="up" HREF="node377.html">
+<LINK REL="up" HREF="node386.html">
 <LINK REL="next" HREF="node415.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10057"
+<A NAME="tex2html10110"
   HREF="node415.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10051"
-  HREF="node377.html">
+<A NAME="tex2html10104"
+  HREF="node386.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10045"
+<A NAME="tex2html10098"
   HREF="node413.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10053"
-  HREF="node783.html">
+<A NAME="tex2html10106"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10055"
-  HREF="node786.html">
+<A NAME="tex2html10108"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,102 +92,87 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10058"
-  HREF="node415.html">Práctica: TicTacToe</A>
-<B> Subir:</B> <A NAME="tex2html10052"
-  HREF="node377.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10046"
-  HREF="node413.html">Sinatra como Middleware</A>
- &nbsp; <B>  <A NAME="tex2html10054"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10056"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10111"
+  HREF="node415.html">Settings disponibles/Available Settings</A>
+<B> Subir:</B> <A NAME="tex2html10105"
+  HREF="node386.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10099"
+  HREF="node413.html">Configuration / Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html10107"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10109"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033280000000000000000"></A>
-   <A NAME="17039"></A>
-  
-<A NAME="practica:twitterpopularity"></A>
-<BR>
-Práctica: Aplicación Web con Sinatra: Contar la Popularidad de Nuestros Amigos en Twitter
+<H1><A NAME="SECTION033200000000000000000">
+Configuring attack protection</A>
 </H1>
-Escriba una aplicación web en Sinatra 
-similar a la solicitada en la práctica 
-<A HREF="node40.html#practica:popularidadentwitter">7.18</A>
-y que una vez obtenido el nombre del usuario muestre la lista de los 
-<FONT COLOR="#0000ff"> amigos de ese usuario (esto es, a quienes sigue)</FONT>
-ordenada según su 
-<FONT COLOR="#0000ff"> popularidad (esto es, según el número de seguidores que tiene)</FONT>.
-Del mas popular al menos popular (no mas de 10 usuarios. Evite posibles cortes de Twitter por el uso del ancho de banda. Lea 
-<A NAME="tex2html892"
-  HREF="https://dev.twitter.com/rest/public/rate-limiting">Tips to avoid being Rate Limited</A>).
-Puede usar la aplicación <code>rack-last-twits</code> (rama <code>sinatra</code>) en 
-<A NAME="tex2html893"
-  HREF="https://github.com/crguezl/rack-last-twits/tree/sinatra">https://github.com/crguezl/rack-last-twits/tree/sinatra</A>
-como base para su código.
+Sinatra is using <A NAME="tex2html904"
+  HREF="http://rubydoc.info/gems/rack-protection/">Rack::Protection</A>
+to defend your application against common, opportunistic attacks.
 
 <P>
 
-<br/>
-<img src="lasttweets.png" width="50%">
-<br/>
+<OL>
+<LI>You can easily disable this behavior (which will open up your
+application to tons of common vulnerabilities):
 
 <P>
-La siguiente sesión <code>pry</code> muestra como obtener los seguidores de un usuario:
+<code>disable :protection</code>
+</LI>
+<LI>To skip a single defense layer, set protection to an options hash:
+
+<P>
 <PRE>
-[1] pry(main)&gt; require 'twitter'
-=&gt; true
-[2] pry(main)&gt; require './configure'
-=&gt; true
-[3] pry(main)&gt; client = my_twitter_client()
-=&gt; #&lt;Twitter::REST::Client:0x007fe972075e78
- @access_token="**********************",
- @access_token_secret="**********************",
- @consumer_key="**********************",
- @consumer_secret="**********************"&gt;
-[5] pry(main)&gt; seguidores = client.friend_ids("crguezl").attrs[:ids].take(10)
-=&gt; [476049040, 249595722,
- 582620116, 546228347, 39973845,
- 150456846, 79024273, 2693104332,
- 2471387516, 1635283039]
-[6] pry(main)&gt; amigos = {}
-[7] pry(main)&gt; seguidores.map { amigos[client.user(f).name] = client.user(f).followers_count }
-=&gt; [269, 269, 269, 269, 269, 269, 269, 269, 269, 269]
-[8] pry(main)&gt; amigos
-=&gt; {"@laculturaensc"=&gt;486, "Teatro Guimerá"=&gt;2738,
- "TEA Tenerife"=&gt;5649, "Tenerife Ocio"=&gt;12925,
- "lagenda tenerife"=&gt;7876, "El Chikiplan"=&gt;424,
- "PateaTusMontes"=&gt;6038, "Mastering Vim"=&gt;1170,
- "CocoaConf Podcast"=&gt;94, "Kido Tsubomi"=&gt;269}
-[9] pry(main)&gt; amigos.sort_by { |x, y| -y }
-=&gt; [["Tenerife Ocio", 12925],
- ["lagenda tenerife", 7876], ["PateaTusMontes", 6038],
- ["TEA Tenerife", 5649], ["Teatro Guimerá", 2738],
- ["Mastering Vim", 1170], ["@laculturaensc", 486],
- ["El Chikiplan", 424], ["Kido Tsubomi", 269],
- ["CocoaConf Podcast", 94]]
+set :protection, :except =&gt; :path_traversal
 </PRE>
+</LI>
+<LI>You can also hand in an array in order to disable a list of protections:
+
+<P>
+<PRE>
+set :protection, :except =&gt; [:path_traversal, :session_hijacking]
+</PRE>
+</LI>
+<LI>By default, Sinatra will only set up session based protection if
+<code>:sessions</code> has been enabled. 
+
+<P>
+Sometimes you want to set up sessions
+on your own, though. 
+
+<P>
+In that case you can get it to set up session
+based protections by passing the <code>:session option</code>:
+
+<P>
+<PRE>
+use Rack::Session::Pool
+set :protection, :session =&gt; true
+</PRE>
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10057"
+<A NAME="tex2html10110"
   HREF="node415.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10051"
-  HREF="node377.html">
+<A NAME="tex2html10104"
+  HREF="node386.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10045"
+<A NAME="tex2html10098"
   HREF="node413.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10053"
-  HREF="node783.html">
+<A NAME="tex2html10106"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10055"
-  HREF="node786.html">
+<A NAME="tex2html10108"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -238,20 +223,20 @@ La siguiente sesión <code>pry</code> muestra como obtener los seguidores de un 
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10058"
-  HREF="node415.html">Práctica: TicTacToe</A>
-<B> Subir:</B> <A NAME="tex2html10052"
-  HREF="node377.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10046"
-  HREF="node413.html">Sinatra como Middleware</A>
- &nbsp; <B>  <A NAME="tex2html10054"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10056"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10111"
+  HREF="node415.html">Settings disponibles/Available Settings</A>
+<B> Subir:</B> <A NAME="tex2html10105"
+  HREF="node386.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10099"
+  HREF="node413.html">Configuration / Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html10107"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10109"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

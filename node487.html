@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Make Heroku run non-master Git branch</TITLE>
-<META NAME="description" CONTENT="Make Heroku run non-master Git branch">
+<TITLE>Ejemplo Simple</TITLE>
+<META NAME="description" CONTENT="Ejemplo Simple">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node488.html">
 <LINK REL="previous" HREF="node486.html">
-<LINK REL="up" HREF="node482.html">
+<LINK REL="up" HREF="node486.html">
 <LINK REL="next" HREF="node488.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11311"
+<A NAME="tex2html11298"
   HREF="node488.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11305"
-  HREF="node482.html">
+<A NAME="tex2html11292"
+  HREF="node486.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11299"
+<A NAME="tex2html11288"
   HREF="node486.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11307"
-  HREF="node783.html">
+<A NAME="tex2html11294"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11309"
-  HREF="node786.html">
+<A NAME="tex2html11296"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,135 +91,115 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11312"
-  HREF="node488.html">Account Verification and add-ons</A>
-<B> Subir:</B> <A NAME="tex2html11306"
-  HREF="node482.html">Despliegue en Heroku</A>
-<B> Anterior:</B> <A NAME="tex2html11300"
-  HREF="node486.html">Configuration</A>
- &nbsp; <B>  <A NAME="tex2html11308"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11310"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11299"
+  HREF="node488.html">Las Manos en la</A>
+<B> Subir:</B> <A NAME="tex2html11293"
+  HREF="node486.html">Google Plus y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html11289"
+  HREF="node486.html">Google Plus y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html11295"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11297"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION032250000000000000000">
-Make Heroku run non-master Git branch</A>
+<H1><A NAME="SECTION031910000000000000000">
+Ejemplo Simple</A>
 </H1>
 
 <P>
-<A NAME="tex2html1131"
-  HREF="http://stackoverflow.com/questions/14593538/make-heroku-run-non-master-git-branch">Make Heroku run non-master Git branch</A>
-You can push an alternative branch to Heroku using Git.
+Véase
+<A NAME="tex2html1144"
+  HREF="https://github.com/crguezl/sinatra-google-plus-simple">https://github.com/crguezl/sinatra-google-plus-simple</A>
 <PRE>
-git push heroku-dev test:master
+[~/src/ruby/sinatra/sinatra-google-plus(master)]$ tree
+.
+|--- Gemfile
+|--- Gemfile.lock
+|--- README.md
+|--- clientID.txt
+|--- config.yml
+|--- config.yml.example
+|--- public
+|   |--- images
+|   |   `--- favicon.ico
+|   |--- javascript
+|   `--- stylesheets
+|       `--- style.css
+|--- sinatragplus.rb
+`--- views
+    |--- 404.erb
+    |--- 500.erb
+    |--- index.erb
+    |--- layout.erb
+    `--- show.erb
+
+5 directories, 14 files
 </PRE>
-This pushes your local test branch to the remote's master branch (on Heroku).
 
 <P>
-El manual de <code>git push</code> dice:
-
-<P>
-To push a local branch to an established remote, you need to issue the command:
 <PRE>
-git push  &lt;REMOTENAME&gt; &lt;BRANCHNAME&gt;
+[~/src/ruby/sinatra/sinatra-google-plus(master)]$ cat sinatragplus.rb 
+# sinatragplus.rb
+require 'sinatra'
+require "sinatra/config_file"
+require 'google_plus'
+
+config_file 'config.yml'
+
+
+error do
+  erb :'500'
+end
+
+#class
+class GPlus
+  def initialize(apikey, gid)
+    @apikey = apikey
+    @gid = gid
+    get_info
+  end
+
+  attr_reader :row0, :row1, :row2, :logo
+  private
+    #Get info about specific G+ ID
+    def get_info
+      begin
+        GooglePlus.api_key = @apikey
+        person = GooglePlus::Person.get(@gid.to_i)
+        @row0 = person.display_name
+        @row1 = person.list_activities.items
+        @row2 = person.url
+        properties = person.attributes
+        puts properties.class
+        puts properties['image'].class
+        @logo = properties['image']['url']
+        properties.each { |key, value| puts "%-20s %20s" % [key, value] }
+      rescue Exception =&gt; msg  
+        # display the system generated error message  
+        puts msg  
+      end  
+    end
+end
+ 
+# Display Google+ details
+get '/' do
+  @key = settings.key
+  @user = settings.user
+  @gplus = GPlus.new(@key, @user)
+  erb :show
+end
 </PRE>
-This is most typically invoked as <code>git push origin master</code>. 
-
-<P>
-If you
-would like to give the branch a different name on the upstream side
-of the push, you can issue the command:
-
-<P>
-<PRE>
-git push  &lt;REMOTENAME&gt; &lt;LOCALBRANCHNAME&gt;:&lt;REMOTEBRANCHNAME&gt;
-</PRE>
 
 <P>
 
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html11311"
-  HREF="node488.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11305"
-  HREF="node482.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11299"
-  HREF="node486.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11307"
-  HREF="node783.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11309"
-  HREF="node786.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html11312"
-  HREF="node488.html">Account Verification and add-ons</A>
-<B> Subir:</B> <A NAME="tex2html11306"
-  HREF="node482.html">Despliegue en Heroku</A>
-<B> Anterior:</B> <A NAME="tex2html11300"
-  HREF="node486.html">Configuration</A>
- &nbsp; <B>  <A NAME="tex2html11308"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11310"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<P>
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

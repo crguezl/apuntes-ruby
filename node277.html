@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Cuando una assertion falla</TITLE>
-<META NAME="description" CONTENT="Cuando una assertion falla">
+<TITLE>Práctica: HTML DSL</TITLE>
+<META NAME="description" CONTENT="Práctica: HTML DSL">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node278.html">
 <LINK REL="previous" HREF="node276.html">
-<LINK REL="up" HREF="node275.html">
+<LINK REL="up" HREF="node236.html">
 <LINK REL="next" HREF="node278.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7535"
+<A NAME="tex2html7575"
   HREF="node278.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7529"
-  HREF="node275.html">
+<A NAME="tex2html7569"
+  HREF="node236.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7523"
+<A NAME="tex2html7563"
   HREF="node276.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7531"
-  HREF="node783.html">
+<A NAME="tex2html7571"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7533"
-  HREF="node786.html">
+<A NAME="tex2html7573"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,138 +92,201 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7536"
-  HREF="node278.html">Organizando las pruebas</A>
-<B> Subir:</B> <A NAME="tex2html7530"
-  HREF="node275.html">Test/Unit</A>
-<B> Anterior:</B> <A NAME="tex2html7524"
-  HREF="node276.html">Ejemplo Sencillo de uso</A>
- &nbsp; <B>  <A NAME="tex2html7532"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7534"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7576"
+  HREF="node278.html">Práctica: HTML DSL con</A>
+<B> Subir:</B> <A NAME="tex2html7570"
+  HREF="node236.html">Reflexión y Metaprogramación</A>
+<B> Anterior:</B> <A NAME="tex2html7564"
+  HREF="node276.html">Práctica: DSL: Redacción de</A>
+ &nbsp; <B>  <A NAME="tex2html7572"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7574"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02912000000000000000">
-Cuando una assertion falla</A>
-</H2>
-
-<P>
+<H1><A NAME="SECTION028150000000000000000"></A>
+   <A NAME="10552"></A>
+  
+<A NAME="sectionpractica:htmldsl"></A>
+<BR>
+Práctica: HTML DSL
+</H1>
+En esta práctica deberá escribir una clase que provea una funcionalidad 
+parecida (por supuesto, no completa)
+ a la de la librería
+<A NAME="tex2html563"
+  HREF="http://markaby.rubyforge.org/">markaby</A>.
+La librería provee métodos <code>html</code>, <code>body</code>, <code>h1</code>, etc. que permiten 
+la escritura de los correspondientes tags HTML:
 <PRE>
-[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat test/tc_simple_number2.rb 
-# File:  tc_simple_number2.rb
- 
-require "simple_number"
-require "test/unit"
- 
-class TestSimpleNumber &lt; Test::Unit::TestCase
- 
-  def test_simple
-    assert_equal(4, SimpleNumber.new(2).add(2) )
-    assert_equal(4, SimpleNumber.new(2).multiply(2) )
+ require 'markaby'
+
+  mab = Markaby::Builder.new
+  mab.html do
+    head { title "Boats.com" }
+    body do
+      h1 "Boats.com has great deals"
+      ul do
+        li "$49 for a canoe"
+        li "$39 for a raft"
+        li "$29 for a huge boot that floats and can fit 5 people"
+      end
+    end
   end
- 
-  def test_typecheck
-    assert_raise( RuntimeError ) { SimpleNumber.new('a') }
-  end
- 
-  def test_failure
-    assert_equal(3, SimpleNumber.new(2).add(2), "Adding doesn't work" )
-  end
- 
-end
+  puts mab.to_s
+</PRE>
+Los métodos, como <code>b</code> reciben como primer argumento una cadena que es la que hay que rodear entre
+las marcas <code>&lt;b&gt;</code> y <code>&lt;/b&gt;</code>.
+También pueden recibir opcionalmente un segundo argumento que sea un hash
+especificando los atributos asociados con el tag:
+<PRE>
+a "google", :href =&gt; "http://www.google.com", :name =&gt; "foo"
+</PRE>
+que debería dar lugar a un texto parecido a este:
+<PRE>
+&lt;a href = "http://www.google.com", name = "foo"&gt;google&lt;/a&gt;
+</PRE>
+Si en la llamada no se provee la cadena inicial, se deberá proveer un bloque.
+Dicho bloque construye la cadena que se interpolará entre las marcas.
+Así:
+<PRE>
+head { title "My wonderful home page" }
 </PRE>
 
 <P>
+debería producir la cadena:
 <PRE>
-[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat Rakefile 
-desc "Test class SimpleNumber"
-task :test do
-  sh "ruby -Ilib -Itest test/tc_simple_number.rb"
-end
-
-desc "Test with test/tc_simple_number2.rb. Expect failures"
-task :test2 do
-  sh "ruby -Ilib -Itest test/tc_simple_number2.rb"
-end
+&lt;head&gt;&lt;title&gt;My wonderful home page&lt;/title&gt;&lt;/head&gt;
+</PRE>
+La ejecución de este código
+<PRE>
+~/chapter8ReflectionandMetaprogramming$ cat -n html.rb 
+     1  class HTML
+     2    attr_accessor :page
+     3  
+     4    def initialize........
+     5      ....................
+     6      ....................
+     7    end
+     8  
+     9    def build_attr(attributes)
+    10        ...........................................................
+    11        ............................................................ 
+    12    end
+    13  
+    14    def ..............(tag, *args)
+    15      ...............................................
+    16      ...............................................
+    17      ...............................................
+    18      ...............................................
+    19      ...............................................
+    20      ...............................................
+    21      ...............................................
+    22      ...............................................
+    23      ...............................................
+    24      ...............................................
+    25      ...............................................
+    26      ...............................................
+    27    end
+    28  
+    29    def to_s
+    30      ..............................................
+    31    end
+    32  end
+    33  
+    34  if __FILE__ == $0
+    35    q= HTML.new {  
+    36      html {
+    37        head(:dir =&gt; "chazam", :lang =&gt; "spanish") { title "My wonderful home page" }
+    38        body do
+    39          h1 "Welcome to my home page!", :class =&gt; "chuchu", :lang =&gt; "spanish"
+    40          b "My hobbies:"
+    41          ul do
+    42            li "Juggling"
+    43            li "Knitting"
+    44            li "Metaprogramming"
+    45          end #ul
+    46        end # body
+    47      }
+    48    }
+    49    puts q
+    50  end
+</PRE>
+debería producir una salida parecida a esta:
+<PRE>
+~/chapter8ReflectionandMetaprogramming$ ruby html.rb 
+&lt;html&gt;
+&lt;head dir = "chazam" lang = "spanish"&gt;
+&lt;title&gt;
+My wonderful home page
+&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1 class = "chuchu" lang = "spanish"&gt;
+Welcome to my home page!
+&lt;/h1&gt; &lt;b&gt;
+My hobbies:
+&lt;/b&gt; &lt;ul&gt;
+&lt;li&gt;
+Juggling
+&lt;/li&gt; &lt;li&gt;
+Knitting
+&lt;/li&gt; &lt;li&gt;
+Metaprogramming
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
 </PRE>
 
 <P>
-<PRE>
-[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ rake test2
-ruby -Ilib -Itest test/tc_simple_number2.rb
-Run options: 
-
-# Running tests:
-
-F..
-
-Finished tests in 0.001706s, 1758.4994 tests/s, 2344.6659 assertions/s.
-
-  1) Failure:
-test_failure(TestSimpleNumber) [test/tc_simple_number2.rb:18]:
-Adding doesn't work.
-&lt;3&gt; expected but was
-&lt;4&gt;.
-
-3 tests, 4 assertions, 1 failures, 0 errors, 0 skips
-rake aborted!
-Command failed with status (1): [ruby -Ilib -Itest test/tc_simple_number2.r...]
-/Users/casiano/local/src/ruby/LPP/unit_testing/simple_example/Rakefile:8:in `block in &lt;top (required)&gt;'
-/Users/casiano/.rvm/gems/ruby-1.9.3-p392/bin/ruby_noexec_wrapper:14:in `eval'
-/Users/casiano/.rvm/gems/ruby-1.9.3-p392/bin/ruby_noexec_wrapper:14:in `&lt;main&gt;'
-Tasks: TOP =&gt; test2
-(See full trace by running task with --trace)
-</PRE>
-
-<OL>
-<LI>Now there are three tests (three member functions) in the class.
+Repase las secciones 
+<A HREF="node251.html#seubsection:methodmissing">15.4.5</A>
+y
+<A HREF="node271.html#subsection:instanceeval">15.12.1</A>.
 
 <P>
-</LI>
-<LI>The function <code>test_typecheck</code> uses <code>assert_raise</code> to check for an
-exception. 
+
+<H4><A NAME="SECTION028150010000000000000">
+Solución</A>
+</H4>
+  
 
 <P>
-</LI>
-<LI>The function <code>test_failure</code> is set up to fail, which the
-Ruby output happily points out, not only telling us which test
-failed, but how it failed (<code>expected &lt;3&gt; but was &lt;4&gt;</code>). 
-
+Puede consultar una solución en
+<A NAME="tex2html564"
+  HREF="https://github.com/crguezl/dsl-quiz-simple">https://github.com/crguezl/dsl-quiz-simple</A>
 <P>
-</LI>
-<LI>On this
-assertion, we've also added an final parameters which is a custom
-error message. It's strictly optional but can be helpful for
-debugging. 
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-</LI>
-<LI>All of the assertions include their own error messages
-which are usually sufficient for simple debugging.
-</LI>
-</OL>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html7577"
+  HREF="node277.html#SECTION028150010000000000000">Solución</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7535"
+<A NAME="tex2html7575"
   HREF="node278.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7529"
-  HREF="node275.html">
+<A NAME="tex2html7569"
+  HREF="node236.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7523"
+<A NAME="tex2html7563"
   HREF="node276.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7531"
-  HREF="node783.html">
+<A NAME="tex2html7571"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7533"
-  HREF="node786.html">
+<A NAME="tex2html7573"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -274,20 +337,20 @@ which are usually sufficient for simple debugging.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7536"
-  HREF="node278.html">Organizando las pruebas</A>
-<B> Subir:</B> <A NAME="tex2html7530"
-  HREF="node275.html">Test/Unit</A>
-<B> Anterior:</B> <A NAME="tex2html7524"
-  HREF="node276.html">Ejemplo Sencillo de uso</A>
- &nbsp; <B>  <A NAME="tex2html7532"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7534"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7576"
+  HREF="node278.html">Práctica: HTML DSL con</A>
+<B> Subir:</B> <A NAME="tex2html7570"
+  HREF="node236.html">Reflexión y Metaprogramación</A>
+<B> Anterior:</B> <A NAME="tex2html7564"
+  HREF="node276.html">Práctica: DSL: Redacción de</A>
+ &nbsp; <B>  <A NAME="tex2html7572"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7574"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

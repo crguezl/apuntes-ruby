@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>set_trace_func</TITLE>
-<META NAME="description" CONTENT="set_trace_func">
+<TITLE>Definiendo, Suprimiendo y Haciendo Alias de Métodos</TITLE>
+<META NAME="description" CONTENT="Definiendo, Suprimiendo y Haciendo Alias de Métodos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node251.html">
 <LINK REL="previous" HREF="node249.html">
-<LINK REL="up" HREF="node249.html">
+<LINK REL="up" HREF="node246.html">
 <LINK REL="next" HREF="node251.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7112"
+<A NAME="tex2html7155"
   HREF="node251.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7106"
-  HREF="node249.html">
+<A NAME="tex2html7149"
+  HREF="node246.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7100"
+<A NAME="tex2html7143"
   HREF="node249.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7108"
-  HREF="node783.html">
+<A NAME="tex2html7151"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7110"
-  HREF="node786.html">
+<A NAME="tex2html7153"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,147 +92,148 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7113"
-  HREF="node251.html">caller</A>
-<B> Subir:</B> <A NAME="tex2html7107"
-  HREF="node249.html">Traza</A>
-<B> Anterior:</B> <A NAME="tex2html7101"
-  HREF="node249.html">Traza</A>
- &nbsp; <B>  <A NAME="tex2html7109"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7111"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7156"
+  HREF="node251.html">Manejando Métodos No Definidos:</A>
+<B> Subir:</B> <A NAME="tex2html7150"
+  HREF="node246.html">Métodos</A>
+<B> Anterior:</B> <A NAME="tex2html7144"
+  HREF="node249.html">Llamando a los Métodos</A>
+ &nbsp; <B>  <A NAME="tex2html7152"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7154"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02861000000000000000">
-set_trace_func</A>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html7157"
+  HREF="node250.html#SECTION02844100000000000000">Definiendo Métodos con define_method</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02844000000000000000">
+Definiendo, Suprimiendo y Haciendo Alias de Métodos</A>
 </H2>
-Es posible monitorizar la ejecución de un programa usando <code>set_trace_func</code>.
-<code>set_trace_func</code> tiene la sintáxis:
-<PRE>
-set_trace_func( proc ) → proc 
-set_trace_func( nil ) → nil
-</PRE>
-Establece <code> proc</code> como un manejador para crear una traza 
-de la ejecución. Si es <code>nil</code> desactivamos la traza.
 
 <P>
-El <code>proc</code> toma 6 parámetros:
+
+<H3><A NAME="SECTION02844100000000000000"></A>
+<A NAME="subsubsection:definiendometodos"></A>
+<BR>
+Definiendo Métodos con define_method
+</H3>
+En Ruby tenemos dos formas de generar métodos 
+dinámicamente: <code>define_method</code> y
+<code>eval + def</code>. 
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
+define_method(symbol, method)
+
+define_method(symbol) { block }
+</PRE></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
+ class_eval &lt;&lt;-"END"
+  def #{name}
+    # body 
+  end  
+ END
+</PRE></TD>
+</TR>
+</TABLE>
+<code>define_method</code> es un método de clase privado y por tanto debe ser invocado sin especificar 
+el receptor: el destinatario es siempre la clase que esta en contexto.
+Los parámetros son:
+
+<P>
 
 <UL>
-<LI>Un nombre de evento,
+<LI><code>symbol</code> especifica el nombre del método. 
 </LI>
-<LI>Un nombre de fichero,
-</LI>
-<LI>Un número de línea
-</LI>
-<LI>Un ID de objeto
-</LI>
-<LI>Un binding, y
-</LI>
-<LI>Un nombre de una clase
+<LI><code>method</code> es una <code>lambda</code> o <code>Proc</code> o un bloque.
 </LI>
 </UL>
-<code>proc</code> es invocado cada vez que ocurre un evento.
-Los eventos son:
-
-<UL>
-<LI>c-call 
-</LI>
-<LI>c-return 
-</LI>
-<LI>call 
-</LI>
-<LI>class 
-</LI>
-<LI>end 
-</LI>
-<LI>line 
-</LI>
-<LI>raise 
-</LI>
-<LI>return 
-</LI>
-</UL>
-La traza se desactiva en el contexto de 
-<code>proc</code>.
 
 <P>
 <PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ cat -n ex0682.rb 
-     1  class Test
-     2    def initialize
-     3      puts "In initialize"
-     4    end
-     5    def test
-     6      a = 1
-     7      b = 2
-     8    end
-     9  end
-    10  
-    11  set_trace_func proc {|event, file, line, id, binding, classname|
-    12    printf "%8s %s:%-2d %10s %8s\n", event, file, line, id, classname
-    13  }
-    14  t = Test.new
-    15  t.test
-</PRE>
-<PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby ex0682.rb 
-    line ex0682.rb:14               false
-  c-call ex0682.rb:14        new    Class
-    call ex0682.rb:2  initialize     Test
-    line ex0682.rb:3  initialize     Test
-  c-call ex0682.rb:3        puts   Kernel
-  c-call ex0682.rb:3       write       IO
-In initialize
-c-return ex0682.rb:3       write       IO
-  c-call ex0682.rb:3       write       IO
-
-c-return ex0682.rb:3       write       IO
-c-return ex0682.rb:3        puts   Kernel
-  return ex0682.rb:3  initialize     Test
-c-return ex0682.rb:14        new    Class
-    line ex0682.rb:15               false
-    call ex0682.rb:5        test     Test
-    line ex0682.rb:6        test     Test
-    line ex0682.rb:7        test     Test
-  return ex0682.rb:7        test     Test
-</PRE>
-Otro método que puede ser usado para obtener mas información sobre la traza es <code>trace_var</code>
-<PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ cat -n trace_var.rb 
-     1  trace_var :$_, proc {|v| puts "$_ is now '#{v}'" }
-     2  $_ = "hello"
-     3  $_ = ' there'
+~/chapter8ReflectionandMetaprogramming$ cat -n hashtoclass.rb 
+     1  class MyClass 
+     2      def self.h; @@h end
+     3  
+     4      print "Write a ruby hash: "
+     5      @@h = eval gets() 
+     6  
+     7      @@h.keys.each { |k|
+     8        define_method k do
+     9         @@h[k] 
+    10        end
+    11  
+    12        define_method "#{k}=" do |v|
+    13         @@h[k] = v 
+    14        end
+    15      }
+    16  end
+    17  
+    18  x = MyClass.new
+    19  print "Action: "; action = gets().chomp
+    20  if action =~ /=/
+    21    print "Value: "; value = eval gets().chomp
+    22    puts x.send(action, value)
+    23  else 
+    24    puts x.send(action)
+    25  end
+    26  puts MyClass.h.inspect
 </PRE>
 
 <P>
 <PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby trace_var.rb 
-$_ is now 'hello'
-$_ is now ' there'
+~/chapter8ReflectionandMetaprogramming$ ruby hashtoclass.rb 
+Write a ruby hash: { :a =&gt; 1, :b =&gt; 2}
+Action: b=
+Value: 45
+45
+{:a=&gt;1, :b=&gt;45}
+</PRE>
+
+<P>
+<code>define_method</code> nos permite definir métodos cuyos nombres no se atienen a las reglas convencionales:
+
+<P>
+<PRE>
+&gt;&gt; class Titi
+&gt;&gt; define_method 'chu$|chu' do
+?&gt; puts "in chu$|chu"
+&gt;&gt; end
+&gt;&gt; end
+=&gt; #&lt;Proc:0x000000010046d8f8@(irb):33&gt;
+&gt;&gt; z = Titi.new
+=&gt; #&lt;Titi:0x10046ac20&gt;
+&gt;&gt; z.send 'chu$|chu'
+in chu$|chu
+=&gt; nil
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7112"
+<A NAME="tex2html7155"
   HREF="node251.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7106"
-  HREF="node249.html">
+<A NAME="tex2html7149"
+  HREF="node246.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7100"
+<A NAME="tex2html7143"
   HREF="node249.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7108"
-  HREF="node783.html">
+<A NAME="tex2html7151"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7110"
-  HREF="node786.html">
+<A NAME="tex2html7153"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -283,20 +284,20 @@ $_ is now ' there'
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7113"
-  HREF="node251.html">caller</A>
-<B> Subir:</B> <A NAME="tex2html7107"
-  HREF="node249.html">Traza</A>
-<B> Anterior:</B> <A NAME="tex2html7101"
-  HREF="node249.html">Traza</A>
- &nbsp; <B>  <A NAME="tex2html7109"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7111"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7156"
+  HREF="node251.html">Manejando Métodos No Definidos:</A>
+<B> Subir:</B> <A NAME="tex2html7150"
+  HREF="node246.html">Métodos</A>
+<B> Anterior:</B> <A NAME="tex2html7144"
+  HREF="node249.html">Llamando a los Métodos</A>
+ &nbsp; <B>  <A NAME="tex2html7152"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7154"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

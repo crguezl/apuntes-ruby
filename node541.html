@@ -28,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12198"
+<A NAME="tex2html12248"
   HREF="node542.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12192"
+<A NAME="tex2html12242"
   HREF="node540.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12186"
+<A NAME="tex2html12236"
   HREF="node540.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12194"
-  HREF="node783.html">
+<A NAME="tex2html12244"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12196"
-  HREF="node786.html">
+<A NAME="tex2html12246"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,34 +92,92 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12199"
-  HREF="node542.html">Un Fichero package.json</A>
-<B> Subir:</B> <A NAME="tex2html12193"
-  HREF="node540.html">Como Crear tu Propio</A>
-<B> Anterior:</B> <A NAME="tex2html12187"
-  HREF="node540.html">Como Crear tu Propio</A>
- &nbsp; <B>  <A NAME="tex2html12195"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12197"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12249"
+  HREF="node542.html">Ciclos</A>
+<B> Subir:</B> <A NAME="tex2html12243"
+  HREF="node540.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12237"
+  HREF="node540.html">Modulos</A>
+ &nbsp; <B>  <A NAME="tex2html12245"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12247"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04591000000000000000">
+<H2><A NAME="SECTION04581000000000000000">
 Introducción</A>
 </H2>
 
 <P>
-Cuando Node carga nuestro fichero JavaScript
-crea un nuevo ámbito. Cuando estamos en nuestro módulo, no podemos
-ver el ámbito externo lo que evita las colisiones de nombres.
+<PRE>
+[~/javascript/node.js/creating_modules(master)]$ cat foo.js 
+var circle = require('./circle.js');
+console.log( 'The area of a circle of radius 4 is '
+           + circle.area(4));
+</PRE>
+
+<P>
+<PRE>
+[~/javascript/node.js/creating_modules(master)]$ cat circle.js 
+var PI = Math.PI;
+
+exports.area = function (r) {
+  return PI * r * r;
+};
+
+exports.circumference = function (r) {
+  return 2 * PI * r;
+};
+</PRE>
+
+<P>
+<PRE>
+[~/javascript/node.js/creating_modules(master)]$ node foo.js The area of a circle of radius 4 is 50.26548245743669
+</PRE>
+
+<P>
+El módulo <code>circle.js</code> exporta las funciones <code>area()</code> 
+y <code>circumference()</code>. Para exportar un objeto lo añadimos 
+al objeto expecial <code>exports</code>.
+
+<P>
+Las variables locales al módulo serán privadas.
+En este ejemplo la variable <code>PI</code> es privada a <code>circle.js</code>.
+
+<P>
+<PRE>
+[~/javascript/node.js/creating_modules(master)]$ node debug foo.js 
+&lt; debugger listening on port 5858
+connecting... ok
+break in foo.js:1
+  1 var circle = require('./circle.js');
+  2 console.log( 'The area of a circle of radius 4 is '
+  3            + circle.area(4));
+debug&gt; n
+break in foo.js:2
+  1 var circle = require('./circle.js');
+  2 console.log( 'The area of a circle of radius 4 is '
+  3            + circle.area(4));
+  4 
+debug&gt; repl
+Press Ctrl + C to leave debug repl
+&gt; circle
+{ circumference: [Function],
+  area: [Function] }
+&gt; circle.area(2)
+12.566370614359172
+&gt; PI
+ReferenceError: PI is not defined
+&gt;
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Código Completo del Chat</TITLE>
-<META NAME="description" CONTENT="Código Completo del Chat">
+<TITLE>Streaming</TITLE>
+<META NAME="description" CONTENT="Streaming">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node456.html">
 <LINK REL="previous" HREF="node437.html">
-<LINK REL="up" HREF="node436.html">
+<LINK REL="up" HREF="node330.html">
 <LINK REL="next" HREF="node439.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10458"
+<A NAME="tex2html10472"
   HREF="node439.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10452"
-  HREF="node436.html">
+<A NAME="tex2html10466"
+  HREF="node330.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10448"
+<A NAME="tex2html10460"
   HREF="node437.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10454"
-  HREF="node783.html">
+<A NAME="tex2html10468"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10456"
-  HREF="node786.html">
+<A NAME="tex2html10470"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,91 +92,121 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10459"
-  HREF="node439.html">Chat Simple</A>
-<B> Subir:</B> <A NAME="tex2html10453"
-  HREF="node436.html">Chat Utilizando Streaming y</A>
-<B> Anterior:</B> <A NAME="tex2html10449"
-  HREF="node437.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html10455"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10457"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10473"
+  HREF="node439.html">Introducción</A>
+<B> Subir:</B> <A NAME="tex2html10467"
+  HREF="node330.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html10461"
+  HREF="node437.html">CoffeeScript y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html10469"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10471"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03872000000000000000">
-Código Completo del Chat</A>
-</H2>
-<PRE>
-[17:51][~/srcSTW/streaming/chat_with_streaming(master)]$ cat chat.rb 
-# coding: utf-8
-require 'sinatra'
-set server: 'thin', connections: []
+<H1><A NAME="SECTION03800000000000000000"></A>
+<A NAME="section:streaming"></A><A NAME="chapter:streaming"></A>
+<BR>
+Streaming
+</H1>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-get '/' do
-  halt erb(:login) unless params[:user]
-  erb :chat, locals: { user: params[:user].gsub(/\W/, '') }
-end
-
-get '/stream', provides: 'text/event-stream' do
-  stream :keep_open do |out|
-    settings.connections &lt;&lt; out
-    out.callback { settings.connections.delete(out) }
-  end
-end
-
-post '/' do
-  settings.connections.each { |out| out &lt;&lt; "data: #{params[:msg]}\n\n" }
-  204 # response without entity body
-end
-
-__END__
-
-@@ layout
-&lt;html&gt;
-  &lt;head&gt; 
-    &lt;title&gt;Super Simple Chat with Sinatra&lt;/title&gt; 
-    &lt;meta charset="utf-8" /&gt;
-    &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"&gt;&lt;/script&gt; 
-  &lt;/head&gt; 
-  &lt;body&gt;&lt;%= yield %&gt;&lt;/body&gt;
-&lt;/html&gt;
-
-@@ login
-&lt;form action='/'&gt;
-  &lt;label for='user'&gt;User Name:&lt;/label&gt;
-  &lt;input name='user' value='' /&gt;
-  &lt;input type='submit' value="GO!" /&gt;
-&lt;/form&gt;
-
-@@ chat
-&lt;pre id='chat'&gt;&lt;/pre&gt;
-
-&lt;script&gt;
-  // reading
-  var es = new EventSource('/stream');
-  es.onmessage = function(e) { $('#chat').append(e.data + "\n") };
-
-  // writing
-  $("form").live("submit", function(e) {
-    $.post('/', {msg: "&lt;%= user %&gt;: " + $('#msg').val()});
-    $('#msg').val(''); $('#msg').focus();
-    e.preventDefault();
-  });
-&lt;/script&gt;
-
-&lt;form&gt;
-  &lt;input id='msg' placeholder='type message here...' /&gt;
-&lt;/form&gt;[
-</PRE>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html10474"
+  HREF="node439.html">Introducción</A>
+<UL>
+<LI><A NAME="tex2html10475"
+  HREF="node439.html#SECTION03810010000000000000"><TT>Sinatra::Streaming</TT></A>
+<LI><A NAME="tex2html10476"
+  HREF="node439.html#SECTION03810020000000000000">sinatra/streaming en Aplicaciones Modulares</A>
+<LI><A NAME="tex2html10477"
+  HREF="node439.html#SECTION03810030000000000000">Manteniendo la Conexión Abierta: <TT>keep_open</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10478"
+  HREF="node440.html">Streaming y Valores de Retorno</A>
+<LI><A NAME="tex2html10479"
+  HREF="node441.html">Sinatra usando Streaming, Rack MiddleWare y map</A>
+<LI><A NAME="tex2html10480"
+  HREF="node442.html">Enlaces Relacionados</A>
+<LI><A NAME="tex2html10481"
+  HREF="node443.html">A simple demonstration of streaming Redis pub/sub data</A>
+<UL>
+<LI><A NAME="tex2html10482"
+  HREF="node443.html#SECTION03850010000000000000">web.rb</A>
+<LI><A NAME="tex2html10483"
+  HREF="node443.html#SECTION03850020000000000000">worker.rb</A>
+<LI><A NAME="tex2html10484"
+  HREF="node443.html#SECTION03850030000000000000">Procfile</A>
+<LI><A NAME="tex2html10485"
+  HREF="node443.html#SECTION03850040000000000000">Gemfile</A>
+<LI><A NAME="tex2html10486"
+  HREF="node443.html#SECTION03850050000000000000">Ejecución: Arranca el Servidor Redis</A>
+<LI><A NAME="tex2html10487"
+  HREF="node443.html#SECTION03850060000000000000">Ejecución 2: Arranca la aplicación Sinatra y el Worker</A>
+<LI><A NAME="tex2html10488"
+  HREF="node443.html#SECTION03850070000000000000">Ejecución 3: Arranca un Cliente</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10489"
+  HREF="node444.html">Comet</A>
+<LI><A NAME="tex2html10490"
+  HREF="node445.html">Chat Utilizando Streaming y Server Sent Events (SSE)</A>
+<UL>
+<LI><A NAME="tex2html10491"
+  HREF="node446.html">Enlaces Relacionados</A>
+<LI><A NAME="tex2html10492"
+  HREF="node447.html">Código Completo del Chat</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10493"
+  HREF="node448.html">Chat Simple</A>
+<UL>
+<LI><A NAME="tex2html10494"
+  HREF="node448.html#SECTION03880010000000000000">Donde</A>
+<LI><A NAME="tex2html10495"
+  HREF="node448.html#SECTION03880020000000000000">Código</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10496"
+  HREF="node449.html">Práctica: Chat con Mensajes Individuales</A>
+<LI><A NAME="tex2html10497"
+  HREF="node450.html">Práctica: Chat con Estilo</A>
+<LI><A NAME="tex2html10498"
+  HREF="node451.html">Práctica: Chat con TicTacToe</A>
+<LI><A NAME="tex2html10499"
+  HREF="node452.html">Embedding Sinatra within EventMachine</A>
+<UL>
+<LI><A NAME="tex2html10500"
+  HREF="node452.html#SECTION038120010000000000000">Véase</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10501"
+  HREF="node453.html">Ejemplo de Server Sent Events: irb en el navegador</A>
+<UL>
+<LI><A NAME="tex2html10502"
+  HREF="node453.html#SECTION038130010000000000000">example.rb</A>
+<LI><A NAME="tex2html10503"
+  HREF="node453.html#SECTION038130020000000000000">showoff.json</A>
+<LI><A NAME="tex2html10504"
+  HREF="node453.html#SECTION038130030000000000000">slides/01_slides.md </A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10505"
+  HREF="node454.html">Asynchronous responses in Rack</A>
+<UL>
+<LI><A NAME="tex2html10506"
+  HREF="node455.html">Deferred or streaming response bodies</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

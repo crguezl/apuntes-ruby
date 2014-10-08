@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Aumentando la Conducta Mediante Encadenamiento</TITLE>
-<META NAME="description" CONTENT="Aumentando la Conducta Mediante Encadenamiento">
+<TITLE>Variables de Instancia de Clase</TITLE>
+<META NAME="description" CONTENT="Variables de Instancia de Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node190.html">
 <LINK REL="previous" HREF="node188.html">
-<LINK REL="up" HREF="node185.html">
+<LINK REL="up" HREF="node170.html">
 <LINK REL="next" HREF="node190.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6119"
+<A NAME="tex2html6164"
   HREF="node190.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6113"
-  HREF="node185.html">
+<A NAME="tex2html6158"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6107"
+<A NAME="tex2html6152"
   HREF="node188.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6115"
-  HREF="node783.html">
+<A NAME="tex2html6160"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6117"
-  HREF="node786.html">
+<A NAME="tex2html6162"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,113 +92,142 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6120"
-  HREF="node190.html">Herencia y Métodos de</A>
-<B> Subir:</B> <A NAME="tex2html6114"
-  HREF="node185.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6108"
-  HREF="node188.html">Predominancia/Invalidación de Métodos (overriding)</A>
- &nbsp; <B>  <A NAME="tex2html6116"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6118"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6165"
+  HREF="node190.html">Práctica: La Clase Punto</A>
+<B> Subir:</B> <A NAME="tex2html6159"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6153"
+  HREF="node188.html">Variables de Clase</A>
+ &nbsp; <B>  <A NAME="tex2html6161"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6163"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02734000000000000000">
-Aumentando la Conducta Mediante Encadenamiento</A>
+<H2><A NAME="SECTION027119000000000000000"></A>
+<A NAME="subsection:variablesdeinstnciadeclase"></A>
+<BR>
+Variables de Instancia de Clase
 </H2>
 
+<OL>
+<LI>Classes are objects and can have instance variables just as other objects can
+</LI>
+<LI>The instance variables of a class—often called class instance variables—are not the same as class variables
+</LI>
+<LI>They are similar enough that they can often be used instead of class variables
+</LI>
+</OL>
+
 <P>
-Cuando queremos aumentar la funcionalidad de un método de la clase de la que se hereda
-es necesario invocar el método sobreescrito desde la nueva versión del  método.
-Esto se consigue mediante la palabra reservada <code>super</code>.
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n Point3D.rb 
-     1  require "Point"
-     2  class Point3D &lt; Point
-     3    def initialize(x, y, z)
-     4      super(x, y)
-     5      @z = z
-     6    end
-     7  end
-     8  if __FILE__ == $0
-     9    p = Point3D.new(1,2,3)
-    10    puts p.inspect
-    11  end
+class Point
+  # Initialize our class instance variables in the class definition itself
+  @n = 0              # How many points have been created
+  @totalX = 0         # The sum of all X coordinates
+  @totalY = 0         # The sum of all Y coordinates
+
+  def initialize(x,y) # Initialize method 
+    @x,@y = x, y      # Sets initial values for instance variables
+  end
+
+  def self.new(x,y)   # Class method to create new Point objects
+    # Use the class instance variables in this class method to collect data
+    @n += 1           # Keep track of how many Points have been created
+    @totalX += x      # Add these coordinates to the totals
+    @totalY += y
+
+    super             # Invoke the real definition of new to create a Point
+                      # More about super later in the chapter
+  end
+
+  # A class method to report the data we collected
+  def self.report
+    # Here we use the class instance variables in a class method
+    puts "Number of points created: #@n"
+    puts "Average X coordinate: #{@totalX.to_f/@n}"
+    puts "Average Y coordinate: #{@totalY.to_f/@n}"
+  end
+end
 </PRE>
 
 <P>
-Ejecución:
+
+<OL>
+<LI>Because class instance variables are just instance variables of class objects, we can use <code>attr</code>, <code>attr_reader</code>, and <code>attr_accessor</code> to create accessor methods for them
+</LI>
+<LI>The trick, however, is to invoke these metaprogramming methods in the right context
+</LI>
+<LI>Recall that one way to define class methods uses the syntax <code>class &lt;&lt; self</code>
+</LI>
+<LI>This same syntax allows us to define attribute accessor methods for class instance variables:
+</LI>
+</OL>
+
+<P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby Point3D.rb 
-#&lt;Point3D:0x1001622f8 @y=2, @x=1, @z=3&gt;
+class &lt;&lt; self
+  attr_accessor :n, :totalX, :totalY
+end
 </PRE>
 
 <P>
+El siguiente ejemplo muestra como crear accessors a las variables de instancia
+de clase:
 
-<UL>
-<LI>Si se usa <code>super</code> sin argumentos y sin paréntesis
-entonces se le pasarán todos los argumentos con los que ha sido llamado el método
-actual.
-</LI>
-<LI><code>super()</code> lo llamará sin argumentos
-</LI>
-<LI>Si el método modifica los valores de los argumentos antes de la llamada a <code>super</code>
-entonces son los valores modificados los que son pasados en la invocación del correspondiente 
-método de la superclase:
+<P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n Point3DSuper.rb 
-     1  class Point
-     2    attr_reader :x, :y   
-     3  
-     4    def initialize(x,y)
-     5      @x,@y = x, y
-     6    end
+$ cat -n creating_class_accessors.rb 
+     1  class Tutu
+     2  
+     3    class &lt;&lt; self
+     4        attr_accessor :n
+     5    end
+     6  
      7  end
      8  
-     9  class Point3D &lt; Point
-    10    attr_reader :z
-    11    def initialize(x, y, z)
-    12      x, y = x+1, y+1
-    13      super(x, y)
-    14      @z = z
-    15    end
-    16  end
-    17  if __FILE__ == $0
-    18    p = Point3D.new(1,1,1)
-    19    puts "#{p.x} #{p.y} #{p.z}"
-    20  end
+     9  Tutu.n = 4
+    10  p Tutu.n
+    11  
+    12  
+[~/point]$ ruby creating_class_accessors.rb 
+4
 </PRE>
 
 <P>
-Ejecución:
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby Point3DSuper.rb 
-2 2 1
-</PRE>
+
+<OL>
+<LI>Una desventaja de las variables de instancia de clase
+es que no pueden ser utilizadas directamente dentro de los métodos de instancia,
+mientras que las variables de clase si son accesibles.
 </LI>
-</UL>
+<LI>Otra desventaja es el riesgo potencial de confundirlas con variables de
+instancia ordinarias
+</LI>
+<LI>Aún así su uso es mas recomendable que el de las variables de clase
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6119"
+<A NAME="tex2html6164"
   HREF="node190.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6113"
-  HREF="node185.html">
+<A NAME="tex2html6158"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6107"
+<A NAME="tex2html6152"
   HREF="node188.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6115"
-  HREF="node783.html">
+<A NAME="tex2html6160"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6117"
-  HREF="node786.html">
+<A NAME="tex2html6162"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -249,20 +278,20 @@ Ejecución:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6120"
-  HREF="node190.html">Herencia y Métodos de</A>
-<B> Subir:</B> <A NAME="tex2html6114"
-  HREF="node185.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6108"
-  HREF="node188.html">Predominancia/Invalidación de Métodos (overriding)</A>
- &nbsp; <B>  <A NAME="tex2html6116"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6118"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6165"
+  HREF="node190.html">Práctica: La Clase Punto</A>
+<B> Subir:</B> <A NAME="tex2html6159"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6153"
+  HREF="node188.html">Variables de Clase</A>
+ &nbsp; <B>  <A NAME="tex2html6161"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6163"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

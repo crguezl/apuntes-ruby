@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>instance_eval y class_eval</TITLE>
-<META NAME="description" CONTENT="instance_eval y class_eval">
+<TITLE>La Clase Board</TITLE>
+<META NAME="description" CONTENT="La Clase Board">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node234.html">
 <LINK REL="previous" HREF="node232.html">
-<LINK REL="up" HREF="node231.html">
+<LINK REL="up" HREF="node228.html">
 <LINK REL="next" HREF="node234.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6852"
+<A NAME="tex2html6824"
   HREF="node234.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6846"
-  HREF="node231.html">
+<A NAME="tex2html6818"
+  HREF="node228.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6840"
+<A NAME="tex2html6812"
   HREF="node232.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6848"
-  HREF="node783.html">
+<A NAME="tex2html6820"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6850"
-  HREF="node786.html">
+<A NAME="tex2html6822"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,213 +92,157 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6853"
-  HREF="node234.html">instance_exec y class_exec</A>
-<B> Subir:</B> <A NAME="tex2html6847"
-  HREF="node231.html">Evaluando Strings y Bloques</A>
-<B> Anterior:</B> <A NAME="tex2html6841"
-  HREF="node232.html">Bindings (encarpetados) y eval</A>
- &nbsp; <B>  <A NAME="tex2html6849"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6851"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6825"
+  HREF="node234.html">La Clase Row</A>
+<B> Subir:</B> <A NAME="tex2html6819"
+  HREF="node228.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6813"
+  HREF="node232.html">La Clase Player: Un</A>
+ &nbsp; <B>  <A NAME="tex2html6821"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6823"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6854"
-  HREF="node233.html#SECTION02822100000000000000">Creando accessors con class_eval</A>
-</UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02822000000000000000"></A>
-<A NAME="subsection:instanceevalyclasseval"></A>
+<H2><A NAME="SECTION027175000000000000000"></A>
+<A NAME="subsection:board"></A>
 <BR>
-instance_eval y class_eval
+La Clase Board
 </H2>
-
-<P>
-
-<UL>
-<LI>La clase <A NAME="9915"></A><A NAME="tex2html468"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html"><TT>BasicObject</TT></A>
-define el método <A NAME="9919"></A><A NAME="tex2html469"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>.
+La clase <code>TicTacToe::Game</code> confía en la clase <code>Board</code> que describe las operaciones
+que se pueden efectuar sobre el tablero. Por ejemplo, el método <code>play</code> hace uso de 
+operaciones sobre el tablero:
 <PRE>
-ruby-1.9.2-head :004 &gt; BasicObject.public_methods.select { |x| x =~ /instance_e/ }
- =&gt; [:instance_eval, :instance_exec]
+    def play
+      until @board.won?
+        @board[@x_player.move(@board)] = @x_player.mark # @board["b2"] = "X"
+        break if @board.won?
+        
+        @board[@o_player.move(@board)] = @o_player.mark 
+      end
+      
+      @o_player.finish @board  
+      @x_player.finish @board
+    end
 </PRE>
-</LI>
-<LI>La clase <A NAME="9923"></A><A NAME="tex2html470"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>
-define el método <A NAME="9927"></A><A NAME="tex2html471"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>.
-</LI>
-<LI>El método <A NAME="9931"></A><A NAME="tex2html472"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-module_eval"><TT>module_eval</TT></A>
-es un sinónimo de <A NAME="9935"></A><A NAME="tex2html473"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>.
-</LI>
-</UL>
-Estos dos métodos evaluan de manera similar a <code>eval</code> pero con estas consideraciones:
+Eso significa que tenemos que definir en la clase <code>Board</code> predicados como <code>won?</code> y
+operaciones como <code>[]=(indice, value)</code> además del <code>initialize</code>:
+<PRE>
+  class Board
+    class Row
+      ....
+    end
+    
+    MOVES = %w{a1    a2   a3   b1   b2   b3   c1   c2   c3}
+    # Define constant INDICES
+    INDICES = Hash.new { |h, k| h[k] = MOVES.find_index(k) }
 
-<OL>
-<LI>Evaluan el código en el contexto del objeto o de la clase o módulo especificados
-</LI>
-<LI>El objeto o módulo es el valor de <code>self</code> durante la evaluación
-</LI>
-<LI><A NAME="9939"></A><A NAME="tex2html474"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
-define métodos singleton del objeto 
-(y, por tanto define métodos de clase cuando el objeto es una clase)
-<PRE>
-# Use instance_eval to define class method String.empty
-# Note that quotes within quotes get a little tricky...
-String.instance_eval("def empty; ''; end")
-</PRE>
-</LI>
-<LI><A NAME="9943"></A><A NAME="tex2html475"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>
-define métodos de instancia 
-<PRE>
-# Define an instance method len of String to return string length
-String.class_eval("def len; size; end")
-</PRE>
-</LI>
-<LI><A NAME="9947"></A><A NAME="tex2html476"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-instance_eval"><TT>instance_eval</TT></A>
-y  <A NAME="9951"></A><A NAME="tex2html477"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>
-aceptan un bloque de código como argumento para la evaluación
-<PRE>
-String.class_eval {
-  def len
-    size
+    def self.name_to_index( name )# Receives "b2" and returns 4
+      INDICES[name]
+    end
+    
+    def self.index_to_name( index ) # Receives the index, like 4 and returns "b2"
+      MOVES[index]
+    end
+    
+    def initialize( squares )
+      @squares = squares # An array of Strings: [ " ", " ", " ", " ", "X", " ", " ", " ", "O"]
+    end
+      
+    include SquaresContainer
+    
+    def []( *indices )
+      if indices.size == 2                  # board[1,2] is @squares[7]
+        super indices[0] + indices[1] * 3   # calls SquaresContainer [] method
+      elsif indices[0].is_a? Fixnum         # board[7]
+        super indices[0]
+      else                                  # board["b2"]
+        super Board.name_to_index(indices[0].to_s)
+      end
+    end
+
+    def []=(indice, value)                  # board["b2"] = "X"
+      m = Board.name_to_index(indice)
+      @squares[m] = value
+    end
+    
+    ....
+    
+    def moves
+      moves = [ ]
+      @squares.each_with_index do |s, i|
+        moves &lt;&lt; Board.index_to_name(i) if s == " "
+      end
+      moves # returns the set of feasible moves [ "b3", "c2", ... ]
+    end
+    
+    ....
+    
+    BOARD =&lt;&lt;EOS
+
+  +---+---+---+
+a | 0 | 1 | 2 |
+  +---+---+---+
+b | 3 | 4 | 5 |
+  +---+---+---+
+c | 6 | 7 | 8 |
+  +---+---+---+
+    1   2   3
+
+EOS
+    def to_s
+      BOARD.gsub(/(\d)(?= \|)/) { |i| @squares[i.to_i] }
+    end
+
   end
-}
-String.class_eval { alias len size }
-String.instance_eval { def empty; ""; end }
+end
 </PRE>
-
-<P>
-</LI>
-<LI>La sintáxis de <A NAME="9955"></A><A NAME="tex2html478"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
-es:
-<PRE>
-    instance_eval(string [, filename [, lineno]] ) 
-    instance_eval {| | block }
-</PRE>
-En el caso de la <A NAME="tex2html479"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>, los dos últimos argumentos 
-son utilizados para mejorar los mensajes de error
-</LI>
-<LI>El método <A NAME="9962"></A><A NAME="tex2html480"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>
-tiene la sintaxis:
+El predicado  <code>won?</code> recorre todas las posibles filas con <code>each_row</code> comprobando 
+si hay tres alineadas:
 
 <P>
 <PRE>
-class_eval(string [, filename [, lineno]])
-module_eval {|| block }
-</PRE>
-</LI>
-</OL>
-Veamos un ejemplo:
+    HORIZONTALS = [ [0, 1, 2], [3, 4, 5], [6, 7, 8] ]
+    COLUMNS     = [ [0, 3, 6], [1, 4, 7], [2, 5, 8] ]
+    DIAGONALS   = [ [0, 4, 8], [2, 4, 6] ]
+    ROWS = HORIZONTALS + COLUMNS + DIAGONALS
 
-<P>
+    def each_row
+      ROWS.each do |e|
+        yield Row.new(@squares.values_at(*e), e)
+      end
+    end
 
-    <pre>
-
-    </pre>
-
-<P>
-Los dos últimos argumentos 
-<code>class_eval(string [, filename [, lineno]])</code>
-son utilizados para mejorar los mensajes de error:
-
-<P>
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ cat -n class_eval.rb 
-     1  class Thing
-     2  end
-     3  a = %q{def hello() "Hello there!" end}
-     4  Thing.module_eval(a)
-     5  puts Thing.new.hello()
-     6                                     
-     7  Thing.module_eval("invalid code", 
-     8                    "ficherito.rb", 
-     9                    123               # nº de linea
-    10                   )
-</PRE>
-Ejecución:
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ ruby class_eval.rb 
-Hello there!
-ficherito.rb:123: undefined local variable or method `code' for Thing:Class (NameError)
-</PRE>
-
-<P>
-
-<H3><A NAME="SECTION02822100000000000000">
-Creando accessors con class_eval</A>
-</H3>
-Sabemos que podemos crear accessors a los atributos de una clase
-usando <code>attr_accessor</code>, <code>attr_reader</code> y <code>attr_writer</code>.
-Estas no son palabras reservadas de Ruby sino que se trata de métodos.
-Veamos como podemos emular su construcción  usando <A NAME="9966"></A><A NAME="tex2html481"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>:
-
-<P>
-<PRE>
-MacBookdeCasiano:chapter8ReflectionandMetaprogramming casiano$ cat -n myAccessors.rb 
-     1  class Module
-     2    def my_attr_reader(*syms) # método de instancia de Module
-     3      syms.each { |s|         # esto es, ¡un método de clase!
-     4        class_eval %{         # aquí self es el objeto Module
-     5                      def #{s}  # estamos definiendo un método de 
-     6                        @#{s}   #instancia en la clase "self"
-     7                      end
-     8                    }
-     9      }
-    10    end
-    11  end
-    12  
-    13  class Chuchu
-    14    my_attr_reader :a, :b
-    15  
-    16    def initialize(a,b)
-    17      @a, @b = a, b
-    18    end
-    19  end
-    20  
-    21  x = Chuchu.new(4, "z")
-    22  puts x.a    # 4
-    23  puts x.b    # z
+    def won?
+      each_row do |row|
+        return "X" if row.xs == 3 # "X" wins
+        return "O" if row.os == 3 # "O" wins
+      end
+      return " " if blanks == 0   # tie
+      false
+    end
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6852"
+<A NAME="tex2html6824"
   HREF="node234.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6846"
-  HREF="node231.html">
+<A NAME="tex2html6818"
+  HREF="node228.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6840"
+<A NAME="tex2html6812"
   HREF="node232.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6848"
-  HREF="node783.html">
+<A NAME="tex2html6820"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6850"
-  HREF="node786.html">
+<A NAME="tex2html6822"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -349,20 +293,20 @@ MacBookdeCasiano:chapter8ReflectionandMetaprogramming casiano$ cat -n myAccessor
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6853"
-  HREF="node234.html">instance_exec y class_exec</A>
-<B> Subir:</B> <A NAME="tex2html6847"
-  HREF="node231.html">Evaluando Strings y Bloques</A>
-<B> Anterior:</B> <A NAME="tex2html6841"
-  HREF="node232.html">Bindings (encarpetados) y eval</A>
- &nbsp; <B>  <A NAME="tex2html6849"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6851"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6825"
+  HREF="node234.html">La Clase Row</A>
+<B> Subir:</B> <A NAME="tex2html6819"
+  HREF="node228.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6813"
+  HREF="node232.html">La Clase Player: Un</A>
+ &nbsp; <B>  <A NAME="tex2html6821"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6823"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Congelación: freezing</TITLE>
-<META NAME="description" CONTENT="Congelación: freezing">
+<TITLE>Vida de un Objeto</TITLE>
+<META NAME="description" CONTENT="Vida de un Objeto">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node74.html">
 <LINK REL="previous" HREF="node72.html">
-<LINK REL="up" HREF="node62.html">
+<LINK REL="up" HREF="node71.html">
 <LINK REL="next" HREF="node74.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html4159"
+<A NAME="tex2html4204"
   HREF="node74.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html4153"
-  HREF="node62.html">
+<A NAME="tex2html4198"
+  HREF="node71.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html4149"
+<A NAME="tex2html4192"
   HREF="node72.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html4155"
-  HREF="node783.html">
+<A NAME="tex2html4200"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html4157"
-  HREF="node786.html">
+<A NAME="tex2html4202"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,91 +92,164 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html4160"
-  HREF="node74.html">Ejercicios</A>
-<B> Subir:</B> <A NAME="tex2html4154"
-  HREF="node62.html">Objetos</A>
-<B> Anterior:</B> <A NAME="tex2html4150"
-  HREF="node72.html">Objetos Manchados: Tainting</A>
- &nbsp; <B>  <A NAME="tex2html4156"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html4158"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html4205"
+  HREF="node74.html">Identidad de un Objeto</A>
+<B> Subir:</B> <A NAME="tex2html4199"
+  HREF="node71.html">Objetos</A>
+<B> Anterior:</B> <A NAME="tex2html4193"
+  HREF="node72.html">Referencias a Objetos</A>
+ &nbsp; <B>  <A NAME="tex2html4201"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html4203"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION023811000000000000000"></A>
-<A NAME="subsection:freezing"></A>
+<H2><A NAME="SECTION02382000000000000000"></A>
+<A NAME="subsection:vidadeunobjeto"></A>
 <BR>
-Congelación: freezing
+Vida de un Objeto
 </H2>
 
 <P>
-<PRE>
-&gt;&gt; person2 = person1
-=&gt; "Wim"
-&gt;&gt; person1.freeze
-=&gt; "Wim"
-&gt;&gt; person2[0] = "R"
-TypeError: can't modify frozen string
-  from (irb):18:in `[]='
-  from (irb):18
-</PRE>
+Objects of most
+classes need to be explicitly created, and this is most often done
+with a method named new:
 
 <P>
 <PRE>
-~/rubytesting$ cat -n freeze.rb 
-     1  begin
-     2    a = [1,2,3].freeze
-     3    puts a
-     4    a &lt;&lt; [4,7] # this raises an exception
-     5    puts a
-     6  rescue
-     7    puts "Exception &lt;#{$!.class}&gt; raised &lt;#{$!}&gt;"
-     8  end
-~/rubytesting$ ruby freeze.rb 
-1
-2
-3
-Exception &lt;TypeError&gt; raised &lt;can't modify frozen array&gt;
+      myObject = myClass.new
 </PRE>
 
 <P>
-<PRE>
-pp@nereida:~/LPPbook$ irb
-irb(main):001:0&gt; 
-irb(main):002:0* 
-irb(main):003:0* quit
-lpp@nereida:~/LPPbook$ irb
-irb(main):001:0&gt; q = "hello"
-=&gt; "hello"
-irb(main):002:0&gt; q.freeze
-=&gt; "hello"
-irb(main):003:0&gt; q.object_id
-=&gt; 70233414821660
-irb(main):004:0&gt; q += " world"
-=&gt; "hello world"
-irb(main):005:0&gt; q.object_id
-=&gt; 70233414771300
-irb(main):006:0&gt; q.freeze
-=&gt; "hello world"
-irb(main):007:0&gt; q &lt;&lt; " world"
-TypeError: can't modify frozen string
-        from (irb):7:in `&lt;&lt;'
-        from (irb):7
-        from :0
-</PRE>
+ <TT>new</TT>  is a method of the <A NAME="tex2html169"
+  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A> class. 
 
 <P>
-No hay manera de descongelar un objeto sobre el que ha sido llamado 
-<code>freeze</code>.
+
+<OL>
+<LI>It allocates memory to hold the
+new object, then it initializes the state of that newly allocated
+<I>empty</I> object by invoking its  <TT>initialize</TT>  method. 
 
 <P>
-<BR><HR>
+</LI>
+<LI>The arguments to
+new are passed directly on to initialize. Most classes define an
+initialize method to perform whatever initialization is necessary
+for instances.
+
+<P>
+</LI>
+<LI>The new and initialize methods provide the default technique for
+creating new objects, but classes may also define other methods,
+known as <I>factory methods</I> that return instances. 
+
+<P>
+</LI>
+<LI>Ruby objects never need to be explicitly deallocated, as they do
+in languages like C and C++. Ruby uses a technique called 
+<A NAME="3956"></A><SPAN  CLASS="textit">garbage collection</SPAN> to automatically destroy objects that are no longer
+needed. 
+
+<P>
+</LI>
+<LI>An object becomes a candidate for garbage collection when
+it is unreachable: when there are no remaining references to the
+object except from other unreachable objects.
+
+<P>
+</LI>
+<LI>Garbage collection does not mean that memory leaks are impossible:
+any code that creates long-lived references to objects that would
+otherwise be short-lived can be a
+source of memory leaks.
+</LI>
+</OL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html4204"
+  HREF="node74.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html4198"
+  HREF="node71.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html4192"
+  HREF="node72.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html4200"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html4202"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html4205"
+  HREF="node74.html">Identidad de un Objeto</A>
+<B> Subir:</B> <A NAME="tex2html4199"
+  HREF="node71.html">Objetos</A>
+<B> Anterior:</B> <A NAME="tex2html4193"
+  HREF="node72.html">Referencias a Objetos</A>
+ &nbsp; <B>  <A NAME="tex2html4201"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html4203"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

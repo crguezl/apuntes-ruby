@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Métodos de Petición</TITLE>
-<META NAME="description" CONTENT="Métodos de Petición">
+<TITLE>Introducción</TITLE>
+<META NAME="description" CONTENT="Introducción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node333.html">
 <LINK REL="previous" HREF="node331.html">
-<LINK REL="up" HREF="node329.html">
+<LINK REL="up" HREF="node331.html">
 <LINK REL="next" HREF="node333.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8712"
+<A NAME="tex2html8755"
   HREF="node333.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8706"
-  HREF="node329.html">
+<A NAME="tex2html8749"
+  HREF="node331.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8700"
+<A NAME="tex2html8743"
   HREF="node331.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8708"
-  HREF="node783.html">
+<A NAME="tex2html8751"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8710"
-  HREF="node786.html">
+<A NAME="tex2html8753"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,123 +92,262 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8713"
-  HREF="node333.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html8707"
-  HREF="node329.html">HTTP</A>
-<B> Anterior:</B> <A NAME="tex2html8701"
-  HREF="node331.html">Sesiones HTTP</A>
- &nbsp; <B>  <A NAME="tex2html8709"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8711"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8756"
+  HREF="node333.html">Analizando env con pry-debugger</A>
+<B> Subir:</B> <A NAME="tex2html8750"
+  HREF="node331.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html8744"
+  HREF="node331.html">Rack, un Webserver Ruby</A>
+ &nbsp; <B>  <A NAME="tex2html8752"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8754"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03153000000000000000"></A>
-<A NAME="subsection:metodosdepeticionhttp"></A>
-<BR>
-Métodos de Petición
-</H2>
+<H1><A NAME="SECTION03110000000000000000">
+Introducción</A>
+</H1>
+
+<P>
+
+<H4><A NAME="SECTION03110010000000000000">
+Que es Rack</A>
+</H4>
+  
+
+<A NAME="tex2html728"
+  HREF="http://rack.github.io/">rack</A> provides an minimal interface between webservers supporting Ruby and Ruby frameworks.
+
+<P>
+Ruby on Rails, Ramaze, Sinatra and other Ruby frameworks use it by 
+default to talk to web servers, including Mongrel, Thin or Apache via Passenger.
+
+<P>
+Lo que hace Rack es que unifica la API de los diferentes web servers
+envolviendo las peticiones y respuestas HTTP en la forma mas simple posible.
+
+<P>
 
 <OL>
-<LI><A NAME="14214"></A><SPAN  CLASS="textbf">GET</SPAN>
+<LI>Rack includes <A NAME="13523"></A><SPAN  CLASS="textbf">handlers</SPAN> that connect Rack to all these web application
+servers (WEBrick, Mongrel etc.).
 
 <P>
-Solicita una representación de un recurso especificado.
-Las peticiones que usen <A NAME="14216"></A><SPAN  CLASS="textbf">GET</SPAN> deberían limitarse a obtener los datos 
-y no tener ningún otro efecto.
 </LI>
-<LI><A NAME="14218"></A><SPAN  CLASS="textbf">HEAD</SPAN>
+<LI>Rack includes <A NAME="13525"></A><SPAN  CLASS="textbf">adapters</SPAN> that connect Rack to various web frameworks (Sinatra, Rails etc.).
 
 <P>
-Pregunta por la misma respuesta que una petición <A NAME="14220"></A><SPAN  CLASS="textbf">GET</SPAN> pero sin el 
-cuerpo de la respuesta
 </LI>
-<LI><A NAME="14222"></A><SPAN  CLASS="textbf">POST</SPAN>
-
-<P>
-Requests that the server accept the entity enclosed in the request
-as a new subordinate of the web resource identified by the URI. The
-data POSTed might be, as examples, 
-  
-<OL>
-<LI>an annotation for existing
-  resources; 
-</LI>
-<LI>a message for a bulletin board, newsgroup, mailing list,
-  or comment thread; 
-</LI>
-<LI>a block of data that is the result of submitting
-  a web form to a data-handling process; 
-</LI>
-<LI>or an item to add to a
-  database.
-  
-</LI>
-</OL>
-</LI>
-<LI><A NAME="14224"></A><SPAN  CLASS="textbf">PUT</SPAN>
-
-<P>
-Requests that the enclosed entity be stored under the supplied URI.
-If the URI refers to an already existing resource, it is modified;
-if the URI does not point to an existing resource, then the server
-can create the resource with that URI.
-</LI>
-<LI><A NAME="14226"></A><SPAN  CLASS="textbf">DELETE</SPAN>
-
-<P>
-Deletes the specified resource.
-</LI>
-<LI><A NAME="14228"></A><SPAN  CLASS="textbf">TRACE</SPAN>
-
-<P>
-Echoes back the received request so that a client can see what (if
-any) changes or additions have been made by intermediate servers.
-</LI>
-<LI><A NAME="14230"></A><SPAN  CLASS="textbf">OPTIONS</SPAN>
-
-<P>
-Returns the HTTP methods that the server supports for the specified
-URL. This can be used to check the functionality of a web server
-by requesting <code>*</code> instead of a specific resource.
-</LI>
-<LI><A NAME="14232"></A><SPAN  CLASS="textbf">CONNECT</SPAN>
-
-<P>
-Converts the request connection to a transparent TCP/IP tunnel,
-usually to facilitate SSL-encrypted communication (HTTPS) through
-an unencrypted HTTP proxy.
-</LI>
-<LI><A NAME="14234"></A><SPAN  CLASS="textbf">PATCH</SPAN>
-
-<P>
-Is used to apply partial modifications to a resource.
-HTTP servers are required to implement at least the GET and HEAD
-methods and, whenever possible, also the OPTIONS method
+<LI>Between the server and the framework, Rack can be customized to your
+applications needs using <A NAME="13527"></A><SPAN  CLASS="textbf">middleware</SPAN>. 
 </LI>
 </OL>
 
 <P>
+The fundamental idea behind 
+<A NAME="13529"></A><SPAN  CLASS="textbf">Rack middleware</SPAN> is – come between the calling client and the
+server, process the HTTP request before sending it to the server, and
+processing the HTTP response before returning it to the client.
+
+<P>
+
+<img src="rack.jpeg">
+
+<P>
+
+<H4><A NAME="SECTION03110020000000000000">
+Que es una Aplicación Rack</A>
+</H4>
+  
+
+Una aplicación Rack es un objeto que 
+
+<P>
+
+<OL>
+<LI>Debe responder al método <code>call</code>.
+</LI>
+<LI>El método <code>call</code> será llamado por el servidor y se le pasa como
+argumento <code>env</code> que es un hash que contiene información sobre el entorno CGI.
+</LI>
+<LI>El método <code>call</code> debe retornar un array con tres elementos:
+  
+<OL>
+<LI><code>status</code>: un entero
+</LI>
+<LI><code>headers</code>: un hash
+</LI>
+<LI><code>body</code>: un objeto que responde al método <code>each</code> y que para cada llamada de
+  <code>each</code> retorna una <A NAME="tex2html729"
+  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>.
+  
+</LI>
+</OL>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION03110030000000000000">
+Un Ejemplo Sencillo</A>
+</H4>
+  
+
+<P>
+<A NAME="13542"></A><SPAN  CLASS="textbf">Rack</SPAN> uses a 
+configuration file with extension 
+<code>.ru</code>, that instructs 
+<A NAME="tex2html730"
+  HREF="http://rack.rubyforge.org/doc/Rack/Builder.html">Rack::Builder</A>
+what middleware should it use and in which order. Let’s create one:
+
+<P>
+<PRE>
+[~/sinatra/rackup/simple(master)]$ cat myapp.rb 
+# my_app.rb
+#
+class MyApp
+  def call env
+    [200, {"Content-Type" =&gt; "text/html"}, ["Hello Rack Participants"]] 
+  end
+end
+</PRE>
+
+<P>
+Esta es la aplicación Rack mas simple posible.
+
+<P>
+<PRE>
+[~/sinatra/rackup/simple(master)]$ cat config.ru
+require './myapp'
+run MyApp.new
+</PRE>
+To start your newly created app, you need to use <code>rackup</code> command:
+
+<P>
+<PRE>
+$ rackup config.ru
+</PRE>
+The application will be available by default on port 9292, 
+so you have to visit <code>http://localhost:9292</code> to see it. 
+
+<P>
+Donde se encuentra este ejemplo:
+
+<UL>
+<LI><PRE>
+[~/sinatra/rack/rack-simple(env)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/rack/rackup/simple
+</PRE>
+</LI>
+<LI><PRE>
+[~/sinatra/rack/rack-simple(env)]$ git remote -v
+origin  git@github.com:crguezl/a-quick-introduction-to-rack.git (fetch)
+origin  git@github.com:crguezl/a-quick-introduction-to-rack.git (push)
+</PRE>
+</LI>
+<LI><A NAME="tex2html731"
+  HREF="https://github.com/crguezl/a-quick-introduction-to-rack">Repo: crguezl/a-quick-introduction-to-rack</A>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION03110040000000000000">
+Un Ejemplo con la Consola Interactiva de Ruby</A>
+</H4>
+  
+
+<P>
+Arranquemos la consola interactiva de Ruby. Cargamos <code>rack</code>:
+
+<P>
+<PRE>
+1] pry(main)&gt; require 'rack'
+=&gt; true
+</PRE>
+Comprobemos que handlers tenemos instalados:
+<PRE>
+[2] pry(main)&gt; Rack::Handler::constants
+=&gt; [:CGI,
+ :FastCGI,
+ :Mongrel,
+ :EventedMongrel,
+ :SwiftipliedMongrel,
+ :WEBrick,
+ :LSWS,
+ :SCGI,
+ :Thin]
+</PRE>
+
+<P>
+Todos los handlers Rack tienen un método <code>run</code> por lo que podemos 
+llamar el método <code>run</code> en cualquiera de esos handlers instalados.
+
+<P>
+Un objeto que tiene un método <code>call</code> es cualquier objeto <A NAME="tex2html732"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> y por 
+tanto podemos usar una lambda que se atenga al protocolo de rack para nuestro ejemplo:
+<PRE>
+[3] pry(main)&gt; Rack::Handler::WEBrick.run lambda 
+                  { |env| [200, 
+                           {"Content-Type" =&gt; "text/plain"}, 
+                          ["Hello. The time is #{Time.now}"]] }
+[2013-09-11 17:59:07] INFO  WEBrick 1.3.1
+[2013-09-11 17:59:07] INFO  ruby 1.9.3 (2013-02-22) [x86_64-darwin11.4.2]
+[2013-09-11 17:59:07] INFO  WEBrick::HTTPServer#start: pid=25123 port=8080
+localhost - - [11/Sep/2013:17:59:26 WEST] "GET / HTTP/1.1" 200 44
+- -&gt; /
+localhost - - [11/Sep/2013:17:59:26 WEST] "GET /favicon.ico HTTP/1.1" 200 44
+- -&gt; /favicon.ico
+</PRE>
+El primer argumento de <code>run</code> es nuestra aplicación Rack 
+<PRE>
+lambda { |env| [200, {"Content-Type" =&gt; "text/plain"}, ["Hello. The time is #{Time.now}"]] }
+</PRE>
+y el segundo es el conjunto de opciones para nuestro programa.
+
+<P>
+ahora podemos visitar la aplicación con nuestro navegador
+en <code>http://localhost:8080</code>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html8757"
+  HREF="node332.html#SECTION03110010000000000000">Que es Rack</A>
+<LI><A NAME="tex2html8758"
+  HREF="node332.html#SECTION03110020000000000000">Que es una Aplicación Rack</A>
+<LI><A NAME="tex2html8759"
+  HREF="node332.html#SECTION03110030000000000000">Un Ejemplo Sencillo</A>
+<LI><A NAME="tex2html8760"
+  HREF="node332.html#SECTION03110040000000000000">Un Ejemplo con la Consola Interactiva de Ruby</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8712"
+<A NAME="tex2html8755"
   HREF="node333.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8706"
-  HREF="node329.html">
+<A NAME="tex2html8749"
+  HREF="node331.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8700"
+<A NAME="tex2html8743"
   HREF="node331.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8708"
-  HREF="node783.html">
+<A NAME="tex2html8751"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8710"
-  HREF="node786.html">
+<A NAME="tex2html8753"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -259,20 +398,20 @@ methods and, whenever possible, also the OPTIONS method
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8713"
-  HREF="node333.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html8707"
-  HREF="node329.html">HTTP</A>
-<B> Anterior:</B> <A NAME="tex2html8701"
-  HREF="node331.html">Sesiones HTTP</A>
- &nbsp; <B>  <A NAME="tex2html8709"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8711"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8756"
+  HREF="node333.html">Analizando env con pry-debugger</A>
+<B> Subir:</B> <A NAME="tex2html8750"
+  HREF="node331.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html8744"
+  HREF="node331.html">Rack, un Webserver Ruby</A>
+ &nbsp; <B>  <A NAME="tex2html8752"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8754"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

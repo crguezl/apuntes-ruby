@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Módulos Espacio de Nombres Incluíbles</TITLE>
-<META NAME="description" CONTENT="Módulos Espacio de Nombres Incluíbles">
+<TITLE>Métodos Factoría</TITLE>
+<META NAME="description" CONTENT="Métodos Factoría">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node207.html">
 <LINK REL="previous" HREF="node205.html">
-<LINK REL="up" HREF="node202.html">
+<LINK REL="up" HREF="node204.html">
 <LINK REL="next" HREF="node207.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6380"
+<A NAME="tex2html6420"
   HREF="node207.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6374"
-  HREF="node202.html">
+<A NAME="tex2html6414"
+  HREF="node204.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6370"
+<A NAME="tex2html6408"
   HREF="node205.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6376"
-  HREF="node783.html">
+<A NAME="tex2html6416"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6378"
-  HREF="node786.html">
+<A NAME="tex2html6418"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,105 +92,115 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6381"
-  HREF="node207.html">Prepend</A>
-<B> Subir:</B> <A NAME="tex2html6375"
-  HREF="node202.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6371"
-  HREF="node205.html">Ejemplo</A>
- &nbsp; <B>  <A NAME="tex2html6377"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6379"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6421"
+  HREF="node207.html">dup, clone e initialize_copy</A>
+<B> Subir:</B> <A NAME="tex2html6415"
+  HREF="node204.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6409"
+  HREF="node205.html">new, allocate e initialize</A>
+ &nbsp; <B>  <A NAME="tex2html6417"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6419"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02774000000000000000"></A>
-<A NAME="subsection:modulosespaciodenombresincluibles"></A>
+<H2><A NAME="SECTION02742000000000000000"></A>
+<A NAME="subsection:metodosfactoria"></A>
 <BR>
-Módulos Espacio de Nombres Incluíbles
+Métodos Factoría
 </H2>
-<PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ irb
-ruby-1.9.2-head :001 &gt; Math.sin(Math::PI/2)
- =&gt; 1.0 
-ruby-1.9.2-head :002 &gt; include Math
- =&gt; Object 
-ruby-1.9.2-head :003 &gt; sin(PI/2)
- =&gt; 1.0
-</PRE>
 
-<UL>
-<LI>Para crear un módulo que funcione como <A NAME="7856"></A><SPAN  CLASS="textbf">Math</SPAN> define
-tus métodos como métodos de instancia dentro del módulo
-</LI>
-<LI>Usa la función <code>module_function</code>, un método de instancia privado
-de <code>Module</code> para convertir en <A NAME="7858"></A><SPAN  CLASS="textbf">module functions</SPAN> a los métodos
-cuyos nombres le pases como argumentos
-</LI>
-<LI>El resultado de llamar a <A NAME="7860"></A><SPAN  CLASS="textbf">module_function</SPAN> es que: 
-
-<UL>
-<LI>construye métodos
-de clase equivalentes para cada uno de los métodos de instancia especificados
-</LI>
-<LI>Hace privados a los métodos de instancia implicados
-</LI>
-</UL>
-</LI>
-</UL>
+<P>
+A veces se necesita mas de una forma de inicializar las instancias
+de una clase.
+Una manera simple de hacerlo es dando valores por defecto a los 
+parámetros de <code>initialize</code>:
 
 <P>
 <PRE>
-~/srcLPP/Chapter7ClassesAndModules/modules]$ cat module_function.rb 
-module SpaceOdissey
-
-  THE_UNIVERSE = 1
-
-  def tutu
-    "inside tutu"
+class Point
+  def initialize(x, y, z = nil)
+    @x,@y,@z = x,y,z
   end
-
-  module_function :tutu
 end
-
-puts SpaceOdissey::THE_UNIVERSE
-puts SpaceOdissey::tutu
-
-include SpaceOdissey
-puts THE_UNIVERSE
-puts tutu
 </PRE>
-Ejecución:
+Pero a menudo no es suficiente con esto. Necesitamos <A NAME="8111"></A><SPAN  CLASS="textbf">factory methods</SPAN> o
+<A NAME="8113"></A><SPAN  CLASS="textbf">métodos factoría</SPAN> 
+para crear los objetos de nuestra clase.
+
+<P>
+Supongamos que queremos crear objetos <code>Point</code>
+bien en coordenadas cartesianas
+bien en coordenadas  polares:
+
+<P>
 <PRE>
-[~/srcLPP/Chapter7ClassesAndModules/modules]$ ruby module_function.rb 
-1
-inside tutu
-1
-inside tutu
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n CartAndPolar.rb 
+     1  include Math
+     2  class Point
+     3    attr_accessor :x, :y
+     4  
+     5    def initialize(x, y)
+     6      @x, @y = x,y
+     7    end
+     8  
+     9    private_class_method :new
+    10  
+    11    def Point.cartesian(x,y)
+    12      new(x,y)
+    13    end
+    14  
+    15    def Point.polar(r,theta)
+    16      new(r*cos(theta), r*sin(theta))
+    17    end
+    18  
+    19    def r 
+    20      sqrt(@x*@x+@y*@y)
+    21    end
+    22  
+    23    def theta
+    24      atan2(@y, @x)
+    25    end
+    26  end
+    27  if __FILE__ == $0 
+    28    p = Point.polar(1, PI/4)
+    29    puts p.r, p.theta         # 1.0 0.785398
+    30    q = Point.cartesian(1, 1) # 1 1
+    31    puts q.x, q.y
+    32  end
 </PRE>
-Cuando se define una función-módulo se debe evitar hacer uso de <code>self</code>
-ya que el valor de <code>self</code> hará que dependa de como es invocada.
+Al hacer <code>new</code> privado lo hacemos inaccesible a las clases cliente,
+de manera que las clases usuario de <code>Point</code> deberán de usar uno de los dos métodos factoría proveídos para construir un objeto <code>Point</code>.
+
+<P>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby CartAndPolar.rb 
+1.0
+0.785398163397448
+1
+1
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6380"
+<A NAME="tex2html6420"
   HREF="node207.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6374"
-  HREF="node202.html">
+<A NAME="tex2html6414"
+  HREF="node204.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6370"
+<A NAME="tex2html6408"
   HREF="node205.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6376"
-  HREF="node783.html">
+<A NAME="tex2html6416"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6378"
-  HREF="node786.html">
+<A NAME="tex2html6418"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -240,20 +251,20 @@ ya que el valor de <code>self</code> hará que dependa de como es invocada.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6381"
-  HREF="node207.html">Prepend</A>
-<B> Subir:</B> <A NAME="tex2html6375"
-  HREF="node202.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6371"
-  HREF="node205.html">Ejemplo</A>
- &nbsp; <B>  <A NAME="tex2html6377"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6379"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6421"
+  HREF="node207.html">dup, clone e initialize_copy</A>
+<B> Subir:</B> <A NAME="tex2html6415"
+  HREF="node204.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6409"
+  HREF="node205.html">new, allocate e initialize</A>
+ &nbsp; <B>  <A NAME="tex2html6417"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6419"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

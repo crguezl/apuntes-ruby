@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Definiendo, Suprimiendo y Haciendo Alias de Métodos</TITLE>
-<META NAME="description" CONTENT="Definiendo, Suprimiendo y Haciendo Alias de Métodos">
+<TITLE>Bindings (encarpetados) y eval</TITLE>
+<META NAME="description" CONTENT="Bindings (encarpetados) y eval">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node242.html">
 <LINK REL="previous" HREF="node240.html">
-<LINK REL="up" HREF="node237.html">
+<LINK REL="up" HREF="node240.html">
 <LINK REL="next" HREF="node242.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6972"
+<A NAME="tex2html7020"
   HREF="node242.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6966"
-  HREF="node237.html">
+<A NAME="tex2html7014"
+  HREF="node240.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6960"
+<A NAME="tex2html7008"
   HREF="node240.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6968"
-  HREF="node783.html">
+<A NAME="tex2html7016"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6970"
-  HREF="node786.html">
+<A NAME="tex2html7018"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,16 +92,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6973"
-  HREF="node242.html">Manejando Métodos No Definidos:</A>
-<B> Subir:</B> <A NAME="tex2html6967"
-  HREF="node237.html">Métodos</A>
-<B> Anterior:</B> <A NAME="tex2html6961"
-  HREF="node240.html">Llamando a los Métodos</A>
- &nbsp; <B>  <A NAME="tex2html6969"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6971"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7021"
+  HREF="node242.html">instance_eval y class_eval</A>
+<B> Subir:</B> <A NAME="tex2html7015"
+  HREF="node240.html">Evaluando Strings y Bloques</A>
+<B> Anterior:</B> <A NAME="tex2html7009"
+  HREF="node240.html">Evaluando Strings y Bloques</A>
+ &nbsp; <B>  <A NAME="tex2html7017"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7019"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
@@ -109,131 +109,154 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6974"
-  HREF="node241.html#SECTION02844100000000000000">Definiendo Métodos con define_method</A>
+<LI><A NAME="tex2html7022"
+  HREF="node241.html#SECTION02821100000000000000">Procs y Bindings</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H2><A NAME="SECTION02844000000000000000">
-Definiendo, Suprimiendo y Haciendo Alias de Métodos</A>
+<H2><A NAME="SECTION02821000000000000000"></A>
+  <A NAME="subsection:bindings"></A>
+<BR>
+Bindings (encarpetados) y eval
 </H2>
 
 <P>
 
-<H3><A NAME="SECTION02844100000000000000"></A>
-<A NAME="subsubsection:definiendometodos"></A>
-<BR>
-Definiendo Métodos con define_method
+<OL>
+<LI>Un <A NAME="10160"></A><A NAME="tex2html470"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
+es un objeto que representa el estado de los bindings 
+definidos por las variables en un instante dado.
+
+<P>
+</LI>
+<LI>El método <A NAME="10164"></A><A NAME="tex2html471"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-binding"><TT>binding</TT></A>
+retorna un objeto <A NAME="tex2html472"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> describiendo
+los bindings en efecto en el punto de la llamada.
+
+<P>
+</LI>
+<LI>Es posible pasarle a <A NAME="10171"></A><A NAME="tex2html473"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
+un segundo argumento de la clase <A NAME="10175"></A><A NAME="tex2html474"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
+que especifique el contexto en que es evaluada la cadena:
+</LI>
+</OL>
+<PRE>
+~/Chapter8ReflectionandMetaprogramming$ cat -n bindingsAndEval.rb 
+     1  class Demo
+     2    def initialize(n)
+     3      @secret = n
+     4    end
+     5    def getBinding
+     6      return binding()
+     7    end
+     8  end
+     9  
+    10  k1 = Demo.new(99)
+    11  b1 = k1.getBinding
+    12  k2 = Demo.new(-3)
+    13  b2 = k2.getBinding
+    14  
+    15  puts eval("@secret", b1)   #=&gt; 99
+    16  puts eval("@secret", b2)   #=&gt; -3
+    17  puts eval("@secret")       #=&gt; nil
+</PRE>
+Ejecución:
+<PRE>
+~/Chapter8ReflectionandMetaprogramming$ ruby bindingsAndEval.rb 
+99
+-3
+nil
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02821100000000000000">
+Procs y Bindings</A>
 </H3>
-En Ruby tenemos dos formas de generar métodos 
-dinámicamente: <code>define_method</code> y
-<code>eval + def</code>. 
-<TABLE CELLPADDING=3 BORDER="1">
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
-define_method(symbol, method)
-
-define_method(symbol) { block }
-</PRE></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
- class_eval &lt;&lt;-"END"
-  def #{name}
-    # body 
-  end  
- END
-</PRE></TD>
-</TR>
-</TABLE>
-<code>define_method</code> es un método de clase privado y por tanto debe ser invocado sin especificar 
-el receptor: el destinatario es siempre la clase que esta en contexto.
-Los parámetros son:
 
 <P>
 
-<UL>
-<LI><code>symbol</code> especifica el nombre del método. 
+<OL>
+<LI>La clase <A NAME="10179"></A><A NAME="tex2html475"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>
+define un método <A NAME="10183"></A><A NAME="tex2html476"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html#method-i-binding"><TT>binding</TT></A>.
+Cuando se llama dentro de un proc o de una lambda retorna un objeto 
+<A NAME="10187"></A><A NAME="tex2html477"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
+que representa los bindings en efecto en la clausura
+de ese <A NAME="tex2html478"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>.
+
+<P>
 </LI>
-<LI><code>method</code> es una <code>lambda</code> o <code>Proc</code> o un bloque.
+<LI>Además, el método de <A NAME="tex2html479"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> <A NAME="10197"></A><A NAME="tex2html480"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
+nos permite pasar como segundo argumento un <A NAME="tex2html481"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> en vez de un <A NAME="tex2html482"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
+(Véase la sección <A HREF="node155.html#subsection:clausurasybindings">13.6.2</A>).
+
+<P>
 </LI>
-</UL>
+<LI>Además, Ruby 1.9 define un método <A NAME="10207"></A><A NAME="tex2html483"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html#method-i-eval"><TT>eval</TT></A>
+para los objetos <A NAME="tex2html484"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>.
+</LI>
+</OL>
 
 <P>
+
+    <pre>
+
+    </pre>
+
+<P>
+ejecución:
 <PRE>
-~/chapter8ReflectionandMetaprogramming$ cat -n hashtoclass.rb 
-     1  class MyClass 
-     2      def self.h; @@h end
-     3  
-     4      print "Write a ruby hash: "
-     5      @@h = eval gets() 
-     6  
-     7      @@h.keys.each { |k|
-     8        define_method k do
-     9         @@h[k] 
-    10        end
-    11  
-    12        define_method "#{k}=" do |v|
-    13         @@h[k] = v 
-    14        end
-    15      }
-    16  end
-    17  
-    18  x = MyClass.new
-    19  print "Action: "; action = gets().chomp
-    20  if action =~ /=/
-    21    print "Value: "; value = eval gets().chomp
-    22    puts x.send(action, value)
-    23  else 
-    24    puts x.send(action)
-    25  end
-    26  puts MyClass.h.inspect
-</PRE>
-
-<P>
-<PRE>
-~/chapter8ReflectionandMetaprogramming$ ruby hashtoclass.rb 
-Write a ruby hash: { :a =&gt; 1, :b =&gt; 2}
-Action: b=
-Value: 45
-45
-{:a=&gt;1, :b=&gt;45}
-</PRE>
-
-<P>
-<code>define_method</code> nos permite definir métodos cuyos nombres no se atienen a las reglas convencionales:
-
-<P>
-<PRE>
-&gt;&gt; class Titi
-&gt;&gt; define_method 'chu$|chu' do
-?&gt; puts "in chu$|chu"
-&gt;&gt; end
-&gt;&gt; end
-=&gt; #&lt;Proc:0x000000010046d8f8@(irb):33&gt;
-&gt;&gt; z = Titi.new
-=&gt; #&lt;Titi:0x10046ac20&gt;
-&gt;&gt; z.send 'chu$|chu'
-in chu$|chu
-=&gt; nil
+~/Chapter8ReflectionandMetaprogramming$ ruby procsAndBindings.rb 
+99
+99
+********************************
+2
+4
+6
+********************************
+3
+6
+9
+********************************
+5
+10
+15
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6972"
+<A NAME="tex2html7020"
   HREF="node242.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6966"
-  HREF="node237.html">
+<A NAME="tex2html7014"
+  HREF="node240.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6960"
+<A NAME="tex2html7008"
   HREF="node240.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6968"
-  HREF="node783.html">
+<A NAME="tex2html7016"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6970"
-  HREF="node786.html">
+<A NAME="tex2html7018"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -284,20 +307,20 @@ in chu$|chu
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6973"
-  HREF="node242.html">Manejando Métodos No Definidos:</A>
-<B> Subir:</B> <A NAME="tex2html6967"
-  HREF="node237.html">Métodos</A>
-<B> Anterior:</B> <A NAME="tex2html6961"
-  HREF="node240.html">Llamando a los Métodos</A>
- &nbsp; <B>  <A NAME="tex2html6969"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6971"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7021"
+  HREF="node242.html">instance_eval y class_eval</A>
+<B> Subir:</B> <A NAME="tex2html7015"
+  HREF="node240.html">Evaluando Strings y Bloques</A>
+<B> Anterior:</B> <A NAME="tex2html7009"
+  HREF="node240.html">Evaluando Strings y Bloques</A>
+ &nbsp; <B>  <A NAME="tex2html7017"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7019"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

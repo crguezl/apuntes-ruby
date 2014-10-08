@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Templates Inline</TITLE>
-<META NAME="description" CONTENT="Templates Inline">
+<TITLE>Introducción</TITLE>
+<META NAME="description" CONTENT="Introducción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,7 +19,6 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node384.html">
 <LINK REL="previous" HREF="node382.html">
 <LINK REL="up" HREF="node382.html">
 <LINK REL="next" HREF="node384.html">
@@ -28,20 +27,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9598"
+<A NAME="tex2html9555"
   HREF="node384.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9592"
+<A NAME="tex2html9549"
   HREF="node382.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9586"
+<A NAME="tex2html9545"
   HREF="node382.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9594"
-  HREF="node783.html">
+<A NAME="tex2html9551"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9596"
-  HREF="node786.html">
+<A NAME="tex2html9553"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,142 +91,40 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9599"
-  HREF="node384.html">Named Templates</A>
-<B> Subir:</B> <A NAME="tex2html9593"
-  HREF="node382.html">Vistas</A>
-<B> Anterior:</B> <A NAME="tex2html9587"
-  HREF="node382.html">Vistas</A>
- &nbsp; <B>  <A NAME="tex2html9595"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9597"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9556"
+  HREF="node384.html">Referencias sobre Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html9550"
+  HREF="node382.html">Primeros Pasos</A>
+<B> Anterior:</B> <A NAME="tex2html9546"
+  HREF="node382.html">Primeros Pasos</A>
+ &nbsp; <B>  <A NAME="tex2html9552"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9554"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03341000000000000000">
-Templates Inline</A>
-</H2>
-
-<P>
-Templates may be defined at the end of the source file.
-En este ejemplo trabajamos con varios templates inline en diferentes ficheros:
-<PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat example2-14.rb 
-require 'sinatra/base'
-
-class App &lt; Sinatra::Base
-  enable :inline_templates
-  get '/index' do 
-    puts "Visiting #{request.url}"
-    erb :index
-  end
-end
-
-require './another'
-__END__
-@@index
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Inline template&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Worked!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
-</PRE>
-
-<P>
-En este fichero tenemos un segundo template inline:
-<PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat another.rb 
-class App 
-  enable :inline_templates
-  get '/' do
-    erb :another
-  end
-end
-
-__END__
-@@another
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Separated file&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Inside another!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
-</PRE>
-
-<P>
-Este es nuestro config.ru:
-
-<P>
-<PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat config.ru 
-require './example2-14'
-
-run App
-</PRE>
-Para simplificar las cosas hemos hecho un <code>Rakefile</code>:
-<PRE>
-[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat Rakefile 
-task :default =&gt; :server
-
-desc "run server"
-task :server do
-  sh "rackup"
-end
-
-desc "make a get / request via curl"
-task :root do
-  sh "curl -v localhost:9292"
-end
-
-desc "make a get /index request via curl"
-task :index do 
-  sh "curl -v localhost:9292/index"
-end
-</PRE>
-
-<P>
-El resultado de la ejecución es:
-<PRE>
-[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/index
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Inline template&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Worked!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
-[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Separated file&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Inside another!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
-</PRE>
+<H1><A NAME="SECTION03210000000000000000">
+Introducción</A>
+</H1>
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html9557"
+  HREF="node384.html">Referencias sobre Sinatra</A>
+<LI><A NAME="tex2html9558"
+  HREF="node385.html">Ejercicio: Instale la Documentación en sinatra.github.com</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

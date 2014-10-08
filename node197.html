@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Métodos Factoría</TITLE>
-<META NAME="description" CONTENT="Métodos Factoría">
+<TITLE>Predominancia/Invalidación de Métodos (overriding)</TITLE>
+<META NAME="description" CONTENT="Predominancia/Invalidación de Métodos (overriding)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node198.html">
 <LINK REL="previous" HREF="node196.html">
-<LINK REL="up" HREF="node195.html">
+<LINK REL="up" HREF="node194.html">
 <LINK REL="next" HREF="node198.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6237"
+<A NAME="tex2html6287"
   HREF="node198.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6231"
-  HREF="node195.html">
+<A NAME="tex2html6281"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6225"
+<A NAME="tex2html6275"
   HREF="node196.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6233"
-  HREF="node783.html">
+<A NAME="tex2html6283"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6235"
-  HREF="node786.html">
+<A NAME="tex2html6285"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,115 +92,266 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6238"
-  HREF="node198.html">dup, clone e initialize_copy</A>
-<B> Subir:</B> <A NAME="tex2html6232"
-  HREF="node195.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html6226"
-  HREF="node196.html">new, allocate e initialize</A>
- &nbsp; <B>  <A NAME="tex2html6234"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6236"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6288"
+  HREF="node198.html">Aumentando la Conducta Mediante</A>
+<B> Subir:</B> <A NAME="tex2html6282"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6276"
+  HREF="node196.html">super</A>
+ &nbsp; <B>  <A NAME="tex2html6284"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6286"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02742000000000000000"></A>
-<A NAME="subsection:metodosfactoria"></A>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html6289"
+  HREF="node197.html#SECTION02733100000000000000">Predominancia de Métodos Privados</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02733000000000000000"></A>
+<A NAME="subsection:overriding"></A>
 <BR>
-Métodos Factoría
+Predominancia/Invalidación de Métodos (overriding)
 </H2>
 
 <P>
-A veces se necesita mas de una forma de inicializar las instancias
-de una clase.
-Una manera simple de hacerlo es dando valores por defecto a los 
-parámetros de <code>initialize</code>:
+Se entiende por <A NAME="tex2html395"
+  HREF="http://en.wikipedia.org/wiki/Method_overriding">overriding</A>
+la posibilidad de reemplazar la conducta de un método en la superclase.
 
 <P>
 <PRE>
-class Point
-  def initialize(x, y, z = nil)
-    @x,@y,@z = x,y,z
+[19:28][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat overriding_methods.rb 
+class WorldGreeter
+  def greet                      # Display a greeting
+    puts "#{greeting} #{who}"
+  end 
+
+  def greeting                   # What greeting to use 
+    "Hello"
+  end 
+
+  def who                        # Who to greet
+    "World"
+  end 
+end
+
+# Greet the world in Spanish
+class SpanishWorldGreeter &lt; WorldGreeter
+  def greeting                   # Override the greeting
+    "Hola"
+  end 
+end
+
+# We call a method defined in WorldGreeter, which calls the overridden
+# version of greeting in SpanishWorldGreeter, and prints "Hola World"
+SpanishWorldGreeter.new.greet
+</PRE>
+
+<P>
+Ejecución:
+<PRE>
+[19:28][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby overriding_methods.rb 
+Hola World
+</PRE>
+
+<P>
+
+<UL>
+<LI>Nótese que es posible definir una clase <A NAME="8096"></A><SPAN  CLASS="textbf">Abstracta</SPAN> que invoca ciertos <A NAME="8098"></A><SPAN  CLASS="textbf">métodos abstractos</SPAN>
+cuya definición se delega a las subclases.
+</LI>
+<LI>Una clase que extiende una clase <A NAME="8100"></A><SPAN  CLASS="textbf">abstracta</SPAN> es <A NAME="8102"></A><SPAN  CLASS="textbf">concreta</SPAN> si define todos
+los métodos abstractos de sus ancestros.
+</LI>
+</UL>
+
+<P>
+<PRE>
+[19:34][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat abstract_and_concrete_classes.rb 
+# This class is abstract; it doesn't define greeting or who
+# No special syntax is required: any class that invokes methods that are
+# intended for a subclass to implement is abstract.
+class AbstractGreeter
+  def greet
+    puts "#{greeting} #{who}"
   end
 end
+
+# A concrete subclass
+class WorldGreeter &lt; AbstractGreeter
+  def greeting; "Hello"; end
+  def who; "World"; end
+end
+
+WorldGreeter.new.greet  # Displays "Hello World"
 </PRE>
-Pero a menudo no es suficiente con esto. Necesitamos <A NAME="7812"></A><SPAN  CLASS="textbf">factory methods</SPAN> o
-<A NAME="7814"></A><SPAN  CLASS="textbf">métodos factoría</SPAN> 
-para crear los objetos de nuestra clase.
 
 <P>
-Supongamos que queremos crear objetos <code>Point</code>
-bien en coordenadas cartesianas
-bien en coordenadas  polares:
+Ejecución:
+<PRE>
+[19:34][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby abstract_and_concrete_classes.rb 
+Hello World
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02733100000000000000"></A>
+<A NAME="subsubsection:predominancia_de_metodos_privados"></A>
+<BR>
+Predominancia de Métodos Privados
+</H3>
+Los métodos privados no pueden ser invocados con un receptor explícito pero son heredados por las subclases.
+Si ocurre que 
+
+<OL>
+<LI>Nuestra clase hereda de otra
+</LI>
+<LI>Definimos un método (cualquiera que sea su visibilidad)
+en nuestra subclase que tiene el mismo nombre que un método privado en la superclase
+</LI>
+<LI>Entonces sobreescribimos el método privado. 
+</LI>
+<LI>Si lo hemos hecho por equivocación y el método privado 
+así llamado era usado como un helper por la superclase
+<SPAN  CLASS="textbf">es muy posible que esta colisión produzca una conducta indeseable</SPAN>.
+</LI>
+<LI>Cuando herede procure estar familiarizado con la implementación de la superclase.
+</LI>
+</OL>
+
+<P>
+El siguiente ejemplo ilustra el problema:
+<PRE>
+[~/srcLPP/Chapter7ClassesAndModules/overriding_methods]$ cat overriding_private_methods.rb 
+class MotherFoo
+  def titi 
+   foo
+  end
+
+  private
+  def foo
+   "mother foo"
+  end
+end
+
+class ChildFoo &lt; MotherFoo
+  def foo 
+    "child foo"
+  end
+end
+
+c = ChildFoo.new
+puts c.titi # child foo
+
+print "Private methods of mother class: "
+class MotherFoo
+  puts MotherFoo.private_instance_methods(false)
+end
+</PRE>
+
+<P>
+La llamada a <code>titi</code> hace que se llame al método <code>foo</code> de la clase hija en vez
+de al método <code>foo</code> de la clase madre que era lo que el programador pretendía.
+
+<P>
+Una manera de paliar este problema consiste en documentar los métodos privados de nuestra clase
+en una sección para desarrolladores. 
+
+<P>
+Como muestra la ejecución del anterior ejemplo 
+siempre es posible averiguar que métodos privados tiene la superclase llamando a 
+<code>MotherFoo.private_instance_methods</code>. De esta forma sabemos que nombres 
+evitar en nuestra clase hija:
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n CartAndPolar.rb 
-     1  include Math
-     2  class Point
-     3    attr_accessor :x, :y
-     4  
-     5    def initialize(x, y)
-     6      @x, @y = x,y
-     7    end
-     8  
-     9    private_class_method :new
-    10  
-    11    def Point.cartesian(x,y)
-    12      new(x,y)
-    13    end
-    14  
-    15    def Point.polar(r,theta)
-    16      new(r*cos(theta), r*sin(theta))
-    17    end
-    18  
-    19    def r 
-    20      sqrt(@x*@x+@y*@y)
-    21    end
-    22  
-    23    def theta
-    24      atan2(@y, @x)
-    25    end
-    26  end
-    27  if __FILE__ == $0 
-    28    p = Point.polar(1, PI/4)
-    29    puts p.r, p.theta         # 1.0 0.785398
-    30    q = Point.cartesian(1, 1) # 1 1
-    31    puts q.x, q.y
-    32  end
+[~/srcLPP/Chapter7ClassesAndModules/overriding_methods]$ ruby overriding_private_methods.rb 
+child foo
+Private methods of mother class: foo
+[~/srcLPP/Chapter7ClassesAndModules/overriding_methods]$
 </PRE>
-Al hacer <code>new</code> privado lo hacemos inaccesible a las clases cliente,
-de manera que las clases usuario de <code>Point</code> deberán de usar uno de los dos métodos factoría proveídos para construir un objeto <code>Point</code>.
+
+<P>
+Otra forma de aliviar el problema es: 
+
+<OL>
+<LI>crear un método anónimo de clase <code>Proc</code> o una lambda
+</LI>
+<LI>usar una variable de instancia de la clase para guardarlo. 
+</LI>
+<LI>crear un accessor de lectura para la variable de instancia de la clase como objeto
+</LI>
+</OL>
+Esto hace mas difícil que las clases que hereden
+puedan colisionar con nuestro método <I>privado</I>.
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby CartAndPolar.rb 
-1.0
-0.785398163397448
-1
-1
+11:10][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat overriding_private_methods3.rb 
+class MotherFoo
+  @ofoo = Proc.new do |x|
+   "mother foo #{x}"
+  end
+
+  def self.foo(x)
+    @ofoo.call(x)
+  end
+
+  def titi(y) 
+    MotherFoo.foo(y) 
+  end
+end
+
+class ChildFoo &lt; MotherFoo
+  # puts @ofoo.call # generates an exception: undefined method `call' for nil:NilClass (NoMethodError))
+  def foo(z) 
+    "child foo #{z}"
+  end
+  puts MotherFoo.foo(9)
+end
+
+c = ChildFoo.new
+puts c.titi(4) 
+puts c.foo(3)
+</PRE>
+Como se vé, es todavía posible - pero ahora explicitándolo con <code>MotherFoo.foo</code> - acceder al método "privado"
+evitando de este modo la colisión casual.
+
+<P>
+Ejecución:
+<PRE>
+[11:13][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby overriding_private_methods3.rb 
+mother foo 9
+mother foo 4
+child foo 3
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6237"
+<A NAME="tex2html6287"
   HREF="node198.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6231"
-  HREF="node195.html">
+<A NAME="tex2html6281"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6225"
+<A NAME="tex2html6275"
   HREF="node196.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6233"
-  HREF="node783.html">
+<A NAME="tex2html6283"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6235"
-  HREF="node786.html">
+<A NAME="tex2html6285"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -251,20 +402,20 @@ de manera que las clases usuario de <code>Point</code> deberán de usar uno de l
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6238"
-  HREF="node198.html">dup, clone e initialize_copy</A>
-<B> Subir:</B> <A NAME="tex2html6232"
-  HREF="node195.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html6226"
-  HREF="node196.html">new, allocate e initialize</A>
- &nbsp; <B>  <A NAME="tex2html6234"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6236"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6288"
+  HREF="node198.html">Aumentando la Conducta Mediante</A>
+<B> Subir:</B> <A NAME="tex2html6282"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6276"
+  HREF="node196.html">super</A>
+ &nbsp; <B>  <A NAME="tex2html6284"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6286"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

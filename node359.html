@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Rack::Cascade</TITLE>
-<META NAME="description" CONTENT="Rack::Cascade">
+<TITLE>Rack::Static</TITLE>
+<META NAME="description" CONTENT="Rack::Static">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node360.html">
 <LINK REL="previous" HREF="node358.html">
-<LINK REL="up" HREF="node322.html">
+<LINK REL="up" HREF="node331.html">
 <LINK REL="next" HREF="node360.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9143"
+<A NAME="tex2html9186"
   HREF="node360.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9137"
-  HREF="node322.html">
+<A NAME="tex2html9180"
+  HREF="node331.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9131"
+<A NAME="tex2html9174"
   HREF="node358.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9139"
-  HREF="node783.html">
+<A NAME="tex2html9182"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9141"
-  HREF="node786.html">
+<A NAME="tex2html9184"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,65 +92,133 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9144"
-  HREF="node360.html">Rack::Mount</A>
-<B> Subir:</B> <A NAME="tex2html9138"
-  HREF="node322.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9132"
-  HREF="node358.html">Código de Rack::Builder</A>
- &nbsp; <B>  <A NAME="tex2html9140"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9142"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9187"
+  HREF="node360.html">Un Ejemplo Simple: Piedra,</A>
+<B> Subir:</B> <A NAME="tex2html9181"
+  HREF="node331.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9175"
+  HREF="node358.html">rackup</A>
+ &nbsp; <B>  <A NAME="tex2html9183"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9185"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031220000000000000000">
-Rack::Cascade</A>
+<H1><A NAME="SECTION031160000000000000000">
+Rack::Static</A>
 </H1>
 
 <P>
-<A NAME="tex2html801"
-  HREF="http://rack.rubyforge.org/doc/Rack/Cascade.html">Rack::Cascade</A> 
-tries an request on several apps, and returns the first response
-that is not 404 (or in a list of configurable status codes).
+
+<H4><A NAME="SECTION031160010000000000000">
+Véase</A>
+</H4>
+  
 
 <P>
 
-<H4><A NAME="SECTION031220010000000000000">
+<OL>
+<LI>Documentación de <A NAME="tex2html772"
+  HREF="http://rack.rubyforge.org/doc/Rack/Static.html">Rack::Static</A> 
+</LI>
+<LI>Este ejemplo: 
+<A NAME="tex2html773"
+  HREF="https://github.com/crguezl/rack-static-example">rack-static-example</A>
+en GitHub
+</LI>
+<LI><A NAME="tex2html774"
+  HREF="https://github.com/rack/rack/blob/master/lib/rack/static.rb">Código fuente</A>
+de <A NAME="tex2html775"
+  HREF="http://rack.rubyforge.org/doc/Rack/Static.html">Rack::Static</A> en GitHub
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION031160020000000000000">
 Ejemplo</A>
 </H4>
   
 
 <P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-cascade]$ cat cascade2.ru 
-statuses = [200,404]
-apps = [
-  lambda {|env| 
-    status = statuses.sample
-    [status, {}, ["I'm the first app. Status = #{status}\n"]]
-  }, 
-  lambda {|env| 
-    status = statuses.sample
-    [status, {}, ["I'm the second app. Status = #{status}\n"]]
-  }, 
-  lambda {|env| 
-    status = statuses.sample
-    [status, {}, ["I'm the last app. Status = #{status}\n"]]
-  } 
-]
-use Rack::ContentLength 
-use Rack::ContentType 
-run Rack::Cascade.new(apps)
+[~/local/src/ruby/sinatra/rack/rack-static(master)]$ tree
+.
+|--- README
+|--- README.md
+|--- Rakefile
+|--- config.ru
+|--- myapp.rb
+`---- public
+   `--- index.html
 </PRE>
 
 <P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-cascade]$ rake client
-curl -v 'http://localhost:9292'
+1 directory, 6 files
+[~/local/src/ruby/sinatra/rack/rack-static(master)]$ cat public/index.html 
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello World!&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-static(master)]$ cat config.ru 
+require './myapp'
+
+use Rack::Static, :urls =&gt; ["/public"]
+
+run MyApp.new
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-static(master)]$ cat Rakefile 
+task :default =&gt; :server
+
+desc "run server"
+task :server do
+  sh "rackup"
+end
+
+desc "run client via curl"
+task :client do
+  sh "curl -v localhost:9292"
+end
+
+desc "access to static file"
+task :index do
+  sh "curl -v localhost:9292/public/index.html"
+end
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-static(master)]$ cat myapp.rb 
+# my_app.rb
+#
+class MyApp
+  def call env
+    [200, {"Content-Type" =&gt; "text/html"}, ["Hello SYTW!"]] 
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-static(master)]$ rake client
+curl -v localhost:9292
 * About to connect() to localhost port 9292 (#0)
+*   Trying ::1... Connection refused
 *   Trying 127.0.0.1... connected
 * Connected to localhost (127.0.0.1) port 9292 (#0)
 &gt; GET / HTTP/1.1
@@ -160,101 +228,119 @@ curl -v 'http://localhost:9292'
 &gt; 
 &lt; HTTP/1.1 200 OK
 &lt; Content-Type: text/html
-&lt; Content-Length: 33
+&lt; Transfer-Encoding: chunked
+&lt; Connection: close
+&lt; Server: thin 1.5.1 codename Straight Razor
+&lt; 
+* Closing connection #0
+Hello SYTW!
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-static(master)]$ rake index
+curl -v localhost:9292/public/index.html
+* About to connect() to localhost port 9292 (#0)
+*   Trying ::1... Connection refused
+*   Trying 127.0.0.1... connected
+* Connected to localhost (127.0.0.1) port 9292 (#0)
+&gt; GET /public/index.html HTTP/1.1
+&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
+&gt; Host: localhost:9292
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Last-Modified: Thu, 03 Oct 2013 08:24:43 GMT
+&lt; Content-Type: text/html
+&lt; Content-Length: 227
 &lt; Connection: keep-alive
 &lt; Server: thin 1.5.1 codename Straight Razor
 &lt; 
-I'm the second app. Status = 200
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello World!&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
 * Connection #0 to host localhost left intact
 * Closing connection #0
 </PRE>
 
 <P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-cascade]$ rake client
-curl -v 'http://localhost:9292'
-* About to connect() to localhost port 9292 (#0)
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET / HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
-&gt; Host: localhost:9292
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html
-&lt; Content-Length: 31
-&lt; Connection: keep-alive
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-I'm the last app. Status = 200
-* Connection #0 to host localhost left intact
-* Closing connection #0
-</PRE>
 
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-cascade]$ rake client
-curl -v 'http://localhost:9292'
-* About to connect() to localhost port 9292 (#0)
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET / HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
-&gt; Host: localhost:9292
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html
-&lt; Content-Length: 32
-&lt; Connection: keep-alive
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-I'm the first app. Status = 200
-* Connection #0 to host localhost left intact
-* Closing connection #0]
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031220020000000000000">
-Código del Constructor</A>
+<H4><A NAME="SECTION031160030000000000000">
+<TT>El comando rackup</TT></A>
 </H4>
   
 
 <P>
+<code>rackup</code> converts the supplied rack config file to an instance of <A NAME="tex2html776"
+  HREF="http://rack.rubyforge.org/doc/Rack/Builder.html">Rack::Builder</A>. 
+In short, rack config files are evaluated within the context of a <A NAME="tex2html777"
+  HREF="http://rack.rubyforge.org/doc/Rack/Builder.html">Rack::Builder</A>
+object.
+
+<P>
+Rackup also has a <A NAME="14802"></A><SPAN  CLASS="textbf">use</SPAN> method that accepts a <A NAME="14804"></A><SPAN  CLASS="textbf">middleware</SPAN>. Let us use one
+of Rack’s built-in middleware.
+
+<P>
 <PRE>
-        # File lib/rack/cascade.rb, line 11
-11:     def initialize(apps, catch=404)
-12:       @apps = []; @has_app = {}
-13:       apps.each { |app| add app }
-14: 
-15:       @catch = {}
-16:       [*catch].each { |status| @catch[status] = true }
-17:     end
+[~/sinatra/rackup/middleware]$ cat config.ru 
+require './myapp'
+require './myrackmiddleware'
+use Rack::Reloader
+use MyRackMiddleware
+run MyApp.new
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/rackup/middleware]$ cat myapp.rb 
+# myapp.rb
+class MyApp
+  def call(env)
+    [200, {"Content-Type" =&gt; "text/html"}, ["Hello Rack Participants from across the globe"]] 
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/rackup/middleware]$ cat myrackmiddleware.rb 
+class MyRackMiddleware
+  def initialize(appl)
+    @appl = appl
+  end
+  def call(env)
+    status, headers, body = @appl.call(env)
+    append_s = "... greetings from RubyLearning!!"
+    [status, headers, body &lt;&lt; append_s]
+  end  
+end
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION031220030000000000000">
-Código de <TT>call</TT></A>
+<H4><A NAME="SECTION031160040000000000000">
+Véase</A>
 </H4>
   
 
 <P>
-<PRE>
-        # File lib/rack/cascade.rb, line 19
-19:     def call(env)
-20:       result = NotFound
-21: 
-22:       @apps.each do |app|
-23:         result = app.call(env)
-24:         break unless @catch.include?(result[0].to_i)
-25:       end
-26: 
-27:       result
-28:     end
-</PRE>
+
+<UL>
+<LI><A NAME="tex2html778"
+  HREF="http://railscasts.com/episodes/151-rack-middleware">RailCast #151 Rack Middleware</A>
+</LI>
+<LI><A NAME="tex2html779"
+  HREF="http://www.confreaks.com/videos/961-mwrc2012-rack-middleware-as-a-general-purpose-abstraction">Rack Middleware as a General Purpose Abstraction por Mitchell Hashimoto</A>
+</LI>
+</UL>
 
 <P>
 <BR><HR>
@@ -264,18 +350,97 @@ Código de <TT>call</TT></A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html9145"
-  HREF="node359.html#SECTION031220010000000000000">Ejemplo</A>
-<LI><A NAME="tex2html9146"
-  HREF="node359.html#SECTION031220020000000000000">Código del Constructor</A>
-<LI><A NAME="tex2html9147"
-  HREF="node359.html#SECTION031220030000000000000">Código de <TT>call</TT></A>
+<LI><A NAME="tex2html9188"
+  HREF="node359.html#SECTION031160010000000000000">Véase</A>
+<LI><A NAME="tex2html9189"
+  HREF="node359.html#SECTION031160020000000000000">Ejemplo</A>
+<LI><A NAME="tex2html9190"
+  HREF="node359.html#SECTION031160030000000000000"><TT>El comando rackup</TT></A>
+<LI><A NAME="tex2html9191"
+  HREF="node359.html#SECTION031160040000000000000">Véase</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9186"
+  HREF="node360.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9180"
+  HREF="node331.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9174"
+  HREF="node358.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html9182"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html9184"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html9187"
+  HREF="node360.html">Un Ejemplo Simple: Piedra,</A>
+<B> Subir:</B> <A NAME="tex2html9181"
+  HREF="node331.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9175"
+  HREF="node358.html">rackup</A>
+ &nbsp; <B>  <A NAME="tex2html9183"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9185"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

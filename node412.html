@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Autentificación Básica</TITLE>
-<META NAME="description" CONTENT="Autentificación Básica">
+<TITLE>Redireccionamientos/Browser Redirect</TITLE>
+<META NAME="description" CONTENT="Redireccionamientos/Browser Redirect">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node413.html">
-<LINK REL="previous" HREF="node410.html">
-<LINK REL="up" HREF="node377.html">
+<LINK REL="previous" HREF="node411.html">
+<LINK REL="up" HREF="node386.html">
 <LINK REL="next" HREF="node413.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10029"
+<A NAME="tex2html10082"
   HREF="node413.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10023"
-  HREF="node377.html">
+<A NAME="tex2html10076"
+  HREF="node386.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10017"
+<A NAME="tex2html10070"
   HREF="node411.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10025"
-  HREF="node783.html">
+<A NAME="tex2html10078"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10027"
-  HREF="node786.html">
+<A NAME="tex2html10080"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,40 +92,72 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10030"
-  HREF="node413.html">Sinatra como Middleware</A>
-<B> Subir:</B> <A NAME="tex2html10024"
-  HREF="node377.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10018"
-  HREF="node411.html">Referencias</A>
- &nbsp; <B>  <A NAME="tex2html10026"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10028"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10083"
+  HREF="node413.html">Configuration / Configuración</A>
+<B> Subir:</B> <A NAME="tex2html10077"
+  HREF="node386.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10071"
+  HREF="node411.html">Generating URLs</A>
+ &nbsp; <B>  <A NAME="tex2html10079"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10081"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033260000000000000000"></A>
-<A NAME="section:basicauthentication"></A>
-<BR>
-Autentificación Básica
+<H1><A NAME="SECTION033180000000000000000">
+Redireccionamientos/Browser Redirect</A>
 </H1>
+
+<P>
+You can trigger a browser redirect with the <code>redirect</code> helper method:
+
+<P>
 <PRE>
-[~/srcSTW/sinatra-faq/authentication/basic(esau)]$ cat app.rb 
-require 'rubygems'
-require 'sinatra'
+get '/foo' do
+  redirect to('/bar')
+end
+</PRE>
+Any additional parameters are handled like arguments passed to <code>halt</code>:
 
-use Rack::Auth::Basic, "Restricted Area" do |username, password|
-  [username, password] == ['admin', 'admin']
+<P>
+<PRE>
+redirect to('/bar'), 303
+redirect 'http://google.com', 'wrong place, buddy'
+</PRE>
+You can also easily <code>redirect</code> back to the page the user came from with <code>redirect back</code>:
+
+<P>
+<PRE>
+get '/foo' do
+  "&lt;a href='/bar'&gt;do something&lt;/a&gt;"
 end
 
-get '/' do
-  "You're welcome"
+get '/bar' do
+  do_something
+  redirect back
 end
+</PRE>
+To pass arguments with a <code>redirect</code>, either add them to the query:
+
+<P>
+<PRE>
+redirect to('/bar?sum=42')
+</PRE>
+Or use a session:
+
+<P>
+<PRE>
+enable :sessions
 
 get '/foo' do
-  "You're also welcome"
+  session[:secret] = 'foo'
+  redirect to('/bar')
+end
+
+get '/bar' do
+  session[:secret]
 end
 </PRE>
 
@@ -133,7 +165,7 @@ end
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

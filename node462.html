@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Ejemplo Simple</TITLE>
-<META NAME="description" CONTENT="Un Ejemplo Simple">
+<TITLE>Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</TITLE>
+<META NAME="description" CONTENT="Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node463.html">
+<LINK REL="next" HREF="node464.html">
 <LINK REL="previous" HREF="node461.html">
-<LINK REL="up" HREF="node460.html">
+<LINK REL="up" HREF="node456.html">
 <LINK REL="next" HREF="node463.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10834"
+<A NAME="tex2html10871"
   HREF="node463.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10828"
-  HREF="node460.html">
+<A NAME="tex2html10865"
+  HREF="node456.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10822"
+<A NAME="tex2html10859"
   HREF="node461.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10830"
-  HREF="node783.html">
+<A NAME="tex2html10867"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10832"
-  HREF="node786.html">
+<A NAME="tex2html10869"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,473 +92,242 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10835"
-  HREF="node463.html">Ajax, Sinatra y RightJS</A>
-<B> Subir:</B> <A NAME="tex2html10829"
-  HREF="node460.html">Ajax in Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html10823"
-  HREF="node461.html">Un Programa para Experimentar</A>
- &nbsp; <B>  <A NAME="tex2html10831"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10833"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10872"
+  HREF="node463.html">Enlaces Relacionados</A>
+<B> Subir:</B> <A NAME="tex2html10866"
+  HREF="node456.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html10860"
+  HREF="node461.html">Ruby y WebSockets: TCP</A>
+ &nbsp; <B>  <A NAME="tex2html10868"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10870"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031220000000000000000">
-Un Ejemplo Simple</A>
+<H1><A NAME="SECTION03940000000000000000">
+Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</A>
 </H1>
 
 <P>
-Véase 
-<A NAME="tex2html1050"
-  HREF="https://github.com/crguezl/sinatra-jquery-ajax">sinatra-jquery-ajax</A>
-en GitHub.
 
-<P>
-<PRE>
-~/sinatra/sinatra-jquery-ajax(master)]$ tree
-.
-|--- Gemfile
-|--- Gemfile.lock
-|--- README
-|--- config.ru
-|--- public
-|   |--- css
-|   |   `--- style.css
-|   `--- js
-|       `--- app.js
-|--- sinatra_jquery_test.rb
-`--- views
-    |--- app.erb
-    `--- layout.erb
-</PRE>
-
-<P>
-<PRE>
-[~/sinatra/sinatra-jquery-ajax(master)]$ cat sinatra_jquery_test.rb 
-require 'sinatra'
-
-get '/' do
-  erb :app
-end
-
-get '/play' do 
-  if request.xhr?
-    %q{&lt;h1 class="blue"&gt;Hello! &lt;a href="/"&gt;back&lt;/a&gt;&lt;/h1&gt;}
-  else
-    "&lt;h1&gt;Not an Ajax request!&lt;/h1&gt;"
-  end
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031220010000000000000">
-request.xhr?</A>
+<H4><A NAME="SECTION03940010000000000000">
+server.rb</A>
 </H4>
   
 
 <P>
-El predicado
-<code>request.xhr?</code> nos permite saber si este es una request ajax.
+<PRE>
+[19:36][~/srcSTW/streaming/websocketsDrawEM(master)]$ cat -n server.rb 
+     1  require 'em-websocket'
+     2  require 'json'
+     3  require 'sinatra/base'
+     4  
+     5  EventMachine.run {
+     6    @channel = EM::Channel.new
+     7    @users = {}
+     8    @messages = []
+     9  
+    10    EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
+    11        
+    12      ws.onopen {
+    13        #Subscribe the new user to the channel with the callback function for the push action
+    14        new_user = @channel.subscribe { |msg| ws.send msg }
+    15        
+    16        #Add the new user to the user list
+    17        @users[ws.object_id] = new_user
+    18        
+    19        #Push the last messages to the user
+    20        @messages.each do |message|
+    21          ws.send message
+    22        end
+    23     }
+    24  
+    25      ws.onmessage { |msg|
+    26        
+    27        #append the message at the end of the queue
+    28        @messages &lt;&lt; msg
+    29        @messages.shift if @messages.length &gt; 10
+    30  
+    31        #Broadcast the message to all users connected to the channel
+    32        @channel.push msg
+    33      }
+    34  
+    35      ws.onclose { 
+    36        @channel.unsubscribe(@users[ws.object_id])
+    37        @users.delete(ws.object_id)
+    38      }
+    39    end
+    40  
+    41    #Run a Sinatra server for serving index.html
+    42    class App &lt; Sinatra::Base
+    43      set :public_folder, settings.root
+    44      
+    45      get '/' do
+    46        send_file 'index.html'
+    47      end
+    48    end
+    49    App.run!
+    50  }
+</PRE>
 
 <P>
+
+<H4><A NAME="SECTION03940020000000000000">
+index.html.haml</A>
+</H4>
+  
+
 <PRE>
-[~/sinatra/sinatra-jquery-ajax(master)]$ cat views/layout.erb 
+!!! 5
+%html
+  %head
+    %meta(charset="utf-8")
+    %meta(content="IE=edge,chrome=1" http-equiv="X-UA-Compatible")
+    %meta(name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;")  
+    %link(rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css")
+    %script(type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js")
+    %script(type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js")
+    %title
+      WebSockets Drawing
+  %body
+    :javascript
+      var WebSocket = window.WebSocket || window.MozWebSocket;
+
+      $(function() {
+
+        var socket = new WebSocket("ws://" + location.hostname + ":8080");
+       
+        var currentX = 0;
+        var currentY = 0;
+        var lastX;
+        var lastY;
+        var lastReceivedX;
+        var lastReceivedY;
+        
+        var ctx = $('#canvas')[0].getContext('2d');
+
+        $('#canvas').bind('vmousemove',function(ev){
+          ev = ev || window.event;
+          currentX = ev.pageX || ev.clientX;
+          currentY = ev.pageY || ev.clientY;
+        });
+        
+        socket.onopen = function(event) {
+          setInterval(function(){
+            if(currentX !== lastX || currentY !== lastY){
+              lastX = currentX;
+              lastY = currentY;
+              socket.send( JSON.stringify({x:currentX, y: currentY}) );
+            }
+          }, 30); // send every 300 milliseconds if position has changed
+        }
+        socket.onmessage = function(event) {
+          var msg = $.parseJSON(event.data);
+          
+          ctx.beginPath();
+          ctx.moveTo(lastReceivedX,lastReceivedY);
+          ctx.lineTo(msg.x,msg.y);
+          ctx.closePath();
+          ctx.stroke();
+          lastReceivedX = msg.x;
+          lastReceivedY = msg.y;
+        }
+      });
+
+    %div(data-role="page")
+      %canvas#canvas(width='1000' height='1000')
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03940030000000000000">
+index.html</A>
+</H4>
+  
+
+<PRE>
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
   &lt;head&gt;
-    &lt;link rel="stylesheet" type="text/css" href="css/style.css"&gt;
-    &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;
-    &lt;script src="js/app.js"&gt;&lt;/script&gt;
+    &lt;meta charset='utf-8' /&gt;
+    &lt;meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible' /&gt;
+    &lt;meta content='width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;' name='viewport' /&gt;
+    &lt;link href='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css' rel='stylesheet' /&gt;
+    &lt;script src='http://code.jquery.com/jquery-1.6.4.min.js' type='text/javascript'&gt;&lt;/script&gt;
+    &lt;script src='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js' type='text/javascript'&gt;&lt;/script&gt;
+    &lt;title&gt;
+      WebSockets Drawing
+    &lt;/title&gt;
   &lt;/head&gt;
   &lt;body&gt;
-    &lt;%= yield %&gt;
+    &lt;script type='text/javascript'&gt;
+      //&lt;![CDATA[
+        var WebSocket = window.WebSocket || window.MozWebSocket;
+        
+        $(function() {
+        
+          var socket = new WebSocket("ws://" + location.hostname + ":8080");
+         
+          var currentX = 0;
+          var currentY = 0;
+          var lastX;
+          var lastY;
+          var lastReceivedX;
+          var lastReceivedY;
+          
+          var ctx = $('#canvas')[0].getContext('2d');
+        
+          $('#canvas').bind('vmousemove',function(ev){
+            ev = ev || window.event;
+            currentX = ev.pageX || ev.clientX;
+            currentY = ev.pageY || ev.clientY;
+          });
+          
+          socket.onopen = function(event) {
+            setInterval(function(){
+              if(currentX !== lastX || currentY !== lastY){
+                lastX = currentX;
+                lastY = currentY;
+                socket.send( JSON.stringify({x:currentX, y: currentY}) );
+              }
+            }, 30); // send every 300 milliseconds if position has changed
+          }
+          socket.onmessage = function(event) {
+            var msg = $.parseJSON(event.data);
+            
+            ctx.beginPath();
+            ctx.moveTo(lastReceivedX,lastReceivedY);
+            ctx.lineTo(msg.x,msg.y);
+            ctx.closePath();
+            ctx.stroke();
+            lastReceivedX = msg.x;
+            lastReceivedY = msg.y;
+          }
+        });
+      //]]&gt;
+    &lt;/script&gt;
+    &lt;div data-role='page'&gt;
+      &lt;canvas height='1000' id='canvas' width='1000'&gt;&lt;/canvas&gt;
+    &lt;/div&gt;
   &lt;/body&gt;
 &lt;/html&gt;
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION031220020000000000000">
-Content Delivery Network (CDN)</A>
-</H4>
-  
-
-A <A NAME="18974"></A><SPAN  CLASS="textbf">Content Delivery Network</SPAN> (<A NAME="18976"></A><SPAN  CLASS="textbf">CDN</SPAN>) is a distributed system of web servers 
-that aim to deliver content to users quickly and efficiently. 
-
-<P>
-A large number of CDNs are available for JavaScript libraries. 
-
-<P>
-The idea is that if lots of sites use the same CDN or <A NAME="18978"></A><SPAN  CLASS="textbf">hotlink</SPAN>
-(véase
-<A NAME="tex2html1051"
-  HREF="http://simple.wikipedia.org/wiki/Hotlinking">Hotlinking</A>), 
-it will be cached locally on the user’s machine, saving the user 
-from an extra download across all those sites. 
-
-<P>
-The downside is a loss of control and the chance (however small) 
-that the CDN might go down and be unavailable.
-
-<P>
-
-<OL>
-<LI><A NAME="tex2html1052"
-  HREF="https://developers.google.com/speed/libraries/devguide">Google Hosted Libraries - Developer's Guide</A>
-</LI>
-<LI><A NAME="tex2html1053"
-  HREF="http://jquery.com/download/">jQuery download</A>
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION031220030000000000000">
-views/app.erb</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-jquery-ajax(master)]$ cat views/app.erb 
-&lt;div id="div1"&gt;
-  &lt;h2 class="pink"&gt;Let jQuery AJAX Change This Text&lt;/h2&gt;
-  &lt;button type="button"&gt;Get External Content&lt;/button&gt;
-&lt;/div&gt;
-</PRE>
-Inside a <code>&lt;button&gt;</code> element you can put content, like text or images. This is the difference between this element and buttons created with the <code>&lt;input&gt;</code> element.
-
-<P>
-Always specify the type attribute for a <code>&lt;button&gt;</code> element. Different browsers use different default types for the <code>&lt;button&gt;</code> element.
-
-<P>
-HTML5 has the following new attributes: <code>autofocus</code>, <code>form</code>, <code>formaction</code>, <code>formenctype</code>, <code>formmethod</code>, <code>formnovalidate</code>, and <code>formtarget</code>.
-
-<P>
-
-<H4><A NAME="SECTION031220040000000000000">
-public/js/app.js</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/sinatra/sinatra-jquery-ajax(master)]$ cat public/js/app.js 
-$(document).ready(function(){
-  $("button").click(function(){
-    $("#div1").load("/play",function(responseTxt,statusTxt,xhr){
-      /* if(statusTxt=="success") alert("External content loaded successfully!"); */
-      if(statusTxt=="error")
-        alert("Error: "+xhr.status+": "+xhr.statusText);
-    });
-  });
-});
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031220050000000000000">
-$(document).ready(function(){ ... })</A>
-</H4>
-  
-
-No es posible interactuar de forma segura con el contenido de una página hasta que el documento no se encuentre preparado para su manipulación. 
-
-<P>
-jQuery permite detectar dicho estado a través de la declaración 
-<PRE>
-$(document).ready()
-</PRE>
-de forma tal que el bloque se ejecutará sólo una vez que la página este disponible.
-
-<P>
-
-<H4><A NAME="SECTION031220060000000000000">
-selectores CSS</A>
-</H4>
-  
-
-El concepto más básico de jQuery es el de 
-<SPAN  CLASS="textbf">seleccionar algunos elementos y realizar acciones con ellos</SPAN>.
-
-<P>
-La biblioteca soporta gran parte de los selectores CSS3 y varios más no estandarizados. 
-
-<P>
-<PRE>
-    $("#div1").load("/play",function(responseTxt,statusTxt,xhr){ ... }
-</PRE>
-
-<P>
-En 
-<A NAME="tex2html1054"
-  HREF="http://api.jquery.com/category/selectors/ ">http://api.jquery.com/category/selectors/ </A>
-se puede encontrar una completa referencia sobre los selectores de la biblioteca.
-
-<P>
-
-<H4><A NAME="SECTION031220070000000000000">
-Controladores de Eventos (Event Handlers)</A>
-</H4>
-  
-
-<P>
-jQuery provee métodos para asociar <A NAME="19000"></A><SPAN  CLASS="textbf">controladores de eventos</SPAN> (en inglés <A NAME="19002"></A><SPAN  CLASS="textbf">event handlers</SPAN>) 
-a selectores. 
-
-<P>
-Cuando un evento ocurre, la función provista es ejecutada. 
-<PRE>
-  $("button").click(function(){ ... })
-</PRE>
-
-<P>
-Dentro de la función, la palabra clave <code>this</code> hace referencia al elemento en que el evento ocurre.
-
-<P>
-Para más detalles sobre los eventos en jQuery, puede consultar 
-<A NAME="tex2html1055"
-  HREF="http://api.jquery.com/category/events/">http://api.jquery.com/category/events/.</A>
-<P>
-
-<H4><A NAME="SECTION031220080000000000000">
-El Evento</A>
-</H4>
-  
-
-La función del controlador de eventos puede recibir un objeto. 
-
-<P>
-Este objeto puede ser utilizado para determinar la naturaleza del
-evento o, por ejemplo, prevenir el comportamiento predeterminado
-de éste.
-
-<P>
-Para más detalles sobre el objeto del evento, visite 
-
-<P>
-
-<H4><A NAME="SECTION031220090000000000000">
-XMLHttpRequest(XHR)</A>
-</H4>
-  
-
-<P>
-<A NAME="tex2html1056"
-  HREF="http://api.jquery.com/category/events/event-object/">http://api.jquery.com/category/events/event-object/</A>
-<P>
-El método <code>XMLHttpRequest(XHR)</code> permite a los navegadores comunicarse con el servidor sin la necesidad de recargar la página. 
-
-<P>
-Este método, también conocido como <A NAME="19012"></A><SPAN  CLASS="textbf">Ajax</SPAN> (<A NAME="19014"></A><SPAN  CLASS="textbf">Asynchronous JavaScript and XML</SPAN>), permite la creación de aplicaciones ricas en interactividad.
-
-<P>
-Las peticiones Ajax son ejecutadas por el código JavaScript, el cual 
-
-<P>
-
-<OL>
-<LI>envía una petición a una URL y 
-</LI>
-<LI>cuando recibe una respuesta, una <A NAME="19016"></A><SPAN  CLASS="textbf">función de devolución</SPAN> (<A NAME="19018"></A><SPAN  CLASS="textbf">callback</SPAN>) 
-puede ser ejecutada 
-</LI>
-<LI>Esta función recibe como argumento la respuesta del servidor y realiza algo con ella. 
-</LI>
-<LI>Debido a que la respuesta es asíncrona, 
-el resto del código de la aplicación continua ejecutándose, por lo cual, es imperativo que una función de devolución sea ejecutada para manejar la respuesta.
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION0312200100000000000000">
-Métodos jQuery para Ajax</A>
-</H4>
-  
-
-A través de varios métodos, jQuery provee soporte para Ajax, 
-permitiendo abstraer las diferencias que pueden existir entre navegadores. 
-
-<P>
-Los métodos en cuestión son 
-
-<P>
-
-<OL>
-<LI><code>$.get()</code>
-<A NAME="tex2html1057"
-  HREF="http://api.jquery.com/jQuery.get/">.get()</A>
-</LI>
-<LI><code>$.getScript()</code>
-<A NAME="tex2html1058"
-  HREF="http://api.jquery.com/jQuery.getScript/">.getScript()</A>
-</LI>
-<LI><code>$.getJSON()</code>
-<A NAME="tex2html1059"
-  HREF="http://api.jquery.com/jQuery.getJSON/">.getJSON()</A>
-</LI>
-<LI><code>$.post()</code>
-<A NAME="tex2html1060"
-  HREF="http://api.jquery.com/jQuery.post/">.post()</A>
-</LI>
-<LI><code>$().load()</code>
-<A NAME="tex2html1061"
-  HREF="http://api.jquery.com/load/">.load()</A>
-</LI>
-<LI><code>$().ajax()</code>
-<A NAME="tex2html1062"
-  HREF="http://api.jquery.com/jQuery.ajax/">jQuery.ajax()</A>
-</LI>
-</OL>
-
-<P>
-A pesar que la definición de Ajax posee la palabra <code>XML</code>, la
-mayoría de las aplicaciones no utilizan dicho formato para el
-transporte de datos, sino que en su lugar se utiliza HTML plano o
-información en formato <A NAME="19024"></A><SPAN  CLASS="textbf">JSON</SPAN> (<A NAME="tex2html1063"
-  HREF="http://en.wikipedia.org/wiki/,">JSON</A>
-<A NAME="19028"></A><SPAN  CLASS="textbf">JavaScript Object Notation</SPAN>).
-
-<P>
-Generalmente, jQuery necesita algunas instrucciones sobre el tipo de información 
-que se espera recibir cuando se realiza una petición Ajax. 
-
-<P>
-En algunos casos, el tipo de dato es especificado por el nombre del método, 
-pero en otros casos se lo debe detallar como parte de la configuración del método:
-
-<P>
-
-<OL>
-<LI><code>text</code> Para el transporte de cadenas de caracteres simples.
-</LI>
-<LI><code>html</code> Para el transporte de bloques de código HTML que serán ubicados en la página.
-</LI>
-<LI><code>script</code> Para añadir un nuevo script con código JavaScript a la página.
-</LI>
-<LI><code>json</code> Para transportar información en formato JSON, el cual puede incluir cadenas de caracteres, arreglos y objetos.
-
-<P>
-Es recomendable utilizar los mecanismos que posea el lenguaje del
-lado de servidor para la generación de información en JSON.
-</LI>
-<LI><code>jsonp</code> Para transportar información JSON de un dominio a otro. 
-</LI>
-<LI><code>xml</code> Para transportar información en formato XML.
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION0312200110000000000000">
-.load()</A>
-</H4>
-  
-
-La sintáxis de 
-<A NAME="tex2html1064"
-  HREF="http://api.jquery.com/load/">.load()</A>
-es:
-<PRE>
-.load( url [, data ] [, complete(responseText, textStatus, XMLHttpRequest) ] )
-</PRE>
-
-<P>
-En nuestro ejemplo lo hemos usado así:
-
-<P>
-<PRE>
-    $("#div1").load("/play",function(responseTxt,statusTxt,xhr){
-      /* if(statusTxt=="success") alert("External content loaded successfully!"); */
-      if(statusTxt=="error")
-        alert("Error: "+xhr.status+": "+xhr.statusText);
-    });
-</PRE>
-Load data from the server and place the returned HTML into the matched element.
-Por ejemplo:
-<PRE>
-$( "#result" ).load( "ajax/test.html" );
-</PRE>
-If no element is matched by the selector, in this case, 
-<PRE>
-.load( url [, data ] [, complete(responseText, textStatus, XMLHttpRequest) ] )
-</PRE>
-if the document does not contain an element with <code>id="result"</code>,
-the Ajax request will not be sent.
-
-<P>
-
-<H4><A NAME="SECTION0312200120000000000000">
-.load() usa GET si no se especifica <TT>data</TT></A>
-</H4>
-  
-
-The <code>POST</code> method is used if <code>data</code> <SPAN  CLASS="textbf">is provided as an
-object</SPAN>; otherwise, <code>GET</code> is assumed.
-
-<P>
-
-<H4><A NAME="SECTION0312200130000000000000">
-Especificando un Objeto del Documento Remoto via un Selector</A>
-</H4>
-  
-
-The <code>.load()</code> method, unlike <code>$.get()</code>, 
-allows us to specify a portion of the remote document to be inserted. 
-
-<P>
-This is achieved with a special syntax for the <code>url</code> 
-parameter. 
-
-<P>
-If one or more space characters are included in the string, 
-the portion of the string following the first space is assumed 
-to be a jQuery selector that determines the content to be loaded.
-
-<P>
-<PRE>
-$( "#result" ).load( "ajax/test.html #container" );
-</PRE>
-
-<P>
-When this method executes, it retrieves the content of <code>ajax/test.html</code>,
-but then jQuery parses the returned document to find the element
-with an ID of <code>container</code>. 
-
-<P>
-This element, along with its contents, is
-inserted into the element with an ID of <code>result</code>, and the rest of the
-retrieved document is discarded.
-
-<P>
-We could modify the example above to use only part of the document that is fetched:
-
-<P>
-
-<H4><A NAME="SECTION0312200140000000000000">
-.innerHTML y .load</A>
-</H4>
-  
-
-<P>
-jQuery uses the browser's 
-<A NAME="tex2html1065"
-  HREF="http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_elmnt_innerhtml">.innerHTML</A>
-property to parse 
-the retrieved document and insert it into the current document. 
-
-<P>
-During this process, browsers often filter elements from the document such as 
-<code>&lt;html&gt;</code>, 
-<code>&lt;title&gt;</code>, or 
-<code>&lt;head&gt;</code> elements. As a result, the elements retrieved by 
-<code>.load()</code> may not be exactly the same as if the 
-document were retrieved directly by the browser.
+<DIV ALIGN="CENTER"><A NAME="figure:websockets"></A><A NAME="18857"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
+Múltiples clientes pueden dibujar en el lienzo</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+[scale=0.7]sinatra/chapter2fundamentos/websockets.png
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
 
 <P>
 <BR><HR>
@@ -568,53 +337,36 @@ document were retrieved directly by the browser.
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html10836"
-  HREF="node462.html#SECTION031220010000000000000">request.xhr?</A>
-<LI><A NAME="tex2html10837"
-  HREF="node462.html#SECTION031220020000000000000">Content Delivery Network (CDN)</A>
-<LI><A NAME="tex2html10838"
-  HREF="node462.html#SECTION031220030000000000000">views/app.erb</A>
-<LI><A NAME="tex2html10839"
-  HREF="node462.html#SECTION031220040000000000000">public/js/app.js</A>
-<LI><A NAME="tex2html10840"
-  HREF="node462.html#SECTION031220050000000000000">$(document).ready(function(){ ... })</A>
-<LI><A NAME="tex2html10841"
-  HREF="node462.html#SECTION031220060000000000000">selectores CSS</A>
-<LI><A NAME="tex2html10842"
-  HREF="node462.html#SECTION031220070000000000000">Controladores de Eventos (Event Handlers)</A>
-<LI><A NAME="tex2html10843"
-  HREF="node462.html#SECTION031220080000000000000">El Evento</A>
-<LI><A NAME="tex2html10844"
-  HREF="node462.html#SECTION031220090000000000000">XMLHttpRequest(XHR)</A>
-<LI><A NAME="tex2html10845"
-  HREF="node462.html#SECTION0312200100000000000000">Métodos jQuery para Ajax</A>
-<LI><A NAME="tex2html10846"
-  HREF="node462.html#SECTION0312200110000000000000">.load()</A>
-<LI><A NAME="tex2html10847"
-  HREF="node462.html#SECTION0312200120000000000000">.load() usa GET si no se especifica <TT>data</TT></A>
-<LI><A NAME="tex2html10848"
-  HREF="node462.html#SECTION0312200130000000000000">Especificando un Objeto del Documento Remoto via un Selector</A>
-<LI><A NAME="tex2html10849"
-  HREF="node462.html#SECTION0312200140000000000000">.innerHTML y .load</A>
-</UL></UL></UL>
+<LI><A NAME="tex2html10873"
+  HREF="node462.html#SECTION03940010000000000000">server.rb</A>
+<LI><A NAME="tex2html10874"
+  HREF="node462.html#SECTION03940020000000000000">index.html.haml</A>
+<LI><A NAME="tex2html10875"
+  HREF="node462.html#SECTION03940030000000000000">index.html</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html10876"
+  HREF="node463.html">Enlaces Relacionados</A>
+</UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10834"
+<A NAME="tex2html10871"
   HREF="node463.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10828"
-  HREF="node460.html">
+<A NAME="tex2html10865"
+  HREF="node456.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10822"
+<A NAME="tex2html10859"
   HREF="node461.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10830"
-  HREF="node783.html">
+<A NAME="tex2html10867"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10832"
-  HREF="node786.html">
+<A NAME="tex2html10869"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -665,20 +417,20 @@ document were retrieved directly by the browser.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10835"
-  HREF="node463.html">Ajax, Sinatra y RightJS</A>
-<B> Subir:</B> <A NAME="tex2html10829"
-  HREF="node460.html">Ajax in Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html10823"
-  HREF="node461.html">Un Programa para Experimentar</A>
- &nbsp; <B>  <A NAME="tex2html10831"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10833"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10872"
+  HREF="node463.html">Enlaces Relacionados</A>
+<B> Subir:</B> <A NAME="tex2html10866"
+  HREF="node456.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html10860"
+  HREF="node461.html">Ruby y WebSockets: TCP</A>
+ &nbsp; <B>  <A NAME="tex2html10868"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10870"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

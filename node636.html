@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Rake::TestTask</TITLE>
-<META NAME="description" CONTENT="Rake::TestTask">
+<TITLE>Poner la rama en el prompt de la shell</TITLE>
+<META NAME="description" CONTENT="Poner la rama en el prompt de la shell">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node637.html">
 <LINK REL="previous" HREF="node635.html">
-<LINK REL="up" HREF="node634.html">
+<LINK REL="up" HREF="node633.html">
 <LINK REL="next" HREF="node637.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13881"
+<A NAME="tex2html13936"
   HREF="node637.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13875"
-  HREF="node634.html">
+<A NAME="tex2html13930"
+  HREF="node633.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13869"
+<A NAME="tex2html13926"
   HREF="node635.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13877"
-  HREF="node783.html">
+<A NAME="tex2html13932"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13879"
-  HREF="node786.html">
+<A NAME="tex2html13934"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,121 +91,36 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13882"
-  HREF="node637.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html13876"
-  HREF="node634.html">Rake</A>
-<B> Anterior:</B> <A NAME="tex2html13870"
-  HREF="node635.html">Argumentos en una Tarea</A>
- &nbsp; <B>  <A NAME="tex2html13878"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13880"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13937"
+  HREF="node637.html">Hub</A>
+<B> Subir:</B> <A NAME="tex2html13931"
+  HREF="node633.html">Configuración y Algunos alias</A>
+<B> Anterior:</B> <A NAME="tex2html13927"
+  HREF="node635.html">Auto-completado</A>
+ &nbsp; <B>  <A NAME="tex2html13933"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13935"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06820000000000000000">
-Rake::TestTask</A>
-</H1>
-La clase <A NAME="tex2html1441"
-  HREF="http://rake.rubyforge.org/classes/Rake/TestTask.html">Rake::TestTask</A>
-nos permite crear una tarea que ejecuta un conjunto de pruebas;
+<H2><A NAME="SECTION06683000000000000000">
+Poner la rama en el prompt de la shell</A>
+</H2>
+En mi fichero de arranque bash tengo una línea como:
 <PRE>
-  Rake::TestTask.new do |t|
-    t.libs &lt;&lt; "test"
-    t.test_files = FileList['test/test*.rb']
-    t.verbose = true
-  end
+source ~/.git_prompt.sh
 </PRE>
-Si se llama a <code>rake</code> con la opción <code>TEST=filename</code> entonces sólo se ejecutará esa prueba.
-
-<P>
-Si se invoca con la opción <code>TESTOPTS=options</code>, las opciones se pasarán  a <code>Test::Unit</code>.
-Ejemplos:
-<PRE>
-  rake test                           # run tests normally
-  rake test TEST=just_one_file.rb     # run just one test file.
-  rake test TESTOPTS="-v"             # run in verbose mode
-</PRE>
-
-<P>
-Sigue otro ejemplo:
-
-<P>
-<PRE>
-MacBookdeJohn:htmlRB john$ cat Rakefile 
-$:.unshift 'lib/'
-require 'rake/testtask'
-
-# rake test TEST=just_one_file.rb     # run just one test file.
-# rake test TESTOPTS="-v"             # run in verbose mode
-Rake::TestTask.new do |t|
-  # t.libs: List of directories to be added to $LOAD_PATH. (default is ‘lib’)
-  t.libs &lt;&lt; "test" 
-  t.pattern = 'test/tc*.rb' # or t.test_files = FileList['test/tc*.rb'] 
-  t.warning = true
-  t.verbose = true # verbose test output. (default is false)
-end
-</PRE>
-
-<P>
-Ejecuciones:
-<PRE>
-MacBookdeJohn:htmlRB john$ ls -ltr test/
-total 16
--rw-r--r--  1 john  staff   835 29 nov 12:27 tc_01_smoke.rb
--rw-r--r--  1 john  staff  1023  9 dic 11:35 tc_02_smoke.rb
-MacBookdeJohn:htmlRB john$ rake test
-(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
-/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" 
-./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
-Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
-Started
-...
-Finished in 0.001125 seconds.
-
-3 tests, 7 assertions, 0 failures, 0 errors
-</PRE>
-Con la opción <code>TESTOPTS="-v"</code> la salida es mas detallada:
-
-<P>
-<PRE>
-MacBookdeJohn:htmlRB john$ rake test TESTOPTS="-v" 
-(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
-/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" -v
-./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
-Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
-Started
-test_attr(TestHTML): .
-test_attr2(TestHTML): .
-test_simplepage(TestHTML): .
-
-Finished in 0.000844 seconds.
-
-3 tests, 7 assertions, 0 failures, 0 errors
-</PRE>
-Ejecución de un solo programa de prueba:
-
-<P>
-<PRE>
-MacBookdeJohn:htmlRB john$ rake test TEST=tc_02_smoke.rb
-(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
-/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "tc_02_smoke.rb" 
-./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
-Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
-Started
-..
-Finished in 0.000623 seconds.
-
-2 tests, 6 assertions, 0 failures, 0 errors
-</PRE>
-
+Esto permite ver la rama actual en el prompt.
+El fichero <code>.git-prompt.sh</code> es posible encontrarlo en la distribución de <code>git</code>:
+<A NAME="tex2html1442"
+  HREF="https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh">https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh</A>
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

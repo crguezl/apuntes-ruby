@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Controlando nuestras dependencias</TITLE>
-<META NAME="description" CONTENT="Controlando nuestras dependencias">
+<TITLE>Gemas con Un Gran Número de Utilidades Independientes</TITLE>
+<META NAME="description" CONTENT="Gemas con Un Gran Número de Utilidades Independientes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node672.html">
 <LINK REL="previous" HREF="node670.html">
-<LINK REL="up" HREF="node656.html">
+<LINK REL="up" HREF="node665.html">
 <LINK REL="next" HREF="node672.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14426"
+<A NAME="tex2html14483"
   HREF="node672.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14420"
-  HREF="node656.html">
+<A NAME="tex2html14477"
+  HREF="node665.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14414"
+<A NAME="tex2html14471"
   HREF="node670.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14422"
-  HREF="node783.html">
+<A NAME="tex2html14479"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14424"
-  HREF="node786.html">
+<A NAME="tex2html14481"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,145 +92,106 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14427"
-  HREF="node672.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html14421"
-  HREF="node656.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14415"
-  HREF="node670.html">Pessimistic version constraint</A>
- &nbsp; <B>  <A NAME="tex2html14423"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14425"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14484"
+  HREF="node672.html">Sharing Source Code</A>
+<B> Subir:</B> <A NAME="tex2html14478"
+  HREF="node665.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14472"
+  HREF="node670.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html14480"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14482"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0614150000000000000000"></A>
-<A NAME="section:controlandonuestrasdependencias"></A>
-<BR>
-Controlando nuestras dependencias
+<H1><A NAME="SECTION061460000000000000000">
+Gemas con Un Gran Número de Utilidades Independientes</A>
 </H1>
+Some
+gems, however, may be made up of multiple parts that could be used
+independently of each other. <code>ActiveSupport</code>, for example, provides a
+large number of useful utilities that, while they function together,
+can also function separately.
 
 <P>
+If I add require <code>active_support</code> to my code I load all of
+<code>ActiveSupport</code>. While this may be what I want in some cases (like inside
+a Rails application) in other cases I may just want a specific piece
+of <code>ActiveSupport</code>. Luckily, <code>ActiveSupport</code> is designed to handle this
+well. If I, for instance, add require <code>active_support/core_ext</code> I will
+only be loading the Ruby core extensions that are a part of <code>ActiveSupport</code>.
 
-<H4><A NAME="SECTION0614150010000000000000">
-bundle outdated</A>
-</H4>
-  
+<P>
+How can you make this work in your library? It's quite simple: your
+base file should, when required, require all the other parts of your
+library. However, each part of your library should, at its top, require
+any other parts or external dependencies so that it may be included
+without the user having previously required the base file. Let's take
+a look at an example:
 
 <P>
 <PRE>
-[~/ruby/faye]$ bundle help outdated
-Usage:
-  bundle outdated [GEM]
+# in lib/my_gem.rb
 
-Options:
-      [--pre=Check for newer pre-release gems]                                       
-      [--source=Check against a specific source]                                     
-      [--local=Do not attempt to fetch gems remotely and use the gem cache instead]  
-      [--no-color=Disable colorization in output]                                    
-  -V, [--verbose=Enable verbose output mode]                                         
-
-Description:
-  Outdated lists the names and versions of gems that have a newer version available in the given source. 
-  Calling outdated with [GEM [GEM]] will only check for newer versions of the given gems. Prerelease gems are 
-  ignored by default. If your gems are up to date, Bundler will exit with a status of 0. Otherwise, it will 
-  exit 1.
+require 'my_gem/widget'
+require 'my_gem/widgets/foo_bar'
+require 'my_gem/widgets/baz'
 </PRE>
 
 <P>
 <PRE>
-[~/ruby/faye]$ ls -l Gemfile*
--rw-r--r--  1 casiano  staff   267 15 nov 18:01 Gemfile
--rw-r--r--  1 casiano  staff  2373 15 nov 18:02 Gemfile.lock
-[~/ruby/faye]$ bundle outdated
-Fetching gem metadata from https://rubygems.org/.........
-Fetching gem metadata from https://rubygems.org/..
-Resolving dependencies...
+# in lib/my_gem/widget.rb
 
-Outdated gems included in the bundle:
-  * em-websocket (0.5.0 &gt; 0.3.8)
-  * rainbows (4.5.0 &gt; 4.4.3)
+require 'external_library'
+
+module MyGem
+  class Widget
+  end
+end
 </PRE>
 
 <P>
+<PRE>
+# in lib/my_gem/widgets/foo_bar
 
-<H4><A NAME="SECTION0614150020000000000000">
-Gemnasium</A>
-</H4>
-  
+require 'my_gem/widget'
 
-<A NAME="parrafo:gemnasium"></A>
-<P>
-Gemnasium 
-<A NAME="tex2html1532"
-  HREF="https://gemnasium.com">https://gemnasium.com</A>
-is a service that learns your gem dependencies, listens
-for new versions of those gems and notifies you when they’re released.
-
-<P>
-Gemnasium sends you an email whenever a new version is released for a gem that you use.
-You can turn off notifications for particular gems or for entire repositories,
-or  choose to receive them in a digest email on a daily or weekly basis.
+module MyGem
+  module Widgets
+    class FooBar &lt; MyGem::Widget
+    end
+  end
+end
+</PRE>
+Each of the files in the above example can be required independently,
+giving developers the flexibility to use only a subset of your library's
+functionality if needed. 
 
 <P>
-Gemnasium represents the statuses of your dependencies with three colors:
+Remember that <code>require</code> statements will only
+load the code from a file once, so it is safe to <code>require</code> the same file
+multiple times.
 
 <P>
-
-<OL>
-<LI>green =&gt; dependency is up to date with latest version available
-</LI>
-<LI>yellow =&gt; there is at least one newer stable version available
-</LI>
-<LI>red =&gt; the dependency is behind a security fix or an important update (broken API, deprecation, …)
-</LI>
-</OL>
-
-<P>
-Gemnasium looks the Gemfile.lock files. If your repository has one, Gemnasium will use it. They’re informational and easily parsed with a little help from Bundler.
-
-<P>
-Unfortunately, it’s not always wise to commit your Gemfile.lock. In those cases, Gemnasium looks for a Gemfile instead.
-
-<P>
-If all else fails, Gemnasium looks for a gemspec file in your repository’s root directory.
-
-<P>
-If any of these files exists, Gemnasium parses them to determine your repository’s gem dependencies.
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html14428"
-  HREF="node671.html#SECTION0614150010000000000000">bundle outdated</A>
-<LI><A NAME="tex2html14429"
-  HREF="node671.html#SECTION0614150020000000000000">Gemnasium</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14426"
+<A NAME="tex2html14483"
   HREF="node672.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14420"
-  HREF="node656.html">
+<A NAME="tex2html14477"
+  HREF="node665.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14414"
+<A NAME="tex2html14471"
   HREF="node670.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14422"
-  HREF="node783.html">
+<A NAME="tex2html14479"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14424"
-  HREF="node786.html">
+<A NAME="tex2html14481"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -281,20 +242,20 @@ If any of these files exists, Gemnasium parses them to determine your repository
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14427"
-  HREF="node672.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html14421"
-  HREF="node656.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14415"
-  HREF="node670.html">Pessimistic version constraint</A>
- &nbsp; <B>  <A NAME="tex2html14423"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14425"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14484"
+  HREF="node672.html">Sharing Source Code</A>
+<B> Subir:</B> <A NAME="tex2html14478"
+  HREF="node665.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14472"
+  HREF="node670.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html14480"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14482"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Embedding Sinatra within EventMachine</TITLE>
-<META NAME="description" CONTENT="Embedding Sinatra within EventMachine">
+<TITLE>A simple demonstration of streaming Redis pub/sub data</TITLE>
+<META NAME="description" CONTENT="A simple demonstration of streaming Redis pub/sub data">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node444.html">
 <LINK REL="previous" HREF="node442.html">
-<LINK REL="up" HREF="node429.html">
+<LINK REL="up" HREF="node438.html">
 <LINK REL="next" HREF="node444.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10530"
+<A NAME="tex2html10578"
   HREF="node444.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10524"
-  HREF="node429.html">
+<A NAME="tex2html10572"
+  HREF="node438.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10518"
+<A NAME="tex2html10566"
   HREF="node442.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10526"
-  HREF="node783.html">
+<A NAME="tex2html10574"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10528"
-  HREF="node786.html">
+<A NAME="tex2html10576"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,215 +92,331 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10531"
-  HREF="node444.html">Ejemplo de Server Sent</A>
-<B> Subir:</B> <A NAME="tex2html10525"
-  HREF="node429.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10519"
-  HREF="node442.html">Práctica: Chat con TicTacToe</A>
- &nbsp; <B>  <A NAME="tex2html10527"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10529"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10579"
+  HREF="node444.html">Comet</A>
+<B> Subir:</B> <A NAME="tex2html10573"
+  HREF="node438.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html10567"
+  HREF="node442.html">Enlaces Relacionados</A>
+ &nbsp; <B>  <A NAME="tex2html10575"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10577"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION038120000000000000000">
-Embedding Sinatra within EventMachine</A>
+<H1><A NAME="SECTION03850000000000000000">
+A simple demonstration of streaming Redis pub/sub data</A>
 </H1>
+Véase:
 
-<P>
-Véase 
-<A NAME="tex2html1000"
-  HREF="http://recipes.sinatrarb.com/p/embed/event-machine">Sinatra Recipes. Embedding Sinatra within EventMachine</A>.
-
-<P>
-<A NAME="tex2html1001"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A> is a very useful tool and sometimes you need to add a
-web-interface on top of it. Yes, EM does support this out of the
-box, but it can be ugly and hard to work with. Why not use something
-that everyone already knows and loves like Sinatra?
-
-<P>
-Below is a (working) code-sample for running a simple HelloWorld
-Sinatra app within <A NAME="tex2html1002"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>. I've also provided a simple example
-of deferring tasks within your Sinatra call.
-
-<P>
-<PRE>
-[~/sinatra/sinatra-eventmachine]$ cat em-sinatra-test.rb 
-require 'eventmachine'
-require 'sinatra/base'
-require 'thin'
-
-
-# This example shows you how to embed Sinatra into your EventMachine
-# application. This is very useful if you're application needs some
-# sort of API interface and you don't want to use EM's provided
-# web-server.
-
-def run(opts)
-
-  # Start he reactor
-  EM.run do
-
-    # define some defaults for our app
-    server  = opts[:server] || 'thin'
-    host    = opts[:host]   || '0.0.0.0'
-    port    = opts[:port]   || '8181'
-    web_app = opts[:app]
-
-    # create a base-mapping that our application will set at. If I
-    # have the following routes:
-    dispatch = Rack::Builder.app do
-      map '/' do
-        run web_app
-      end
-    end
-
-    # NOTE that we have to use an EM-compatible web-server. There
-    # might be more, but these are some that are currently available.
-    unless ['thin', 'hatetepe', 'goliath'].include? server
-      raise "Need an EM webserver, but #{server} isn't"
-    end
-
-    # Start the web server. Note that you are free to run other tasks
-    # within your EM instance.
-    Rack::Server.start({
-      app:    dispatch,
-      server: server,
-      Host:   host,
-      Port:   port
-    })
-  end
-end
-
-# Our simple hello-world app
-class HelloApp &lt; Sinatra::Base
-  # threaded - False: Will take requests on the reactor thread
-  #            True:  Will queue request for background thread
-  configure do
-    set :threaded, false
-  end
-
-  # Request runs on the reactor thread (with threaded set to false)
-  get '/hello' do
-    'Hello World'
-  end
-
-  # Request runs on the reactor thread (with threaded set to false)
-  # and returns immediately. The deferred task does not delay the
-  # response from the web-service.
-  get '/delayed-hello' do
-    EM.defer do
-      sleep 5
-    end
-    'I\'m doing work in the background, but I am still free to take requests'
-  end
-end
-
-# start the application
-run app: HelloApp.new
-</PRE>
-
-<P>
-You can run this simply with the command:
-
-<P>
-<PRE>
-ruby em-sinatra-test.rb   # em-sinatra-test.rb is the filename of the above-code
-</PRE>
-You should also be able to test that it is working correctly with the following <code>ab</code> 
-command:
-
-<P>
-<PRE>
-ab -c 10 -n 100 http://localhost:8181/delayed-hello
-</PRE>
-<A NAME="18029"></A><SPAN  CLASS="textbf">ApacheBench</SPAN> ( <TT>ab</TT> ) is a single-threaded command line
-computer program for measuring the performance of HTTP web servers.
-Originally designed to test the Apache HTTP Server, it is generic
-enough to test any web server (Véase 
-<A NAME="tex2html1003"
-  HREF="http://httpd.apache.org/docs/2.2/programs/ab.html">http://httpd.apache.org/docs/2.2/programs/ab.html</A>).
-
-<P>
-If this finishes in <code>zero point something</code> seconds, then you have
-successfully setup Sinatra to run within EM and you are taking
-requests on the event-loop and deferring tasks to the background.
-
-<P>
-If it takes any longer than that, then you are most likely taking
-requests in the background which means when the EM queue fills up,
-you can't process your sinatra requests (not a good thing!). Make
-sure that you have threaded set to false and then try again.
-
-<P>
-Here is an execution:
-<PRE>
-[~/sinatra/sinatra-eventmachine]$ ab -c 10 -n 100 http://localhost:8181/delayed-hello
-This is ApacheBench, Version 2.3 &lt;$Revision: 655654 $&gt;
-Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
-Licensed to The Apache Software Foundation, http://www.apache.org/
-
-Benchmarking localhost (be patient).....done
-
-
-Server Software:        thin
-Server Hostname:        localhost
-Server Port:            8181
-
-Document Path:          /delayed-hello
-Document Length:        70 bytes
-
-Concurrency Level:      10
-Time taken for tests:   0.096 seconds
-Complete requests:      100
-Failed requests:        0
-Write errors:           0
-Total transferred:      30300 bytes
-HTML transferred:       7000 bytes
-Requests per second:    1043.96 [#/sec] (mean)
-Time per request:       9.579 [ms] (mean)
-Time per request:       0.958 [ms] (mean, across all concurrent requests)
-Transfer rate:          308.91 [Kbytes/sec] received
-
-Connection Times (ms)
-              min  mean[+/-sd] median   max
-Connect:        0    0   0.1      0       1
-Processing:     2    9  11.6      5      44
-Waiting:        1    8  11.7      5      43
-Total:          2    9  11.6      6      44
-
-Percentage of the requests served within a certain time (ms)
-  50%      6
-  66%      6
-  75%      7
-  80%      7
-  90%     44
-  95%     44
-  98%     44
-  99%     44
- 100%     44 (longest request)
-</PRE>
+<OL>
+<LI><A NAME="tex2html972"
+  HREF="https://github.com/gorsuch/sinatra-streaming-example">A simple demonstration of streaming Redis pub/sub data over HTTP via Sinatra's streaming capabilities.</A>
+</LI>
+<LI><A NAME="tex2html973"
+  HREF="https://github.com/crguezl/sinatra-streaming-example">A simple demonstration of streaming Redis pub/sub data over HTTP via Sinatra's streaming capabilities.</A>
+forked version crguezl
+</LI>
+<LI>Véa el capítulo <I>Redis y Sinatra</I> <A HREF="node474.html#chapter:redisysinatra">37</A>
+</LI>
+<LI><A NAME="tex2html974"
+  HREF="https://github.com/redis/redis-rb">redis</A>
+gem en GitHub
+</LI>
+<LI><A NAME="tex2html975"
+  HREF="http://rubydoc.info/gems/redis/3.0.6/frames">redis</A>
+documentación de la gema
+</LI>
+<LI><A NAME="tex2html976"
+  HREF="http://redis.io/topics/pubsub">Redis Pub/Sub</A>
+</LI>
+<LI><A NAME="tex2html977"
+  HREF="http://rubydoc.info/gems/redis/3.0.6/Redis/Subscription">Redis::Subscription</A>:
+</LI>
+<LI><A NAME="tex2html978"
+  HREF="https://addons.heroku.com/redistogo">Heroku addon Redis To Go</A>
+</LI>
+</OL>
 
 <P>
 
-<H4><A NAME="SECTION038120010000000000000">
-Véase</A>
+<H4><A NAME="SECTION03850010000000000000">
+web.rb</A>
 </H4>
   
 
+<PRE>
+[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat web.rb
+require 'redis'
+require 'sinatra'
+
+configure do
+  redis_url = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
+  uri = URI.parse(redis_url)
+  set :redis, Redis.new(:host =&gt; uri.host, :port =&gt; uri.port, :password =&gt; uri.password)
+end
+
+get '/' do
+  "&lt;pre&gt;curl -v https://sinatra-streaming-example.herokuapp.com/stream&lt;/pre&gt;"
+end
+
+get '/stream' do
+  puts "connection made"
+
+  stream do |out|
+    settings.redis.subscribe 'time' do |on|
+      on.message do |channel, message|
+        out &lt;&lt; "#{message}\n"
+      end
+    end
+  end
+end
+</PRE>
+<A NAME="tex2html979"
+  HREF="http://redis.com">Redis</A> is a key-value store; it supports lists, hashes, sets, and ordered sets.
+
+<P>
+El código 
+<PRE>
+  redis_url = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
+</PRE>
+decide si estamos en Heroku o no. Si estamos en Heroku deberemos haber instalado
+el <A NAME="tex2html980"
+  HREF="https://addons.heroku.com/redistogo">Heroku addon Redis To Go</A>.
+
+<P>
+La llamada:
+<PRE>
+  set :redis, Redis.new(:host =&gt; uri.host, :port =&gt; uri.port, :password =&gt; uri.password)
+</PRE>
+conecta con el servidor Redis.
+
+<P>
+The Redis class exports methods that are named identical to the
+commands they execute. The arguments these methods accept are often
+identical to the arguments specified on the Redis website.
+
+<P>
+In Redis,
+<code>SUBSCRIBE</code>, <code>UNSUBSCRIBE</code> and <code>PUBLISH</code> implement 
+the <A NAME="tex2html981"
+  HREF="http://en.wikipedia.org/wiki/Publish/subscribe">Publish/Subscribe</A>
+messaging paradigm where 
+
 <OL>
-<LI><A NAME="tex2html1004"
-  HREF="http://polycrystal.org/2012/04/15/asynchronous_responses_in_rack.html">Asynchronous responses in Rack</A>
-por 
-<A NAME="tex2html1005"
-  HREF="http://polycrystal.org/authors/pat/">Patrick</A>
+<LI>In the <A NAME="18264"></A><SPAN  CLASS="textbf">Publish/Subscribe</SPAN> pattern, senders (publishers) are not programmed to send their messages to
+specific receivers (subscribers). 
+</LI>
+<LI>Rather, published messages are
+characterized into channels, without knowledge of what (if any)
+subscribers there may be. 
+</LI>
+<LI>Subscribers express interest in one or
+more channels, and only receive messages that are of interest,
+without knowledge of what (if any) publishers there are. 
+</LI>
+<LI>This
+decoupling of publishers and subscribers can allow for greater
+scalability and a more dynamic network topology.
 </LI>
 </OL>
+For instance in order to subscribe to channels <code>foo</code> and <code>bar</code> the
+client issues a <code>SUBSCRIBE</code> providing the names of the channels:
+<PRE>
+SUBSCRIBE foo bar
+</PRE>
+
+<P>
+Messages sent by other clients to these channels will be pushed by
+Redis to all the subscribed clients.
+
+<P>
+A client subscribed to one or more channels should not issue commands,
+although it can subscribe and unsubscribe to and from other channels.
+
+<P>
+The reply of the <code>SUBSCRIBE</code> and <code>UNSUBSCRIBE</code> operations are sent in
+the form of messages, so that the client can just read a coherent
+stream of messages where the first element indicates the type of
+message.
+
+<P>
+El objeto <code>on</code> pasado al bloque está en la clase
+<A NAME="tex2html982"
+  HREF="http://rubydoc.info/gems/redis/3.0.6/Redis/Subscription">Redis::Subscription</A>:
+<PRE>
+    settings.redis.subscribe 'time' do |on|
+      on.message do |channel, message|
+        out &lt;&lt; "#{message}\n"
+      end
+</PRE>
+el objeto <code>on</code> dispone del método <code>message</code> que establece una callback
+que será ejecutada cada vez que se produzca un mensaje.
+
+<P>
+
+<H4><A NAME="SECTION03850020000000000000">
+worker.rb</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat worker.rb 
+require 'uri'
+require 'redis'
+
+redis_url = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
+uri = URI.parse(redis_url)
+r = Redis.new(:host =&gt; uri.host, :port =&gt; uri.port, :password =&gt; uri.password)
+
+while true do
+  puts "publishing..."
+  r.publish "time", Time.now.utc
+  sleep 1  
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03850030000000000000">
+Procfile</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat Procfile 
+web: bundle exec ruby web.rb -p $PORT
+worker: bundle exec ruby worker.rb
+</PRE>
+The <code>web</code> process type, describes to Heroku how to start the web application server.
+
+<P>
+<A NAME="tex2html983"
+  HREF="http://www.neilmiddleton.com/the-procfile-is-your-friend/">An interesting thing to mention here is that Heroku</A>
+only auto-launches
+the web process in your Procfile when deploying, whereas <code>foreman</code>
+launches everything. 
+
+<P>
+
+<H4><A NAME="SECTION03850040000000000000">
+Gemfile</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat Gemfile
+source 'https://rubygems.org'
+
+gem 'foreman'
+gem 'redis'
+gem 'sinatra'
+gem 'thin'
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03850050000000000000">
+Ejecución: Arranca el Servidor Redis</A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ redis-server 
+[5604] 04 Dec 10:18:58.126 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+[5604] 04 Dec 10:18:58.129 * Max number of open files set to 10032
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 2.6.14 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in stand alone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 5604
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+[5604] 04 Dec 10:18:58.129 # Server started, Redis version 2.6.14
+[5604] 04 Dec 10:18:58.129 * The server is now ready to accept connections on port 6379
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03850060000000000000">
+Ejecución 2: Arranca la aplicación Sinatra y el Worker</A>
+</H4>
+  
+
+Obsérvese como <code>bundle exec foreman start</code> arranca tanto a <code>worker</code> como 
+a <code>web</code>:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ bundle exec foreman start
+10:19:04 web.1     | started with pid 5606
+10:19:04 worker.1  | started with pid 5607
+10:19:05 worker.1  | publishing...
+10:19:06 web.1     | == Sinatra/1.3.0 has taken the stage on 5000 for development with backup from Thin
+10:19:06 web.1     | &gt;&gt; Thin web server (v1.2.11 codename Bat-Shit Crazy)
+10:19:06 web.1     | &gt;&gt; Maximum connections set to 1024
+10:19:06 web.1     | &gt;&gt; Listening on 0.0.0.0:5000, CTRL+C to stop
+10:19:06 worker.1  | publishing...
+10:19:07 worker.1  | publishing...
+10:19:08 worker.1  | publishing...
+..................................
+10:19:37 worker.1  | publishing...
+10:19:38 web.1     | connection made
+10:19:39 worker.1  | publishing...
+..................................
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03850070000000000000">
+Ejecución 3: Arranca un Cliente</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ curl -v http://localhost:5000/stream
+* Adding handle: conn: 0x7fc71280aa00
+* Adding handle: send: 0
+* Adding handle: recv: 0
+* Curl_addHandleToPipeline: length: 1
+* - Conn 0 (0x7fc71280aa00) send_pipe: 1, recv_pipe: 0
+* About to connect() to localhost port 5000 (#0)
+*   Trying 127.0.0.1...
+* Connected to localhost (127.0.0.1) port 5000 (#0)
+&gt; GET /stream HTTP/1.1
+&gt; User-Agent: curl/7.30.0
+&gt; Host: localhost:5000
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; X-Frame-Options: sameorigin
+&lt; X-XSS-Protection: 1; mode=block
+&lt; Content-Type: text/html;charset=utf-8
+&lt; Connection: close
+* Server thin 1.2.11 codename Bat-Shit Crazy is not blacklisted
+&lt; Server: thin 1.2.11 codename Bat-Shit Crazy
+&lt; 
+2013-12-04 13:24:13 UTC
+2013-12-04 13:24:14 UTC
+2013-12-04 13:24:15 UTC
+2013-12-04 13:24:16 UTC
+2013-12-04 13:24:17 UTC
+.......................
+</PRE>
 
 <P>
 <BR><HR>
@@ -310,27 +426,39 @@ por
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html10532"
-  HREF="node443.html#SECTION038120010000000000000">Véase</A>
+<LI><A NAME="tex2html10580"
+  HREF="node443.html#SECTION03850010000000000000">web.rb</A>
+<LI><A NAME="tex2html10581"
+  HREF="node443.html#SECTION03850020000000000000">worker.rb</A>
+<LI><A NAME="tex2html10582"
+  HREF="node443.html#SECTION03850030000000000000">Procfile</A>
+<LI><A NAME="tex2html10583"
+  HREF="node443.html#SECTION03850040000000000000">Gemfile</A>
+<LI><A NAME="tex2html10584"
+  HREF="node443.html#SECTION03850050000000000000">Ejecución: Arranca el Servidor Redis</A>
+<LI><A NAME="tex2html10585"
+  HREF="node443.html#SECTION03850060000000000000">Ejecución 2: Arranca la aplicación Sinatra y el Worker</A>
+<LI><A NAME="tex2html10586"
+  HREF="node443.html#SECTION03850070000000000000">Ejecución 3: Arranca un Cliente</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10530"
+<A NAME="tex2html10578"
   HREF="node444.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10524"
-  HREF="node429.html">
+<A NAME="tex2html10572"
+  HREF="node438.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10518"
+<A NAME="tex2html10566"
   HREF="node442.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10526"
-  HREF="node783.html">
+<A NAME="tex2html10574"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10528"
-  HREF="node786.html">
+<A NAME="tex2html10576"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -381,20 +509,20 @@ por
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10531"
-  HREF="node444.html">Ejemplo de Server Sent</A>
-<B> Subir:</B> <A NAME="tex2html10525"
-  HREF="node429.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10519"
-  HREF="node442.html">Práctica: Chat con TicTacToe</A>
- &nbsp; <B>  <A NAME="tex2html10527"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10529"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10579"
+  HREF="node444.html">Comet</A>
+<B> Subir:</B> <A NAME="tex2html10573"
+  HREF="node438.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html10567"
+  HREF="node442.html">Enlaces Relacionados</A>
+ &nbsp; <B>  <A NAME="tex2html10575"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10577"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

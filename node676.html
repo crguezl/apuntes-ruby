@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Notificaciones/Notifications</TITLE>
-<META NAME="description" CONTENT="Notificaciones/Notifications">
+<TITLE>Retirando una Gema</TITLE>
+<META NAME="description" CONTENT="Retirando una Gema">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node677.html">
 <LINK REL="previous" HREF="node675.html">
-<LINK REL="up" HREF="node673.html">
+<LINK REL="up" HREF="node665.html">
 <LINK REL="next" HREF="node677.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14529"
+<A NAME="tex2html14553"
   HREF="node677.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14523"
-  HREF="node673.html">
+<A NAME="tex2html14547"
+  HREF="node665.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14517"
+<A NAME="tex2html14541"
   HREF="node675.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14525"
-  HREF="node783.html">
+<A NAME="tex2html14549"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14527"
-  HREF="node786.html">
+<A NAME="tex2html14551"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,33 +92,87 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14530"
-  HREF="node677.html">Limites de Timepo/Build Timeouts</A>
-<B> Subir:</B> <A NAME="tex2html14524"
-  HREF="node673.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html14518"
-  HREF="node675.html">Enlaces</A>
- &nbsp; <B>  <A NAME="tex2html14526"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14528"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14554"
+  HREF="node677.html">Semantic Versioning</A>
+<B> Subir:</B> <A NAME="tex2html14548"
+  HREF="node665.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14542"
+  HREF="node675.html">Gem Security</A>
+ &nbsp; <B>  <A NAME="tex2html14550"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14552"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061530000000000000000">
-Notificaciones/Notifications</A>
+<H1><A NAME="SECTION0614110000000000000000">
+Retirando una Gema</A>
 </H1>
 
 <P>
-Véase
-<A NAME="tex2html1559"
-  HREF="http://about.travis-ci.org/docs/user/notifications/#Email-notifications">Configuring Build Notifications</A>
+In previous versions we had to install <code>gemcutter</code>.
+It will add global <code>yank</code> command for <A NAME="tex2html1543"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>.
+
+<P>
+<PRE>
+$ rvm rubygems latest
+$ gem update --system
+$ gem install gemcutter
+</PRE>
+It seems that the current version of <A NAME="tex2html1544"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> 
+already includes <code>yank</code>.
+
+<P>
+You can't push the same gem version twice. 
+Yanking just marks a particular version as <SPAN  CLASS="textbf">'invalid'</SPAN>:
+
+<P>
+<PRE>
+$ gem list tictactoe -ra
+*** REMOTE GEMS ***
+tic-tac.toe (0.3.4, 0.3.3, 0.3.2, 0.3.1)
+
+gem yank tic-tac-toe -v0.3.4
+</PRE>
+Veamos la página de ayuda:
+<PRE>
+[~/ruby_quiz/tictactoe/solutions/eduardo_segredo(john)]$ gem help yank
+Usage: gem yank GEM -v VERSION [-p PLATFORM] [--undo] [--key KEY_NAME] [options]
+
+  Options:
+    -v, --version VERSION            Specify version of gem to remove
+        --platform PLATFORM          Specify the platform of gem to remove
+        --undo
+    -k, --key KEY_NAME               Use API key from your gem credentials file
+
+
+  Common Options:
+    -h, --help                       Get help on this command
+    -V, --[no-]verbose               Set the verbose level of output
+    -q, --quiet                      Silence commands
+        --config-file FILE           Use this config file instead of default
+        --backtrace                  Show stack backtrace on errors
+        --debug                      Turn on Ruby debugging
+
+
+  Arguments:
+    GEM       name of gem
+
+  Summary:
+    Remove a specific gem version release from RubyGems.org
+
+  Description:
+    Remove a specific gem version release from RubyGems.org
+</PRE>
+
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

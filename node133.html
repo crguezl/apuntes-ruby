@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Named Parameters in Ruby 2.0</TITLE>
-<META NAME="description" CONTENT="Named Parameters in Ruby 2.0">
+<TITLE>Definiendo Métodos Singleton</TITLE>
+<META NAME="description" CONTENT="Definiendo Métodos Singleton">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node134.html">
 <LINK REL="previous" HREF="node132.html">
-<LINK REL="up" HREF="node128.html">
+<LINK REL="up" HREF="node129.html">
 <LINK REL="next" HREF="node134.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5141"
+<A NAME="tex2html5184"
   HREF="node134.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5135"
-  HREF="node128.html">
+<A NAME="tex2html5178"
+  HREF="node129.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5129"
+<A NAME="tex2html5172"
   HREF="node132.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5137"
-  HREF="node783.html">
+<A NAME="tex2html5180"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5139"
-  HREF="node786.html">
+<A NAME="tex2html5182"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,123 +92,75 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5142"
-  HREF="node134.html">Argumentos Bloque</A>
-<B> Subir:</B> <A NAME="tex2html5136"
-  HREF="node128.html">Argumentos de un Método</A>
-<B> Anterior:</B> <A NAME="tex2html5130"
-  HREF="node132.html">Hashes para Argumentos con</A>
- &nbsp; <B>  <A NAME="tex2html5138"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5140"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5185"
+  HREF="node134.html">Borrando (Undefining) Métodos</A>
+<B> Subir:</B> <A NAME="tex2html5179"
+  HREF="node129.html">Definiendo Métodos Simples</A>
+<B> Anterior:</B> <A NAME="tex2html5173"
+  HREF="node132.html">Invocando un Método en</A>
+ &nbsp; <B>  <A NAME="tex2html5181"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5183"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02645000000000000000"></A>
-<A NAME="subsection:namedparametersinruby20"></A>
+<H2><A NAME="SECTION02614000000000000000"></A>
+<A NAME="subsection:metodos_singleton"></A>
 <BR>
-Named Parameters in Ruby 2.0
+Definiendo Métodos Singleton
 </H2>
-In computer programming, named parameters or keyword arguments refer
-to a computer language’s support for function calls that clearly
-state the name of each parameter within the function call itself.
+
+<P>
+Si <code>def</code> va seguido de una expresión que determina un objeto, seguida de <code>.nombre_de_metodo</code>
+el método definido es sólo para el objeto específicado.
 
 <P>
 <PRE>
-def foo(bar: '12345', baz: 'abcdef')
-  [bar, baz]
+o = "message"    # A string is an object
+def o.printme    # Define a singleton method for this object
+  puts self
 end
- 
-foo                         # =&gt; ["12345", "abcdefg"]
-foo(bar: 'bar')             # =&gt; ["bar", "abcdef"]
-foo(bar: 'bar', baz: 'baz') # =&gt; ["bar", "baz"]
+o.printme        # Invoke the singleton
 </PRE>
+A un método de este tipo se le denomina <A NAME="5687"></A><SPAN  CLASS="textit">método singleton</SPAN>.
 
 <P>
-Si se llama con un nombre 
-no declarado se produce un <code>ArgumentError</code>:
-<PRE>
-[2] pry(main)&gt; require './named_parameters2'
-["12345", "abcdef"]
-["bar", "abcdef"]
-["bar", "baz"]
-=&gt; true
-[3] pry(main)&gt; foo(chuchu: 'chuchu')
-ArgumentError: unknown keyword: chuchu
-from (pry):3:in `__pry__'
-</PRE>
-Also, you can combine them with regular parameters.
+Los métodos de clase como <code>Socket.tcp</code> y <code>File.delete</code> son, de hecho, 
+métodos singleton.
 
 <P>
-<PRE>
-def foo(value, bar: '12345', baz: 'abcdef')
-  [value, bar, baz]
-end
- 
-foo('VALUE')                         # =&gt; ["VALUE", "12345", "abcdefg"]
-foo('VALUE', bar: 'bar')             # =&gt; ["VALUE", "bar", "abcdef"]
-foo('VALUE', bar: 'bar', baz: 'baz') # =&gt; ["VALUE", "bar", "baz"]
-</PRE>
+Ruby implementations typically treat <A NAME="tex2html222"
+  HREF="http://ruby-doc.org/core-2.0.0/Fixnum.html"><TT>Fixnum</TT></A> and <A NAME="tex2html223"
+  HREF="http://ruby-doc.org/core-2.0.0/Symbol.html"><TT>Symbol</TT></A> values as <A NAME="5695"></A><SPAN  CLASS="textit">immediate values</SPAN> 
+rather than as true object references. 
 
 <P>
-Se pueden combinar con splats:
+Debido a ello
+los objetos <code>Fixnum</code> y <code>Symbol</code> no pueden tener métodos singleton.
 
 <P>
-<PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat named_parameters4.rb 
-require 'pp'
-
-def cycle(first_value, *values, name: 'default')
-  return [ first_value, values, name]
-end
-
-pp cycle(1, 2, 3, 4, name: 'Pedro') # [1, [2, 3, 4], "Pedro"]
-</PRE>
-
-<P>
-You can stop an <code>ArgumentError</code> being raised and deal with arbitrary keyword arguments by using a double-splat (double asterisk) to capture all keywords not already assigned and puts them in a hash:
-
-<P>
-<PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat named_parameters5.rb 
-require 'pp'
-
-def foo(bar: '12345', baz: 'abcdef', **rest)
-  [bar, baz, rest]
-end
- 
-pp foo(bar: 'bar', chuchu: 'chuchu', chachi: 'chachi') # ["bar", "abcdef", {:chuchu=&gt;"chuchu", :chachi=&gt;"chachi"}]
-</PRE>
-
-<P>
-
-<OL>
-<LI><A NAME="tex2html209"
-  HREF="http://chriszetter.com/blog/2012/11/02/keyword-arguments-in-ruby-2-dot-0/">Keyword Arguments in Ruby 2.0</A>
-por Chris Zetter
-</LI>
-</OL>
+For consistency, singletons are also prohibited on other Numeric objects.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5141"
+<A NAME="tex2html5184"
   HREF="node134.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5135"
-  HREF="node128.html">
+<A NAME="tex2html5178"
+  HREF="node129.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5129"
+<A NAME="tex2html5172"
   HREF="node132.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5137"
-  HREF="node783.html">
+<A NAME="tex2html5180"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5139"
-  HREF="node786.html">
+<A NAME="tex2html5182"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -259,20 +211,20 @@ por Chris Zetter
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5142"
-  HREF="node134.html">Argumentos Bloque</A>
-<B> Subir:</B> <A NAME="tex2html5136"
-  HREF="node128.html">Argumentos de un Método</A>
-<B> Anterior:</B> <A NAME="tex2html5130"
-  HREF="node132.html">Hashes para Argumentos con</A>
- &nbsp; <B>  <A NAME="tex2html5138"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5140"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5185"
+  HREF="node134.html">Borrando (Undefining) Métodos</A>
+<B> Subir:</B> <A NAME="tex2html5179"
+  HREF="node129.html">Definiendo Métodos Simples</A>
+<B> Anterior:</B> <A NAME="tex2html5173"
+  HREF="node132.html">Invocando un Método en</A>
+ &nbsp; <B>  <A NAME="tex2html5181"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5183"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

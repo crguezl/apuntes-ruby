@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>WebSockets</TITLE>
-<META NAME="description" CONTENT="WebSockets">
+<TITLE>Chat Simple</TITLE>
+<META NAME="description" CONTENT="Chat Simple">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node451.html">
-<LINK REL="previous" HREF="node447.html">
-<LINK REL="up" HREF="node447.html">
+<LINK REL="next" HREF="node449.html">
+<LINK REL="previous" HREF="node445.html">
+<LINK REL="up" HREF="node438.html">
 <LINK REL="next" HREF="node449.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10615"
+<A NAME="tex2html10655"
   HREF="node449.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10609"
-  HREF="node447.html">
+<A NAME="tex2html10649"
+  HREF="node438.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10603"
+<A NAME="tex2html10643"
   HREF="node447.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10611"
-  HREF="node783.html">
+<A NAME="tex2html10651"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10613"
-  HREF="node786.html">
+<A NAME="tex2html10653"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,23 +92,103 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10616"
-  HREF="node449.html">Que es WebSocket y</A>
-<B> Subir:</B> <A NAME="tex2html10610"
-  HREF="node447.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html10604"
-  HREF="node447.html">Web Sockets</A>
- &nbsp; <B>  <A NAME="tex2html10612"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10614"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10656"
+  HREF="node449.html">Práctica: Chat con Mensajes</A>
+<B> Subir:</B> <A NAME="tex2html10650"
+  HREF="node438.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html10644"
+  HREF="node447.html">Código Completo del Chat</A>
+ &nbsp; <B>  <A NAME="tex2html10652"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10654"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03910000000000000000">
-WebSockets</A>
+<H1><A NAME="SECTION03880000000000000000">
+Chat Simple</A>
 </H1>
+
+<P>
+
+<H4><A NAME="SECTION03880010000000000000">
+Donde</A>
+</H4>
+  
+
+<UL>
+<LI><PRE>
+[~/sinatra-streaming/blazeeboychat(master)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/sinatra-streaming/blazeeboychat
+[~/sinatra-streaming/blazeeboychat(master)]$ git remote -v
+origin  git@github.com:crguezl/chat-blazee.git (fetch)
+origin  git@github.com:crguezl/chat-blazee.git (push)
+</PRE>
+</LI>
+<LI><A NAME="tex2html1014"
+  HREF="https://github.com/crguezl/chat-blazee">https://github.com/crguezl/chat-blazee</A>
+</LI>
+<LI><A NAME="tex2html1015"
+  HREF="https://gist.github.com/blazeeboy/9289678">https://gist.github.com/blazeeboy/9289678</A>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION03880020000000000000">
+Código</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra-streaming/blazeeboychat(master)]$ cat chat.rb 
+require 'sinatra' # gem install sinatra --no-rdoc --no-ri
+set :port, 3000
+set :environment, :production
+ 
+html = &lt;&lt;-EOT
+&lt;html&gt;&lt;head&gt;&lt;style&gt;
+#text{width:100%; font-size: 15px; padding: 5px; display: block;}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+  &lt;input id="text" placeholder="Write then press Enter."/&gt;
+  &lt;div id="chat"&gt;&lt;/div&gt;
+  &lt;script src="http://code.jquery.com/jquery-1.11.0.min.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+  $('#text').keypress(function(e){
+    if( e.keyCode==13 ){
+      $.get('/send',{text:$('#text').val()});
+      $('#text').val('');
+    }
+  });
+  last = 0;
+  setInterval(function(){
+    $.get('/update',{last:last},
+      function(response){
+        last = $('&lt;p&gt;').html(response).find('span').data('last');
+        $('#chat').append(response);
+        });
+    },1000);
+  &lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;
+EOT
+ 
+chat = ['welcome..']
+get('/') { html }
+get '/send' do
+  chat &lt;&lt; "#{request.ip} : #{params['text']}"
+  nil
+end
+get '/update' do
+  updates = chat[params['last'].to_i..-1]
+  last = "&lt;span data-last=\"#{chat.size}\"&gt;&lt;/span&gt;"
+  if updates.size&gt;0
+  updates.join('&lt;/br&gt;') + "#{last}&lt;/br&gt;"
+  else
+    last
+  end
+end
+</PRE>
 
 <P>
 <BR><HR>
@@ -116,16 +196,18 @@ WebSockets</A>
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html10617"
-  HREF="node449.html">Que es WebSocket y para que sirve</A>
-<LI><A NAME="tex2html10618"
-  HREF="node450.html">Negociación del protocolo WebSocket</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html10657"
+  HREF="node448.html#SECTION03880010000000000000">Donde</A>
+<LI><A NAME="tex2html10658"
+  HREF="node448.html#SECTION03880020000000000000">Código</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

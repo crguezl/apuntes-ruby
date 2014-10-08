@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Introducción</TITLE>
-<META NAME="description" CONTENT="Introducción">
+<TITLE>5: Red: should and should_not</TITLE>
+<META NAME="description" CONTENT="5: Red: should and should_not">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node655.html">
 <LINK REL="previous" HREF="node653.html">
-<LINK REL="up" HREF="node653.html">
+<LINK REL="up" HREF="node648.html">
 <LINK REL="next" HREF="node655.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14161"
+<A NAME="tex2html14210"
   HREF="node655.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14155"
-  HREF="node653.html">
+<A NAME="tex2html14204"
+  HREF="node648.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14149"
+<A NAME="tex2html14198"
   HREF="node653.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14157"
-  HREF="node783.html">
+<A NAME="tex2html14206"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14159"
-  HREF="node786.html">
+<A NAME="tex2html14208"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,81 +92,207 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14162"
-  HREF="node655.html">La opción PATH (:path)</A>
-<B> Subir:</B> <A NAME="tex2html14156"
-  HREF="node653.html">Bundler</A>
-<B> Anterior:</B> <A NAME="tex2html14150"
-  HREF="node653.html">Bundler</A>
- &nbsp; <B>  <A NAME="tex2html14158"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14160"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14211"
+  HREF="node655.html">6: Green</A>
+<B> Subir:</B> <A NAME="tex2html14205"
+  HREF="node648.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html14199"
+  HREF="node653.html">4: refactor</A>
+ &nbsp; <B>  <A NAME="tex2html14207"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14209"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061310000000000000000">
-Introducción</A>
-</H1>
-
-<UL>
-<LI><A NAME="tex2html1503"
-  HREF="http://gembundler.com/">Bundler</A>
-</LI>
-<LI><A NAME="tex2html1504"
-  HREF="http://pragprog.com/magazines/2010-12/three-bundler-benefits">Three Bundler Benefits. Bundler Gives You Pay-as-you-go Gem Management</A>
-por Paolo Perrotta
-</LI>
-<LI><A NAME="tex2html1505"
-  HREF="http://ruby.about.com/od/bundler/ss/Getting-Started-With-Bundler.htm">Getting Started with Bundler por Michael Morin</A>
-</LI>
-<LI><A NAME="tex2html1506"
-  HREF="http://viget.com/extend/bundler-best-practices">Bundler Best Practices</A>
-por Chris Jones en viget.com
-</LI>
-</UL>
-
-<P>
-
-<H4><A NAME="SECTION061310010000000000000">
-Que versión de una gema estamos usando</A>
-</H4>
-  
-
-<PRE>
-[~/Dropbox/src/ruby/sinatra/bootstrap_example(master)]$ cat Gemfile
-source 'https://rubygems.org'
-gem 'sinatra'
-[~/Dropbox/src/ruby/sinatra/bootstrap_example(master)]$ bundle show
-</PRE>
+<H2><A NAME="SECTION06916000000000000000">
+5: Red:  should and should_not</A>
+</H2>
 
 <P>
 <PRE>
-Gems included by the bundle:
-  * bundler (1.3.5)
-  * rack (1.5.2)
-  * rack-protection (1.5.0)
-  * sinatra (1.4.2)
-  * tilt (1.4.1)
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/math/rpcalc_spec.rb 
+#require File.join(File.dirname(__FILE__), "/../spec_helper")
+require "spec_helper"
+module Math
+  describe RPCalc do
+    before :each do
+      @c = Math::RPCalc.new
+    end
+
+    context "When an erroneous input is given" do
+      before :each do
+        @e = proc { @c.calc('a') }
+      end
+      it "must raise an exception" do
+        expect { @e[] }.to raise_error(SyntaxError)
+        expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
+      end
+    end
+
+    context "When a correct input is given" do
+      it "must compute the answer" do
+        r = @c.calc('2 3 + 4 *')
+        r.should eq 20
+        @c.stack.should eq []
+      end
+    end
+
+  end    # RPCalc
+end      # Math
 </PRE>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<A NAME="tex2html1471"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A> achieves a high level of expressiveness and readability
+by exploiting open classes in Ruby to add the methods <code>should()</code> 
+and <code>should_not( )</code> to every object in the system. Each
+method accepts either a <A NAME="25530"></A><SPAN  CLASS="textbf">matcher</SPAN> or a Ruby expression using a specific
+subset of Ruby operators. 
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html14163"
-  HREF="node654.html#SECTION061310010000000000000">Que versión de una gema estamos usando</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+<P>
+A matcher is an object that tries to match
+against an expected outcome.
+
+<P>
+Let’s take a look at an example using the equal matcher, which you
+can access through the method <code>eq</code>:
+<PRE>
+       r.should eq 20
+</PRE>
+When the Ruby interpreter encounters this line, it begins by evaluating <code>eq 20</code>. 
+
+<P>
+This is an RSpec method that returns a matcher object configured to match for equality with the value 20. 
+The matcher then becomes the argument to <code>r.should</code>.
+
+<P>
+Behind the scenes, the <code>should( )</code> method calls
+<code>matcher.matches?</code>, passing <code>self</code> (the result object)
+as the argument. Because <code>should( )</code> is added to every object,
+it can be any object. Similarly, the matcher can be any object that
+responds to <code>matches?(object)</code>.
+
+<P>
+If <code>matches?(self)</code> returns <code>true</code>, then the expectation is met and execution moves on to the next line in the example. 
+
+<P>
+If <code>matches?(self)</code> returns <code>false</code>, <code>should( )</code> asks the matcher for a failure message and raises an <code>ExpectationNotMetError</code> with that message.
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
+rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
+
+Math::RPCalc
+  When an erroneous input is given
+    must raise an exception
+  When a correct input is given
+    must compute the answer (FAILED - 1)
+
+Failures:
+
+  1) Math::RPCalc When a correct input is given must compute the answer
+     Failure/Error: r = @c.calc('2 3 + 4 *')
+     SyntaxError:
+       Error. found '2'. Expected number or operator
+     # ./lib/math/rpcalc.rb:12:in `block in calc'
+     # ./lib/math/rpcalc.rb:11:in `each'
+     # ./lib/math/rpcalc.rb:11:in `calc'
+     # ./spec/math/rpcalc_spec.rb:21:in `block (3 levels) in &lt;module:Math&gt;'
+
+Finished in 0.00244 seconds
+2 examples, 1 failure
+
+Failed examples:
+
+rspec ./spec/math/rpcalc_spec.rb:20 # Math::RPCalc When a correct input is given must compute the answer
+rake aborted!
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14210"
+  HREF="node655.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14204"
+  HREF="node648.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14198"
+  HREF="node653.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html14206"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14208"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html14211"
+  HREF="node655.html">6: Green</A>
+<B> Subir:</B> <A NAME="tex2html14205"
+  HREF="node648.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html14199"
+  HREF="node653.html">4: refactor</A>
+ &nbsp; <B>  <A NAME="tex2html14207"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14209"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

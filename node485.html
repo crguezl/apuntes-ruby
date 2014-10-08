@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Troubleshooting</TITLE>
-<META NAME="description" CONTENT="Troubleshooting">
+<TITLE>Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita</TITLE>
+<META NAME="description" CONTENT="Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node486.html">
 <LINK REL="previous" HREF="node484.html">
-<LINK REL="up" HREF="node482.html">
+<LINK REL="up" HREF="node483.html">
 <LINK REL="next" HREF="node486.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11277"
+<A NAME="tex2html11271"
   HREF="node486.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11271"
-  HREF="node482.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
 <A NAME="tex2html11265"
+  HREF="node483.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11261"
   HREF="node484.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11273"
-  HREF="node783.html">
+<A NAME="tex2html11267"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11275"
-  HREF="node786.html">
+<A NAME="tex2html11269"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,231 +91,80 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11278"
-  HREF="node486.html">Configuration</A>
-<B> Subir:</B> <A NAME="tex2html11272"
-  HREF="node482.html">Despliegue en Heroku</A>
-<B> Anterior:</B> <A NAME="tex2html11266"
-  HREF="node484.html">Logging</A>
- &nbsp; <B>  <A NAME="tex2html11274"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11276"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11272"
+  HREF="node486.html">Google Plus y Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html11266"
+  HREF="node483.html">ActiveRecord y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html11262"
+  HREF="node484.html">Práctica: Servicio para Abreviar</A>
+ &nbsp; <B>  <A NAME="tex2html11268"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11270"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION032230000000000000000">
-Troubleshooting</A>
+<H1><A NAME="SECTION031820000000000000000"></A>
+   <A NAME="20078"></A>
+<BR>
+Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita
 </H1>
 
 <P>
-If you push your app and it crashes, 
-<code>heroku ps</code> shows state crashed:
+Añádale a la práctica 
+<A HREF="node484.html#sectionpractica:abreviarurl">42.1</A>
+la funcionalidad de mostrar el número de visitas y el número de visitas por país.
+
+<P>
+Puede usar para ello la API de <A NAME="tex2html1140"
+  HREF="http://www.hostip.info/">http://www.hostip.info/</A>:
+
+<P>
 <PRE>
-=== web (1X): `bundle exec thin start -R config.ru -e $RACK_ENV -p $PORT`
-web.1: crashed 2013/10/24 20:21:34 (~ 1h ago)
-</PRE>
-check your logs to find out what went wrong. 
-
-<P>
-Here are some common
-problems.
-
-<P>
-
-<H4><A NAME="SECTION032230010000000000000">
-Failed to require a sourcefile</A>
-</H4>
+  after :create, :set_country
   
-
-<P>
-If your app failed to require a sourcefile, chances are good you’re
-running Ruby 1.9.1 or 1.8 in your local environment. 
-
-<P>
-The load paths
-have changed in Ruby 1.9 which applies to Ruby 2.0. 
-
-<P>
-Port your app
-forward to Ruby 2.0.0 making certain it works locally before trying
-to push to Cedar again.
-
-<P>
-
-<H4><A NAME="SECTION032230020000000000000">
-Encoding error</A>
-</H4>
-  
-
-Ruby 1.9 added more sophisticated encoding support to the language
-which applies to Ruby 2.0. 
-
-<P>
-Not all gems work with Ruby 2.0. If you
-hit an encoding error, you probably haven’t fully tested your app
-with Ruby 2.0.0 in your local environment. 
-
-<P>
-Port your app forward
-to Ruby 2.0.0 making certain it works locally before trying to push
-to Cedar again.
-
-<P>
-
-<H4><A NAME="SECTION032230030000000000000">
-Missing a gem</A>
-</H4>
-  
-
-<P>
-If your app crashes due to missing a gem, you may have it installed
-locally but not specified in your Gemfile. 
-
-<P>
-You must isolate all
-local testing using <code>bundle exec</code>. 
-
-<P>
-For example, don’t run <code>ruby web.rb</code>,
-run 
-
-<P>
-<PRE>
-bundle exec ruby web.rb
-</PRE>
-Don’t run <code>rake db:migrate</code>, run 
-<PRE>
-bundle exec rake db:migrate.
-</PRE>
-Another approach is to create a blank RVM gemset to be absolutely
-sure you’re not touching any system-installed gems:
-<PRE>
-$ rvm gemset create myapp
-$ rvm gemset use myapp
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION032230040000000000000">
-Runtime dependencies on development/test gems</A>
-</H4>
-  
-
-<P>
-If you’re still missing a gem when you deploy, check your Bundler
-groups.
-
-<P>
-Heroku builds your app without the <code>development</code> or <code>test</code>
-groups, and if you app depends on a gem from one of these groups
-to run, you should move it out of the group.
-
-<P>
-One common example using the <code>RSpec tasks</code> in your Rakefile. 
-If you see this in your Heroku deploy:
-<PRE>
-$ heroku run rake -T
-Running `rake -T` attached to terminal... up, ps.3
-rake aborted!
-no such file to load -- rspec/core/rake_task
-</PRE>
-Then you’ve hit this problem. 
-
-<P>
-First, duplicate the problem locally like so:
-<PRE>
-$ bundle install --without development:test
-...
-$ bundle exec rake -T
-rake aborted!
-no such file to load -- rspec/core/rake_task
-</PRE>
-Now you can fix it by making these Rake tasks conditional on the gem load. 
-For example:
-<PRE>
-begin
-  require "rspec/core/rake_task"
-
-  desc "Run all examples"
-  RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = %w[--color]
-    t.pattern = 'spec/*_spec.rb'
+  def set_country
+    xml = RestClient.get "http://api.hostip.info/get_xml.php?ip=#{ip}"  
+    self.country = XmlSimple.xml_in(xml.to_s, { 'ForceArray' =&gt; false })['featureMember']['Hostip']['countryAbbrev']
+    self.save
   end
-rescue LoadError
-end
 </PRE>
-Confirm it works locally, then push to Heroku.
 
 <P>
 
-<H4><A NAME="SECTION032230050000000000000">
-Rack::Sendfile</A>
-</H4>
-  
+<UL>
+<LI>XMLSimple le puede ayudar a parsear el XML:
+<A NAME="tex2html1141"
+  HREF="http://xml-simple.rubyforge.org/">http://xml-simple.rubyforge.org/</A>
+</LI>
+<LI><A NAME="tex2html1142"
+  HREF="https://github.com/sausheong/tinyclone">https://github.com/sausheong/tinyclone</A>
+</LI>
+<LI>Véase la API de 
+<A NAME="tex2html1143"
+  HREF="http://www.hostip.info/">http://www.hostip.info/</A>
+</LI>
+</UL>
 
 <P>
-Heroku does not support the use of Rack::Sendfile. 
-
-<P>
-Rack:Sendfile
-usually requires that there is a frontend webserver like nginx or
-apache is running on the same machine as the application server.
-
-<P>
-This is not how Heroku is architected. Using the Rack::Sendfile
-middleware will cause your file downloads to fail since it will
-send a body with Content-Length of 0.
-
-<P>
-
-<H4><A NAME="SECTION032230060000000000000">
-Número máximo de aplicaciones</A>
-</H4>
-  
-
-If you have unverified account then the maximum number of apps is 5 only and for verified account number is 100.
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html11279"
-  HREF="node485.html#SECTION032230010000000000000">Failed to require a sourcefile</A>
-<LI><A NAME="tex2html11280"
-  HREF="node485.html#SECTION032230020000000000000">Encoding error</A>
-<LI><A NAME="tex2html11281"
-  HREF="node485.html#SECTION032230030000000000000">Missing a gem</A>
-<LI><A NAME="tex2html11282"
-  HREF="node485.html#SECTION032230040000000000000">Runtime dependencies on development/test gems</A>
-<LI><A NAME="tex2html11283"
-  HREF="node485.html#SECTION032230050000000000000">Rack::Sendfile</A>
-<LI><A NAME="tex2html11284"
-  HREF="node485.html#SECTION032230060000000000000">Número máximo de aplicaciones</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11277"
+<A NAME="tex2html11271"
   HREF="node486.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11271"
-  HREF="node482.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
 <A NAME="tex2html11265"
+  HREF="node483.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11261"
   HREF="node484.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11273"
-  HREF="node783.html">
+<A NAME="tex2html11267"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11275"
-  HREF="node786.html">
+<A NAME="tex2html11269"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -367,20 +215,20 @@ If you have unverified account then the maximum number of apps is 5 only and for
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11278"
-  HREF="node486.html">Configuration</A>
-<B> Subir:</B> <A NAME="tex2html11272"
-  HREF="node482.html">Despliegue en Heroku</A>
-<B> Anterior:</B> <A NAME="tex2html11266"
-  HREF="node484.html">Logging</A>
- &nbsp; <B>  <A NAME="tex2html11274"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11276"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11272"
+  HREF="node486.html">Google Plus y Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html11266"
+  HREF="node483.html">ActiveRecord y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html11262"
+  HREF="node484.html">Práctica: Servicio para Abreviar</A>
+ &nbsp; <B>  <A NAME="tex2html11268"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11270"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

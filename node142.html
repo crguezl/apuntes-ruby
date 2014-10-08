@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Bloques para las Transacciones</TITLE>
-<META NAME="description" CONTENT="Bloques para las Transacciones">
+<TITLE>Named Parameters in Ruby 2.0</TITLE>
+<META NAME="description" CONTENT="Named Parameters in Ruby 2.0">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node143.html">
 <LINK REL="previous" HREF="node141.html">
-<LINK REL="up" HREF="node135.html">
+<LINK REL="up" HREF="node137.html">
 <LINK REL="next" HREF="node143.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5311"
+<A NAME="tex2html5324"
   HREF="node143.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5305"
-  HREF="node135.html">
+<A NAME="tex2html5318"
+  HREF="node137.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5299"
+<A NAME="tex2html5312"
   HREF="node141.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5307"
-  HREF="node783.html">
+<A NAME="tex2html5320"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5309"
-  HREF="node786.html">
+<A NAME="tex2html5322"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,95 +92,102 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5312"
-  HREF="node143.html">Ejemplo: La Clase Filter</A>
-<B> Subir:</B> <A NAME="tex2html5306"
-  HREF="node135.html">Procs y Lambdas</A>
-<B> Anterior:</B> <A NAME="tex2html5300"
-  HREF="node141.html">Enumeradores</A>
- &nbsp; <B>  <A NAME="tex2html5308"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5310"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5325"
+  HREF="node143.html">Argumentos Bloque</A>
+<B> Subir:</B> <A NAME="tex2html5319"
+  HREF="node137.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5313"
+  HREF="node141.html">Hashes para Argumentos con</A>
+ &nbsp; <B>  <A NAME="tex2html5321"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5323"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html5313"
-  HREF="node142.html#SECTION02657010000000000000">Véase</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02657000000000000000">
-Bloques para las Transacciones</A>
+<H2><A NAME="SECTION02645000000000000000"></A>
+<A NAME="subsection:namedparametersinruby20"></A>
+<BR>
+Named Parameters in Ruby 2.0
 </H2>
-
-<P>
-You can use blocks to define a chunk of code that must be run under some kind of transactional control. 
-
-<P>
-For example, you’ll often open a file, do something with its contents, and then want to ensure that the file is closed when you finish. 
-
-<P>
-A naive implementation (ignoring error handling) could look something like the following:
+In computer programming, named parameters or keyword arguments refer
+to a computer language’s support for function calls that clearly
+state the name of each parameter within the function call itself.
 
 <P>
 <PRE>
-[~/ruby/PROGRAMMINGRUBYDAVETHOMAS]$ cat block_for_transaction.rb 
-class File
-  def self.my_open(*args)
-    result = file = File.new(*args)
-    if block_given?
-      result = yield file
-      file.close
-    end
-    return result
-  end
+def foo(bar: '12345', baz: 'abcdef')
+  [bar, baz]
+end
+ 
+foo                         # =&gt; ["12345", "abcdefg"]
+foo(bar: 'bar')             # =&gt; ["bar", "abcdef"]
+foo(bar: 'bar', baz: 'baz') # =&gt; ["bar", "baz"]
+</PRE>
+
+<P>
+Si se llama con un nombre 
+no declarado se produce un <code>ArgumentError</code>:
+<PRE>
+[2] pry(main)&gt; require './named_parameters2'
+["12345", "abcdef"]
+["bar", "abcdef"]
+["bar", "baz"]
+=&gt; true
+[3] pry(main)&gt; foo(chuchu: 'chuchu')
+ArgumentError: unknown keyword: chuchu
+from (pry):3:in `__pry__'
+</PRE>
+Also, you can combine them with regular parameters.
+
+<P>
+<PRE>
+def foo(value, bar: '12345', baz: 'abcdef')
+  [value, bar, baz]
+end
+ 
+foo('VALUE')                         # =&gt; ["VALUE", "12345", "abcdefg"]
+foo('VALUE', bar: 'bar')             # =&gt; ["VALUE", "bar", "abcdef"]
+foo('VALUE', bar: 'bar', baz: 'baz') # =&gt; ["VALUE", "bar", "baz"]
+</PRE>
+
+<P>
+Se pueden combinar con splats:
+
+<P>
+<PRE>
+[~/rubytesting/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat named_parameters4.rb 
+require 'pp'
+
+def cycle(first_value, *values, name: 'default')
+  return [ first_value, values, name]
 end
 
-File.my_open("testfile", "r") do |file| 
-  while line = file.gets
-    print line 
-  end
-end
+pp cycle(1, 2, 3, 4, name: 'Pedro') # [1, [2, 3, 4], "Pedro"]
 </PRE>
- The responsibility for closing an open file has been shifted from
- the users of file objects back to the file objects themselves.
+
+<P>
+You can stop an <code>ArgumentError</code> being raised and deal with arbitrary keyword arguments by using a double-splat (double asterisk) to capture all keywords not already assigned and puts them in a hash:
+
+<P>
 <PRE>
-[~/ruby/PROGRAMMINGRUBYDAVETHOMAS]$ ruby block_for_transaction.rb 
-1
-2
-3
-fin
+[~/rubytesting/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat named_parameters5.rb 
+require 'pp'
+
+def foo(bar: '12345', baz: 'abcdef', **rest)
+  [bar, baz, rest]
+end
+ 
+pp foo(bar: 'bar', chuchu: 'chuchu', chachi: 'chachi') # ["bar", "abcdef", {:chuchu=&gt;"chuchu", :chachi=&gt;"chachi"}]
 </PRE>
-If we wanted to implement this method properly, we’d need
-to ensure that we closed a file even if the code processing that file somehow aborted. 
 
 <P>
 
 <OL>
-<LI>As a similar  example, we could extend this <code>my_open</code> method to 
-support some sort of rolling back transaction, 
-making a backup copy of the file being open, and then restoring it 
-if an exception is produced or deleting it if everything went fine. 
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION02657010000000000000">
-Véase</A>
-</H4>
-  
-
-<OL>
-<LI><A NAME="tex2html252"
-  HREF="http://blog.rubybestpractices.com/posts/gregory/009-beautiful-blocks.html">Ruby Best Practices.  Code Blocks: Ruby's Swiss Army Knife. 2009-07-07 written by Gregory Brown</A>
+<LI><A NAME="tex2html226"
+  HREF="http://chriszetter.com/blog/2012/11/02/keyword-arguments-in-ruby-2-dot-0/">Keyword Arguments in Ruby 2.0</A>
+por Chris Zetter
 </LI>
 </OL>
 
@@ -188,20 +195,20 @@ Véase</A>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5311"
+<A NAME="tex2html5324"
   HREF="node143.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5305"
-  HREF="node135.html">
+<A NAME="tex2html5318"
+  HREF="node137.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5299"
+<A NAME="tex2html5312"
   HREF="node141.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5307"
-  HREF="node783.html">
+<A NAME="tex2html5320"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5309"
-  HREF="node786.html">
+<A NAME="tex2html5322"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -252,20 +259,20 @@ Véase</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5312"
-  HREF="node143.html">Ejemplo: La Clase Filter</A>
-<B> Subir:</B> <A NAME="tex2html5306"
-  HREF="node135.html">Procs y Lambdas</A>
-<B> Anterior:</B> <A NAME="tex2html5300"
-  HREF="node141.html">Enumeradores</A>
- &nbsp; <B>  <A NAME="tex2html5308"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5310"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5325"
+  HREF="node143.html">Argumentos Bloque</A>
+<B> Subir:</B> <A NAME="tex2html5319"
+  HREF="node137.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5313"
+  HREF="node141.html">Hashes para Argumentos con</A>
+ &nbsp; <B>  <A NAME="tex2html5321"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5323"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

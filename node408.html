@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Correo</TITLE>
-<META NAME="description" CONTENT="Correo">
+<TITLE>Passing a Request</TITLE>
+<META NAME="description" CONTENT="Passing a Request">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node409.html">
 <LINK REL="previous" HREF="node407.html">
-<LINK REL="up" HREF="node377.html">
+<LINK REL="up" HREF="node386.html">
 <LINK REL="next" HREF="node409.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9969"
+<A NAME="tex2html10023"
   HREF="node409.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9963"
-  HREF="node377.html">
+<A NAME="tex2html10017"
+  HREF="node386.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9957"
+<A NAME="tex2html10011"
   HREF="node407.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9965"
-  HREF="node783.html">
+<A NAME="tex2html10019"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9967"
-  HREF="node786.html">
+<A NAME="tex2html10021"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,65 +92,50 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9970"
-  HREF="node409.html">Ambito</A>
-<B> Subir:</B> <A NAME="tex2html9964"
-  HREF="node377.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9958"
-  HREF="node407.html">Environments</A>
- &nbsp; <B>  <A NAME="tex2html9966"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9968"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10024"
+  HREF="node409.html">Triggering Another Route: calling</A>
+<B> Subir:</B> <A NAME="tex2html10018"
+  HREF="node386.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10012"
+  HREF="node407.html">halt</A>
+ &nbsp; <B>  <A NAME="tex2html10020"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10022"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033230000000000000000"></A>
-<A NAME="section:correo"></A>
-<BR>
-Correo
+<H1><A NAME="SECTION033140000000000000000">
+Passing a Request</A>
 </H1>
-<PRE>
-[~/srcSTW/sinatra-faq/mail(esau)]$ cat app.rb 
-require 'sinatra'
-require 'pony'
-raise "Execute:\n\t#{$0} password email_to email_from" if ARGV.length.zero?
-get '/' do
-    email = ARGV.shift
-    pass = ARGV.shift
-    Pony.mail({
-      :to =&gt; email,
-      :body =&gt; "Hello Casiano",
-      :subject =&gt; 'Howdy, Partna!',
-      :via =&gt; :smtp,
-      :via_options =&gt; {
-          :address              =&gt; 'smtp.gmail.com',
-          :port                 =&gt; '587',
-          :enable_starttls_auto =&gt; true,
-          :user_name            =&gt; ARGV.shift,
-          :password             =&gt; pass,
-          :authentication       =&gt; :plain, # :plain, :login, :cram_md5, no auth by default
-          :domain               =&gt; "localhost.localdomain" # the HELO domain provided by the client to the server
-        }
-    })
-    "Check your email at #{email}"
-end
-</PRE>
+When we want to pass processing 
+to the next matching route we use
+<code>pass</code>:
 
 <P>
+<PRE>
+get '/guess/:who' do
+  pass unless params[:who] == 'Frank'
+  'You got me!'
+end
 
-<OL>
-<LI><A NAME="tex2html887"
-  HREF="http://www.millwoodonline.co.uk/blog/getting-started-with-sinatra">Getting started with Sinatra</A>
-</LI>
-</OL>
+get '/guess/*' do
+  'You missed!'
+end
+</PRE>
+The route block is immediately exited and control continues with
+the next matching route. 
+
+<P>
+If no matching route is found, a 404 is
+returned.
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

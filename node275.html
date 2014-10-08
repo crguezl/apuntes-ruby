@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Test/Unit</TITLE>
-<META NAME="description" CONTENT="Test/Unit">
+<TITLE>Práctica: DSL: Redacción de Cuestionarios I (Sin Contexto)</TITLE>
+<META NAME="description" CONTENT="Práctica: DSL: Redacción de Cuestionarios I (Sin Contexto)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node281.html">
-<LINK REL="previous" HREF="node274.html">
-<LINK REL="up" HREF="node274.html">
+<LINK REL="next" HREF="node276.html">
+<LINK REL="previous" HREF="node270.html">
+<LINK REL="up" HREF="node236.html">
 <LINK REL="next" HREF="node276.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7499"
+<A NAME="tex2html7547"
   HREF="node276.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7493"
-  HREF="node274.html">
+<A NAME="tex2html7541"
+  HREF="node236.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7487"
+<A NAME="tex2html7535"
   HREF="node274.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7495"
-  HREF="node783.html">
+<A NAME="tex2html7543"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7497"
-  HREF="node786.html">
+<A NAME="tex2html7545"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,91 +92,209 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7500"
-  HREF="node276.html">Ejemplo Sencillo de uso</A>
-<B> Subir:</B> <A NAME="tex2html7494"
-  HREF="node274.html">Pruebas</A>
-<B> Anterior:</B> <A NAME="tex2html7488"
-  HREF="node274.html">Pruebas</A>
- &nbsp; <B>  <A NAME="tex2html7496"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7498"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7548"
+  HREF="node276.html">Práctica: DSL: Redacción de</A>
+<B> Subir:</B> <A NAME="tex2html7542"
+  HREF="node236.html">Reflexión y Metaprogramación</A>
+<B> Anterior:</B> <A NAME="tex2html7536"
+  HREF="node274.html">Creando un ORM</A>
+ &nbsp; <B>  <A NAME="tex2html7544"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7546"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02910000000000000000"></A>
-<A NAME="section:testunit"></A>
+<H1><A NAME="SECTION028130000000000000000"></A>
+   <A NAME="10525"></A>
+  
+<A NAME="sectionpractica:DSL1"></A>
 <BR>
-Test/Unit
+Práctica: DSL: Redacción de Cuestionarios I (Sin Contexto)
 </H1>
+Se trata de escribir un programa que redacte cuestionarios.
+En principio, sólo soportaremos preguntas del tipo selección múltiple:
 
 <P>
-<A NAME="11117"></A><SPAN  CLASS="textbf">Unit testing</SPAN> is a great way to catch errors early in the development
-process, if you dedicate time to writing appropriate and useful
-tests. As in other languages, Ruby provides a framework in its
-standard library for setting up, organizing, and running tests
-called <A NAME="tex2html558"
-  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A>.
+<PRE>
+1. ¿En que año Cristobal Colón descubrió América?
+      1 - 1942
+      2 - 1492
+      3 - 1808
+      4 - 1914
+Su respuesta:
+</PRE>
+Debe definir una clase <code>Quiz</code> que soporte un pequeño lenguaje
+en el que las preguntas puedan ser especificadas.
+El constructor de <code>Quiz</code> va seguido de un bloque al que pasa
+como argumento el objeto <code>e</code> que representa al examen:
 
 <P>
-<A NAME="tex2html559"
-  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A> provides three basic functionalities:
+<PRE>
+quiz = Quiz.new("Cuestionario de PFS 10/12/2011") do |e|
+  e.question '¿En que año Cristobal Colón descubrió América?',
+    e.wrong =&gt;'1942',
+    e.right =&gt;'1492',
+    e.wrong =&gt;'1808',
+    e.wrong =&gt;'1914'
+  
+  a = rand(10)
+  b = rand(10)
+  e.question "#{a}+#{b} = ",
+    e.wrong =&gt;"44",
+    e.wrong =&gt;"#{a + b + 2}",
+    e.right =&gt;"#{a + b}",
+    e.wrong =&gt;"#{a + b - 2}"
+end
 
-<OL>
-<LI>A way to define basic pass/fail tests.
-</LI>
-<LI>A way to gather like tests together and run them as a group.
-</LI>
-<LI>Tools for running single tests or whole groups of tests.
-</LI>
-</OL>
+quiz.run
+</PRE>
+El programa anterior podría producir una salida parecida a esta:
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+MacBookdeCasiano:chapter8ReflectionandMetaprogramming casiano$ ruby Quiz.rb 
+Cuestionario de PFS 10/12/2011
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html7501"
-  HREF="node276.html">Ejemplo Sencillo de uso de <TT>test/unit</TT></A>
-<LI><A NAME="tex2html7502"
-  HREF="node277.html">Cuando una assertion falla</A>
-<LI><A NAME="tex2html7503"
-  HREF="node278.html">Organizando las pruebas</A>
+¿En que año Cristobal Colón descubrió América?
+
+  1 -  1942
+  2 -  1492
+  3 -  1808
+  4 -  1914
+
+Su respuesta: 3
+0+8 = 
+
+  1 -  44
+  2 -  10
+  3 -  8
+  4 -  6
+
+Su respuesta: 1
+0 respuestas correctas de un total de 2.
+MacBookdeCasiano:chapter8ReflectionandMetaprogramming casiano$
+</PRE>
+
+<P>
+
 <UL>
-<LI><A NAME="tex2html7504"
-  HREF="node278.html#SECTION02913010000000000000">Convenciones con respecto a los Nombres</A>
-<LI><A NAME="tex2html7505"
-  HREF="node278.html#SECTION02913020000000000000">Ejecución de pruebas específicas</A>
-<LI><A NAME="tex2html7506"
-  HREF="node278.html#SECTION02913030000000000000">Opciones en Línea de Comandos</A>
+<LI>Los cuestionarios deberían tener un método <code>to_s</code> que devuelve una <A NAME="tex2html554"
+  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>
+conteniendo el examen en texto plano.
+Así al imprimir el objeto <code>quiz</code> del ejemplo anterior:
+<PRE>
+puts quiz
+puts "************************"
+</PRE>
+obtendríamos como salida:
+<PRE>
+Cuestionario de PFS 10/12/2011
+
+¿En que año Cristobal Colón descubrió América?
+
+  1 -  1942
+  2 -  1492
+  3 -  1808
+  4 -  1914
+
+
+0+8 = 
+
+  1 -  44
+  2 -  10
+  3 -  8
+  4 -  6
+
+
+************************
+</PRE>
+</LI>
+<LI>Los cuestionarios deberían tener un método <code>run</code> que formulará
+cada una de las preguntas del cuestionario y mostrara el porcentaje de aciertos
+</LI>
+<LI>Puede que le interese crear tres clases, una para modelar las respuestas (<code>Answer</code>),
+otra para modelar las preguntas (<code>Question</code>) y una tercera para el cuestionario (<code>Quiz</code>)
+</LI>
+<LI>El método <code>question</code> recibe dos argumentos. El primero es el título del examen, el segundo es un hash:
+<PRE>
+  e.question '¿En que año Cristobal Colón descubrió América?',
+    e.wrong =&gt;'1942',
+    e.right =&gt;'1492',
+    e.wrong =&gt;'1808',
+    e.wrong =&gt;'1914'
+</PRE>
+de modo que la llamada, realmente es equivalente a:
+<PRE>
+  e.question('¿En que año Cristobal Colón descubrió América?',
+    {e.wrong =&gt;'1942', e.right =&gt;'1492', e.wrong =&gt;'1808', e.wrong =&gt;'1914'})
+</PRE>
+si el segundo argumento de <code>question</code> es un hash y las claves son <code>:wrong</code> y <code>:right</code> se va a 
+producir una colisión y el último valor sobreescribirá a los anteriores. ¿Como resolverlo?
+Una posible forma de hacerlo es que los métodos <code>wrong</code> y <code>right</code> diferencien las ocurrencias de las repsuestas
+usando un contador <code>@counter</code>:
+<PRE>
+ def wrong
+    @counter += 1
+    [@counter, WRONG]
+  end
+</PRE>
+</LI>
+<LI>Escriba un método <code>to_html</code> que genere una página describiendo el examen. Use <A NAME="tex2html555"
+  HREF="http://ruby-doc.org/stdlib-1.9.3/libdoc/erb/rdoc/ERB.html"><TT>ERB</TT></A>. 
+</LI>
+<LI>Opcionalmente
+puede incluir hojas de estilo, javascript, etc. en el HTML generado
+</LI>
+<LI>Use TDD con <A NAME="tex2html556"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A>
+</LI>
+<LI>Use Unit Testing
+</LI>
+<LI>Use Continuous Integration (Travis)
+</LI>
+<LI>Use Continuous Testing (Guard)
+</LI>
+<LI>Documente su gema (véase
+<A NAME="tex2html557"
+  HREF="http://docs.seattlerb.org/rdoc/RDoc/Markup.html"><SPAN  CLASS="textbf">RDOC::Markup</SPAN></A>
+o
+<A NAME="tex2html558"
+  HREF="http://rdoc.sourceforge.net/doc/index.html"><SPAN  CLASS="textbf">RDOC</SPAN></A>
+o 
+<A NAME="tex2html559"
+  HREF="http://yardoc.org"><SPAN  CLASS="textbf">YARD</SPAN></A>). 
+</LI>
+<LI>Cree una gema <code>ull-etsii-aluXX-quiz</code>
+</LI>
+<LI>Publique la gema en <A NAME="tex2html560"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>
+</LI>
+<LI>Indique la URL de su repositorio en <A NAME="tex2html561"
+  HREF="http://help.github.com">GitHub</A> y la URL en <A NAME="tex2html562"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>
+</LI>
 </UL>
-<BR>
-<LI><A NAME="tex2html7507"
-  HREF="node279.html">Setup y Teardown</A>
-<LI><A NAME="tex2html7508"
-  HREF="node280.html">Veáse</A>
-</UL>
-<!--End of Table of Child-Links-->
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7499"
+<A NAME="tex2html7547"
   HREF="node276.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7493"
-  HREF="node274.html">
+<A NAME="tex2html7541"
+  HREF="node236.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7487"
+<A NAME="tex2html7535"
   HREF="node274.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7495"
-  HREF="node783.html">
+<A NAME="tex2html7543"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7497"
-  HREF="node786.html">
+<A NAME="tex2html7545"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -227,20 +345,20 @@ called <A NAME="tex2html558"
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7500"
-  HREF="node276.html">Ejemplo Sencillo de uso</A>
-<B> Subir:</B> <A NAME="tex2html7494"
-  HREF="node274.html">Pruebas</A>
-<B> Anterior:</B> <A NAME="tex2html7488"
-  HREF="node274.html">Pruebas</A>
- &nbsp; <B>  <A NAME="tex2html7496"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7498"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7548"
+  HREF="node276.html">Práctica: DSL: Redacción de</A>
+<B> Subir:</B> <A NAME="tex2html7542"
+  HREF="node236.html">Reflexión y Metaprogramación</A>
+<B> Anterior:</B> <A NAME="tex2html7536"
+  HREF="node274.html">Creando un ORM</A>
+ &nbsp; <B>  <A NAME="tex2html7544"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7546"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

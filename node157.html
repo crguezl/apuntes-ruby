@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: La Calculadora</TITLE>
-<META NAME="description" CONTENT="Práctica: La Calculadora">
+<TITLE>Objetos Method</TITLE>
+<META NAME="description" CONTENT="Objetos Method">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node158.html">
-<LINK REL="previous" HREF="node150.html">
-<LINK REL="up" HREF="node119.html">
+<LINK REL="next" HREF="node159.html">
+<LINK REL="previous" HREF="node156.html">
+<LINK REL="up" HREF="node128.html">
 <LINK REL="next" HREF="node158.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5536"
+<A NAME="tex2html5580"
   HREF="node158.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5530"
-  HREF="node119.html">
+<A NAME="tex2html5574"
+  HREF="node128.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5524"
+<A NAME="tex2html5568"
   HREF="node156.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5532"
-  HREF="node783.html">
+<A NAME="tex2html5576"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5534"
-  HREF="node786.html">
+<A NAME="tex2html5578"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,169 +92,191 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5537"
-  HREF="node158.html">Ejercicios</A>
-<B> Subir:</B> <A NAME="tex2html5531"
-  HREF="node119.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5525"
-  HREF="node156.html">Véase También</A>
- &nbsp; <B>  <A NAME="tex2html5533"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5535"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5581"
+  HREF="node158.html">Objetos Method no Ligados</A>
+<B> Subir:</B> <A NAME="tex2html5575"
+  HREF="node128.html">Métodos, Procs, Lambdas y</A>
+<B> Anterior:</B> <A NAME="tex2html5569"
+  HREF="node156.html">Repaso</A>
+ &nbsp; <B>  <A NAME="tex2html5577"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5579"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION026100000000000000000"></A>
-   <A NAME="5877"></A>
-  
-<A NAME="practica:lacalculadora2"></A>
-<BR>
-Práctica: La Calculadora
+<H1><A NAME="SECTION02680000000000000000">
+Objetos </A><A NAME="tex2html288"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A>
 </H1>
-
-<P>
-Se trata de extender la calculadora en postfijo realizada en la práctica
-<A HREF="node34.html#practica:postfijo">7.13</A>.
-
-<P>
-La nueva calculadora deberá estar implantada mediante una clase 
-<code>PostfixCalc</code> y dispone de dos operadores <code>=</code> y <code>!</code> que permiten respectivamente 
-asignar valores a variables
-y obtener el valor ligado a una variable.
-
-<P>
-Los objetos <code>PostfixCalc</code>  disponen de un atributo <code>stack</code> (de sólo lectura),
-de un atributo <code>st</code> que contiene la tabla de símbolos.
-
-<P>
-El objeto dispone también de un hash privado 
-que mantiene las lambdas (véase la seccion <A HREF="node158.html#ejercicios:lambda">12.11</A>)
-que implantan las operaciones de  suma, resta, multiplicación, división,
-etc.
-<PRE>
-    @f = {
-      '+' =&gt; lambda { |a,b| a+b},
-      '*' =&gt; lambda { |a,b| a*b},
-      ...
-    }
-</PRE>
-
-<P>
-El siguiente ejemplo muestra un código que usa la clase:
-
-<P>
-<PRE>
- 43 if __FILE__ == $0
- 44   include Math
- 45 
- 46   expr = ARGV.join(" ")
- 47   c = PostfixCalc.new({'sin'   =&gt; lambda { |a| sin(a) }})
- 48 
- 49   c.eval(expr)
- 50 
- 51   puts "----stack------"
- 52   c.stack.each { |m| puts m }
- 53   puts "----symbol table------"
- 54   c.st.each { |k,v|  puts "#{k} =&gt; #{v}" }
- 55 end
-</PRE>
-
-<P>
-Siguen varias ejecuciones:
-
-<P>
-<PRE>
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '3.14159 2 / sin'
-----stack------
-0.99999999999912
-</PRE>
-Por defecto la calculadora contiene un conjunto básico de operaciones.
-El programa cliente puede añadir nuevas operaciones como ocurre en el ejemplo:
-<PRE>
-  c = PostfixCalc.new({'sin'   =&gt; lambda { |a| sin(a) }})
-</PRE>
-El siguiente ejemplo muestra el uso del operador de asignación <code>=</code>
-y del operador de carga (fetch) <code>!</code>:
-<PRE>
-----symbol table------
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '2 a = 3 b = a ! b ! *'
-----stack------
-6.0
-----symbol table------
-a =&gt; 2.0
-b =&gt; 3.0
-</PRE>
-La expresión <code>2 a =</code> retira el <code>2</code> y la <code>a</code> de la pila y
-almacena en la entrada <code>a</code> de la tabla de símbolos de la calculadora
-un <code>2</code>. No añade nada al top de la pila.
-
-<P>
-La expresión <code>a !</code> empuja en el top de la pila el valor asociado 
-con la entrada <code>a</code> de la tabla de símbolos.
-
-<P>
-La función <code>p</code> imprime el elemento en el top de la pila:
-<PRE>
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '2 a = 3 a ! 4 + p'
-6.0
-----stack------
-3.0
-6.0
-----symbol table------
-a =&gt; 2.0
-</PRE>
 
 <P>
 
 <UL>
-<LI>Consulte el método <code>merge!</code> de la clase <A NAME="tex2html334"
-  HREF="http://www.ruby-doc.org/core-1.9.2/Hash.html">Hash</A>
+<LI>Los métodos Ruby son constructos ejecutables, pero no son objetos
 </LI>
-<LI>Generalize el programa para que los operadores <code>=</code> y <code>!</code> puedan ir pegados al identificador:
+<LI><A NAME="tex2html293"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>s y Lambdas son objetos que representan a los bloques
+</LI>
+<LI>Las instancias de la clase <A NAME="tex2html294"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A> representan a los métodos
+</LI>
+<LI>La clase <A NAME="tex2html295"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A> define un método con nombre <A NAME="5979"></A><A NAME="tex2html296"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-method"><TT>method</TT></A>
+que retorna el 
+objeto asociado con un método (también puede usarse <A NAME="5983"></A><A NAME="tex2html297"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-public_method"><TT>public_method</TT></A>: ignora a los métodos protegidos y privados)
 <PRE>
-~/rubytesting$ ruby postfixwithhashfunctions3.rb '2 a= 3 a! 4 + p'
-6.0
-----stack------
-3.0
-6.0
-----symbol table------
-a =&gt; 2.0
+class Demo
+  def initialize(n)
+    @iv = n
+  end
+  def hello()
+    "Hello, @iv = #{@iv}"
+  end
+end
+
+k = Demo.new(99)
+m = k.method(:hello)
+m.call   #=&gt; "Hello, @iv = 99"
+
+l = Demo.new('Fred')
+m = l.method("hello")
+m.call   #=&gt; "Hello, @iv = Fred"
 </PRE>
-Hay varias soluciones. Una es usar <code>scan</code>:
+</LI>
+<LI>Cuando necesitamos un  <A NAME="tex2html298"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> en vez de un <A NAME="tex2html299"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A> podemos convertir el <A NAME="tex2html300"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A> a 
+<A NAME="tex2html301"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>
+vía el método <A NAME="5999"></A><A NAME="tex2html302"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-to_proc"><TT>to_proc</TT></A>
 <PRE>
-&gt;&gt; "12 -3+ 4- 5*".scan(/-?\d+|[-+*]/)
-=&gt; ["12", "-3", "+", "4", "-", "5", "*"]
-&gt;&gt;
+def square(x); x*x; end
+puts (1..10).map(&amp;method(:square))
 </PRE>
-Otra es usar <code>gsub</code>. Consulte el método <code>gsub</code> de la clase <A NAME="5878"></A><A NAME="tex2html335"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>, que permite sustituciones
-globales:
+
+<P>
+</LI>
+<LI>Definiendo Métodos con <A NAME="tex2html303"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>, <A NAME="tex2html304"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A> o bloques
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=454>El método <A NAME="6009"></A><A NAME="tex2html289"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
+de <A NAME="tex2html290"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>
+espera un símbolo como argumento y crea un método con ese 
+nombre utilizando el bloque asociado como cuerpo del método.
+
+<P>
+Es posible también pasar a <A NAME="6016"></A><SPAN  CLASS="textit">define_method</SPAN>
+un <A NAME="tex2html291"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> o un <A NAME="tex2html292"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A> en vez del bloque
+como segundo argumento.
+
+<P>
 <PRE>
-expr.gsub!(/([a-zA-Z_]\w)*([!=])/, '\1 \2')
+$ cat define_method.rb 
+class Chazam
+   def initialize(data)
+     @data = data
+   end
+
+   %w(user email food).each do |meth|
+     define_method(meth) { @data[meth.to_sym] }
+   end
+end
+
+p = Chazam.new(:user =&gt; 'Juan', :food =&gt; 'Cucumber')
+puts p.user
+puts p.food
 </PRE>
+
+<P>
+<PRE>
+$ ruby define_method.rb 
+Juan
+Cucumber
+</PRE></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<P>
+</LI>
+<LI>La clase <A NAME="tex2html305"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A> define múltiples métodos
+
+<P>
+
+<OL>
+<LI><A NAME="6027"></A><A NAME="tex2html306"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-name"><TT>name</TT></A>
+<P>
+Returns the name of the method.
+</LI>
+<LI><A NAME="6031"></A><A NAME="tex2html307"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-owner"><TT>owner</TT></A>
+<P>
+Returns the class or module that defines the method.
+
+<P>
+</LI>
+<LI><A NAME="6035"></A><A NAME="tex2html308"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-parameters"><TT>parameters</TT></A>
+<P>
+Returns the parameter information of this method.
+</LI>
+<LI><A NAME="6039"></A><A NAME="tex2html309"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-receiver"><TT>receiver</TT></A>
+<P>
+Returns the bound receiver of the method object.
+
+<P>
+</LI>
+<LI><A NAME="6043"></A><A NAME="tex2html310"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-source_location"><TT>source_location</TT></A>
+<P>
+Returns the Ruby source filename and line number containing this method or nil if this method was not defined in Ruby (i.e. native)
+</LI>
+</OL>
 </LI>
 </UL>
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html5582"
+  HREF="node158.html">Objetos <TT>Method</TT> no Ligados (Unbound Method Objects)</A>
+</UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5536"
+<A NAME="tex2html5580"
   HREF="node158.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5530"
-  HREF="node119.html">
+<A NAME="tex2html5574"
+  HREF="node128.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5524"
+<A NAME="tex2html5568"
   HREF="node156.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5532"
-  HREF="node783.html">
+<A NAME="tex2html5576"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5534"
-  HREF="node786.html">
+<A NAME="tex2html5578"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -305,20 +327,20 @@ expr.gsub!(/([a-zA-Z_]\w)*([!=])/, '\1 \2')
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5537"
-  HREF="node158.html">Ejercicios</A>
-<B> Subir:</B> <A NAME="tex2html5531"
-  HREF="node119.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5525"
-  HREF="node156.html">Véase También</A>
- &nbsp; <B>  <A NAME="tex2html5533"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5535"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5581"
+  HREF="node158.html">Objetos Method no Ligados</A>
+<B> Subir:</B> <A NAME="tex2html5575"
+  HREF="node128.html">Métodos, Procs, Lambdas y</A>
+<B> Anterior:</B> <A NAME="tex2html5569"
+  HREF="node156.html">Repaso</A>
+ &nbsp; <B>  <A NAME="tex2html5577"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5579"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo de Visibilidad</TITLE>
-<META NAME="description" CONTENT="Ejemplo de Visibilidad">
+<TITLE>Un Punto Mutable</TITLE>
+<META NAME="description" CONTENT="Un Punto Mutable">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node185.html">
 <LINK REL="previous" HREF="node183.html">
-<LINK REL="up" HREF="node182.html">
+<LINK REL="up" HREF="node170.html">
 <LINK REL="next" HREF="node185.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6035"
+<A NAME="tex2html6094"
   HREF="node185.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6029"
-  HREF="node182.html">
+<A NAME="tex2html6088"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6025"
+<A NAME="tex2html6082"
   HREF="node183.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6031"
-  HREF="node783.html">
+<A NAME="tex2html6090"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6033"
-  HREF="node786.html">
+<A NAME="tex2html6092"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,90 +92,74 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6036"
-  HREF="node185.html">Subclases y Herencia</A>
-<B> Subir:</B> <A NAME="tex2html6030"
-  HREF="node182.html">Visibilidad de los métodos:</A>
-<B> Anterior:</B> <A NAME="tex2html6026"
-  HREF="node183.html">Ejemplo de Visibilidad</A>
- &nbsp; <B>  <A NAME="tex2html6032"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6034"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6095"
+  HREF="node185.html">Clases Mutables: Fácil y</A>
+<B> Subir:</B> <A NAME="tex2html6089"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6083"
+  HREF="node183.html">Ordenando Puntos</A>
+ &nbsp; <B>  <A NAME="tex2html6091"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6093"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02722000000000000000">
-Ejemplo de Visibilidad</A>
+<H2><A NAME="SECTION027114000000000000000">
+Un Punto Mutable</A>
 </H2>
 
 <P>
 <PRE>
-~/rubytesting/programmingRuby$ !cat
-cat -n Visibility.rb 
-   1  class Visibility
-   2  protected
-   3    def tutu_prot
-   4      puts "Prot"
-   5    end
-   6  
-   7  private
-   8    def tutu_priv
-   9      puts "Priv"
-  10    end
-  11  
-  12  public
-  13    def tutu_pub
-  14      puts "Pub"
-  15    end
-  16  end
-  17  
-  18  
-  19  class Child &lt; Visibility
-  20  
-  21    def chachi
-  22      puts "in chachi"
-  23      self.tutu_prot
-  24    end
-  25  
-  26    def chuchu
-  27      puts "in chuchu"
-  28      self.tutu_priv
-  29    end
-  30  end
-  31  
-  32  if $0 == __FILE__
-  33    b = Child.new
-  34    b.tutu_pub       # &lt;- Pub
-  35    begin
-  36      b.tutu_priv    # Exception &lt;NoMethodError&gt; raised &lt;private method `tutu_priv' called for #&lt;Child:0x100168068&gt;&gt; 
-  37    rescue NoMethodError
-  38        puts "Exception &lt;#{$!.class}&gt; raised &lt;#{$!}&gt;"
-  39    end
-  40    b.chachi  # &lt;- in chachi
-  41              #    Prot
-  42    begin
-  43      b.chuchu # &lt;- Exception &lt;NoMethodError&gt; raised &lt;private method `tutu_priv' called for #&lt;Child:0x100168068&gt;&gt;
-  44    rescue
-  45        puts "Exception &lt;#{$!.class}&gt; raised &lt;#{$!}&gt;"
-  46    end
-  47  
-  48    begin
-  49      c = Visibility.new
-  50      c.tutu_pub  # &lt;- Pub
-  51      c.tutu_prot # &lt;- Exception &lt;NoMethodError&gt; raised &lt;protected method `tutu_prot' called for #&lt;Visibility:0x100167b40&gt;&gt;
-  52    rescue NoMethodError
-  53        puts "Exception &lt;#{$!.class}&gt; raised &lt;#{$!}&gt;"
-  54    end
-  55  end
+[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ cat -n mutable_point.rb 
+     1  #encoding : utf-8
+     2  class MutablePoint
+     3    def initialize(ñ,y)
+     4     @ñ, @y = ñ, y 
+     5    end
+     6  
+     7    def ñ; @ñ; end       # The getter method for @ñ
+     8    def y; @y; end       # The getter method for @y
+     9  
+    10     def ñ=(value)        # The setter method for @ñ
+    11       @ñ = value
+    12     end
+    13  
+    14    def y=(value)        # The setter method for @y
+    15      @y = value
+    16    end
+    17  
+    18     def add!(p)          # Add p to self, return modified self
+    19       @ñ += p.ñ
+    20       @y += p.y
+    21       self
+    22     end
+    23  #  ---------------------------
+    24    def add(p)           # A nonmutating version of add!
+    25      q = self.dup       # Make a copy of self
+    26      q.add!(p)          # Invoke the mutating method on the copy
+    27    end
+    28  
+    29  end
+    30  
+    31  if __FILE__ == $0
+    32    z = MutablePoint.new(1,2)
+    33    p z
+    34    t = MutablePoint.new(2,1)
+    35    p t 
+    36    t.ñ = 4
+    37    p t 
+    38    z.add!(t)
+    39    p z
+    40  end
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

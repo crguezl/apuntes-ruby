@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Objetos Method no Ligados (Unbound Method Objects)</TITLE>
-<META NAME="description" CONTENT="Objetos Method no Ligados (Unbound Method Objects)">
+<TITLE>En que Forma las Lambdas Difieren de los Procs</TITLE>
+<META NAME="description" CONTENT="En que Forma las Lambdas Difieren de los Procs">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node150.html">
 <LINK REL="previous" HREF="node148.html">
-<LINK REL="up" HREF="node148.html">
+<LINK REL="up" HREF="node144.html">
 <LINK REL="next" HREF="node150.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5410"
+<A NAME="tex2html5456"
   HREF="node150.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5404"
-  HREF="node148.html">
+<A NAME="tex2html5450"
+  HREF="node144.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5400"
+<A NAME="tex2html5444"
   HREF="node148.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5406"
-  HREF="node783.html">
+<A NAME="tex2html5452"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5408"
-  HREF="node786.html">
+<A NAME="tex2html5454"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,156 +92,394 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5411"
-  HREF="node150.html">Programación Funcional</A>
-<B> Subir:</B> <A NAME="tex2html5405"
-  HREF="node148.html">Objetos Method</A>
-<B> Anterior:</B> <A NAME="tex2html5401"
-  HREF="node148.html">Objetos Method</A>
- &nbsp; <B>  <A NAME="tex2html5407"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5409"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5457"
+  HREF="node150.html">Enumeradores</A>
+<B> Subir:</B> <A NAME="tex2html5451"
+  HREF="node144.html">Procs y Lambdas</A>
+<B> Anterior:</B> <A NAME="tex2html5445"
+  HREF="node148.html">Igualdad de Procs</A>
+ &nbsp; <B>  <A NAME="tex2html5453"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5455"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02681000000000000000">
-Objetos </A><A NAME="tex2html294"
-  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A> no Ligados (Unbound Method Objects)
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html5458"
+  HREF="node149.html#SECTION02655100000000000000">Return en bloques, procs y lambdas</A>
+<LI><A NAME="tex2html5459"
+  HREF="node149.html#SECTION02655200000000000000">Break en bloques, procs y lambdas</A>
+<LI><A NAME="tex2html5460"
+  HREF="node149.html#SECTION02655300000000000000">Otras sentencias de control en bloques, procs y lambdas</A>
+<LI><A NAME="tex2html5461"
+  HREF="node149.html#SECTION02655400000000000000">Paso de argumentos en procs y lambdas</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02655000000000000000">
+En que Forma las Lambdas Difieren de los </A><A NAME="tex2html250"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>s
 </H2>
-Ruby soporta métodos <I>unbound</I>. Métodos que no están asociados con un objeto particular.
-Cuando se usa <code>instance_method</code> se obtiene un método <code>unbound</code>.
-Los métodos unbound sólo pueden ser llamados después que son ligados a algún objeto.
 
 <P>
-Los objetos de la clase <A NAME="tex2html295"
-  HREF="http://ruby-doc.org/core-2.0.0/UnboundMethod.html"><TT>UnboundMethod</TT></A> 
-representan métodos pero sin el objeto <A NAME="tex2html296"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
-que define su entorno de ejecución.
+
+<OL>
+<LI>Un proc es la  representación como objeto de un bloque
+y se comporta como un bloque
+</LI>
+<LI>Una lambda se comporta mas como un método que como un bloque
+</LI>
+<LI>LLamar una lambda es como invocar un método
+</LI>
+<LI>LLamar un proc es como <code>yield</code>ing un bloque
+</LI>
+<LI>El predicado <code>lambda?</code> determina si un objeto <A NAME="tex2html251"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> es una lambda o un proc
+</LI>
+</OL>
 
 <P>
+
+<H3><A NAME="SECTION02655100000000000000"></A>
+<A NAME="subsubsection:returnenbloques"></A>
+<BR>
+Return en bloques, procs y lambdas
+</H3>
+
+<OL>
+<LI><code>return</code> nos saca del método en el que estamos, no del <SPAN  CLASS="textit">bloque</SPAN> en el que estamos:
 <PRE>
-ruby-1.9.2-head :001 &gt; unbound_plus = Fixnum.instance_method("+")
- =&gt; #&lt;UnboundMethod: Fixnum#+&gt; 
-ruby-1.9.2-head :002 &gt; plus_5 = unbound_plus.bind(5)
- =&gt; #&lt;Method: Fixnum#+&gt; 
-ruby-1.9.2-head :003 &gt; plus_5[4]
- =&gt; 9 
-ruby-1.9.2-head :004 &gt; plus_5.class
- =&gt; Method
+def test
+  puts "entering method"
+  1.times { puts "entering block"; return }  # Makes test method return
+  puts "exiting method"  # This line is never executed
+end
+test
+</PRE>
+</LI>
+<LI><code>return</code> nos saca del método en el que estamos, no del <SPAN  CLASS="textit">proc</SPAN> en el que estamos:
+<PRE>
+def test
+  puts "entering method"
+  p = Proc.new { puts "entering proc"; return } 
+  p.call                 # Invoking the proc makes method return
+  puts "exiting method"  # This line is never executed
+end
+test
+</PRE>
+</LI>
+<LI>Un <code>return</code> dentro de un proc puede sorprender un poco:
+<PRE>
+def procBuilder(message)            # Create and return a proc
+  Proc.new { puts message; return } # return returns from procBuilder
+end
+
+def test
+  puts "entering method"
+  p = procBuilder("entering proc")
+  p.call                 # Prints "entering proc" and raises LocalJumpError!
+  puts "exiting method"  # This line is never executed
+end
+test
+</PRE>
+Cuando lo ejecutamos obtenemos:
+<PRE>
+$ ruby procjump.rb 
+entering method
+entering proc
+procjump.rb:2:in `block in procBuilder': unexpected return (LocalJumpError)
+</PRE>
+Al convertir el bloque en un objeto podemos pasar el bloque  y utilizarlo fuera de su contexto.
+</LI>
+<LI>Un <code>return</code> dentro de una lambda
+retorna desde la lambda no desde el método que contiene a la lambda
+<PRE>
+def test
+  puts "entering method"
+  p = lambda { puts "entering lambda"; return } 
+  p.call                 # Invoking the lambda does not make the method return
+  puts "exiting method"  # This line *is* executed now
+end
+test
+</PRE>
+</LI>
+<LI>Eso significa que no tenemos que preocuparnos por que un <code>return</code>  en  una lambda
+caiga fuera de contexto
+<PRE>
+def lambdaBuilder(message)        # Create and return a lambda
+  lambda { puts message; return } # return returns from the lambda
+end
+
+def test
+  puts "entering method"
+  l = lambdaBuilder("entering lambda")
+  l.call                 # Prints "entering lambda" 
+  puts "exiting method"  # This line is executed
+end
+test
+</PRE>
+</LI>
+</OL>
+
+<P>
+
+<H3><A NAME="SECTION02655200000000000000">
+Break en bloques, procs y lambdas</A>
+</H3>
+
+<P>
+
+<OL>
+<LI>Cuando se usa dentro de un bucle <code>break</code> transfiere el control a la
+primera sentencia que sigue al bucle:
+<PRE>
+while(line = gets.chop)     # A loop starts here
+  break if line == "quit"   # If this break statement is executed...
+  puts eval(line)
+end
+puts "Good bye"             # ...then control is transferred here
 </PRE>
 
 <P>
-También es posible construir objetos <A NAME="tex2html297"
-  HREF="http://ruby-doc.org/core-2.0.0/UnboundMethod.html"><TT>UnboundMethod</TT></A>
-usando el método <A NAME="5760"></A><A NAME="tex2html298"
-  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-unbind"><TT>unbind</TT></A>:
+</LI>
+<LI>Cuando se usa dentro de un bloque <code>break</code> transfiere el control fuera
+del bloque, fuera del iterador hasta la primera expresión que sigue 
+a la invocación del iterador:
 <PRE>
-ruby-1.9.2-head :014 &gt; x = 4.method('+')
- =&gt; #&lt;Method: Fixnum#+&gt; 
-ruby-1.9.2-head :015 &gt; u = x.unbind
- =&gt; #&lt;UnboundMethod: Fixnum#+&gt; 
-ruby-1.9.2-head :016 &gt; w = u.bind(3)
- =&gt; #&lt;Method: Fixnum#+&gt; 
-ruby-1.9.2-head :017 &gt; w[5]
- =&gt; 8
+f.each do |line|             # Iterate over the lines in file f
+  break if line == "quit\n"  # If this break statement is executed...
+  puts eval(line)
+end
+puts "Good bye"              # ...then control is transferred here
 </PRE>
 
 <P>
+</LI>
+<LI>Cuando creamos un proc con <code>Proc.new</code>, el iterador desde el que se sale es 
+<code>Proc.new</code>. Eso significa que si el proc con el <code>break</code> es llamado
+fuera de contexto obtendremos un error:
 <PRE>
-~/rubytesting$ cat -n instance_method.rb 
-     1  class Interpreter
-     2    def do_a() print "there, "; end
-     3    def do_d() print "Hello ";  end
-     4    def do_e() print "!\n";     end
-     5    def do_v() print "Dave";    end
-     6    Dispatcher = {
-     7     ?a =&gt; instance_method(:do_a),
-     8     ?d =&gt; instance_method(:do_d),
-     9     ?e =&gt; instance_method(:do_e),
-    10     ?v =&gt; instance_method(:do_v)
-    11    }
-    12    def interpret(string)
-    13      string.each_byte {|b| Dispatcher[b].bind(self).call }
-    14    end
-    15  end
-    16  
-    17  interpreter = Interpreter.new
-    18  interpreter.interpret('dave')
+$ cat procbreak.rb 
+def test
+  puts "entering test method"
+  proc = Proc.new { puts "entering proc"; break }
+  proc.call                    # LocalJumpError: iterator has already returned
+  puts "exiting test method"
+end
+test
+
+$ ruby procbreak.rb 
+entering test method
+entering proc
+procbreak.rb:3:in `block in test': break from proc-closure (LocalJumpError)`
 </PRE>
-Al ejecutar, se obtiene:
+</LI>
+<LI>Si creamos el proc como argumento del iterador:
+<PRE>
+$ cat procbreakwithampersand.rb 
+def iterator(&amp;proc)
+  puts "entering iterator"
+  proc.call  # invoke the proc
+  puts "exiting iterator"   # Never executed if the proc breaks
+end
+
+def test
+  iterator { puts "entering proc"; break }
+end
+test
+</PRE>
+la cosa funciona bien porque el proc está en contexto:
+<PRE>
+$ ruby procbreakwithampersand.rb 
+entering iterator
+entering proc
+</PRE>
+</LI>
+<LI>Dentro de una lambda <code>break</code> funciona igual que dentro de un método:
+<PRE>
+$ cat lambdabreak.rb 
+def test
+  puts "entering test method"
+  lambda = lambda { puts "entering lambda"; break; puts "exiting lambda" }
+  lambda.call  
+  puts "exiting test method"
+end
+test
+</PRE>
+de hecho el <code>break</code> actúa como un <code>return</code> y nos saca de la lambda:
+<PRE>
+$ ruby lambdabreak.rb 
+entering test method
+entering lambda
+exiting test method
+</PRE>
+</LI>
+</OL>
+
+<P>
+
+<H3><A NAME="SECTION02655300000000000000">
+Otras sentencias de control en bloques, procs y lambdas</A>
+</H3>
+
+<P>
+
+<OL>
+<LI>Un <code>next</code> al nivel mas alto produce el mismo efecto en un bloque,
+proc o lambda: hace que se retorne del <code>yield</code> o del <code>call</code> que 
+invoca el bloque, proc o lambda
+</LI>
+<LI>Si <code>next</code> va seguido de una expresión es usada como valor de retorno
+del bloque, proc o lambda
+</LI>
+<LI><code>redo</code> transfiere el control al comienzo del bloque o lambda
+</LI>
+<LI>El uso de <code>retry</code> no esta permitido ni en procs ni en lambdas
+
+<P>
+</LI>
+<LI><code>raise</code>
+</LI>
+<LI><code>rescue</code>
+</LI>
+</OL>
+
+<P>
+
+<H3><A NAME="SECTION02655400000000000000">
+Paso de argumentos en procs y lambdas</A>
+</H3>
+
+<P>
+
+<OL>
+<LI>Los valores de los argumentos que siguen un <code>yield</code> son asignados a los parámetros
+de un bloque siguiendo reglas que son mas próximas a las reglas de asignación
+de variables que a las reglas de invocación de métodos
+
+<P>
+</LI>
+<LI>Un código como:
+
+<P>
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=142><PRE>
+  yield k,v
+</PRE></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=142><PRE>
+do |key, value|
+  ...
+end
+</PRE></TD>
+</TR>
+</TABLE>
+
+<P>
+funciona como 
+<PRE>
+key, value = k, v
+</PRE>
+</LI>
+<LI><P>
+<PRE>
+def two; yield 1,2; end  # An iterator that yields two values
+two {|x| p x }     # Ruby 1.8: warns and prints [1,2],
+two {|x| p x }     # Ruby 1.9: prints 1, no warning
+two {|*x| p x }    # Either version: prints [1,2]; no warning
+two {|x,| p x }    # Either version: prints 1; no warning
+</PRE>
+</LI>
+<LI>En Ruby 1.9 l el argumento splat no tiene por que ser el último:
+<PRE>
+def five; yield 1,2,3,4,5; end     # Yield 5 values
+five do |head, *body, tail|        # Extra values go into body array
+  print head, body, tail           # Prints "1[2,3,4]5"
+end
+</PRE>
+</LI>
+<LI>La sentencia <code>yield</code> permite bare hashes:
+<PRE>
+def hashiter; yield :a=&gt;1, :b=&gt;2; end  # Note no curly braces
+hashiter {|hash| puts hash[:a] }       # Prints 1
+</PRE>
+</LI>
+<LI>Si el parámetro final es un bloque puede ser prefijado con <code>&amp;</code>
+para indicar que será utilizado para recibir el bloque asociado con la invocación
+del bloque:
 
 <P>
 <PRE>
-~/rubytesting$ ruby instance_method.rb 
-Hello there, Dave!
+# This Proc expects a block 
+printer = lambda {|&amp;b| puts b.call } # Print value returned by b
+printer.call { "hi" }                # Pass a block to the block!
 </PRE>
-
-<P>
-El operador de interrogación nos dá el código de un carácter:
+</LI>
+<LI>Es legal dar valores por defecto a los parámetros de un bloque:
 <PRE>
-&gt;&gt; ?a
-=&gt; 97
-&gt;&gt; 'a'[0]
-=&gt; 97
-&gt;&gt; 97.chr
-=&gt; "a"
+ruby-1.9.2-head :001 &gt; [1,2,3].each { |x,y=2| puts x*y }
+2
+4
+6
+ =&gt; [1, 2, 3]
 </PRE>
-
-<P>
-Veamos otro ejemplo:
+o también:
 <PRE>
-MacBook-Air-de-casiano:rubytesting casiano$ ruby -r debug unbound_method.rb 
-unbound_method.rb:1:class Square
-(rdb:1) l 1,100
-[1, 100] in unbound_method.rb
-=&gt; 1  class Square
-   2    def area
-   3      @side * @side
-   4    end
-   5    def initialize(side)
-   6      @side = side
-   7    end
-   8  end
-   9  
-   10  area_un = Square.instance_method(:area)
-   11  
-   12  s = Square.new(12)
-   13  area = area_un.bind(s)
-   14  area.call   #=&gt; 144
+ruby-1.9.2-head :007 &gt; [1,2,3].each &amp;-&gt;(x, y=2) { puts x*y }
+2
+4
+6
+ =&gt; [1, 2, 3]
 </PRE>
-
-<P>
+</LI>
+<LI>La sentencia <code>yield</code> usa <A NAME="5804"></A><SPAN  CLASS="textit">semántica yield</SPAN> mientras que la invocación de un método
+usa <A NAME="5806"></A><SPAN  CLASS="textit">semántica de invocación</SPAN>
+</LI>
+<LI>Invocar un proc sigue <A NAME="5808"></A><SPAN  CLASS="textit">semántica yield</SPAN> mientras que invocar una lambda
+sigue <A NAME="5810"></A><SPAN  CLASS="textit">semántica de invocación</SPAN>
 <PRE>
-(rdb:1) b 14
-Set breakpoint 1 at unbound_method.rb:14
-(rdb:1) c
-Breakpoint 1, toplevel at unbound_method.rb:14
-unbound_method.rb:14:area.call   #=&gt; 144
-(rdb:1) area.call
-144
+p = Proc.new {|x,y| print x,y }
+p.call(1)       # x,y=1:     nil used for missing rvalue:  Prints 1nil
+p.call(1,2)     # x,y=1,2:   2 lvalues, 2 rvalues:         Prints 12
+p.call(1,2,3)   # x,y=1,2,3: extra rvalue discarded:       Prints 12
+p.call([1,2])   # x,y=[1,2]: array automatically unpacked: Prints 12
 </PRE>
+</LI>
+<LI>Las Lambdas no son tan flexibles; al igual que los métodos, son mas estrictas con el número
+de argumentos pasados:
+<PRE>
+l = lambda {|x,y| print x,y }
+l.call(1,2)     # This works
+l.call(1)       # Wrong number of arguments
+l.call(1,2,3)   # Wrong number of arguments
+l.call([1,2])   # Wrong number of arguments
+l.call(*[1,2])  # Works: explicit splat to unpack the array
+</PRE>
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5410"
+<A NAME="tex2html5456"
   HREF="node150.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5404"
-  HREF="node148.html">
+<A NAME="tex2html5450"
+  HREF="node144.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5400"
+<A NAME="tex2html5444"
   HREF="node148.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5406"
-  HREF="node783.html">
+<A NAME="tex2html5452"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5408"
-  HREF="node786.html">
+<A NAME="tex2html5454"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -291,20 +530,20 @@ unbound_method.rb:14:area.call   #=&gt; 144
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5411"
-  HREF="node150.html">Programación Funcional</A>
-<B> Subir:</B> <A NAME="tex2html5405"
-  HREF="node148.html">Objetos Method</A>
-<B> Anterior:</B> <A NAME="tex2html5401"
-  HREF="node148.html">Objetos Method</A>
- &nbsp; <B>  <A NAME="tex2html5407"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5409"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5457"
+  HREF="node150.html">Enumeradores</A>
+<B> Subir:</B> <A NAME="tex2html5451"
+  HREF="node144.html">Procs y Lambdas</A>
+<B> Anterior:</B> <A NAME="tex2html5445"
+  HREF="node148.html">Igualdad de Procs</A>
+ &nbsp; <B>  <A NAME="tex2html5453"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5455"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

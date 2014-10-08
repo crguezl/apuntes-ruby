@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Aridad de un Proc</TITLE>
-<META NAME="description" CONTENT="La Aridad de un Proc">
+<TITLE>Parámetros por Defecto</TITLE>
+<META NAME="description" CONTENT="Parámetros por Defecto">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node139.html">
 <LINK REL="previous" HREF="node137.html">
-<LINK REL="up" HREF="node135.html">
+<LINK REL="up" HREF="node137.html">
 <LINK REL="next" HREF="node139.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5245"
+<A NAME="tex2html5266"
   HREF="node139.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5239"
-  HREF="node135.html">
+<A NAME="tex2html5260"
+  HREF="node137.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5233"
+<A NAME="tex2html5254"
   HREF="node137.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5241"
-  HREF="node783.html">
+<A NAME="tex2html5262"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5243"
-  HREF="node786.html">
+<A NAME="tex2html5264"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,68 +92,81 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5246"
-  HREF="node139.html">Igualdad de Procs</A>
-<B> Subir:</B> <A NAME="tex2html5240"
-  HREF="node135.html">Procs y Lambdas</A>
-<B> Anterior:</B> <A NAME="tex2html5234"
-  HREF="node137.html">Invocación de Procs y</A>
- &nbsp; <B>  <A NAME="tex2html5242"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5244"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5267"
+  HREF="node139.html">Listas de Argumentos de</A>
+<B> Subir:</B> <A NAME="tex2html5261"
+  HREF="node137.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5255"
+  HREF="node137.html">Argumentos de un Método</A>
+ &nbsp; <B>  <A NAME="tex2html5263"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5265"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02653000000000000000">
-La Aridad de un </A><A NAME="tex2html227"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>
+<H2><A NAME="SECTION02641000000000000000">
+Parámetros por Defecto</A>
 </H2>
 
 <P>
+<PRE>
+def prefix(s, len=1)
+  s[0,len]
+end
+</PRE>
 
-<OL>
-<LI>La <A NAME="5482"></A><SPAN  CLASS="textit">aridad</SPAN> de un proc o lambda es el número de argumentos que espera.
-</LI>
-<LI>Los objetos <A NAME="tex2html228"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> disponen de un método <code>arity</code> que retorna el número de
-argumentos que espera
+<P>
 <PRE>
-lambda{||}.arity        # =&gt; 0. No arguments expected
-lambda{|x| x}.arity     # =&gt; 1. One argument expected
-lambda{|x,y| x+y}.arity # =&gt; 2. Two arguments expected
+prefix("Ruby", 3)    # =&gt; "Rub"
+prefix("Ruby")       # =&gt; "R"
 </PRE>
-</LI>
-<LI>Si el <A NAME="tex2html229"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> acepta un número arbitrario de argumentos mediante un argumento final prefijado
-con <code>*</code>, el método <code>arity</code> retorna un número negativo de la forma <code>-n-1</code>.
-Esto indica que requiere <code>n</code> argumentos pero que puede tener también argumentos adicionales. 
+
+<P>
+Los valores por defecto pueden ser expresiones arbitrarias
+en las que aparezcan parámetros previos:
+
+<P>
 <PRE>
-lambda {|*args|}.arity        # =&gt; -1.  ~-1 = -(-1)-1 = 0 arguments required
-lambda {|first, *rest|}.arity # =&gt; -2.  ~-2 = -(-2)-1 = 1 argument required
+# Return the last character of s or the substring from index to the end
+def suffix(s, index=s.size-1)
+  s[index, s.size-index]
+end
 </PRE>
-</LI>
-</OL>
+
+<P>
+Los parámetros por defecto son evaluados cuando se invoca al método, no cuando es compilado.
+
+<P>
+En este ejemplo el valor por defecto <code>a = []</code> produce un nuevo array en cada invocación 
+en vez de reutilizar un único array que fuera creado cuando se define el método:
+<PRE>
+# Append the value x to the array a, return a.
+# If no array is specified, start with an empty one.
+def append(x, a=[])
+  a &lt;&lt; x
+end
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5245"
+<A NAME="tex2html5266"
   HREF="node139.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5239"
-  HREF="node135.html">
+<A NAME="tex2html5260"
+  HREF="node137.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5233"
+<A NAME="tex2html5254"
   HREF="node137.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5241"
-  HREF="node783.html">
+<A NAME="tex2html5262"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5243"
-  HREF="node786.html">
+<A NAME="tex2html5264"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -204,20 +217,20 @@ lambda {|first, *rest|}.arity # =&gt; -2.  ~-2 = -(-2)-1 = 1 argument required
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5246"
-  HREF="node139.html">Igualdad de Procs</A>
-<B> Subir:</B> <A NAME="tex2html5240"
-  HREF="node135.html">Procs y Lambdas</A>
-<B> Anterior:</B> <A NAME="tex2html5234"
-  HREF="node137.html">Invocación de Procs y</A>
- &nbsp; <B>  <A NAME="tex2html5242"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5244"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5267"
+  HREF="node139.html">Listas de Argumentos de</A>
+<B> Subir:</B> <A NAME="tex2html5261"
+  HREF="node137.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5255"
+  HREF="node137.html">Argumentos de un Método</A>
+ &nbsp; <B>  <A NAME="tex2html5263"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5265"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

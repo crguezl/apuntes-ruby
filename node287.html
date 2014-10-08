@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Deferrable</TITLE>
-<META NAME="description" CONTENT="Deferrable">
+<TITLE>Organizando las pruebas</TITLE>
+<META NAME="description" CONTENT="Organizando las pruebas">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node288.html">
 <LINK REL="previous" HREF="node286.html">
-<LINK REL="up" HREF="node285.html">
+<LINK REL="up" HREF="node284.html">
 <LINK REL="next" HREF="node288.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7699"
+<A NAME="tex2html7732"
   HREF="node288.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7693"
-  HREF="node285.html">
+<A NAME="tex2html7726"
+  HREF="node284.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7687"
+<A NAME="tex2html7720"
   HREF="node286.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7695"
-  HREF="node783.html">
+<A NAME="tex2html7728"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7697"
-  HREF="node786.html">
+<A NAME="tex2html7730"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,217 +92,188 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7700"
-  HREF="node288.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html7694"
-  HREF="node285.html">EventMachine</A>
-<B> Anterior:</B> <A NAME="tex2html7688"
-  HREF="node286.html">Un server</A>
- &nbsp; <B>  <A NAME="tex2html7696"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7698"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7733"
+  HREF="node288.html">Setup y Teardown</A>
+<B> Subir:</B> <A NAME="tex2html7727"
+  HREF="node284.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7721"
+  HREF="node286.html">Cuando una assertion falla</A>
+ &nbsp; <B>  <A NAME="tex2html7729"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7731"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION021032000000000000000">
-Deferrable</A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html7734"
+  HREF="node287.html#SECTION02913010000000000000">Convenciones con respecto a los Nombres</A>
+<LI><A NAME="tex2html7735"
+  HREF="node287.html#SECTION02913020000000000000">Ejecución de pruebas específicas</A>
+<LI><A NAME="tex2html7736"
+  HREF="node287.html#SECTION02913030000000000000">Opciones en Línea de Comandos</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02913000000000000000">
+Organizando las pruebas</A>
 </H2>
 
 <P>
-<A NAME="tex2html582"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>’s Deferrable borrows heavily from the deferred object
-in Python’s Twisted event-handling framework. Here’s a minimal
-example that illustrates Deferrable:
-
-<P>
-<PRE>
- require 'eventmachine'
-
- class MyClass
-   include EM::Deferrable
-
-   def print_value x
-     puts "MyClass instance received #{x}"
-   end
- end
-
- EM.run {
-   df = MyClass.new
-   df.callback {|x|
-     df.print_value(x)
-     EM.stop
-   }
-
-   EM::Timer.new(2) {
-     df.set_deferred_status :succeeded, 100
-   }
- }
-</PRE>
-
-<P>
-This program will spin for two seconds, print out the string 
-<code>MyClass instance received 100</code> and then exit. 
-
-<P>
-The Deferrable pattern allows you to specify any number of Ruby
-code blocks (callbacks or errbacks) that will be executed at some
-future time when the status of the Deferrable object changes.
-
-<P>
-How might that be useful? 
 
 <OL>
-<LI>Well, imagine that you’re implementing
-an HTTP server, 
-</LI>
-<LI>but you need to make a call to some other server
-in order to fulfill a client request.
-</LI>
-<LI>When you receive a request from one of your clients, you can create
-and return a Deferrable object.
-</LI>
-<LI>Some other section of your program
-can add a callback to the Deferrable that will cause the client’s
-request to be fulfilled.
-</LI>
-<LI>Simultaneously, you initiate an event-driven
-or threaded client request to some different server. 
-</LI>
-<LI>And then your
-EM program will continue to process other events and service other
-client requests.
-</LI>
-<LI>When your client request to the other server completes some time
-later, you will call the <code>set_deferred_status</code> method on the Deferrable
-object, passing either a <code>success</code> or <code>failure</code> status, and an arbitrary
-number of parameters (which might include the data you received
-from the other server).
-</LI>
-<LI>At that point, the status of the Deferrable object becomes known,
-and its callback or errback methods are immediately executed.
-</LI>
-<LI>Callbacks and errbacks are code blocks that are attached to Deferrable
-objects at any time through the methods callback and errback.
+<LI>Tests for a particular unit of code are grouped together into a
+<A NAME="11427"></A><SPAN  CLASS="textbf">test case</SPAN>, which is a subclass of <A NAME="tex2html578"
+  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit/TestCase.html"><TT>Test/Unit/TestCase</TT></A>. 
 
 <P>
 </LI>
-<LI>The deep beauty of this pattern is that it decouples the disposition
-of one operation (such as a client request to an outboard server)
-from the subsequent operations that depend on that disposition
-(which may include responding to a different client or any other
-operation).
+<LI><TT>Assertions</TT> 
+are gathered in <A NAME="11433"></A><SPAN  CLASS="textbf">tests</SPAN>, member functions for the test case whose
+names start with <code>test_</code>. 
 
 <P>
 </LI>
-<LI>The code which invokes the deferred operation (that will eventually
-result in a success or failure status together with associated data)
-is completely separate from the code which depends on that status
-and data. 
+<LI>When the test case is executed or required,
+<A NAME="tex2html579"
+  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A> will iterate through all of the tests (finding all of
+the <A NAME="11438"></A><SPAN  CLASS="textbf">member functions</SPAN> which start with <code>test_</code> using reflection) in
+the test case, and provide the appropriate feedback.
 
 <P>
 </LI>
-<LI>This achieves one of the primary goals for which threading
-is typically used in sophisticated applications, with none of the
-nondeterminacy or debugging difficulties of threads.
+<LI>Test case classes can be gathered together into test suites which are Ruby files which require other test cases:
+<PRE>
+  # File: ts_allTheTests.rb
+  require 'test/unit'
+  require 'testOne'
+  require 'testTwo'
+  require 'testThree'
+</PRE>
+In this way, related test cases can be naturally grouped.
 
 <P>
 </LI>
-<LI>As soon as the deferred status of a Deferrable becomes known by way
-of a call to <code>set_deferred_status</code>, the Deferrable will IMMEDIATELY
-execute all of its callbacks or errbacks in the order in which they
-were added to the Deferrable.
+<LI>Further, test suites can contain other test suites, allowing the construction of a hierarchy of tests.
+</LI>
+<LI>This structure provides relatively fine-grained control over testing.
 
 <P>
-</LI>
-<LI>Callbacks and errbacks can be added to a Deferrable object at any
-time, not just when the object is created. They can even be added
-after the status of the object has been determined! (In this case,
-they will be executed immediately when they are added.)
 
-<P>
+<OL>
+<LI>Individual tests can be run from a test case
 </LI>
-<LI>A call to <code>Deferrable#set_deferred_status</code> takes <code>:succeeded</code> 
-or <code>:failed</code>
-as its first argument. (This determines whether the object will
-call its callbacks or its errbacks.) <code>set_deferred_status</code> also takes
-zero or more additional parameters, that will in turn be passed as
-parameters to the callbacks or errbacks.
-
-<P>
+<LI>a full test case can be run stand-alone, 
 </LI>
-<LI>In general, you can only call <code>set_deferred_status</code> ONCE on a Deferrable
-object. A call to <code>set_deferred_status</code> will not return until all of
-the associated callbacks or errbacks have been called. If you add
-callbacks or errbacks AFTER making a call to <code>set_deferred_status</code>,
-those additional callbacks or errbacks will execute IMMEDIATELY.
-Any given callback or errback will be executed AT MOST once.
-
-<P>
+<LI>a test suite containing multiple cases can be run, 
 </LI>
-<LI>It’s possible to call <code>set_deferred_status</code> AGAIN, during the
-execution a callback or errback. This makes it possible to change
-the parameters which will be sent to the callbacks or errbacks
-farther down the chain, enabling some extremely elegant use-cases.
-You can transform the data returned from a deferred operation in
-arbitrary ways as needed by subsequent users, without changing any
-of the code that generated the original data.
-
-<P>
+<LI>or a suite of suites can run, spanning many test
+  cases.
+  
 </LI>
-<LI>A call to <code>set_deferred_status</code> will not return until all of
-the associated callbacks or errbacks have been called. If you add
-callbacks or errbacks AFTER making a call to <code>set_deferred_status</code>,
-those additional callbacks or errbacks will execute IMMEDIATELY.
+</OL>
 </LI>
 </OL>
 
 <P>
-<PRE>
-[~/ruby/eventmachine/deferrable(master)]$ cat defaultdeferrable.rb 
-require 'eventmachine'
-EM.run do
- df = EM::DefaultDeferrable.new
-   df.callback do |x|
-     puts "got #{x}"
-   end
-   df.callback do |x|
-     EM.stop
-   end
-   EM.add_timer(1) do
-     df.set_deferred_status :succeeded, "monkeys"
-   end
-end
-</PRE>
-DefaultDeferrable is an otherwise empty class that includes Deferrable. 
+
+<H4><A NAME="SECTION02913010000000000000">
+Convenciones con respecto a los Nombres</A>
+</H4>
+  
 
 <P>
-This is useful when you just need to return a Deferrable object 
-as a way of communicating deferred status to some other part of a program.
+The author of <A NAME="tex2html580"
+  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A>, <A NAME="tex2html581"
+  HREF="https://github.com/ntalbott">Nathaniel Talbott</A>, suggests starting the
+names of test cases with <code>tc_</code> and the names of test suites with <code>ts_</code>
+
+<P>
+
+<H4><A NAME="SECTION02913020000000000000">
+Ejecución de pruebas específicas</A>
+</H4>
+  
+
+It's possible to run just one (or more) tests out of a full test case:
 <PRE>
-[~/ruby/eventmachine/deferrable(master)]$ ruby defaultdeferrable.rb 
-got monkeys
+&gt;&gt; ruby -w tc_simpleNumber2.rb --name test_typecheck 
+Loaded suite tc_simpleNumber2
+Started
+.
+Finished in 0.003401 seconds.
+ 
+1 tests, 1 assertions, 0 failures, 0 errors
+</PRE>
+
+<P>
+It is also possible to run all tests whose names match a given pattern:
+<PRE>
+&gt;&gt; ruby -w tc_simpleNumber2.rb --name /test_type.*/ 
+Loaded suite tc_simpleNumber2
+Started
+.
+Finished in 0.003401 seconds.
+ 
+1 tests, 1 assertions, 0 failures, 0 errors
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION02913030000000000000">
+Opciones en Línea de Comandos</A>
+</H4>
+  
+
+<PRE>
+unittestingpoint/examples(master)]$ ruby -I. tc_point_1.rb --help
+Usage: tc_point_1 [options]
+minitest options:
+    -h, --help                       Display this help.
+    -s, --seed SEED                  Sets random seed
+    -v, --verbose                    Verbose. Show progress processing files.
+    -n, --name PATTERN               Filter test names on pattern.
+        --jobs-status [TYPE]         Show status of jobs every file; Disabled when --jobs isn't specified.
+    -j, --jobs N                     Allow run tests with N jobs at once
+        --separate                   Restart job process after one testcase has done
+        --retry                      Retry running testcase when --jobs specified
+        --no-retry                   Disable --retry
+        --ruby VAL                   Path to ruby; It'll have used at -j option
+    -q, --hide-skip                  Hide skipped tests
+        --show-skip                  Show skipped tests
+        --color[=WHEN]               colorize the output.  WHEN defaults to 'always'
+                                     or can be 'never' or 'auto'.
+        --tty[=WHEN]                 force to output tty control.  WHEN defaults to 'yes'
+                                     or can be 'no'.
+    -b, --basedir=DIR                Base directory of test suites.
+    -x, --exclude PATTERN            Exclude test files on pattern.
+    -Idirectory                      Add library load path
+        --[no-]gc-stress             Set GC.stress as true
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7699"
+<A NAME="tex2html7732"
   HREF="node288.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7693"
-  HREF="node285.html">
+<A NAME="tex2html7726"
+  HREF="node284.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7687"
+<A NAME="tex2html7720"
   HREF="node286.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7695"
-  HREF="node783.html">
+<A NAME="tex2html7728"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7697"
-  HREF="node786.html">
+<A NAME="tex2html7730"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -353,20 +324,20 @@ got monkeys
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7700"
-  HREF="node288.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html7694"
-  HREF="node285.html">EventMachine</A>
-<B> Anterior:</B> <A NAME="tex2html7688"
-  HREF="node286.html">Un server</A>
- &nbsp; <B>  <A NAME="tex2html7696"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7698"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7733"
+  HREF="node288.html">Setup y Teardown</A>
+<B> Subir:</B> <A NAME="tex2html7727"
+  HREF="node284.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7721"
+  HREF="node286.html">Cuando una assertion falla</A>
+ &nbsp; <B>  <A NAME="tex2html7729"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7731"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

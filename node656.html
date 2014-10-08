@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Creando Gemas</TITLE>
-<META NAME="description" CONTENT="Creando Gemas">
+<TITLE>7: un poco mas tarde ...</TITLE>
+<META NAME="description" CONTENT="7: un poco mas tarde ...">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node673.html">
-<LINK REL="previous" HREF="node653.html">
-<LINK REL="up" HREF="node578.html">
+<LINK REL="previous" HREF="node655.html">
+<LINK REL="up" HREF="node648.html">
 <LINK REL="next" HREF="node657.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14188"
+<A NAME="tex2html14236"
   HREF="node657.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14182"
-  HREF="node578.html">
+<A NAME="tex2html14230"
+  HREF="node648.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14176"
+<A NAME="tex2html14226"
   HREF="node655.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14184"
-  HREF="node783.html">
+<A NAME="tex2html14232"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14186"
-  HREF="node786.html">
+<A NAME="tex2html14234"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,93 +91,129 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14189"
-  HREF="node657.html">Eligiendo Nombre</A>
-<B> Subir:</B> <A NAME="tex2html14183"
-  HREF="node578.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14177"
-  HREF="node655.html">La opción PATH (:path)</A>
- &nbsp; <B>  <A NAME="tex2html14185"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14187"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14237"
+  HREF="node657.html">Resumen y Enlaces</A>
+<B> Subir:</B> <A NAME="tex2html14231"
+  HREF="node648.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html14227"
+  HREF="node655.html">6: Green</A>
+ &nbsp; <B>  <A NAME="tex2html14233"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14235"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061400000000000000000"></A>
-<A NAME="section:gemas_con_bundler"></A>
-<BR>
-Creando Gemas
-</H1>
-Un ejemplo parecido al usado en este capítulo está disponible en
-<A NAME="tex2html1507"
-  HREF="https://github.com/crguezl/bleigh-tutorial-to-building-gems">GitHub</A>.
+<H2><A NAME="SECTION06918000000000000000">
+7: un poco mas tarde ...</A>
+</H2>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/math/rpcalc.rb 
+module Math
+  class RPCalc
+    attr_accessor :stack
+
+    def initialize()
+      @stack = []
+    end
+
+    def calc(expr)
+      @stack = []
+      expr.split(/\s+/).each do |x|
+      case x
+        when '+', '*', '-', '/' 
+          op2 = @stack.pop or raise SyntaxError, "No first argument for '#{x}'"
+          op1 = @stack.pop or raise SyntaxError, "No second argument for '#{x}'"
+          @stack.push eval "(#{op1} #{x} #{op2})"
+        when /^-?\s*\d+(\.\d+)?([eE][+-]?\d+)?\s*$/
+          @stack.push x
+        else
+          raise SyntaxError, "Error. found '#{x}'. Expected number or operator"       
+        end
+      end
+      @stack.pop
+    end
+
+  end  # class RPCalc
+end    # Math
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/math/rpcalc_spec.rb 
+#require File.join(File.dirname(__FILE__), "/../spec_helper")
+require "spec_helper"
+module Math
+  describe RPCalc do
+    before :each do
+      @c = Math::RPCalc.new
+    end
+
+    context "When an erroneous input is given" do
+      context "not numeric input" do
+        before :each do
+          @e = proc { @c.calc('a') }
+        end
+
+        it "must raise an exception for not numeric input" do
+          expect { @e[] }.to raise_error(SyntaxError)
+          expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
+        end
+      end
+
+      context "not enough operands" do
+        it "must raise an exception when not enough operands" do
+          expect { @c.calc('2 3 + *') }.to raise_error(SyntaxError)
+          expect { @c.calc('2 3 + *') }.to raise_error("No second argument for '*'")
+        end
+      end
+    end
+
+    context "When a correct input is given" do
+      it "must give the correct answer for integer expressions" do
+        r = @c.calc('2 3 + 4 *')
+        r.should eq 20
+        @c.stack.should eq []
+      end
+
+      it "must give the correct answer for float expressions" do
+        r = @c.calc('4 3 + 2.5 3.5 +')
+        r.should be_within(0.01).of(6.0)
+        @c.stack.should eq [ 7 ]
+      end
+    end
+
+  end    # RPCalc
+end      # Math
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
+rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
+
+Math::RPCalc
+  When an erroneous input is given
+    not numeric input
+      must raise an exception for not numeric input
+    not enough operands
+      must raise an exception when not enough operands
+  When a correct input is given
+    must give the correct answer for integer expressions
+    must give the correct answer for float expressions
+
+Finished in 0.00526 seconds
+4 examples, 0 failures
+</PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html14190"
-  HREF="node657.html">Eligiendo Nombre</A>
-<LI><A NAME="tex2html14191"
-  HREF="node658.html">Creando la Estructura Inicial de la Gema</A>
-<LI><A NAME="tex2html14192"
-  HREF="node659.html">Underscores and Dashes</A>
-<UL>
-<LI><A NAME="tex2html14193"
-  HREF="node659.html#SECTION061430010000000000000">Use underscores for multiple words</A>
-<LI><A NAME="tex2html14194"
-  HREF="node659.html#SECTION061430020000000000000">Use dashes for extensions</A>
-<LI><A NAME="tex2html14195"
-  HREF="node659.html#SECTION061430030000000000000">Mix underscores and dashes appropriately</A>
-<LI><A NAME="tex2html14196"
-  HREF="node659.html#SECTION061430040000000000000">Don’t use UPPERCASE letters</A>
-<LI><A NAME="tex2html14197"
-  HREF="node659.html#SECTION061430050000000000000">Ventajas</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html14198"
-  HREF="node660.html">Dependencias de la Gema</A>
-<LI><A NAME="tex2html14199"
-  HREF="node661.html">Jerarquía de Ficheros y Directorios, Nombres y Requires</A>
-<LI><A NAME="tex2html14200"
-  HREF="node662.html">Gemas con Un Gran Número de Utilidades Independientes</A>
-<LI><A NAME="tex2html14201"
-  HREF="node663.html">Sharing Source Code</A>
-<LI><A NAME="tex2html14202"
-  HREF="node664.html">Publishing to RubyGems.org</A>
-<LI><A NAME="tex2html14203"
-  HREF="node665.html">Push Permissions on RubyGems.org</A>
-<LI><A NAME="tex2html14204"
-  HREF="node666.html">Gem Security</A>
-<LI><A NAME="tex2html14205"
-  HREF="node667.html">Retirando una Gema</A>
-<LI><A NAME="tex2html14206"
-  HREF="node668.html">Semantic Versioning</A>
-<LI><A NAME="tex2html14207"
-  HREF="node669.html">Declaring dependencies: Runtime vs. development</A>
-<LI><A NAME="tex2html14208"
-  HREF="node670.html">Pessimistic version constraint</A>
-<LI><A NAME="tex2html14209"
-  HREF="node671.html">Controlando nuestras dependencias</A>
-<UL>
-<LI><A NAME="tex2html14210"
-  HREF="node671.html#SECTION0614150010000000000000">bundle outdated</A>
-<LI><A NAME="tex2html14211"
-  HREF="node671.html#SECTION0614150020000000000000">Gemnasium</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html14212"
-  HREF="node672.html">Enlaces Relacionados</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

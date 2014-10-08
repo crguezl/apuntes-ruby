@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Visibilidad de los métodos: Público, Privado, Protegido</TITLE>
-<META NAME="description" CONTENT="Visibilidad de los métodos: Público, Privado, Protegido">
+<TITLE>Igualdad de Puntos</TITLE>
+<META NAME="description" CONTENT="Igualdad de Puntos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node185.html">
-<LINK REL="previous" HREF="node161.html">
-<LINK REL="up" HREF="node160.html">
+<LINK REL="next" HREF="node183.html">
+<LINK REL="previous" HREF="node181.html">
+<LINK REL="up" HREF="node170.html">
 <LINK REL="next" HREF="node183.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6007"
+<A NAME="tex2html6065"
   HREF="node183.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6001"
-  HREF="node160.html">
+<A NAME="tex2html6059"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5995"
+<A NAME="tex2html6053"
   HREF="node181.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6003"
-  HREF="node783.html">
+<A NAME="tex2html6061"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6005"
-  HREF="node786.html">
+<A NAME="tex2html6063"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,276 +92,138 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6008"
-  HREF="node183.html">Ejemplo de Visibilidad</A>
-<B> Subir:</B> <A NAME="tex2html6002"
-  HREF="node160.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html5996"
-  HREF="node181.html">Práctica: La Clase Punto</A>
- &nbsp; <B>  <A NAME="tex2html6004"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6006"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6066"
+  HREF="node183.html">Ordenando Puntos</A>
+<B> Subir:</B> <A NAME="tex2html6060"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6054"
+  HREF="node181.html">Enumeración de Coordenadas</A>
+ &nbsp; <B>  <A NAME="tex2html6062"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6064"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-
-<H1><A NAME="SECTION02720000000000000000"></A>
-<A NAME="section:visibilidaddelosmetodos"></A>
-<BR>
-Visibilidad de los métodos: Público, Privado, Protegido
-</H1>
-
-<P>
-
-<UL>
-<LI><A NAME="7761"></A><SPAN  CLASS="textbf">Encapsulation</SPAN> means that the internal representation of an object is generally hidden from view outside of the object's definition. Typically, only the object's own methods can directly inspect or manipulate its fields. Smalltalk and Ruby only allow access via object methods,
-</LI>
-<LI><A NAME="7763"></A><SPAN  CLASS="textbf">The Uniform Access Principle</SPAN> was put forth by <A NAME="tex2html371"
-  HREF="http://en.wikipedia.org/wiki/Bertrand_Meyer">Bertrand Meyer</A>. It states 
-<I>All services offered by a module should be available through a uniform notation, which does not betray whether they are implemented through storage or through computation</I>.
-
-<P>
-This principle applies generally to the syntax of object-oriented programming languages. 
-In simpler form, it states that there should be no difference between working with an attribute, precomputed property, or method/query:
-
-<OL>
-<LI><PRE>
-[~/srcDaveThomasProgrammingRuby]$ cat virtual_attributes.rb 
-class BookInStock
-  attr_reader :isbn 
-  attr_accessor :price
-  def initialize(isbn, price)
-    @isbn = isbn
-    @price = Float(price) 
-  end
-  def price_in_cents 
-   Integer(price*100 + 0.5)
-  end
-  # ... 
-end
-book = BookInStock.new("isbn1", 33.80)
-puts "Price = #{book.price}"
-puts "Price in cents = #{book.price_in_cents}"
-</PRE>
-Here we’ve used attribute methods to create a virtual instance
-variable. To the outside world, <code>price_in_cents</code> seems to be an
-attribute like any other. Internally, though, it has no corre-
-sponding instance variable.
-</LI>
-<LI><PRE>
-[~/srcDaveThomasProgrammingRuby]$ ruby  virtual_attributes.rb 
-Price = 33.8
-Price in cents = 3380
-</PRE>
-</LI>
-</OL>
-</LI>
-<LI>Los métodos son normalmente <code>public</code> a menos que sean explícitamente declarados como <code>private</code> o <code>protected</code>. 
-</LI>
-<LI>Una excepción es <code>initialize</code> que es implícitamente privado.
-</LI>
-<LI>Otra excepción son los métodos declarados fuera de cualquier definición de clase: son declarados como métodos de instancia privados de la clase <A NAME="tex2html372"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
-<PRE>
-[~/rubytesting]$ cat privado_main.rb 
-
-def tutu
-  "tutu dfhsjdsfh"
-end
-
-puts self
-
-puts tutu
-
-#puts self.tutu # exception
-
-class Titi
-  def toto
-    tutu()
-  end
-end
-
-z = Titi.new
-
-puts Titi.ancestors.inspect
-puts "-------"
-puts z.toto()
-</PRE>
-
-<P>
-<PRE>
-[~/rubytesting]$ ruby privado_main.rb
-main
-tutu dfhsjdsfh
-[Titi, Object, Kernel, BasicObject]
--------
-tutu dfhsjdsfh
-</PRE>
-</LI>
-</UL>
-
-<P>
-
-<UL>
-<LI>Un método público puede ser llamado desde cualquier lugar
-</LI>
-<LI>Si <code>m</code> es un método privado, deberá ser invocado implícitamente en <code>self</code>,
-esto es, como <I>función, <code>m()</code></I>,
-y no con receptor explícito: (<code>obj.m</code> o bien <code>self.m</code>).
-</LI>
-<LI>Esto es, un método privado es siempre invocado implícitamente en <code>self</code>
-y no debe ser invocado explícitamente en un objeto
-</LI>
-<LI>Las subclases pueden invocar y sobreescribir los métodos <code>private</code>
-
-<P>
-</LI>
-<LI>Al igual que los métodos privados, los métodos <code>protected</code>
-pueden ser invocados desde  la clase  o sus subclases
-</LI>
-<LI>A diferencia de los métodos privados, los métodos <code>protected</code>
-pueden ser invocados en cualquier objeto de la clase
-y no implican la invocación implícita via <code>self</code>
-</LI>
-<LI>La visibilidad de los métodos se declara mediante tres <SPAN  CLASS="textbf">métodos</SPAN>:
-<code>public</code>, <code>private</code> y <code>protected</code>. 
-
-<P>
-</LI>
-<LI>Estos tres métodos son métodos 
-de instancia de la clase <code>Module</code>.
-
-<P>
-</LI>
-<LI>Como todas las clases son módulos y dentro de una definición de clase
-(pero fuera de las definiciones de métodos) <code>self</code> se refiere a la clase, podemos usar 
-estos métodos <code>public</code>, <code>private</code> y <code>protected</code> como si de palabras reservadas se tratara.
-
-<P>
-</LI>
-<LI>Una clase puede usarlos así:
-<PRE>
-class Point
-  # public methods go here
-
-  # The following methods are protected
-  protected
-
-  # protected methods go here
-
-  # The following methods are private
-  private
-
-  # private methods go here
-end
-</PRE>
-</LI>
-<LI>También pueden ser invocados con los nombres de uno o mas métodos (como símbolos o como
-cadenas). En tal caso la declaración de visibilidad viene después de la definición del método
-y altera la visibilidad del método con ese nombre.
-
-<P>
-</LI>
-<LI>Una aproximación es declarar todos los métodos protegidos y privados de golpe,
-al final de la clase
-
-<P>
-</LI>
-<LI>Otra aproximación es declarar la visbilidad justo después de la definición del método:
-<PRE>
-class Widget
-  def x                       # Accessor method for @x
-    @x
-  end
-  protected :x                # Make it protected
-
-  def utility_method          # Define a method
-    nil
-  end
-  private :utility_method     # And make it private
-end
-</PRE>
-</LI>
-<LI>Si se desea declarar un método de clase como privado se usa el <SPAN  CLASS="textbf">método</SPAN>
-<code>private_class_method</code>:
-<PRE>
-        private_class_method :new
-</PRE>
-</LI>
-<LI>Si se desea hacer público de nuevo un método de clase privado se usa el 
-método <code>public_class_method</code>
-</LI>
-<LI>Las capacidades de metaprogramación de Ruby hacen posible
-invocar métodos privados y protegidos e incluso el acceso a variables 
-encapsuladas:
-<PRE>
-$ cat -n accesing_private_method.rb 
-     1  class Widget
-     2    def initialize()
-     3      @x = 4
-     4    end
-     5  
-     6    def x
-     7      @x
-     8    end
-     9    protected :x                # Make it protected
-    10  
-    11    def utility_method          # Define a method
-    12      puts "Inside utility_method"
-    13    end
-    14    private :utility_method     # And make it private
-    15  end
-    16  
-    17  w = Widget.new                      # Create a Widget
-    18  w.send :utility_method              # Invoke private method!
-    19  w.instance_eval { utility_method }  # Another way to invoke it
-    20  
-    21  w.instance_eval { puts @x }              # Read instance variable of w
-</PRE>
-Cuando ejecutamos, obtenemos:
-<PRE>
-[~/point]$ ruby accesing_private_method.rb 
-Inside utility_method
-Inside utility_method
-4
-</PRE>
-
-<P>
-Utilice <code>public_send</code> en vez de <code>send</code> si no se quiere que, 
-por error, se llame inadvertidamente a un método privado.
-</LI>
-</UL>
-
-<P>
-<BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6009"
-  HREF="node183.html">Ejemplo de Visibilidad</A>
-<LI><A NAME="tex2html6010"
-  HREF="node184.html">Ejemplo de Visibilidad</A>
+<LI><A NAME="tex2html6067"
+  HREF="node182.html#SECTION027112100000000000000"><TT>eql?</TT> y las Claves de un hash</A>
 </UL>
 <!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION027112000000000000000">
+Igualdad de Puntos</A>
+</H2>
+
+<P>
+Repáse la sección <A HREF="node71.html#section:objetos">10.8</A>.
+
+<P>
+<PRE>
+def ==(o)               # Is self == o?
+  if o.is_a? Point      # If o is a Point object
+    @x==o.x &amp;&amp; @y==o.y  # then compare the fields.
+  elsif                 # If o is not a Point
+    false               # then, by definition, self != o.
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+def ==(o)                  # Is self == o?
+  @x == o.x &amp;&amp; @y == o.y   # Assume o has proper x and y methods
+rescue                     # If that assumption fails
+  false                    # Then self != o
+end
+</PRE>
+
+<P>
+<PRE>
+class Point
+  alias eql? ==
+end
+</PRE>
+
+<P>
+<PRE>
+def eql?(o)             
+  if o.instance_of? Point      
+    @x.eql?(o.x) &amp;&amp; @y.eql?(o.y)
+  elsif
+    false
+  end
+end
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION027112100000000000000">
+<TT>eql?</TT> y las Claves de un hash</A>
+</H3>
+
+<P>
+El predicado <code>eql?</code>
+es usado por Ruby para comparar las claves de un hash.
+Por ello, si redefinimos <code>eql?</code> en nuestra clase,
+es conveniente que también definamos el método
+<code>hash</code> que es usado por Ruby para calcular el <I>hashcode</I>
+del objeto. 
+
+<P>
+Se debe cumplir siempre 
+que si dos objetos son iguales según <code>eql?</code> entonces sus hashcodes
+deben ser iguales.
+
+<P>
+No parece que sea una buena idea usar objetos mutables como índices de 
+hashes. Si es el caso, es mejor congelar el objeto
+(véase la sección <A HREF="node82.html#subsection:freezing">10.8.11</A>).
+
+<P>
+Véase  el código en 
+<A HREF="node176.html#subsection:definiendooperadores">14.1.6</A>
+
+<P>
+<PRE>
+def hash
+  @x.hash + @y.hash
+end
+</PRE>
+
+<P>
+<PRE>
+def hash
+  code = 17
+  code = 37*code + @x.hash
+  code = 37*code + @y.hash
+  # Add lines like this for each significant instance variable
+  code  # Return the resulting code
+end
+</PRE>
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6007"
+<A NAME="tex2html6065"
   HREF="node183.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6001"
-  HREF="node160.html">
+<A NAME="tex2html6059"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5995"
+<A NAME="tex2html6053"
   HREF="node181.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6003"
-  HREF="node783.html">
+<A NAME="tex2html6061"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6005"
-  HREF="node786.html">
+<A NAME="tex2html6063"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -412,20 +274,20 @@ por error, se llame inadvertidamente a un método privado.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6008"
-  HREF="node183.html">Ejemplo de Visibilidad</A>
-<B> Subir:</B> <A NAME="tex2html6002"
-  HREF="node160.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html5996"
-  HREF="node181.html">Práctica: La Clase Punto</A>
- &nbsp; <B>  <A NAME="tex2html6004"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6006"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6066"
+  HREF="node183.html">Ordenando Puntos</A>
+<B> Subir:</B> <A NAME="tex2html6060"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6054"
+  HREF="node181.html">Enumeración de Coordenadas</A>
+ &nbsp; <B>  <A NAME="tex2html6062"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6064"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

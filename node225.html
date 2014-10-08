@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Clase Row</TITLE>
-<META NAME="description" CONTENT="La Clase Row">
+<TITLE>Búsqueda de Métodos de Clase</TITLE>
+<META NAME="description" CONTENT="Búsqueda de Métodos de Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node226.html">
 <LINK REL="previous" HREF="node224.html">
-<LINK REL="up" HREF="node219.html">
+<LINK REL="up" HREF="node169.html">
 <LINK REL="next" HREF="node226.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6655"
+<A NAME="tex2html6707"
   HREF="node226.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6649"
-  HREF="node219.html">
+<A NAME="tex2html6701"
+  HREF="node169.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6643"
+<A NAME="tex2html6695"
   HREF="node224.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6651"
-  HREF="node783.html">
+<A NAME="tex2html6703"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6653"
-  HREF="node786.html">
+<A NAME="tex2html6705"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,94 +92,178 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6656"
-  HREF="node226.html">Código Completo del TicTacToe</A>
-<B> Subir:</B> <A NAME="tex2html6650"
-  HREF="node219.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html6644"
-  HREF="node224.html">La Clase Board</A>
- &nbsp; <B>  <A NAME="tex2html6652"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6654"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6708"
+  HREF="node226.html">La Búsqueda de Constantes</A>
+<B> Subir:</B> <A NAME="tex2html6702"
+  HREF="node169.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6696"
+  HREF="node224.html">La Búsqueda por Métodos</A>
+ &nbsp; <B>  <A NAME="tex2html6704"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6706"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027176000000000000000">
-La Clase Row</A>
-</H2>
-Como se ve, hemos delegado en la clase <code>Row</code> la tarea de contar el número de marcas.
-La clase <code>Row</code> representa a un objeto fila del tablero, incluyendo las diagonales.
-Sólo tiene dos métodos porque los dema´s los obtiene del módulo <code>SquaresContainer</code>:
-<PRE>
-  class Board
-    class Row
-      def initialize( squares, names )
-        @squares  = squares
-        @names    = names
-      end
-      
-      include SquaresContainer
-      
-      def to_board_name( index ) 
-        Board.index_to_name(@names[index]) 
-      end
-    end
-    .... 
-end
-</PRE>
-El método auxiliar <code>to_board_name</code> recibe un índice de la fila, columna o diagonal que
-representa el objeto <code>Row</code> (supongamos que por ejemplo <code>@squares = ["X","O"," "], @names = [2, 4, 6]</code> y <code>index = 2</code>
-y devuelve la notación jugada (<code>"c2"</code>) que define a esa casilla.
+<H1><A NAME="SECTION027140000000000000000"></A>
+<A NAME="subsection:busqueda_de_metodos_de_clase"></A>
+<BR>
+Búsqueda de Métodos de Clase
+</H1>
 
 <P>
-En realidad todos los métodos de conteo <code>xs</code>, <code>os</code>, <code>blanks</code> son proveídos por el módulo 
-<code>SquaresContainer</code>:
-<PRE>
-module TicTacToe
-  module SquaresContainer
-    def []( index ) @squares[index] end
+El algoritmo de resolución para los métodos de clase es el mismo 
+que para los métodos de instancia, pero con un cambio importante.
 
-    def blanks()  @squares.find_all { |s| s == " " }.size end
-    def os()      @squares.find_all { |s| s == "O" }.size end
-    def xs()      @squares.find_all { |s| s == "X" }.size end
-  end
-  .... 
+<P>
+Supongamos esta clase <code>C</code> sin métodos:
+<PRE>
+class C
 end
 </PRE>
-Este mixin es incluído por <code>Rows</code> para proveer los contadores
-para las filas, columnas y diagonales. Pero es también incluído/reutilizado por la clase
-<code>Board</code> para comprobar cuando no hay casillas en blanco y ha habido un empate:
+
+<P>
+Supongamos la llamada:
 <PRE>
-    def won?
-      each_row do |row|
-        return "X" if row.xs == 3 # "X" wins
-        return "O" if row.os == 3 # "O" wins
-      end
-      return " " if blanks == 0   # Aqui self es el objeto Board.
-      false                       # Reutilizamos blanks
-    end
+c = C.new
 </PRE>
+
+<P>
+
+<OL>
+<LI>Ruby busca en la eigenclass de <code>C</code>, no se encuentra
+ya que en <code>C</code> no se han declarado métodos de clase
+</LI>
+<LI>Se busca a continuación en la clase de <code>C</code>: esta clase es la clase <code>Class</code>.
+
+<P>
+</LI>
+<LI>En <A NAME="tex2html421"
+  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A> ruby encuentra el <SPAN ID="txt7876">método de instancia</SPAN> <code>new</code> y lo invoca
+</LI>
+</OL>
+
+<P>
+En Ruby cualquier invocación a un método implica
+un objeto receptor y un nombre de método.
+Si nuestro objeto es una instancia de la clase
+<code>Class</code> entonces nuestro objeto es una clase.
+
+<P>
+Para explicar en que consiste 
+el cambio importante en la búsqueda 
+de métodos de clase mencionado 
+antes, consideremos este otro ejemplo
+en el que definimos un método de clase 
+<code>Integer.parse</code>:
+<PRE>
+def Integer.parse(text)
+  text.to_i
+end
+</PRE>
+Puesto que <code>Fixnum</code> es una subclase de 
+<code>Integer</code> deberíamos poder invocarlo así:
+<PRE>
+n = Fixnum.parse("1")
+</PRE>
+<PRE>
+[3] pry(main)&gt; Class.ancestors
+=&gt; [Class, Module, Object, PP::ObjectMixin, Kernel, BasicObject]
+[4] pry(main)&gt; Fixnum.ancestors
+=&gt; [Fixnum,
+ Integer,
+ Numeric,
+ Comparable,
+ Object,
+ PP::ObjectMixin,
+ Kernel,
+ BasicObject]
+</PRE>
+Si aplicamos el method lookup anterior tendríamos:
+
+<OL>
+<LI>Se busca en la eigenclass de <code>Fixnum</code>: no se encuentra
+</LI>
+<LI>Se busca en la clase de <code>Fixnum</code>: es <code>Class</code>.
+No se encuentra
+</LI>
+<LI>Se busca en <A NAME="tex2html422"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>, <A NAME="tex2html423"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>,  <A NAME="tex2html424"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A>
+y <A NAME="tex2html425"
+  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html"><TT>BasicObject</TT></A>
+infructuosamente 
+</LI>
+</OL>
+
+<P>
+Falla. ¿Donde se encuentra el método <code>parse</code>?.
+Sabemos que <code>parse</code> <SPAN  CLASS="textbf">es un método singleton del objeto</SPAN> <code>Integer</code>.
+Por tanto está en la eigenclass/singleton class  de <code>Integer</code>.
+
+<P>
+
+<OL>
+<LI>Los objetos de la clase <code>Class</code>
+son especiales: tienen <A NAME="8232"></A><SPAN  CLASS="textbf">superclases</SPAN>.
+</LI>
+<LI>Las singleton clases o eigenclases de los objetos de la clase <code>Class</code>
+son también especiales: tienen <A NAME="8234"></A><SPAN  CLASS="textbf">superclases</SPAN>.
+</LI>
+<LI>La eigenclass de un objeto ordinario no tiene superclase
+</LI>
+<LI>Si la clase <code>A</code> hereda de la clase <code>B</code> (esto es <code>A &lt; B</code>)
+y <code>A'</code> denota la eigenclass de <code>A</code>
+y <code>B'</code> denota la eigenclass de <code>B</code>,
+entonces la superclase de <code>A'</code> es <code>B'</code>
+</LI>
+<LI>Ruby para los métodos singleton busca en la eigenclass del objeto y en todas las superclases de la eigenclass 
+</LI>
+</OL>
+Si aplicamos el nuevo lookup  a la búsqueda de <code>Fixnum.parse</code> en:
+<PRE>
+n = Fixnum.parse("1")
+</PRE>
+tendríamos:
+
+<P>
+
+<OL>
+<LI>Se busca en la eigenclass de <code>Fixnum</code>: no se encuentra
+</LI>
+<LI>Busca en la superclase de la eigenclass de  <code>Fixnum</code> esta es la eigenclass de <code>Integer</code> y allí encuentra el método <code>parse</code>
+</LI>
+<LI>Si no lo hubiera encontrado hubiera probado con las subsiguientes eigenclasses de <code>Numeric</code> y <A NAME="tex2html426"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>. 
+Es decir, sigue buscando por métodos singleton
+</LI>
+<LI>Después probaría con <code>Class</code>,
+<code>Module</code>,
+<A NAME="tex2html427"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A> y <code>Kernel</code>
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6655"
+<A NAME="tex2html6707"
   HREF="node226.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6649"
-  HREF="node219.html">
+<A NAME="tex2html6701"
+  HREF="node169.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6643"
+<A NAME="tex2html6695"
   HREF="node224.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6651"
-  HREF="node783.html">
+<A NAME="tex2html6703"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6653"
-  HREF="node786.html">
+<A NAME="tex2html6705"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -230,20 +314,20 @@ para las filas, columnas y diagonales. Pero es también incluído/reutilizado po
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6656"
-  HREF="node226.html">Código Completo del TicTacToe</A>
-<B> Subir:</B> <A NAME="tex2html6650"
-  HREF="node219.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html6644"
-  HREF="node224.html">La Clase Board</A>
- &nbsp; <B>  <A NAME="tex2html6652"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6654"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6708"
+  HREF="node226.html">La Búsqueda de Constantes</A>
+<B> Subir:</B> <A NAME="tex2html6702"
+  HREF="node169.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6696"
+  HREF="node224.html">La Búsqueda por Métodos</A>
+ &nbsp; <B>  <A NAME="tex2html6704"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6706"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

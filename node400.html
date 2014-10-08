@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Triggering Another Route: calling call</TITLE>
-<META NAME="description" CONTENT="Triggering Another Route: calling call">
+<TITLE>Manejo de Errores</TITLE>
+<META NAME="description" CONTENT="Manejo de Errores">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node401.html">
 <LINK REL="previous" HREF="node399.html">
-<LINK REL="up" HREF="node377.html">
+<LINK REL="up" HREF="node386.html">
 <LINK REL="next" HREF="node401.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9854"
+<A NAME="tex2html9896"
   HREF="node401.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9848"
-  HREF="node377.html">
+<A NAME="tex2html9890"
+  HREF="node386.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9842"
+<A NAME="tex2html9884"
   HREF="node399.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9850"
-  HREF="node783.html">
+<A NAME="tex2html9892"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9852"
-  HREF="node786.html">
+<A NAME="tex2html9894"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,66 +92,151 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9855"
-  HREF="node401.html">Logging</A>
-<B> Subir:</B> <A NAME="tex2html9849"
-  HREF="node377.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9843"
-  HREF="node399.html">Passing a Request</A>
- &nbsp; <B>  <A NAME="tex2html9851"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9853"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9897"
+  HREF="node401.html">The methods body, status</A>
+<B> Subir:</B> <A NAME="tex2html9891"
+  HREF="node386.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9885"
+  HREF="node399.html">Filtros</A>
+ &nbsp; <B>  <A NAME="tex2html9893"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9895"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033150000000000000000">
-Triggering Another Route: calling <TT>call</TT></A>
+<H1><A NAME="SECTION03360000000000000000">
+Manejo de Errores</A>
 </H1>
-Sometimes <code>pass</code> is not what you want, 
-instead you would like to get the result of calling another route. 
-Simply use <code>call</code> to achieve this:
+
+<P>
+
+<OL>
+<LI>The HTTP specification states that response status in the range  200-299
+indicate success in processing a request
+</LI>
+<LI>500-599 is reserved for server errors
+</LI>
+<LI>Sinatra  offers helpers for the 404 (Not Found) and 500 (Internal Server Error) status
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION03360010000000000000">
+not_found</A>
+</H4>
+  
+
+When a <code>Sinatra::NotFound</code> exception is raised, or the response’s
+status code is 404, the <code>not_found</code> handler is invoked:
 
 <P>
 <PRE>
-get '/foo' do
-  status, headers, body = call env.merge("PATH_INFO" =&gt; '/bar')
-  [status, headers, body.map(&amp;:upcase)]
-end
-
-get '/bar' do
-  "bar"
+not_found do
+  'This is nowhere to be found.'
 end
 </PRE>
 
 <P>
-Note that in the example above, you would ease testing and increase performance by simply moving <code>"bar"</code> into a helper used by both <code>/foo</code> and <code>/bar</code>.
+
+<H4><A NAME="SECTION03360020000000000000">
+error</A>
+</H4>
+  
+
+The <code>error</code> handler is invoked any time an exception is raised from
+a route block or a filter. 
 
 <P>
-If you want the request to be sent to the same application instance rather than a duplicate, use <code>call!</code> instead of <code>call</code>.
+The exception object can be obtained
+from the <code>sinatra.error</code> Rack variable:
 
 <P>
-Check out the Rack specification if you want to learn more about <code>call</code>.
+<PRE>
+error do
+  'Sorry there was a nasty error - ' + env['sinatra.error'].name
+end
+</PRE>
+Custom errors:
 
 <P>
+<PRE>
+error MyCustomError do
+  'So what happened was...' + env['sinatra.error'].message
+end
+</PRE>
+Then, if this happens:
+
+<P>
+<PRE>
+get '/' do
+  raise MyCustomError, 'something bad'
+end
+</PRE>
+You get this:
+
+<P>
+<PRE>
+So what happened was... something bad
+</PRE>
+Alternatively, you can install an error handler for a status code:
+
+<P>
+<PRE>
+error 403 do
+  'Access forbidden'
+end
+
+get '/secret' do
+  403
+end
+</PRE>
+Or a range:
+
+<P>
+<PRE>
+error 400..510 do
+  'Boom'
+end
+</PRE>
+Sinatra installs special <code>not_found</code> and <code>error</code> handlers 
+when running under the development environment to display nice stack
+traces and additional debugging information in your browser (esto es,
+en producción estos handlers son mucho mas "parcos").
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html9898"
+  HREF="node400.html#SECTION03360010000000000000">not_found</A>
+<LI><A NAME="tex2html9899"
+  HREF="node400.html#SECTION03360020000000000000">error</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9854"
+<A NAME="tex2html9896"
   HREF="node401.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9848"
-  HREF="node377.html">
+<A NAME="tex2html9890"
+  HREF="node386.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9842"
+<A NAME="tex2html9884"
   HREF="node399.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9850"
-  HREF="node783.html">
+<A NAME="tex2html9892"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9852"
-  HREF="node786.html">
+<A NAME="tex2html9894"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -202,20 +287,20 @@ Check out the Rack specification if you want to learn more about <code>call</cod
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9855"
-  HREF="node401.html">Logging</A>
-<B> Subir:</B> <A NAME="tex2html9849"
-  HREF="node377.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html9843"
-  HREF="node399.html">Passing a Request</A>
- &nbsp; <B>  <A NAME="tex2html9851"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9853"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9897"
+  HREF="node401.html">The methods body, status</A>
+<B> Subir:</B> <A NAME="tex2html9891"
+  HREF="node386.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html9885"
+  HREF="node399.html">Filtros</A>
+ &nbsp; <B>  <A NAME="tex2html9893"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9895"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

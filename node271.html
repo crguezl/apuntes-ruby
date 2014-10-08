@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Repaso</TITLE>
-<META NAME="description" CONTENT="Repaso">
+<TITLE>Un Lenguaje de Dominio Específico para Describir Recetas de Cocina</TITLE>
+<META NAME="description" CONTENT="Un Lenguaje de Dominio Específico para Describir Recetas de Cocina">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node272.html">
 <LINK REL="previous" HREF="node270.html">
-<LINK REL="up" HREF="node227.html">
+<LINK REL="up" HREF="node270.html">
 <LINK REL="next" HREF="node272.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7435"
+<A NAME="tex2html7478"
   HREF="node272.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7429"
-  HREF="node227.html">
+<A NAME="tex2html7472"
+  HREF="node270.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7423"
+<A NAME="tex2html7466"
   HREF="node270.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7431"
-  HREF="node783.html">
+<A NAME="tex2html7474"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7433"
-  HREF="node786.html">
+<A NAME="tex2html7476"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,288 +92,221 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7436"
-  HREF="node272.html">Repaso</A>
-<B> Subir:</B> <A NAME="tex2html7430"
-  HREF="node227.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7424"
-  HREF="node270.html">Repaso</A>
- &nbsp; <B>  <A NAME="tex2html7432"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7434"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7479"
+  HREF="node272.html">Un DSL para Procesar</A>
+<B> Subir:</B> <A NAME="tex2html7473"
+  HREF="node270.html">Lenguajes de Dominio Específico.</A>
+<B> Anterior:</B> <A NAME="tex2html7467"
+  HREF="node270.html">Lenguajes de Dominio Específico.</A>
+ &nbsp; <B>  <A NAME="tex2html7475"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7477"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION028180000000000000000">
-Repaso</A>
-</H1>
+<H2><A NAME="SECTION028121000000000000000"></A>
+<A NAME="subsection:instanceeval"></A>
+<BR>
+Un Lenguaje de Dominio Específico para Describir Recetas de Cocina
+</H2>
 
 <P>
+Supongamos que queremos crear una Clase <code>Recipe</code> cuyo constructor entienda 
+un  Lenguaje de Dominio Específico (Domain Specific Language, DSL) para describir recetas
+de cocina.
+Queremos que sea posible especificar con facilidad  los ingredientes y los
+pasos de la forma mas simple posible.
+La API debería ser parecida a esta:
 
-<UL>
-<LI>¿Cuál es la salida de este programa?
+<P>
 <PRE>
-~/rubytesting$ cat -n closure1.rb 
-     1  def greetings
-     2    x = "Goodbye"
-     3    yield 
-     4  end
-     5  
-     6  x = "Hello"
-     7  puts greetings { "#{x} world" }
-</PRE>
-</LI>
-<LI>¿Cuál es la salida de este programa?
-<PRE>
-~/rubytesting$ cat -n blocks1_8.rb 
-     1  def chuchu
-     2    yield 2
-     3  end
-     4  
-     5  x = 1
-     6  chuchu { |x| }
-     7  puts x
-~/rubytesting$ ruby -v
-ruby 1.8.7 (2010-01-10 patchlevel 249) [universal-darwin10.0]
-~/rubytesting$ ruby blocks1_8.rb
-</PRE>
-</LI>
-<LI>¿Cuál es la salida de este programa?
-<PRE>
-~/rubytesting$ cat -n blocks1_8.rb 
-     1  def chuchu
-     2    yield 2
-     3  end
-     4  
-     5  x = 1
-     6  chuchu { |x| }
-     7  puts x
-~/rubytesting$ sudo rvm install 1.9.2
-...
-Install of ruby-1.9.2-p290 - #complete 
-~/rubytesting$  
-~/rubytesting$ rvm list
+puts Recipe.new("Noodles and Cheese") {
+  ingredient "Water",   amount =&gt; "2 cups"
+  ingredient "Noodles", amount =&gt; "1 cup"
+  ingredient "Cheese",  amount =&gt; "1/2 cup"
 
-rvm rubies
-
-   ruby-1.9.2-p290 [ x86_64 ]
-
-~/rubytesting$ rvm ruby-1.9.2-p290
-~/rubytesting$ ruby -v
-ruby 1.9.2p290 (2011-07-09 revision 32553) [x86_64-darwin10.8.0]
-~/rubytesting$ ruby blocks1_8.rb
-</PRE>
-<A NAME="tex2html552"
-  HREF="http://beginrescueend.com/">RVM</A>
-<I>is a command-line tool which allows you to easily install, manage, and work with multiple ruby environments from interpreters to sets of gems.</I>
-</LI>
-<LI>Dado el programa:
-<PRE>
-~/rubytesting$ cat -n scopes.rb 
-     1  v1 = 1                  
-     2  
-     3  class Tutu
-     4    v2 = 2                
-     5    puts "%2d"%(__LINE__.to_s)+' '+local_variables.inspect    
-     6  
-     7    def my_method
-     8      v3 = 3
-     9      puts "%2d"%__LINE__.to_s+' '+local_variables.inspect
-    10    end
-    11  
-    12    puts "%2d"%__LINE__.to_s+' '+local_variables.inspect    
-    13  end
-    14  
-    15  obj = Tutu.new
-    16  obj.my_method        
-    17  obj.my_method        
-    18  puts "%2d"%__LINE__.to_s+' '+local_variables.inspect      
-</PRE>
-¿Cuál es la salida de este programa?
-<PRE>
-~/rubytesting$ ruby scopes.rb 
- 5 .....................
-12 .....................
- 9 .....................
- 9 .....................
-18 .....................
-</PRE>
-</LI>
-<LI>Dado el programa:
-<PRE>
-~/rubytesting$ cat -n instance_scope.rb 
-     1  @var = "hello"
-     2  
-     3  class Tutu
-     4    puts "Inside Tutu: #{@var}"
-     5  end
-     6  
-     7  puts @var
-</PRE>
-¿Cual es la salida de esta ejecución?
-<PRE>
-~/rubytesting$ ruby -w instance_scope.rb
+  step "Heat water to boiling.",        during =&gt; "5 minutes"
+  step "Add noodles to boiling water.", during =&gt; "6 minutes"
+  step "Drain water."
+  step "Mix cheese in with noodles."
+}
 </PRE>
 
 <P>
-</LI>
-<LI>Dado el programa:
+y el resultado de ejecutar el código anterior debería ser similar a este:
+
+<P>
 <PRE>
-~/rubytesting$ cat -n scopes2.rb 
-     1  v1 = 1                  
-     2  
-     3  Tutu = Class.new do
-     4    v2 = 2                
-     5    puts "%2d"%(__LINE__.to_s)+' '+local_variables.inspect    
-     6  
-     7    def my_method
-     8      v3 = 3
-     9      puts "%2d"%__LINE__.to_s+' '+local_variables.inspect
-    10    end
-    11  
-    12    puts "%2d"%__LINE__.to_s+' '+local_variables.inspect    
-    13  end
-    14  
-    15  obj = Tutu.new
-    16  obj.my_method        
-    17  obj.my_method        
-    18  puts "%2d"%__LINE__.to_s+' '+local_variables.inspect      
-</PRE>
-¿Cuál es la salida de este programa?
-<PRE>
-~/rubytesting$ ruby scopes2.rb 
- 5 .....................
-12 .....................
- 9 .....................
- 9 .....................
-18 .....................
+~/Chapter8ReflectionandMetaprogramming$ ruby recipes.rb 
+Noodles and Cheese
+==================
+
+Ingredients: Water (2 cups), Noodles (1 cup), Cheese (1/2 cup)
+
+1) Heat water to boiling. (5 minutes)
+2) Add noodles to boiling water. (6 minutes)
+3) Drain water.
+4) Mix cheese in with noodles.
 </PRE>
 
 <P>
-</LI>
-<LI>Dado el programa:
+Como se ve en el ejemplo de uso, el constructor de la clase recibe un bloque que describe la receta.
+Una solución es usar <code>yield</code> para llamar al bloque:
+
+<P>
 <PRE>
-~/rubytesting$ cat -n scopes3.rb 
-     1  v1 = 1                  
-     2  
-     3  Tutu = Class.new do
-     4    v2 = 2                
-     5    puts "%2d"%(__LINE__.to_s)+' '+local_variables.inspect    
-     6  
-     7    define_method :my_method  do
-     8      v3 = 3
-     9      puts "%2d"%__LINE__.to_s+' '+local_variables.inspect
+~/Chapter8ReflectionandMetaprogramming$ cat -n recipes2.rb 
+     1  class Recipe2
+     2    attr_accessor :name, :ingredients, :instructions
+     3  
+     4    def initialize(name)
+     5      self.name = name
+     6      self.ingredients = []
+     7      self.instructions = []
+     8  
+     9      yield self
     10    end
     11  
-    12    puts "%2d"%__LINE__.to_s+' '+local_variables.inspect    
-    13  end
-    14  
-    15  obj = Tutu.new
-    16  obj.my_method        
-    17  obj.my_method        
-    18  puts "%2d"%__LINE__.to_s+' '+local_variables.inspect      
+    12    def to_s
+    13      output = name
+    14      output &lt;&lt; "\n#{'=' * name.size}\n\n"
+    15      output &lt;&lt; "Ingredients: #{ingredients.join(', ')}\n\n"
+    16  
+    17      instructions.each_with_index do |instruction, index|
+    18        output &lt;&lt; "#{index + 1}) #{instruction}\n"
+    19      end
+    20  
+    21      output
+    22    end
+    23  
+    24    def ingredient(name, options = {})
+    25      ingredient = name
+    26      ingredient &lt;&lt; " (#{options[:amount]})" if options[:amount]
+    27  
+    28      ingredients &lt;&lt; ingredient
+    29    end
+    30  
+    31    def step(text, options = {})
+    32      instruction = text
+    33      instruction &lt;&lt; " (#{options[:during]})" if options[:during]
+    34  
+    35      instructions &lt;&lt; instruction
+    36    end
+    37  end
 </PRE>
-¿Cuál es la salida de este programa?
-<PRE>
-~/rubytesting$ ruby scopes3.rb 
- 5 .....................
-12 .....................
- 9 .....................
- 9 .....................
-18 .....................
-</PRE>
-</LI>
-<LI>¿En que clases está definido <code>define_method</code>?
-</LI>
-<LI>¿Que visibilidad tiene <code>define_method</code>? (público, privado, protegido) 
-</LI>
-<LI>¿En que clase queda definida el método creado por <code>define_method</code>?
-</LI>
-<LI>¿Es posible llamar a <code>define_method</code> con un receptor explícito?
-<PRE>
-Tutu.define_method
-</PRE>
-</LI>
-<LI>Dado el programa:
-<PRE>
-~/rubytesting$ cat -n shared_scope2.rb 
-     1  def define_methods
-     2    shared = 5
-     3    
-     4    Kernel.send :define_method, :counter do
-     5      shared
-     6    end
-     7  
-     8    Kernel.send :define_method, :inc do |x|
-     9      shared += x
-    10    end
-    11  end
-    12  
-    13  define_methods
-    14  
-    15  puts counter     
-    16  inc(4)
-    17  puts counter
-</PRE>
+Los métodos <code>ingredient</code> y <code>step</code> nos ayudan en el proceso de construcción de la cadena
+de presentación.
 
-<UL>
-<LI>¿Cuál es la salida de este programa?
-</LI>
-<LI>¿Por que no puede llamarse a <code>define_method</code> en vez de <code>Kernel.send define_method</code>?
-</LI>
-<LI>¿Donde (en que clase/objeto) estamos incorporando los métodos <code>counter</code> e <code>inc</code>?
-</LI>
-<LI>¿A que objeto/clase  esta siendo envíado el mensaje <code>counter</code> en la línea 15?
-</LI>
-</UL>
-</LI>
-<LI>¿Cuál es la salida?
+<P>
+Sin embargo, esta solución no es satisfactoria, ya que debemos pasar 
+al bloque de definición el objeto receta que esta siendo construido:
 <PRE>
-MacBook-Air-de-casiano:rubytesting casiano$ cat -n define_method.rb 
-     1  class A
-     2    def fred
-     3      puts "In Fred"
-     4    end
-     5    def create_method(name, &amp;block)
-     6      self.class.send(:define_method, name, &amp;block)
-     7    end
-     8    define_method(:wilma) { puts "Charge it!" }
-     9  end
-    10  class B &lt; A
-    11    define_method(:barney, instance_method(:fred))
-    12  end
-    13  a = B.new
-    14  a.barney
-    15  a.wilma
-    16  a.create_method(:betty) { p self }
-    17  a.betty
+    39  noodles_and_cheese = Recipe2.new("Noodles and Cheese") do |r|
+    40    r.ingredient "Water",   :amount =&gt; "2 cups"
+    41    r.ingredient "Noodles", :amount =&gt; "1 cup"
+    42    r.ingredient "Cheese",  :amount =&gt; "1/2 cup"
+    43  
+    44    r.step "Heat water to boiling.",        :during =&gt; "5 minutes"
+    45    r.step "Add noodles to boiling water.", :during =&gt; "6 minutes"
+    46    r.step "Drain water."
+    47    r.step "Mix cheese in with noodles."
+    48  end
+    49  
+    50  puts noodles_and_cheese
 </PRE>
-<code>instance_method</code> es definido en <A NAME="10268"></A><A NAME="tex2html553"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.
-Retorna un <I>UnboundMethod</I>.
-</LI>
-</UL>
+Peor aún, debemos repetir constantemente el objeto <code>r.ingredient</code>
+y <code>r.step</code>.
+Sabemos que <A NAME="10447"></A><A NAME="tex2html543"
+  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
+evalúa el bloque que se le pasa en el contexto del objeto
+en el que es llamado (<code>self</code> en la línea 9 abajo):
+
+<P>
+<PRE>
+~/Chapter8ReflectionandMetaprogramming$ cat -n recipes.rb 
+     1  class Recipe
+     2    attr_accessor :name, :ingredients, :instructions
+     3  
+     4    def initialize(name, &amp;block)
+     5      self.name = name
+     6      self.ingredients = []
+     7      self.instructions = []
+     8  
+     9      instance_eval &amp;block
+    10    end
+    11  
+    12    def to_s
+    13      output = &lt;&lt;"EORECIPE"
+    14  #{name}
+    15  #{'=' * name.size}
+    16  
+    17  Ingredients: #{ingredients.join(', ')}
+    18  
+    19  #{
+    20      out = ""
+    21      instructions.each_with_index do |instruction, index|
+    22        out &lt;&lt; "#{index + 1}) #{instruction}\n"
+    23      end
+    24      out
+    25  }
+    26  EORECIPE
+    27    end
+    28  
+    29    def ingredient(name, options = {})
+    30      ingredient = name
+    31      ingredient &lt;&lt; " (#{options[:amount]})" if options[:amount]
+    32  
+    33      ingredients &lt;&lt; ingredient
+    34    end
+    35  
+    36    def step(text, options = {})
+    37      instruction = text
+    38      instruction &lt;&lt; " (#{options[:for]})" if options[:for]
+    39  
+    40      instructions &lt;&lt; instruction
+    41    end
+    42  
+    43    def amount 
+    44     :amount 
+    45    end
+    46  
+    47    def during 
+    48     :for
+    49    end
+    50  end
+    51  
+    52  puts Recipe.new("Noodles and Cheese") {
+    53    ingredient "Water",   amount =&gt; "2 cups"
+    54    ingredient "Noodles", amount =&gt; "1 cup"
+    55    ingredient "Cheese",  amount =&gt; "1/2 cup"
+    56  
+    57    step "Heat water to boiling.",        during =&gt; "5 minutes"
+    58    step "Add noodles to boiling water.", during =&gt; "6 minutes"
+    59    step "Drain water."
+    60    step "Mix cheese in with noodles."
+    61  }
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7435"
+<A NAME="tex2html7478"
   HREF="node272.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7429"
-  HREF="node227.html">
+<A NAME="tex2html7472"
+  HREF="node270.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7423"
+<A NAME="tex2html7466"
   HREF="node270.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7431"
-  HREF="node783.html">
+<A NAME="tex2html7474"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7433"
-  HREF="node786.html">
+<A NAME="tex2html7476"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -424,20 +357,20 @@ Retorna un <I>UnboundMethod</I>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7436"
-  HREF="node272.html">Repaso</A>
-<B> Subir:</B> <A NAME="tex2html7430"
-  HREF="node227.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7424"
-  HREF="node270.html">Repaso</A>
- &nbsp; <B>  <A NAME="tex2html7432"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7434"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7479"
+  HREF="node272.html">Un DSL para Procesar</A>
+<B> Subir:</B> <A NAME="tex2html7473"
+  HREF="node270.html">Lenguajes de Dominio Específico.</A>
+<B> Anterior:</B> <A NAME="tex2html7467"
+  HREF="node270.html">Lenguajes de Dominio Específico.</A>
+ &nbsp; <B>  <A NAME="tex2html7475"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7477"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Agentes SSH</TITLE>
-<META NAME="description" CONTENT="Agentes SSH">
+<TITLE>Introducción</TITLE>
+<META NAME="description" CONTENT="Introducción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node608.html">
 <LINK REL="previous" HREF="node606.html">
-<LINK REL="up" HREF="node601.html">
+<LINK REL="up" HREF="node606.html">
 <LINK REL="next" HREF="node608.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13418"
+<A NAME="tex2html13389"
   HREF="node608.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13412"
-  HREF="node601.html">
+<A NAME="tex2html13383"
+  HREF="node606.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13406"
+<A NAME="tex2html13377"
   HREF="node606.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13414"
-  HREF="node783.html">
+<A NAME="tex2html13385"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13416"
-  HREF="node786.html">
+<A NAME="tex2html13387"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,271 +92,323 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13419"
-  HREF="node608.html">Mejor un Sólo Agente</A>
-<B> Subir:</B> <A NAME="tex2html13413"
-  HREF="node601.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13407"
-  HREF="node606.html">Deshabilitar la Asignación de</A>
- &nbsp; <B>  <A NAME="tex2html13415"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13417"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13390"
+  HREF="node608.html">Servidores de Gemas</A>
+<B> Subir:</B> <A NAME="tex2html13384"
+  HREF="node606.html">RubyGems: installing, updating and</A>
+<B> Anterior:</B> <A NAME="tex2html13378"
+  HREF="node606.html">RubyGems: installing, updating and</A>
+ &nbsp; <B>  <A NAME="tex2html13386"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13388"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06560000000000000000">
-Agentes SSH</A>
+<H1><A NAME="SECTION06410000000000000000">
+Introducción</A>
 </H1>
 
 <P>
-Un agente SSH es un programa que guarda de forma segura 
-las frases-clave asociadas con las claves privadas y responde a consultas 
-autentificadas de los clientes SSH.
-El agente recuerda la passphrase de manera que el usuario 
-no tenga que teclearla cada vez que la clave es usada.
 
-<P>
-El agente crea un socket en un subdirectorio de <code>/tmp</code> 
-en el que escucha las peticiones de conexión SSH.
-Cualquiera que tenga acceso a dicho socket puede acceder al agente. Los permisos
-unix para el socket son suficientemente restrictivos.
-
-<P>
-Los programas que se usan son  <TT>ssh-agent</TT>  y  <TT>ssh-add</TT> . 
-Utilizamos <A NAME="tex2html1350"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
-para añadir claves privadas a la cache del agente
-ssh. A partir de ese momento el cliente ssh no nos importunará
-solicitando la passphrase, comúnicandose con el agente 
-para superar el proceso de autentificación.
-El agente <code>ssh-agent</code> actúa como un daemon que permanece dando el
-servicio de autentificación a los clientes SSH.
-
-<P>
-
-<H4><A NAME="SECTION06560010000000000000">
-ssh-add</A>
-</H4>
-  
-
-<P>
-El programa
-<code>ssh-add</code> permite añadir, listar y suprimir claves de la cache del agente:
-
-<P>
-<PRE>
-someone@localhost:~/.ssh$ ssh-add ~/.ssh/conpass
-Enter passphrase for /home/someone/.ssh/conpass: **********
-Identity added: /home/someone/.ssh/conpass (/home/someone/.ssh/conpass)
-someone@localhost:~/.ssh$ ssh-add -l
-2048 da:13:....:ee /home/someone/.ssh/conpass (RSA)
-</PRE>
-Una vez establecida la clave en el agente es posible conectarse sin necesidad
-de proporcionar la frase clave:
-
-<P>
-<PRE>
-someone@localhost:~/.kde/shutdown$ ssh remote.machine
-Linux remote.machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-Last login: Tue Mar 11 14:03:59 2008 from localhost.deioc.ull.es
-user@remote.machine:~$
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06560020000000000000">
-Arrancando un Agente SSH</A>
-</H4>
-  
-
-<P>
-Para arrancar el agente SSH se ejecuta el comando:
-<PRE>
-eval `ssh-agent`
-</PRE>
-Esto se hace asi porque el resultado retornado por <code>ssh-agent</code>
-es una cadena conteniendo un script <A NAME="tex2html1351"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?bash"><TT>bash</TT></A>. Este guión establece las variables de 
-entorno necesarias para que las futuras llamadas a clientes SSH 
-puedan encontrar al agente. Observe el resultado de una ejecución sin <code>eval</code> ni backticks:
-<PRE>
-$ ssh-agent
-SSH_AUTH_SOCK=/tmp/ssh-jaDVTd5583/agent.5583; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=5584; export SSH_AGENT_PID;
-echo Agent pid 5584;
-</PRE>
-
-<P>
-La variable <code>SSH_AUTH_SOCK</code> contiene el camino al socket de dominio UNIX que será 
-utilizado por los clientes <code>ssh</code>, <code>scp</code>, etc. para comunicarse 
-con el agente.
-
-<P>
-El pid proporcionado en <code>SSH_AGENT_PID</code> nos permite eliminar al agente mediante <code>kill</code>. 
-Sin embargo una llamada a <code>kill</code> no elimina 
-las variables de entorno establecidas.
-La forma correcta de terminar el agente es usando la opción <code>-k</code>
-de <code>ssh-agent</code>:
-<PRE>
-pp2@localhost:~/Lbook$ eval `ssh-agent`
-Agent pid 5606
-pp2@localhost:~/Lbook$ env | grep -i ssh
-SSH_AGENT_PID=5606
-SSH_AUTH_SOCK=/tmp/ssh-ALUJyJ5605/agent.5605
-CVS_RSH=/usr/bin/ssh
-pp2@localhost:~/Lbook$ eval `ssh-agent -k`
-Agent pid 5606 killed
-pp2@localhost:~/Lbook$ env | grep -i ssh
-CVS_RSH=/usr/bin/ssh
-pp2@localhost:~/Lbook$
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06560030000000000000">
-El Protocolo</A>
+<H4><A NAME="SECTION06410010000000000000">
+Breve Introducción a RubyGems</A>
 </H4>
   
 
 <P>
 
-<OL>
-<LI>El usuario escribe el comando que da lugar a la conexión inicial y especifica el username asi como 
-la petición de usar una clave. El programa cliente envía el username y la petición de uso
-de  la clave.
+<div class="wrapper">
+ <a name="top" id="top"></a> 
+
+ <div id="bodyContent">
+  <!-- start content -->
+  <div id="catlinks">
+
+<div id='catlinks' class='catlinks'>
+</div> 
+</div>
+</div>
+
+  <div lang="en" dir="ltr" class="mw-content-ltr"><table id="toc" class="toc"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Aim"><span class="tocnumber">1</span> <span class="toctext">Aim</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Searching"><span class="tocnumber">2</span> <span class="toctext">Searching</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Installing"><span class="tocnumber">3</span> <span class="toctext">Installing</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#Outdated"><span class="tocnumber">4</span> <span class="toctext">Outdated</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#Updating"><span class="tocnumber">5</span> <span class="toctext">Updating</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#Clean"><span class="tocnumber">6</span> <span class="toctext">Clean</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="#Removing"><span class="tocnumber">7</span> <span class="toctext">Removing</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="#Listing_installed_gems"><span class="tocnumber">8</span> <span class="toctext">Listing installed gems</span></a></li>
+</ul>
+</td></tr></table>
+<h2> <span class="mw-headline" id="Aim">Aim</span></h2>
+<p>To give an overview of installing gems, updating them and, if necessary, removing them. We'll also look at some housekeeping and clean up and remove older versions of updated gems.
+</p>
+<h2> <span class="mw-headline" id="Searching">Searching</span></h2>
+<p>Installing a gem in fair enough but what if you don't know what it's called?
+</p><p>Well, one way of finding a gem is to look at the rubygems homepage at <a rel="nofollow" class="external free" href="http://rubyforge.org/projects/rubygems/">http://rubyforge.org/projects/rubygems/</a>
+</p><p>However, this can be a bit overwhelming and may be a long way around if you know what you are looking for. In cases like these you can search a remote list of gems for the phrase you are after:
+</p>
+<pre> gem search mysql --remote gems.rubyforge.org
+</pre>
+<p>This will give a list of gems with the word 'mysql' in them.
+</p>
+<p>
+Si queremos ver todas las versiones de una gema usamos al opción <tt>-a</tt>:
+<pre> 
+[~/local/src/ruby/sinatra/rack/hangout-framework(master)]$ gem list 'erubis$' -a -r
+
+*** REMOTE GEMS ***
+
+erubis (2.7.0, 2.6.6, 2.6.5, 2.6.4, 2.6.3, 2.6.2, 2.6.1, 2.6.0, 2.5.0, 2.4.1, 
+        2.4.0, 2.3.1, 2.3.0, 2.2.0, 2.1.0, 2.0.1, 2.0.0, 1.1.0, 1.0.1, 1.0.0)
+</pre>
+</p>
+<h2> <span class="mw-headline" id="Installing">Installing</span></h2>
+<p>Installing a particular gem is very simple:
+</p>
+<pre> gem install mysql
+</pre>
+<p>That will, not unsurprisingly, install the gem 'mysql' (which is the ruby bindings for MySQL, not MySQL itself!).
+</p><p>The example above will give a choice of versions to install. On a Linux VPS simply choose the latest 'ruby' version. So at the time of writing I would select option (3) mysql 2.7 (ruby).
+</p><p>Often a gem will have several dependencies with it. To stop the install asking if you want the dependencies to be installed use this:
+</p>
+<pre> gem install mysql --include-dependencies
+</pre>
+<h2> <span class="mw-headline" id="Outdated">Outdated</span></h2>
+<p>To get a list of gems that are now outdated (they have a newer version available), use this command:
+</p>
+<pre> gem outdated
+</pre>
+<h2> <span class="mw-headline" id="Updating">Updating</span></h2>
+<p>To update all the installed rubygems is just as straightforward:
+</p>
+<pre> gem update
+</pre>
+<p>However, you may not want to update all at once, in which case specify the gem:
+</p>
+<pre> gem update mysql
+</pre>
+<h2> <span class="mw-headline" id="Clean">Clean</span></h2>
+<p>This will remove outdated versions of gems that are installed, leaving the new updated version installed:
+</p>
+<pre> gem clean
+</pre>
+<p>This will leave a nice and shiny up to date rubygems install.
+</p>
+<h2> <span class="mw-headline" id="Removing">Removing</span></h2>
+<p>At some point you may want to get rid of a gem completely. No problem:
+</p>
+<pre> gem uninstall mysql
+</pre>
+<h2> <span class="mw-headline" id="Listing_installed_gems">Listing installed gems</span></h2>
+<p>To get a list of locally installed gems, issue this command:
+</p>
+<pre> gem list
+</pre>
+<p>That will give an overview of the gems you have installed.
+</p>
 
 <P>
-</LI>
-<LI>El demonio de SSH mira en el fichero <code>authorized_keys</code> y
-construye un reto basado en esa clave y lo envía al cliente.
+
+<H4><A NAME="SECTION06410020000000000000">
+Instalando una gema en local</A>
+</H4>
+  
+
+You can use <code>gem install --local path_to_gem/filename.gem</code>
 
 <P>
-</LI>
-<LI>El cliente recibe el reto asociado con la clave y lo redirige al
-agente. Supongamos que la clave fué previamente cargada con <A NAME="tex2html1352"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
-<P>
-</LI>
-<LI>El agente construye la respuesta y la devuelve al proceso <A NAME="tex2html1353"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
-el cual la envía al proceso <A NAME="tex2html1354"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
-que escucha en el otro extremo.
-El cliente <A NAME="tex2html1355"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
-nunca ve la clave privada, lo que ve 
-es la respuesta. 
-
-<P>
-</LI>
-<LI>El servidor <A NAME="tex2html1356"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
-valida la respuesta. Si es correcta permite 
-el acceso al sistema.
-
-<P>
-</LI>
-</OL>
-
-<P>
-<P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
-<I>Establezca claves con passphrase, instale un agente ssh y compruebe su buen
-funcionamiento.</I></DIV><P></P>
+This will skip the usual gem repository scan that happens when you leave off <code>--local</code>.
 
 <P>
 
-<H4><A NAME="SECTION06560040000000000000">
-Bloqueando el acceso a un Agente</A>
+<H4><A NAME="SECTION06410030000000000000">
+Toda la información sobre una gema:<TT>gem spec</TT></A>
 </H4>
   
 
 <P>
-Es posible cerrar el acceso al agente usando la opción <code>-x</code> de <A NAME="tex2html1357"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
 <PRE>
-pp2@europa:~$ ssh-add -x
-Enter lock password:
-Again:
-Agent locked.
-pp2@europa:~$ ssh orion
-Enter passphrase for key '/home/pp2/.ssh/id_dsa': ********
-Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-Last login: Mon Apr 27 13:29:32 2009 from europa.deioc.ull.es
-casiano@orion:~$
+[~/Dropbox/src/ruby/sinatra/bootstrap_example(master)]$ gem spec sinatra
+--- !ruby/object:Gem::Specification
+name: sinatra
+version: !ruby/object:Gem::Version
+  version: 1.4.2
+platform: ruby
+authors:
+- Blake Mizerany
+- Ryan Tomayko
+- Simon Rozet
+- Konstantin Haase
+autorequire: 
+bindir: bin
+cert_chain: []
+date: 2013-03-21 00:00:00.000000000 Z
+dependencies:
+- !ruby/object:Gem::Dependency
+  name: rack
+  requirement: !ruby/object:Gem::Requirement
+    requirements:
+    - - '&gt;='
+      - !ruby/object:Gem::Version
+        version: 1.5.2
+    - - ~&gt;
+      - !ruby/object:Gem::Version
+        version: '1.5'
+  type: :runtime
+  prerelease: false
+  version_requirements: !ruby/object:Gem::Requirement
+    requirements:
+    - - '&gt;='
+      - !ruby/object:Gem::Version
+        version: 1.5.2
+    - - ~&gt;
+      - !ruby/object:Gem::Version
+        version: '1.5'
+- !ruby/object:Gem::Dependency
+  name: tilt
+  requirement: !ruby/object:Gem::Requirement
+    requirements:
+    - - '&gt;='
+      - !ruby/object:Gem::Version
+        version: 1.3.4
+    - - ~&gt;
+      - !ruby/object:Gem::Version
+        version: '1.3'
+  type: :runtime
+  prerelease: false
+  version_requirements: !ruby/object:Gem::Requirement
+    requirements:
+    - - '&gt;='
+      - !ruby/object:Gem::Version
+        version: 1.3.4
+    - - ~&gt;
+      - !ruby/object:Gem::Version
+        version: '1.3'
+- !ruby/object:Gem::Dependency
+  name: rack-protection
+  requirement: !ruby/object:Gem::Requirement
+    requirements:
+    - - ~&gt;
+      - !ruby/object:Gem::Version
+        version: '1.4'
+  type: :runtime
+  prerelease: false
+  version_requirements: !ruby/object:Gem::Requirement
+    requirements:
+    - - ~&gt;
+      - !ruby/object:Gem::Version
+        version: '1.4'
+description: Sinatra is a DSL for quickly creating web applications in Ruby with minimal
+  effort.
+email: sinatrarb@googlegroups.com
+executables: []
+extensions: []
+extra_rdoc_files:
+- README.de.md
+- README.es.md
+- README.fr.md
+- README.hu.md
+- README.jp.md
+- README.ko.md
+- README.md
+- README.pt-br.md
+- README.pt-pt.md
+- README.ru.md
+- README.zh.md
+- LICENSE
+files:
+- README.de.md
+- README.es.md
+- README.fr.md
+- README.hu.md
+- README.jp.md
+- README.ko.md
+- README.md
+- README.pt-br.md
+- README.pt-pt.md
+- README.ru.md
+- README.zh.md
+- LICENSE
+homepage: http://www.sinatrarb.com/
+licenses: []
+metadata: {}
+post_install_message: 
+rdoc_options:
+- --line-numbers
+- --inline-source
+- --title
+- Sinatra
+- --main
+- README.rdoc
+- --encoding=UTF-8
+require_paths:
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement
+  requirements:
+  - - '&gt;='
+    - !ruby/object:Gem::Version
+      version: '0'
+required_rubygems_version: !ruby/object:Gem::Requirement
+  requirements:
+  - - '&gt;='
+    - !ruby/object:Gem::Version
+      version: '0'
+requirements: []
+rubyforge_project: 
+rubygems_version: 2.0.3
+signing_key: 
+specification_version: 3
+summary: Classy web-development dressed in a DSL
+test_files: []
 </PRE>
 
 <P>
-Para abrir el acceso al agente usaremos la opción <code>-X</code> de <A NAME="tex2html1358"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
-<PRE>
-pp2@europa:~$ ssh-add -X
-Enter lock password: ****************
-Agent unlocked.
-pp2@europa:~$
-</PRE>
 
-<P>
-
-<H4><A NAME="SECTION06560050000000000000">
-Poniendo Fecha de Caducidad</A>
+<H4><A NAME="SECTION06410040000000000000">
+Véase También</A>
 </H4>
   
-
-<P>
-La opción <code>-t lifetime</code> de <A NAME="tex2html1359"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>
-puede ser utilizada para 
-limitar el tiempo de caducidad de las identidades en un agente. El tiempo
-se expresará en segundos o bien de la forma <code>time[qualifier]</code>, donde
-<code>time</code> es un entero positivo y <code>qualifier</code> es:
-
-<P>
-<PRE>
-           nada    segundos
-           s | S   segundos
-           m | M   minutos
-           h | H   horas
-           d | D   dias
-           w | W   semanas
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06560060000000000000">
-Véase también</A>
-</H4>
-  
-
-<P>
 
 <UL>
-<LI>Wikipedia <A NAME="tex2html1360"
-  HREF="http://en.wikipedia.org/wiki/Ssh-agent">Ssh-agent</A>
+<LI><A NAME="tex2html1344"
+  HREF="http://net.tutsplus.com/tutorials/ruby/ruby-for-newbies-working-with-gems/?search_index=1">Ruby for Newbies: Working with Gems</A>
 </LI>
-<LI><A NAME="tex2html1361"
-  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+<LI><A NAME="tex2html1345"
+  HREF="http://www.linuxjournal.com/article/8967?page=0,1">Artículo de Linux Journal sobre RubyGems</A>
 </LI>
-<LI><A NAME="tex2html1362"
-  HREF="http://mah.everybody.org/docs/ssh">Using ssh-agent with ssh</A>
+<LI><A NAME="tex2html1346"
+  HREF="http://rubygems.org/">RubyGems.org</A>
+home page
+</LI>
+<LI><A NAME="tex2html1347"
+  HREF="http://docs.rubygems.org/">docs.rubygems.org</A>
+home page
+</LI>
+<LI><A NAME="tex2html1348"
+  HREF="http://help.rubygems.org/">help.rubygems.org</A>
+home page
+</LI>
+<LI>Véase <A NAME="tex2html1349"
+  HREF="http://docs.rubygems.org/read/chapter/2">RubyGems User Guide</A>.
 </LI>
 </UL>
+
+<P>
+
+<H4><A NAME="SECTION06410050000000000000">
+Seguridad</A>
+</H4>
+  
+
+<OL>
+<LI><A NAME="tex2html1350"
+  HREF="http://rubygems.rubyforge.org/rubygems-update/Gem/Security.html">module Gem::Security</A>
+</LI>
+</OL>
 
 <P>
 <BR><HR>
@@ -366,37 +418,35 @@ Véase también</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html13420"
-  HREF="node607.html#SECTION06560010000000000000">ssh-add</A>
-<LI><A NAME="tex2html13421"
-  HREF="node607.html#SECTION06560020000000000000">Arrancando un Agente SSH</A>
-<LI><A NAME="tex2html13422"
-  HREF="node607.html#SECTION06560030000000000000">El Protocolo</A>
-<LI><A NAME="tex2html13423"
-  HREF="node607.html#SECTION06560040000000000000">Bloqueando el acceso a un Agente</A>
-<LI><A NAME="tex2html13424"
-  HREF="node607.html#SECTION06560050000000000000">Poniendo Fecha de Caducidad</A>
-<LI><A NAME="tex2html13425"
-  HREF="node607.html#SECTION06560060000000000000">Véase también</A>
+<LI><A NAME="tex2html13391"
+  HREF="node607.html#SECTION06410010000000000000">Breve Introducción a RubyGems</A>
+<LI><A NAME="tex2html13392"
+  HREF="node607.html#SECTION06410020000000000000">Instalando una gema en local</A>
+<LI><A NAME="tex2html13393"
+  HREF="node607.html#SECTION06410030000000000000">Toda la información sobre una gema:<TT>gem spec</TT></A>
+<LI><A NAME="tex2html13394"
+  HREF="node607.html#SECTION06410040000000000000">Véase También</A>
+<LI><A NAME="tex2html13395"
+  HREF="node607.html#SECTION06410050000000000000">Seguridad</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13418"
+<A NAME="tex2html13389"
   HREF="node608.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13412"
-  HREF="node601.html">
+<A NAME="tex2html13383"
+  HREF="node606.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13406"
+<A NAME="tex2html13377"
   HREF="node606.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13414"
-  HREF="node783.html">
+<A NAME="tex2html13385"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13416"
-  HREF="node786.html">
+<A NAME="tex2html13387"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -447,20 +497,20 @@ Véase también</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13419"
-  HREF="node608.html">Mejor un Sólo Agente</A>
-<B> Subir:</B> <A NAME="tex2html13413"
-  HREF="node601.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13407"
-  HREF="node606.html">Deshabilitar la Asignación de</A>
- &nbsp; <B>  <A NAME="tex2html13415"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13417"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13390"
+  HREF="node608.html">Servidores de Gemas</A>
+<B> Subir:</B> <A NAME="tex2html13384"
+  HREF="node606.html">RubyGems: installing, updating and</A>
+<B> Anterior:</B> <A NAME="tex2html13378"
+  HREF="node606.html">RubyGems: installing, updating and</A>
+ &nbsp; <B>  <A NAME="tex2html13386"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13388"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

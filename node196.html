@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>new, allocate e initialize</TITLE>
-<META NAME="description" CONTENT="new, allocate e initialize">
+<TITLE>super</TITLE>
+<META NAME="description" CONTENT="super">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node197.html">
 <LINK REL="previous" HREF="node195.html">
-<LINK REL="up" HREF="node195.html">
+<LINK REL="up" HREF="node194.html">
 <LINK REL="next" HREF="node197.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6223"
+<A NAME="tex2html6272"
   HREF="node197.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6217"
-  HREF="node195.html">
+<A NAME="tex2html6266"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6211"
+<A NAME="tex2html6260"
   HREF="node195.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6219"
-  HREF="node783.html">
+<A NAME="tex2html6268"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6221"
-  HREF="node786.html">
+<A NAME="tex2html6270"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,101 +92,210 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6224"
-  HREF="node197.html">Métodos Factoría</A>
-<B> Subir:</B> <A NAME="tex2html6218"
-  HREF="node195.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html6212"
-  HREF="node195.html">Creación e Inicialización de</A>
- &nbsp; <B>  <A NAME="tex2html6220"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6222"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6273"
+  HREF="node197.html">Predominancia/Invalidación de Métodos (overriding)</A>
+<B> Subir:</B> <A NAME="tex2html6267"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6261"
+  HREF="node195.html">Heredando Métodos</A>
+ &nbsp; <B>  <A NAME="tex2html6269"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6271"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02741000000000000000">
-new, allocate e initialize</A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html6274"
+  HREF="node196.html#SECTION02732010000000000000">Ejemplo</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02732000000000000000"></A>
+<A NAME="subsection:super"></A>
+<BR>
+super
 </H2>
-Todas las clases heredan el método de clase <code>new</code>.
-Este método tiene dos tareas: 
 
 <P>
 
-<OL>
-<LI>debe alojar al objeto y 
+<UL>
+<LI><A NAME="tex2html394"
+  HREF="https://gist.github.com/3548473">GIST: Ruby OOP example</A>
 </LI>
-<LI>debe inicializarlo.
-</LI>
-</OL>
-Para estas tareas, delega en los métodos.
-Este es el seudocódigo de <code>new</code>: 
-<code>allocate</code> e <code>initialize</code>:
+</UL>
+
+<P>
 <PRE>
-def new(* args)
-  o = self.allocate       # crear el objeto
-  o.initialize(* args)    # inicializarlo
-  o                       # retornar el objeto
+class Person
+  def initialize name, dob #dob = date of birth
+    @name = name
+    @dob = dob
+  end
+
+  def age
+    (Time.now - @dob) / (365 * 24 * 60 * 60)
+  end
+
+  def introduce_yoself
+    print "Hey, I'm #{@name} and I was born #{age} years ago.\n"
+  end
 end
+
+maxxx = Person.new("Max", Time.new(1988, 9, 11))
+maxxx.introduce_yoself
+# which prints
+# "Hey, I'm Max and I was born 23.986193869358075 years ago."
+
+class CoolDude &lt; Person
+  def initialize name, dob, nickname
+    super name, dob
+    @nickname = nickname
+  end
+
+  def introduce_yoself
+    print "Yo, they call me '#{@nickname}'."
+  end
+end
+
+waltr0x = CoolDude.new("Walter", Time.new(1987, 9, 29), "The Laser")
+# we've still got this function
+print waltr0x.age
+# 24.939627905041938
+waltr0x.introduce_yoself
+# "Yo, they call me 'The Laser'."
 </PRE>
 
 <P>
 
-<UL>
-<LI>El método <code>allocate</code> es un método de instancia de la clase <code>Class</code>.
+<OL>
+<LI>The Ruby-reserved word  <TT>super</TT>  is a special kind of method
+invocation expression. This keyword is used when creating a subclass
+of another class. 
 </LI>
-<LI>Es heredado por todos los objetos clase. 
+<LI>By itself,  <TT>super</TT>  passes the arguments of
+the current method to the method with the same name in the superclass.
 </LI>
-<LI>Ruby invoca al
-método directamente.
-No puede ser sobreescrito. 
+<LI>If you use  <TT>super</TT>  as a bare keyword—with no arguments and no
+parentheses—then all of the arguments that were passed to the current
+method are passed to the superclass method.
 </LI>
-</UL>
+<LI>As with normal method invocations, the parentheses around  <TT>super</TT> 
+arguments are optional. Because a bare  <TT>super</TT>  has special
+meaning, however, you must explicitly use a pair of empty parentheses
+if you want to pass zero arguments from a method that itself has
+one or more arguments.
+</LI>
+</OL>
 
 <P>
 
-<UL>
-<LI><code>initialize</code> es un método de instancia y privado
-</LI>
-<LI>La mayor parte de las clases deberían usar <code>super</code>
-para encadenar con el <code>initialize</code> de la superclase.
-</LI>
-<LI>La tarea habitual de <code>initialize</code> es crear e inicializar
-las variables de instancia del objeto, cuyos valores normalmente 
-se derivan de los argumentos pasados a <code>new</code>.
-</LI>
-<LI>El valor retornado por <code>initialize</code> es ignorado.
-</LI>
-<LI>En realidad, <code>Class</code> define dos métodos con nombre <code>new</code>:
+<H4><A NAME="SECTION02732010000000000000">
+Ejemplo</A>
+</H4>
+  
 
-<UL>
-<LI>Uno <code>Class#new</code> es el método de instancia descrito aquí.
-</LI>
-<LI>El otro <code>Class::new</code> es un método de clase y se usa para crear nuevas clases.
-</LI>
-</UL>
-</LI>
-</UL>
+<P>
+GServer implements a generic server, featuring thread pool management,
+simple logging, and multi-server management.
+
+<P>
+Any kind of application-level server can be implemented using this
+class. It accepts multiple simultaneous connections from clients,
+up to an optional maximum number. Several services (i.e. one service
+per TCP port) can be run simultaneously, and stopped at any time
+through the class method GServer.stop(port). All the threading
+issues are handled, saving you the effort.
+
+<P>
+<PRE>
+[~/local/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/inheritance]$ cat gserver_example.rb
+</PRE>
+
+<P>
+<PRE>
+require 'pry'
+require 'gserver'
+
+#
+# A server that returns the time in seconds since 1970.
+#
+class TimeServer &lt; GServer
+  def initialize(port=10001, *args)
+    super(port, *args)
+  end
+  def serve(io)
+    io.puts(Time.now.to_s)
+  end
+end
+
+## Run the server with logging enabled (it's a separate thread).
+server = TimeServer.new
+server.audit = true                  # Turn logging on.
+server.start
+
+binding.pry
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/inheritance]$ ruby gserver_example.rb 
+[Mon Oct 21 16:03:56 2013] TimeServer 127.0.0.1:10001 start
+
+Frame number: 0/1
+
+From: /Users/casiano/local/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/inheritance/gserver_example.rb @ line 21 :
+
+    16: ## Run the server with logging enabled (it's a separate thread).
+    17: server = TimeServer.new
+    18: server.audit = true                  # Turn logging on.
+    19: server.start
+    20: 
+ =&gt; 21: binding.pry
+</PRE>
+
+<P>
+<PRE>
+[2] pry(main)&gt; GServer.in_service? 10001
+=&gt; true
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/inheritance]$ curl  http://localhost:10001
+2013-10-21 16:04:58 +0100
+</PRE>
+
+<P>
+<PRE>
+[8] pry(main)&gt; [Mon Oct 21 16:04:58 2013] TimeServer 127.0.0.1:10001 client:56520 disconnect
+SyntaxError: unexpected tCONSTANT, expecting keyword_do or '{' or '('
+[Mon Oct 21 16:04:58 2013] TimeServer...
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6223"
+<A NAME="tex2html6272"
   HREF="node197.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6217"
-  HREF="node195.html">
+<A NAME="tex2html6266"
+  HREF="node194.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6211"
+<A NAME="tex2html6260"
   HREF="node195.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6219"
-  HREF="node783.html">
+<A NAME="tex2html6268"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6221"
-  HREF="node786.html">
+<A NAME="tex2html6270"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -237,20 +346,20 @@ se derivan de los argumentos pasados a <code>new</code>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6224"
-  HREF="node197.html">Métodos Factoría</A>
-<B> Subir:</B> <A NAME="tex2html6218"
-  HREF="node195.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html6212"
-  HREF="node195.html">Creación e Inicialización de</A>
- &nbsp; <B>  <A NAME="tex2html6220"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6222"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6273"
+  HREF="node197.html">Predominancia/Invalidación de Métodos (overriding)</A>
+<B> Subir:</B> <A NAME="tex2html6267"
+  HREF="node194.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6261"
+  HREF="node195.html">Heredando Métodos</A>
+ &nbsp; <B>  <A NAME="tex2html6269"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6271"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

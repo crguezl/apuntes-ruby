@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Creando Métodos Dinámicamente</TITLE>
-<META NAME="description" CONTENT="Creando Métodos Dinámicamente">
+<TITLE>Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado</TITLE>
+<META NAME="description" CONTENT="Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node260.html">
-<LINK REL="previous" HREF="node255.html">
-<LINK REL="up" HREF="node227.html">
+<LINK REL="previous" HREF="node256.html">
+<LINK REL="up" HREF="node253.html">
 <LINK REL="next" HREF="node258.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7206"
+<A NAME="tex2html7265"
   HREF="node258.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7200"
-  HREF="node227.html">
+<A NAME="tex2html7259"
+  HREF="node253.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7194"
+<A NAME="tex2html7255"
   HREF="node256.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7202"
-  HREF="node783.html">
+<A NAME="tex2html7261"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7204"
-  HREF="node786.html">
+<A NAME="tex2html7263"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,40 +91,188 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7207"
-  HREF="node258.html">Definiendo Métodos con class_eval</A>
-<B> Subir:</B> <A NAME="tex2html7201"
-  HREF="node227.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7195"
-  HREF="node256.html">Creando Dinámicamente los Métodos</A>
- &nbsp; <B>  <A NAME="tex2html7203"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7205"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7266"
+  HREF="node258.html">Traza</A>
+<B> Subir:</B> <A NAME="tex2html7260"
+  HREF="node253.html">Hooks (Ganchos)</A>
+<B> Anterior:</B> <A NAME="tex2html7256"
+  HREF="node256.html">Ganchos/Hooks: Sustituyendo (y delegando</A>
+ &nbsp; <B>  <A NAME="tex2html7262"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7264"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION028100000000000000000">
-Creando Métodos Dinámicamente</A>
-</H1>
+<H2><A NAME="SECTION02854000000000000000">
+Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado</A>
+</H2>
+En esta sección se muestra una forma de intervenir en el momento en que un objeto es creado.
+El ejemplo consiste en que queremos añadirle a todo objeto un atributo <code>timestamp</code>
+que indica su fecha de creación.
+Se hace abriendo la clase <A NAME="10411"></A><A NAME="tex2html532"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
+y añadiéndole el atributo:
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+         class Object
+           attr_accessor :timestamp
+         end
+</PRE>
+Ahora bien, el método <code>new</code> es un método de clase, (<code>Tutu.new</code>)
+es un metodo de instancia de la clase <code>Class</code>:
+<PRE>
+&gt;&gt; Class.instance_methods.select { |x| x =~/new/ }
+=&gt; ["new"]
+</PRE>
+Así que lo que haremos es abrir la clase <code>Class</code> y reescribir <code>new</code>.
+Repetimos el truco usado en <code>system</code> en la sección 
+<A HREF="node256.html#subsection:hooks">15.5.3</A>.
+La técnica no es completa, debido a que ciertos objetos preconstruidos como pueda ser el caso de las <code>String</code> se construyen sin que se produzca una llamada a <code>new</code>.
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html7208"
-  HREF="node258.html">Definiendo Métodos con <TT>class_eval</TT></A>
-<LI><A NAME="tex2html7209"
-  HREF="node259.html">Definiendo Métodos con <TT>define_methods</TT></A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+<P>
+<PRE>
+~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby -rdebug ex0681.rb 
+Debug.rb
+Emacs support available.
+
+ex0681.rb:2:  class Object
+(rdb:1) l 1,50
+[1, 50] in ex0681.rb
+    1  
+=&gt;  2    class Object
+    3      attr_accessor :timestamp
+    4    end
+    5    class Class
+    6      alias_method :old_new,  :new
+    7      def new(*args)
+    8        result = old_new(*args)
+    9        result.timestamp = Time.now
+   10        result
+   11      end
+   12    end
+   13    class Test
+   14    end
+   15    
+   16    obj1 = Test.new
+   17    sleep(0.002)  #!sh!
+   18    obj2 = Test.new
+   19  
+   20    obj1.timestamp.to_f
+   21    obj2.timestamp.to_f
+(rdb:1) b 18
+Set breakpoint 1 at ex0681.rb:18
+(rdb:1) c
+Breakpoint 1, toplevel at ex0681.rb:18
+ex0681.rb:18:  obj2 = Test.new
+(rdb:1) p obj1
+#&lt;Test:0x100361c70 @timestamp=Sun Nov 20 11:54:46 +0000 2011&gt;
+(rdb:1) l
+[13, 22] in ex0681.rb
+   13    class Test
+   14    end
+   15    
+   16    obj1 = Test.new
+   17    sleep(0.002)  #!sh!
+=&gt; 18    obj2 = Test.new
+   19  
+   20    obj1.timestamp.to_f
+   21    obj2.timestamp.to_f
+(rdb:1) n
+ex0681.rb:20:  obj1.timestamp.to_f
+(rdb:1) obj2
+#&lt;Test:0x10035f628 @timestamp=Sun Nov 20 11:55:15 +0000 2011&gt;
+(rdb:1) p obj1.timestamp.to_f
+1321790086.82083
+(rdb:1) p obj2.timestamp.to_f
+1321790115.59523
+(rdb:1)
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html7265"
+  HREF="node258.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7259"
+  HREF="node253.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7255"
+  HREF="node256.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html7261"
+  HREF="node792.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html7263"
+  HREF="node795.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html7266"
+  HREF="node258.html">Traza</A>
+<B> Subir:</B> <A NAME="tex2html7260"
+  HREF="node253.html">Hooks (Ganchos)</A>
+<B> Anterior:</B> <A NAME="tex2html7256"
+  HREF="node256.html">Ganchos/Hooks: Sustituyendo (y delegando</A>
+ &nbsp; <B>  <A NAME="tex2html7262"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7264"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

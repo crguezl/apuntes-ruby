@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Constantes</TITLE>
-<META NAME="description" CONTENT="Constantes">
+<TITLE>Comprobación de Tipos y Tipado Pato (Duck Typing)</TITLE>
+<META NAME="description" CONTENT="Comprobación de Tipos y Tipado Pato (Duck Typing)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node179.html">
 <LINK REL="previous" HREF="node177.html">
-<LINK REL="up" HREF="node161.html">
+<LINK REL="up" HREF="node170.html">
 <LINK REL="next" HREF="node179.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5953"
+<A NAME="tex2html6008"
   HREF="node179.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5947"
-  HREF="node161.html">
+<A NAME="tex2html6002"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5941"
+<A NAME="tex2html5996"
   HREF="node177.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5949"
-  HREF="node783.html">
+<A NAME="tex2html6004"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5951"
-  HREF="node786.html">
+<A NAME="tex2html6006"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,108 +92,179 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5954"
-  HREF="node179.html">Variables de Clase</A>
-<B> Subir:</B> <A NAME="tex2html5948"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5942"
-  HREF="node177.html">Un Método de Clase</A>
- &nbsp; <B>  <A NAME="tex2html5950"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5952"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6009"
+  HREF="node179.html">Coerción</A>
+<B> Subir:</B> <A NAME="tex2html6003"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5997"
+  HREF="node177.html">Tabla de Operadores en</A>
+ &nbsp; <B>  <A NAME="tex2html6005"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6007"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027117000000000000000"></A>
-<A NAME="strangeerror:introconstantes"></A>
+<H2><A NAME="SECTION02718000000000000000"></A>
+<A NAME="subsub:tiposypatos"></A>
 <BR>
-Constantes
+Comprobación de Tipos y Tipado Pato (Duck Typing)
 </H2>
 
 <P>
-<PRE>
- 1 class Point
-  2   attr_reader :x, :y   # Define accessor methods for our instance variables
-  3 
-  4   include Comparable
-  5   include Enumerable
-  6 
-  7   def initialize(x,y)
-  8     @x,@y = x, y
-  9   end    
- 10   
- 11   ORIGIN = Point.new(0, 0)
- 12   E_1    = Point.new(1, 0)
- 13   E_2    = Point.new(0, 1)
-</PRE>
+<BLOCKQUOTE>
+Red or yellow, black or white, they are all ducks in the VM’s sight. 
 
-<P>
-Inside the class definition, these constants can be referred to by
-their unqualified names. Outside the definition, they must be
-prefixed by the name of the class:
+</BLOCKQUOTE>
 
 <P>
 <PRE>
-&gt;&gt; load "Point2.rb"
-=&gt; true
-&gt;&gt; Point::E_1
-=&gt; #&lt;Point:0x100589f20 @y=0, @x=1&gt;
-&gt;&gt; Point::E_1.x
-=&gt; 1
-&gt;&gt; E_1
-NameError: uninitialized constant E_1
-  from (irb):4
-&gt;&gt;
-</PRE>
-
-<P>
-Puesto que las constantes crean instancias de la clase, no podemos definirlas antes 
-de tener definido el método <code>initialize</code>:
-<PRE>
-[~/rubytesting]$ cat constant_before_initialize.rb 
+[~/srcLPPruby/TheRubyProgrammingLanguage/Chapter3DatatypesAndObjects]$ cat type_versus_class_checking.rb 
+# page 75
+require "stringio"
 class Tutu
+  # Appends " chazam!" to its argument
+  def chazam_check(x) # duck typing style
+    raise "Error in chazam_check" unless x.respond_to? :"&lt;&lt;"
 
-  C = Tutu.new(5)
+    x &lt;&lt; " chazam!"
+  end
+end
 
-  def initialize(x)
-   @x = x 
+if __FILE__ == $0
+  t = Tutu.new
+
+  t = Tutu.new
+  puts "procesing a String"
+  p t.chazam_check("ban ban")  # "ban ban chazam!""
+  puts "procesing an Array"
+  p t.chazam_check([1,2,3])    # [1, 2, 3, " chazam!"]"
+  begin
+    puts "Processing a Fixnum"
+    p t.chazam_check(6)        # can't convert String into Integer
+  rescue
+    puts "t.chazam_check(6) fails:\n\tException type: &lt;#{$!.class}&gt;\n\tmessage: &lt;#{$!}&gt;"
   end
 end
 </PRE>
-Al ejecutar produce un error:
+
+<P>
 <PRE>
-[~/rubytesting]$ ruby constant_before_initialize.rb 
-constant_before_initialize.rb:3:in `initialize': wrong number of arguments(1 for 0) (ArgumentError)
-  from constant_before_initialize.rb:3:in `new'
-  from constant_before_initialize.rb:3:in `&lt;class:Tutu&gt;'
-  from constant_before_initialize.rb:1:in `&lt;main&gt;'
+[~/srcLPPruby/TheRubyProgrammingLanguage/Chapter3DatatypesAndObjects]$ ruby type_versus_class_checking.rb 
+procesing a String
+"ban ban chazam!"
+procesing an Array
+[1, 2, 3, " chazam!"]
+Processing a Fixnum
+t.chazam_check(6) fails:
+  Exception type: &lt;TypeError&gt;
+  message: &lt;can't convert String into Integer&gt;
 </PRE>
-Es posible definir constantes de una clase desde fuera de la misma:
+
+<P>
 <PRE>
-&gt;&gt; Point::E_3 = Point.new 1, 1
-=&gt; #&lt;Point:0x100565df0 @y=1, @x=1&gt;
+[~/srcLPPruby/TheRubyProgrammingLanguage/Chapter3DatatypesAndObjects]$ cat type_versus_class_checking2.rb 
+# page 75
+require "stringio"
+class Tutu
+  # Print the lengths of the lines in the IO object
+  def show_lengths(x)
+    raise "Error in show_lengths" unless x.is_a? IO
+    #raise "Error in show_lengths" unless x.respond_to? "each_line"
+    x.each_line do |line|
+      print "#{line.length} "
+    end
+    puts ""
+  end
+end
+
+if __FILE__ == $0
+  t = Tutu.new
+
+  #######################################################
+  t.show_lengths(IO.open(File.open($0).to_i)) # 10 19 ...
+  begin
+    t.show_lengths(StringIO.open("Hello World!\nHello Mars!")) # Error in show_lengths
+  rescue
+    puts "t.show_lengths fails with StringIO:\n\tException type: &lt;#{$!.class}&gt;\n\tmessage: &lt;#{$!}&gt;"
+  end
+end
 </PRE>
+
+<P>
+<PRE>
+[~/srcLPPruby/TheRubyProgrammingLanguage/Chapter3DatatypesAndObjects]$ ruby type_versus_class_checking2.rb 
+10 19 11 52 22 52 68 26 30 8 12 6 4 1 18 15 1 58 58 8 87 9 100 6 4 
+t.show_lengths fails with StringIO:
+  Exception type: &lt;RuntimeError&gt;
+  message: &lt;Error in show_lengths&gt;
+</PRE>
+Aunque quizá sea larga y requiera para su comprensión completa 
+mas conocimientos de los que tenemos en este punto,
+escuchar la charla 
+<SPAN  CLASS="textbf">
+<A NAME="tex2html376"
+  HREF="http://vimeo.com/53154357">Less: The Path to a Better Design</A>
+por <A NAME="8038"></A><SPAN  CLASS="textbf">Sandi Metz</SPAN>
+</SPAN>
+en Vimeo puede resultar útil. 
+Metz 
+muestra como el uso de <A NAME="8040"></A><SPAN  CLASS="textbf">Tipado Pato</SPAN> (<A NAME="8042"></A><SPAN  CLASS="textbf">Duck Typing</SPAN>) 
+puede ayudar a desacoplar nuestras
+clases, mejorando así nuestros diseños y haciéndo que nuestro software 
+sea mas adaptable a los cambios que necesariamente habrán de sobrevenir durante 
+su vida útil.
+
+<P>
+Véanse algunos comentarios de 
+<A NAME="tex2html377"
+  HREF="http://nathany.com/poodr">Nathan Youngman</A>
+sobre la lectura 
+del libro
+<A NAME="tex2html378"
+  HREF="http://my.safaribooksonline.com/book/programming/ruby/9780132930895">"Practical Object Oriented Design in Ruby: An Agile Primer"</A>
+de Sandi Metz:
+<BLOCKQUOTE>
+Procedural programs operate by performing a series of steps, whereas
+object-oriented programs are about sending messages.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>When one object tells another to perform a series of steps, it knows
+too much! To minimize dependencies, an object needs to ask for what
+it wants, and trust that the receiver takes the necessary steps.
+It doesn't need to know the details.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><SPAN  CLASS="textbf">The distinction between a message that asks for what the sender
+wants and a message that tells the receiver how to behave may seem
+subtle but the consequences are significant</SPAN>.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>Rather than depending on a concrete Class, consider relying on a
+duck type that implements the necessary message. <SPAN  CLASS="textbf">Depending on a
+“duck-like” thing is much more flexible</SPAN>.
+
+</BLOCKQUOTE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5953"
+<A NAME="tex2html6008"
   HREF="node179.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5947"
-  HREF="node161.html">
+<A NAME="tex2html6002"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5941"
+<A NAME="tex2html5996"
   HREF="node177.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5949"
-  HREF="node783.html">
+<A NAME="tex2html6004"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5951"
-  HREF="node786.html">
+<A NAME="tex2html6006"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -244,20 +315,20 @@ Es posible definir constantes de una clase desde fuera de la misma:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5954"
-  HREF="node179.html">Variables de Clase</A>
-<B> Subir:</B> <A NAME="tex2html5948"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5942"
-  HREF="node177.html">Un Método de Clase</A>
- &nbsp; <B>  <A NAME="tex2html5950"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5952"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6009"
+  HREF="node179.html">Coerción</A>
+<B> Subir:</B> <A NAME="tex2html6003"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html5997"
+  HREF="node177.html">Tabla de Operadores en</A>
+ &nbsp; <B>  <A NAME="tex2html6005"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6007"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

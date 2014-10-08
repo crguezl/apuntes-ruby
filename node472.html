@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</TITLE>
-<META NAME="description" CONTENT="Configurando la Base de Datos en Heroku con DataMapper. Despliegue">
+<TITLE>Ajax, Sinatra y RightJS</TITLE>
+<META NAME="description" CONTENT="Ajax, Sinatra y RightJS">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node473.html">
 <LINK REL="previous" HREF="node471.html">
-<LINK REL="up" HREF="node468.html">
+<LINK REL="up" HREF="node469.html">
 <LINK REL="next" HREF="node473.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11030"
+<A NAME="tex2html11045"
   HREF="node473.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11024"
-  HREF="node468.html">
+<A NAME="tex2html11039"
+  HREF="node469.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11020"
+<A NAME="tex2html11033"
   HREF="node471.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11026"
-  HREF="node783.html">
+<A NAME="tex2html11041"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11028"
-  HREF="node786.html">
+<A NAME="tex2html11043"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,131 +92,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11031"
-  HREF="node473.html">Sequel y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html11025"
-  HREF="node468.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11021"
-  HREF="node471.html">Ejemplo de Uso de</A>
- &nbsp; <B>  <A NAME="tex2html11027"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11029"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11046"
+  HREF="node473.html">Práctica: TicTactoe Usando Ajax</A>
+<B> Subir:</B> <A NAME="tex2html11040"
+  HREF="node469.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html11034"
+  HREF="node471.html">Un Ejemplo Simple</A>
+ &nbsp; <B>  <A NAME="tex2html11042"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11044"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031640000000000000000">
-Configurando la Base de Datos en Heroku con DataMapper. Despliegue</A>
+<H1><A NAME="SECTION031230000000000000000">
+Ajax, Sinatra y RightJS</A>
 </H1>
+Ajax has been around for a while now but that doesn’t mean it is any
+less fun. The nice thing about Sinatra is you are left to do as much or
+little JavaScript as you like and you can do it in any way
+that you want as well. 
 
 <P>
-<A NAME="tex2html1109"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A> utiliza la base de datos PostgreSQL y una URL en una variable 
-de entorno <code>ENV['DATABASE_URL']</code>.
+In this 
+<A NAME="tex2html1084"
+  HREF="http://ididitmyway.herokuapp.com/past/2011/2/27/ajax_in_sinatra/">ditty </A>
+I hope to show that it’s easy
+to add some Ajax magic to a Sinatra app (with a little help from a
+JavaScript framework).
 
 <P>
-<PRE>
-configure :development do
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
-end
 
-configure :production do
-  DataMapper.setup(:default, ENV['DATABASE_URL'])
-end
-</PRE>
-
-<P>
-Estas líneas especifican que se usa SQLite en desarrollo y PostgreSQL en producción.
-Obsérvese que el <code>Gemfile</code> debe estar coherente:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ cat Gemfile
-source 'https://rubygems.org'
-gem "sinatra"
-gem "slim"
-gem "sass"
-gem "dm-core"
-gem "dm-migrations"
-gem "thin"
-gem "pg", :group =&gt; :production
-gem "dm-postgres-adapter", :group =&gt; :production
-gem "dm-sqlite-adapter", :group =&gt; :development
-</PRE>
-o mejor:
-<PRE>
-group :production do
-    gem "pg"
-    gem "dm-postgres-adapter"
-end
-</PRE>
-
-<P>
-<PRE>
-heroku create ...
-</PRE>
-
-<P>
-<PRE>
-git push heroku master
-</PRE>
-
-<P>
-<PRE>
-heroku open
-</PRE>
-
-<P>
-<PRE>
-heroku logs --source app
-</PRE>
-
-<P>
-Ahora ejecutamos la consola de heroku:
-
-<P>
-<PRE>
-heroku run console
-</PRE>
-lo que nos abre una sesión <code>irb</code>.
-
-<P>
-Ahora creamos la base de datos en <A NAME="tex2html1110"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ heroku run console
-Running `console` attached to terminal... up, run.8011
-irb(main):001:0&gt; require './main'
-=&gt; true
-irb(main):002:0&gt; DataMapper.auto_migrate!
-=&gt; #&lt;DataMapper::DescendantSet:0x007fb89c878230 @descendants=#&lt;DataMapper::SubjectSet:0x007fb89c8781b8 @entries=#&lt;DataMapper::OrderedSet:0x007fb89c878190 @cache=#&lt;DataMapper::SubjectSet::NameCache:0x007fb89c878168 @cache={"Song"=&gt;0}&gt;, @entries=[Song]&gt;&gt;&gt;
-irb(main):003:0&gt;
-</PRE>
-Véase también 
-la practica TicTacToe
-<A HREF="node415.html#practica:ticatactoe">26.29</A>
-y
-el capítulo <I>Despliegue en Heroku</I> 
-<A HREF="node482.html#chapter:despliegueenheroku">45</A>.
-.
+<OL>
+<LI><A NAME="tex2html1085"
+  HREF="https://gist.github.com/mr-rock/205948">An example of Sinatra working with Ajaxified JQuery based on some pieces of code published by Rafael George on the Sinatra Google Group</A>
+</LI>
+<LI><A NAME="tex2html1086"
+  HREF="http://ididitmyway.herokuapp.com/past/2011/2/27/ajax_in_sinatra/">Ajax, Sinatra y RightJS</A>
+Darren Jones
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11030"
+<A NAME="tex2html11045"
   HREF="node473.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11024"
-  HREF="node468.html">
+<A NAME="tex2html11039"
+  HREF="node469.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11020"
+<A NAME="tex2html11033"
   HREF="node471.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11026"
-  HREF="node783.html">
+<A NAME="tex2html11041"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11028"
-  HREF="node786.html">
+<A NAME="tex2html11043"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -266,20 +202,20 @@ el capítulo <I>Despliegue en Heroku</I>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11031"
-  HREF="node473.html">Sequel y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html11025"
-  HREF="node468.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11021"
-  HREF="node471.html">Ejemplo de Uso de</A>
- &nbsp; <B>  <A NAME="tex2html11027"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11029"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11046"
+  HREF="node473.html">Práctica: TicTactoe Usando Ajax</A>
+<B> Subir:</B> <A NAME="tex2html11040"
+  HREF="node469.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html11034"
+  HREF="node471.html">Un Ejemplo Simple</A>
+ &nbsp; <B>  <A NAME="tex2html11042"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11044"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

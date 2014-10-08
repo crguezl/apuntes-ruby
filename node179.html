@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Variables de Clase</TITLE>
-<META NAME="description" CONTENT="Variables de Clase">
+<TITLE>Coerción</TITLE>
+<META NAME="description" CONTENT="Coerción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node180.html">
 <LINK REL="previous" HREF="node178.html">
-<LINK REL="up" HREF="node161.html">
+<LINK REL="up" HREF="node170.html">
 <LINK REL="next" HREF="node180.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5967"
+<A NAME="tex2html6022"
   HREF="node180.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5961"
-  HREF="node161.html">
+<A NAME="tex2html6016"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5955"
+<A NAME="tex2html6010"
   HREF="node178.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5963"
-  HREF="node783.html">
+<A NAME="tex2html6018"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5965"
-  HREF="node786.html">
+<A NAME="tex2html6020"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,149 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5968"
-  HREF="node180.html">Variables de Instancia de</A>
-<B> Subir:</B> <A NAME="tex2html5962"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5956"
-  HREF="node178.html">Constantes</A>
- &nbsp; <B>  <A NAME="tex2html5964"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5966"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6023"
+  HREF="node180.html">Acceso a Arrays y</A>
+<B> Subir:</B> <A NAME="tex2html6017"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6011"
+  HREF="node178.html">Comprobación de Tipos y</A>
+ &nbsp; <B>  <A NAME="tex2html6019"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6021"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027118000000000000000"></A>
-<A NAME="subsection:variablesdeclase"></A>
-<BR>
-Variables de Clase
+<H2><A NAME="SECTION02719000000000000000">
+Coerción</A>
 </H2>
-
-<OL>
-<LI>Class variables are visible to, and shared by, the class methods
-and the instance methods of a class, and also by the class definition
-itself. 
-</LI>
-<LI>Like instance variables, class variables are encapsulated;
-they can be used by the implementation of a class, but they are not
-visible to the users of a class. 
-</LI>
-<LI>Class variables have names that
-begin with <code>@@</code>.
-</LI>
-</OL>
+Puesto que <code>Integer</code> no sabe como multiplicarse por un <code>Point</code>,
+pide ayuda a <code>Point</code> llamando a su método <code>coerce</code>
+(véase el código de <code>point.rb</code> en la sección
+<A HREF="node176.html#subsection:definiendooperadores">14.1.6</A>).
 
 <P>
 <PRE>
-class Point
-  # Initialize our class variables in the class definition itself
-  @@n = 0              # How many points have been created
-  @@totalX = 0         # The sum of all X coordinates
-  @@totalY = 0         # The sum of all Y coordinates
+$ cat coerce.rb 
+require 'point'
 
-  def initialize(x,y)  # Initialize method
-    @x,@y = x, y       # Sets initial values for instance variables
-
-    # Use the class variables in this instance method to collect data
-    @@n += 1           # Keep track of how many Points have been created
-    @@totalX += x      # Add these coordinates to the totals
-    @@totalY += y
-  end
-
-  # A class method to report the data we collected
-  def self.report
-    # Here we use the class variables in a class method
-    puts "Number of points created: #@@n"
-    puts "Average X coordinate: #{@@totalX.to_f/@@n}"
-    puts "Average Y coordinate: #{@@totalY.to_f/@@n}"
-  end
-end
+p = Point.new(2,3)
+q = 2*p
+puts q
 </PRE>
 
 <P>
+<PRE>
+[09:01][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ ruby -rdebug -I. coerce.rb 
+coerce.rb:1:require 'point'
+(rdb:1) n
+coerce.rb:3:p = Point.new(2,3)
+(rdb:1) 
+n
+coerce.rb:4:q = 2*p
+(rdb:1) p p
+(2,3)
+(rdb:1) s
+/Users/casianorodriguezleon/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point/point.rb:34:    [self, other]
+(rdb:1) where
+--&gt; #1 /Users/casianorodriguezleon/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point/point.rb:34:in `coerce'
+    #2 coerce.rb:4
+(rdb:1) self
+(2,3)
+(rdb:1) other
+2
+(rdb:1) s
+/Users/casianorodriguezleon/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point/point.rb:29:    return Point.new(@x*scalar,   @y*scalar) if scalar.is_a? Numeric
+(rdb:1) n
+coerce.rb:5:puts q
+(rdb:1) 
+n
+(4,6)
+[09:09][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$
+</PRE>
 
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html5967"
-  HREF="node180.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5961"
-  HREF="node161.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5955"
-  HREF="node178.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5963"
-  HREF="node783.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5965"
-  HREF="node786.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html5968"
-  HREF="node180.html">Variables de Instancia de</A>
-<B> Subir:</B> <A NAME="tex2html5962"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5956"
-  HREF="node178.html">Constantes</A>
- &nbsp; <B>  <A NAME="tex2html5964"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5966"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<P>
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

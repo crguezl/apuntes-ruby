@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Consideraciones sobre la Seguridad del Uso de Agentes</TITLE>
-<META NAME="description" CONTENT="Consideraciones sobre la Seguridad del Uso de Agentes">
+<TITLE>ssh</TITLE>
+<META NAME="description" CONTENT="ssh">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node611.html">
-<LINK REL="previous" HREF="node609.html">
-<LINK REL="up" HREF="node601.html">
+<LINK REL="next" HREF="node625.html">
+<LINK REL="previous" HREF="node606.html">
+<LINK REL="up" HREF="node587.html">
 <LINK REL="next" HREF="node611.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13477"
+<A NAME="tex2html13433"
   HREF="node611.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13471"
-  HREF="node601.html">
+<A NAME="tex2html13427"
+  HREF="node587.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13465"
+<A NAME="tex2html13421"
   HREF="node609.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13473"
-  HREF="node783.html">
+<A NAME="tex2html13429"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13475"
-  HREF="node786.html">
+<A NAME="tex2html13431"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,230 +92,197 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13478"
-  HREF="node611.html">Depuración/Debugging</A>
-<B> Subir:</B> <A NAME="tex2html13472"
-  HREF="node601.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13466"
-  HREF="node609.html">Redireccionado al Agente SSH</A>
- &nbsp; <B>  <A NAME="tex2html13474"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13476"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13434"
+  HREF="node611.html">Introducción</A>
+<B> Subir:</B> <A NAME="tex2html13428"
+  HREF="node587.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html13422"
+  HREF="node609.html">Geminabox</A>
+ &nbsp; <B>  <A NAME="tex2html13430"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13432"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06590000000000000000">
-Consideraciones sobre la Seguridad del Uso de Agentes</A>
-</H1>
-
-<P>
-El uso de agentes previene que la passphrase o la clave 
-tengan que viajar por la red y nos proteje contra el róbo de la clave.
-
-<P>
-Sin embargo, existe la posibilidad de que alguien tenga 
-acceso al socket usado por el agente. Cualquiera que pueda
-leer/escribir en ese socket tiene la posibilidad de suplantarnos.
-En particular el administrador de un sistema tiene siempre 
-esa posibilidad. 
-
-<P>
-Supongamos que el usuario <code>casiano</code> tiene acceso a dos máquinas:
-<code>orion</code> y <code>beowulf</code> a las que accede desde <code>europa</code>. 
-Supongamos que el administrador de <code>orion</code> es malicioso e intenta
-obtener acceso a las máquinas  de sus usuarios. Supongamos que tanto
-<code>europa</code> como <code>beowulf</code> son máquinas fiables. 
-Asumimos también que la máquina <code>beowulf</code> contiene información 
-importante y es un servidor que el usuario <code>casiano</code> tiene en su casa.
-
-<P>
-La sesión que sigue muestra como el malvado administrador de <code>orion</code>
-puede secuestrar al agente utilizado por <code>casiano</code> para obtener acceso
-a <code>beowulf</code>:
-
-<P>
-
-<OL>
-<LI>Supongamos que cierto usuario <code>casiano</code> abre una conexión SSH
-con <code>orion</code> desde la máquina 
-<code>europa</code>, utilizando <A NAME="23595"></A><SPAN  CLASS="textbf">agent forwarding</SPAN>
-
-<P>
-<PRE>
-casiano@europa:~$ ps -fA | grep ssh-agent
-casiano   7618     1  0 Apr28 ?        00:00:00 /usr/bin/ssh-agent -s
-casiano  16288 16223  0 Apr29 ?        00:00:00 /usr/bin/ssh-agent x-session-manager
-casiano  16970 13271  0 17:25 pts/31   00:00:00 grep ssh-agent
-pp2      28048     1  0 May02 ?        00:00:00 ssh-agent
-casiano@europa:~$ ssh-add -l
-1024 49:Xc:eX:bX:Xa:ea:eX:XX:fc:aX:eX:Xb:XX:cX:da:XX /home/casiano/.ssh/id_dsa (DSA)
-1024 56:XX:XX:dX:XX:eX:ca:XX:Xd:Xf:Xb:XX:Xd:fX:Xc:XX /home/casiano/.ssh/orionbackupidentity (DSA)
-casiano@europa:~$ ssh -A orion
-Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-</PRE>
-Posteriormente el usuario se conecta a una tercera máquina <code>beowulf</code>
-desde su sesión en <code>orion</code>:
-<PRE>
-casiano@orion:~$                                                   
-casiano@orion:~$ ssh beowulf
-Linux beowulf 2.6.15-1-686-smp #2 SMP Mon Mar 6 15:34:50 UTC 2006 i686
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-No mail.
-Last login: Mon May  4 17:44:35 2009 from orion.pcg.ull.es
-casiano@beowulf:~$
-</PRE>
-</LI>
-<LI>En otra sesión en <code>orion</code> el malvado administrador busca por sockets de agentes en <code>/tmp</code>:
-<PRE>
-root@orion:~# ls -ltr /tmp/ssh*
-total 0
-srwxr-xr-x 1 casiano casiano 0 2009-05-04 17:35 agent.7932
-root@orion:~# ls -ldtr /tmp/ssh*
-drwx------ 2 casiano casiano 4096 2009-05-04 17:35 /tmp/ssh-jrQQgf7932
-</PRE>
-El root puede ver que el usuario <code>casiano</code> tiene un agente arrancado.
-
-<P>
-En el caso del agente, la opción <TT>-a</TT> de <TT>ssh-agent</TT>
-permite definir un lugar alternativo para el socket Unix a usar:
-<PRE>
-lusasoft@LusaSoft:~$ eval `ssh-agent -a myagentsocket`
-Agent pid 6475
-lusasoft@LusaSoft:~$ ls -ltrd my*
-srw------- 1 lusasoft lusasoft 0 2009-05-02 08:56 myagentsocket
-</PRE>
-esta opción sin embargo no afecta al socket creado por el daemon en <code>orion</code>
-
-<P>
-</LI>
-<LI><P>
-El malvado administrador vigila lo que hace el usuario casiano:
-<PRE>
-root@orion:~# ps -fu casiano
-UID        PID  PPID  C STIME TTY          TIME CMD
-casiano   7682  7680  0 17:16 ?        00:00:00 sshd: casiano@pts/1
-casiano   7683  7682  0 17:16 pts/1    00:00:00 -bash
-casiano   7932  7930  0 17:35 ?        00:00:00 sshd: casiano@pts/0
-casiano   7933  7932  0 17:35 pts/0    00:00:00 -bash
-casiano   7939  7933  0 17:35 pts/0    00:00:00 ssh beowulf
-</PRE>
-Ummmmhhh... tiene una conexión ssh a una máquina llamada <code>beowulf</code>? 
-demasiado breve para ser el nombre real de una máquina. 
-Debe estar definida en su fichero de configuración.
-</LI>
-<LI>Bueno, el root decide usar el socket de casiano:
-<PRE>
-root@orion:~# export SSH_AUTH_SOCK=/tmp/ssh-jrQQgf7932/agent.7932
-</PRE>
-</LI>
-<LI><P>
-El administrador malvado ya puede conectarse. Usará el fichero de configuración de <code>casiano</code> (opción <code>-F</code>)
-para que la conexión ocurra según la configuración de ese usuario (por supuesto, antes comprueba que
-existe tal configuración):
-
-<P>
-<PRE>
-root@orion:~# ssh -F ~casiano/.ssh/config casiano@beowulf
-casiano@beowulf:~$
-</PRE>
-
-<P>
-El administrador de orion ha conseguido acceso a una máquina
-en la que no tenía cuenta. Ahora podría proceder a instalar una autentificación automática
-en la cuenta de caiano en beowulf, de modo que le permita posteriores visitas.
-</LI>
-</OL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html13477"
-  HREF="node611.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13471"
-  HREF="node601.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13465"
-  HREF="node609.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13473"
-  HREF="node783.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13475"
-  HREF="node786.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
+<H1><A NAME="SECTION06500000000000000000"></A>
+<A NAME="chapter:ssh"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13478"
-  HREF="node611.html">Depuración/Debugging</A>
-<B> Subir:</B> <A NAME="tex2html13472"
-  HREF="node601.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html13466"
-  HREF="node609.html">Redireccionado al Agente SSH</A>
- &nbsp; <B>  <A NAME="tex2html13474"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13476"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+ssh
+</H1>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html13435"
+  HREF="node611.html">Introducción</A>
+<UL>
+<LI><A NAME="tex2html13436"
+  HREF="node611.html#SECTION06510010000000000000">Definición</A>
+<LI><A NAME="tex2html13437"
+  HREF="node611.html#SECTION06510020000000000000">Historia</A>
+<LI><A NAME="tex2html13438"
+  HREF="node611.html#SECTION06510030000000000000">Arquitectura</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13439"
+  HREF="node612.html">Conexión SSH a Una máquina por Primera Vez</A>
+<UL>
+<LI><A NAME="tex2html13440"
+  HREF="node612.html#SECTION06520010000000000000">El Fichero <TT>.ssh/known_hosts</TT></A>
+<LI><A NAME="tex2html13441"
+  HREF="node612.html#SECTION06520020000000000000">Algoritmo de Autentificación de las Máquinas</A>
+<LI><A NAME="tex2html13442"
+  HREF="node612.html#SECTION06520030000000000000">Borrando una Entrada de <TT>.ssh/known_hosts</TT></A>
+<LI><A NAME="tex2html13443"
+  HREF="node612.html#SECTION06520040000000000000">Hashing</A>
+<LI><A NAME="tex2html13444"
+  HREF="node612.html#SECTION06520050000000000000">Búsqueda de Entradas Hash</A>
+<LI><A NAME="tex2html13445"
+  HREF="node612.html#SECTION06520060000000000000">Ejercicios con <TT>known_hosts</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13446"
+  HREF="node613.html">Claves Pública y Privada: Estableciendo Autentificación No Interactiva</A>
+<UL>
+<LI><A NAME="tex2html13447"
+  HREF="node613.html#SECTION06530010000000000000">ssh-keygen</A>
+<LI><A NAME="tex2html13448"
+  HREF="node613.html#SECTION06530020000000000000">Computando la Huella de una Máquina</A>
+<LI><A NAME="tex2html13449"
+  HREF="node613.html#SECTION06530030000000000000">ssh-copy-id</A>
+<LI><A NAME="tex2html13450"
+  HREF="node613.html#SECTION06530040000000000000">Copia Manual</A>
+<LI><A NAME="tex2html13451"
+  HREF="node613.html#SECTION06530050000000000000">Conexión sin Clave</A>
+<LI><A NAME="tex2html13452"
+  HREF="node613.html#SECTION06530060000000000000">Permisos en <TT>.ssh</TT></A>
+<LI><A NAME="tex2html13453"
+  HREF="node613.html#SECTION06530070000000000000">Véase también</A>
+<LI><A NAME="tex2html13454"
+  HREF="node613.html#SECTION06530080000000000000">Ejercicios</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13455"
+  HREF="node614.html">El fichero <TT>authorized_keys</TT></A>
+<UL>
+<LI><A NAME="tex2html13456"
+  HREF="node614.html#SECTION06540010000000000000">Véase También</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13457"
+  HREF="node615.html">Deshabilitar la Asignación de una TTY</A>
+<LI><A NAME="tex2html13458"
+  HREF="node616.html">Agentes SSH</A>
+<UL>
+<LI><A NAME="tex2html13459"
+  HREF="node616.html#SECTION06560010000000000000">ssh-add</A>
+<LI><A NAME="tex2html13460"
+  HREF="node616.html#SECTION06560020000000000000">Arrancando un Agente SSH</A>
+<LI><A NAME="tex2html13461"
+  HREF="node616.html#SECTION06560030000000000000">El Protocolo</A>
+<LI><A NAME="tex2html13462"
+  HREF="node616.html#SECTION06560040000000000000">Bloqueando el acceso a un Agente</A>
+<LI><A NAME="tex2html13463"
+  HREF="node616.html#SECTION06560050000000000000">Poniendo Fecha de Caducidad</A>
+<LI><A NAME="tex2html13464"
+  HREF="node616.html#SECTION06560060000000000000">Véase también</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13465"
+  HREF="node617.html">Mejor un Sólo Agente</A>
+<UL>
+<LI><A NAME="tex2html13466"
+  HREF="node617.html#SECTION06570010000000000000"><TT>ssh-agent</TT> y Sesiones X</A>
+<LI><A NAME="tex2html13467"
+  HREF="node617.html#SECTION06570020000000000000">Arrancando el Agente en KDE</A>
+<LI><A NAME="tex2html13468"
+  HREF="node617.html#SECTION06570030000000000000">Introducción a <TT>keychain</TT></A>
+<LI><A NAME="tex2html13469"
+  HREF="node617.html#SECTION06570040000000000000">Suprimiendo los Agentes Activos con <TT>keychain</TT></A>
+<LI><A NAME="tex2html13470"
+  HREF="node617.html#SECTION06570050000000000000">Funcionamiento de <TT>keychain</TT></A>
+<LI><A NAME="tex2html13471"
+  HREF="node617.html#SECTION06570060000000000000">Cuando el Agente no Conoce la Clave</A>
+<LI><A NAME="tex2html13472"
+  HREF="node617.html#SECTION06570070000000000000">Tipos de Agentes</A>
+<LI><A NAME="tex2html13473"
+  HREF="node617.html#SECTION06570080000000000000">Agentes en Mal Estado</A>
+<LI><A NAME="tex2html13474"
+  HREF="node617.html#SECTION06570090000000000000">La opción <TT>-eval</TT> de <TT>keychain</TT></A>
+<LI><A NAME="tex2html13475"
+  HREF="node617.html#SECTION065700100000000000000">Véase También</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13476"
+  HREF="node618.html">Redireccionado al Agente SSH</A>
+<UL>
+<LI><A NAME="tex2html13477"
+  HREF="node618.html#SECTION06580010000000000000">Véase También</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13478"
+  HREF="node619.html">Consideraciones sobre la Seguridad del Uso de Agentes</A>
+<LI><A NAME="tex2html13479"
+  HREF="node620.html">Depuración/Debugging</A>
+<UL>
+<LI><A NAME="tex2html13480"
+  HREF="node620.html#SECTION065100010000000000000">Lista de Comprobaciones en Caso de Error</A>
+<LI><A NAME="tex2html13481"
+  HREF="node620.html#SECTION065100020000000000000">Véase también</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13482"
+  HREF="node621.html">Los Ficheros de Configuración</A>
+<UL>
+<LI><A NAME="tex2html13483"
+  HREF="node621.html#SECTION065110010000000000000">Estructura de un Fichero de Configuración</A>
+<LI><A NAME="tex2html13484"
+  HREF="node621.html#SECTION065110020000000000000">Palabras Clave</A>
+<LI><A NAME="tex2html13485"
+  HREF="node621.html#SECTION065110030000000000000">Ejemplo</A>
+<LI><A NAME="tex2html13486"
+  HREF="node621.html#SECTION065110040000000000000">El fichero <TT>rc</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html13487"
+  HREF="node622.html">Copia Segura de un Fichero</A>
+<UL>
+<LI><A NAME="tex2html13488"
+  HREF="node622.html#SECTION065120010000000000000">Transferencia de Ficheros con <TT>scp</TT></A>
+<LI><A NAME="tex2html13489"
+  HREF="node622.html#SECTION065120020000000000000">Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
+<LI><A NAME="tex2html13490"
+  HREF="node623.html">Transferencia de ficheros por <TT>sftp</TT></A>
+<LI><A NAME="tex2html13491"
+  HREF="node624.html">Copias de Seguridad con <TT>rsync</TT></A>
+<UL>
+<LI><A NAME="tex2html13492"
+  HREF="node624.html#SECTION065122010000000000000">El Algoritmo</A>
+<LI><A NAME="tex2html13493"
+  HREF="node624.html#SECTION065122020000000000000">Mode de Uso</A>
+<LI><A NAME="tex2html13494"
+  HREF="node624.html#SECTION065122030000000000000">Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
+<LI><A NAME="tex2html13495"
+  HREF="node624.html#SECTION065122040000000000000">Backups con <TT>rsync</TT> en un Medio Externo</A>
+<LI><A NAME="tex2html13496"
+  HREF="node624.html#SECTION065122050000000000000">El fichero <TT>/etc/fstab</TT></A>
+<LI><A NAME="tex2html13497"
+  HREF="node624.html#SECTION065122060000000000000">El Programa de Copia</A>
+<LI><A NAME="tex2html13498"
+  HREF="node624.html#SECTION065122070000000000000">Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
+<LI><A NAME="tex2html13499"
+  HREF="node624.html#SECTION065122080000000000000">El fichero de <TT>cron</TT></A>
+<LI><A NAME="tex2html13500"
+  HREF="node624.html#SECTION065122090000000000000">Comprobación de la Copia</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

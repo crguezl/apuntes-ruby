@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Clase Board</TITLE>
-<META NAME="description" CONTENT="La Clase Board">
+<TITLE>La Búsqueda por Métodos</TITLE>
+<META NAME="description" CONTENT="La Búsqueda por Métodos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node225.html">
 <LINK REL="previous" HREF="node223.html">
-<LINK REL="up" HREF="node219.html">
+<LINK REL="up" HREF="node169.html">
 <LINK REL="next" HREF="node225.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6641"
+<A NAME="tex2html6693"
   HREF="node225.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6635"
-  HREF="node219.html">
+<A NAME="tex2html6687"
+  HREF="node169.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6629"
+<A NAME="tex2html6681"
   HREF="node223.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6637"
-  HREF="node783.html">
+<A NAME="tex2html6689"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6639"
-  HREF="node786.html">
+<A NAME="tex2html6691"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,157 +92,148 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6642"
-  HREF="node225.html">La Clase Row</A>
-<B> Subir:</B> <A NAME="tex2html6636"
-  HREF="node219.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html6630"
-  HREF="node223.html">La Clase Player: Un</A>
- &nbsp; <B>  <A NAME="tex2html6638"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6640"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6694"
+  HREF="node225.html">Búsqueda de Métodos de</A>
+<B> Subir:</B> <A NAME="tex2html6688"
+  HREF="node169.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6682"
+  HREF="node223.html">Los Métodos Singleton y</A>
+ &nbsp; <B>  <A NAME="tex2html6690"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6692"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027175000000000000000"></A>
-<A NAME="subsection:board"></A>
+<H1><A NAME="SECTION027130000000000000000"></A>
+<A NAME="section:la_busqueda_por_metodos"></A>
 <BR>
-La Clase Board
-</H2>
-La clase <code>TicTacToe::Game</code> confía en la clase <code>Board</code> que describe las operaciones
-que se pueden efectuar sobre el tablero. Por ejemplo, el método <code>play</code> hace uso de 
-operaciones sobre el tablero:
-<PRE>
-    def play
-      until @board.won?
-        @board[@x_player.move(@board)] = @x_player.mark # @board["b2"] = "X"
-        break if @board.won?
-        
-        @board[@o_player.move(@board)] = @o_player.mark 
-      end
-      
-      @o_player.finish @board  
-      @x_player.finish @board
-    end
-</PRE>
-Eso significa que tenemos que definir en la clase <code>Board</code> predicados como <code>won?</code> y
-operaciones como <code>[]=(indice, value)</code> además del <code>initialize</code>:
-<PRE>
-  class Board
-    class Row
-      ....
-    end
-    
-    MOVES = %w{a1    a2   a3   b1   b2   b3   c1   c2   c3}
-    # Define constant INDICES
-    INDICES = Hash.new { |h, k| h[k] = MOVES.find_index(k) }
-
-    def self.name_to_index( name )# Receives "b2" and returns 4
-      INDICES[name]
-    end
-    
-    def self.index_to_name( index ) # Receives the index, like 4 and returns "b2"
-      MOVES[index]
-    end
-    
-    def initialize( squares )
-      @squares = squares # An array of Strings: [ " ", " ", " ", " ", "X", " ", " ", " ", "O"]
-    end
-      
-    include SquaresContainer
-    
-    def []( *indices )
-      if indices.size == 2                  # board[1,2] is @squares[7]
-        super indices[0] + indices[1] * 3   # calls SquaresContainer [] method
-      elsif indices[0].is_a? Fixnum         # board[7]
-        super indices[0]
-      else                                  # board["b2"]
-        super Board.name_to_index(indices[0].to_s)
-      end
-    end
-
-    def []=(indice, value)                  # board["b2"] = "X"
-      m = Board.name_to_index(indice)
-      @squares[m] = value
-    end
-    
-    ....
-    
-    def moves
-      moves = [ ]
-      @squares.each_with_index do |s, i|
-        moves &lt;&lt; Board.index_to_name(i) if s == " "
-      end
-      moves # returns the set of feasible moves [ "b3", "c2", ... ]
-    end
-    
-    ....
-    
-    BOARD =&lt;&lt;EOS
-
-  +---+---+---+
-a | 0 | 1 | 2 |
-  +---+---+---+
-b | 3 | 4 | 5 |
-  +---+---+---+
-c | 6 | 7 | 8 |
-  +---+---+---+
-    1   2   3
-
-EOS
-    def to_s
-      BOARD.gsub(/(\d)(?= \|)/) { |i| @squares[i.to_i] }
-    end
-
-  end
-end
-</PRE>
-El predicado  <code>won?</code> recorre todas las posibles filas con <code>each_row</code> comprobando 
-si hay tres alineadas:
+La Búsqueda por Métodos
+</H1>
 
 <P>
+Cuando Ruby evalúa una expresión de invocación de un método (este proceso
+es conocido como <A NAME="8195"></A><SPAN  CLASS="textbf">method lookup</SPAN> o <A NAME="8197"></A><SPAN  CLASS="textbf">method resolution</SPAN>), por ejemplo
+<code>o.m</code> ocurren los siguientes pasos:
+
+<P>
+
+<OL>
+<LI><A NAME="item:busca_eigenclass"></A>Primero comprueba en la <A NAME="8199"></A><SPAN  CLASS="textbf">singleton class</SPAN> o <A NAME="8201"></A><SPAN  CLASS="textbf">eigenclass</SPAN> de <code>o</code> la existencia de un método <code>m</code>
+
+<P>
+</LI>
+<LI><A NAME="item:busca_clase"></A>Si no, busca en la clase de <code>o</code> por un método <code>m</code>
+
+<P>
+</LI>
+<LI><A NAME="item:busca_modulos"></A>Si no, busca en los módulos incluídos por la clase de <code>o</code>.
+Si la clase incluye mas de un módulo se buscan en orden inverso al orden en el que fueron incluídos
+
+<P>
+</LI>
+<LI>Si no, se mueve hacia arriba en la clase de herencia a la superclase.
+Los pasos
+<A HREF="#item:busca_clase">2</A>
+y
+<A HREF="#item:busca_modulos">3</A>
+se repiten para cada clase en la jerarquía de herencia hasta que todos los 
+antecesores y módulos incluídos han sido buscados.
+
+<P>
+</LI>
+<LI>Si no, se invoca a un método con nombre <A NAME="8203"></A><SPAN  CLASS="textbf">method_missing</SPAN>.
+Para encontrar dicho método se empieza en el paso
+<A HREF="#item:busca_eigenclass">1</A>.
+
+<P>
+El módulo <A NAME="tex2html417"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> provee una implementación por defecto de
+<code>method_missing</code> por lo que queda garantizado 
+el éxito de esta segunda pasada.
+</LI>
+</OL>
+
+<P>
+Let’s consider a concrete example of this algorithm. Suppose we have the following code:
 <PRE>
-    HORIZONTALS = [ [0, 1, 2], [3, 4, 5], [6, 7, 8] ]
-    COLUMNS     = [ [0, 3, 6], [1, 4, 7], [2, 5, 8] ]
-    DIAGONALS   = [ [0, 4, 8], [2, 4, 6] ]
-    ROWS = HORIZONTALS + COLUMNS + DIAGONALS
-
-    def each_row
-      ROWS.each do |e|
-        yield Row.new(@squares.values_at(*e), e)
-      end
-    end
-
-    def won?
-      each_row do |row|
-        return "X" if row.xs == 3 # "X" wins
-        return "O" if row.os == 3 # "O" wins
-      end
-      return " " if blanks == 0   # tie
-      false
-    end
+  message = "hello" 
+  message.world
 </PRE>
+We want to invoke a method named <code>world</code> on the String instance <code>"hello"</code>. 
+<PRE>
+[1] pry(main)&gt; String.ancestors
+=&gt; [String, Comparable, Object, PP::ObjectMixin, Kernel, BasicObject]
+</PRE>
+Name resolution proceeds as follows:
+
+<OL>
+<LI>Check the eigenclass for singleton methods. There aren’t any in this case.
+</LI>
+<LI>Check the <code>String</code> class. There is no instance method named <code>world</code>.
+</LI>
+<LI>Check the <code>Comparable</code> module of the <code>String</code> class for an instance method named <code>world</code>. 
+</LI>
+<LI>Check the superclass of <code>String</code>, which is <code>Object</code>. The <code>Object</code> class does not define a method named <code>world</code>, either.
+</LI>
+<LI>Check the <A NAME="tex2html418"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> module included by
+<code>Object</code>.
+The <code>world</code> method is not found here either, 
+so we now switch to looking for a method named <code>method_missing</code>.
+</LI>
+<LI>Look for <code>method_missing</code> in each of the spots above:
+
+<OL>
+<LI>the eigenclass of the <code>String</code> object, 
+</LI>
+<LI>the <code>String</code>
+class, 
+</LI>
+<LI>the <code>Comparable</code> module, 
+</LI>
+<LI>the
+<code>Object</code> class, and the <A NAME="tex2html419"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> module
+</LI>
+</OL>
+The first definition
+of <code>method_missing</code> we find is in the <A NAME="tex2html420"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> module, so this
+is the method we invoke. What it does is raise an exception:
+<PRE>
+NoMethodError: undefined method `world' for "hello":String
+</PRE>
+</LI>
+</OL>
+This may seem like it requires Ruby to perform an exhaustive search
+every time it invokes a method. 
+
+<P>
+In typical implementations, however,
+successful method lookups will be cached so that subsequent lookups
+of the same name (with no intervening method definitions) will be
+very quick.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6641"
+<A NAME="tex2html6693"
   HREF="node225.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6635"
-  HREF="node219.html">
+<A NAME="tex2html6687"
+  HREF="node169.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6629"
+<A NAME="tex2html6681"
   HREF="node223.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6637"
-  HREF="node783.html">
+<A NAME="tex2html6689"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6639"
-  HREF="node786.html">
+<A NAME="tex2html6691"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -293,20 +284,20 @@ si hay tres alineadas:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6642"
-  HREF="node225.html">La Clase Row</A>
-<B> Subir:</B> <A NAME="tex2html6636"
-  HREF="node219.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html6630"
-  HREF="node223.html">La Clase Player: Un</A>
- &nbsp; <B>  <A NAME="tex2html6638"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6640"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6694"
+  HREF="node225.html">Búsqueda de Métodos de</A>
+<B> Subir:</B> <A NAME="tex2html6688"
+  HREF="node169.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6682"
+  HREF="node223.html">Los Métodos Singleton y</A>
+ &nbsp; <B>  <A NAME="tex2html6690"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6692"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>

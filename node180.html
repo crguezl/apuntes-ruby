@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Variables de Instancia de Clase</TITLE>
-<META NAME="description" CONTENT="Variables de Instancia de Clase">
+<TITLE>Acceso a Arrays y a Hashes</TITLE>
+<META NAME="description" CONTENT="Acceso a Arrays y a Hashes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node181.html">
 <LINK REL="previous" HREF="node179.html">
-<LINK REL="up" HREF="node161.html">
+<LINK REL="up" HREF="node170.html">
 <LINK REL="next" HREF="node181.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5981"
+<A NAME="tex2html6036"
   HREF="node181.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5975"
-  HREF="node161.html">
+<A NAME="tex2html6030"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5969"
+<A NAME="tex2html6024"
   HREF="node179.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5977"
-  HREF="node783.html">
+<A NAME="tex2html6032"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5979"
-  HREF="node786.html">
+<A NAME="tex2html6034"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,142 +92,97 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5982"
-  HREF="node181.html">Práctica: La Clase Punto</A>
-<B> Subir:</B> <A NAME="tex2html5976"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5970"
-  HREF="node179.html">Variables de Clase</A>
- &nbsp; <B>  <A NAME="tex2html5978"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5980"
-  HREF="node786.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6037"
+  HREF="node181.html">Enumeración de Coordenadas</A>
+<B> Subir:</B> <A NAME="tex2html6031"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6025"
+  HREF="node179.html">Coerción</A>
+ &nbsp; <B>  <A NAME="tex2html6033"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6035"
+  HREF="node795.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION027119000000000000000"></A>
-<A NAME="subsection:variablesdeinstnciadeclase"></A>
-<BR>
-Variables de Instancia de Clase
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html6038"
+  HREF="node180.html#SECTION027110010000000000000">Nota Sobre el Case</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION027110000000000000000">
+Acceso a Arrays y a Hashes</A>
 </H2>
-
-<OL>
-<LI>Classes are objects and can have instance variables just as other objects can
-</LI>
-<LI>The instance variables of a class—often called class instance variables—are not the same as class variables
-</LI>
-<LI>They are similar enough that they can often be used instead of class variables
-</LI>
-</OL>
-
-<P>
+Véase  el código en la sección
+<A HREF="node176.html#subsection:definiendooperadores">14.1.6</A>
 <PRE>
-class Point
-  # Initialize our class instance variables in the class definition itself
-  @n = 0              # How many points have been created
-  @totalX = 0         # The sum of all X coordinates
-  @totalY = 0         # The sum of all Y coordinates
-
-  def initialize(x,y) # Initialize method 
-    @x,@y = x, y      # Sets initial values for instance variables
-  end
-
-  def self.new(x,y)   # Class method to create new Point objects
-    # Use the class instance variables in this class method to collect data
-    @n += 1           # Keep track of how many Points have been created
-    @totalX += x      # Add these coordinates to the totals
-    @totalY += y
-
-    super             # Invoke the real definition of new to create a Point
-                      # More about super later in the chapter
-  end
-
-  # A class method to report the data we collected
-  def self.report
-    # Here we use the class instance variables in a class method
-    puts "Number of points created: #@n"
-    puts "Average X coordinate: #{@totalX.to_f/@n}"
-    puts "Average Y coordinate: #{@totalY.to_f/@n}"
+# Define [] method to allow a Point to look like an array or
+# a hash with keys :x and :y
+def [](index)
+  case index
+  when 0, -2: @x         # Index 0 (or -2) is the X coordinate
+  when 1, -1: @y         # Index 1 (or -1) is the Y coordinate
+  when :x, "x": @x       # Hash keys as symbol or string for X
+  when :y, "y": @y       # Hash keys as symbol or string for Y
+  else nil               # Arrays and hashes just return nil on bad indexes
   end
 end
 </PRE>
 
 <P>
 
-<OL>
-<LI>Because class instance variables are just instance variables of class objects, we can use <code>attr</code>, <code>attr_reader</code>, and <code>attr_accessor</code> to create accessor methods for them
-</LI>
-<LI>The trick, however, is to invoke these metaprogramming methods in the right context
-</LI>
-<LI>Recall that one way to define class methods uses the syntax <code>class &lt;&lt; self</code>
-</LI>
-<LI>This same syntax allows us to define attribute accessor methods for class instance variables:
-</LI>
-</OL>
+<H4><A NAME="SECTION027110010000000000000">
+Nota Sobre el Case</A>
+</H4>
+  
+
+Ruby 1.9 introduces an incompatible syntax change for conditional statements such as 'if' and 'case/when'. Previously a colon could be used as a shorthand for a 'then' statement; this is perhaps most useful with multiple 'when' statements on one line.
+
+<P>
+The following is legitimate ruby in 1.8:
 
 <P>
 <PRE>
-class &lt;&lt; self
-  attr_accessor :n, :totalX, :totalY
+case x 
+when Regexp  : puts 'a regex'
+when Hash    : puts 'a regex'
+when Numeric : puts 'a number'
+when String  : puts 'a string'
 end
 </PRE>
-
-<P>
-El siguiente ejemplo muestra como crear accessors a las variables de instancia
-de clase:
+But not in ruby 1.9; now an explicit 'then' statement must be used:
 
 <P>
 <PRE>
-$ cat -n creating_class_accessors.rb 
-     1  class Tutu
-     2  
-     3    class &lt;&lt; self
-     4        attr_accessor :n
-     5    end
-     6  
-     7  end
-     8  
-     9  Tutu.n = 4
-    10  p Tutu.n
-    11  
-    12  
-[~/point]$ ruby creating_class_accessors.rb 
-4
+case x
+when Regexp then puts 'a regex'
+...
 </PRE>
-
-<P>
-
-<OL>
-<LI>Una desventaja de las variables de instancia de clase
-es que no pueden ser utilizadas directamente dentro de los métodos de instancia,
-mientras que las variables de clase si son accesibles.
-</LI>
-<LI>Otra desventaja es el riesgo potencial de confundirlas con variables de
-instancia ordinarias
-</LI>
-<LI>Aún así su uso es mas recomendable que el de las variables de clase
-</LI>
-</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5981"
+<A NAME="tex2html6036"
   HREF="node181.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5975"
-  HREF="node161.html">
+<A NAME="tex2html6030"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5969"
+<A NAME="tex2html6024"
   HREF="node179.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5977"
-  HREF="node783.html">
+<A NAME="tex2html6032"
+  HREF="node792.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5979"
-  HREF="node786.html">
+<A NAME="tex2html6034"
+  HREF="node795.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -278,20 +233,20 @@ instancia ordinarias
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5982"
-  HREF="node181.html">Práctica: La Clase Punto</A>
-<B> Subir:</B> <A NAME="tex2html5976"
-  HREF="node161.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html5970"
-  HREF="node179.html">Variables de Clase</A>
- &nbsp; <B>  <A NAME="tex2html5978"
-  HREF="node783.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5980"
-  HREF="node786.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6037"
+  HREF="node181.html">Enumeración de Coordenadas</A>
+<B> Subir:</B> <A NAME="tex2html6031"
+  HREF="node170.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6025"
+  HREF="node179.html">Coerción</A>
+ &nbsp; <B>  <A NAME="tex2html6033"
+  HREF="node792.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6035"
+  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-09-29
+2014-10-08
 </ADDRESS>
 </BODY>
 </HTML>
