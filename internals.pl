@@ -122,16 +122,16 @@ $key = q/section:bloques/;
 $ref_files{$key} = "$dir".q|node40.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/chapter:websockets/;
+$ref_files{$key} = "$dir".q|node456.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/routes/;
 $ref_files{$key} = "$dir".q|node388.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:borrandometodos/;
 $ref_files{$key} = "$dir".q|node134.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/chapter:websockets/;
-$ref_files{$key} = "$dir".q|node456.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/item:gemfile/;

@@ -122,16 +122,16 @@ $key = q/section:bloques/;
 $external_labels{$key} = "$URL/" . q|node40.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/chapter:websockets/;
+$external_labels{$key} = "$URL/" . q|node456.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/routes/;
 $external_labels{$key} = "$URL/" . q|node388.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:borrandometodos/;
 $external_labels{$key} = "$URL/" . q|node134.html|; 
-$noresave{$key} = "$nosave";
-
-$key = q/chapter:websockets/;
-$external_labels{$key} = "$URL/" . q|node456.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/item:gemfile/;
