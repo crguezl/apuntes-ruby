@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Other Testing tools</TITLE>
-<META NAME="description" CONTENT="Other Testing tools">
+<TITLE>5: Red: should and should_not</TITLE>
+<META NAME="description" CONTENT="5: Red: should and should_not">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node660.html">
 <LINK REL="previous" HREF="node658.html">
-<LINK REL="up" HREF="node587.html">
+<LINK REL="up" HREF="node653.html">
 <LINK REL="next" HREF="node660.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14310"
+<A NAME="tex2html14385"
   HREF="node660.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14304"
-  HREF="node587.html">
+<A NAME="tex2html14379"
+  HREF="node653.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14298"
+<A NAME="tex2html14373"
   HREF="node658.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14306"
-  HREF="node792.html">
+<A NAME="tex2html14381"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14308"
-  HREF="node795.html">
+<A NAME="tex2html14383"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,91 +92,143 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14311"
-  HREF="node660.html">RDoc</A>
-<B> Subir:</B> <A NAME="tex2html14305"
-  HREF="node587.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14299"
-  HREF="node658.html">Cucumber, Capybara</A>
- &nbsp; <B>  <A NAME="tex2html14307"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14309"
-  HREF="node795.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14386"
+  HREF="node660.html">6: Green</A>
+<B> Subir:</B> <A NAME="tex2html14380"
+  HREF="node653.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html14374"
+  HREF="node658.html">4: refactor</A>
+ &nbsp; <B>  <A NAME="tex2html14382"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14384"
+  HREF="node800.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061100000000000000000">
-Other Testing tools</A>
-</H1>
+<H2><A NAME="SECTION06916000000000000000">
+5: Red:  should and should_not</A>
+</H2>
 
 <P>
-See
-<A NAME="tex2html1494"
-  HREF="http://www.saasbook.info/courses">SAASBOOK. Questions specific to CS 169.1x/CS 169.2x</A>
-<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/math/rpcalc_spec.rb 
+#require File.join(File.dirname(__FILE__), "/../spec_helper")
+require "spec_helper"
+module Math
+  describe RPCalc do
+    before :each do
+      @c = Math::RPCalc.new
+    end
 
-<H4><A NAME="SECTION061100010000000000000">
-Why are you using Ruby and Rails rather than a more popular language like Java or Python?</A>
-</H4>
-  
+    context "When an erroneous input is given" do
+      before :each do
+        @e = proc { @c.calc('a') }
+      end
+      it "must raise an exception" do
+        expect { @e[] }.to raise_error(SyntaxError)
+        expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
+      end
+    end
 
-<P>
-We believe it is critical to teach the importance of testing, of communicating with nontechnical customers, and of using all methods at your disposal to create code that is modular and reusable.  Our
-colleagues in the SaaS industry strongly support these goals.
-The Ruby/Rails ecosystem has by far the most developed tools for unit
-and functional testing (rspec), integration testing (capybara),
-acceptance testing and customer communication (cucumber), as well
-as great tools for code analysis both quantitative (flog, simplecov,
-saikuro) and qualitative (reek, flay).  And Ruby, as a language,
-includes a number of mechanisms that make it easier to architect your
-code for reuse (including higher order functions, internal iterators
-using yield(), mix-ins, and metaprogramming).
+    context "When a correct input is given" do
+      it "must compute the answer" do
+        r = @c.calc('2 3 + 4 *')
+        r.should eq 20
+        @c.stack.should eq []
+      end
+    end
 
-<P>
-
-<UL>
-<LI><A NAME="tex2html1495"
-  HREF="https://github.com/troessner/reek">Reek is a tool that examines Ruby classes, modules and methods and reports any code smells it finds</A>.
-</LI>
-<LI><A NAME="tex2html1496"
-  HREF="https://github.com/colszowka/simplecov">Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites</A>
-</LI>
-<LI><A NAME="tex2html1497"
-  HREF="http://lkdjiin.github.io/coco/">Code coverage for ruby 1.9.3, 2.0 and 2.1</A>
-</LI>
-</UL>
+  end    # RPCalc
+end      # Math
+</PRE>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<A NAME="tex2html1501"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A> achieves a high level of expressiveness and readability
+by exploiting open classes in Ruby to add the methods <code>should()</code> 
+and <code>should_not( )</code> to every object in the system. Each
+method accepts either a <A NAME="26306"></A><SPAN  CLASS="textbf">matcher</SPAN> or a Ruby expression using a specific
+subset of Ruby operators. 
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html14312"
-  HREF="node659.html#SECTION061100010000000000000">Why are you using Ruby and Rails rather than a more popular language like Java or Python?</A>
-</UL></UL></UL></UL>
-<!--End of Table of Child-Links-->
+<P>
+A matcher is an object that tries to match
+against an expected outcome.
+
+<P>
+Let’s take a look at an example using the equal matcher, which you
+can access through the method <code>eq</code>:
+<PRE>
+       r.should eq 20
+</PRE>
+When the Ruby interpreter encounters this line, it begins by evaluating <code>eq 20</code>. 
+
+<P>
+This is an RSpec method that returns a matcher object configured to match for equality with the value 20. 
+The matcher then becomes the argument to <code>r.should</code>.
+
+<P>
+Behind the scenes, the <code>should( )</code> method calls
+<code>matcher.matches?</code>, passing <code>self</code> (the result object)
+as the argument. Because <code>should( )</code> is added to every object,
+it can be any object. Similarly, the matcher can be any object that
+responds to <code>matches?(object)</code>.
+
+<P>
+If <code>matches?(self)</code> returns <code>true</code>, then the expectation is met and execution moves on to the next line in the example. 
+
+<P>
+If <code>matches?(self)</code> returns <code>false</code>, <code>should( )</code> asks the matcher for a failure message and raises an <code>ExpectationNotMetError</code> with that message.
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
+rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
+
+Math::RPCalc
+  When an erroneous input is given
+    must raise an exception
+  When a correct input is given
+    must compute the answer (FAILED - 1)
+
+Failures:
+
+  1) Math::RPCalc When a correct input is given must compute the answer
+     Failure/Error: r = @c.calc('2 3 + 4 *')
+     SyntaxError:
+       Error. found '2'. Expected number or operator
+     # ./lib/math/rpcalc.rb:12:in `block in calc'
+     # ./lib/math/rpcalc.rb:11:in `each'
+     # ./lib/math/rpcalc.rb:11:in `calc'
+     # ./spec/math/rpcalc_spec.rb:21:in `block (3 levels) in &lt;module:Math&gt;'
+
+Finished in 0.00244 seconds
+2 examples, 1 failure
+
+Failed examples:
+
+rspec ./spec/math/rpcalc_spec.rb:20 # Math::RPCalc When a correct input is given must compute the answer
+rake aborted!
+</PRE>
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14310"
+<A NAME="tex2html14385"
   HREF="node660.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14304"
-  HREF="node587.html">
+<A NAME="tex2html14379"
+  HREF="node653.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14298"
+<A NAME="tex2html14373"
   HREF="node658.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14306"
-  HREF="node792.html">
+<A NAME="tex2html14381"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14308"
-  HREF="node795.html">
+<A NAME="tex2html14383"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -227,20 +279,20 @@ using yield(), mix-ins, and metaprogramming).
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14311"
-  HREF="node660.html">RDoc</A>
-<B> Subir:</B> <A NAME="tex2html14305"
-  HREF="node587.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14299"
-  HREF="node658.html">Cucumber, Capybara</A>
- &nbsp; <B>  <A NAME="tex2html14307"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14309"
-  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14386"
+  HREF="node660.html">6: Green</A>
+<B> Subir:</B> <A NAME="tex2html14380"
+  HREF="node653.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html14374"
+  HREF="node658.html">4: refactor</A>
+ &nbsp; <B>  <A NAME="tex2html14382"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14384"
+  HREF="node800.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-09
+2014-10-21
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>JavaScript en el Lado del Servidor</TITLE>
-<META NAME="description" CONTENT="JavaScript en el Lado del Servidor">
+<TITLE>Los Métodos call y apply</TITLE>
+<META NAME="description" CONTENT="Los Métodos call y apply">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node556.html">
-<LINK REL="previous" HREF="node529.html">
-<LINK REL="up" HREF="node517.html">
+<LINK REL="previous" HREF="node531.html">
+<LINK REL="up" HREF="node531.html">
 <LINK REL="next" HREF="node533.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12114"
+<A NAME="tex2html12185"
   HREF="node533.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12108"
-  HREF="node517.html">
+<A NAME="tex2html12179"
+  HREF="node531.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12102"
+<A NAME="tex2html12175"
   HREF="node531.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12110"
-  HREF="node792.html">
+<A NAME="tex2html12181"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12112"
-  HREF="node795.html">
+<A NAME="tex2html12183"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,107 +91,90 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12115"
-  HREF="node533.html">Instalar Node.js</A>
-<B> Subir:</B> <A NAME="tex2html12109"
-  HREF="node517.html">JAVASCRIPT, HTML y CSS</A>
-<B> Anterior:</B> <A NAME="tex2html12103"
-  HREF="node531.html">Ejercicios</A>
- &nbsp; <B>  <A NAME="tex2html12111"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12113"
-  HREF="node795.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12186"
+  HREF="node533.html">Programación Funcional</A>
+<B> Subir:</B> <A NAME="tex2html12180"
+  HREF="node531.html">Funciones</A>
+<B> Anterior:</B> <A NAME="tex2html12176"
+  HREF="node531.html">Funciones</A>
+ &nbsp; <B>  <A NAME="tex2html12182"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12184"
+  HREF="node800.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04500000000000000000"></A>
-<A NAME="chapter:nodejs"></A>
+<H2><A NAME="SECTION04301000000000000000"></A>
+<A NAME="subsection:callyapply"></A>
 <BR>
-JavaScript en el Lado del Servidor
-</H1>
-Node es un intérprete JavaScript escrito en C++ y con una API ligada a
-Unix para trabajar con procesos, fichero, sockets, etc.  Los programas
-Node por defecto nunca se bloquean. Node utiliza manejadores de eventos
-que a menudo se implementan haciendo uso de funciones anidadas  y
-clausuras.
+Los Métodos <TT>call</TT> y <TT>apply</TT>
+</H2>
+Los métodos  <TT>call</TT>  y  <TT>apply</TT>  nos permiten
+invocar una función como si fuera un método de algún otro 
+objeto.
+
+<P>
+<PRE>
+[~/Dropbox/src/javascript/learning]$ cat call.js 
+var Bob = {
+  name: "Bob",
+  greet: function() {
+    console.log("Hi, I'm " + this.name);
+  }
+}
+ 
+var Alice = {
+  name: "Alice",
+};
+
+Bob.greet.call(Alice);
+</PRE>
+
+<P>
+<PRE>
+[~/Dropbox/src/javascript/learning]$ node call.js
+Hi, I'm Alice
+</PRE>
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html1237"
+  HREF="http://odetocode.com/blogs/scott/archive/2007/07/05/function-apply-and-function-call-in-javascript.aspx">Function.apply and Function.call in JavaScript</A>
+<PRE>
+&gt; function f() { console.log(this.x); }
+undefined
+&gt; f.toString()
+'function f() { console.log(this.x); }'
+&gt; z = { x : 99 }
+{ x: 99 }
+&gt; f.call(z)
+99
+undefined
+&gt;
+</PRE>
+</LI>
+<LI><PRE>
+&gt; o  = { x : 15 }
+{ x: 15 }
+&gt; function f(m) { console.log(m+" "+this.x); }
+undefined
+&gt; f("invoking f")
+invoking f 10
+undefined
+&gt; f.call(o, "invoking f via call");
+invoking f via call 15
+undefined
+</PRE>
+</LI>
+</OL>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html12116"
-  HREF="node533.html">Instalar Node.js</A>
-<LI><A NAME="tex2html12117"
-  HREF="node534.html">Primeros Pasos. Un Ejemplo Simple</A>
-<LI><A NAME="tex2html12118"
-  HREF="node535.html">Usando REPL desde un programa</A>
-<LI><A NAME="tex2html12119"
-  HREF="node536.html">Usando REPL via un socket TCP</A>
-<LI><A NAME="tex2html12120"
-  HREF="node537.html">Referencias sobre REPL</A>
-<LI><A NAME="tex2html12121"
-  HREF="node538.html">Entrada Salida en Node.js</A>
-<LI><A NAME="tex2html12122"
-  HREF="node539.html">Debugger</A>
-<LI><A NAME="tex2html12123"
-  HREF="node540.html">Modulos</A>
-<UL>
-<LI><A NAME="tex2html12124"
-  HREF="node541.html">Introducción</A>
-<LI><A NAME="tex2html12125"
-  HREF="node542.html">Ciclos</A>
-<LI><A NAME="tex2html12126"
-  HREF="node543.html">Especificación de Ficheros Conteniendo Módulos</A>
-<LI><A NAME="tex2html12127"
-  HREF="node544.html">Carga desde Carpetas <TT>node_modules</TT></A>
-<LI><A NAME="tex2html12128"
-  HREF="node545.html">Las Carpetas Usadas Como Módulos</A>
-<LI><A NAME="tex2html12129"
-  HREF="node546.html">Caching</A>
-<LI><A NAME="tex2html12130"
-  HREF="node547.html">El Objeto <TT>module</TT> y <TT>module.exports</TT></A>
-<LI><A NAME="tex2html12131"
-  HREF="node548.html">Algoritmo de Búsqueda Ejecutado por <TT>require</TT></A>
-<UL>
-<LI><A NAME="tex2html12132"
-  HREF="node548.html#SECTION04588010000000000000">require(X) from module at path Y</A>
-<LI><A NAME="tex2html12133"
-  HREF="node548.html#SECTION04588020000000000000">LOAD_AS_FILE(X)</A>
-<LI><A NAME="tex2html12134"
-  HREF="node548.html#SECTION04588030000000000000">LOAD_AS_DIRECTORY(X)</A>
-<LI><A NAME="tex2html12135"
-  HREF="node548.html#SECTION04588040000000000000">LOAD_NODE_MODULES(X, START)</A>
-<LI><A NAME="tex2html12136"
-  HREF="node548.html#SECTION04588050000000000000">NODE_MODULES_PATHS(START)</A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html12137"
-  HREF="node549.html">Como Crear tu Propio Módulo en Node.js</A>
-<UL>
-<LI><A NAME="tex2html12138"
-  HREF="node550.html">Introducción</A>
-<LI><A NAME="tex2html12139"
-  HREF="node551.html">Un Fichero <TT>package.json</TT></A>
-<LI><A NAME="tex2html12140"
-  HREF="node552.html">README y otros documentos</A>
-<LI><A NAME="tex2html12141"
-  HREF="node553.html">Véase También</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html12142"
-  HREF="node554.html">JQuery en Node.js</A>
-<LI><A NAME="tex2html12143"
-  HREF="node555.html">Mas sobre Node</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-09
+2014-10-21
 </ADDRESS>
 </BODY>
 </HTML>

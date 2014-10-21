@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Caching</TITLE>
-<META NAME="description" CONTENT="Caching">
+<TITLE>Introducción</TITLE>
+<META NAME="description" CONTENT="Introducción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node547.html">
 <LINK REL="previous" HREF="node545.html">
-<LINK REL="up" HREF="node540.html">
+<LINK REL="up" HREF="node545.html">
 <LINK REL="next" HREF="node547.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12351"
+<A NAME="tex2html12420"
   HREF="node547.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12345"
-  HREF="node540.html">
+<A NAME="tex2html12414"
+  HREF="node545.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12339"
+<A NAME="tex2html12408"
   HREF="node545.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12347"
-  HREF="node792.html">
+<A NAME="tex2html12416"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12349"
-  HREF="node795.html">
+<A NAME="tex2html12418"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,137 +92,92 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12352"
-  HREF="node547.html">El Objeto module y</A>
-<B> Subir:</B> <A NAME="tex2html12346"
-  HREF="node540.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html12340"
-  HREF="node545.html">Las Carpetas Usadas Como</A>
- &nbsp; <B>  <A NAME="tex2html12348"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12350"
-  HREF="node795.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12421"
+  HREF="node547.html">Ciclos</A>
+<B> Subir:</B> <A NAME="tex2html12415"
+  HREF="node545.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12409"
+  HREF="node545.html">Modulos</A>
+ &nbsp; <B>  <A NAME="tex2html12417"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12419"
+  HREF="node800.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04586000000000000000">
-Caching</A>
+<H2><A NAME="SECTION04581000000000000000">
+Introducción</A>
 </H2>
 
 <P>
-
-<OL>
-<LI>Modules are cached after the first time they are loaded. This means
-(among other things) that every call to <code>require('foo')</code> will get exactly
-the same object returned, if it would resolve to the same file.
-
-<P>
-</LI>
-<LI>Multiple calls to <code>require('foo')</code> may not cause the module code
-to be executed multiple times. This is an important feature. With it,
-<A NAME="22171"></A><SPAN  CLASS="textbf">partially done</SPAN> objects can be returned, thus allowing transitive
-dependencies to be loaded even when they would cause cycles.
+<PRE>
+[~/javascript/node.js/creating_modules(master)]$ cat foo.js 
+var circle = require('./circle.js');
+console.log( 'The area of a circle of radius 4 is '
+           + circle.area(4));
+</PRE>
 
 <P>
-</LI>
-<LI>If you want to have a module execute code multiple times, then export
-a function, and call that function.
+<PRE>
+[~/javascript/node.js/creating_modules(master)]$ cat circle.js 
+var PI = Math.PI;
+
+exports.area = function (r) {
+  return PI * r * r;
+};
+
+exports.circumference = function (r) {
+  return 2 * PI * r;
+};
+</PRE>
 
 <P>
-</LI>
-<LI>Modules are cached based on their <B>resolved filename</B>. Since modules may
-resolve to a different filename based on the location of the calling
-module (loading from <code>node_modules folders</code>), it is not a guarantee that
-<code>require('foo')</code> will always return the exact same object, if it would
-resolve to different files.
+<PRE>
+[~/javascript/node.js/creating_modules(master)]$ node foo.js The area of a circle of radius 4 is 50.26548245743669
+</PRE>
 
 <P>
-</LI>
-</OL>
+El módulo <code>circle.js</code> exporta las funciones <code>area()</code> 
+y <code>circumference()</code>. Para exportar un objeto lo añadimos 
+al objeto expecial <code>exports</code>.
 
 <P>
+Las variables locales al módulo serán privadas.
+En este ejemplo la variable <code>PI</code> es privada a <code>circle.js</code>.
 
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html12351"
-  HREF="node547.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12345"
-  HREF="node540.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12339"
-  HREF="node545.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12347"
-  HREF="node792.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12349"
-  HREF="node795.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html12352"
-  HREF="node547.html">El Objeto module y</A>
-<B> Subir:</B> <A NAME="tex2html12346"
-  HREF="node540.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html12340"
-  HREF="node545.html">Las Carpetas Usadas Como</A>
- &nbsp; <B>  <A NAME="tex2html12348"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12350"
-  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<P>
+<PRE>
+[~/javascript/node.js/creating_modules(master)]$ node debug foo.js 
+&lt; debugger listening on port 5858
+connecting... ok
+break in foo.js:1
+  1 var circle = require('./circle.js');
+  2 console.log( 'The area of a circle of radius 4 is '
+  3            + circle.area(4));
+debug&gt; n
+break in foo.js:2
+  1 var circle = require('./circle.js');
+  2 console.log( 'The area of a circle of radius 4 is '
+  3            + circle.area(4));
+  4 
+debug&gt; repl
+Press Ctrl + C to leave debug repl
+&gt; circle
+{ circumference: [Function],
+  area: [Function] }
+&gt; circle.area(2)
+12.566370614359172
+&gt; PI
+ReferenceError: PI is not defined
+&gt;
+</PRE>
+
+<P>
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-09
+2014-10-21
 </ADDRESS>
 </BODY>
 </HTML>

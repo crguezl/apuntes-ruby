@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Google+ Sign-In for server-side apps</TITLE>
-<META NAME="description" CONTENT="Google+ Sign-In for server-side apps">
+<TITLE>Using OAuth 2.0 to Access Google APIs</TITLE>
+<META NAME="description" CONTENT="Using OAuth 2.0 to Access Google APIs">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node722.html">
 <LINK REL="previous" HREF="node720.html">
-<LINK REL="up" HREF="node705.html">
+<LINK REL="up" HREF="node710.html">
 <LINK REL="next" HREF="node722.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15320"
+<A NAME="tex2html15390"
   HREF="node722.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15314"
-  HREF="node705.html">
+<A NAME="tex2html15384"
+  HREF="node710.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15308"
+<A NAME="tex2html15378"
   HREF="node720.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15316"
-  HREF="node792.html">
+<A NAME="tex2html15386"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15318"
-  HREF="node795.html">
+<A NAME="tex2html15388"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,68 +92,100 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15321"
-  HREF="node722.html">Authentication using the Google</A>
-<B> Subir:</B> <A NAME="tex2html15315"
-  HREF="node705.html">OAuth</A>
-<B> Anterior:</B> <A NAME="tex2html15309"
-  HREF="node720.html">Google + API for</A>
- &nbsp; <B>  <A NAME="tex2html15317"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15319"
-  HREF="node795.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15391"
+  HREF="node722.html">Google OAuth 2.0 Playground</A>
+<B> Subir:</B> <A NAME="tex2html15385"
+  HREF="node710.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html15379"
+  HREF="node720.html">Práctica: Usando OAuth con</A>
+ &nbsp; <B>  <A NAME="tex2html15387"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15389"
+  HREF="node800.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0619130000000000000000">
-Google+ Sign-In for server-side apps</A>
+<H1><A NAME="SECTION061980000000000000000">
+Using OAuth 2.0 to Access Google APIs</A>
 </H1>
 
 <P>
-To take advantage of all of the benefits of Google+ Sign-In you must
-use a hybrid server-side flow where a user authorizes your app on the
-client side using the JavaScript API client and you send a
-special one-time authorization code to your server. 
+Véase 
+<A NAME="tex2html1713"
+  HREF="https://developers.google.com/accounts/docs/OAuth2">Using OAuth 2.0 to Access Google APIs</A>.
 
 <P>
-Your server exchanges this one-time-use code to acquire its own access and
-refresh tokens from Google for the server to be able to make its own API
-calls, which can be done while the user is offline. 
-
-<P>
-This one-time code flow has security advantages over both a pure
-server-side flow and over sending access tokens to your server.
-
-<P>
-
-<FONT COLOR="#ff0000"> The Google+ Sign-In server-side flow differs from the  <A NAME="tex2html1710"
+Google APIs use the  <A NAME="tex2html1714"
   HREF="http://oauth.net/">OAuth</A>
- 2.0
-for Web server applications flow.</FONT>
+ 2.0 protocol for authentication and
+authorization. Google supports common  <A NAME="tex2html1715"
+  HREF="http://oauth.net/">OAuth</A>
+ 2.0 scenarios such as those
+for web server, installed, and client-side applications.
 
 <P>
 
-<img src="server_side_code_flow.png" />
+<OL>
+<LI><A NAME="tex2html1716"
+  HREF="http://oauth.net/">OAuth</A>
+ 2.0 is a relatively simple protocol. To begin, you obtain  <A NAME="tex2html1717"
+  HREF="http://oauth.net/">OAuth</A>
+
+2.0 credentials from the 
+<A NAME="tex2html1718"
+  HREF="https://cloud.google.com/console">Google Developers Console</A>. 
+</LI>
+<LI>See the Video in YouTube 
+<A NAME="tex2html1719"
+  HREF="http://youtu.be/Im69kzhpR3I">Obtaining a developer key for the YouTube Data API v3 and the Analytics API</A>
+</LI>
+<LI>Then your client
+application requests an 
+<FONT COLOR="#0000ff"> access token</FONT> from the 
+
+<FONT COLOR="#0000ff"> Google Authorization Server</FONT>,
+extracts a token from the response, and sends the token to the 
+
+<FONT COLOR="#0000ff"> Google API</FONT> 
+that you want to access.
+</LI>
+</OL>
+
+<P>
+To get access keys, go to the Google APIs Console and specify your
+<A NAME="tex2html1720"
+  HREF="https://cloud.google.com/console">Google Developers Console</A>. 
+application's name and the Google APIs it will access. For simple access,
+Google generates an API key that uniquely identifies your application
+in its transactions with the Google Auth server.
+
+<P>
+For authorized access, you must also tell Google your website's protocol
+and domain. In return, Google generates a client ID. Your application
+submits this to the Google Auth server to get an  <A NAME="tex2html1721"
+  HREF="http://oauth.net/">OAuth</A>
+ 2.0 access
+token.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15320"
+<A NAME="tex2html15390"
   HREF="node722.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15314"
-  HREF="node705.html">
+<A NAME="tex2html15384"
+  HREF="node710.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15308"
+<A NAME="tex2html15378"
   HREF="node720.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15316"
-  HREF="node792.html">
+<A NAME="tex2html15386"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15318"
-  HREF="node795.html">
+<A NAME="tex2html15388"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -204,20 +236,20 @@ for Web server applications flow.</FONT>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15321"
-  HREF="node722.html">Authentication using the Google</A>
-<B> Subir:</B> <A NAME="tex2html15315"
-  HREF="node705.html">OAuth</A>
-<B> Anterior:</B> <A NAME="tex2html15309"
-  HREF="node720.html">Google + API for</A>
- &nbsp; <B>  <A NAME="tex2html15317"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15319"
-  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15391"
+  HREF="node722.html">Google OAuth 2.0 Playground</A>
+<B> Subir:</B> <A NAME="tex2html15385"
+  HREF="node710.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html15379"
+  HREF="node720.html">Práctica: Usando OAuth con</A>
+ &nbsp; <B>  <A NAME="tex2html15387"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15389"
+  HREF="node800.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-09
+2014-10-21
 </ADDRESS>
 </BODY>
 </HTML>

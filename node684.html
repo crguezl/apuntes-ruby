@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Enlaces</TITLE>
-<META NAME="description" CONTENT="Enlaces">
+<TITLE>Pessimistic version constraint</TITLE>
+<META NAME="description" CONTENT="Pessimistic version constraint">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node685.html">
 <LINK REL="previous" HREF="node683.html">
-<LINK REL="up" HREF="node682.html">
+<LINK REL="up" HREF="node670.html">
 <LINK REL="next" HREF="node685.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14731"
+<A NAME="tex2html14770"
   HREF="node685.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14725"
-  HREF="node682.html">
+<A NAME="tex2html14764"
+  HREF="node670.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14719"
+<A NAME="tex2html14758"
   HREF="node683.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14727"
-  HREF="node792.html">
+<A NAME="tex2html14766"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14729"
-  HREF="node795.html">
+<A NAME="tex2html14768"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,85 +92,157 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14732"
-  HREF="node685.html">Notificaciones/Notifications</A>
-<B> Subir:</B> <A NAME="tex2html14726"
-  HREF="node682.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html14720"
-  HREF="node683.html">Uso de Travis</A>
- &nbsp; <B>  <A NAME="tex2html14728"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14730"
-  HREF="node795.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14771"
+  HREF="node685.html">Controlando nuestras dependencias</A>
+<B> Subir:</B> <A NAME="tex2html14765"
+  HREF="node670.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14759"
+  HREF="node683.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html14767"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14769"
+  HREF="node800.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061520000000000000000">
-Enlaces</A>
+<H1><A NAME="SECTION0614140000000000000000">
+Pessimistic version constraint</A>
 </H1>
+If your gem properly follows <A NAME="26968"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
+scheme, then other Ruby developers can take advantage of this when
+choosing a version constraint to lock down your gem in their
+application.
 
-<UL>
-<LI>Ejemplo en GitHub
+<P>
+Let’s say the following releases of a gem exist:
+
+<P>
+<PRE>
+Version 2.1.0 — Baseline
+Version 2.2.0 — Introduced some new (backward compatible) features.
+Version 2.2.1 — Removed some bugs
+Version 2.2.2 — Streamlined your code
+Version 2.3.0 — More new features (but still backwards compatible).
+Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
+</PRE>
+Someone who wants to use your gem has determined that 
 
 <OL>
-<LI><A NAME="tex2html1574"
-  HREF="https://github.com/coromoto/CI-Point">La Clase Point con Integración Contínua (GitHub)</A>
+<LI>version 2.2.0
+works with their software, 
 </LI>
-<LI><A NAME="tex2html1575"
-  HREF="https://travis-ci.org/coromoto/CI-Point/">La clase Point con Integración Contínua (Travis)</A>
+<LI>but version 2.1.0 doesn’t have a feature
+they need. 
 </LI>
-</OL>
-</LI>
-<LI><A NAME="tex2html1576"
-  HREF="http://en.wikipedia.org/wiki/Continuous_integration">Continuous Integration</A>
-(Wikipedia)
-</LI>
-<LI>Travis
+<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
+might look like:
 
-<OL>
-<LI><A NAME="tex2html1577"
-  HREF="http://about.travis-ci.org">Travis</A>
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  '&gt;= 2.2.0'
+</PRE>
+or 
+<PRE>
+# bundler
+gem 'library', '&gt;= 2.2.0'
+</PRE>
+This is an <A NAME="26970"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
+
+<P>
+It’s saying that all
+changes from <code>2.x</code> on will work with my software, 
+but for version
+<code>3.0.0</code> this will not be true.
+
+<P>
 </LI>
-<LI><A NAME="tex2html1578"
-  HREF="http://about.travis-ci.org/docs/user/languages/ruby/">Travis para Ruby</A>
+<LI>The alternative here is to use <A NAME="26972"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
+
+<P>
+This explicitly excludes the version that might break your code.
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  ['&gt;= 2.2.0', '&lt; 3.0']
+</PRE>
+or
+
+<P>
+<PRE>
+# bundler
+gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
+</PRE>
 </LI>
 <LI><A NAME="tex2html1579"
-  HREF="https://github.com/travis-ci/travis-ci">Travis (Proyecto en GitHub)</A>
-</LI>
-</OL>
-</LI>
-<LI>Creación de Gemas
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> provides a shortcut for this, commonly known as the <A NAME="26977"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
 
-<OL>
-<LI><A NAME="tex2html1580"
-  HREF="https://github.com/crguezl/bleigh-tutorial-to-building-gems">Bleigh tutorial to building gems (Proyecto en GitHub)</A>
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  '~&gt; 2.2'
+</PRE>
+
+<P>
+<PRE>
+# bundler
+gem 'library', '~&gt; 2.2'
+</PRE>
+Notice that we dropped the <code>PATCH</code> level of the version number. 
+
+<P>
 </LI>
-<LI><A NAME="tex2html1581"
-  HREF="http://www.intridea.com/blog/2012/3/23/polishing-rubies-part-iii">Polishing Rubies (Part 3): Tools for Testing by Michael Bleigh March 23, 2012</A>
+<LI>Had
+we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
+<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
+
+<P>
+</LI>
+<LI>If you want to allow use of newer backwards-compatible versions but
+need a specific bug fix you can use a compound requirement:
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+</PRE>
+
+<P>
+<PRE>
+# bundler
+gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+</PRE>
+</LI>
+<LI>The important note to take home here is to be aware others will be
+using your gems, so guard yourself from potential bugs/failures in
+future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
+if at all possible.
 </LI>
 </OL>
-</LI>
-</UL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14731"
+<A NAME="tex2html14770"
   HREF="node685.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14725"
-  HREF="node682.html">
+<A NAME="tex2html14764"
+  HREF="node670.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14719"
+<A NAME="tex2html14758"
   HREF="node683.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14727"
-  HREF="node792.html">
+<A NAME="tex2html14766"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14729"
-  HREF="node795.html">
+<A NAME="tex2html14768"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -221,20 +293,20 @@ Enlaces</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14732"
-  HREF="node685.html">Notificaciones/Notifications</A>
-<B> Subir:</B> <A NAME="tex2html14726"
-  HREF="node682.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html14720"
-  HREF="node683.html">Uso de Travis</A>
- &nbsp; <B>  <A NAME="tex2html14728"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14730"
-  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14771"
+  HREF="node685.html">Controlando nuestras dependencias</A>
+<B> Subir:</B> <A NAME="tex2html14765"
+  HREF="node670.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14759"
+  HREF="node683.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html14767"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14769"
+  HREF="node800.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-09
+2014-10-21
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Herencia</TITLE>
-<META NAME="description" CONTENT="Herencia">
+<TITLE>Enumeración de Propiedades</TITLE>
+<META NAME="description" CONTENT="Enumeración de Propiedades">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node531.html">
 <LINK REL="previous" HREF="node529.html">
-<LINK REL="up" HREF="node529.html">
+<LINK REL="up" HREF="node526.html">
 <LINK REL="next" HREF="node531.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12088"
+<A NAME="tex2html12157"
   HREF="node531.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12082"
-  HREF="node529.html">
+<A NAME="tex2html12151"
+  HREF="node526.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12076"
+<A NAME="tex2html12147"
   HREF="node529.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12084"
-  HREF="node792.html">
+<A NAME="tex2html12153"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12086"
-  HREF="node795.html">
+<A NAME="tex2html12155"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,74 +91,65 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12089"
-  HREF="node531.html">Ejercicios</A>
-<B> Subir:</B> <A NAME="tex2html12083"
-  HREF="node529.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html12077"
-  HREF="node529.html">Clases y Módulos</A>
- &nbsp; <B>  <A NAME="tex2html12085"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12087"
-  HREF="node795.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12158"
+  HREF="node531.html">Funciones</A>
+<B> Subir:</B> <A NAME="tex2html12152"
+  HREF="node526.html">Objetos</A>
+<B> Anterior:</B> <A NAME="tex2html12148"
+  HREF="node529.html">Comprobando Propiedades</A>
+ &nbsp; <B>  <A NAME="tex2html12154"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12156"
+  HREF="node800.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04410000000000000000">
-Herencia</A>
+<H1><A NAME="SECTION04240000000000000000">
+Enumeración de Propiedades</A>
 </H1>
 
 <P>
 <PRE>
-[~/Dropbox/src/javascript/inheritance]$ cat inh1.js 
-//Shape - superclass
-function Shape() {
-  this.x = 0;
-  this.y = 0;
-}
- 
-Shape.prototype.toString = function() {
-  return "("+this.x+", "+this.y+")";
-}
-
-Shape.prototype.move = function(x, y) {
-    this.x += x;
-    this.y += y;
-    console.info("Shape moved to "+this);
-};
- 
-// Rectangle - subclass
-function Rectangle() {
-  Shape.call(this); //call super constructor.
-}
- 
-// Rectangle inherits from Shape
-Rectangle.prototype = Object.create(Shape.prototype);
- 
-var rect = new Rectangle();
- 
-console.log("x = "+rect);
-console.log("rect is an instance of Rectangle? "+(rect instanceof Rectangle)) //true.
-console.log("rect is an instance of Shape? "+(rect instanceof Shape))         //true.
- 
-rect.move(1, 2); //Outputs, "Shape moved."
+&gt; o = { x: 1 }
+{ x: 1 }
+&gt; b = Object.create(o)
+{}
+&gt; b.y = 2
+2
+&gt; b.propertyIsEnumerable('x')
+false
+&gt; b.propertyIsEnumerable('y')
+true
+&gt; Object.prototype.propertyIsEnumerable('toString')
+false
+&gt; a = {x:1, y:2 }
+{ x: 1, y: 2 }
+&gt; b = Object.create(a)
+{}
+&gt; b.z = 3
+3
+&gt; for(i in b) console.log(b[i])
+3
+1
+2
+undefined
+&gt; for(i in b) console.log(i)
+z
+x
+y
+undefined
+&gt; b.propertyIsEnumerable("toString")
+false
 </PRE>
 
 <P>
-<PRE>
-[~/Dropbox/src/javascript/inheritance]$ node inh1.js 
-x = (0, 0)
-rect is an instance of Rectangle? true
-rect is an instance of Shape? true
-Shape moved to (1, 2)
-</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-09
+2014-10-21
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>OmniAuth gem: Standardized Multi-Provider Authentication for Ruby</TITLE>
-<META NAME="description" CONTENT="OmniAuth gem: Standardized Multi-Provider Authentication for Ruby">
+<TITLE>OAuth</TITLE>
+<META NAME="description" CONTENT="OAuth">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node712.html">
-<LINK REL="previous" HREF="node707.html">
-<LINK REL="up" HREF="node705.html">
+<LINK REL="next" HREF="node728.html">
+<LINK REL="previous" HREF="node702.html">
+<LINK REL="up" HREF="node592.html">
 <LINK REL="next" HREF="node711.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15154"
+<A NAME="tex2html15180"
   HREF="node711.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15148"
-  HREF="node705.html">
+<A NAME="tex2html15174"
+  HREF="node592.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15142"
+<A NAME="tex2html15168"
   HREF="node709.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15150"
-  HREF="node792.html">
+<A NAME="tex2html15176"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15152"
-  HREF="node795.html">
+<A NAME="tex2html15178"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,278 +92,127 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15155"
-  HREF="node711.html">Auth Hash Schema</A>
-<B> Subir:</B> <A NAME="tex2html15149"
-  HREF="node705.html">OAuth</A>
-<B> Anterior:</B> <A NAME="tex2html15143"
-  HREF="node709.html">Keys, access, security, and</A>
- &nbsp; <B>  <A NAME="tex2html15151"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15153"
-  HREF="node795.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15181"
+  HREF="node711.html">Introduction to OAuth</A>
+<B> Subir:</B> <A NAME="tex2html15175"
+  HREF="node592.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html15169"
+  HREF="node709.html">Deploy your app to</A>
+ &nbsp; <B>  <A NAME="tex2html15177"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15179"
+  HREF="node800.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061930000000000000000">
-OmniAuth gem: Standardized Multi-Provider Authentication for Ruby</A>
+<H1><A NAME="SECTION061900000000000000000"></A>
+<A NAME="chapter:oauth"></A>
+<BR>
+OAuth
 </H1>
-
-<P>
-
-<UL>
-<LI><A NAME="tex2html1666"
-  HREF="http://intridea.github.io/omniauth/">OmniAuth</A>
-</LI>
-</UL>
-
-<P>
-OmniAuth is a library that standardizes multi-provider authentication
-for web applications. Any developer can create <A NAME="28217"></A><SPAN  CLASS="textbf">strategies</SPAN> for
-OmniAuth that can
-authenticate users via disparate systems. 
-
-<P>
-OmniAuth strategies have been created for everything from Facebook to LDAP.
-
-<P>
-To use OmniAuth, you need only 
-
-<OL>
-<LI>to redirect users to <code>/auth/:provider</code>,
-where <code>:provider</code> is the name of the strategy 
-(for example, <code>developer</code> or <code>twitter</code>). 
-
-<P>
-</LI>
-<LI>From there, OmniAuth will take over and take the
-user through the necessary steps to authenticate them with the chosen strategy.
-
-<P>
-</LI>
-<LI>Once the user has authenticated, 
-OmniAuth sets a special hash called the <A NAME="28219"></A><SPAN  CLASS="textbf">Authentication Hash</SPAN> 
-on the Rack environment of a request to <code>/auth/:provider/callback</code>. 
-
-<P>
-</LI>
-<LI>This hash
-contains as much information about the user as OmniAuth was able to
-glean from the utilized strategy. 
-
-<P>
-</LI>
-<LI>
-<FONT COLOR="#ff0000"> You should set up an endpoint in your
-application that matches to the callback URL and then
-performs whatever steps are necessary for your application</FONT>. 
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION061930010000000000000">
-Getting Started</A>
-</H4>
-  
-
-<P>
-To use OmniAuth in a project with a Gemfile, just add each of the
-
-<FONT COLOR="#0000ff"> strategies</FONT> you want to use individually:
-
-<P>
-<PRE>
-gem 'omniauth-github'
-gem 'omniauth-openid'
-</PRE>
-
-<P>
-Now you can use the <code>OmniAuth::Builder</code> 
-Rack middleware 
-<FONT COLOR="#0000ff"> to build up your
-list of OmniAuth strategies for use in your application</FONT>:
-
-<P>
-Para saber mas sobre Rack y sobre Middlewares Rack,
-véanse las secciones 
-
-<UL>
-<LI>Rack en <A HREF="#chapter:rack"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>,
-</LI>
-<LI><I>Middleware y la Clase Rack::Builder</I> en <A HREF="#section:middleware"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A> 
-y
-</LI>
-<LI><I>La Estructura de una Aplicación Rack</I>
-en
-<A HREF="#section:estructuradeunaapprack"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>
-</LI>
-</UL>
-
-<P>
-<PRE>
-use OmniAuth::Builder do
-  provider:github, ENV['GITHUB_KEY'], ENV['GITHUB_SECRET']
-  provider:openid, :store =&gt; OpenID::Store::Filesystem.new('/tmp')
-end
-</PRE>
-By default, OmniAuth will return auth information to the path
-<code>/auth/:provider/callback</code> inside the Rack environment. 
-
-<P>
-In Sinatra, for
-example, a callback might look something like this:
-
-<P>
-<PRE>
-# Support both GET and POST for callbacks
-%w(get post).each do |method|
-  send(method, "/auth/:provider/callback") do
-    env['omniauth.auth'] # =&gt; OmniAuth::AuthHash
-  end
-end
-</PRE>
-
-<P>
-Also of note, by default, if user authentication fails on the provider
-side, OmniAuth will catch the response and then redirect the request
-to the path <code>/auth/failure</code>,
- passing a corresponding error message in a
-parameter named <code>message</code>. 
-
-<P>
-You may want to add an action to catch these
-cases. Continuing with the previous Sinatra example, you could add an
-action like this:
-
-<P>
-<PRE>
-get '/auth/failure' do
-  flash[:notice] = params[:message] # if using sinatra-flash or rack-flash
-  redirect '/'
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION061930020000000000000">
-Strategies</A>
-</H4>
-  
-
-<P>
-In this link we can find a list of the strategies that are available for OmniAuth:
-<A NAME="tex2html1667"
-  HREF="https://github.com/intridea/omniauth/wiki/List-of-Strategies">List of Strategies for Omniauth</A>.
-
-<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html15156"
-  HREF="node710.html#SECTION061930010000000000000">Getting Started</A>
-<LI><A NAME="tex2html15157"
-  HREF="node710.html#SECTION061930020000000000000">Strategies</A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html15158"
-  HREF="node711.html">Auth Hash Schema</A>
+<LI><A NAME="tex2html15182"
+  HREF="node711.html">Introduction to OAuth</A>
 <UL>
-<LI><A NAME="tex2html15159"
-  HREF="node711.html#SECTION061931010000000000000">Ejemplos</A>
-<LI><A NAME="tex2html15160"
-  HREF="node711.html#SECTION061931020000000000000">Documentación de la Gema</A>
-<LI><A NAME="tex2html15161"
-  HREF="node711.html#SECTION061931030000000000000">Véase</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html15154"
-  HREF="node711.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15148"
-  HREF="node705.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15142"
-  HREF="node709.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15150"
-  HREF="node792.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15152"
-  HREF="node795.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
+<LI><A NAME="tex2html15183"
+  HREF="node711.html#SECTION061910010000000000000">Valet Key for the Web</A>
+<LI><A NAME="tex2html15184"
+  HREF="node711.html#SECTION061910020000000000000">Roles in OAuth</A>
+<LI><A NAME="tex2html15185"
+  HREF="node711.html#SECTION061910030000000000000">Abstract Flow</A>
+<LI><A NAME="tex2html15186"
+  HREF="node711.html#SECTION061910040000000000000">Application Registration</A>
+<LI><A NAME="tex2html15187"
+  HREF="node711.html#SECTION061910050000000000000">Client ID and Client Secret</A>
+<LI><A NAME="tex2html15188"
+  HREF="node711.html#SECTION061910060000000000000">Authorization Grant</A>
+<LI><A NAME="tex2html15189"
+  HREF="node711.html#SECTION061910070000000000000">Grant Type: Authorization Code</A>
+<LI><A NAME="tex2html15190"
+  HREF="node711.html#SECTION061910080000000000000">Véase</A>
+</UL>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15155"
-  HREF="node711.html">Auth Hash Schema</A>
-<B> Subir:</B> <A NAME="tex2html15149"
-  HREF="node705.html">OAuth</A>
-<B> Anterior:</B> <A NAME="tex2html15143"
-  HREF="node709.html">Keys, access, security, and</A>
- &nbsp; <B>  <A NAME="tex2html15151"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15153"
-  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<LI><A NAME="tex2html15191"
+  HREF="node712.html">Google Developers Console</A>
+<UL>
+<LI><A NAME="tex2html15192"
+  HREF="node713.html">Managing projects and applications</A>
+<UL>
+<LI><A NAME="tex2html15193"
+  HREF="node713.html#SECTION061921100000000000000">Managing project members</A>
+</UL>
+<LI><A NAME="tex2html15194"
+  HREF="node714.html">Keys, access, security, and identity</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html15195"
+  HREF="node715.html">OmniAuth gem: Standardized Multi-Provider Authentication for Ruby</A>
+<UL>
+<LI><A NAME="tex2html15196"
+  HREF="node715.html#SECTION061930010000000000000">Getting Started</A>
+<LI><A NAME="tex2html15197"
+  HREF="node715.html#SECTION061930020000000000000">Strategies</A>
+<LI><A NAME="tex2html15198"
+  HREF="node716.html">Auth Hash Schema</A>
+<UL>
+<LI><A NAME="tex2html15199"
+  HREF="node716.html#SECTION061931010000000000000">Ejemplos</A>
+<LI><A NAME="tex2html15200"
+  HREF="node716.html#SECTION061931020000000000000">Documentación de la Gema</A>
+<LI><A NAME="tex2html15201"
+  HREF="node716.html#SECTION061931030000000000000">Véase</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html15202"
+  HREF="node717.html">OmniAuth OAuth2 gem</A>
+<LI><A NAME="tex2html15203"
+  HREF="node718.html">The gem omniauth-google-oauth2</A>
+<UL>
+<LI><A NAME="tex2html15204"
+  HREF="node718.html#SECTION061950010000000000000">Introducción</A>
+<LI><A NAME="tex2html15205"
+  HREF="node718.html#SECTION061950020000000000000">Configuration</A>
+<LI><A NAME="tex2html15206"
+  HREF="node718.html#SECTION061950030000000000000">Auth Hash</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html15207"
+  HREF="node719.html">Ejemplos de uso de omniauth</A>
+<LI><A NAME="tex2html15208"
+  HREF="node720.html">Práctica: Usando OAuth con omniauth</A>
+<LI><A NAME="tex2html15209"
+  HREF="node721.html">Using OAuth 2.0 to Access Google APIs</A>
+<LI><A NAME="tex2html15210"
+  HREF="node722.html">Google OAuth 2.0 Playground</A>
+<LI><A NAME="tex2html15211"
+  HREF="node723.html">Sign-in with Google +</A>
+<LI><A NAME="tex2html15212"
+  HREF="node724.html">Revoking Access to an App</A>
+<LI><A NAME="tex2html15213"
+  HREF="node725.html">Google + API for Ruby</A>
+<UL>
+<LI><A NAME="tex2html15214"
+  HREF="node725.html#SECTION0619120010000000000000">Donde</A>
+<LI><A NAME="tex2html15215"
+  HREF="node725.html#SECTION0619120020000000000000">Step 1: Enable the Google+ API</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html15216"
+  HREF="node726.html">Google+ Sign-In for server-side apps</A>
+<LI><A NAME="tex2html15217"
+  HREF="node727.html">Authentication using the Google APIs Client Library for JavaScript</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-09
+2014-10-21
 </ADDRESS>
 </BODY>
 </HTML>

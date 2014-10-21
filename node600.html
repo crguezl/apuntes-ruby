@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo de uso de gemsets</TITLE>
-<META NAME="description" CONTENT="Ejemplo de uso de gemsets">
+<TITLE>Suprimir un intérprete</TITLE>
+<META NAME="description" CONTENT="Suprimir un intérprete">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node601.html">
 <LINK REL="previous" HREF="node599.html">
-<LINK REL="up" HREF="node589.html">
+<LINK REL="up" HREF="node594.html">
 <LINK REL="next" HREF="node601.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13318"
+<A NAME="tex2html13387"
   HREF="node601.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13312"
-  HREF="node589.html">
+<A NAME="tex2html13381"
+  HREF="node594.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13306"
+<A NAME="tex2html13375"
   HREF="node599.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13314"
-  HREF="node792.html">
+<A NAME="tex2html13383"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13316"
-  HREF="node795.html">
+<A NAME="tex2html13385"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,99 +92,75 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13319"
-  HREF="node601.html">RVM gives you a</A>
-<B> Subir:</B> <A NAME="tex2html13313"
-  HREF="node589.html">Ruby Version Manager: RVM</A>
-<B> Anterior:</B> <A NAME="tex2html13307"
-  HREF="node599.html">Lista de Comandos para</A>
- &nbsp; <B>  <A NAME="tex2html13315"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13317"
-  HREF="node795.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13388"
+  HREF="node601.html">.rvmrc, .ruby-version y .ruby-gemset</A>
+<B> Subir:</B> <A NAME="tex2html13382"
+  HREF="node594.html">Ruby Version Manager: RVM</A>
+<B> Anterior:</B> <A NAME="tex2html13376"
+  HREF="node599.html">Intérpretes Instalados</A>
+ &nbsp; <B>  <A NAME="tex2html13384"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13386"
+  HREF="node800.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION062110000000000000000">
-Ejemplo de uso de gemsets</A>
+<H1><A NAME="SECTION06260000000000000000">
+Suprimir un intérprete</A>
 </H1>
-To illustrate the point, let's talk about a common use case. Assume you
-are testing out a rails application against a new Rails release. RVM
-makes such testing very easy, by letting you quickly switch between
-multiple Rails versions. First, let's set up the environments:
 
 <P>
+<code>rvm remove</code> is the preferred way of removing rubies from rvm. 
+
+<P>
+By default,
+not only will it remove the ruby and it's source files, it will also
+get rid of aliases, wrappers, environments and any
+associated binaries - in other words, it cleans up most of the install.
 <PRE>
-$ rvm 1.9.2-head
-$ gem install rails -v 2.3.3
-
-$ rvm gemset create rails222 rails126
-Gemset 'rails222' created.
-Gemset 'rails126' created.
-
-$ rvm 1.9.2-head@rails222
-$ gem install rails -v 2.2.2
-
-$ rvm 1.9.2-head@rails126
-$ gem install rails -v 1.2.6
-
-$ rvm 1.8.7
-$ gem install rails -v 1.2.3
+rvm remove
 </PRE>
-Note that, for each of the ruby installs above, you can have completely
-separate versions!
-
-<P>
-Now that your environments are set up, you can simply switch between
-Rails versions and Ruby versions as follows.
+As an example, to remove rubinius 1.0.0, you could do:
 
 <P>
 <PRE>
-$ rvm 1.9.2-head@rails126 ; rails --version
+$ rvm remove rbx-1.0.0
 
-Rails 1.2.6
-
-$ rvm 1.8.7 ; rails --version
-
-Rails 1.2.3
-
-$ rvm 1.9.2-head@rails220 ; rails --version
-
-Rails 2.2.0
-
-$ rvm 1.9.2-head ; rails --version
-
-Rails 2.3.3
+info: Removing /Users/sutto/.rvm/src/rbx-1.0.0-20100514...
+info: Removing /Users/sutto/.rvm/rubies/rbx-1.0.0-20100514...
+info: Removing rbx-1.0.0-20100514 aliases...
+info: Removing rbx-1.0.0-20100514 wrappers...
+info: Removing rbx-1.0.0-20100514 environments...
+info: Removing rbx-1.0.0-20100514 binaries...
 </PRE>
-If you are deploying to a server, or you do not want to wait around for
-<code>rdoc</code> and <code>ri</code> to install for each gem, you can disable them for gem installs
-and updates. Just add these two lines to your <code>~/.gemrc or /etc/gemrc</code>:
 
 <P>
+For the most basic case (e.g. you want to try clearing out a bad
+install), rvm uninstall literally just removes the folder under
+<code>~/.rvm/rubies</code>.
 <PRE>
-install: --no-rdoc --no-ri
-update: --no-rdoc --no-ri
+rvm uninstall VERSION_NUMBER
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13318"
+<A NAME="tex2html13387"
   HREF="node601.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13312"
-  HREF="node589.html">
+<A NAME="tex2html13381"
+  HREF="node594.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13306"
+<A NAME="tex2html13375"
   HREF="node599.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13314"
-  HREF="node792.html">
+<A NAME="tex2html13383"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13316"
-  HREF="node795.html">
+<A NAME="tex2html13385"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -235,20 +211,20 @@ update: --no-rdoc --no-ri
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13319"
-  HREF="node601.html">RVM gives you a</A>
-<B> Subir:</B> <A NAME="tex2html13313"
-  HREF="node589.html">Ruby Version Manager: RVM</A>
-<B> Anterior:</B> <A NAME="tex2html13307"
-  HREF="node599.html">Lista de Comandos para</A>
- &nbsp; <B>  <A NAME="tex2html13315"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13317"
-  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13388"
+  HREF="node601.html">.rvmrc, .ruby-version y .ruby-gemset</A>
+<B> Subir:</B> <A NAME="tex2html13382"
+  HREF="node594.html">Ruby Version Manager: RVM</A>
+<B> Anterior:</B> <A NAME="tex2html13376"
+  HREF="node599.html">Intérpretes Instalados</A>
+ &nbsp; <B>  <A NAME="tex2html13384"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13386"
+  HREF="node800.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-09
+2014-10-21
 </ADDRESS>
 </BODY>
 </HTML>

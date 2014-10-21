@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Uso de Travis</TITLE>
-<META NAME="description" CONTENT="Uso de Travis">
+<TITLE>Declaring dependencies: Runtime vs. development</TITLE>
+<META NAME="description" CONTENT="Declaring dependencies: Runtime vs. development">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node684.html">
 <LINK REL="previous" HREF="node682.html">
-<LINK REL="up" HREF="node682.html">
+<LINK REL="up" HREF="node670.html">
 <LINK REL="next" HREF="node684.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14707"
+<A NAME="tex2html14756"
   HREF="node684.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14701"
-  HREF="node682.html">
+<A NAME="tex2html14750"
+  HREF="node670.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14695"
+<A NAME="tex2html14744"
   HREF="node682.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14703"
-  HREF="node792.html">
+<A NAME="tex2html14752"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14705"
-  HREF="node795.html">
+<A NAME="tex2html14754"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,416 +92,97 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14708"
-  HREF="node684.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html14702"
-  HREF="node682.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html14696"
-  HREF="node682.html">Integración Contínua: Travis</A>
- &nbsp; <B>  <A NAME="tex2html14704"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14706"
-  HREF="node795.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14757"
+  HREF="node684.html">Pessimistic version constraint</A>
+<B> Subir:</B> <A NAME="tex2html14751"
+  HREF="node670.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14745"
+  HREF="node682.html">Semantic Versioning</A>
+ &nbsp; <B>  <A NAME="tex2html14753"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14755"
+  HREF="node800.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061510000000000000000"></A>
-<A NAME="section:travis"></A>
-<BR>
-Uso de Travis
+<H1><A NAME="SECTION0614130000000000000000">
+Declaring dependencies: Runtime vs. development</A>
 </H1>
 
 <P>
-
-<H4><A NAME="SECTION061510010000000000000">
-Step one: Sign in</A>
-</H4>
-  
-
-<P>
-To get started with Travis CI, sign in through GitHub OAuth. Go to
-<A NAME="tex2html1563"
-  HREF="http://travis-ci.org/">Travis</A> CI and follow the <I>Sign In link at the top</I>.
-
-<P>
-GitHub will ask you to grant read and write access. Travis CI needs
-write access for setting up service hooks for your repositories
-when you request it, but it won't touch anything else.
-
-<P>
-
-<H4><A NAME="SECTION061510020000000000000">
-Step two: Activate GitHub Service Hook</A>
-</H4>
-  
-
-<P>
-Once you're signed in go to your 
-<A NAME="tex2html1565"
-  HREF="https://travis-ci.org/profile">profile page</A>. 
-You'll see a list
-of your repositories. 
-
-<P>
-Flip the on/off switch for each repository
-that you want to hook up on Travis CI. 
-
-<P>
-Then visit the GitHub 
-<code>service hooks</code> page for that project 
-(<code>repo -&gt; settings -&gt; Service Hooks</code> on the left)
-and paste your GitHub username and
-Travis token 
-(en account-&gt;profile)
-into the settings for the Travis service if it is not
-already prefilled.
-
-<P>
-
-<DIV ALIGN="CENTER"><A NAME="figure:githubtokenfortravis"></A><A NAME="26908"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura 88.1:</STRONG>
-GitHub Service Hooks Page</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.5]githubtokenfortravis.png
-
-</DIV></TD></TR>
-</TABLE>
-</DIV>
-
-<P>
-
-<H4><A NAME="SECTION061510030000000000000">
-Step three: Add <TT>.travis.yml</TT> file to your repository</A>
-</H4>
-  
-
-<P>
-In order for Travis to build your project, you need to tell the
-system a little bit about it. 
-
-<P>
-To do so, add <code>.travis.yml</code> to the root
-of your repository. 
-
-<P>
-We will only cover basic <code>.travis.yml</code> options
-in this guide. 
+<A NAME="tex2html1578"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> provides two main types of dependencies: 
+runtime and development. 
 
 <P>
 
 <OL>
-<LI>The most important one is the language key. It tells
-Travis what builder to pick. 
+<LI>Runtime dependencies are what your gem needs to work (such as rails needing activesupport).
 </LI>
-<LI>Ruby projects typically use different
-build tools and practices than Clojure or PHP projects do, so Travis
-needs to know what to do.
-</LI>
-<LI>If <code>.travis.yml</code> is not in the repository, is misspelled or is not
-valid <A NAME="tex2html1566"
-  HREF="http://en.wikipedia.org/wiki/YAML">YAML</A>, travis-ci.org will ignore it, assume Ruby as the language
-and use default values for everything.
+<LI>Development dependencies are useful for when someone wants to make modifications to your gem. 
 </LI>
 </OL>
 
 <P>
-<PRE>
-[~/srcLPP/coro/frac(master)]$ cat .travis.yml 
-language: ruby
-rvm:
-  - 1.9.3
-  - jruby-18mode # JRuby in 1.8 mode
-  - jruby-19mode # JRuby in 1.9 mode
-  - rbx-18mode
-  - rbx-19mode
-  - 1.8.7
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION061510040000000000000">
-Validate Your <TT>.travis.yml</TT></A>
-</H4>
-  
-
-We recommend you use <code>travis-lint</code> 
-(command-line tool) or 
-<A NAME="tex2html1567"
-  HREF="http://lint.travis-ci.org/">.travis.yml validation Web app </A>
-to validate your <code>.travis.yml</code> file.
-
-<P>
-Get <code>travis-lint</code> with
+When you specify development dependencies, another developer can run 
 
 <P>
 <PRE>
-    gem install travis-lint
+gem install --dev your_gem
 </PRE>
-and run it on your <code>.travis.yml</code>:
 
 <P>
+and RubyGems will grab both sets of dependencies (runtime and development). 
+
+<P>
+Typical development dependencies include test frameworks (like <code>rspec</code>) and build systems
+(like <code>rake</code>).
+
+<P>
+Setting dependencies in your gemspec is easy. 
+
+<P>
+Just use <code>add_runtime_dependency</code> and <code>add_development_dependency</code>:
 <PRE>
-# inside a repository with .travis.yml
-travis-lint
+Gem::Specification.new do |s|
+  s.name = "hola"
+  s.version = "2.0.0"
+  s.add_runtime_dependency "daemons",
+    ["= 1.1.0"]
+  s.add_development_dependency "bourne",
+    ["&gt;= 0"]
 </PRE>
 
 <P>
-from any directory
+Inside the <code>Gemfile</code> we can also specify groups.
+Each  gem  may  specify  membership in one or more groups. 
+Any gem that does not specify membership in any  group  is  placed  in  the
+default group.
 <PRE>
-travis-lint [path to your .travis.yml]
+   gem "rspec", :group =&gt; :test
+   gem "wirble", :groups =&gt; [:development, :test]
 </PRE>
-<code>travis-lint</code> will check things like
+then we can run <code>bundle install --without development test</code> to omit some groups.
 
 <P>
-
-<OL>
-<LI>The <code>.travis.yml</code> file is valid <A NAME="tex2html1568"
-  HREF="http://en.wikipedia.org/wiki/YAML">YAML</A>
-</LI>
-<LI>The language key is present
-</LI>
-<LI>The runtime versions (Ruby, PHP, OTP, etc) specified are supported
-in the 
-<A NAME="tex2html1569"
-  HREF="http://about.travis-ci.org/docs/user/ci-environment/">Travis CI Environment</A>
-</LI>
-<LI>That you are not using deprecated features or runtime aliases
-and so on. 
-</LI>
-</OL>
-
-<P>
-<code>travis-lint</code> is your friend, use it.
-
-<P>
-
-<H4><A NAME="SECTION061510050000000000000">
-Default Test Script</A>
-</H4>
-  
-
-<P>
-Travis will use <code>Bundler</code> to install your project's dependencies and
-run <code>rake</code> by default to execute your tests. 
-
-<P>
-Please note that <SPAN  CLASS="textbf">you
-need to add</SPAN> <code>rake</code> to your <code>Gemfile</code> 
-(adding it to just <code>:test</code> group
-should be sufficient).
-<PRE>
-group :development, :test do
-  gem "rake"
-end
-</PRE>
-Groups can be ignored by <code>bundle</code>
-at install-time (<code>using --without=GROUP1[ GROUP2...]</code>).
-
-<P>
-<PRE>
-[~/srcLPP/coro/frac(master)]$ cat Gemfile 
-source 'https://rubygems.org'
-
-gem 'rake'
-gem 'rspec'
-</PRE>
-
-<P>
-Exclude non-essential gems like <code>ruby-debug</code> from your <code>Gemfile</code>.
-
-<P>
-
-<H4><A NAME="SECTION061510060000000000000">
-Testing Against Multiple Versions of Gems</A>
-</H4>
-  
-
-Many projects need to be tested against multiple versions of 
-<A NAME="tex2html1570"
-  HREF="http://rack.rubyforge.org/doc/">Rack</A>, <A NAME="tex2html1571"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>, HAML, Sinatra, Ruby on Rails, 
-you name it. You can
-do it with Travis CI.
-See the manual pages.
-
-<OL>
-<LI>Create a directory in your project's repository root where you will keep gemfiles (<code>./gemfiles</code>
- is a commonly used name)
-</LI>
-<LI>Add one or more gemfiles to it
-</LI>
-<LI>Instruct Travis CI to use those gemfiles using the gemfile option in your <code>.travis.yml</code>
-<PRE>
-gemfile:
-  - Gemfile
-  - gemfiles/eventmachine-pre
-</PRE>
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION061510070000000000000">
-Custom Bundler arguments and Gemfile locations</A>
-</H4>
-  
-
-<A NAME="parrafo:travisbundlerargs"></A>You can specify a custom Gemfile name:
-
-<P>
-<PRE>
-gemfile: gemfiles/Gemfile.ci
-</PRE>
-Unless specified, the worker will look for a file named <code>Gemfile</code> in the root of your project.
-
-<P>
-You can also set extra arguments to be passed to bundle install:
-
-<P>
-<PRE>
-bundler_args: --without=development
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION061510080000000000000">
-Rakefile</A>
-</H4>
-  
-
-<PRE>
-john@exthost:~/291012/frac$ rake -T
-rake spec     # Run RSpec code examples
-rake specman  # Run rspec with --format documentation
-rake thtml    # Run rspec with format: html
-</PRE>
-
-<P>
-<PRE>
-john@exthost:~/291012/frac$ cat Rakefile 
-$:.unshift File.dirname(__FILE__) + 'lib'
-
-require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new
-task :default =&gt; :spec
-
-desc "Run rspec with --format documentation"
-task :specman do
-  sh "rspec -Ilib spec/frac_spec.rb --format documentation"
-end
-
-desc "Run rspec with format: html"
-task :thtml do
-  sh "rspec -Ilib spec/frac_.rb --format html &gt; index.html"
-end
-</PRE>
-Véase la documentación de la clase 
-<A NAME="tex2html1572"
-  HREF="http://rdoc.info/github/rspec/rspec-core/RSpec/Core/RakeTask">RSpec::Core::RakeTask</A>.
-
-<P>
-<PRE>
-john@exthost:~/291012/frac$ rake
-/usr/local/ruby/bin/ruby -S rspec ./spec/frac_spec.rb
-....................
-
-Finished in 0.00451 seconds
-20 examples, 0 failures
-john@exthost:~/291012/frac$
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION061510090000000000000">
-Ejemplo de Jerarquía</A>
-</H4>
-  
-
-<PRE>
-[~/srcLPP/coro/frac(master)]$ tree -A
-.
-|-- Gemfile
-|-- README
-|-- Rakefile
-|-- lib
-|   `-- fraction.rb
-`-- spec
-    `-- frac_spec.rb
-
-2 directories, 5 files
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION0615100100000000000000">
-Página de Travis Mostrando los Resultados de unas Pruebas con Rspec</A>
-</H4>
-  
-
-<P>
-
-<DIV ALIGN="CENTER"><A NAME="figure:rdoc1"></A><A NAME="26969"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
-Página de Travis Mostrando los Resultados de unas Pruebas con Rspec</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.5]chapter11/travis.png
-
-</DIV></TD></TR>
-</TABLE>
-</DIV>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html14709"
-  HREF="node683.html#SECTION061510010000000000000">Step one: Sign in</A>
-<LI><A NAME="tex2html14710"
-  HREF="node683.html#SECTION061510020000000000000">Step two: Activate GitHub Service Hook</A>
-<LI><A NAME="tex2html14711"
-  HREF="node683.html#SECTION061510030000000000000">Step three: Add <TT>.travis.yml</TT> file to your repository</A>
-<LI><A NAME="tex2html14712"
-  HREF="node683.html#SECTION061510040000000000000">Validate Your <TT>.travis.yml</TT></A>
-<LI><A NAME="tex2html14713"
-  HREF="node683.html#SECTION061510050000000000000">Default Test Script</A>
-<LI><A NAME="tex2html14714"
-  HREF="node683.html#SECTION061510060000000000000">Testing Against Multiple Versions of Gems</A>
-<LI><A NAME="tex2html14715"
-  HREF="node683.html#SECTION061510070000000000000">Custom Bundler arguments and Gemfile locations</A>
-<LI><A NAME="tex2html14716"
-  HREF="node683.html#SECTION061510080000000000000">Rakefile</A>
-<LI><A NAME="tex2html14717"
-  HREF="node683.html#SECTION061510090000000000000">Ejemplo de Jerarquía</A>
-<LI><A NAME="tex2html14718"
-  HREF="node683.html#SECTION0615100100000000000000">Página de Travis Mostrando los Resultados de unas Pruebas con Rspec</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14707"
+<A NAME="tex2html14756"
   HREF="node684.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14701"
-  HREF="node682.html">
+<A NAME="tex2html14750"
+  HREF="node670.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14695"
+<A NAME="tex2html14744"
   HREF="node682.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14703"
-  HREF="node792.html">
+<A NAME="tex2html14752"
+  HREF="node797.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14705"
-  HREF="node795.html">
+<A NAME="tex2html14754"
+  HREF="node800.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -552,20 +233,20 @@ Página de Travis Mostrando los Resultados de unas Pruebas con Rspec</CAPTION>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14708"
-  HREF="node684.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html14702"
-  HREF="node682.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html14696"
-  HREF="node682.html">Integración Contínua: Travis</A>
- &nbsp; <B>  <A NAME="tex2html14704"
-  HREF="node792.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14706"
-  HREF="node795.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14757"
+  HREF="node684.html">Pessimistic version constraint</A>
+<B> Subir:</B> <A NAME="tex2html14751"
+  HREF="node670.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14745"
+  HREF="node682.html">Semantic Versioning</A>
+ &nbsp; <B>  <A NAME="tex2html14753"
+  HREF="node797.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14755"
+  HREF="node800.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-09
+2014-10-21
 </ADDRESS>
 </BODY>
 </HTML>
