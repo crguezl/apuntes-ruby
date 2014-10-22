@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Guard</TITLE>
-<META NAME="description" CONTENT="Guard">
+<TITLE>Travis en la Línea de Comandos</TITLE>
+<META NAME="description" CONTENT="Travis en la Línea de Comandos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node695.html">
-<LINK REL="previous" HREF="node687.html">
-<LINK REL="up" HREF="node592.html">
+<LINK REL="previous" HREF="node693.html">
+<LINK REL="up" HREF="node688.html">
 <LINK REL="next" HREF="node695.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14948"
+<A NAME="tex2html14943"
   HREF="node695.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14942"
-  HREF="node592.html">
+<A NAME="tex2html14937"
+  HREF="node688.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14936"
+<A NAME="tex2html14933"
   HREF="node693.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14944"
-  HREF="node797.html">
+<A NAME="tex2html14939"
+  HREF="node798.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14946"
-  HREF="node800.html">
+<A NAME="tex2html14941"
+  HREF="node801.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,317 +91,206 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14949"
-  HREF="node695.html">Herramientas para la Programacion</A>
-<B> Subir:</B> <A NAME="tex2html14943"
-  HREF="node592.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14937"
-  HREF="node693.html">Travis en la Línea</A>
- &nbsp; <B>  <A NAME="tex2html14945"
-  HREF="node797.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14947"
-  HREF="node800.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14944"
+  HREF="node695.html">Guard</A>
+<B> Subir:</B> <A NAME="tex2html14938"
+  HREF="node688.html">Integración Contínua: Travis</A>
+<B> Anterior:</B> <A NAME="tex2html14934"
+  HREF="node693.html">Databases and other services</A>
+ &nbsp; <B>  <A NAME="tex2html14940"
+  HREF="node798.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14942"
+  HREF="node801.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061600000000000000000"></A>
-<A NAME="section:guard"></A>
-<BR>
-Guard
+<H1><A NAME="SECTION061560000000000000000">
+Travis en la Línea de Comandos</A>
 </H1>
-<A NAME="tex2html1619"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> is a gem that allows you to observe your project's files for
-change and perform actions based on that change. The first thing you
-will need to do is add <A NAME="tex2html1620"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> (and its helpers for <A NAME="tex2html1621"
-  HREF="http://bundler.io//"><TT>Bundler</TT></A> and <A NAME="tex2html1622"
-  HREF="http://rspec.info/"><TT>RSpec</TT></A>)
-to the end of your <code>Gemfile</code>:
-
-<P>
-<PRE>
-$ cat Gemfile
-source 'https://rubygems.org'
-
-gem 'guard'
-gem 'guard-rspec'
-gem 'guard-bundler'
-gem 'guard-gitpusher'
-</PRE>
-You should now run <code>bundle install</code> in your project root to install <A NAME="tex2html1623"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> if it
-isn't already.
-<PRE>
-[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard version
-Guard version 2.2.2
-</PRE>
-
-<P>
-<PRE>
-[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard help
-Commands:
-  guard help [COMMAND]  # Describe available commands or one specific command
-  guard init [GUARDS]   # Generates a Guardfile at the current directory (if it is not already there) and a...
-  guard list            # Lists Guard plugins that can be used with init
-  guard notifiers       # Lists notifiers and its options
-  guard show            # Show all defined Guard plugins and their options
-  guard start           # Starts Guard
-  guard version         # Show the Guard version
-</PRE>
-
-<P>
-Now we need to initialize <A NAME="tex2html1624"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> and configure it for our project. Luckily,
-<A NAME="tex2html1625"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> comes with its own command line helpers:
-<PRE>
-[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard help init
-Usage:
-  guard init [GUARDS]
-
-Options:
-  -b, [--bare=Generate a bare Guardfile without adding any installed plugin into it]  
-
-Generates a Guardfile at the current directory (if it is not already there) and adds all installed Guard plugins or the given GUARDS into it
-</PRE>
-
-<P>
-Si solo queremos generar código para vigilar el <code>Gemfile</code> usando <code>guard-bundler</code>:
-<PRE>
-[/tmp]$ guard init bundler
-^[[A18:22:37 - INFO - Writing new Guardfile to /private/tmp/Guardfile
-18:22:37 - INFO - bundler guard added to Guardfile, feel free to edit it
-</PRE>
-
-<P>
-<PRE>
-[/tmp]$ cat Guardfile 
-# A sample Guardfile
-# More info at https://github.com/guard/guard#readme
-
-guard :bundler do
-  watch('Gemfile')
-  # Uncomment next line if your Gemfile contains the `gemspec' command.
-  # watch(/^.+\.gemspec/)
-end
-`]]
-</PRE>
-Si solo queremos generar código para vigilar las pruebas usando <code>guard-rspec</code>:
-<PRE>
-guard init rspec
-</PRE>
+The <A NAME="tex2html1610"
+  HREF="https://rubygems.org/gems/travis">travis gem</A>
+includes both a
+<A NAME="tex2html1611"
+  HREF="https://github.com/travis-ci/travis/#command-line-client">command line client</A>
+and a 
+<A NAME="tex2html1612"
+  HREF="https://github.com/travis-ci/travis/#ruby-library">Ruby library</A>
+to interface with a Travis CI service. Both
+work with <A NAME="tex2html1613"
+  HREF="https://travis-ci.org">travis-ci.org</A>,
+<A NAME="tex2html1614"
+  HREF="https://travis-ci.com">travis-ci.com</A>
+or any custom Travis CI setup
+you might have. Check out the <A NAME="tex2html1615"
+  HREF="https://github.com/travis-ci/travis/#installation">installation instructions</A>
+to get it running in no time.
 
 <P>
 
-<OL>
-<LI><A NAME="tex2html1626"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> works similarly to <A NAME="tex2html1627"
-  HREF="http://bundler.io//"><TT>Bundler</TT></A> and Rake by creating a Guardfile in
-your project's root directory. 
-
-<P>
-</LI>
-<LI>These commands automatically add example
-configuration for each guard type to the Guardfile (after guard init
-creates the file to begin with). 
-
-<P>
-</LI>
-<LI>While I'm going to tell you explicitly
-what to put in your Guardfile, the <code>init</code> commands can really help jog
-your memory if you're trying to do it from scratch. 
-</LI>
-</OL>
-
-<P>
-Let's modify our
-Guardfile to look like this:
-
-<P>
-<PRE>
-guard 'bundler' do
-  watch('Gemfile')
-end
-
-guard 'rspec', :version =&gt; 2 do
-  watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }
-  watch('spec/spec_helper.rb')  { "spec" }
-end
-</PRE>
-<SPAN  CLASS="textbf"><A NAME="tex2html1618"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> works by watching certain files in your project and then performing
-actions when those files change</SPAN>. 
-
-<P>
-
-<OL>
-<LI>The first guard 
-<PRE>
-guard 'bundler' do
-  watch('Gemfile')
-end
-</PRE>
-tells us to watch for
-the <code>Gemfile</code> to change, and run <code>bundle install</code>
-when that happens. 
-
-<P>
-</LI>
-<LI>The second guard tells us to watch all of our <A NAME="tex2html1628"
-  HREF="http://rspec.info/"><TT>RSpec</TT></A>
-test files, our <code>spec_helper</code>, and the corresponding library files for
-each of our <A NAME="tex2html1629"
-  HREF="http://rspec.info/"><TT>RSpec</TT></A> tests. 
-
-<P>
-</LI>
-<LI>This means that when you change a file, <A NAME="tex2html1630"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A>
-can automatically re-run the tests for that specific file only.
-
-<P>
-</LI>
-<LI>Now that your Guardfile is properly configured, you can just run 
-<code>bundle exec guard start</code> from your project's root directory. 
-
-<P>
-<PRE>
-[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard help start
-Usage:
-  guard start
-
-Options:
-  -c, [--clear=Auto clear shell before each action]                            
-  -n, [--notify=Notifications feature]                                         
-  -d, [--debug=Show debug information]                                         
-  -g, [--group=Run only the passed groups]                                     
-  -P, [--plugin=Run only the passed plugins]                                   
-  -w, [--watchdir=Specify the directories to watch]                            
-  -G, [--guardfile=Specify a Guardfile]                                        
-  -i, [--no-interactions=Turn off completely any Guard terminal interactions]  
-  -B, [--no-bundler-warning=Turn off warning when Bundler is not present]      
-      [--show-deprecations=Turn on deprecation warnings]                       
-  -l, [--latency=Overwrite Listen's default latency]                           
-  -p, [--force-polling=Force usage of the Listen polling listener]             
-
-Starts Guard
-</PRE>
-</LI>
-<LI>When excuting <code>guard</code>, it shows a <code>pry</code> console,
-with some Guard specific <code>pry</code> commands:
-<PRE>
-[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard
-17:41:40 - INFO - Guard here! It looks like your project has a Gemfile, yet you are running
-&gt; [#] `guard` outside of Bundler. If this is your intent, feel free to ignore this
-&gt; [#] message. Otherwise, consider using `bundle exec guard` to ensure your
-&gt; [#] dependencies are loaded correctly.
-&gt; [#] (You can run `guard` with --no-bundler-warning to get rid of this message.)
-17:41:40 - WARN - Guard::RSpec DEPRECATION WARNING: The :version option is deprecated. Only RSpec ~&gt; 2.14 is now supported.
-17:41:40 - INFO - Guard is using TerminalTitle to send notifications.
-17:41:40 - INFO - Bundle already up-to-date
-17:41:40 - INFO - Guard::RSpec is running
-17:41:40 - INFO - Guard is now watching at '/Users/casiano/local/src/ruby/building_gems/bleigh_tutorial_to_building_gems/my-gem'
-[1] guard(main)&gt;
-</PRE>
-</LI>
-</OL>
-This will get <A NAME="tex2html1631"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> up
-and running and you will now automatically run tests and re-bundle as
-you build your application. 
-
-<P>
-Si ahora en una terminal modificamos uno de los ficheros vigilados:
-<PRE>
-$ touch spec/spec_helper.rb
-</PRE>
-Guard dispara la correspondiente acción, que en este caso es ejecutar <A NAME="tex2html1632"
-  HREF="http://rspec.info/"><TT>RSpec</TT></A>:
-<PRE>
-17:50:28 - INFO - Running: spec
-Run options: include {:focus=&gt;true}
-
-All examples were filtered out; ignoring {:focus=&gt;true}
-*
-
-Pending:
-  MyGem requires additional testing
-    # Not yet implemented
-    # ./spec/my_gem_spec.rb:5
-
-Finished in 0.00062 seconds
-1 example, 0 failures, 1 pending
-
-
-Randomized with seed 46343
-
-[1] guard(main)&gt;
-</PRE>
-
-<P>
-Running <A NAME="tex2html1633"
-  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> makes the development feedback loop
-as tight and automatic as possible.
-
-<P>
-
-<H4><A NAME="SECTION061600010000000000000">
-Enlaces Relacionados</A>
+<H4><A NAME="SECTION061560010000000000000">
+The Travis Client</A>
 </H4>
   
 
 <P>
-Gemas
-
-<OL>
-<LI><A NAME="tex2html1634"
-  HREF="https://github.com/crguezl/bleigh-tutorial-to-building-gems">crguezl / bleigh-tutorial-to-building-gems</A>
-en GitHub
-</LI>
-</OL>
+Véase <A NAME="tex2html1616"
+  HREF="https://github.com/travis-ci/travis#command-line-client">The Travis Client</A>.
 
 <P>
-Testing
 
-<OL>
-<LI><A NAME="tex2html1635"
-  HREF="http://www.intridea.com/blog/2012/3/23/polishing-rubies-part-iii">Polishing Rubies (Part 3): Tools for Testing</A>
-</LI>
-</OL>
+<H4><A NAME="SECTION061560020000000000000">
+login</A>
+</H4>
+  
+
+The <code>login</code> command 
+will ask you for your GitHub user name and password.
 
 <P>
-Guard
+We can also create a GitHub token on our own and supply it via
+<code>--github-token</code>:
 
-<OL>
-<LI><A NAME="tex2html1636"
-  HREF="http://www.intridea.com/blog/2011/8/25/hire-a-guard-for-your-project">Hire a Guard for Your Project</A>
-</LI>
-<LI><A NAME="tex2html1637"
-  HREF="http://michaelvanrooijen.com/articles/2011/06/19-automate-your-applications-development-environment-with-guard/">Automate your application's development environment with Guard</A>
-by Michael van Rooijen
-</LI>
-<LI><A NAME="tex2html1638"
-  HREF="https://github.com/guard">Guard en GitHub</A>
-</LI>
-<LI><A NAME="tex2html1639"
-  HREF="https://github.com/guard/guard/wiki">Guard Wiki</A>
-</LI>
-<LI><A NAME="tex2html1640"
-  HREF="https://github.com/guard/guard-rspec">Guard Rspec</A>
-</LI>
-<LI><A NAME="tex2html1641"
-  HREF="https://github.com/hatone/guard-gitpusher">guard-gitpusher</A>
-</LI>
-<LI><A NAME="tex2html1642"
-  HREF="https://github.com/johnbintz/rack-livereload">Guard and Rack-livereload With Sinatra</A>
-</LI>
-<LI><A NAME="tex2html1643"
-  HREF="http://net.tutsplus.com/tutorials/tools-and-tips/guard-is-your-best-friend/">Guard is Your Best Friend</A>
-Jeffrey Way  NetTuts Screencast
-</LI>
-</OL>
+<P>
+<PRE>
+$ travis login  --github-token xxxxxxxxxxxxxxxxxxxxxxxxxxxx  --pro
+Successfully logged in as crguezl!
+[~/sinatra/sinatra-number_cruncher(master)]$ travis whoami
+You are crguezl (Casiano Rodriguez-Leon)
+</PRE>
+ Para obtener el token que usamos como argumento
+de <code>--github-token</code> nos vamos a GitHub -&gt; settings -&gt; Applications -&gt;
+Generate new token. Véase el tutorial
+<A NAME="tex2html1617"
+  HREF="https://help.github.com/articles/creating-an-access-token-for-command-line-use">Creating an access token for command-line use</A>.
+
+<P>
+
+<H4><A NAME="SECTION061560030000000000000">
+init</A>
+</H4>
+  
+
+<P>
+When setting up a new project, we can run <code>travis init</code> 
+to generate a <code>.travis.yml</code> and 
+<FONT COLOR="#0000ff"> enable the project</FONT>:
+<PRE>
+[~/sinatra/sinatra-number_cruncher(master)]$ travis init ruby --rvm 2.1.2 -r crguezl/number_cruncher
+.travis.yml file created!
+crguezl/number_cruncher: enabled :)
+</PRE>
+
+<P>
+A file called <code>.travis.yml</code> was created that contains information
+about our app. 
+
+<P>
+<PRE>
+[~/sinatra/sinatra-number_cruncher(master)]$ cat .travis.yml
+language: ruby
+rvm: 2.1.2
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION061560040000000000000">
+Ejecutando las pruebas en Travis</A>
+</H4>
+  
+
+A build on Travis is initialized when we push to our
+Github account, so do that now:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-number_cruncher(master)]$ git add .travis.yml Rakefile
+[~/sinatra/sinatra-number_cruncher(master)]$ git commit -am '.travis.ym added'
+[master b25b8e8] .travis.ym added
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+[~/sinatra/sinatra-number_cruncher(master)]$ git push origin master
+Counting objects: 7, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (4/4), 466 bytes | 0 bytes/s, done.
+Total 4 (delta 2), reused 0 (delta 0)
+To git@github.com:crguezl/number_cruncher.git
+   5e51ec1..b25b8e8  master -&gt; master
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION061560050000000000000">
+show</A>
+</H4>
+  
+
+To check the status of the build, run the following command in a terminal:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-number_cruncher(master)]$ travis show -r crguezl/number_cruncher
+no build yet for crguezl/number_cruncher
+</PRE>
+Travis can take a while to run a build, so you might get a message like the one above. Let us try again:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-number_cruncher(master)]$ travis show -r crguezl/number_cruncher
+Job #1.1:  .travis.ym added
+State:         passed
+Type:          push
+Branch:        master
+Compare URL:   https://github.com/crguezl/number_cruncher/compare/5e51ec1d8a3a...b25b8e8d7086
+Duration:      18 sec
+Started:       2014-09-24 17:09:38
+Finished:      2014-09-24 17:09:56
+Allow Failure: false
+Config:        rvm: 2.1.2
+[~/sinatra/sinatra-number_cruncher(master)]$
+</PRE>
+This time we got confirmation that the build has passed successfully.
+
+<P>
+
+<H4><A NAME="SECTION061560060000000000000">
+logs</A>
+</H4>
+  
+
+Given a job number, <code>logs</code> simply prints out that job's logs. 
+By default it will display the first job of the latest build.
+<PRE>
+[~/sinatra/sinatra-number_cruncher(master)]$ travis logs -r crguezl/number_cruncher
+displaying logs for crguezl/number_cruncher#1.1
+Using worker: worker-linux-6-2.bb.travis-ci.org:travis-linux-2
+
+$ git clone --depth=50 --branch=master git://github.com/crguezl/number_cruncher.git crguezl/number_cruncher
+Cloning into 'crguezl/number_cruncher'...
+remote: Counting objects: 36, done.
+remote: Compressing objects: 100% (25/25), done.
+remote: Total 36 (delta 11), reused 28 (delta 7)
+Receiving objects: 100% (36/36), 4.63 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (11/11), done.
+Checking connectivity... done.
+$ cd crguezl/number_cruncher
+$ git checkout -qf b25b8e8d70861b82c1399f87ebab036a180bc653
+couchdb stop/waiting
+$ rvm use 2.1.2 --install --binary --fuzzy
+.....
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION061560070000000000000">
+open</A>
+</H4>
+  
+
+<PRE>
+travis open -r crguezl/number_cruncher
+</PRE>
+Opens the project view in the Travis CI web interface.
 
 <P>
 <BR><HR>
@@ -412,28 +300,39 @@ Jeffrey Way  NetTuts Screencast
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><UL>
+<LI><A NAME="tex2html14945"
+  HREF="node694.html#SECTION061560010000000000000">The Travis Client</A>
+<LI><A NAME="tex2html14946"
+  HREF="node694.html#SECTION061560020000000000000">login</A>
+<LI><A NAME="tex2html14947"
+  HREF="node694.html#SECTION061560030000000000000">init</A>
+<LI><A NAME="tex2html14948"
+  HREF="node694.html#SECTION061560040000000000000">Ejecutando las pruebas en Travis</A>
+<LI><A NAME="tex2html14949"
+  HREF="node694.html#SECTION061560050000000000000">show</A>
 <LI><A NAME="tex2html14950"
-  HREF="node694.html#SECTION061600010000000000000">Enlaces Relacionados</A>
-</UL></UL></UL></UL>
+  HREF="node694.html#SECTION061560060000000000000">logs</A>
+<LI><A NAME="tex2html14951"
+  HREF="node694.html#SECTION061560070000000000000">open</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14948"
+<A NAME="tex2html14943"
   HREF="node695.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14942"
-  HREF="node592.html">
+<A NAME="tex2html14937"
+  HREF="node688.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14936"
+<A NAME="tex2html14933"
   HREF="node693.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14944"
-  HREF="node797.html">
+<A NAME="tex2html14939"
+  HREF="node798.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14946"
-  HREF="node800.html">
+<A NAME="tex2html14941"
+  HREF="node801.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -484,20 +383,20 @@ Jeffrey Way  NetTuts Screencast
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14949"
-  HREF="node695.html">Herramientas para la Programacion</A>
-<B> Subir:</B> <A NAME="tex2html14943"
-  HREF="node592.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14937"
-  HREF="node693.html">Travis en la Línea</A>
- &nbsp; <B>  <A NAME="tex2html14945"
-  HREF="node797.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14947"
-  HREF="node800.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14944"
+  HREF="node695.html">Guard</A>
+<B> Subir:</B> <A NAME="tex2html14938"
+  HREF="node688.html">Integración Contínua: Travis</A>
+<B> Anterior:</B> <A NAME="tex2html14934"
+  HREF="node693.html">Databases and other services</A>
+ &nbsp; <B>  <A NAME="tex2html14940"
+  HREF="node798.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14942"
+  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-21
+2014-10-22
 </ADDRESS>
 </BODY>
 </HTML>

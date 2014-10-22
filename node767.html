@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>PHP</TITLE>
-<META NAME="description" CONTENT="PHP">
+<TITLE>Configuring Apache</TITLE>
+<META NAME="description" CONTENT="Configuring Apache">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node768.html">
 <LINK REL="previous" HREF="node766.html">
-<LINK REL="up" HREF="node765.html">
+<LINK REL="up" HREF="node766.html">
 <LINK REL="next" HREF="node768.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16068"
+<A NAME="tex2html16070"
   HREF="node768.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16062"
-  HREF="node765.html">
+<A NAME="tex2html16064"
+  HREF="node766.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16056"
+<A NAME="tex2html16058"
   HREF="node766.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16064"
-  HREF="node797.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
 <A NAME="tex2html16066"
-  HREF="node800.html">
+  HREF="node798.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html16068"
+  HREF="node801.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,72 +92,103 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16069"
-  HREF="node768.html">Perl</A>
-<B> Subir:</B> <A NAME="tex2html16063"
-  HREF="node765.html">Apache en Mac OS</A>
-<B> Anterior:</B> <A NAME="tex2html16057"
-  HREF="node766.html">Configuring Apache</A>
- &nbsp; <B>  <A NAME="tex2html16065"
-  HREF="node797.html">&#205;ndice General</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16071"
+  HREF="node768.html">PHP</A>
+<B> Subir:</B> <A NAME="tex2html16065"
+  HREF="node766.html">Apache en Mac OS</A>
+<B> Anterior:</B> <A NAME="tex2html16059"
+  HREF="node766.html">Apache en Mac OS</A>
  &nbsp; <B>  <A NAME="tex2html16067"
-  HREF="node800.html">&#205;ndice de Materias</A></B> 
+  HREF="node798.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16069"
+  HREF="node801.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION063412000000000000000">
-PHP</A>
+<H2><A NAME="SECTION063411000000000000000">
+Configuring Apache</A>
 </H2>
 
+<OL>
+<LI>The default system document root is still found at - 
+<code>http://localhost/</code>
+The files are shared in the filing system at -  
+<PRE>
+/Library/WebServer/Documents/
+</PRE>
+</LI>
+<LI>The other web root directory which is missing by default is the
+<code>~/Sites</code> folder in the User account. 
+
 <P>
-PHP 5.4.17 is loaded in the latest preview of OSX 10.9 Mavericks
-and needs to be turned on by uncommenting a line in the httpd.conf
-file.
+</LI>
+<LI>Check that you have a <code>username.conf</code> filed under:
+<PRE>
+/etc/apache2/users/
+</PRE>
+If you don’t (very likely), then create one named by the short
+username of the account with the suffix <code>.conf</code>, it's location and
+permissions/ownership is best tackled by using the Terminal:
 
 <P>
 <PRE>
-sudo vi /etc/apache2/httpd.conf
+[~/LPPbook(master)]$ ls -l /etc/apache2/users/
+total 40
+-rw-r--r--  1 root  wheel  143 15 feb  2010 casiano.conf
 </PRE>
-Search for <code>php</code> this will land you on the right line then uncomment the line:
+
+<P>
+</LI>
+<LI><PRE>
+[~/LPPbook(master)]$ cat /etc/apache2/users/casiano.conf 
+&lt;Directory "/Users/casiano/Sites/"&gt;
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+&lt;/Directory&gt;
+</PRE>
+</LI>
+<LI>Permissions on the file should be:
 
 <P>
 <PRE>
-LoadModule php5_module libexec/apache2/libphp5.so
+-rw-r--r--   1 root  wheel  298 Jun 28 16:47 username.conf
 </PRE>
-Reload apache to kick in
+</LI>
+<LI>Restart Apache for the new file to be read:
 
 <P>
 <PRE>
 sudo apachectl restart
 </PRE>
-To see and test PHP, create a file name it <code>phpinfo.php</code> and file
-it in your document root with the contents below, then view it in
-a browser.
-
-<P>
+</LI>
+<LI>Then this user level document root will be viewable at:
 <PRE>
- &lt;?php phpinfo(); ?&gt;
+http://localhost/~username/
 </PRE>
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html16068"
+<A NAME="tex2html16070"
   HREF="node768.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16062"
-  HREF="node765.html">
+<A NAME="tex2html16064"
+  HREF="node766.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16056"
+<A NAME="tex2html16058"
   HREF="node766.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16064"
-  HREF="node797.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
 <A NAME="tex2html16066"
-  HREF="node800.html">
+  HREF="node798.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html16068"
+  HREF="node801.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -208,20 +239,20 @@ a browser.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16069"
-  HREF="node768.html">Perl</A>
-<B> Subir:</B> <A NAME="tex2html16063"
-  HREF="node765.html">Apache en Mac OS</A>
-<B> Anterior:</B> <A NAME="tex2html16057"
-  HREF="node766.html">Configuring Apache</A>
- &nbsp; <B>  <A NAME="tex2html16065"
-  HREF="node797.html">&#205;ndice General</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16071"
+  HREF="node768.html">PHP</A>
+<B> Subir:</B> <A NAME="tex2html16065"
+  HREF="node766.html">Apache en Mac OS</A>
+<B> Anterior:</B> <A NAME="tex2html16059"
+  HREF="node766.html">Apache en Mac OS</A>
  &nbsp; <B>  <A NAME="tex2html16067"
-  HREF="node800.html">&#205;ndice de Materias</A></B> </DIV>
+  HREF="node798.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16069"
+  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-21
+2014-10-22
 </ADDRESS>
 </BODY>
 </HTML>

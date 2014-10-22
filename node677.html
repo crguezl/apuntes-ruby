@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Sharing Source Code</TITLE>
-<META NAME="description" CONTENT="Sharing Source Code">
+<TITLE>Gemas con Un Gran Número de Utilidades Independientes</TITLE>
+<META NAME="description" CONTENT="Gemas con Un Gran Número de Utilidades Independientes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node678.html">
 <LINK REL="previous" HREF="node676.html">
-<LINK REL="up" HREF="node670.html">
+<LINK REL="up" HREF="node671.html">
 <LINK REL="next" HREF="node678.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14672"
+<A NAME="tex2html14674"
   HREF="node678.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14666"
-  HREF="node670.html">
+<A NAME="tex2html14668"
+  HREF="node671.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14660"
+<A NAME="tex2html14662"
   HREF="node676.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14668"
-  HREF="node797.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
 <A NAME="tex2html14670"
-  HREF="node800.html">
+  HREF="node798.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14672"
+  HREF="node801.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,64 +92,106 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14673"
-  HREF="node678.html">Publishing to RubyGems.org</A>
-<B> Subir:</B> <A NAME="tex2html14667"
-  HREF="node670.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14661"
-  HREF="node676.html">Gemas con Un Gran</A>
- &nbsp; <B>  <A NAME="tex2html14669"
-  HREF="node797.html">&#205;ndice General</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14675"
+  HREF="node678.html">Sharing Source Code</A>
+<B> Subir:</B> <A NAME="tex2html14669"
+  HREF="node671.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14663"
+  HREF="node676.html">Jerarquía de Ficheros y</A>
  &nbsp; <B>  <A NAME="tex2html14671"
-  HREF="node800.html">&#205;ndice de Materias</A></B> 
+  HREF="node798.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14673"
+  HREF="node801.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061470000000000000000">
-Sharing Source Code</A>
+<H1><A NAME="SECTION061460000000000000000">
+Gemas con Un Gran Número de Utilidades Independientes</A>
 </H1>
+Some
+gems, however, may be made up of multiple parts that could be used
+independently of each other. <code>ActiveSupport</code>, for example, provides a
+large number of useful utilities that, while they function together,
+can also function separately.
 
 <P>
-The simplest way (from the author’s perspective) to share a gem for
-other developers’ use is to distribute it in source code form. If
-you place the full source code for your gem on a public git repository, then
-other users can install it with Bundler’s git functionality.
+If I add require <code>active_support</code> to my code I load all of
+<code>ActiveSupport</code>. While this may be what I want in some cases (like inside
+a Rails application) in other cases I may just want a specific piece
+of <code>ActiveSupport</code>. Luckily, <code>ActiveSupport</code> is designed to handle this
+well. If I, for instance, add require <code>active_support/core_ext</code> I will
+only be loading the Ruby core extensions that are a part of <code>ActiveSupport</code>.
 
 <P>
-For example, you can install the latest code for the <code>wicked_pdf</code> gem
-in a project by including this line in your Gemfile:
+How can you make this work in your library? It's quite simple: your
+base file should, when required, require all the other parts of your
+library. However, each part of your library should, at its top, require
+any other parts or external dependencies so that it may be included
+without the user having previously required the base file. Let's take
+a look at an example:
 
 <P>
 <PRE>
-gem "wicked_pdf", :git =&gt; "git://github.com/mileszs/wicked_pdf.git"
+# in lib/my_gem.rb
+
+require 'my_gem/widget'
+require 'my_gem/widgets/foo_bar'
+require 'my_gem/widgets/baz'
 </PRE>
-(Véase <code>bundle help gemfile</code>)
 
 <P>
-Installing a gem directly from a git repository is a feature of
-Bundler, not a feature of <A NAME="tex2html1561"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>. Gems installed this way will
-not show up when you run <code>gem list</code>.
+<PRE>
+# in lib/my_gem/widget.rb
+
+require 'external_library'
+
+module MyGem
+  class Widget
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+# in lib/my_gem/widgets/foo_bar
+
+require 'my_gem/widget'
+
+module MyGem
+  module Widgets
+    class FooBar &lt; MyGem::Widget
+    end
+  end
+end
+</PRE>
+Each of the files in the above example can be required independently,
+giving developers the flexibility to use only a subset of your library's
+functionality if needed. 
+
+<P>
+Remember that <code>require</code> statements will only
+load the code from a file once, so it is safe to <code>require</code> the same file
+multiple times.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14672"
+<A NAME="tex2html14674"
   HREF="node678.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14666"
-  HREF="node670.html">
+<A NAME="tex2html14668"
+  HREF="node671.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14660"
+<A NAME="tex2html14662"
   HREF="node676.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14668"
-  HREF="node797.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
 <A NAME="tex2html14670"
-  HREF="node800.html">
+  HREF="node798.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14672"
+  HREF="node801.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -200,20 +242,20 @@ not show up when you run <code>gem list</code>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14673"
-  HREF="node678.html">Publishing to RubyGems.org</A>
-<B> Subir:</B> <A NAME="tex2html14667"
-  HREF="node670.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14661"
-  HREF="node676.html">Gemas con Un Gran</A>
- &nbsp; <B>  <A NAME="tex2html14669"
-  HREF="node797.html">&#205;ndice General</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14675"
+  HREF="node678.html">Sharing Source Code</A>
+<B> Subir:</B> <A NAME="tex2html14669"
+  HREF="node671.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14663"
+  HREF="node676.html">Jerarquía de Ficheros y</A>
  &nbsp; <B>  <A NAME="tex2html14671"
-  HREF="node800.html">&#205;ndice de Materias</A></B> </DIV>
+  HREF="node798.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14673"
+  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-21
+2014-10-22
 </ADDRESS>
 </BODY>
 </HTML>
