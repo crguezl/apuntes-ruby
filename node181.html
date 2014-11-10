@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Enumeración de Coordenadas</TITLE>
-<META NAME="description" CONTENT="Enumeración de Coordenadas">
+<TITLE>Acceso a Arrays y a Hashes</TITLE>
+<META NAME="description" CONTENT="Acceso a Arrays y a Hashes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node182.html">
 <LINK REL="previous" HREF="node180.html">
-<LINK REL="up" HREF="node170.html">
+<LINK REL="up" HREF="node171.html">
 <LINK REL="next" HREF="node182.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6123"
+<A NAME="tex2html6163"
   HREF="node182.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6117"
-  HREF="node170.html">
+<A NAME="tex2html6157"
+  HREF="node171.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6111"
+<A NAME="tex2html6151"
   HREF="node180.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6119"
-  HREF="node798.html">
+<A NAME="tex2html6159"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6121"
-  HREF="node801.html">
+<A NAME="tex2html6161"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,56 +92,162 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6124"
-  HREF="node182.html">Igualdad de Puntos</A>
-<B> Subir:</B> <A NAME="tex2html6118"
-  HREF="node170.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6112"
-  HREF="node180.html">Acceso a Arrays y</A>
- &nbsp; <B>  <A NAME="tex2html6120"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6122"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6164"
+  HREF="node182.html">Enumeración de Coordenadas</A>
+<B> Subir:</B> <A NAME="tex2html6158"
+  HREF="node171.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6152"
+  HREF="node180.html">Coerción</A>
+ &nbsp; <B>  <A NAME="tex2html6160"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6162"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION027111000000000000000">
-Enumeración de Coordenadas</A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html6165"
+  HREF="node181.html#SECTION027110010000000000000">Nota Sobre el Case</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION027110000000000000000">
+Acceso a Arrays y a Hashes</A>
 </H2>
-
-<P>
+Véase  el código en la sección
+<A HREF="node177.html#subsection:definiendooperadores">14.1.6</A>
 <PRE>
-09:37][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ export RUBYLIB=$RUBYLIB:.
-[09:38][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ echo $RUBYLIB
-:.
+# Define [] method to allow a Point to look like an array or
+# a hash with keys :x and :y
+def [](index)
+  case index
+  when 0, -2: @x         # Index 0 (or -2) is the X coordinate
+  when 1, -1: @y         # Index 1 (or -1) is the Y coordinate
+  when :x, "x": @x       # Hash keys as symbol or string for X
+  when :y, "y": @y       # Hash keys as symbol or string for Y
+  else nil               # Arrays and hashes just return nil on bad indexes
+  end
+end
 </PRE>
 
 <P>
+
+<H4><A NAME="SECTION027110010000000000000">
+Nota Sobre el Case</A>
+</H4>
+  
+
+Ruby 1.9 introduces an incompatible syntax change for conditional statements such as <code>if</code> and <code>case/when</code>. Previously a colon could be used as a shorthand for a <code>then</code> statement; this is
+perhaps most useful with multiple <code>when</code> statements on one line.
+
+<P>
+The following is legitimate ruby in 1.8:
+
+<P>
 <PRE>
-[09:39][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ irb
-ruby-1.9.2-p290 :001 &gt; require 'point' 
- =&gt; true 
-ruby-1.9.2-p290 :002 &gt; class Point
-ruby-1.9.2-p290 :003?&gt;   def each
-ruby-1.9.2-p290 :004?&gt;     yield @x
-ruby-1.9.2-p290 :005?&gt;     yield @y
-ruby-1.9.2-p290 :006?&gt;     end
-ruby-1.9.2-p290 :007?&gt;   end
- =&gt; nil 
-ruby-1.9.2-p290 :008 &gt; p = Point.new(2,1)
- =&gt; (2,1) 
-ruby-1.9.2-p290 :009 &gt; p.each do |x| puts "coord = #{x}" end
-coord = 2
-coord = 1
- =&gt; nil
+case x 
+when Regexp  : puts 'a regex'
+when Hash    : puts 'a regex'
+when Numeric : puts 'a number'
+when String  : puts 'a string'
+end
+</PRE>
+But not in ruby 1.9; now an explicit 'then' statement must be used:
+
+<P>
+<PRE>
+case x
+when Regexp then puts 'a regex'
+...
 </PRE>
 
 <P>
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html6163"
+  HREF="node182.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html6157"
+  HREF="node171.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html6151"
+  HREF="node180.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html6159"
+  HREF="node802.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html6161"
+  HREF="node805.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html6164"
+  HREF="node182.html">Enumeración de Coordenadas</A>
+<B> Subir:</B> <A NAME="tex2html6158"
+  HREF="node171.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6152"
+  HREF="node180.html">Coerción</A>
+ &nbsp; <B>  <A NAME="tex2html6160"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6162"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

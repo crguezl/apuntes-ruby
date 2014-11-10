@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Herencia y Variables de la Instancia</TITLE>
-<META NAME="description" CONTENT="Herencia y Variables de la Instancia">
+<TITLE>Herencia y Métodos de Clase</TITLE>
+<META NAME="description" CONTENT="Herencia y Métodos de Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node201.html">
 <LINK REL="previous" HREF="node199.html">
-<LINK REL="up" HREF="node194.html">
+<LINK REL="up" HREF="node195.html">
 <LINK REL="next" HREF="node201.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6402"
+<A NAME="tex2html6449"
   HREF="node201.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6396"
-  HREF="node194.html">
+<A NAME="tex2html6443"
+  HREF="node195.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6390"
+<A NAME="tex2html6437"
   HREF="node199.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6398"
-  HREF="node798.html">
+<A NAME="tex2html6445"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6400"
-  HREF="node801.html">
+<A NAME="tex2html6447"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,132 +92,105 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6403"
+<B> Siguiente:</B> <A NAME="tex2html6450"
   HREF="node201.html">Herencia y Variables de</A>
-<B> Subir:</B> <A NAME="tex2html6397"
-  HREF="node194.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6391"
-  HREF="node199.html">Herencia y Métodos de</A>
- &nbsp; <B>  <A NAME="tex2html6399"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6401"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Subir:</B> <A NAME="tex2html6444"
+  HREF="node195.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6438"
+  HREF="node199.html">Aumentando la Conducta Mediante</A>
+ &nbsp; <B>  <A NAME="tex2html6446"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6448"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02736000000000000000">
-Herencia y Variables de la Instancia</A>
+<H2><A NAME="SECTION02735000000000000000"></A>
+<A NAME="subsection:herenciaymetodosdeclase"></A>
+<BR>
+Herencia y Métodos de Clase
 </H2>
 
 <P>
-Considere el siguiente ejemplo:
-<PRE>
-[~/srcLPP/inheritance]$ cat VariableInheritance.rb 
-class Point
-  def initialize(x,y)
-    @x,@y = x, y
-  end
-
-  def to_s
-    "#@x #@y"
-  end
-end
-
-class Point3D &lt; Point
-  def initialize(x, y, z)
-    super(x, y)
-    @z = z
-  end
-
-  def to_s
-    "#@x #@y #@z"
-  end
-end
-
-if __FILE__ == $0
-  q, r, s = Point3D.new(1,1,1), Point3D.new(2,2,2), Point3D.new(3,3,3)
-  puts q, r, s
-
-  print "The instance variables of point 'q' are: "
-  puts q.instance_variables.join(',')
-end
-</PRE>
-Observe como en la línea 18 accedemos a las referencias <code>@x</code> y <code>@y</code> de la superclase <code>Point</code>.
-Este código funciona como cabría esperar:
+Si nuestra clase <code>Point3D</code> hereda de <code>Point</code> y 
+<code>Point</code> define un método de clase <code>sum</code>
+entonces la llamada <code>Point3D.sum</code> invocará a <code>Point.sum</code> 
+en el caso de que la clase <code>Point3D</code> no defina su propio método <code>sum</code>.
 
 <P>
 <PRE>
-[~/srcLPP/inheritance]$ ruby VariableInheritance.rb 
-1 1 1
-2 2 2
-3 3 3
-The instance variables of point 'q' are: @x,@y,@z
-[~/srcLPP/inheritance]$
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n Point3DSuper.rb
+     1  class Point
+     2    attr_reader :x, :y   
+     3  
+     4    def initialize(x,y)
+     5      @x,@y = x, y
+     6    end
+     7  
+     8    def self.sum(* points)
+     9      x, y  = 0, 0
+    10      points.each { |p| x += p.x; y += p.y }
+    11      Point.new(x, y)
+    12    end
+    13  
+    14    def to_s
+    15      "#@x #@y"
+    16    end
+    17  end
+    18  
+    19  class Point3D &lt; Point
+    20    attr_reader :z
+    21  
+    22    def initialize(x, y, z)
+    23      super(x, y)
+    24      @z = z
+    25    end
+    26  
+    27    def self.sum(* points)
+    28      p = super
+    29      z = points.inject(0) { |a,r| a  += r.z } 
+    30      Point3D.new(p.x, p.y, z)
+    31    end
+    32  
+    33    def to_s
+    34      super+" #@z"
+    35    end
+    36  end
+    37  
+    38  if __FILE__ == $0
+    39    q, r, s = Point3D.new(1,1,1), Point3D.new(2,2,2), Point3D.new(3,3,3)
+    40  
+    41    puts Point3D.sum(q, r, s)
+    42  end
 </PRE>
+Como se ve, podemos usar <code>super</code> con métodos de clase con el mismo significado que en los métodos de objeto.
 
 <P>
-
-<UL>
-<LI>Una variable de un objeto/instancia
-se crea en el momento en el que se le asigna
-un valor
-</LI>
-<LI>Las variables de la instancia no son definidas por la clase
-y no están relacionadas con los mecanismos de herencia
-</LI>
-<LI>Si una subclase utiliza el mismo  nombre 
-para una variable de instancia que alguno de sus ancestros la variable
-será <SPAN  CLASS="textbf">sobreescrita</SPAN>
-</LI>
-</UL>
-
-<P>
-Puesto que las variables de instancia no están relacionadas con la
-herencia, se deduce que una variable de instancia usada por una
-subclase no puede
-<SPAN  CLASS="textbf">ocultar</SPAN> una variable de instancia definida usada en la superclase.
-Si una subclase usa una variable de instancia con el mismo nombre que una variable utilizada por uno de sus
-ancestros, sobreescribirá el valor de la variable de su ancestro.
-<SPAN  CLASS="textbf">Esto puede ser que se haga con intencionalidad, para cambiar la conducta del ancestro
-o puede que ocurra por accidente. En este último caso seguramente dará lugar a bugs</SPAN>.
-
-<P>
-
-<OL>
-<LI>Observe que, como en el ejemplo, 
-podemos siempre averiguar cuales son las variables de instancia
-de un objeto <code>q</code> llamando a <code>q.instance_variables</code>
-</LI>
-<LI>En general, el mecanismo de herencia debe ser usado para extender clases en Ruby
-sólo cuando estamos familiarizados y tenemos control de la superclase.
-</LI>
-<LI>Compruebe que nombres usa la superclase para sus variables de instancia y evítelos
-</LI>
-<LI>Documente sus variables de instancia en la sección para desarrolladores
-</LI>
-<LI>Prefije los nombres de sus variables de instancia con el nombre de la clase. 
-</LI>
-</OL>
+La línea 28 es equivalente a <code>p = super(* points)</code> y también equivalente a <code>p = Point.sum(* points)</code>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby Point3DSuper.rb 
+6 6 6
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6402"
+<A NAME="tex2html6449"
   HREF="node201.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6396"
-  HREF="node194.html">
+<A NAME="tex2html6443"
+  HREF="node195.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6390"
+<A NAME="tex2html6437"
   HREF="node199.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6398"
-  HREF="node798.html">
+<A NAME="tex2html6445"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6400"
-  HREF="node801.html">
+<A NAME="tex2html6447"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -268,20 +241,20 @@ sólo cuando estamos familiarizados y tenemos control de la superclase.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6403"
+<B> Siguiente:</B> <A NAME="tex2html6450"
   HREF="node201.html">Herencia y Variables de</A>
-<B> Subir:</B> <A NAME="tex2html6397"
-  HREF="node194.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6391"
-  HREF="node199.html">Herencia y Métodos de</A>
- &nbsp; <B>  <A NAME="tex2html6399"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6401"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Subir:</B> <A NAME="tex2html6444"
+  HREF="node195.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6438"
+  HREF="node199.html">Aumentando la Conducta Mediante</A>
+ &nbsp; <B>  <A NAME="tex2html6446"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6448"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

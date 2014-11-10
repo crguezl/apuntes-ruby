@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node282.html">
 <LINK REL="previous" HREF="node280.html">
-<LINK REL="up" HREF="node236.html">
+<LINK REL="up" HREF="node238.html">
 <LINK REL="next" HREF="node282.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7704"
+<A NAME="tex2html7754"
   HREF="node282.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7698"
-  HREF="node236.html">
+<A NAME="tex2html7748"
+  HREF="node238.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7692"
+<A NAME="tex2html7742"
   HREF="node280.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7700"
-  HREF="node798.html">
+<A NAME="tex2html7750"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7702"
-  HREF="node801.html">
+<A NAME="tex2html7752"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,282 +92,498 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7705"
-  HREF="node282.html">Referencias. Véase También</A>
-<B> Subir:</B> <A NAME="tex2html7699"
-  HREF="node236.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7693"
-  HREF="node280.html">Repaso</A>
- &nbsp; <B>  <A NAME="tex2html7701"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7703"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7755"
+  HREF="node282.html">Repaso</A>
+<B> Subir:</B> <A NAME="tex2html7749"
+  HREF="node238.html">Reflexión y Metaprogramación</A>
+<B> Anterior:</B> <A NAME="tex2html7743"
+  HREF="node280.html">Práctica: HTML DSL con</A>
+ &nbsp; <B>  <A NAME="tex2html7751"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7753"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION028190000000000000000">
+<H1><A NAME="SECTION028170000000000000000">
 Repaso</A>
 </H1>
 
-<P>
-
 <OL>
-<LI>Complete el siguiente programa Ruby que resuelve el reto Dropbox
-conocido como "El Problema de la Dieta" (partes en subrayado):
+<LI>¿Cuanto vale <code>self</code> en las líneas 5-8 cuando <code>my_attr_reader</code> es llamado desde la línea 14?
 <PRE>
- 1  def solve(goal, values)
- 2    x = values.____
- 3  
- 4    subsets = lambda do |k|
- 5      return { _______ } if k &lt; 0
- 6      old_sums = subsets[___]
- 7  
- 8      new_sums = ___
- 9  
-10      old_sums.keys.each do |p|
-11        c = p + ____
-12        new_sums[c] = _________________ if c &lt;= goal
-13      end
-14  
-15      return old_sums._____(new_sums) 
-16    end
-17  
-18    z = subsets[values.________][goal] || []
-19    x.values_at(*z)
-20  end
-21  
-22  rdropbox = {
-23    'free-lunch'    =&gt;  802,
-..    .......................,
-34    'playing-drums'    =&gt;  -295
-35  }.invert
-36  
-37  s = solve(0, rdropbox.keys)
-38  puts s.inspect
-39  puts rdropbox.values_at(*s).inspect
+MacBookdeCasiano:chapter8ReflectionandMetaprogramming casiano$ cat -n myAccessors.rb 
+     1  class Module
+     2    def my_attr_reader(*syms)
+     3      syms.each { |s|
+     4        class_eval %{
+     5                      def #{s} 
+     6                        @#{s} 
+     7                      end
+     8                    }
+     9      }
+    10    end
+    11  end
+    12  
+    13  class Chuchu
+    14    my_attr_reader :a, :b
+    15  
+    16    def initialize(a,b)
+    17      @a, @b = a, b
+    18    end
+    19  end
 </PRE>
 </LI>
-<LI>Escriba los nombres de los métodos para listar los nombres (como cadenas)
-de 
-
-<UL>
-<LI>las variables globales que estén definidas (<code>________________</code>) 
-</LI>
-<LI>de las variables locales que estén actualmente definidas (<code>_______________</code>)
-</LI>
-<LI>de las variables de instancia de un objeto (<code>__________________</code>)
-</LI>
-<LI>de las variables de clase o módulo (<code>_______________</code>)
-</LI>
-<LI>y de las constantes de una clase o módulo (<code>_________</code>)
-</LI>
-</UL>
-¿Cuales son métodos de instancia? ¿Cuáles de clase?
-
-<P>
-</LI>
-<LI>El código que sigue implementa un motor para las expresiones regulares.
-Para simplificar las expresiones, se han definido algunos operadores.
-Siguen algunos ejemplos de uso:
+<LI>Rellene las partes que faltan en el código de la clase <code>Quiz</code> que implementa un DSL para la escritura de cuestionarios.
+Comente el código.
 <PRE>
-  e = 'c'.re - +('d'.re | 'r'.re)   # /c(d|r)+/
-  s = 'crddf'
-  remaining = e[s]                  # s =~ /c(d|r)+/
-  puts "/c(d|r)+/ '#{s}' Matched. Remaining = '#{remaining}'" if remaining
-                              # /c(d|r)+/ 'crddf' Matched. Remaining = 'f' 
-  e = 'c'.re - ~('d'.re | 'r'.re)   # /c(d|r)*/
-  s = 'cdrdrf'
-  remaining = e[s]                  # s =~ /c(d|r)*/
-  puts "/c(d|r)*/ '#{s}' Matched. Remaining = '#{remaining}'" if remaining
-</PRE>
-Rellene el código que falta:
-<PRE>
- 1  class ____
- 2  
- 3    def -(right)  # concatenacion
- 4      lambda { |x|  _ _ self[x] ___ right[_] }
- 5    end
- 6  
- 7    def |(right)  # or
- 8      lambda { |x|  self[x] __ _____[x] }
- 9    end
-10  
-11    def epsilon   # palabra vacía
-12      lambda {|x| _ }
-13    end
-14  
-15    def ~         # cierre de Kleene *
-16      lambda { |x| (_____)[x] or self._______[x] }
-17    end
-18  
-19    def +@        # cierre positivo
-20      lambda { |x| (____________)[x] }
-21    end
-22  
-23  end # Proc
-24  
-25  class ______
-26    def re
-27      lambda { |x| x[0,self.______] == ____ and x[self.______..__] }
-28    end
-29  end
-</PRE>
-</LI>
-<LI>¿Que predicado debo de usar para saber si la llamada al método
-actual es seguida de un bloque?
-</LI>
-<LI>¿Que hace el método <code>send</code>?¿Que argumentos lleva? ¿que retorna?
-</LI>
-<LI>¿Cómo puedo llamar a un método privado en Ruby desde fuera de la clase?
-</LI>
-<LI>¿Que visibilidad tiene <code>define_method</code>? ¿Cómo funciona?
-¿Que argumentos recibe? ¿Que devuelve? ¿En que contexto espera ser evaluado?
-</LI>
-<LI>¿Es posible definir en Ruby un método cuyo nombre no case con la expresión
-regular <code>/^[a-z_]+\w*$/i</code>?
-</LI>
-<LI>¿Cuándo se ejecuta <code>method_missing</code>? ¿Que argumentos espera? ¿Que precauciones hay que tomar 
-cuando se escribe uno?
-</LI>
-<LI>¿Que se entiende por delegación?
-<PRE>
- 1  require 'delegate'
- 2  class Set &lt; DelegateClass(Array)
-</PRE>
-¿Que ocurre en la línea 2?
-¿Que debe hacerse en el <code>initialize</code> para que el proceso de delegación funcione?
-</LI>
-<LI>¿Cómo puedo recorrer los objetos (referencia) que estan vivos en un punto dado de la 
-ejecución de un programa? </LI>
-<LI>¿Como puedo obtener los nombres de los métodos de un objeto? </LI>
-<LI>¿Como funciona el método de instancia <code>index</code> de un objeto de la clase <code>Array</code>?
-</LI>
-<LI>¿Cómo puedo llamar a un método cuyo nombre esta almacenado en la variable <code>x</code>?
-</LI>
-<LI>¿Cómo puedo saber cuantos argumentos espera un método cuyo nombre esta almacenado en la variable <code>x</code>?
-</LI>
-<LI>¿Cuales son los pasos para sobreescribir un método <code>mm</code> de una clase o módulo <code>MM</code>
-por nuestro propio <code>mm</code>?
+class Quiz
+  RIGHT = :right
+  WRONG = :wrong
 
-<P>
-</LI>
-<LI>Rellene las partes de código que faltan en esta clase que implementa una clase
-que da una funcionalidad parecida a la de la librería <code>markby</code>:
-<PRE>
-class HTML
+  attr_accessor :name, :_________ 
 
-  attr_accessor :page
+  def initialize(name, &amp;block)
+    self.name = name
+    self.questions = __
 
-  def initialize(&amp;block)
-    @page = ____
+    @counter = 0
     _____________ &amp;block
   end
 
-  def build_attr(attributes)
-      return '' if attributes.nil? or  attributes._____?
-      attributes.______(__) { |s,x| s += %{ ___________________ } } 
+  def question(text, answers)
+    q = Question.new(text, answers)
+    questions &lt;&lt; q 
+    @_______ = _
   end
 
-  def method_missing(tag, *args)
-    if block_given?
-      @page.____ ______
-      _____ 
-      text = @page.________
-    else
-      text = args.__________ || "\n"
-    end
-    tagattr = build_attr(args.shift) 
-    text = "______________________________________"
-    @page[__].push ____
-    text
+
+  def to_s
+    out = &lt;&lt;"EOQUIZ"
+#{self.name}
+
+#{self.questions.____("\n")}
+EOQUIZ
+  end
+
+  def wrong
+    @counter += 1
+    [_______________]
+  end
+
+  def right
+    @counter+= 1
+    [_______________]
+  end
+
+  def run
+    counter=0
+    puts self.name+"\n\n"
+    self.questions.each { |q| counter += 1 if q.ask }
+    puts "#{counter} respuestas correctas de un total de #{@_________.size}."
+  end
+end
+</PRE>
+</LI>
+<LI>Rellene las partes que faltan en el código de la clase <code>Question</code> 
+que implementa los objetos <code>question</code> para
+el DSL visto en clase para la escritura de cuestionarios. 
+Comente el código.
+<PRE>
+class Question
+  ORDER = 0
+  KIND = 1
+  attr_accessor :text, :answers
+
+  def initialize(text, answers)
+    @text = text
+    @answers = answers.map { |k, v| _________________________________ }.sort
   end
 
   def to_s
-    @page.join("\n")
-  end
-end
-</PRE>
-</LI>
-<LI>Explique brevemente que hacen los siguientes comandos:
+    output = &lt;&lt;"EORECIPE"
+#{_____}
 
-<OL>
-<LI><code>git init</code>
-</LI>
-<LI><code>git add</code>
-</LI>
-<LI><code>git commit</code>
-</LI>
-<LI><code>git clone ssh://..</code>
-</LI>
-<LI><code>git status</code>
-</LI>
-<LI><code>git diff oldref newref</code>
-</LI>
-<LI><code>git push</code>
-</LI>
-<LI><code>git pull</code>
-</LI>
-</OL>
-</LI>
-<LI>
-<OL>
-<LI>¿Que paquete hay que cargar <code>require '_________'</code> para elaborar una prueba?
-</LI>
-<LI>¿De que clase debe heredar  nuestra clase para que pueda ser usada en la implementación
-de pruebas <code>Test::Unit</code>?
-</LI>
-<LI>¿Que patrón debe seguir el nombre de los métodos de prueba dentro de la clase de prueba?
-</LI>
-</OL>
-</LI>
-<LI>
-<OL>
-<LI>¿Cómo se declara una tarea en <code>Rake</code>?
-</LI>
-<LI>¿Cómo se declara que una tarea tiene dependencias?
-</LI>
-<LI>¿Cómo se definen las acciones asociadas que componen una tarea?
-</LI>
-<LI>Cada tarea se define en un lugar del fichero <code>Rakefile</code> ¿cierto o falso?
-</LI>
-<LI>¿Cómo se declara una tarea <I>fichero</I>? ¿Como se definen sus dependencias?
-¿Cómo se declara una tarea <I>directorio</I>?
-</LI>
-<LI>¿Que hace el método <code>sh</code>?
-</LI>
-<LI>¿Como se llama la clase que nos facilita la tarea de ejecutar un conjunto de pruebas?
-¿Que hacen los métodos <code>libs</code> y  <code>pattern</code> del objeto <code>t</code> en el siguiente código?
-<PRE>
-Rake::TestTask.new do |t|
-  t.libs &lt;&lt; "test"
-  t.test_files = FileList['test/test*.rb']
-  t.verbose = true
+#{
+    out = ""
+    @answers.each do |answer|
+      out &lt;&lt; "  #{answer}\n"
+    end
+    ___
+}
+EORECIPE
+  end
+
+  def ask
+    begin
+      puts self
+      print "Su respuesta: " 
+      answerno = gets.to_i - 1
+    end while (answerno &lt; 0 or answerno &gt;= @_______.______)
+    @answers[________].is_right? 
+  end
+
 end
 </PRE>
 </LI>
-</OL>
+<LI>Rellene las partes que faltan en el código de la clase <code>Answer</code> que implementa las respuestas
+en el DSL para la escritura de cuestionarios.
+Comente el código.
+<PRE>
+class Answer
+  attr_accessor :____, :_____, :______
+
+  def initialize(order, kind, answer)
+    @kind, @order, @answer = kind, order, answer
+  end
+
+  def to_s
+    "#{@order} -  #{answer}"
+  end
+
+  def is_right?
+    ____________________
+  end
+
+  def ___(other)
+    __________________________
+  end
+
+end
+</PRE>
+</LI>
+<LI>Complete las partes que faltan en el siguiente código que implementa el método
+<code>prun</code> de la práctica <I>Procesos Concurrentes</I>.
+Comente el programa.
+<PRE>
+#!/usr/___/env ____ -w
+
+def deb(m) 
+  puts "#{$$}: #{m}" if $DEBUG
+end
+
+
+def getResult(chan)
+  Marshal.____(chan.____)
+end
+  
+def prun(p)
+  pid, name, read = {}, {}, {}
+  p.each { |n, code|
+    read[n], write = IO.____
+
+    pid[n] = fork do
+      read[n]._____
+
+      res = _________(n)
+
+      write.syswrite ____________(res)
+
+    end # fork
+
+    write._____
+  }
+
+  name = pid.invert
+  
+  result = {}
+  p.length.times { 
+    i, s = Process._____ 
+    n = _______
+
+    result[n] = getResult(read[n])
+    deb "Finished process '____' pid=____ with status #{s} result = ____________"
+  }
+  ______
+end
+
+res = prun(
+     :one     =&gt; lambda { |n| "#{n} is 1" },
+     :three   =&gt; lambda { |n| "#{n} is 3" },
+     'two'    =&gt; lambda { |n| n*4 }
+)
+</PRE>
+</LI>
+<LI>Complete las partes que faltan en el siguiente código 
+de la práctica <I>Ordenar por Calificaciones</I>
+que implementa la ordenación de un ficheros
+de notas 
+con el formato:
+<PRE>
+Ferrer Pérez, Eduardo &amp; 9'6\\
+</PRE>
+Se ordenan en orden decreciente de calificaciones.
+Comente el programa.
+<PRE>
+~/rubytesting$ cat -n calif.rb 
+     1  f = File.open('notas')
+     2  x = f._________
+     3  
+     4  y = x.map { |alu| alu =~ /_____________________/;  ________ }
+     5  h =  ____[__________]
+     6  h.keys.each { |alu| h[alu].gsub!(/__________)/, '_____'); h[alu] = h[alu].____ }
+     7  
+     8  s = h.sort { |a,b| ____ &lt;=&gt; ____ }
+     9  s.each { |x| puts "_________________________" }
+</PRE>
+
+<P>
+</LI>
+<LI>Complete las partes que faltan en el siguiente código 
+de la práctica <I>La Calculadora</I>
+que implementa una calculadora extensible 
+de expresiones en postfijo
+que admiten variables y asignación.
+Comente el programa. <PRE>
+ 1  class PostfixCalc
+ 2  
+ 3    attr_reader :stack
+ 4    attr_accessor :st
+ 5  
+ 6    def initialize(f) 
+ 7      @f = {
+ 8        '+' =&gt; lambda { |a,b| a+b },
+ 9        '*' =&gt; lambda { |a,b| a*b },
+10        '-' =&gt; lambda { |a,b| a-b },
+11        '/' =&gt; lambda { |a,b| a/b },
+12        'p' =&gt; lambda { _____________ },
+13        '!' =&gt; lambda { __________ },
+14        '=' =&gt; lambda { _____________________ },
+15      }
+16      @f._____!(f)
+17      @st = ________
+18      @stack = __
+19    end
+20  
+21   def eval(expr)
+22      expr.gsub!(/____________________/, '\1 \2') # Se admite a= y b!
+23      expr.split(/___/).each do |x|
+24        case x
+25          when *@f.keys
+26            f = _____
+27            ops = @stack.pop _______
+28            b = f.call(_____)
+29            @stack.push __ if __
+30          when /^-?\d+(\.\d+)?$/
+31            @stack.push ______
+32          when /^[a-zA-Z_]\w*$/
+33            _____________
+34          else
+35            ___________________________________________________________________       
+36        end
+37      end # each
+38    end
+39  end
+..  ...
+</PRE>
+
+<P>
+</LI>
+<LI>Complete las partes que faltan en el siguiente fragmento de código 
+que implementa la práctica <I>Conjuntos</I>
+usando arrays.
+Comente el programa.
+<PRE>
+ 1  class Set2 
+ 2  
+ 3    attr_accessor :sep
+ 4    attr_reader :a
+ 5    protected :a
+ 6  
+ 7    def initialize(a)
+ 8      @sep = ', '
+ 9      @a = a.uniq.____
+10    end
+11  
+12    def to_s
+13      _______(@sep)
+14    end
+15  
+16    def length 
+17      _________
+18    end
+19  
+20    alias cardinal ______
+21  
+22    def +(o)
+23      Set2.new(________)
+24    end
+25  
+26    def ^(o) # interseccion
+27      Set2.new(________)
+28    end
+29  
+30    def -(o)
+31      Set2.new(________)
+32    end
+33  
+34    def include?(x)
+35      _____________
+36    end
+37  
+38    def &lt;(s)
+39      if @a.length &lt; s.a.length 
+40        return true if @a.all? { |m| ______________ }
+42      end
+43      return false
+44    end
+45  
+54    def ==(s)
+55      _________
+56    end
+57  
+58    def &lt;=(s)
+59      _________________________
+60    end
+</PRE>
+</LI>
+<LI>¿Cual es la diferencia entre <code>dup</code> y <code>clone</code>?
+</LI>
+<LI>¿Cómo se llama el método que nos permite declarar
+un método de clase como privado? </LI>
+<LI>¿Que hace El método <A NAME="tex2html580"
+  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html#method-i-const_set">const_set</A>
+de la clase <A NAME="tex2html581"
+  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html">Module</A>?
+</LI>
+<LI>¿Que retorna el método <code>fork</code>? ¿Que argumentos lleva?
+</LI>
+<LI>¿Que retorna el método <code>pipe</code>? ¿En que clase está?
+</LI>
+<LI>¿Que hace el método <code>wait2</code>?
+</LI>
+<LI>¿Que hace el método <code>exit!</code>?
+</LI>
+<LI>¿Que es un proceso zombi?
+</LI>
+<LI>¿Que diferencias hay entre <code>syswrite</code> y <code>puts</code>?
+</LI>
+<LI>¿Cómo funciona el método <code>popen</code>? (véase por ejemplo <A HREF="#subsection:YAML"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+<PRE>
+  popen(cmd_string, mode="r" ) {|io| block } =&gt; obj
+</PRE>
+</LI>
+<LI>¿Que es YAML? ¿Para que sirve? (véase por ejemplo <A HREF="#subsection:YAML"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+</LI>
+<LI>¿Cual es el resultado?
+<PRE>
+&gt;&gt; ww ||= 8
+=&gt; 
+&gt;&gt; ww ||= 9
+=&gt;
+</PRE>
+</LI>
+<LI>Complete el código que falta. La clase <code>SerializableProc</code> implementa
+bloques de código serializables (véase <A HREF="#Marshalling_Lambdas_y_Procs"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>):
+<PRE>
+class SerializableProc
+
+   def initialize( block )
+     @block = block
+     @block.sub!(/^/,'lambda ') unless @block =~/^\s*(?:lambda|proc)/
+     @func = eval "#{@block}"
+   end
+
+
+   def call(* args)
+     __________(* args)
+   end
+
+   def arity
+     @func.arity
+   end
+
+   def _____(limit)
+     ______
+   end
+
+   def ____._____(s)
+     ________(s)
+   end
+end
+</PRE>
+</LI>
+<LI>¿Cuales son las salidas?
+<PRE>
+&gt;&gt; def tutu(n,m, &amp;b) b.call() end
+=&gt; nil
+&gt;&gt; tutu 2, {:a =&gt;1, :b =&gt;2} { puts "hello" }
+
+
+&gt;&gt; tutu(2,{:a =&gt;1, :b =&gt;2}) { puts "hello" }
+</PRE>
+</LI>
+<LI>¿Que hace el método <code>extend</code> cuando es llamado en un objeto?
+¿Que argumentos recibe? ¿Cual es la salida de estas sentencias? (véase <A HREF="#subsection:extend"><IMG  ALIGN="BOTTOM" BORDER="1" ALT="[*]" SRC="crossref.png"></A>)
+<PRE>
+&gt;&gt; module Chuchu
+&gt;&gt; def hello; "hello" end
+&gt;&gt; end
+=&gt; nil
+&gt;&gt; s = {}
+=&gt; {}
+&gt;&gt; s.extend Chuchu
+=&gt; {}
+&gt;&gt; s.hello
+=&gt;
+</PRE>
+</LI>
+<LI>¿Cual es el peligro de usar <code>eval</code> en un entorno distribuído?
+</LI>
+<LI>Comente el siguiente programa y explica su comportamiento:
+<PRE>
+    def multiplier(n)
+      lambda do |*arr| 
+                arr.collect { |i| i*n } 
+             end
+    end
+    
+    doubler = multiplier(2)
+    puts doubler[1, 2, 3]
+    
+    eval("n = 3", doubler.binding)
+    puts doubler.call(1, 2, 3)
+    
+    eval("n = 5", doubler)
+    puts doubler.call(1, 2, 3)
+</PRE>
+</LI>
+<LI>¿Que diferencias hay entre <A NAME="11141"></A><A NAME="tex2html582"
+  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>, <A NAME="11145"></A><A NAME="tex2html583"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-class_eval"><TT>class_eval</TT></A>
+y <code>eval</code>?
+</LI>
+<LI>¿Que es un DSL? ¿Que es un DSL interno o empotrado?
+
+<P>
 </LI>
 </OL>
+Repase los ejercicios
+<A HREF="node84.html#ejercicios:schwartz">10.9</A>,
+<A HREF="node80.html#ejercicios:procesos">10.8.9</A>,
+<A HREF="node85.html#ejercicios:hashes">10.10</A>,
+y
+<A HREF="node168.html#ejercicios:lambda">13.11</A>.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7704"
+<A NAME="tex2html7754"
   HREF="node282.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7698"
-  HREF="node236.html">
+<A NAME="tex2html7748"
+  HREF="node238.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7692"
+<A NAME="tex2html7742"
   HREF="node280.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7700"
-  HREF="node798.html">
+<A NAME="tex2html7750"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7702"
-  HREF="node801.html">
+<A NAME="tex2html7752"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -418,20 +634,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7705"
-  HREF="node282.html">Referencias. Véase También</A>
-<B> Subir:</B> <A NAME="tex2html7699"
-  HREF="node236.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7693"
-  HREF="node280.html">Repaso</A>
- &nbsp; <B>  <A NAME="tex2html7701"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7703"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7755"
+  HREF="node282.html">Repaso</A>
+<B> Subir:</B> <A NAME="tex2html7749"
+  HREF="node238.html">Reflexión y Metaprogramación</A>
+<B> Anterior:</B> <A NAME="tex2html7743"
+  HREF="node280.html">Práctica: HTML DSL con</A>
+ &nbsp; <B>  <A NAME="tex2html7751"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7753"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

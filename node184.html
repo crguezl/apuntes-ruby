@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Punto Mutable</TITLE>
-<META NAME="description" CONTENT="Un Punto Mutable">
+<TITLE>Ordenando Puntos</TITLE>
+<META NAME="description" CONTENT="Ordenando Puntos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node185.html">
 <LINK REL="previous" HREF="node183.html">
-<LINK REL="up" HREF="node170.html">
+<LINK REL="up" HREF="node171.html">
 <LINK REL="next" HREF="node185.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6166"
+<A NAME="tex2html6207"
   HREF="node185.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6160"
-  HREF="node170.html">
+<A NAME="tex2html6201"
+  HREF="node171.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6154"
+<A NAME="tex2html6195"
   HREF="node183.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6162"
-  HREF="node798.html">
+<A NAME="tex2html6203"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6164"
-  HREF="node801.html">
+<A NAME="tex2html6205"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,74 +92,64 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6167"
-  HREF="node185.html">Clases Mutables: Fácil y</A>
-<B> Subir:</B> <A NAME="tex2html6161"
-  HREF="node170.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6155"
-  HREF="node183.html">Ordenando Puntos</A>
- &nbsp; <B>  <A NAME="tex2html6163"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6165"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6208"
+  HREF="node185.html">Un Punto Mutable</A>
+<B> Subir:</B> <A NAME="tex2html6202"
+  HREF="node171.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6196"
+  HREF="node183.html">Igualdad de Puntos</A>
+ &nbsp; <B>  <A NAME="tex2html6204"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6206"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027114000000000000000">
-Un Punto Mutable</A>
+<H2><A NAME="SECTION027113000000000000000">
+Ordenando Puntos</A>
 </H2>
 
 <P>
+Véase  el código en 
+<A HREF="node177.html#subsection:definiendooperadores">14.1.6</A>
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html389"
+  HREF="http://www.ruby-doc.org/core-1.9.3/Comparable.html">Comparable</A>
+</LI>
+<LI><A NAME="tex2html390"
+  HREF="http://ruby-doc.org/core-1.9.3/Enumerable.html">Enumerable</A>
+</LI>
+</UL>
+
+<P>
 <PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ cat -n mutable_point.rb 
-     1  #encoding : utf-8
-     2  class MutablePoint
-     3    def initialize(ñ,y)
-     4     @ñ, @y = ñ, y 
-     5    end
-     6  
-     7    def ñ; @ñ; end       # The getter method for @ñ
-     8    def y; @y; end       # The getter method for @y
-     9  
-    10     def ñ=(value)        # The setter method for @ñ
-    11       @ñ = value
-    12     end
-    13  
-    14    def y=(value)        # The setter method for @y
-    15      @y = value
-    16    end
-    17  
-    18     def add!(p)          # Add p to self, return modified self
-    19       @ñ += p.ñ
-    20       @y += p.y
-    21       self
-    22     end
-    23  #  ---------------------------
-    24    def add(p)           # A nonmutating version of add!
-    25      q = self.dup       # Make a copy of self
-    26      q.add!(p)          # Invoke the mutating method on the copy
-    27    end
-    28  
-    29  end
-    30  
-    31  if __FILE__ == $0
-    32    z = MutablePoint.new(1,2)
-    33    p z
-    34    t = MutablePoint.new(2,1)
-    35    p t 
-    36    t.ñ = 4
-    37    p t 
-    38    z.add!(t)
-    39    p z
-    40  end
+include Comparable   # Mix in methods from the Comparable module.
+
+# Define an ordering for points based on their distance from the origin.
+# This method is required by the Comparable module.
+def &lt;=&gt;(other)
+  return nil unless other.instance_of? Point
+  @x**2 + @y**2 &lt;=&gt; other.x**2 + other.y**2
+end
+</PRE>
+
+<P>
+<PRE>
+p,q = Point.new(1,0), Point.new(0,1)
+p == q        # =&gt; false: p is not equal to q
+p &lt; q         # =&gt; false: p is not less than q
+p &gt; q         # =&gt; false: p is not greater than q
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

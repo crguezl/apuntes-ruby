@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Openid y Sinatra</TITLE>
-<META NAME="description" CONTENT="Openid y Sinatra">
+<TITLE>Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</TITLE>
+<META NAME="description" CONTENT="Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node467.html">
-<LINK REL="previous" HREF="node456.html">
-<LINK REL="up" HREF="node330.html">
+<LINK REL="previous" HREF="node464.html">
+<LINK REL="up" HREF="node459.html">
 <LINK REL="next" HREF="node466.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10990"
+<A NAME="tex2html11061"
   HREF="node466.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10984"
-  HREF="node330.html">
+<A NAME="tex2html11055"
+  HREF="node459.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10978"
+<A NAME="tex2html11049"
   HREF="node464.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10986"
-  HREF="node798.html">
+<A NAME="tex2html11057"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10988"
-  HREF="node801.html">
+<A NAME="tex2html11059"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,47 +92,242 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10991"
-  HREF="node466.html">Referencias. Véase Tambien</A>
-<B> Subir:</B> <A NAME="tex2html10985"
-  HREF="node330.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html10979"
-  HREF="node464.html">Using WebSockets on Heroku</A>
- &nbsp; <B>  <A NAME="tex2html10987"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10989"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11062"
+  HREF="node466.html">Enlaces Relacionados</A>
+<B> Subir:</B> <A NAME="tex2html11056"
+  HREF="node459.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html11050"
+  HREF="node464.html">Ruby y WebSockets: TCP</A>
+ &nbsp; <B>  <A NAME="tex2html11058"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11060"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031000000000000000000">
-Openid y Sinatra</A>
+<H1><A NAME="SECTION03940000000000000000">
+Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</A>
 </H1>
 
 <P>
-OpenID provides sites and services with a decentralized protocol for
-authenticating users through a wide variety of providers. What this means
-is that a site integrating OpenID can allow its users to log in using,
-for example, their Yahoo!, Google, or AOL accounts. Not only can the
-consuming site avoid having to create a login system itself, but it
-can also take advantage of the accounts that its users already have,
-thereby in- creasing user registration and login rates.
+
+<H4><A NAME="SECTION03940010000000000000">
+server.rb</A>
+</H4>
+  
 
 <P>
-In addition to simple authentication, OpenID also offers a series of
-extensions through which an OpenID provider can allow sites to obtain
-a user’s profile information or integrate additional layers
-of security for the login procedure.
+<PRE>
+[19:36][~/srcSTW/streaming/websocketsDrawEM(master)]$ cat -n server.rb 
+     1  require 'em-websocket'
+     2  require 'json'
+     3  require 'sinatra/base'
+     4  
+     5  EventMachine.run {
+     6    @channel = EM::Channel.new
+     7    @users = {}
+     8    @messages = []
+     9  
+    10    EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
+    11        
+    12      ws.onopen {
+    13        #Subscribe the new user to the channel with the callback function for the push action
+    14        new_user = @channel.subscribe { |msg| ws.send msg }
+    15        
+    16        #Add the new user to the user list
+    17        @users[ws.object_id] = new_user
+    18        
+    19        #Push the last messages to the user
+    20        @messages.each do |message|
+    21          ws.send message
+    22        end
+    23     }
+    24  
+    25      ws.onmessage { |msg|
+    26        
+    27        #append the message at the end of the queue
+    28        @messages &lt;&lt; msg
+    29        @messages.shift if @messages.length &gt; 10
+    30  
+    31        #Broadcast the message to all users connected to the channel
+    32        @channel.push msg
+    33      }
+    34  
+    35      ws.onclose { 
+    36        @channel.unsubscribe(@users[ws.object_id])
+    37        @users.delete(ws.object_id)
+    38      }
+    39    end
+    40  
+    41    #Run a Sinatra server for serving index.html
+    42    class App &lt; Sinatra::Base
+    43      set :public_folder, settings.root
+    44      
+    45      get '/' do
+    46        send_file 'index.html'
+    47      end
+    48    end
+    49    App.run!
+    50  }
+</PRE>
 
 <P>
-What makes OpenID so intriguing is the fact that it offers a standard
-that is fully decentralized from the providers and consumers. This
-aspect is what allows a single consuming site to allow its
-users to log in via Yahoo! and Google, while another site may want to
-allow logins via Blogger or WordPress. Ultimately, it is up to the OpenID
-consumer (your site or service) to choose what login
-methods it would like to offer its user base.
+
+<H4><A NAME="SECTION03940020000000000000">
+index.html.haml</A>
+</H4>
+  
+
+<PRE>
+!!! 5
+%html
+  %head
+    %meta(charset="utf-8")
+    %meta(content="IE=edge,chrome=1" http-equiv="X-UA-Compatible")
+    %meta(name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;")  
+    %link(rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css")
+    %script(type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js")
+    %script(type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js")
+    %title
+      WebSockets Drawing
+  %body
+    :javascript
+      var WebSocket = window.WebSocket || window.MozWebSocket;
+
+      $(function() {
+
+        var socket = new WebSocket("ws://" + location.hostname + ":8080");
+       
+        var currentX = 0;
+        var currentY = 0;
+        var lastX;
+        var lastY;
+        var lastReceivedX;
+        var lastReceivedY;
+        
+        var ctx = $('#canvas')[0].getContext('2d');
+
+        $('#canvas').bind('vmousemove',function(ev){
+          ev = ev || window.event;
+          currentX = ev.pageX || ev.clientX;
+          currentY = ev.pageY || ev.clientY;
+        });
+        
+        socket.onopen = function(event) {
+          setInterval(function(){
+            if(currentX !== lastX || currentY !== lastY){
+              lastX = currentX;
+              lastY = currentY;
+              socket.send( JSON.stringify({x:currentX, y: currentY}) );
+            }
+          }, 30); // send every 300 milliseconds if position has changed
+        }
+        socket.onmessage = function(event) {
+          var msg = $.parseJSON(event.data);
+          
+          ctx.beginPath();
+          ctx.moveTo(lastReceivedX,lastReceivedY);
+          ctx.lineTo(msg.x,msg.y);
+          ctx.closePath();
+          ctx.stroke();
+          lastReceivedX = msg.x;
+          lastReceivedY = msg.y;
+        }
+      });
+
+    %div(data-role="page")
+      %canvas#canvas(width='1000' height='1000')
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03940030000000000000">
+index.html</A>
+</H4>
+  
+
+<PRE>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset='utf-8' /&gt;
+    &lt;meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible' /&gt;
+    &lt;meta content='width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;' name='viewport' /&gt;
+    &lt;link href='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css' rel='stylesheet' /&gt;
+    &lt;script src='http://code.jquery.com/jquery-1.6.4.min.js' type='text/javascript'&gt;&lt;/script&gt;
+    &lt;script src='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js' type='text/javascript'&gt;&lt;/script&gt;
+    &lt;title&gt;
+      WebSockets Drawing
+    &lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;script type='text/javascript'&gt;
+      //&lt;![CDATA[
+        var WebSocket = window.WebSocket || window.MozWebSocket;
+        
+        $(function() {
+        
+          var socket = new WebSocket("ws://" + location.hostname + ":8080");
+         
+          var currentX = 0;
+          var currentY = 0;
+          var lastX;
+          var lastY;
+          var lastReceivedX;
+          var lastReceivedY;
+          
+          var ctx = $('#canvas')[0].getContext('2d');
+        
+          $('#canvas').bind('vmousemove',function(ev){
+            ev = ev || window.event;
+            currentX = ev.pageX || ev.clientX;
+            currentY = ev.pageY || ev.clientY;
+          });
+          
+          socket.onopen = function(event) {
+            setInterval(function(){
+              if(currentX !== lastX || currentY !== lastY){
+                lastX = currentX;
+                lastY = currentY;
+                socket.send( JSON.stringify({x:currentX, y: currentY}) );
+              }
+            }, 30); // send every 300 milliseconds if position has changed
+          }
+          socket.onmessage = function(event) {
+            var msg = $.parseJSON(event.data);
+            
+            ctx.beginPath();
+            ctx.moveTo(lastReceivedX,lastReceivedY);
+            ctx.lineTo(msg.x,msg.y);
+            ctx.closePath();
+            ctx.stroke();
+            lastReceivedX = msg.x;
+            lastReceivedY = msg.y;
+          }
+        });
+      //]]&gt;
+    &lt;/script&gt;
+    &lt;div data-role='page'&gt;
+      &lt;canvas height='1000' id='canvas' width='1000'&gt;&lt;/canvas&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="figure:websockets"></A><A NAME="19574"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
+Múltiples clientes pueden dibujar en el lienzo</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+[scale=0.7]sinatra/chapter2fundamentos/websockets.png
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
 
 <P>
 <BR><HR>
@@ -140,27 +335,38 @@ methods it would like to offer its user base.
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html10992"
-  HREF="node466.html">Referencias. Véase Tambien</A>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html11063"
+  HREF="node465.html#SECTION03940010000000000000">server.rb</A>
+<LI><A NAME="tex2html11064"
+  HREF="node465.html#SECTION03940020000000000000">index.html.haml</A>
+<LI><A NAME="tex2html11065"
+  HREF="node465.html#SECTION03940030000000000000">index.html</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html11066"
+  HREF="node466.html">Enlaces Relacionados</A>
 </UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10990"
+<A NAME="tex2html11061"
   HREF="node466.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10984"
-  HREF="node330.html">
+<A NAME="tex2html11055"
+  HREF="node459.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10978"
+<A NAME="tex2html11049"
   HREF="node464.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10986"
-  HREF="node798.html">
+<A NAME="tex2html11057"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10988"
-  HREF="node801.html">
+<A NAME="tex2html11059"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -211,20 +417,20 @@ methods it would like to offer its user base.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10991"
-  HREF="node466.html">Referencias. Véase Tambien</A>
-<B> Subir:</B> <A NAME="tex2html10985"
-  HREF="node330.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html10979"
-  HREF="node464.html">Using WebSockets on Heroku</A>
- &nbsp; <B>  <A NAME="tex2html10987"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10989"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11062"
+  HREF="node466.html">Enlaces Relacionados</A>
+<B> Subir:</B> <A NAME="tex2html11056"
+  HREF="node459.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html11050"
+  HREF="node464.html">Ruby y WebSockets: TCP</A>
+ &nbsp; <B>  <A NAME="tex2html11058"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11060"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

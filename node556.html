@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Fichero package.json</TITLE>
-<META NAME="description" CONTENT="Un Fichero package.json">
+<TITLE>El Objeto module y module.exports</TITLE>
+<META NAME="description" CONTENT="El Objeto module y module.exports">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node557.html">
 <LINK REL="previous" HREF="node555.html">
-<LINK REL="up" HREF="node554.html">
+<LINK REL="up" HREF="node549.html">
 <LINK REL="next" HREF="node557.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12567"
+<A NAME="tex2html12659"
   HREF="node557.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12561"
-  HREF="node554.html">
+<A NAME="tex2html12653"
+  HREF="node549.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12555"
+<A NAME="tex2html12647"
   HREF="node555.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12563"
-  HREF="node798.html">
+<A NAME="tex2html12655"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12565"
-  HREF="node801.html">
+<A NAME="tex2html12657"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,115 +92,104 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12568"
-  HREF="node557.html">README y otros documentos</A>
-<B> Subir:</B> <A NAME="tex2html12562"
-  HREF="node554.html">Como Crear tu Propio</A>
-<B> Anterior:</B> <A NAME="tex2html12556"
-  HREF="node555.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html12564"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12566"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12660"
+  HREF="node557.html">Algoritmo de Búsqueda Ejecutado</A>
+<B> Subir:</B> <A NAME="tex2html12654"
+  HREF="node549.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12648"
+  HREF="node555.html">Caching</A>
+ &nbsp; <B>  <A NAME="tex2html12656"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12658"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04592000000000000000">
-Un Fichero <TT>package.json</TT></A>
+<H2><A NAME="SECTION04587000000000000000">
+El Objeto <TT>module</TT> y <TT>module.exports</TT></A>
 </H2>
-
-<P>
-Creamos un fichero en la raíz de nuestro proyecto con nombre 
-<code>package.json</code>. Este fichero describe nuestro proyecto.
-Es esencial si vamos a publicar nuestro proyecto con 
-<A NAME="tex2html1250"
-  HREF="https://npmjs.org/"><TT>npm</TT></A>.
-
-<P>
-Podemos especificar en este fichero:
 
 <P>
 
 <OL>
-<LI>Name, version, description, and keywords to describe your program.
+<LI>In each module, the <code>module</code> free variable is a reference to the object
+representing the current module. 
+
+<P>
 </LI>
-<LI>A homepage where users can learn more about it.
+<LI>In particular <code>module.exports</code> is the
+same as the exports object. 
+
+<P>
 </LI>
-<LI>Other packages that yours depends on.
+<LI><code>module</code> isn't actually a global but rather
+local to each module.
+
+<P>
+</LI>
+<LI>The exports object is created by the <code>Module</code> system. 
+Sometimes this is not acceptable, 
+many want their module to be an instance of some class. 
+To do this assign the desired export object to <code>module.exports</code>. 
+
+<P>
+
+<UL>
+<LI><PRE>
+[~/javascript/node.js/creating_modules/module_exports(master)]$ cat a.js
+var EventEmitter = require('events').EventEmitter;
+
+module.exports = new EventEmitter();
+
+// Do some work, and after some time emit
+// the 'ready' event from the module itself.
+setTimeout(function() {
+  module.exports.emit('ready');
+}, 1000);
+</PRE>
+
+<P>
+</LI>
+<LI><PRE>
+$ cat main.js 
+var a = require('./a');
+a.on('ready', function() {
+  console.log('module a is ready');
+});
+</PRE>
+</LI>
+<LI><PRE>
+$ node main.js 
+module a is ready
+</PRE>
+</LI>
+</UL>
+La asignación a <code>module.exports</code> debe hacerse inmediatamente. 
+No puede hacerse en un callback.
+
+<P>
 </LI>
 </OL>
-
-<P>
-Si hemos instalado <A NAME="tex2html1251"
-  HREF="https://npmjs.org/"><TT>npm</TT></A> podemos usar el comando 
-<code>npm</code> <A NAME="tex2html1252"
-  HREF="https://npmjs.org/doc/init.html"><TT>init</TT></A>
-para empezar.
-Véase  <code>npm help</code>
-<A NAME="tex2html1253"
-  HREF="https://npmjs.org/doc/json.html"><TT>json</TT></A>
-para obtener información sobre este fichero:
-
-<P>
-La cosa mas importante a especificar 
-cuando estamos escribiendo un programa para su uso por otros,
-es el módulo <code>main</code>. Este consituirá el punto de entrada 
-a nuestro programa.
-
-<P>
-Es esencial documentar las dependencias.
-
-<P>
-El siguiente es un ejemplo de fichero <code>package.json</code> tomado
-del proyecto <A NAME="tex2html1254"
-  HREF="https://github.com/zaach/ebnf-parser"><TT>ebnf-parser</TT></A>:
-<PRE>
-[~/javascript/PLgrado/ebnf-parser(master)]$ cat -n package.json 
-   1  {
-   2    "name": "ebnf-parser",
-   3    "version": "0.1.1",
-   4    "description": "A parser for BNF and EBNF grammars used by jison",
-   5    "main": "ebnf-parser.js",
-   6    "scripts": {
-   7      "test": "make test"
-   8    },
-   9    "repository": "",
-  10    "keywords": [
-  11      "bnf",
-  12      "ebnf",
-  13      "grammar",
-  14      "parser",
-  15      "jison"
-  16    ],
-  17    "author": "Zach Carter",
-  18    "license": "MIT",
-  19    "devDependencies": {
-  20      "jison": "0.4.x",
-  21      "lex-parser": "0.1.0",
-  22      "test": "*"
-  23    }
-  24  }
-</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12567"
+<A NAME="tex2html12659"
   HREF="node557.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12561"
-  HREF="node554.html">
+<A NAME="tex2html12653"
+  HREF="node549.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12555"
+<A NAME="tex2html12647"
   HREF="node555.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12563"
-  HREF="node798.html">
+<A NAME="tex2html12655"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12565"
-  HREF="node801.html">
+<A NAME="tex2html12657"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -251,20 +240,20 @@ del proyecto <A NAME="tex2html1254"
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12568"
-  HREF="node557.html">README y otros documentos</A>
-<B> Subir:</B> <A NAME="tex2html12562"
-  HREF="node554.html">Como Crear tu Propio</A>
-<B> Anterior:</B> <A NAME="tex2html12556"
-  HREF="node555.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html12564"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12566"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12660"
+  HREF="node557.html">Algoritmo de Búsqueda Ejecutado</A>
+<B> Subir:</B> <A NAME="tex2html12654"
+  HREF="node549.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12648"
+  HREF="node555.html">Caching</A>
+ &nbsp; <B>  <A NAME="tex2html12656"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12658"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

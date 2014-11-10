@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Aplicando una Función a un Enumerable</TITLE>
-<META NAME="description" CONTENT="Aplicando una Función a un Enumerable">
+<TITLE>Programación Funcional</TITLE>
+<META NAME="description" CONTENT="Programación Funcional">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node161.html">
-<LINK REL="previous" HREF="node159.html">
-<LINK REL="up" HREF="node159.html">
+<LINK REL="next" HREF="node167.html">
+<LINK REL="previous" HREF="node158.html">
+<LINK REL="up" HREF="node129.html">
 <LINK REL="next" HREF="node161.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5704"
+<A NAME="tex2html5726"
   HREF="node161.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5698"
-  HREF="node159.html">
+<A NAME="tex2html5720"
+  HREF="node129.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5692"
+<A NAME="tex2html5714"
   HREF="node159.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5700"
-  HREF="node798.html">
+<A NAME="tex2html5722"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5702"
-  HREF="node801.html">
+<A NAME="tex2html5724"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,160 +92,77 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5705"
-  HREF="node161.html">Composición de Funciones</A>
-<B> Subir:</B> <A NAME="tex2html5699"
-  HREF="node159.html">Programación Funcional</A>
-<B> Anterior:</B> <A NAME="tex2html5693"
-  HREF="node159.html">Programación Funcional</A>
- &nbsp; <B>  <A NAME="tex2html5701"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5703"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5727"
+  HREF="node161.html">Aplicando una Función a</A>
+<B> Subir:</B> <A NAME="tex2html5721"
+  HREF="node129.html">Métodos, Procs, Lambdas y</A>
+<B> Anterior:</B> <A NAME="tex2html5715"
+  HREF="node159.html">Objetos Method no Ligados</A>
+ &nbsp; <B>  <A NAME="tex2html5723"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5725"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02691000000000000000">
-Aplicando una Función a un Enumerable</A>
-</H2>
-
-<P>
-En el ejemplo que sigue escribimos un módulo que usamos para extender
-las clases <A NAME="tex2html324"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> y <A NAME="tex2html325"
-  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A> con dos operaciones.
-
-<OL>
-<LI>La operación <code>f &lt;= a</code> toma una operación binaria 
-implantada via una lambda, proc o method <code>f</code> como primer
-operado y un enumerable <code>a</code> como segundo. Retorna  el resultado 
-de operar los elementos de <code>a</code> con <code>f</code>. Como 
-</LI>
-<LI>La operación <code>f | a</code> aplica <code>f</code> a cada uno de los elementos de
-<code>a</code>
-</LI>
-</OL>
-
-<P>
+<H1><A NAME="SECTION02690000000000000000">
+Programación Funcional</A>
+</H1>
+Ruby no es un lenguaje de programación funcional, pero la existencia de los bloques,
+procs y lambdas permite programar utilizando un estilo funcional.
+Cada vez que usamos bloques con <code>map</code> o <code>inject</code> estamos programando
+con estilo funcional:
 <PRE>
-if __FILE__ == $0
-  a = (1..5).to_a
-  sum = lambda {|x,y| x+y }        # A function to add two numbers
-  mean = (sum&lt;=a)/a.size.to_f      # Or sum.reduce(a) or a.inject(&amp;sum)
-  puts mean                        # 3.0
-  deviation = lambda {|x| x-mean } # Function to compute difference from mean
-  print "#{deviation|a}\n"         # [-2, -1, 0, 1, 2]
-  square = lambda {|x| x*x }       # Function to square a number
-  puts (sum&lt;=square|(deviation|a)) # 10 = 4 + 1 + 4 + 1
-  standardDeviation = Math.sqrt((sum&lt;=square|(deviation|a)).to_f/(a.size-1))
-  puts standardDeviation           # sqrt(10/4) = 1.5811388300841898
-end
+# Compute the average and standard deviation of an array of numbers
+mean = a.inject {|x,y| x+y } / a.size
+sumOfSquares = a.map{|x| (x-mean)**2 }.inject{|x,y| x+y }
+standardDeviation = Math.sqrt(sumOfSquares/(a.size-1))
 </PRE>
 
 <P>
-<PRE>
-[~/Chapter6MethodsProcsLambdasAndClosures]$ cat -n functional.rb | head -16
-     1  module Functional
-     2  
-     3    def apply(enum)
-     4      enum.map &amp;self
-     5    end
-     6    alias | apply
-     7  
-     8    def reduce(enum)
-     9      enum.inject &amp;self
-    10    end
-    11    alias &lt;= reduce
-    12  end
-    13  
-    14  # Add these functional programming methods to Proc and Method classes.
-    15  class Proc; include Functional; end
-    16  class Method; include Functional; end
-</PRE>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html5704"
-  HREF="node161.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5698"
-  HREF="node159.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5692"
-  HREF="node159.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5700"
-  HREF="node798.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5702"
-  HREF="node801.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html5728"
+  HREF="node161.html">Aplicando una Función a un Enumerable</A>
+<LI><A NAME="tex2html5729"
+  HREF="node162.html">Composición de Funciones</A>
+<LI><A NAME="tex2html5730"
+  HREF="node163.html">Aplicación Parcial de Funciones</A>
+<UL>
+<LI><A NAME="tex2html5731"
+  HREF="node163.html#SECTION02693100000000000000">Práctica: Aplicación Parcial</A>
+</UL>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5705"
-  HREF="node161.html">Composición de Funciones</A>
-<B> Subir:</B> <A NAME="tex2html5699"
-  HREF="node159.html">Programación Funcional</A>
-<B> Anterior:</B> <A NAME="tex2html5693"
-  HREF="node159.html">Programación Funcional</A>
- &nbsp; <B>  <A NAME="tex2html5701"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5703"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<LI><A NAME="tex2html5732"
+  HREF="node164.html">Memoización</A>
+<UL>
+<LI><A NAME="tex2html5733"
+  HREF="node164.html#SECTION02694010000000000000">El método <TT>benchmark</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html5734"
+  HREF="node165.html">Símbolos, Métodos y Procs</A>
+<UL>
+<LI><A NAME="tex2html5735"
+  HREF="node165.html#SECTION02695100000000000000">to_proc</A>
+<LI><A NAME="tex2html5736"
+  HREF="node165.html#SECTION02695200000000000000">Accediendo a una Clase como una Colección de Métodos</A>
+<LI><A NAME="tex2html5737"
+  HREF="node165.html#SECTION02695300000000000000">Viendo los (Nombres de) Métodos como Colecciones de Objetos</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html5738"
+  HREF="node166.html">Véase También</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

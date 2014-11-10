@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Dos DSLs: Generando XML con Validación via Generación de Métodos</TITLE>
-<META NAME="description" CONTENT="Dos DSLs: Generando XML con Validación via Generación de Métodos">
+<TITLE>Un Lenguaje de Dominio Específico para Describir Recetas de Cocina</TITLE>
+<META NAME="description" CONTENT="Un Lenguaje de Dominio Específico para Describir Recetas de Cocina">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node274.html">
 <LINK REL="previous" HREF="node272.html">
-<LINK REL="up" HREF="node270.html">
+<LINK REL="up" HREF="node272.html">
 <LINK REL="next" HREF="node274.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7587"
+<A NAME="tex2html7628"
   HREF="node274.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7581"
-  HREF="node270.html">
+<A NAME="tex2html7622"
+  HREF="node272.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7575"
+<A NAME="tex2html7616"
   HREF="node272.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7583"
-  HREF="node798.html">
+<A NAME="tex2html7624"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7585"
-  HREF="node801.html">
+<A NAME="tex2html7626"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,415 +92,221 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7588"
-  HREF="node274.html">Creando un ORM</A>
-<B> Subir:</B> <A NAME="tex2html7582"
-  HREF="node270.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7576"
-  HREF="node272.html">Un DSL para Procesar</A>
- &nbsp; <B>  <A NAME="tex2html7584"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7586"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7629"
+  HREF="node274.html">Un DSL para Procesar</A>
+<B> Subir:</B> <A NAME="tex2html7623"
+  HREF="node272.html">Lenguajes de Dominio Específico.</A>
+<B> Anterior:</B> <A NAME="tex2html7617"
+  HREF="node272.html">Lenguajes de Dominio Específico.</A>
+ &nbsp; <B>  <A NAME="tex2html7625"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7627"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html7589"
-  HREF="node273.html#SECTION028123010000000000000">Primer DSL: Lenguaje para la Generación de XML</A>
-<LI><A NAME="tex2html7590"
-  HREF="node273.html#SECTION028123020000000000000">XML Generado</A>
-<LI><A NAME="tex2html7591"
-  HREF="node273.html#SECTION028123030000000000000">Visualización del HTML Generado</A>
-<LI><A NAME="tex2html7592"
-  HREF="node273.html#SECTION028123040000000000000">Segundo DSL: Lenguaje para la Generación del DSL Anterior y su Validación</A>
-<LI><A NAME="tex2html7593"
-  HREF="node273.html#SECTION028123050000000000000">La Clase <TT>XMLGrammar</TT></A>
-<LI><A NAME="tex2html7594"
-  HREF="node273.html#SECTION028123060000000000000">Código Completo</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION028123000000000000000">
-Dos DSLs: Generando XML con Validación via Generación de Métodos</A>
+<H2><A NAME="SECTION028121000000000000000"></A>
+<A NAME="subsection:instanceeval"></A>
+<BR>
+Un Lenguaje de Dominio Específico para Describir Recetas de Cocina
 </H2>
 
 <P>
+Supongamos que queremos crear una Clase <code>Recipe</code> cuyo constructor entienda 
+un  Lenguaje de Dominio Específico (Domain Specific Language, DSL) para describir recetas
+de cocina.
+Queremos que sea posible especificar con facilidad  los ingredientes y los
+pasos de la forma mas simple posible.
+La API debería ser parecida a esta:
 
-<H4><A NAME="SECTION028123010000000000000">
-Primer DSL: Lenguaje para la Generación de XML</A>
-</H4>
-  
-
+<P>
 <PRE>
-HTMLForm.generate(STDOUT) do
-  comment "This is a simple HTML form"
-  form :name =&gt; "registration",
-       :action =&gt; "http://www.example.com/register.cgi" do
-    content "Name:"
-    br
-    input :name =&gt; "name"
-    br
-    content "Post:"
-    br
-    textarea :name =&gt; "address", :rows=&gt;6, :cols=&gt;40 do
-      "Please enter your post here"        # Este bloque retorna contenido
-    end
-    br
-    button { "Submit" }                    # Este bloque retorna contenido
-  end
-end
+puts Recipe.new("Noodles and Cheese") {
+  ingredient "Water",   amount =&gt; "2 cups"
+  ingredient "Noodles", amount =&gt; "1 cup"
+  ingredient "Cheese",  amount =&gt; "1/2 cup"
+
+  step "Heat water to boiling.",        during =&gt; "5 minutes"
+  step "Add noodles to boiling water.", during =&gt; "6 minutes"
+  step "Drain water."
+  step "Mix cheese in with noodles."
+}
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION028123020000000000000">
-XML Generado</A>
-</H4>
-  
+y el resultado de ejecutar el código anterior debería ser similar a este:
 
 <P>
 <PRE>
-[xmlgenerator]$ ruby xml_generator.rb &gt; ejemplo.html
-[xmlgenerator]$ cat ejemplo.html 
-&lt;!-- This is a simple HTML form --&gt;
-&lt;form name='registration' action='http://www.example.com/register.cgi' method='GET' enctype='application/x-www-form-urlencoded'&gt;Name:&lt;br/&gt;
-&lt;input name='name' type='text'/&gt;
-&lt;br/&gt;
-Post:&lt;br/&gt;
-&lt;textarea name='address' rows='6' cols='40'&gt;Please enter your post here&lt;/textarea&gt;
-&lt;br/&gt;
-&lt;button type='submit'&gt;Submit&lt;/button&gt;
-&lt;/form&gt;
+~/Chapter8ReflectionandMetaprogramming$ ruby recipes.rb 
+Noodles and Cheese
+==================
+
+Ingredients: Water (2 cups), Noodles (1 cup), Cheese (1/2 cup)
+
+1) Heat water to boiling. (5 minutes)
+2) Add noodles to boiling water. (6 minutes)
+3) Drain water.
+4) Mix cheese in with noodles.
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION028123030000000000000">
-Visualización del HTML Generado</A>
-</H4>
-  
-
-<P>
-
-<DIV ALIGN="CENTER"><A NAME="figure:formulario"></A><A NAME="10080"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura 15.1:</STRONG>
-Formulario generado</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=1]chapter8/form.png
-
-</DIV></TD></TR>
-</TABLE>
-</DIV>
-
-<P>
-
-<H4><A NAME="SECTION028123040000000000000">
-Segundo DSL: Lenguaje para la Generación del DSL Anterior y su Validación</A>
-</H4>
-  
-
-<P>
-Este DSL permite describir una gramática XML: que tags son permitidos
-y para cada tag que atributos son legales y de que tipo son.
-Se usaría así:
+Como se ve en el ejemplo de uso, el constructor de la clase recibe un bloque que describe la receta.
+Una solución es usar <code>yield</code> para llamar al bloque:
 
 <P>
 <PRE>
-class HTMLForm &lt; XMLGrammar
-  element :form, :action =&gt; REQ,        # atributo requerido
-                 :method =&gt; "GET",      # cadena: valor por defecto
-                 :enctype =&gt; "application/x-www-form-urlencoded",
-                 :name =&gt; OPT           # opcional
-  element :input, :type =&gt; "text", :name =&gt; OPT, :value =&gt; OPT,
-                  :maxlength =&gt; OPT, :size =&gt; OPT, :src =&gt; OPT,
-                  :checked =&gt; BOOL, :disabled =&gt; BOOL, :readonly =&gt; BOOL
-  element :textarea, :rows =&gt; REQ, :cols =&gt; REQ, :name =&gt; OPT,
-                     :disabled =&gt; BOOL, :readonly =&gt; BOOL
-  element :button, :name =&gt; OPT, :value =&gt; OPT,
-                   :type =&gt; "submit", :disabled =&gt; OPT
-  element :br
-end
+~/Chapter8ReflectionandMetaprogramming$ cat -n recipes2.rb 
+     1  class Recipe2
+     2    attr_accessor :name, :ingredients, :instructions
+     3  
+     4    def initialize(name)
+     5      self.name = name
+     6      self.ingredients = []
+     7      self.instructions = []
+     8  
+     9      yield self
+    10    end
+    11  
+    12    def to_s
+    13      output = name
+    14      output &lt;&lt; "\n#{'=' * name.size}\n\n"
+    15      output &lt;&lt; "Ingredients: #{ingredients.join(', ')}\n\n"
+    16  
+    17      instructions.each_with_index do |instruction, index|
+    18        output &lt;&lt; "#{index + 1}) #{instruction}\n"
+    19      end
+    20  
+    21      output
+    22    end
+    23  
+    24    def ingredient(name, options = {})
+    25      ingredient = name
+    26      ingredient &lt;&lt; " (#{options[:amount]})" if options[:amount]
+    27  
+    28      ingredients &lt;&lt; ingredient
+    29    end
+    30  
+    31    def step(text, options = {})
+    32      instruction = text
+    33      instruction &lt;&lt; " (#{options[:during]})" if options[:during]
+    34  
+    35      instructions &lt;&lt; instruction
+    36    end
+    37  end
 </PRE>
+Los métodos <code>ingredient</code> y <code>step</code> nos ayudan en el proceso de construcción de la cadena
+de presentación.
 
 <P>
-El método <code>element</code> construye un método de instancia 
-con el nombre especificado (por ejemplo, <code>:form</code>) como primer
-argumento en la subclase (<code>HTMLForm</code> en el ejemplo).
-Como segundo argumento opcional recibe un hash especificando los atributos 
-legales del elemento y de que tipo son (<code>REQ</code> por requerido, <code>OPT</code> por opcional,
-una <A NAME="tex2html557"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A> como en <code>:method =&gt; "GET"</code> indica valor por defecto y <code>BOOL</code> para atributos
-cuyo valor es su propio nombre.
-
-<P>
-En el código anterior se crean métodos <code>form</code>, <code>input</code>, <code>texarea</code>, <code>button</code>
-y <code>br</code> en la clase <code>HTMLForm</code>.
-
-<P>
-
-<H4><A NAME="SECTION028123050000000000000">
-La Clase <TT>XMLGrammar</TT></A>
-</H4>
-  
-
-<P>
+Sin embargo, esta solución no es satisfactoria, ya que debemos pasar 
+al bloque de definición el objeto receta que esta siendo construido:
 <PRE>
-class XMLGrammar
-  # Create an instance of this class, specifying a stream or object to
-  # hold the output. This can be any object that responds to &lt;&lt;(String).
-  def initialize(out)
-    @out = out  # Remember where to send our output
-  end
-
-  # Invoke the block in an instance that outputs to the specified stream.
-  def self.generate(out, &amp;block)
-    new(out).instance_eval(&amp;block)
-  end
-
-  # Define an allowed element (or tag) in the grammar.
-  # This class method is the grammar-specification DSL
-  # and defines the methods that constitute the XML-output DSL.
-  def self.element(tagname, attributes={})
-    @allowed_attributes ||= {}
-    @allowed_attributes[tagname] = attributes
-
-    class_eval %Q{
-      def #{tagname}(attributes={}, &amp;block)
-        tag(:#{tagname},attributes,&amp;block)
-      end
-    }
-  end
-
-  # These are constants used when defining attribute values.
-  OPT = :opt     # for optional attributes
-  REQ = :req     # for required attributes
-  BOOL = :bool   # for attributes whose value is their own name
-
-  def self.allowed_attributes
-    @allowed_attributes
-  end
-
-  # Output the specified object as CDATA, return nil.
-  def content(text)
-    @out &lt;&lt; text.to_s
-    nil
-  end
-
-  # Output the specified object as a comment, return nil.
-  def comment(text)
-    @out &lt;&lt; "&lt;!-- #{text} --&gt;\n"
-    nil
-  end
-
-  # Output a tag with the specified name and attribute.
-  # If there is a block, invoke it to output or return content.
-  # Return nil.
-  def tag(tagname, attributes={})
-    # Output the tag name
-    @out &lt;&lt; "&lt;#{tagname}"
-
-    # Get the allowed attributes for this tag.
-    allowed = self.class.allowed_attributes[tagname]
-
-    # First, make sure that each of the attributes is allowed.
-    # Assuming they are allowed, output all of the specified ones.
-    attributes.each_pair do |key,value|
-      raise "unknown attribute: #{key}" unless allowed.include?(key)
-      @out &lt;&lt; " #{key}='#{value}'"
-    end
-
-    # Now look through the allowed attributes, checking for 
-    # required attributes that were omitted and for attributes with
-    # default values that we can output.
-    allowed.each_pair do |key,value|
-      # If this attribute was already output, do nothing.
-      next if attributes.has_key? key
-      if (value == REQ)
-        raise "required attribute '#{key}' missing in &lt;#{tagname}&gt;"
-      elsif value.is_a? String
-        @out &lt;&lt; " #{key}='#{value}'"
-      end
-    end
-
-    if block_given?
-      # This block has content
-      @out &lt;&lt; '&gt;'             # End the opening tag
-      content = yield         # Invoke the block to output or return content
-      if content              # If any content returned
-        @out &lt;&lt; content.to_s  # Output it as a string
-      end
-      @out &lt;&lt; "&lt;/#{tagname}&gt;\n" # Close the tag
-    else 
-      # Otherwise, this is an empty tag, so just close it.
-      @out &lt;&lt; "/&gt;\n"
-    end
-    nil # Tags output themselves, so they don't return any content.
-  end
-end
+    39  noodles_and_cheese = Recipe2.new("Noodles and Cheese") do |r|
+    40    r.ingredient "Water",   :amount =&gt; "2 cups"
+    41    r.ingredient "Noodles", :amount =&gt; "1 cup"
+    42    r.ingredient "Cheese",  :amount =&gt; "1/2 cup"
+    43  
+    44    r.step "Heat water to boiling.",        :during =&gt; "5 minutes"
+    45    r.step "Add noodles to boiling water.", :during =&gt; "6 minutes"
+    46    r.step "Drain water."
+    47    r.step "Mix cheese in with noodles."
+    48  end
+    49  
+    50  puts noodles_and_cheese
 </PRE>
-
-<P>
-
-<H4><A NAME="SECTION028123060000000000000">
-Código Completo</A>
-</H4>
-  
+Peor aún, debemos repetir constantemente el objeto <code>r.ingredient</code>
+y <code>r.step</code>.
+Sabemos que <A NAME="11029"></A><A NAME="tex2html558"
+  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
+evalúa el bloque que se le pasa en el contexto del objeto
+en el que es llamado (<code>self</code> en la línea 9 abajo):
 
 <P>
 <PRE>
-class XMLGrammar
-  # Create an instance of this class, specifying a stream or object to
-  # hold the output. This can be any object that responds to &lt;&lt;(String).
-  def initialize(out)
-    @out = out  # Remember where to send our output
-  end
-
-  # Invoke the block in an instance that outputs to the specified stream.
-  def self.generate(out, &amp;block)
-    new(out).instance_eval(&amp;block)
-  end
-
-  # Define an allowed element (or tag) in the grammar.
-  # This class method is the grammar-specification DSL
-  # and defines the methods that constitute the XML-output DSL.
-  def self.element(tagname, attributes={})
-    @allowed_attributes ||= {}
-    @allowed_attributes[tagname] = attributes
-
-    class_eval %Q{
-      def #{tagname}(attributes={}, &amp;block)
-        tag(:#{tagname},attributes,&amp;block)
-      end
-    }
-  end
-
-  # These are constants used when defining attribute values.
-  OPT = :opt     # for optional attributes
-  REQ = :req     # for required attributes
-  BOOL = :bool   # for attributes whose value is their own name
-
-  def self.allowed_attributes
-    @allowed_attributes
-  end
-
-  # Output the specified object as CDATA, return nil.
-  def content(text)
-    @out &lt;&lt; text.to_s
-    nil
-  end
-
-  # Output the specified object as a comment, return nil.
-  def comment(text)
-    @out &lt;&lt; "&lt;!-- #{text} --&gt;\n"
-    nil
-  end
-
-  # Output a tag with the specified name and attribute.
-  # If there is a block, invoke it to output or return content.
-  # Return nil.
-  def tag(tagname, attributes={})
-    # Output the tag name
-    @out &lt;&lt; "&lt;#{tagname}"
-
-    # Get the allowed attributes for this tag.
-    allowed = self.class.allowed_attributes[tagname]
-
-    # First, make sure that each of the attributes is allowed.
-    # Assuming they are allowed, output all of the specified ones.
-    attributes.each_pair do |key,value|
-      raise "unknown attribute: #{key}" unless allowed.include?(key)
-      @out &lt;&lt; " #{key}='#{value}'"
-    end
-
-    # Now look through the allowed attributes, checking for 
-    # required attributes that were omitted and for attributes with
-    # default values that we can output.
-    allowed.each_pair do |key,value|
-      # If this attribute was already output, do nothing.
-      next if attributes.has_key? key
-      if (value == REQ)
-        raise "required attribute '#{key}' missing in &lt;#{tagname}&gt;"
-      elsif value.is_a? String
-        @out &lt;&lt; " #{key}='#{value}'"
-      end
-    end
-
-    if block_given?
-      # This block has content
-      @out &lt;&lt; '&gt;'             # End the opening tag
-      content = yield         # Invoke the block to output or return content
-      if content              # If any content returned
-        @out &lt;&lt; content.to_s  # Output it as a string
-      end
-      @out &lt;&lt; "&lt;/#{tagname}&gt;\n" # Close the tag
-    else 
-      # Otherwise, this is an empty tag, so just close it.
-      @out &lt;&lt; "/&gt;\n"
-    end
-    nil # Tags output themselves, so they don't return any content.
-  end
-end
-
-class HTMLForm &lt; XMLGrammar
-  element :form, :action =&gt; REQ,
-                 :method =&gt; "GET",
-                 :enctype =&gt; "application/x-www-form-urlencoded",
-                 :name =&gt; OPT
-  element :input, :type =&gt; "text", :name =&gt; OPT, :value =&gt; OPT,
-                  :maxlength =&gt; OPT, :size =&gt; OPT, :src =&gt; OPT,
-                  :checked =&gt; BOOL, :disabled =&gt; BOOL, :readonly =&gt; BOOL
-  element :textarea, :rows =&gt; REQ, :cols =&gt; REQ, :name =&gt; OPT,
-                     :disabled =&gt; BOOL, :readonly =&gt; BOOL
-  element :button, :name =&gt; OPT, :value =&gt; OPT,
-                   :type =&gt; "submit", :disabled =&gt; OPT
-  element :br
-end
-
-HTMLForm.generate(STDOUT) do
-  comment "This is a simple HTML form"
-  form :name =&gt; "registration",
-       :action =&gt; "http://www.example.com/register.cgi" do
-    content "Name:"
-    br
-    input :name =&gt; "name"
-    br
-    content "Post:"
-    br
-    textarea :name =&gt; "address", :rows=&gt;6, :cols=&gt;40 do
-      "Please enter your post here"
-    end
-    br
-    button { "Submit" }
-  end
-end
+~/Chapter8ReflectionandMetaprogramming$ cat -n recipes.rb 
+     1  class Recipe
+     2    attr_accessor :name, :ingredients, :instructions
+     3  
+     4    def initialize(name, &amp;block)
+     5      self.name = name
+     6      self.ingredients = []
+     7      self.instructions = []
+     8  
+     9      instance_eval &amp;block
+    10    end
+    11  
+    12    def to_s
+    13      output = &lt;&lt;"EORECIPE"
+    14  #{name}
+    15  #{'=' * name.size}
+    16  
+    17  Ingredients: #{ingredients.join(', ')}
+    18  
+    19  #{
+    20      out = ""
+    21      instructions.each_with_index do |instruction, index|
+    22        out &lt;&lt; "#{index + 1}) #{instruction}\n"
+    23      end
+    24      out
+    25  }
+    26  EORECIPE
+    27    end
+    28  
+    29    def ingredient(name, options = {})
+    30      ingredient = name
+    31      ingredient &lt;&lt; " (#{options[:amount]})" if options[:amount]
+    32  
+    33      ingredients &lt;&lt; ingredient
+    34    end
+    35  
+    36    def step(text, options = {})
+    37      instruction = text
+    38      instruction &lt;&lt; " (#{options[:for]})" if options[:for]
+    39  
+    40      instructions &lt;&lt; instruction
+    41    end
+    42  
+    43    def amount 
+    44     :amount 
+    45    end
+    46  
+    47    def during 
+    48     :for
+    49    end
+    50  end
+    51  
+    52  puts Recipe.new("Noodles and Cheese") {
+    53    ingredient "Water",   amount =&gt; "2 cups"
+    54    ingredient "Noodles", amount =&gt; "1 cup"
+    55    ingredient "Cheese",  amount =&gt; "1/2 cup"
+    56  
+    57    step "Heat water to boiling.",        during =&gt; "5 minutes"
+    58    step "Add noodles to boiling water.", during =&gt; "6 minutes"
+    59    step "Drain water."
+    60    step "Mix cheese in with noodles."
+    61  }
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7587"
+<A NAME="tex2html7628"
   HREF="node274.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7581"
-  HREF="node270.html">
+<A NAME="tex2html7622"
+  HREF="node272.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7575"
+<A NAME="tex2html7616"
   HREF="node272.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7583"
-  HREF="node798.html">
+<A NAME="tex2html7624"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7585"
-  HREF="node801.html">
+<A NAME="tex2html7626"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -551,20 +357,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7588"
-  HREF="node274.html">Creando un ORM</A>
-<B> Subir:</B> <A NAME="tex2html7582"
-  HREF="node270.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7576"
-  HREF="node272.html">Un DSL para Procesar</A>
- &nbsp; <B>  <A NAME="tex2html7584"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7586"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7629"
+  HREF="node274.html">Un DSL para Procesar</A>
+<B> Subir:</B> <A NAME="tex2html7623"
+  HREF="node272.html">Lenguajes de Dominio Específico.</A>
+<B> Anterior:</B> <A NAME="tex2html7617"
+  HREF="node272.html">Lenguajes de Dominio Específico.</A>
+ &nbsp; <B>  <A NAME="tex2html7625"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7627"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

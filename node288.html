@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Setup y Teardown</TITLE>
-<META NAME="description" CONTENT="Setup y Teardown">
+<TITLE>Cuando una assertion falla</TITLE>
+<META NAME="description" CONTENT="Cuando una assertion falla">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node289.html">
 <LINK REL="previous" HREF="node287.html">
-<LINK REL="up" HREF="node284.html">
+<LINK REL="up" HREF="node286.html">
 <LINK REL="next" HREF="node289.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7821"
+<A NAME="tex2html7868"
   HREF="node289.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7815"
-  HREF="node284.html">
+<A NAME="tex2html7862"
+  HREF="node286.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7809"
+<A NAME="tex2html7856"
   HREF="node287.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7817"
-  HREF="node798.html">
+<A NAME="tex2html7864"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7819"
-  HREF="node801.html">
+<A NAME="tex2html7866"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,55 +92,45 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7822"
-  HREF="node289.html">Veáse</A>
-<B> Subir:</B> <A NAME="tex2html7816"
-  HREF="node284.html">Test/Unit</A>
-<B> Anterior:</B> <A NAME="tex2html7810"
-  HREF="node287.html">Organizando las pruebas</A>
- &nbsp; <B>  <A NAME="tex2html7818"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7820"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7869"
+  HREF="node289.html">Organizando las pruebas</A>
+<B> Subir:</B> <A NAME="tex2html7863"
+  HREF="node286.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7857"
+  HREF="node287.html">Ejemplo Sencillo de uso</A>
+ &nbsp; <B>  <A NAME="tex2html7865"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7867"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02914000000000000000"></A>
-<A NAME="subsection:setupteardown"></A>
-<BR>
-Setup y Teardown
+<H2><A NAME="SECTION02912000000000000000">
+Cuando una assertion falla</A>
 </H2>
-There are many cases where a small bit of code needs to be run
-before and/or after each test. <A NAME="tex2html590"
-  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A> provides the  <TT>setup</TT>  and
- <TT>teardown</TT>  <A NAME="11806"></A><SPAN  CLASS="textbf">member functions</SPAN>, which are run before and after every
-test (member function).
 
 <P>
 <PRE>
-[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat test/tc_simple_number3.rb 
-# File:  tc_simple_number3.rb
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat test/tc_simple_number2.rb 
+# File:  tc_simple_number2.rb
  
 require "simple_number"
 require "test/unit"
  
 class TestSimpleNumber &lt; Test::Unit::TestCase
  
-  def setup
-    @num = SimpleNumber.new(2)
-  end
- 
-  def teardown
-    ## Nothing really
-  end
- 
   def test_simple
-    assert_equal(4, @num.add(2) )
+    assert_equal(4, SimpleNumber.new(2).add(2) )
+    assert_equal(4, SimpleNumber.new(2).multiply(2) )
   end
  
-  def test_simple2
-    assert_equal(4, @num.multiply(2) )
+  def test_typecheck
+    assert_raise( RuntimeError ) { SimpleNumber.new('a') }
+  end
+ 
+  def test_failure
+    assert_equal(3, SimpleNumber.new(2).add(2), "Adding doesn't work" )
   end
  
 end
@@ -158,33 +148,146 @@ desc "Test with test/tc_simple_number2.rb. Expect failures"
 task :test2 do
   sh "ruby -Ilib -Itest test/tc_simple_number2.rb"
 end
-
-desc "Test with test/tc_simple_number3.rb. setup adn teardown"
-task :test3 do
-  sh "ruby -Ilib -Itest test/tc_simple_number3.rb"
-end
 </PRE>
 
 <P>
 <PRE>
-[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ rake test3
-ruby -Ilib -Itest test/tc_simple_number3.rb
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ rake test2
+ruby -Ilib -Itest test/tc_simple_number2.rb
 Run options: 
 
 # Running tests:
 
-..
+F..
 
-Finished tests in 0.000988s, 2024.2915 tests/s, 2024.2915 assertions/s.
+Finished tests in 0.001706s, 1758.4994 tests/s, 2344.6659 assertions/s.
 
-2 tests, 2 assertions, 0 failures, 0 errors, 0 skips
+  1) Failure:
+test_failure(TestSimpleNumber) [test/tc_simple_number2.rb:18]:
+Adding doesn't work.
+&lt;3&gt; expected but was
+&lt;4&gt;.
+
+3 tests, 4 assertions, 1 failures, 0 errors, 0 skips
+rake aborted!
+Command failed with status (1): [ruby -Ilib -Itest test/tc_simple_number2.r...]
+/Users/casiano/local/src/ruby/LPP/unit_testing/simple_example/Rakefile:8:in `block in &lt;top (required)&gt;'
+/Users/casiano/.rvm/gems/ruby-1.9.3-p392/bin/ruby_noexec_wrapper:14:in `eval'
+/Users/casiano/.rvm/gems/ruby-1.9.3-p392/bin/ruby_noexec_wrapper:14:in `&lt;main&gt;'
+Tasks: TOP =&gt; test2
+(See full trace by running task with --trace)
 </PRE>
 
+<OL>
+<LI>Now there are three tests (three member functions) in the class.
+
 <P>
-<BR><HR>
+</LI>
+<LI>The function <code>test_typecheck</code> uses <code>assert_raise</code> to check for an
+exception. 
+
+<P>
+</LI>
+<LI>The function <code>test_failure</code> is set up to fail, which the
+Ruby output happily points out, not only telling us which test
+failed, but how it failed (<code>expected &lt;3&gt; but was &lt;4&gt;</code>). 
+
+<P>
+</LI>
+<LI>On this
+assertion, we've also added an final parameters which is a custom
+error message. It's strictly optional but can be helpful for
+debugging. 
+
+<P>
+</LI>
+<LI>All of the assertions include their own error messages
+which are usually sufficient for simple debugging.
+</LI>
+</OL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html7868"
+  HREF="node289.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7862"
+  HREF="node286.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7856"
+  HREF="node287.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html7864"
+  HREF="node802.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html7866"
+  HREF="node805.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html7869"
+  HREF="node289.html">Organizando las pruebas</A>
+<B> Subir:</B> <A NAME="tex2html7863"
+  HREF="node286.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7857"
+  HREF="node287.html">Ejemplo Sencillo de uso</A>
+ &nbsp; <B>  <A NAME="tex2html7865"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7867"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

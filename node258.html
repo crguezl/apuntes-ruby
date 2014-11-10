@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Traza</TITLE>
-<META NAME="description" CONTENT="Traza">
+<TITLE>Ganchos/Hooks: Sustituyendo (y delegando en) un método existente</TITLE>
+<META NAME="description" CONTENT="Ganchos/Hooks: Sustituyendo (y delegando en) un método existente">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node261.html">
-<LINK REL="previous" HREF="node253.html">
-<LINK REL="up" HREF="node236.html">
+<LINK REL="next" HREF="node259.html">
+<LINK REL="previous" HREF="node257.html">
+<LINK REL="up" HREF="node255.html">
 <LINK REL="next" HREF="node259.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7351"
+<A NAME="tex2html7403"
   HREF="node259.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7345"
-  HREF="node236.html">
+<A NAME="tex2html7397"
+  HREF="node255.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7339"
+<A NAME="tex2html7391"
   HREF="node257.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7347"
-  HREF="node798.html">
+<A NAME="tex2html7399"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7349"
-  HREF="node801.html">
+<A NAME="tex2html7401"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,40 +92,55 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7352"
-  HREF="node259.html">set_trace_func</A>
-<B> Subir:</B> <A NAME="tex2html7346"
-  HREF="node236.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7340"
-  HREF="node257.html">Ganchos/Hooks: Interviniendo en el</A>
- &nbsp; <B>  <A NAME="tex2html7348"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7350"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7404"
+  HREF="node259.html">Ganchos/Hooks: Interviniendo en el</A>
+<B> Subir:</B> <A NAME="tex2html7398"
+  HREF="node255.html">Hooks (Ganchos)</A>
+<B> Anterior:</B> <A NAME="tex2html7392"
+  HREF="node257.html">El Hook included</A>
+ &nbsp; <B>  <A NAME="tex2html7400"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7402"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02860000000000000000">
-Traza</A>
-</H1>
+<H2><A NAME="SECTION02853000000000000000"></A>
+<A NAME="subsection:hooks"></A>
+<BR>
+Ganchos/Hooks: Sustituyendo (y delegando en) un método existente
+</H2>
+El ejemplo muestra como sustituir el método <code>system</code> del módulo <A NAME="10989"></A><A NAME="tex2html546"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A>:
+<PRE>
+~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ cat -n ex0678.rb 
+     1  module Kernel
+     2    alias_method :old_system, :system
+     3    def system(*args)
+     4      result = old_system(*args)
+     5      puts "system(#{args.join(', ')}) returned #{result}"
+     6      result
+     7    end
+     8  end
+     9  
+    10  system("date")
+    11  system("kangaroo", "-hop 10", "skippy")
+</PRE>
+
+<P>
+<PRE>
+~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby ex0678.rb 
+domingo, 20 de noviembre de 2011, 11:21:19 GMT
+system(date) returned true
+system(kangaroo, -hop 10, skippy) returned false
+</PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html7353"
-  HREF="node259.html">set_trace_func</A>
-<LI><A NAME="tex2html7354"
-  HREF="node260.html">caller</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

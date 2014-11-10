@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Deferrable</TITLE>
-<META NAME="description" CONTENT="Deferrable">
+<TITLE>EventMachine</TITLE>
+<META NAME="description" CONTENT="EventMachine">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node297.html">
+<LINK REL="next" HREF="node300.html">
 <LINK REL="previous" HREF="node295.html">
-<LINK REL="up" HREF="node294.html">
+<LINK REL="up" HREF="node293.html">
 <LINK REL="next" HREF="node297.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7954"
+<A NAME="tex2html7993"
   HREF="node297.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7948"
-  HREF="node294.html">
+<A NAME="tex2html7987"
+  HREF="node293.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7942"
+<A NAME="tex2html7981"
   HREF="node295.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7950"
-  HREF="node798.html">
+<A NAME="tex2html7989"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7952"
-  HREF="node801.html">
+<A NAME="tex2html7991"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,217 +92,394 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7955"
-  HREF="node297.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html7949"
-  HREF="node294.html">EventMachine</A>
-<B> Anterior:</B> <A NAME="tex2html7943"
-  HREF="node295.html">Un server</A>
- &nbsp; <B>  <A NAME="tex2html7951"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7953"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7994"
+  HREF="node297.html">Un server</A>
+<B> Subir:</B> <A NAME="tex2html7988"
+  HREF="node293.html">Programación Orientada a Eventos</A>
+<B> Anterior:</B> <A NAME="tex2html7982"
+  HREF="node295.html">Building our own I/O</A>
+ &nbsp; <B>  <A NAME="tex2html7990"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7992"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION021032000000000000000">
-Deferrable</A>
-</H2>
+<H1><A NAME="SECTION021030000000000000000">
+EventMachine</A>
+</H1>
 
 <P>
 <A NAME="tex2html607"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>’s Deferrable borrows heavily from the deferred object
-in Python’s Twisted event-handling framework. Here’s a minimal
-example that illustrates Deferrable:
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A> is an event-driven I/O and lightweight concurrency library for Ruby. It provides event-driven I/O using the <A NAME="12291"></A><SPAN  CLASS="textbf">Reactor pattern</SPAN>.
+
+<P>
+The reactor is the core of <A NAME="tex2html608"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>. 
+All of EM's processing happens in the reactor. 
+Your application will create code that hooks into the reactor, using timers, socket connections or various other means. 
+Typically you'll wrap your entire application inside an <code>EM#run</code> block.
 
 <P>
 <PRE>
- require 'eventmachine'
-
- class MyClass
-   include EM::Deferrable
-
-   def print_value x
-     puts "MyClass instance received #{x}"
-   end
- end
-
- EM.run {
-   df = MyClass.new
-   df.callback {|x|
-     df.print_value(x)
-     EM.stop
-   }
-
-   EM::Timer.new(2) {
-     df.set_deferred_status :succeeded, 100
-   }
- }
+EventMachine.run do
+  EventMachine.start_server ...
+end
 </PRE>
 
 <P>
-This program will spin for two seconds, print out the string 
-<code>MyClass instance received 100</code> and then exit. 
+This block won't complete until <code>EM#stop</code> is called. The
+reactor will loop infinitely.
 
 <P>
-The Deferrable pattern allows you to specify any number of Ruby
-code blocks (callbacks or errbacks) that will be executed at some
-future time when the status of the Deferrable object changes.
+
+<H4><A NAME="SECTION021030010000000000000">
+run y stop_event_loop</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat timer.rb 
+require 'rubygems'
+require 'eventmachine'
+puts "Start"
+EM.run do
+ puts "Init"
+ EM.add_timer(1) do
+   puts "Quitting"
+   EM.stop_event_loop
+ end
+end
+puts "Done"
+</PRE>
 
 <P>
-How might that be useful? 
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ ruby timer.rb 
+Start
+Init
+Quitting
+Done
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021030020000000000000">
+reactor_running?</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat reactor_running.rb 
+require 'rubygems'
+require 'eventmachine'
+puts EM.reactor_running?  # false
+EM.run do
+ puts EM.reactor_running? # true
+ EM.next_tick do
+   puts EM.reactor_running? # true
+   EM.stop
+ end
+end
+puts EM.reactor_running?  # false
+</PRE>
+
+<P>
 
 <OL>
-<LI>Well, imagine that you’re implementing
-an HTTP server, 
-</LI>
-<LI>but you need to make a call to some other server
-in order to fulfill a client request.
-</LI>
-<LI>When you receive a request from one of your clients, you can create
-and return a Deferrable object.
-</LI>
-<LI>Some other section of your program
-can add a callback to the Deferrable that will cause the client’s
-request to be fulfilled.
-</LI>
-<LI>Simultaneously, you initiate an event-driven
-or threaded client request to some different server. 
-</LI>
-<LI>And then your
-EM program will continue to process other events and service other
-client requests.
-</LI>
-<LI>When your client request to the other server completes some time
-later, you will call the <code>set_deferred_status</code> method on the Deferrable
-object, passing either a <code>success</code> or <code>failure</code> status, and an arbitrary
-number of parameters (which might include the data you received
-from the other server).
-</LI>
-<LI>At that point, the status of the Deferrable object becomes known,
-and its callback or errback methods are immediately executed.
-</LI>
-<LI>Callbacks and errbacks are code blocks that are attached to Deferrable
-objects at any time through the methods callback and errback.
+<LI><code>reactor_running?</code>
+Tells you whether the EventMachine reactor loop is currently running.
+
+<P>
+Useful when writing libraries that want to run event-driven code,
+but may be running in programs that are already event-driven. 
+
+<P>
+In
+such cases, if <code>reactor_running?</code> returns <code>false</code>, 
+your code can invoke
+<code>run</code> and run your application code inside the block passed to that
+method. If this method returns true, just execute your event-aware
+code.
 
 <P>
 </LI>
-<LI>The deep beauty of this pattern is that it decouples the disposition
-of one operation (such as a client request to an outboard server)
-from the subsequent operations that depend on that disposition
-(which may include responding to a different client or any other
-operation).
+<LI><code>(Object) next_tick(pr = nil, &amp;block)</code>
+
+<P>
+Schedules a proc for execution immediately after the next "turn"
+through the reactor core. 
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION021030030000000000000">
+add_timer</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat add_timer_family.rb 
+require "eventmachine"
+EM.run do
+ EM.add_periodic_timer(1) do
+   puts "Tick..."
+ end
+ EM.add_timer(5) do
+   puts "BOOM"
+   EM.stop_event_loop
+ end
+end
+[~/ruby/eventmachine/simple(master)]$ ruby add_timer_family.rb 
+Tick...
+Tick...
+Tick...
+Tick...
+BOOM
+</PRE>
+
+<P>
+
+<OL>
+<LI><code>(Object) add_timer(*args, &amp;block)</code>
+
+<P>
+Adds a one-shot timer to the event loop. 
+Call it with one or two parameters. 
+The first parameters is a delay-time expressed in seconds (not milliseconds). 
+The second parameter, if present, must be an object that responds to <code>:call</code>. 
+If 2nd parameter is not given, then you can also simply pass a block to the method call.
+
+<P>
+This method may be called from the block passed to <code>run</code> or from any
+callback method. It schedules execution of the <code>proc</code> or block passed
+to it, after the passage of an interval of time equal to at least
+the number of seconds specified in the first parameter to the call.
+
+<P>
+<code>add_timer</code> is a non-blocking method. Callbacks can and will
+be called during the interval of time that the timer is in effect.
+There is no built-in limit to the number of timers that can be
+outstanding at any given time.
 
 <P>
 </LI>
-<LI>The code which invokes the deferred operation (that will eventually
-result in a success or failure status together with associated data)
-is completely separate from the code which depends on that status
-and data. 
+<LI><code>(Object) add_periodic_timer(*args, &amp;block)</code>
+
+<P>
+Adds a periodic timer to the event loop. It takes the same parameters
+as the one-shot timer method, <code>add_timer</code>. This method schedules
+execution of the given block repeatedly, at intervals of time at
+least as great as the number of seconds given in the first parameter
+to the call.
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION021030040000000000000">
+next_tick</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat next_tick.rb 
+require 'eventmachine'
+EM.run do
+ EM.add_periodic_timer(1) do
+   puts "Hai"
+ end
+ EM.add_timer(5) do
+   EM.next_tick do
+     EM.stop_event_loop
+   end
+ end
+end
+</PRE>
+<code>(Object) next_tick(pr = nil, &amp;block)</code>
+Schedules a proc for execution immediately after the next "turn" through the reactor core.
+
+<P>
+This can be useful for improving memory management and/or application responsiveness, especially when scheduling large amounts of data for writing to a network connection.
+
+<P>
+This method takes either a single argument (which must be a callable object) or a block.
+
+<P>
+Parameters:
+<PRE>
+pr (#call) (defaults to: nil) — A callable object to run
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ ruby next_tick.rb 
+Hai
+Hai
+Hai
+Hai
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021030050000000000000">
+defer</A>
+</H4>
+  
+
+<code>EM.defer</code> is used to push a otherwise blocking operation on an EM internal queue whose jobs are then processed by a thread pool of 20 threads (by default). 
+
+<P>
+You can use <code>EM.defer</code> with operations which aren’t made to work asynchronously.
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat defer.rb 
+require 'eventmachine'
+require 'thread'
+EM.run do
+ EM.add_timer(2) do
+   puts "Main #{Thread.current}"
+   EM.stop_event_loop
+ end
+ EM.defer(proc do
+   puts "Defer #{Thread.current}"
+ end)
+end
+</PRE>
+<code>(Object) defer(op = nil, callback = nil, &amp;blk)</code>
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html609"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>.defer is used for integrating blocking operations
+into <A NAME="tex2html610"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>'s control flow. 
 
 <P>
 </LI>
-<LI>This achieves one of the primary goals for which threading
-is typically used in sophisticated applications, with none of the
-nondeterminacy or debugging difficulties of threads.
+<LI>The action of <A NAME="12319"></A><SPAN  CLASS="textbf">defer</SPAN> is to take
+the block specified in the first parameter (the "operation") and
+schedule it for asynchronous execution on an internal thread pool
+maintained by <A NAME="tex2html611"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>. 
 
 <P>
 </LI>
-<LI>As soon as the deferred status of a Deferrable becomes known by way
-of a call to <code>set_deferred_status</code>, the Deferrable will IMMEDIATELY
-execute all of its callbacks or errbacks in the order in which they
-were added to the Deferrable.
+<LI>When the operation completes, it will
+pass the result computed by the block (if any) back to the <A NAME="tex2html612"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>
+reactor. 
 
 <P>
 </LI>
-<LI>Callbacks and errbacks can be added to a Deferrable object at any
-time, not just when the object is created. They can even be added
-after the status of the object has been determined! (In this case,
-they will be executed immediately when they are added.)
+<LI>Then, <A NAME="tex2html613"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A> calls the block specified in the second
+parameter to defer (the "callback"), as part of its normal event
+handling loop. 
 
 <P>
 </LI>
-<LI>A call to <code>Deferrable#set_deferred_status</code> takes <code>:succeeded</code> 
-or <code>:failed</code>
-as its first argument. (This determines whether the object will
-call its callbacks or its errbacks.) <code>set_deferred_status</code> also takes
-zero or more additional parameters, that will in turn be passed as
-parameters to the callbacks or errbacks.
+<LI>The result computed by the operation block is passed
+as a parameter to the callback. 
 
 <P>
 </LI>
-<LI>In general, you can only call <code>set_deferred_status</code> ONCE on a Deferrable
-object. A call to <code>set_deferred_status</code> will not return until all of
-the associated callbacks or errbacks have been called. If you add
-callbacks or errbacks AFTER making a call to <code>set_deferred_status</code>,
-those additional callbacks or errbacks will execute IMMEDIATELY.
-Any given callback or errback will be executed AT MOST once.
-
-<P>
-</LI>
-<LI>It’s possible to call <code>set_deferred_status</code> AGAIN, during the
-execution a callback or errback. This makes it possible to change
-the parameters which will be sent to the callbacks or errbacks
-farther down the chain, enabling some extremely elegant use-cases.
-You can transform the data returned from a deferred operation in
-arbitrary ways as needed by subsequent users, without changing any
-of the code that generated the original data.
-
-<P>
-</LI>
-<LI>A call to <code>set_deferred_status</code> will not return until all of
-the associated callbacks or errbacks have been called. If you add
-callbacks or errbacks AFTER making a call to <code>set_deferred_status</code>,
-those additional callbacks or errbacks will execute IMMEDIATELY.
+<LI>You may omit the callback parameter
+if you don't need to execute any code after the operation completes.
 </LI>
 </OL>
 
 <P>
 <PRE>
-[~/ruby/eventmachine/deferrable(master)]$ cat defaultdeferrable.rb 
-require 'eventmachine'
-EM.run do
- df = EM::DefaultDeferrable.new
-   df.callback do |x|
-     puts "got #{x}"
-   end
-   df.callback do |x|
-     EM.stop
-   end
-   EM.add_timer(1) do
-     df.set_deferred_status :succeeded, "monkeys"
-   end
-end
-</PRE>
-DefaultDeferrable is an otherwise empty class that includes Deferrable. 
-
-<P>
-This is useful when you just need to return a Deferrable object 
-as a way of communicating deferred status to some other part of a program.
-<PRE>
-[~/ruby/eventmachine/deferrable(master)]$ ruby defaultdeferrable.rb 
-got monkeys
+[~/ruby/eventmachine/simple(master)]$ ruby defer.rb 
+Defer #&lt;Thread:0x007fd9c3826960&gt;
+Main #&lt;Thread:0x007fd9c38bcd98&gt;
 </PRE>
 
 <P>
+
+<H4><A NAME="SECTION021030060000000000000">
+next_tick versus defer</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>The loop runs on a single thread. 
+</LI>
+<LI>What this means is that apart from I/O - at any time, only one task/event is processed by the event loop. 
+</LI>
+<LI>You can imagine this event loop to be a queue of callbacks that are processed on every tick of the event loop. 
+</LI>
+<LI>So, even if you are running on a multi-core machine, you will not get any parallelism in terms of actual processing - all events will be processed only one at a time. 
+</LI>
+<LI>For every I/O bound task, you can simply define a callback that will get added to the event queue. 
+</LI>
+<LI>The callback will fire when the I/O operation is done, and in the mean time, the application can continue to process other I/O bound requests.
+</LI>
+<LI>Given this model, what <code>process.nextTick()</code> 
+actually does is defer the execution of an action till the next pass around the event loop.
+</LI>
+</OL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html7995"
+  HREF="node296.html#SECTION021030010000000000000">run y stop_event_loop</A>
+<LI><A NAME="tex2html7996"
+  HREF="node296.html#SECTION021030020000000000000">reactor_running?</A>
+<LI><A NAME="tex2html7997"
+  HREF="node296.html#SECTION021030030000000000000">add_timer</A>
+<LI><A NAME="tex2html7998"
+  HREF="node296.html#SECTION021030040000000000000">next_tick</A>
+<LI><A NAME="tex2html7999"
+  HREF="node296.html#SECTION021030050000000000000">defer</A>
+<LI><A NAME="tex2html8000"
+  HREF="node296.html#SECTION021030060000000000000">next_tick versus defer</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html8001"
+  HREF="node297.html">Un server</A>
+<UL>
+<LI><A NAME="tex2html8002"
+  HREF="node297.html#SECTION021031010000000000000">callback y errback</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html8003"
+  HREF="node298.html">Deferrable</A>
+<LI><A NAME="tex2html8004"
+  HREF="node299.html">Véase</A>
+</UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7954"
+<A NAME="tex2html7993"
   HREF="node297.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7948"
-  HREF="node294.html">
+<A NAME="tex2html7987"
+  HREF="node293.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7942"
+<A NAME="tex2html7981"
   HREF="node295.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7950"
-  HREF="node798.html">
+<A NAME="tex2html7989"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7952"
-  HREF="node801.html">
+<A NAME="tex2html7991"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -353,20 +530,20 @@ got monkeys
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7955"
-  HREF="node297.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html7949"
-  HREF="node294.html">EventMachine</A>
-<B> Anterior:</B> <A NAME="tex2html7943"
-  HREF="node295.html">Un server</A>
- &nbsp; <B>  <A NAME="tex2html7951"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7953"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7994"
+  HREF="node297.html">Un server</A>
+<B> Subir:</B> <A NAME="tex2html7988"
+  HREF="node293.html">Programación Orientada a Eventos</A>
+<B> Anterior:</B> <A NAME="tex2html7982"
+  HREF="node295.html">Building our own I/O</A>
+ &nbsp; <B>  <A NAME="tex2html7990"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7992"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

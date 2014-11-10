@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Caching / Caches</TITLE>
-<META NAME="description" CONTENT="Caching / Caches">
+<TITLE>The methods body, status and headers</TITLE>
+<META NAME="description" CONTENT="The methods body, status and headers">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node404.html">
 <LINK REL="previous" HREF="node402.html">
-<LINK REL="up" HREF="node386.html">
+<LINK REL="up" HREF="node388.html">
 <LINK REL="next" HREF="node404.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10017"
+<A NAME="tex2html10069"
   HREF="node404.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10011"
-  HREF="node386.html">
+<A NAME="tex2html10063"
+  HREF="node388.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10005"
+<A NAME="tex2html10057"
   HREF="node402.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10013"
-  HREF="node798.html">
+<A NAME="tex2html10065"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10015"
-  HREF="node801.html">
+<A NAME="tex2html10067"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,39 +92,150 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10018"
-  HREF="node404.html">Sesiones y Cookies en</A>
-<B> Subir:</B> <A NAME="tex2html10012"
-  HREF="node386.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10006"
-  HREF="node402.html">Acceso al Objeto Request</A>
- &nbsp; <B>  <A NAME="tex2html10014"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10016"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10070"
+  HREF="node404.html">Acceso al Objeto Request</A>
+<B> Subir:</B> <A NAME="tex2html10064"
+  HREF="node388.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10058"
+  HREF="node402.html">Manejo de Errores</A>
+ &nbsp; <B>  <A NAME="tex2html10066"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10068"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03390000000000000000">
-Caching / Caches</A>
+<H1><A NAME="SECTION03370000000000000000">
+The methods body, status and headers</A>
 </H1>
-Mediante el uso del helper <code>headers</code>podemos establecer los headers que queramos
-para influir sobre la forma en la que ocurre el caching downstream.
-
-<P>
 
 <OL>
-<LI><A NAME="tex2html895"
-  HREF="http://www.mnot.net/cache_docs/">Caching Tutorial</A>
+<LI>It is possible and recommended to set the status code and response
+body with the return value of the route block. 
+</LI>
+<LI>However, in some
+scenarios you might want to set the body at an arbitrary point in
+the execution flow. 
+</LI>
+<LI>You can do so with the <code>body</code> helper method. 
+</LI>
+<LI>If
+you do so, you can use that method from there on to access the body:
+<PRE>
+get '/foo' do
+  body "bar"
+end
+
+after do
+  puts body
+end
+</PRE>
+It is also possible to pass a block to <code>body</code>, which will be executed
+by the Rack handler (this can be used to implement <A NAME="16884"></A><SPAN  CLASS="textbf">streaming</SPAN>).
+
+<P>
+</LI>
+<LI>Similar to the <code>body</code>, you can also set the <code>status</code> code and <code>headers</code>:
+
+<P>
+<PRE>
+get '/foo' do
+  status 418
+  headers \
+    "Allow"   =&gt; "BREW, POST, GET, PROPFIND, WHEN",
+    "Refresh" =&gt; "Refresh: 20; http://www.ietf.org/rfc/rfc2324.txt"
+  body "I'm a tea pot!"
+end
+</PRE>
+</LI>
+<LI>Like <code>body</code>, <code>headers</code> and <code>status</code> with no arguments
+can be used to access their current values.
 </LI>
 </OL>
 
 <P>
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10069"
+  HREF="node404.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10063"
+  HREF="node388.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10057"
+  HREF="node402.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html10065"
+  HREF="node802.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html10067"
+  HREF="node805.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html10070"
+  HREF="node404.html">Acceso al Objeto Request</A>
+<B> Subir:</B> <A NAME="tex2html10064"
+  HREF="node388.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10058"
+  HREF="node402.html">Manejo de Errores</A>
+ &nbsp; <B>  <A NAME="tex2html10066"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10068"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

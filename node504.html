@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Despliegue en Heroku</TITLE>
-<META NAME="description" CONTENT="Práctica: Despliegue en Heroku">
+<TITLE>Troubleshooting</TITLE>
+<META NAME="description" CONTENT="Troubleshooting">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node505.html">
 <LINK REL="previous" HREF="node503.html">
-<LINK REL="up" HREF="node496.html">
+<LINK REL="up" HREF="node501.html">
 <LINK REL="next" HREF="node505.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11706"
+<A NAME="tex2html11801"
   HREF="node505.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11700"
-  HREF="node496.html">
+<A NAME="tex2html11795"
+  HREF="node501.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11696"
+<A NAME="tex2html11789"
   HREF="node503.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11702"
-  HREF="node798.html">
+<A NAME="tex2html11797"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11704"
-  HREF="node801.html">
+<A NAME="tex2html11799"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,125 +92,191 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11707"
-  HREF="node505.html">Envío de SMSs y</A>
-<B> Subir:</B> <A NAME="tex2html11701"
-  HREF="node496.html">Despliegue en Heroku</A>
-<B> Anterior:</B> <A NAME="tex2html11697"
-  HREF="node503.html">Véase</A>
- &nbsp; <B>  <A NAME="tex2html11703"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11705"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11802"
+  HREF="node505.html">Configuration</A>
+<B> Subir:</B> <A NAME="tex2html11796"
+  HREF="node501.html">Despliegue en Heroku</A>
+<B> Anterior:</B> <A NAME="tex2html11790"
+  HREF="node503.html">Logging</A>
+ &nbsp; <B>  <A NAME="tex2html11798"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11800"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION032280000000000000000"></A>
-   <A NAME="21299"></A>
-<BR>
-Práctica: Despliegue en Heroku
+<H1><A NAME="SECTION032230000000000000000">
+Troubleshooting</A>
 </H1>
-  
-Despliegue en Heroku la práctica 
-
-<FONT COLOR="#0000ff"> Aplicación Web con Sinatra: Contar la Popularidad de Nuestros Amigos en Twitter</FONT> descrita en la sección
-<A HREF="node423.html#practica:twitterpopularity">27.28</A>.
 
 <P>
-Añada pruebas. 
-Esta práctica se hace en parejas. Use los issues de GitHub para
-documentar el histórico de desarrollo.
+If you push your app and it crashes, 
+<code>heroku ps</code> shows state crashed:
+<PRE>
+=== web (1X): `bundle exec thin start -R config.ru -e $RACK_ENV -p $PORT`
+web.1: crashed 2013/10/24 20:21:34 (~ 1h ago)
+</PRE>
+check your logs to find out what went wrong. 
+
+<P>
+Here are some common
+problems.
 
 <P>
 
-<H4><A NAME="SECTION032280010000000000000">
-Donde encontrar Ejemplos</A>
+<H4><A NAME="SECTION032230010000000000000">
+Failed to require a sourcefile</A>
 </H4>
   
 
 <P>
+If your app failed to require a sourcefile, chances are good you’re
+running Ruby 1.9.1 or 1.8 in your local environment. 
 
-<UL>
-<LI><code>number_cruncher</code>
+<P>
+The load paths
+have changed in Ruby 1.9 which applies to Ruby 2.0. 
+
+<P>
+Port your app
+forward to Ruby 2.0.0 making certain it works locally before trying
+to push to Cedar again.
+
+<P>
+
+<H4><A NAME="SECTION032230020000000000000">
+Encoding error</A>
+</H4>
   
-<UL>
-<LI>Artículo original de Daz en SitePoint: 
-  <A NAME="tex2html1187"
-  HREF="http://www.sitepoint.com/build-sinatra-api-using-tdd-heroku-continuous-integration-travis/">Build a Sinatra API Using TDD, Heroku, and Continuous Integration with Travis</A>
-por Darren Jones
-</LI>
-<LI><PRE>
-[~/sinatra/sinatra-number_cruncher(master)]$ git remote -v
-daz     git@github.com:daz4126/number_cruncher.git (fetch)
-daz     git@github.com:daz4126/number_cruncher.git (push)
-heroku  git@heroku.com:primefactorization.git (fetch)
-heroku  git@heroku.com:primefactorization.git (push)
-origin  git@github.com:crguezl/number_cruncher.git (fetch)
-origin  git@github.com:crguezl/number_cruncher.git (push)
-</PRE>
-</LI>
-<LI><PRE>
-[~/sinatra/sinatra-number_cruncher(master)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/sinatra-number_cruncher
-</PRE>
-</LI>
-<LI><A NAME="tex2html1188"
-  HREF="https://github.com/crguezl/number_cruncher">GitHub repo forked from Daz</A>
-<code>number_cruncher</code>
+
+Ruby 1.9 added more sophisticated encoding support to the language
+which applies to Ruby 2.0. 
+
+<P>
+Not all gems work with Ruby 2.0. If you
+hit an encoding error, you probably haven’t fully tested your app
+with Ruby 2.0.0 in your local environment. 
+
+<P>
+Port your app forward
+to Ruby 2.0.0 making certain it works locally before trying to push
+to Cedar again.
+
+<P>
+
+<H4><A NAME="SECTION032230030000000000000">
+Missing a gem</A>
+</H4>
   
-</LI>
-</UL>
-</LI>
-<LI>sinatra-rock-paper-scissors
 
-<UL>
-<LI><A NAME="tex2html1189"
-  HREF="https://github.com/crguezl/sinatra-rock-paper-scissors">sinatra-rock-paper-scissors en GitHub</A>
-</LI>
-<LI><PRE>
-[~/sinatra/sinatra-rock-paper-scissors/sinatra-rockpaperscissors(master)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/sinatra-rock-paper-scissors/sinatra-rockpaperscissors
-</PRE>
-</LI>
-<LI><PRE>
-[~/sinatra/sinatra-rock-paper-scissors/sinatra-rockpaperscissors(master)]$ git remote -v
-heroku  git@heroku.com:rps-crguezl.git (fetch)
-heroku  git@heroku.com:rps-crguezl.git (push)
-origin  git@github.com:crguezl/sinatra-rock-paper-scissors.git (fetch)
-origin  git@github.com:crguezl/sinatra-rock-paper-scissors.git (push)
-</PRE>
-</LI>
-<LI><A NAME="tex2html1190"
-  HREF="http://rps-crguezl.herokuapp.com/throw/paper">Despliegue en heroku</A>
-</LI>
-</UL>
-</LI>
-<LI>loadfileontotexarea
+<P>
+If your app crashes due to missing a gem, you may have it installed
+locally but not specified in your Gemfile. 
 
-<UL>
-<LI><A NAME="tex2html1191"
-  HREF="https://github.com/crguezl/loadfileontotexarea">Ejemplo en GitHub</A>
-</LI>
-<LI><PRE>
-[~/javascript/jquery/loadfileontotexarea(master)]$ git remote -v
-heroku  git@heroku.com:pllexer.git (fetch)
-heroku  git@heroku.com:pllexer.git (push)
-origin  git@github.com:crguezl/loadfileontotexarea.git (fetch)
-origin  git@github.com:crguezl/loadfileontotexarea.git (push)
+<P>
+You must isolate all
+local testing using <code>bundle exec</code>. 
+
+<P>
+For example, don’t run <code>ruby web.rb</code>,
+run 
+
+<P>
+<PRE>
+bundle exec ruby web.rb
 </PRE>
-</LI>
-<LI><PRE>
-[~/javascript/jquery/loadfileontotexarea(master)]$ pwd -P
-/Users/casiano/local/src/javascript/jquery/loadfileontotexarea
+Don’t run <code>rake db:migrate</code>, run 
+<PRE>
+bundle exec rake db:migrate.
 </PRE>
-</LI>
-<LI><A NAME="tex2html1192"
-  HREF="http://pllexer.herokuapp.com/">Despliegue en Heroku</A>
-</LI>
-</UL>
-</LI>
-</UL>
+Another approach is to create a blank RVM gemset to be absolutely
+sure you’re not touching any system-installed gems:
+<PRE>
+$ rvm gemset create myapp
+$ rvm gemset use myapp
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION032230040000000000000">
+Runtime dependencies on development/test gems</A>
+</H4>
+  
+
+<P>
+If you’re still missing a gem when you deploy, check your Bundler
+groups.
+
+<P>
+Heroku builds your app without the <code>development</code> or <code>test</code>
+groups, and if you app depends on a gem from one of these groups
+to run, you should move it out of the group.
+
+<P>
+One common example using the <code>RSpec tasks</code> in your Rakefile. 
+If you see this in your Heroku deploy:
+<PRE>
+$ heroku run rake -T
+Running `rake -T` attached to terminal... up, ps.3
+rake aborted!
+no such file to load -- rspec/core/rake_task
+</PRE>
+Then you’ve hit this problem. 
+
+<P>
+First, duplicate the problem locally like so:
+<PRE>
+$ bundle install --without development:test
+...
+$ bundle exec rake -T
+rake aborted!
+no such file to load -- rspec/core/rake_task
+</PRE>
+Now you can fix it by making these Rake tasks conditional on the gem load. 
+For example:
+<PRE>
+begin
+  require "rspec/core/rake_task"
+
+  desc "Run all examples"
+  RSpec::Core::RakeTask.new(:spec) do |t|
+    t.rspec_opts = %w[--color]
+    t.pattern = 'spec/*_spec.rb'
+  end
+rescue LoadError
+end
+</PRE>
+Confirm it works locally, then push to Heroku.
+
+<P>
+
+<H4><A NAME="SECTION032230050000000000000">
+Rack::Sendfile</A>
+</H4>
+  
+
+<P>
+Heroku does not support the use of Rack::Sendfile. 
+
+<P>
+Rack:Sendfile
+usually requires that there is a frontend webserver like nginx or
+apache is running on the same machine as the application server.
+
+<P>
+This is not how Heroku is architected. Using the Rack::Sendfile
+middleware will cause your file downloads to fail since it will
+send a body with Content-Length of 0.
+
+<P>
+
+<H4><A NAME="SECTION032230060000000000000">
+Número máximo de aplicaciones</A>
+</H4>
+  
+
+If you have unverified account then the maximum number of apps is 5 only and for verified account number is 100.
 
 <P>
 <BR><HR>
@@ -219,27 +286,37 @@ origin  git@github.com:crguezl/loadfileontotexarea.git (push)
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html11708"
-  HREF="node504.html#SECTION032280010000000000000">Donde encontrar Ejemplos</A>
+<LI><A NAME="tex2html11803"
+  HREF="node504.html#SECTION032230010000000000000">Failed to require a sourcefile</A>
+<LI><A NAME="tex2html11804"
+  HREF="node504.html#SECTION032230020000000000000">Encoding error</A>
+<LI><A NAME="tex2html11805"
+  HREF="node504.html#SECTION032230030000000000000">Missing a gem</A>
+<LI><A NAME="tex2html11806"
+  HREF="node504.html#SECTION032230040000000000000">Runtime dependencies on development/test gems</A>
+<LI><A NAME="tex2html11807"
+  HREF="node504.html#SECTION032230050000000000000">Rack::Sendfile</A>
+<LI><A NAME="tex2html11808"
+  HREF="node504.html#SECTION032230060000000000000">Número máximo de aplicaciones</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11706"
+<A NAME="tex2html11801"
   HREF="node505.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11700"
-  HREF="node496.html">
+<A NAME="tex2html11795"
+  HREF="node501.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11696"
+<A NAME="tex2html11789"
   HREF="node503.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11702"
-  HREF="node798.html">
+<A NAME="tex2html11797"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11704"
-  HREF="node801.html">
+<A NAME="tex2html11799"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -290,20 +367,20 @@ origin  git@github.com:crguezl/loadfileontotexarea.git (push)
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11707"
-  HREF="node505.html">Envío de SMSs y</A>
-<B> Subir:</B> <A NAME="tex2html11701"
-  HREF="node496.html">Despliegue en Heroku</A>
-<B> Anterior:</B> <A NAME="tex2html11697"
-  HREF="node503.html">Véase</A>
- &nbsp; <B>  <A NAME="tex2html11703"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11705"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11802"
+  HREF="node505.html">Configuration</A>
+<B> Subir:</B> <A NAME="tex2html11796"
+  HREF="node501.html">Despliegue en Heroku</A>
+<B> Anterior:</B> <A NAME="tex2html11790"
+  HREF="node503.html">Logging</A>
+ &nbsp; <B>  <A NAME="tex2html11798"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11800"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

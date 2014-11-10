@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Código de Rack::Builder</TITLE>
-<META NAME="description" CONTENT="Código de Rack::Builder">
+<TITLE>Ejemplo de Middleware: Rack::ETag</TITLE>
+<META NAME="description" CONTENT="Ejemplo de Middleware: Rack::ETag">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node368.html">
 <LINK REL="previous" HREF="node366.html">
-<LINK REL="up" HREF="node331.html">
+<LINK REL="up" HREF="node333.html">
 <LINK REL="next" HREF="node368.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9389"
+<A NAME="tex2html9441"
   HREF="node368.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9383"
-  HREF="node331.html">
+<A NAME="tex2html9435"
+  HREF="node333.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9377"
+<A NAME="tex2html9429"
   HREF="node366.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9385"
-  HREF="node798.html">
+<A NAME="tex2html9437"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9387"
-  HREF="node801.html">
+<A NAME="tex2html9439"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,184 +92,206 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9390"
-  HREF="node368.html">Rack::Cascade</A>
-<B> Subir:</B> <A NAME="tex2html9384"
-  HREF="node331.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9378"
-  HREF="node366.html">Construyendo Nuestro Propio Rack::Builder</A>
- &nbsp; <B>  <A NAME="tex2html9386"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9388"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9442"
+  HREF="node368.html">Construyendo Nuestro Propio Rack::Builder</A>
+<B> Subir:</B> <A NAME="tex2html9436"
+  HREF="node333.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9430"
+  HREF="node366.html">Middleware y la Clase</A>
+ &nbsp; <B>  <A NAME="tex2html9438"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9440"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031210000000000000000">
-Código de </A><A NAME="tex2html825"
-  HREF="http://rack.rubyforge.org/doc/Rack/Builder.html">Rack::Builder</A>
+<H1><A NAME="SECTION031190000000000000000">
+Ejemplo de Middleware: Rack::ETag</A>
 </H1>
-Tomado de 
-<A NAME="tex2html826"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/builder.rb">https://github.com/rack/rack/blob/master/lib/rack/builder.rb</A>:
+
+<P>
+An  <TT>ETag</TT>  or <A NAME="15519"></A><SPAN  CLASS="textbf">entity tag</SPAN>, is part of HTTP, the protocol for the World
+Wide Web. It is one of several mechanisms that HTTP provides for
+<A NAME="15521"></A><SPAN  CLASS="textbf">web cache validation</SPAN>, and which allows a client to make conditional
+requests. 
+
+<P>
+This allows caches to be more efficient, and saves
+bandwidth, as a web server does not need to send a full response
+if the content has not changed.
+
+<P>
+An ETag is an opaque identifier assigned by a web server to a
+specific version of a resource found at a URL. 
+
+<P>
+If the resource
+content at that URL ever changes, a new and different ETag is
+assigned. 
+
+<P>
+Used in this manner ETags are similar to fingerprints,
+and they can be quickly compared to determine if two versions of a
+resource are the same or not.
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html830"
+  HREF="https://github.com/rack/rack/blob/master/lib/rack/etag.rb">Rack::ETag</A>
+en GitHub
+</LI>
+<LI>Documentación de <A NAME="tex2html831"
+  HREF="http://rack.rubyforge.org/doc/Rack/ETag.html">Rack::ETag</A>
+</LI>
+</OL>
+
+<P>
 <PRE>
+require 'digest/md5'
+
 module Rack
-  # Rack::Builder implements a small DSL to iteratively construct Rack
-  # applications.
-  #
-  # Example:
-  #
-  #  require 'rack/lobster'
-  #  app = Rack::Builder.new do
-  #    use Rack::CommonLogger
-  #    use Rack::ShowExceptions
-  #    map "/lobster" do
-  #      use Rack::Lint
-  #      run Rack::Lobster.new
-  #    end
-  #  end
-  #
-  #  run app
-  #
-  # Or
-  #
-  #  app = Rack::Builder.app do
-  #    use Rack::CommonLogger
-  #    run lambda { |env| [200, {'Content-Type' =&gt; 'text/plain'}, ['OK']] }
-  #  end
-  #
-  #  run app
-  #
-  # +use+ adds middleware to the stack, +run+ dispatches to an application.
-  # You can use +map+ to construct a Rack::URLMap in a convenient way.
+  class ETag
+    DEFAULT_CACHE_CONTROL = "max-age=0, private, must-revalidate".freeze
 
-  class Builder
-    def self.parse_file(config, opts = Server::Options.new)
-      options = {}
-      if config =~ /\.ru$/
-        cfgfile = ::File.read(config)
-        if cfgfile[/^#\\(.*)/] &amp;&amp; opts
-          options = opts.parse! $1.split(/\s+/)
-        end
-        cfgfile.sub!(/^__END__\n.*\Z/m, '')
-        app = new_from_string cfgfile, config
-      else
-        require config
-        app = Object.const_get(::File.basename(config, '.rb').capitalize)
-      end
-      return app, options
-    end
-
-    def self.new_from_string(builder_script, file="(rackup)")
-      eval "Rack::Builder.new {\n" + builder_script + "\n}.to_app",
-        TOPLEVEL_BINDING, file, 0
-    end
-
-    def initialize(default_app = nil,&amp;block)
-      @use, @map, @run = [], nil, default_app
-      instance_eval(&amp;block) if block_given?
-    end
-
-    def self.app(default_app = nil, &amp;block)
-      self.new(default_app, &amp;block).to_app
-    end
-
-    # Specifies middleware to use in a stack.
-    #
-    #   class Middleware
-    #     def initialize(app)
-    #       @app = app
-    #     end
-    #
-    #     def call(env)
-    #       env["rack.some_header"] = "setting an example"
-    #       @app.call(env)
-    #     end
-    #   end
-    #
-    #   use Middleware
-    #   run lambda { |env| [200, { "Content-Type =&gt; "text/plain" }, ["OK"]] }
-    #
-    # All requests through to this application will first be processed by the middleware class.
-    # The +call+ method in this example sets an additional environment key which then can be
-    # referenced in the application if required.
-    def use(middleware, *args, &amp;block)
-      if @map
-        mapping, @map = @map, nil
-        @use &lt;&lt; proc { |app| generate_map app, mapping }
-      end
-      @use &lt;&lt; proc { |app| middleware.new(app, *args, &amp;block) }
-    end
-
-    # Takes an argument that is an object that responds to #call and returns a Rack response.
-    # The simplest form of this is a lambda object:
-    #
-    #   run lambda { |env| [200, { "Content-Type" =&gt; "text/plain" }, ["OK"]] }
-    #
-    # However this could also be a class:
-    #
-    #   class Heartbeat
-    #     def self.call(env)
-    #      [200, { "Content-Type" =&gt; "text/plain" }, ["OK"]]
-    #    end
-    #   end
-    #
-    #   run Heartbeat
-    def run(app)
-      @run = app
-    end
-
-    # Creates a route within the application.
-    #
-    #   Rack::Builder.app do
-    #     map '/' do
-    #       run Heartbeat
-    #     end
-    #   end
-    #
-    # The +use+ method can also be used here to specify middleware to run under a specific path:
-    #
-    #   Rack::Builder.app do
-    #     map '/' do
-    #       use Middleware
-    #       run Heartbeat
-    #     end
-    #   end
-    #
-    # This example includes a piece of middleware which will run before requests hit +Heartbeat+.
-    #
-    def map(path, &amp;block)
-      @map ||= {}
-      @map[path] = block
-    end
-
-    def to_app
-      app = @map ? generate_map(@run, @map) : @run
-      fail "missing run or map statement" unless app
-      @use.reverse.inject(app) { |a,e| e[a] }
+    def initialize(app, no_cache_control = nil, cache_control = DEFAULT_CACHE_CONTROL)
+      @app = app
+      @cache_control = cache_control
+      @no_cache_control = no_cache_control
     end
 
     def call(env)
-      to_app.call(env)
+      status, headers, body = @app.call(env)
+
+      if etag_status?(status) &amp;&amp; etag_body?(body) &amp;&amp; !skip_caching?(headers)
+        digest, body = digest_body(body)
+        headers['ETag'] = %("#{digest}") if digest
+      end
+
+      unless headers['Cache-Control']
+        if digest
+          headers['Cache-Control'] = @cache_control if @cache_control
+        else
+          headers['Cache-Control'] = @no_cache_control if @no_cache_control
+        end
+      end
+
+      [status, headers, body]
     end
 
     private
 
-    def generate_map(default_app, mapping)
-      mapped = default_app ? {'/' =&gt; default_app} : {}
-      mapping.each { |r,b| mapped[r] = self.class.new(default_app, &amp;b) }
-      URLMap.new(mapped)
-    end
+      def etag_status?(status)
+        status == 200 || status == 201
+      end
+
+      def etag_body?(body)
+        !body.respond_to?(:to_path)
+      end
+
+      def skip_caching?(headers)
+        (headers['Cache-Control'] &amp;&amp; headers['Cache-Control'].include?('no-cache')) ||
+          headers.key?('ETag') || headers.key?('Last-Modified')
+      end
+
+      def digest_body(body)
+        parts = []
+        digest = nil
+
+        body.each do |part|
+          parts &lt;&lt; part
+          (digest ||= Digest::MD5.new) &lt;&lt; part unless part.empty?
+        end
+
+        [digest &amp;&amp; digest.hexdigest, parts]
+      end
   end
 end
 </PRE>
 
 <P>
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9441"
+  HREF="node368.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9435"
+  HREF="node333.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9429"
+  HREF="node366.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html9437"
+  HREF="node802.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html9439"
+  HREF="node805.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html9442"
+  HREF="node368.html">Construyendo Nuestro Propio Rack::Builder</A>
+<B> Subir:</B> <A NAME="tex2html9436"
+  HREF="node333.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9430"
+  HREF="node366.html">Middleware y la Clase</A>
+ &nbsp; <B>  <A NAME="tex2html9438"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9440"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

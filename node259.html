@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>set_trace_func</TITLE>
-<META NAME="description" CONTENT="set_trace_func">
+<TITLE>Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado</TITLE>
+<META NAME="description" CONTENT="Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node260.html">
 <LINK REL="previous" HREF="node258.html">
-<LINK REL="up" HREF="node258.html">
+<LINK REL="up" HREF="node255.html">
 <LINK REL="next" HREF="node260.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7367"
+<A NAME="tex2html7415"
   HREF="node260.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7361"
-  HREF="node258.html">
+<A NAME="tex2html7409"
+  HREF="node255.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7355"
+<A NAME="tex2html7405"
   HREF="node258.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7363"
-  HREF="node798.html">
+<A NAME="tex2html7411"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7365"
-  HREF="node801.html">
+<A NAME="tex2html7413"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,147 +91,124 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7368"
-  HREF="node260.html">caller</A>
-<B> Subir:</B> <A NAME="tex2html7362"
-  HREF="node258.html">Traza</A>
-<B> Anterior:</B> <A NAME="tex2html7356"
-  HREF="node258.html">Traza</A>
- &nbsp; <B>  <A NAME="tex2html7364"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7366"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7416"
+  HREF="node260.html">Traza</A>
+<B> Subir:</B> <A NAME="tex2html7410"
+  HREF="node255.html">Hooks (Ganchos)</A>
+<B> Anterior:</B> <A NAME="tex2html7406"
+  HREF="node258.html">Ganchos/Hooks: Sustituyendo (y delegando</A>
+ &nbsp; <B>  <A NAME="tex2html7412"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7414"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02861000000000000000">
-set_trace_func</A>
+<H2><A NAME="SECTION02854000000000000000">
+Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado</A>
 </H2>
-Es posible monitorizar la ejecución de un programa usando <code>set_trace_func</code>.
-<code>set_trace_func</code> tiene la sintáxis:
-<PRE>
-set_trace_func( proc ) → proc 
-set_trace_func( nil ) → nil
-</PRE>
-Establece <code> proc</code> como un manejador para crear una traza 
-de la ejecución. Si es <code>nil</code> desactivamos la traza.
-
-<P>
-El <code>proc</code> toma 6 parámetros:
-
-<UL>
-<LI>Un nombre de evento,
-</LI>
-<LI>Un nombre de fichero,
-</LI>
-<LI>Un número de línea
-</LI>
-<LI>Un ID de objeto
-</LI>
-<LI>Un binding, y
-</LI>
-<LI>Un nombre de una clase
-</LI>
-</UL>
-<code>proc</code> es invocado cada vez que ocurre un evento.
-Los eventos son:
-
-<UL>
-<LI>c-call 
-</LI>
-<LI>c-return 
-</LI>
-<LI>call 
-</LI>
-<LI>class 
-</LI>
-<LI>end 
-</LI>
-<LI>line 
-</LI>
-<LI>raise 
-</LI>
-<LI>return 
-</LI>
-</UL>
-La traza se desactiva en el contexto de 
-<code>proc</code>.
+En esta sección se muestra una forma de intervenir en el momento en que un objeto es creado.
+El ejemplo consiste en que queremos añadirle a todo objeto un atributo <code>timestamp</code>
+que indica su fecha de creación.
+Se hace abriendo la clase <A NAME="10993"></A><A NAME="tex2html547"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
+y añadiéndole el atributo:
 
 <P>
 <PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ cat -n ex0682.rb 
-     1  class Test
-     2    def initialize
-     3      puts "In initialize"
-     4    end
-     5    def test
-     6      a = 1
-     7      b = 2
-     8    end
-     9  end
-    10  
-    11  set_trace_func proc {|event, file, line, id, binding, classname|
-    12    printf "%8s %s:%-2d %10s %8s\n", event, file, line, id, classname
-    13  }
-    14  t = Test.new
-    15  t.test
+         class Object
+           attr_accessor :timestamp
+         end
 </PRE>
+Ahora bien, el método <code>new</code> es un método de clase, (<code>Tutu.new</code>)
+es un metodo de instancia de la clase <code>Class</code>:
 <PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby ex0682.rb 
-    line ex0682.rb:14               false
-  c-call ex0682.rb:14        new    Class
-    call ex0682.rb:2  initialize     Test
-    line ex0682.rb:3  initialize     Test
-  c-call ex0682.rb:3        puts   Kernel
-  c-call ex0682.rb:3       write       IO
-In initialize
-c-return ex0682.rb:3       write       IO
-  c-call ex0682.rb:3       write       IO
-
-c-return ex0682.rb:3       write       IO
-c-return ex0682.rb:3        puts   Kernel
-  return ex0682.rb:3  initialize     Test
-c-return ex0682.rb:14        new    Class
-    line ex0682.rb:15               false
-    call ex0682.rb:5        test     Test
-    line ex0682.rb:6        test     Test
-    line ex0682.rb:7        test     Test
-  return ex0682.rb:7        test     Test
+&gt;&gt; Class.instance_methods.select { |x| x =~/new/ }
+=&gt; ["new"]
 </PRE>
-Otro método que puede ser usado para obtener mas información sobre la traza es <code>trace_var</code>
-<PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ cat -n trace_var.rb 
-     1  trace_var :$_, proc {|v| puts "$_ is now '#{v}'" }
-     2  $_ = "hello"
-     3  $_ = ' there'
-</PRE>
+Así que lo que haremos es abrir la clase <code>Class</code> y reescribir <code>new</code>.
+Repetimos el truco usado en <code>system</code> en la sección 
+<A HREF="node258.html#subsection:hooks">15.5.3</A>.
+La técnica no es completa, debido a que ciertos objetos preconstruidos como pueda ser el caso de las <code>String</code> se construyen sin que se produzca una llamada a <code>new</code>.
 
 <P>
 <PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby trace_var.rb 
-$_ is now 'hello'
-$_ is now ' there'
+~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby -rdebug ex0681.rb 
+Debug.rb
+Emacs support available.
+
+ex0681.rb:2:  class Object
+(rdb:1) l 1,50
+[1, 50] in ex0681.rb
+    1  
+=&gt;  2    class Object
+    3      attr_accessor :timestamp
+    4    end
+    5    class Class
+    6      alias_method :old_new,  :new
+    7      def new(*args)
+    8        result = old_new(*args)
+    9        result.timestamp = Time.now
+   10        result
+   11      end
+   12    end
+   13    class Test
+   14    end
+   15    
+   16    obj1 = Test.new
+   17    sleep(0.002)  #!sh!
+   18    obj2 = Test.new
+   19  
+   20    obj1.timestamp.to_f
+   21    obj2.timestamp.to_f
+(rdb:1) b 18
+Set breakpoint 1 at ex0681.rb:18
+(rdb:1) c
+Breakpoint 1, toplevel at ex0681.rb:18
+ex0681.rb:18:  obj2 = Test.new
+(rdb:1) p obj1
+#&lt;Test:0x100361c70 @timestamp=Sun Nov 20 11:54:46 +0000 2011&gt;
+(rdb:1) l
+[13, 22] in ex0681.rb
+   13    class Test
+   14    end
+   15    
+   16    obj1 = Test.new
+   17    sleep(0.002)  #!sh!
+=&gt; 18    obj2 = Test.new
+   19  
+   20    obj1.timestamp.to_f
+   21    obj2.timestamp.to_f
+(rdb:1) n
+ex0681.rb:20:  obj1.timestamp.to_f
+(rdb:1) obj2
+#&lt;Test:0x10035f628 @timestamp=Sun Nov 20 11:55:15 +0000 2011&gt;
+(rdb:1) p obj1.timestamp.to_f
+1321790086.82083
+(rdb:1) p obj2.timestamp.to_f
+1321790115.59523
+(rdb:1)
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7367"
+<A NAME="tex2html7415"
   HREF="node260.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7361"
-  HREF="node258.html">
+<A NAME="tex2html7409"
+  HREF="node255.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7355"
+<A NAME="tex2html7405"
   HREF="node258.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7363"
-  HREF="node798.html">
+<A NAME="tex2html7411"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7365"
-  HREF="node801.html">
+<A NAME="tex2html7413"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -283,20 +259,20 @@ $_ is now ' there'
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7368"
-  HREF="node260.html">caller</A>
-<B> Subir:</B> <A NAME="tex2html7362"
-  HREF="node258.html">Traza</A>
-<B> Anterior:</B> <A NAME="tex2html7356"
-  HREF="node258.html">Traza</A>
- &nbsp; <B>  <A NAME="tex2html7364"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7366"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7416"
+  HREF="node260.html">Traza</A>
+<B> Subir:</B> <A NAME="tex2html7410"
+  HREF="node255.html">Hooks (Ganchos)</A>
+<B> Anterior:</B> <A NAME="tex2html7406"
+  HREF="node258.html">Ganchos/Hooks: Sustituyendo (y delegando</A>
+ &nbsp; <B>  <A NAME="tex2html7412"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7414"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

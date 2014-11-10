@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>REQUEST_METHOD, QUERY_STRING y PATH_INFO</TITLE>
-<META NAME="description" CONTENT="REQUEST_METHOD, QUERY_STRING y PATH_INFO">
+<TITLE>Analizando env con pry-debugger</TITLE>
+<META NAME="description" CONTENT="Analizando env con pry-debugger">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,6 +19,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node338.html">
 <LINK REL="previous" HREF="node334.html">
 <LINK REL="up" HREF="node333.html">
 <LINK REL="next" HREF="node336.html">
@@ -27,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8878"
+<A NAME="tex2html8930"
   HREF="node336.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8872"
+<A NAME="tex2html8924"
   HREF="node333.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8868"
+<A NAME="tex2html8918"
   HREF="node334.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8874"
-  HREF="node798.html">
+<A NAME="tex2html8926"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8876"
-  HREF="node801.html">
+<A NAME="tex2html8928"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,86 +92,40 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8879"
-  HREF="node336.html">Detectando el Proceso que</A>
-<B> Subir:</B> <A NAME="tex2html8873"
-  HREF="node333.html">Analizando env con pry-debugger</A>
-<B> Anterior:</B> <A NAME="tex2html8869"
+<B> Siguiente:</B> <A NAME="tex2html8931"
+  HREF="node336.html">Introducción</A>
+<B> Subir:</B> <A NAME="tex2html8925"
+  HREF="node333.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html8919"
   HREF="node334.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html8875"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8877"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8927"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8929"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03122000000000000000">
-REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
-</H2>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-env]$ cat app.rb 
-require 'rack'
-require 'thin'
-
-cgi_inspector = lambda do |env|
-  [200, #status
-    { 'Content-Type' =&gt; 'text/html' }, #headers
-    ["&lt;h1&gt;
-        Your request:&lt;br&gt;
-       &lt;ul&gt;
-         &lt;li&gt;http method is: #{env['REQUEST_METHOD']}
-         &lt;li&gt;path is: #{env['PATH_INFO']}
-         &lt;li&gt;Query string is: #{env['QUERY_STRING']}
-       &lt;/ul&gt;
-      &lt;/h1&gt;
-     "
-    ]
-  ]
-end
-
-Rack::Handler::Thin.run cgi_inspector, :Port =&gt; 3000
-</PRE>
-
-<P>
-Visite la página <code>localhost:3000/camino?var=4</code>.
-
-<P>
-Esta es la salida:
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-env]$ curl -v localhost:3000/camino?var=4
-* About to connect() to localhost port 3000 (#0)
-*   Trying ::1... Connection refused
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 3000 (#0)
-&gt; GET /camino?var=4 HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
-&gt; Host: localhost:3000
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html
-&lt; Connection: close
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-&lt;h1&gt;
-        Your request:&lt;br&gt;
-       &lt;ul&gt;
-         &lt;li&gt;http method is: GET
-         &lt;li&gt;path is: /camino
-         &lt;li&gt;Query string is: var=4
-       &lt;/ul&gt;
-      &lt;/h1&gt;
-* Closing connection #0
-</PRE>
+<H1><A NAME="SECTION03120000000000000000">
+Analizando <TT>env</TT> con <TT>pry-debugger</TT></A>
+</H1>
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html8932"
+  HREF="node336.html">Introducción</A>
+<LI><A NAME="tex2html8933"
+  HREF="node337.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

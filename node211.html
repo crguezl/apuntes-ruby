@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Módulos</TITLE>
-<META NAME="description" CONTENT="Módulos">
+<TITLE>Métodos y Clases: Construyendo un Iterador</TITLE>
+<META NAME="description" CONTENT="Métodos y Clases: Construyendo un Iterador">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node216.html">
-<LINK REL="previous" HREF="node210.html">
-<LINK REL="up" HREF="node169.html">
+<LINK REL="next" HREF="node212.html">
+<LINK REL="previous" HREF="node206.html">
+<LINK REL="up" HREF="node170.html">
 <LINK REL="next" HREF="node212.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6563"
+<A NAME="tex2html6613"
   HREF="node212.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6557"
-  HREF="node169.html">
+<A NAME="tex2html6607"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6551"
+<A NAME="tex2html6601"
   HREF="node210.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6559"
-  HREF="node798.html">
+<A NAME="tex2html6609"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6561"
-  HREF="node801.html">
+<A NAME="tex2html6611"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,100 +92,174 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6564"
-  HREF="node212.html">Los Módulos como Espacios</A>
-<B> Subir:</B> <A NAME="tex2html6558"
-  HREF="node169.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6552"
-  HREF="node210.html">Práctica: Conjuntos</A>
- &nbsp; <B>  <A NAME="tex2html6560"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6562"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6614"
+  HREF="node212.html">Práctica: Conjuntos</A>
+<B> Subir:</B> <A NAME="tex2html6608"
+  HREF="node170.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6602"
+  HREF="node210.html">Limitando el Número de</A>
+ &nbsp; <B>  <A NAME="tex2html6610"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6612"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02770000000000000000"></A>
-<A NAME="section:modulos"></A>
+<H1><A NAME="SECTION02750000000000000000"></A>
+<A NAME="section:construyendouniterador"></A>
 <BR>
-Módulos
+Métodos y Clases: Construyendo un Iterador
 </H1>
 
 <P>
-Modules are a way of grouping together methods, classes, and constants. 
+A class is a collection of related methods that operate on the state of an object. i
+
+<P>
+An object’s state is held by its instance variables: variables whose names begin with <code>@</code> and whose values are specific
+to that particular object. 
+
+<P>
+This example class demonstrates how to write iterator methods and define operators.
+Here is some code that uses this <code>Sequence</code> class:
+
+<P>
+<PRE>
+lpp@nereida:~/src/rubytesting/TheRubyProgrammingLanguage$ cat -n useSequence.rb 
+     1  #!/usr/bin/env ruby
+     2  require "Sequence.rb"
+     3
+     4  a = Sequence.new(1,10,2)
+     5  a.each { |x| print x,"\n" } #  1 3 5 7 9
+     6
+     7  puts "Length = #{a.length}" # 5
+     8  puts "Size = #{a.size}"     # 5
+     9
+    10  (0..(a.size-1)).each { |i|
+    11    puts "a[#{i}] = '#{a[i]}'"
+    12  }
+    13
+    14  puts ""
+    15
+    16  b = a * 2 # b is a new Sequence object
+    17  b.each { |x| print x,"\n" } # 2 6 10 14 18
+    18
+    19  puts ""
+    20
+    21  b = a + 2 # b is a new Sequence object
+    22  b.each { |x| print x,"\n" } # 3 5 7  9 11
+</PRE>
+
+<P>
+<PRE>
+lpp@nereida:~/src/rubytesting/TheRubyProgrammingLanguage$ ./useSequence.rb 
+1
+3
+5
+7
+9
+Length = 5
+Size = 5
+a[0] = '1'
+a[1] = '3'
+a[2] = '5'
+a[3] = '7'
+a[4] = '9'
+
+2
+6
+10
+14
+18
+
+3
+5
+7
+9
+11
+</PRE>
+
+<P>
+<PRE>
+lpp@nereida:~/src/rubytesting/TheRubyProgrammingLanguage$ cat -n Sequence.rb 
+     1  # The Ruby programming Language Flanagan &amp; Matsumoto
+     2  # page 8
+     3  class Sequence
+     4    include Enumerable
+     5    def initialize(from, to, by)
+     6      @from, @to, @by = from, to, by
+     7    end
+     8
+     9    def each
+    10      x = @from
+    11      while x &lt;= @to
+    12        yield x                                                                                       
+    13        x +=@by
+    14      end                                                                                                             
+    15    end
+    16                                                                                                                              
+    17    def length
+    18      return 0 if @from &gt; @to                                                                                                             
+    19      Integer((@to-@from)/@by)+1                                                                                                          
+    20    end
+    21                                                                                                                                                    
+    22    alias size length
+    23
+    24    # override the array-access operator to give random access to the sequence                                                                               
+    25
+    26    def [](index)                                                                                                                                              
+    27      return nil if index &lt; 0
+    28      v = @from+index*@by
+    29      return v if v &lt;= @to
+    30      return nil
+    31    end
+    32
+    33    def *(factor) 
+    34      Sequence.new(@from*factor, @to*factor, @by*factor)
+    35    end
+    36
+    37    def +(offset) 
+    38      Sequence.new(@from+offset, @to+offset, @by)
+    39    end
+    40  end
+</PRE>
 
 <P>
 
 <UL>
-<LI>Al igual que una clase, un <A NAME="8471"></A><SPAN  CLASS="textbf">módulo</SPAN> es una colección de métodos, constantes y variables de clase.
+<LI><A NAME="tex2html416"
+  HREF="http://www.ruby-doc.org/core/classes/Enumerable.html">The Enumerable Module</A>
 </LI>
-<LI>A diferencia de una clase, un módulo no puede ser instanciado y no puede ser heredado (aunque puede ser incluído),
+<LI><A NAME="tex2html417"
+  HREF="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_modules.html">Modules: Programming Ruby
+The Pragmatic Programmer's Guide</A>
 </LI>
-<LI>Los módulos pueden agrupar varias clases.
+<LI>Vea la sección <A NAME="tex2html418"
+  HREF="http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_containers.html">Containers, Blocks, and Iterators</A>
 </LI>
-<LI>Los módulos tienen dos usos: como espacios de nombres y como <A NAME="tex2html414"
-  HREF="http://en.wikipedia.org/wiki/Mixin">mixins</A>
-</LI>
-<LI>Los módulos son objetos de la clase <code>Module</code>
-</LI>
-<LI><code>Class</code> es una subclase de <code>Module</code>
+<LI><A NAME="tex2html419"
+  HREF="http://ruby.about.com/od/rubyfeatures/a/aliasing.htm">alias</A>
 </LI>
 </UL>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6565"
-  HREF="node212.html">Los Módulos como Espacios de Nombres</A>
-<UL>
-<LI><A NAME="tex2html6566"
-  HREF="node212.html#SECTION02771100000000000000">Ejemplo Simple</A>
-<LI><A NAME="tex2html6567"
-  HREF="node212.html#SECTION02771200000000000000">Ejemplo: Codificar y Decodificar Datos Usando Base64</A>
-<LI><A NAME="tex2html6568"
-  HREF="node212.html#SECTION02771300000000000000">Espacios de Nombres Anidados</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6569"
-  HREF="node213.html">Los Módulos como Mixins</A>
-<UL>
-<LI><A NAME="tex2html6570"
-  HREF="node213.html#SECTION02772100000000000000">Variables de Instancia en Mixins</A>
-<LI><A NAME="tex2html6571"
-  HREF="node213.html#SECTION02772200000000000000">Colisiones</A>
-<LI><A NAME="tex2html6572"
-  HREF="node213.html#SECTION02772300000000000000">Composición frente a Herencia/Composition versus Inheritance</A>
-<LI><A NAME="tex2html6573"
-  HREF="node213.html#SECTION02772400000000000000">extend</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6574"
-  HREF="node214.html">Ejemplo</A>
-<LI><A NAME="tex2html6575"
-  HREF="node215.html">Módulos Espacio de Nombres Incluíbles</A>
-</UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6563"
+<A NAME="tex2html6613"
   HREF="node212.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6557"
-  HREF="node169.html">
+<A NAME="tex2html6607"
+  HREF="node170.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6551"
+<A NAME="tex2html6601"
   HREF="node210.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6559"
-  HREF="node798.html">
+<A NAME="tex2html6609"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6561"
-  HREF="node801.html">
+<A NAME="tex2html6611"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -236,20 +310,20 @@ Modules are a way of grouping together methods, classes, and constants.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6564"
-  HREF="node212.html">Los Módulos como Espacios</A>
-<B> Subir:</B> <A NAME="tex2html6558"
-  HREF="node169.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6552"
-  HREF="node210.html">Práctica: Conjuntos</A>
- &nbsp; <B>  <A NAME="tex2html6560"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6562"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6614"
+  HREF="node212.html">Práctica: Conjuntos</A>
+<B> Subir:</B> <A NAME="tex2html6608"
+  HREF="node170.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6602"
+  HREF="node210.html">Limitando el Número de</A>
+ &nbsp; <B>  <A NAME="tex2html6610"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6612"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

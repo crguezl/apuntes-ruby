@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Templates Externos</TITLE>
-<META NAME="description" CONTENT="Templates Externos">
+<TITLE>Templates Inline</TITLE>
+<META NAME="description" CONTENT="Templates Inline">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node395.html">
 <LINK REL="previous" HREF="node393.html">
-<LINK REL="up" HREF="node391.html">
+<LINK REL="up" HREF="node393.html">
 <LINK REL="next" HREF="node395.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9886"
+<A NAME="tex2html9938"
   HREF="node395.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9880"
-  HREF="node391.html">
+<A NAME="tex2html9932"
+  HREF="node393.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9874"
+<A NAME="tex2html9926"
   HREF="node393.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9882"
-  HREF="node798.html">
+<A NAME="tex2html9934"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9884"
-  HREF="node801.html">
+<A NAME="tex2html9936"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,47 +92,42 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9887"
-  HREF="node395.html">Templates Externos en Subcarpetas</A>
-<B> Subir:</B> <A NAME="tex2html9881"
-  HREF="node391.html">Vistas</A>
-<B> Anterior:</B> <A NAME="tex2html9875"
-  HREF="node393.html">Named Templates</A>
- &nbsp; <B>  <A NAME="tex2html9883"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9885"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9939"
+  HREF="node395.html">Named Templates</A>
+<B> Subir:</B> <A NAME="tex2html9933"
+  HREF="node393.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html9927"
+  HREF="node393.html">Vistas</A>
+ &nbsp; <B>  <A NAME="tex2html9935"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9937"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03343000000000000000">
-Templates Externos</A>
+<H2><A NAME="SECTION03341000000000000000">
+Templates Inline</A>
 </H2>
 
 <P>
+Templates may be defined at the end of the source file.
+En este ejemplo trabajamos con varios templates inline en diferentes ficheros:
 <PRE>
-$ ls
-Rakefile               example2-16.rb         views
-config.ru
-</PRE>
-
-<P>
-<PRE>
-$ cat example2-16.rb 
+[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat example2-14.rb 
 require 'sinatra/base'
 
 class App &lt; Sinatra::Base
+  enable :inline_templates
   get '/index' do 
     puts "Visiting #{request.url}"
     erb :index
   end
 end
-</PRE>
 
-<P>
-<PRE>
-$ cat views/index.erb 
+require './another'
+__END__
+@@index
 &lt;!DOCTYPE html&gt;
 &lt;html&gt; 
   &lt;head&gt;
@@ -146,16 +141,43 @@ $ cat views/index.erb
 </PRE>
 
 <P>
+En este fichero tenemos un segundo template inline:
 <PRE>
-$ cat config.ru 
-require './example2-16'
+[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat another.rb 
+class App 
+  enable :inline_templates
+  get '/' do
+    erb :another
+  end
+end
 
-run App
+__END__
+@@another
+&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Separated file&lt;/title&gt; 
+  &lt;/head&gt;
+  &lt;body&gt; 
+    &lt;h1&gt;Inside another!&lt;/h1&gt;
+  &lt;/body&gt; 
+&lt;/html&gt;
 </PRE>
 
 <P>
+Este es nuestro config.ru:
+
+<P>
 <PRE>
-$ cat Rakefile 
+[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat config.ru 
+require './example2-14'
+
+run App
+</PRE>
+Para simplificar las cosas hemos hecho un <code>Rakefile</code>:
+<PRE>
+[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat Rakefile 
 task :default =&gt; :server
 
 desc "run server"
@@ -175,37 +197,9 @@ end
 </PRE>
 
 <P>
+El resultado de la ejecución es:
 <PRE>
-$ rake server
-rackup
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-Visiting http://localhost:9292/index
-127.0.0.1 - - [03/Jul/2013 22:30:16] "GET /index HTTP/1.1" 200 157 0.0774
-</PRE>
-
-<P>
-<PRE>
-$ rake index
-curl -v localhost:9292/index
-* About to connect() to localhost port 9292 (#0)
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET /index HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8x zlib/1.2.5
-&gt; Host: localhost:9292
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html;charset=utf-8
-&lt; Content-Length: 157
-&lt; X-XSS-Protection: 1; mode=block
-&lt; X-Content-Type-Options: nosniff
-&lt; X-Frame-Options: SAMEORIGIN
-&lt; Connection: keep-alive
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
+[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/index
 &lt;!DOCTYPE html&gt;
 &lt;html&gt; 
   &lt;head&gt;
@@ -216,16 +210,24 @@ curl -v localhost:9292/index
     &lt;h1&gt;Worked!&lt;/h1&gt;
   &lt;/body&gt; 
 &lt;/html&gt;
-
-* Connection #0 to host localhost left intact
-* Closing connection #0
+[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/
+&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Separated file&lt;/title&gt; 
+  &lt;/head&gt;
+  &lt;body&gt; 
+    &lt;h1&gt;Inside another!&lt;/h1&gt;
+  &lt;/body&gt; 
+&lt;/html&gt;
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

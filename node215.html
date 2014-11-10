@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Módulos Espacio de Nombres Incluíbles</TITLE>
-<META NAME="description" CONTENT="Módulos Espacio de Nombres Incluíbles">
+<TITLE>Los Módulos como Mixins</TITLE>
+<META NAME="description" CONTENT="Los Módulos como Mixins">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node216.html">
 <LINK REL="previous" HREF="node214.html">
-<LINK REL="up" HREF="node211.html">
+<LINK REL="up" HREF="node213.html">
 <LINK REL="next" HREF="node216.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6635"
+<A NAME="tex2html6683"
   HREF="node216.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6629"
-  HREF="node211.html">
+<A NAME="tex2html6677"
+  HREF="node213.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6625"
+<A NAME="tex2html6671"
   HREF="node214.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6631"
-  HREF="node798.html">
+<A NAME="tex2html6679"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6633"
-  HREF="node801.html">
+<A NAME="tex2html6681"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,105 +92,525 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6636"
-  HREF="node216.html">Prepend</A>
-<B> Subir:</B> <A NAME="tex2html6630"
-  HREF="node211.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6626"
-  HREF="node214.html">Ejemplo</A>
- &nbsp; <B>  <A NAME="tex2html6632"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6634"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6684"
+  HREF="node216.html">Ejemplo</A>
+<B> Subir:</B> <A NAME="tex2html6678"
+  HREF="node213.html">Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6672"
+  HREF="node214.html">Los Módulos como Espacios</A>
+ &nbsp; <B>  <A NAME="tex2html6680"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6682"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02774000000000000000"></A>
-<A NAME="subsection:modulosespaciodenombresincluibles"></A>
-<BR>
-Módulos Espacio de Nombres Incluíbles
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html6685"
+  HREF="node215.html#SECTION02772100000000000000">Variables de Instancia en Mixins</A>
+<LI><A NAME="tex2html6686"
+  HREF="node215.html#SECTION02772200000000000000">Colisiones</A>
+<LI><A NAME="tex2html6687"
+  HREF="node215.html#SECTION02772300000000000000">Composición frente a Herencia/Composition versus Inheritance</A>
+<LI><A NAME="tex2html6688"
+  HREF="node215.html#SECTION02772400000000000000">extend</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02772000000000000000">
+Los Módulos como Mixins</A>
 </H2>
+
+<P>
+<OL>
+<LI>Modules have another, wonderful use. 
+
+<P>
+At a stroke, they pretty much eliminate the need for inheritance, providing a facility called a <A NAME="tex2html422"
+  HREF="http://en.wikipedia.org/wiki/Mixin">mixin</A>.
+
+<P>
+</LI>
+<LI><I>What happens if I define instance methods within a module?</I> 
+
+<P>
+<DIV ALIGN="CENTER">
+Good question 
+</DIV> 
+
+<P>
+</LI>
+<LI>A module can’t have instances, because a module isn’t a class. 
+
+<P>
+</LI>
+<LI>However, you can <code>include</code> a module within a class definition. 
+
+<P>
+When this happens, all the module’s instance methods are suddenly available as methods in the class as well. 
+
+<P>
+</LI>
+<LI>They get <A NAME="tex2html423"
+  HREF="http://en.wikipedia.org/wiki/Mixin">mixed in</A>. 
+
+<P>
+</LI>
+<LI>In fact, mixed-in modules effectively behave as superclasses.
+</LI>
+</OL>
+<P>
+<BLOCKQUOTE>
+<DIV ALIGN="RIGHT">DaveThomas
+
+</BLOCKQUOTE>
+Si un módulo define métodos de instancia en vez de métodos de clase,
+esos métodos de instancia pueden ser combinados/mezclados (<A NAME="8647"></A><SPAN  CLASS="textbf">mixin</SPAN>)
+en otras clases.
+
+<P>
+Para mezclar un módulo en una clase llamamos al método <A NAME="8649"></A><SPAN  CLASS="textbf">include</SPAN>:
 <PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ irb
-ruby-1.9.2-head :001 &gt; Math.sin(Math::PI/2)
- =&gt; 1.0 
-ruby-1.9.2-head :002 &gt; include Math
- =&gt; Object 
-ruby-1.9.2-head :003 &gt; sin(PI/2)
- =&gt; 1.0
+class Point
+  include Enumerable
+end
 </PRE>
 
-<UL>
-<LI>Para crear un módulo que funcione como <A NAME="8494"></A><SPAN  CLASS="textbf">Math</SPAN> define
-tus métodos como métodos de instancia dentro del módulo
-</LI>
-<LI>Usa la función <code>module_function</code>, un método de instancia privado
-de <code>Module</code> para convertir en <A NAME="8496"></A><SPAN  CLASS="textbf">module functions</SPAN> a los métodos
-cuyos nombres le pases como argumentos
-</LI>
-<LI>El resultado de llamar a <A NAME="8498"></A><SPAN  CLASS="textbf">module_function</SPAN> es que: 
+<P>
 
-<UL>
-<LI>construye métodos
-de clase equivalentes para cada uno de los métodos de instancia especificados
+<OL>
+<LI>Thanks to the magic of mixins and module <code>Enumerable</code>.
+ All you have to do is write an iterator called <code>each</code>, which returns the elements of your collection in turn.
+Mix in <code>Enumerable</code>, and suddenly your class supports things such as <code>map</code>, <code>include?</code>, and <code>find_all?</code>.
 </LI>
-<LI>Hace privados a los métodos de instancia implicados
+<LI>If the objects in your collection implement meaningful ordering semantics using the <code>&lt;=&gt;</code> method, you’ll also get methods such as <code>min</code>, <code>max</code>, and <code>sort</code>.
 </LI>
-</UL>
-</LI>
-</UL>
+</OL>
+
+<P>
+<A NAME="8651"></A><A NAME="tex2html424"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-include"><TT>include</TT></A>
+es un método privado de instancia de <A NAME="tex2html425"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>:
 
 <P>
 <PRE>
-~/srcLPP/Chapter7ClassesAndModules/modules]$ cat module_function.rb 
-module SpaceOdissey
+ruby-1.9.2-head :004 &gt; Module.private_instance_methods.select {|x| x =~ /inc/ }
+ =&gt; [:included, :include]
+</PRE>
+Es legal incluir un módulo en una clase o en un  módulo.
+Al hacerlo los métodos de instancia del módulo incluído
+se convierten en métodos de instancia del incluyente.
 
-  THE_UNIVERSE = 1
-
-  def tutu
-    "inside tutu"
+<P>
+<PRE>
+  module D
+    def initialize(name)
+     @name =name
+    end
+    def to_s
+      @name
+    end
   end
 
-  module_function :tutu
+  module Debug
+  include D
+    def who_am_i?
+      "#{self.class.name} (\##{self.__id__}): #{self.to_s}"
+    end
+  end
+
+  class Phonograph
+    include Debug
+    # ...
+  end
+
+  class EightTrack
+    include Debug
+    # ...
+  end
+
+  ph = Phonograph.new("West End Blues")      # "Phonograph (#70270868282220): West End Blues"º)
+  et = EightTrack.new("Surrealistic Pillow") # "EightTrack (#70270868320420): Surrealistic Pillow")
+  
+  ph.who_am_i?
+  et.who_am_i?
+</PRE>
+
+<P>
+We’ll make a couple of points about the <code>include</code> statement before we go on.
+<OL>
+<LI>First, it has nothing to do with files.
+</LI>
+<LI>C programmers use a preprocessor directive called <code>#include</code> to insert the contents of one file into another during compilation.
+ The Ruby <code>include</code> statement simply makes a reference to a module.
+</LI>
+<LI>If that module is in a separate file, you must use <code>require</code> 
+(or its less commonly used cousin, <code>load</code>) to drag that file in before using <code>include</code>.
+</LI>
+<LI>Second, a Ruby <code>include</code> does not simply copy the module’s instance methods into the class.
+ Instead, it makes a reference from the class to the included module.
+</LI>
+<LI>If multiple classes <code>include</code> that module, <SPAN ID="txt8153">they’ll all point to the same thing</SPAN>.
+</LI>
+<LI>If you change the definition of a method within a module, even while your program is running, all classes that <code>include</code> that module will exhibit the new behavior.
+</LI>
+</OL>
+<P>
+<BLOCKQUOTE>
+<DIV ALIGN="RIGHT">Dave Thomas
+
+</BLOCKQUOTE>
+
+<P>
+
+<H3><A NAME="SECTION02772100000000000000">
+Variables de Instancia en Mixins</A>
+</H3>
+
+<P>
+<OL>
+<LI>Remember how instance variables work in Ruby: the first mention of an <code>@</code>-prefixed variable creates the instance variable in the current object, <code>self</code>.
+
+<P>
+</LI>
+<LI>For a mixin, this means that the module you mix into your client class  may create instance variables in the client object and may use <code>attr_reader</code> and friends to define accessors for these instance variables. 
+</LI>
+<LI>However, this behavior exposes us to a risk. A mixin’s instance variables can clash with those of the host class or with those of other mixins. 
+</LI>
+</OL>
+<P>
+<BLOCKQUOTE>The example that follows shows a class that uses our <code>Observer</code> module but that unluckily also uses an instance variable called <code>@observer_list</code>.
+</BLOCKQUOTE>
+<P><PRE>
+  module Observable
+    def observers
+      @observer_list ||= []
+    end
+
+    def add_observer(obj)
+      observers &lt;&lt; obj
+    end
+
+    def notify_observers
+      observers.each {|o| o.update }
+    end
+  end
+</PRE>
+<P><PRE>
+require 'code/observer_impl'
+class TelescopeScheduler
+
+  # other classes can register to get notifications
+  # when the schedule changes
+  include Observable   
+
+  def initialize
+    @observer_list = []  # folks with telescope time
+  end
+
+  def add_viewer(viewer)
+    @observer_list &lt;&lt; viewer
+  end
+
+  # ...
+end
+</PRE><BLOCKQUOTE>
+At runtime, this program will go wrong in some hard-to-diagnose ways.
+</BLOCKQUOTE>
+<P>
+<OL>
+<LI>For the most part, <I>mixin modules don’t use instance variables directly—they use accessors to retrieve data from the client object</I>
+</LI>
+<LI>But if you need to create a mixin that has to have its own state, ensure that the <I>instance variables have unique names to distinguish them from any other mixins in the system</I> 
+(perhaps <SPAN ID="txt8168">by using the module’s name as part of the variable name</SPAN>).
+</LI>
+<LI>Alternatively, <I>the module could use a module-level hash, 
+indexed by the current object ID, 
+to store instance-specific data</I> 
+without using Ruby instance variables.
+A downside of this approach is that the data associated with a particular object will not get automatically deleted if the object is deleted.
+</LI>
+</OL>
+<P>
+<BLOCKQUOTE>
+<DIV ALIGN="RIGHT">Dave Thomas
+
+</BLOCKQUOTE>
+
+<P>
+<PRE>
+[~/local/src/ruby/rubytesting/programmingRuby/instance_variables_in_mixins]$ cat private_state_in_mixins.rb 
+require 'pp'
+
+module Test
+  State = {}
+  def state=(value)
+    State[__id__] = value
+  end
+  def state
+    State[__id__]
+  end
+
+  def delete_state
+    State.delete(__id__)
+  end
 end
 
-puts SpaceOdissey::THE_UNIVERSE
-puts SpaceOdissey::tutu
+class Client
+  include Test
+end
 
-include SpaceOdissey
-puts THE_UNIVERSE
-puts tutu
+c1 = Client.new
+c2 = Client.new
+c1.state = 'cat'
+c2.state = 'dog'
+
+pp Test::State.inspect # {70259441214220=&gt;"cat", 70259441214140=&gt;"dog"}
+
+pp c1.state
+c1.delete_state
+
+pp Test::State.inspect # {70259441214140=&gt;"dog"}
+
+pp c2.state
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/rubytesting/programmingRuby/instance_variables_in_mixins]$ ruby private_state_in_mixins.rb 
+"{70278990371120=&gt;\"cat\", 70278990371100=&gt;\"dog\"}"
+"cat"
+"{70278990371100=&gt;\"dog\"}"
+"dog"
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02772200000000000000"></A>
+<A NAME="subsection:colisiones"></A>
+<BR>
+Colisiones
+</H3>
+
+<P>
+<BLOCKQUOTE>
+One of the other questions folks ask about mixins is, how is method lookup handled? In particular, what happens if methods with the same name are defined in a class, in that class’s parent class, and in a mixin included into the class?
+</BLOCKQUOTE>
+<P>
+<OL>
+<LI>The answer is that Ruby looks first in the immediate class of an object, 
+</LI>
+<LI>then in the mixins included into that class, 
+</LI>
+<LI>and then in superclasses and their mixins.
+</LI>
+<LI>If a class has multiple modules mixed in, the last one included is searched first.
+</LI>
+</OL>
+<P>
+<BLOCKQUOTE>
+<DIV ALIGN="RIGHT">Dave Thomas
+
+</BLOCKQUOTE>
+
+<P>
+¿Que ocurre si se incluyen dos módulos en los que existen métodos con el mismo nombre?
+<PRE>
+[~/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules]$ cat module_collision.rb 
+module M1
+  def foo
+    puts "M1"
+  end
+end
+
+module M2
+  def foo
+    puts "M2"
+  end
+end
+</PRE>
+
+<P>
+Cuando ambos módulos son incluídos en la clase <code>C</code>, la última definición de <code>foo</code> es la que 
+domina:
+<PRE>
+[~/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules]$ cat class_require_module_collision.rb 
+require 'module_collision'
+class C
+  include M1
+  include M2
+end
+
+C.new.foo # 'M2'
+puts C.ancestors.inspect # =&gt; [C, M2, M1, Object, Kernel, BasicObject]
+</PRE>
+
+<P>
+Ahora bien, si en la clase existe un método <code>foo</code> ese será encontrado primero:
+<PRE>
+[~/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/modules]$ cat -n module_class_collision.rb 
+ 1  module M
+ 2    def foo
+ 3      puts "M"
+ 4    end
+ 5  end
+ 6  
+ 7  class C
+ 8    def foo
+ 9      puts "C"
+10    end
+11    include M
+12  end
+13  C.new.foo                # =&gt; "C"
+14  puts C.ancestors.inspect # =&gt; [C, M, Object, Kernel, BasicObject]
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION02772300000000000000">
+Composición frente a Herencia/Composition versus Inheritance</A>
+</H3>
+
+<P>
+Inheritance and mixins both allow you to write code in one place and effectively inject that code into multiple classes. 
+
+<P>
+<DIV ALIGN="CENTER">
+So, when do you use each?
+
+</DIV>
+
+<P>
+<P>
+<OL>
+<LI>First, let’s look at subclassing. Classes in Ruby are related to the idea of types. 
+
+<P>
+</LI>
+<LI>When we create our own classes, you can think of it as adding new types to the language. 
+
+<P>
+</LI>
+<LI>And when we subclass either a built-in class or our own class, we’re creating a subtype.
+
+<P>
+</LI>
+<LI>Now, a lot of research has been done on type theories. One of the more famous results is the Liskov Substitution Principle. Formally, this states: 
+
+<P>
+<BLOCKQUOTE>
+Let q(x) be a property provable about objects x of type T. Then q(y) should be true for objects y of type S where S <code>is a</code> subtype of T
+
+</BLOCKQUOTE>
+
+<P>
+</LI>
+<LI>What this means is that you should be able to substitute an object of a child class wherever you use an object of the parent class—the child should honor the parent’s contract. 
+
+<P>
+We’re used to saying this in English: a car <code>is a</code> vehicle, a cat <code>is a</code>n animal, and so on. 
+
+<P>
+This means that a cat should, at the very least, be capable of doing everything we say that an animal can do.
+
+<P>
+</LI>
+<LI>So, when you’re looking for subclassing relationships while designing your application, be on the lookout for these 
+<code>is-a</code> relationships.
+
+<P>
+</LI>
+<LI>But...here’s the bad news. In the real world, there really aren’t that many true <code>is a</code> relationships. 
+Instead, it’s far more common to have <code>has a</code> or <code>uses a</code> 
+relationships between things. 
+</LI>
+</OL>
+<P>
+<BLOCKQUOTE>
+<DIV ALIGN="RIGHT">Dave Thomas
+
+</BLOCKQUOTE>
+
+<P>
+
+<OL>
+<LI>Think of containment as a has a relationship. A car <code>has an</code> engine, a person <code>has a</code> name, etc.
+</LI>
+<LI>Think of inheritance as an <code>is a</code> relationship. A car <code>is a</code> vehicle, a person <code>is a</code> mammal, etc.
+</LI>
+</OL>
+
+<P>
+
+<H3><A NAME="SECTION02772400000000000000"></A>
+<A NAME="subsubsection:extend"></A>
+<BR>
+extend
+</H3>
+
+<P>
+Aunque <code>Module.include</code> es la forma normal de mezclar un módulo también es posible
+mezclar con <code>Object.</code><A NAME="8658"></A><A NAME="tex2html426"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-extend"><TT>extend</TT></A>.
+Este método hace que los métodos de instancia del módulo especificado se 
+incorporen como métodos singleton del objeto receptor.
+Si el objeto receptor es una clase, esto es, es un objeto de la clase <code>Class</code>,
+entonces los métodos son métodos de clase de dicha clase receptora.
+
+<P>
+<PRE>
+[~/srcLPP/Chapter7ClassesAndModules/modules]$ cat module_mixin_with_extend.rb 
+module Chuchu
+  def tutu
+    "method tutu. self: #{self.inspect}"
+  end
+end
+
+class ChanChan
+end
+
+p = "hello "
+q = "world"
+p.extend Chuchu
+
+puts p.tutu
+
+ChanChan.extend Chuchu
+puts ChanChan.tutu
+
+puts q.tutu # exception
 </PRE>
 Ejecución:
 <PRE>
-[~/srcLPP/Chapter7ClassesAndModules/modules]$ ruby module_function.rb 
-1
-inside tutu
-1
-inside tutu
+[~/srcLPP/Chapter7ClassesAndModules/modules]$ ruby module_mixin_with_extend.rb 
+method tutu. self: "hello "
+method tutu. self: ChanChan
+module_mixin_with_extend.rb:19:in `&lt;main&gt;': undefined method `tutu' for "world":String (NoMethodError)
 </PRE>
-Cuando se define una función-módulo se debe evitar hacer uso de <code>self</code>
-ya que el valor de <code>self</code> hará que dependa de como es invocada.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6635"
+<A NAME="tex2html6683"
   HREF="node216.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6629"
-  HREF="node211.html">
+<A NAME="tex2html6677"
+  HREF="node213.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6625"
+<A NAME="tex2html6671"
   HREF="node214.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6631"
-  HREF="node798.html">
+<A NAME="tex2html6679"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6633"
-  HREF="node801.html">
+<A NAME="tex2html6681"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -240,20 +661,20 @@ ya que el valor de <code>self</code> hará que dependa de como es invocada.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6636"
-  HREF="node216.html">Prepend</A>
-<B> Subir:</B> <A NAME="tex2html6630"
-  HREF="node211.html">Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6626"
-  HREF="node214.html">Ejemplo</A>
- &nbsp; <B>  <A NAME="tex2html6632"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6634"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6684"
+  HREF="node216.html">Ejemplo</A>
+<B> Subir:</B> <A NAME="tex2html6678"
+  HREF="node213.html">Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6672"
+  HREF="node214.html">Los Módulos como Espacios</A>
+ &nbsp; <B>  <A NAME="tex2html6680"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6682"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Servidor Multithreaded (and a Client)</TITLE>
-<META NAME="description" CONTENT="Un Servidor Multithreaded (and a Client)">
+<TITLE>Creación de Threads</TITLE>
+<META NAME="description" CONTENT="Creación de Threads">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node312.html">
 <LINK REL="previous" HREF="node310.html">
-<LINK REL="up" HREF="node307.html">
+<LINK REL="up" HREF="node309.html">
 <LINK REL="next" HREF="node312.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8192"
+<A NAME="tex2html8233"
   HREF="node312.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8186"
-  HREF="node307.html">
+<A NAME="tex2html8227"
+  HREF="node309.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8180"
+<A NAME="tex2html8221"
   HREF="node310.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8188"
-  HREF="node798.html">
+<A NAME="tex2html8229"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8190"
-  HREF="node801.html">
+<A NAME="tex2html8231"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,196 +92,165 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8193"
-  HREF="node312.html">Colas</A>
-<B> Subir:</B> <A NAME="tex2html8187"
-  HREF="node307.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html8181"
-  HREF="node310.html">Exclusión Mutua y la</A>
- &nbsp; <B>  <A NAME="tex2html8189"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8191"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8234"
+  HREF="node312.html">Exclusión Mutua y la</A>
+<B> Subir:</B> <A NAME="tex2html8228"
+  HREF="node309.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html8222"
+  HREF="node310.html">Enlaces /Véase</A>
+ &nbsp; <B>  <A NAME="tex2html8230"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8232"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021340000000000000000">
-Un Servidor Multithreaded (and a Client)</A>
+<H1><A NAME="SECTION021320000000000000000">
+Creación de Threads</A>
 </H1>
 
 <P>
-An almost canonical use case for threads is for writing servers
-that can communicate with more than one client at a time.
 
-<P>
-<PRE>
-[~/ruby/threads(master)]$ cat simple_server.rb 
-require 'socket'
-
-# This method expects a socket connected to a client.
-# It reads lines from the client, reverses them and sends them back.
-# Multiple threads may run this method at the same time.
-def handle_client(c)
-  while true
-    input = c.gets.chop     # Read a line of input from the client
-    p "Received &lt;#{input}&gt;"
-    break if !input         # Exit if no more input
-    break if input=="quit"  # or if the client asks to.
-    yield c, input
-    c.flush                 # Force our output out
-  end
-  c.close                   # Close the client socket
-end
-
-port = ARGV.shift || 2000
-server = TCPServer.open(port) 
-p "listening in port #{port}"
-
-while true                    # Servers loop forever
-  client = server.accept      # Wait for a client to connect
-  p "new client: #{client}"
-  Thread.start(client) do |c| # Start a new thread 
-    handle_client(c) do |c, input|      # And handle the client on that thread
-      c.puts(input.reverse)   
-    end
-  end
-end
-</PRE>
-
-<P>
+<H4><A NAME="SECTION021320010000000000000">
+new</A>
+</H4>
+  
 
 <OL>
-<LI>To write Internet servers, we use the <A NAME="tex2html655"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> class
+<LI>Ruby makes it easy to write multi-threaded programs with the <A NAME="tex2html645"
+  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A> class
 </LI>
-<LI>In essence,
-a <A NAME="tex2html656"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> object is a factory for <A NAME="tex2html657"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> objects
+<LI>To start a new thread, just associate a block with a call to <A NAME="tex2html646"
+  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A>.<code>new</code>
 </LI>
-<LI>Call <A NAME="tex2html658"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A><code>.open</code> to specify a port for your service and
-create a <A NAME="tex2html659"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> object
+<LI>A new thread will be created to execute the code in the block, 
 </LI>
-<LI>Next, call the <code>accept</code> method of the returned <A NAME="tex2html660"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> object
-</LI>
-<LI>This method waits until a
-client connects to the port you specified, and then returns a
-<A NAME="tex2html661"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> object that represents the connection to that client
-</LI>
-<LI>The call
-<code>Thread.start(client)</code>
-is basically the same as a call to <code>Thread.new</code>.
-</LI>
-<LI>Inside the thread we call the <code>handle_client</code> method, passing the socket
-as argument 
-</LI>
-<LI>The block that follows the invokation of
-<code>handle_client</code> specifies the behavior 
-of the server. 
-</LI>
-<LI>Un <A NAME="tex2html662"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> es un objeto <A NAME="tex2html663"
-  HREF="http://ruby-doc.org/core-2.0.0/IO.html"><TT>IO</TT></A>:
-<PRE>
-&gt;&gt; TCPSocket.ancestors
-=&gt; [TCPSocket, IPSocket, BasicSocket, IO, 
-    File::Constants, Enumerable, Object,  Kernel, BasicObject]
-</PRE>
+<LI>the original thread will return from <A NAME="tex2html647"
+  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A>.<code>new</code> immediately and resume execution with the next statement
 </LI>
 </OL>
 
 <P>
+<PRE>
+arr = []
+a, b, c = 1, 2, 3
+Thread.new(a,b,c) { |d,e,f| arr &lt;&lt; d &lt;&lt; e &lt;&lt; f }.join
+arr #=&gt; [1, 2, 3]
+</PRE>
+A ThreadError exception is raised if <code>::new</code> is called without a block.
 
-<H4><A NAME="SECTION021340010000000000000">
-El Cliente</A>
+<P>
+
+<H4><A NAME="SECTION021320020000000000000">
+join</A>
+</H4>
+  
+
+<OL>
+<LI>When a thread calls <code>thr.join</code>
+The calling thread 
+will suspend execution and run <code>thr</code>. 
+</LI>
+<LI>The calling thread does not return until <code>thr</code> exits or until <code>limit</code> seconds have passed
+if we have used <code>thr.join(limit)</code>. 
+</LI>
+<LI>If the time <code>limit</code> expires, <code>nil</code> will be returned, otherwise <code>thr</code> 
+is returned.
+</LI>
+<LI>Any threads not joined will be killed when the main program exits. 
+</LI>
+<LI>If <code>thr</code> had previously raised an exception and the 
+exception has not yet been processed, it will be processed at this time.
+</LI>
+</OL>
+<PRE>
+[~/ruby/threads(master)]$ cat join_with_timer.rb 
+require 'thread'
+
+y = Thread.new { 4.times { sleep 0.2; puts 'tick... ' }}
+puts "Waiting" until y.join(0.1)
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/threads(master)]$ ruby join_with_timer.rb 
+Waiting
+tick... 
+Waiting
+Waiting
+tick... 
+Waiting
+Waiting
+tick... 
+Waiting
+Waiting
+tick...
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021320030000000000000">
+Localidad y Privacidad</A>
 </H4>
   
 
 <P>
-To obtain a <A NAME="tex2html664"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> instance use the <A NAME="tex2html665"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A><code>.open</code> class method, or with its synonym <A NAME="tex2html666"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A><code>.new</code>. 
+A thread can normally access any variables that are in scope when
+the thread is created. 
 
 <P>
-Pass the name of the host to connect to as the first argument and the port as the second argument. 
+Variables local to the block containing the
+thread code are local to the thread and are not shared.
 
 <P>
-The port should be an integer between 1 and 65535, specified as a <A NAME="tex2html667"
-  HREF="http://ruby-doc.org/core-2.0.0/Fixnum.html"><TT>Fixnum</TT></A> or <A NAME="tex2html668"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A> object. 
+Class <A NAME="tex2html648"
+  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A> features a special facility that allows thread-local variables to be created and accessed by name. 
 
 <P>
-Different internet protocols use different ports. 
+You simply treat the thread object as if it were a <A NAME="tex2html649"
+  HREF="http://ruby-doc.org/core-2.0.0/Hash.html"><TT>Hash</TT></A>, 
+writing to elements using <code>[]=</code> and reading them back using <code>[]</code>.
 
 <P>
-Web servers use port 80 by default, for example. 
-
-<P>
-You may also pass the name of an Internet service, such as <code>http</code>, as a string, in place of a port number, but this is not well documented and may be system dependent.
-
-<P>
+Veamos un ejemplo:
 <PRE>
-[~/ruby/threads(master)]$ cat simple_client.rb 
-require 'socket'                # Sockets are in standard library
+[~/ruby/threads(master)]$ cat sharing.rb 
+require 'thread'
+require 'barrier'
 
-host, port = 'localhost', '2000'
-
-s = TCPSocket.open(host, port)  # Open a socket to host and port
-words = ARGV
-words = [
-"amore, roma.", 
-"a man, a plan, a canal: panama.",
-"no 'x' in 'nixon.'",
-"dábale arroz a la zorra el abad"
-] unless words.length &gt; 0
-words.each do |x|
-  s.puts x 
-  line = s.gets             # Read lines from the socket
-  break if line.nil?
-  puts line.chop            # And print with platform line terminator
+numthreads = 4
+lastthread = numthreads-1
+th = []
+b = Barrier.new(numthreads)
+(0..lastthread).each do |i|
+  th[i] = Thread.new(i) do
+    b.wait
+    th[(i+1)%numthreads][:my_x] = i 
+  end
 end
-s.close                     # Close the socket when done
+th.each do |t| 
+  t.join 
+  print t[:my_x].to_s+"\n" 
+end
 </PRE>
+Necesitamos la barrera proveida por 
+<A NAME="tex2html650"
+  HREF="http://rubydoc.info/gems/barrier/">Barrier</A>
+para asegurarnos de que todas las threads han sido creadas en el momento
+en el que que cada thread escribe en la variable
+<code>my_x</code>
+de la thread siguiente.
 
 <P>
-
-<H4><A NAME="SECTION021340020000000000000">
-ejecución del Servidor</A>
-</H4>
-  
-
-<P>
+La ejecución resulta en:
 <PRE>
-[~/ruby/threads(master)]$ ruby simple_server.rb 
-"listening in port 2000"
-"new client: #&lt;TCPSocket:0x007fd8fb8aee50&gt;"
-"Received &lt;amore, roma.&gt;"
-"Received &lt;a man, a plan, a canal: panama.&gt;"
-"Received &lt;no 'x' in 'nixon.'&gt;"
-"Received &lt;d\xC3\xA1bale arroz a la zorra el abad&gt;"
+[~/ruby/threads(master)]$ ruby sharing.rb 
+3
+0
+1
+2
 </PRE>
-
-<P>
-
-<H4><A NAME="SECTION021340030000000000000">
-Ejecución del Cliente</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/threads(master)]$ ruby simple_client.rb 
-.amor ,eroma
-.amanap :lanac a ,nalp a ,nam a
-'.noxin' ni 'x' on
-</PRE>
-
-<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
@@ -289,31 +258,31 @@ Ejecución del Cliente</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html8194"
-  HREF="node311.html#SECTION021340010000000000000">El Cliente</A>
-<LI><A NAME="tex2html8195"
-  HREF="node311.html#SECTION021340020000000000000">ejecución del Servidor</A>
-<LI><A NAME="tex2html8196"
-  HREF="node311.html#SECTION021340030000000000000">Ejecución del Cliente</A>
+<LI><A NAME="tex2html8235"
+  HREF="node311.html#SECTION021320010000000000000">new</A>
+<LI><A NAME="tex2html8236"
+  HREF="node311.html#SECTION021320020000000000000">join</A>
+<LI><A NAME="tex2html8237"
+  HREF="node311.html#SECTION021320030000000000000">Localidad y Privacidad</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8192"
+<A NAME="tex2html8233"
   HREF="node312.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8186"
-  HREF="node307.html">
+<A NAME="tex2html8227"
+  HREF="node309.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8180"
+<A NAME="tex2html8221"
   HREF="node310.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8188"
-  HREF="node798.html">
+<A NAME="tex2html8229"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8190"
-  HREF="node801.html">
+<A NAME="tex2html8231"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -364,20 +333,20 @@ Ejecución del Cliente</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8193"
-  HREF="node312.html">Colas</A>
-<B> Subir:</B> <A NAME="tex2html8187"
-  HREF="node307.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html8181"
-  HREF="node310.html">Exclusión Mutua y la</A>
- &nbsp; <B>  <A NAME="tex2html8189"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8191"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8234"
+  HREF="node312.html">Exclusión Mutua y la</A>
+<B> Subir:</B> <A NAME="tex2html8228"
+  HREF="node309.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html8222"
+  HREF="node310.html">Enlaces /Véase</A>
+ &nbsp; <B>  <A NAME="tex2html8230"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8232"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

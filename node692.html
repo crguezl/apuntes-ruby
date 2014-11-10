@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Limites de Timepo/Build Timeouts</TITLE>
-<META NAME="description" CONTENT="Limites de Timepo/Build Timeouts">
+<TITLE>Integración Contínua: Travis</TITLE>
+<META NAME="description" CONTENT="Integración Contínua: Travis">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node693.html">
-<LINK REL="previous" HREF="node691.html">
-<LINK REL="up" HREF="node688.html">
+<LINK REL="next" HREF="node699.html">
+<LINK REL="previous" HREF="node675.html">
+<LINK REL="up" HREF="node596.html">
 <LINK REL="next" HREF="node693.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14917"
+<A NAME="tex2html14983"
   HREF="node693.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14911"
-  HREF="node688.html">
+<A NAME="tex2html14977"
+  HREF="node596.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14905"
+<A NAME="tex2html14971"
   HREF="node691.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14913"
-  HREF="node798.html">
+<A NAME="tex2html14979"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14915"
-  HREF="node801.html">
+<A NAME="tex2html14981"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,46 +92,149 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14918"
-  HREF="node693.html">Databases and other services</A>
-<B> Subir:</B> <A NAME="tex2html14912"
-  HREF="node688.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html14906"
-  HREF="node691.html">Notificaciones/Notifications</A>
- &nbsp; <B>  <A NAME="tex2html14914"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14916"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14984"
+  HREF="node693.html">Uso de Travis</A>
+<B> Subir:</B> <A NAME="tex2html14978"
+  HREF="node596.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html14972"
+  HREF="node691.html">Enlaces Relacionados</A>
+ &nbsp; <B>  <A NAME="tex2html14980"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14982"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061540000000000000000">
-Limites de Timepo/Build Timeouts</A>
+<H1><A NAME="SECTION061500000000000000000"></A>
+<A NAME="chapter:travis"></A>
+<BR>
+Integración Contínua: Travis
 </H1>
-Because it is very common to see test suites or before scripts to hang up, Travis CI has hard time limits. If a script or test suite takes longer to run, the build will be forcefully terminated and you will see a message about this in your build log.
 
 <P>
-With our current timeouts, a build will be terminated if it's still running after 50 minutes (respectively 70 on travis-ci.com), or if there hasn't been any log output in 10 minutes.
+<A NAME="28074"></A><SPAN  CLASS="textbf">Continuous integration</SPAN> (<A NAME="28076"></A><SPAN  CLASS="textbf">CI</SPAN>) is the practice, in software engineering,
+of merging all developer workspaces with a shared mainline several
+times a day. It was first named and proposed as part of extreme
+programming (<A NAME="28078"></A><SPAN  CLASS="textbf">XP</SPAN>). 
 
 <P>
+Its main aim is to prevent integration problems,
+referred to as 
+<FONT COLOR="#0000ff"> integration hell</FONT>
+in early descriptions of XP. 
+
+<P>
+CI
+can be seen as an intensification of practices of periodic integration
+advocated by earlier published methods of incremental and iterative
+software development. 
+
+<P>
+
+<OL>
+<LI>CI was originally intended to be used in combination with automated
+unit tests written through the practices of test-driven development.
+</LI>
+<LI>Initially this was conceived of as running all unit tests and
+verifying they all passed before committing to the mainline. 
+</LI>
+<LI>Later
+elaborations of the concept introduced build servers, which
+automatically run the unit tests periodically or even after every
+commit and report the results to the developers. 
+</LI>
+<LI>In the same vein the practice of <A NAME="28082"></A><SPAN  CLASS="textbf">continuous delivery</SPAN> 
+further extends CI by 
+<FONT COLOR="#0000ff"> making sure the software checked in 
+on the mainline is always in a state that can be deployed 
+to users and makes the actual deployment process very rapid</FONT>.
+</LI>
+</OL>
+
+<P>
+<SPAN  CLASS="textbf">The use of build
+servers (not necessarily running unit tests) had already been
+practised by some teams outside the XP community. Now, many
+organisations have adopted CI without adopting all of XP.</SPAN>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html14985"
+  HREF="node693.html">Uso de Travis</A>
+<UL>
+<LI><A NAME="tex2html14986"
+  HREF="node693.html#SECTION061510010000000000000">Step one: Sign in</A>
+<LI><A NAME="tex2html14987"
+  HREF="node693.html#SECTION061510020000000000000">Step two: Activate GitHub Service Hook</A>
+<LI><A NAME="tex2html14988"
+  HREF="node693.html#SECTION061510030000000000000">Step three: Install the travis gem</A>
+<LI><A NAME="tex2html14989"
+  HREF="node693.html#SECTION061510040000000000000">Validate Your <TT>.travis.yml</TT></A>
+<LI><A NAME="tex2html14990"
+  HREF="node693.html#SECTION061510050000000000000">Step four: Trigger Your First Build With a Git Push</A>
+<LI><A NAME="tex2html14991"
+  HREF="node693.html#SECTION061510060000000000000">Default Test Script</A>
+<LI><A NAME="tex2html14992"
+  HREF="node693.html#SECTION061510070000000000000">Testing Against Multiple Versions of Gems</A>
+<LI><A NAME="tex2html14993"
+  HREF="node693.html#SECTION061510080000000000000">Custom Bundler arguments and Gemfile locations</A>
+<LI><A NAME="tex2html14994"
+  HREF="node693.html#SECTION061510090000000000000">Rakefile</A>
+<LI><A NAME="tex2html14995"
+  HREF="node693.html#SECTION0615100100000000000000">Ejemplo de Jerarquía</A>
+<LI><A NAME="tex2html14996"
+  HREF="node693.html#SECTION0615100110000000000000">Página de Travis Mostrando los Resultados de unas Pruebas con Rspec</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html14997"
+  HREF="node694.html">Enlaces</A>
+<LI><A NAME="tex2html14998"
+  HREF="node695.html">Notificaciones/Notifications</A>
+<LI><A NAME="tex2html14999"
+  HREF="node696.html">Limites de Timepo/Build Timeouts</A>
+<LI><A NAME="tex2html15000"
+  HREF="node697.html">Databases and other services</A>
+<LI><A NAME="tex2html15001"
+  HREF="node698.html">Travis en la Línea de Comandos</A>
+<UL>
+<LI><A NAME="tex2html15002"
+  HREF="node698.html#SECTION061560010000000000000">The Travis Client</A>
+<LI><A NAME="tex2html15003"
+  HREF="node698.html#SECTION061560020000000000000">login</A>
+<LI><A NAME="tex2html15004"
+  HREF="node698.html#SECTION061560030000000000000">init</A>
+<LI><A NAME="tex2html15005"
+  HREF="node698.html#SECTION061560040000000000000">Ejecutando las pruebas en Travis</A>
+<LI><A NAME="tex2html15006"
+  HREF="node698.html#SECTION061560050000000000000">show</A>
+<LI><A NAME="tex2html15007"
+  HREF="node698.html#SECTION061560060000000000000">logs</A>
+<LI><A NAME="tex2html15008"
+  HREF="node698.html#SECTION061560070000000000000">open</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14917"
+<A NAME="tex2html14983"
   HREF="node693.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14911"
-  HREF="node688.html">
+<A NAME="tex2html14977"
+  HREF="node596.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14905"
+<A NAME="tex2html14971"
   HREF="node691.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14913"
-  HREF="node798.html">
+<A NAME="tex2html14979"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14915"
-  HREF="node801.html">
+<A NAME="tex2html14981"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -182,20 +285,20 @@ With our current timeouts, a build will be terminated if it's still running afte
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14918"
-  HREF="node693.html">Databases and other services</A>
-<B> Subir:</B> <A NAME="tex2html14912"
-  HREF="node688.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html14906"
-  HREF="node691.html">Notificaciones/Notifications</A>
- &nbsp; <B>  <A NAME="tex2html14914"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14916"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14984"
+  HREF="node693.html">Uso de Travis</A>
+<B> Subir:</B> <A NAME="tex2html14978"
+  HREF="node596.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html14972"
+  HREF="node691.html">Enlaces Relacionados</A>
+ &nbsp; <B>  <A NAME="tex2html14980"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14982"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

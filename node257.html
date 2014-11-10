@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado</TITLE>
-<META NAME="description" CONTENT="Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado">
+<TITLE>El Hook included</TITLE>
+<META NAME="description" CONTENT="El Hook included">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node258.html">
 <LINK REL="previous" HREF="node256.html">
-<LINK REL="up" HREF="node253.html">
+<LINK REL="up" HREF="node255.html">
 <LINK REL="next" HREF="node258.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7337"
+<A NAME="tex2html7384"
   HREF="node258.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7331"
-  HREF="node253.html">
+<A NAME="tex2html7378"
+  HREF="node255.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7327"
+<A NAME="tex2html7372"
   HREF="node256.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7333"
-  HREF="node798.html">
+<A NAME="tex2html7380"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7335"
-  HREF="node801.html">
+<A NAME="tex2html7382"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,124 +92,247 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7338"
-  HREF="node258.html">Traza</A>
-<B> Subir:</B> <A NAME="tex2html7332"
-  HREF="node253.html">Hooks (Ganchos)</A>
-<B> Anterior:</B> <A NAME="tex2html7328"
-  HREF="node256.html">Ganchos/Hooks: Sustituyendo (y delegando</A>
- &nbsp; <B>  <A NAME="tex2html7334"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7336"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7385"
+  HREF="node258.html">Ganchos/Hooks: Sustituyendo (y delegando</A>
+<B> Subir:</B> <A NAME="tex2html7379"
+  HREF="node255.html">Hooks (Ganchos)</A>
+<B> Anterior:</B> <A NAME="tex2html7373"
+  HREF="node256.html">El Hook inherited</A>
+ &nbsp; <B>  <A NAME="tex2html7381"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7383"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02854000000000000000">
-Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado</A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html7386"
+  HREF="node257.html#SECTION02852010000000000000">Creando declaraciones de métodos abstractos</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html7387"
+  HREF="node257.html#SECTION02852100000000000000">Incluyendo Métodos de Instancia y de Clase de un Módulo</A>
+<UL>
+<LI><A NAME="tex2html7388"
+  HREF="node257.html#SECTION02852110000000000000">El Problema</A>
+<LI><A NAME="tex2html7389"
+  HREF="node257.html#SECTION02852120000000000000">Primeras Solución</A>
+<LI><A NAME="tex2html7390"
+  HREF="node257.html#SECTION02852130000000000000">Segunda Solución: Usando el Gancho <TT>included</TT></A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02852000000000000000"></A><A NAME="10950"></A>
+<BR>
+El Hook <A NAME="tex2html541"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-included"><TT>included</TT></A>
 </H2>
-En esta sección se muestra una forma de intervenir en el momento en que un objeto es creado.
-El ejemplo consiste en que queremos añadirle a todo objeto un atributo <code>timestamp</code>
-que indica su fecha de creación.
-Se hace abriendo la clase <A NAME="10751"></A><A NAME="tex2html540"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
-y añadiéndole el atributo:
+Cuando un módulo es incluído en una clase, el método
+de clase <A NAME="10954"></A><A NAME="tex2html542"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-included"><TT>included</TT></A>
+es invocado con argumento el objeto clase o módulo en el cual es incluído.
+
+<P>
+Veamos un ejemplo de uso de  <TT>included</TT> .
+
+<P>
+
+<H4><A NAME="SECTION02852010000000000000">
+Creando declaraciones de métodos abstractos</A>
+</H4>
+  
+
+<A NAME="parrafo:declaracionesdemetodosabstractos"></A>
+<P>
+En Ruby no existe una palabra  <TT>abstract</TT>  que indique que un método
+es abstracto. Creemos una:
+<PRE>
+[~/Chapter7ClassesAndModules/inheritance]$ cat abstract.rb 
+module Abstract
+  def self.included(base)
+    base.extend(ClassMethods)
+  end
+
+  module ClassMethods
+    def abstract_methods(*args)
+      args.each do |name|
+        class_eval(&lt;&lt;-CHUCHU)
+          def #{name}(*args)
+            raise NotImplementedError.new("You must implement #{name}.")
+          end
+        CHUCHU
+      end   # args.each
+    end     # def abstract_methods
+  end     # module ClassMethods
+end
+
+class Tutu
+  include Abstract
+
+  abstract_methods :foo, :bar
+end
+</PRE>
 
 <P>
 <PRE>
-         class Object
-           attr_accessor :timestamp
-         end
+[~/Chapter7ClassesAndModules/inheritance]$ pry
+[1] pry(main)&gt; require './abstract'
+=&gt; true
+[2] pry(main)&gt; z = Tutu.new
+=&gt; #&lt;Tutu:0x007f9bde11ac70&gt;
+[3] pry(main)&gt; z.bar
+NotImplementedError: You must implement bar.
+from (eval):2:in `bar'
+[4] pry(main)&gt;
 </PRE>
-Ahora bien, el método <code>new</code> es un método de clase, (<code>Tutu.new</code>)
-es un metodo de instancia de la clase <code>Class</code>:
-<PRE>
-&gt;&gt; Class.instance_methods.select { |x| x =~/new/ }
-=&gt; ["new"]
-</PRE>
-Así que lo que haremos es abrir la clase <code>Class</code> y reescribir <code>new</code>.
-Repetimos el truco usado en <code>system</code> en la sección 
-<A HREF="node256.html#subsection:hooks">15.5.3</A>.
-La técnica no es completa, debido a que ciertos objetos preconstruidos como pueda ser el caso de las <code>String</code> se construyen sin que se produzca una llamada a <code>new</code>.
 
 <P>
-<PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby -rdebug ex0681.rb 
-Debug.rb
-Emacs support available.
 
-ex0681.rb:2:  class Object
-(rdb:1) l 1,50
-[1, 50] in ex0681.rb
-    1  
-=&gt;  2    class Object
-    3      attr_accessor :timestamp
-    4    end
-    5    class Class
-    6      alias_method :old_new,  :new
-    7      def new(*args)
-    8        result = old_new(*args)
-    9        result.timestamp = Time.now
-   10        result
-   11      end
-   12    end
-   13    class Test
-   14    end
-   15    
-   16    obj1 = Test.new
-   17    sleep(0.002)  #!sh!
-   18    obj2 = Test.new
-   19  
-   20    obj1.timestamp.to_f
-   21    obj2.timestamp.to_f
-(rdb:1) b 18
-Set breakpoint 1 at ex0681.rb:18
-(rdb:1) c
-Breakpoint 1, toplevel at ex0681.rb:18
-ex0681.rb:18:  obj2 = Test.new
-(rdb:1) p obj1
-#&lt;Test:0x100361c70 @timestamp=Sun Nov 20 11:54:46 +0000 2011&gt;
-(rdb:1) l
-[13, 22] in ex0681.rb
-   13    class Test
-   14    end
-   15    
-   16    obj1 = Test.new
-   17    sleep(0.002)  #!sh!
-=&gt; 18    obj2 = Test.new
-   19  
-   20    obj1.timestamp.to_f
-   21    obj2.timestamp.to_f
-(rdb:1) n
-ex0681.rb:20:  obj1.timestamp.to_f
-(rdb:1) obj2
-#&lt;Test:0x10035f628 @timestamp=Sun Nov 20 11:55:15 +0000 2011&gt;
-(rdb:1) p obj1.timestamp.to_f
-1321790086.82083
-(rdb:1) p obj2.timestamp.to_f
-1321790115.59523
-(rdb:1)
+<H3><A NAME="SECTION02852100000000000000">
+Incluyendo Métodos de Instancia y de Clase de un Módulo</A>
+</H3>
+
+<P>
+
+<H4><A NAME="SECTION02852110000000000000">
+El Problema</A>
+</H4>
+  
+
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">15</SPAN>.<SPAN CLASS="arabic">5</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<UL>
+<LI>Cuando hacemos <A NAME="10968"></A><A NAME="tex2html543"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-include"><TT>include</TT></A>
+de un módulo
+para mezclarlo en un módulo o en una clase, los métodos 
+pasan a estar disponibles al nivel de instancia.
+</LI>
+<LI>Si usamos <A NAME="10972"></A><A NAME="tex2html544"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html#method-i-extend"><TT>extend</TT></A>
+los tenemos disponibles como métodos de clase.
+</LI>
+</UL><I>
+Encuentre alguna forma de hacer que un módulo pueda proveer
+métodos de clase y métodos 
+de instancia</I></DIV><P></P>
+
+<P>
+
+<H4><A NAME="SECTION02852120000000000000">
+Primeras Solución</A>
+</H4>
+  
+
+<PRE>
+[~/src/ruby/ruby_best_practices/chapter3_mastering_the_dynamic_toolkit/tracking_mixins(master)]$ cat including_class_and_instance_methods.rb 
+module MyFeatures
+
+  module ClassMethods
+    def say_hello
+      "Hello"
+    end
+
+    def say_goodbye
+      "Goodbye"
+    end
+  end
+
+  def say_hello
+    "Hello from #{self}!"
+  end
+
+  def say_goodbye
+    "Goodbye from #{self}"
+  end
+end
+
+class A
+  include MyFeatures
+  extend MyFeatures::ClassMethods
+end
+
+# List instance methods
+puts A.public_instance_methods.select { |m| m =~/say/ }.inspect # [:say_hello, :say_goodbye] 
+# List class methods
+puts A.methods.select { |m| m =~/say/ }.inspect                 # [:say_hello, :say_goodbye] 
+
+puts A.say_hello     # Hello
+puts A.new.say_hello # Hello from #&lt;A:0x007fb8c38880f0&gt;!
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION02852130000000000000"></A><A NAME="10985"></A>
+<BR>
+Segunda Solución: Usando el Gancho <A NAME="tex2html545"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-included"><TT>included</TT></A>
+</H4>
+  
+
+<PRE>
+[~/src/ruby/ruby_best_practices/chapter3_mastering_the_dynamic_toolkit/tracking_mixins(master)]$ cat including_class_and_instance_methods2.rb 
+module MyFeatures
+
+  module ClassMethods
+    def say_hello
+      "Hello"
+    end
+
+    def say_goodbye
+      "Goodbye"
+    end
+  end
+
+  def self.included(base) # set the hook
+    base.extend(ClassMethods)
+  end
+
+  def say_hello
+    "Hello from #{self}!"
+  end
+
+  def say_goodbye
+    "Goodbye from #{self}"
+  end
+end
+
+class A
+  include MyFeatures # Now only one include is needed
+end
+
+# List instance methods
+puts A.public_instance_methods.select { |m| m =~/say/ }.inspect # [:say_hello, :say_goodbye] 
+# List class methods
+puts A.methods.select { |m| m =~/say/ }.inspect                 # [:say_hello, :say_goodbye] 
+
+puts A.say_hello     # Hello
+puts A.new.say_hello # Hello from #&lt;A:0x007fb8c38880f0&gt;!
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7337"
+<A NAME="tex2html7384"
   HREF="node258.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7331"
-  HREF="node253.html">
+<A NAME="tex2html7378"
+  HREF="node255.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7327"
+<A NAME="tex2html7372"
   HREF="node256.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7333"
-  HREF="node798.html">
+<A NAME="tex2html7380"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7335"
-  HREF="node801.html">
+<A NAME="tex2html7382"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -259,20 +383,20 @@ ex0681.rb:20:  obj1.timestamp.to_f
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7338"
-  HREF="node258.html">Traza</A>
-<B> Subir:</B> <A NAME="tex2html7332"
-  HREF="node253.html">Hooks (Ganchos)</A>
-<B> Anterior:</B> <A NAME="tex2html7328"
-  HREF="node256.html">Ganchos/Hooks: Sustituyendo (y delegando</A>
- &nbsp; <B>  <A NAME="tex2html7334"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7336"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7385"
+  HREF="node258.html">Ganchos/Hooks: Sustituyendo (y delegando</A>
+<B> Subir:</B> <A NAME="tex2html7379"
+  HREF="node255.html">Hooks (Ganchos)</A>
+<B> Anterior:</B> <A NAME="tex2html7373"
+  HREF="node256.html">El Hook inherited</A>
+ &nbsp; <B>  <A NAME="tex2html7381"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7383"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

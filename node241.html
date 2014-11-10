@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Bindings (encarpetados) y eval</TITLE>
-<META NAME="description" CONTENT="Bindings (encarpetados) y eval">
+<TITLE>Definiendo Clases y Módulos</TITLE>
+<META NAME="description" CONTENT="Definiendo Clases y Módulos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node242.html">
 <LINK REL="previous" HREF="node240.html">
-<LINK REL="up" HREF="node240.html">
+<LINK REL="up" HREF="node239.html">
 <LINK REL="next" HREF="node242.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7092"
+<A NAME="tex2html7136"
   HREF="node242.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7086"
-  HREF="node240.html">
+<A NAME="tex2html7130"
+  HREF="node239.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7080"
+<A NAME="tex2html7126"
   HREF="node240.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7088"
-  HREF="node798.html">
+<A NAME="tex2html7132"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7090"
-  HREF="node801.html">
+<A NAME="tex2html7134"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,16 +91,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7093"
-  HREF="node242.html">instance_eval y class_eval</A>
-<B> Subir:</B> <A NAME="tex2html7087"
-  HREF="node240.html">Evaluando Strings y Bloques</A>
-<B> Anterior:</B> <A NAME="tex2html7081"
-  HREF="node240.html">Evaluando Strings y Bloques</A>
- &nbsp; <B>  <A NAME="tex2html7089"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7091"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7137"
+  HREF="node242.html">Evaluando Strings y Bloques</A>
+<B> Subir:</B> <A NAME="tex2html7131"
+  HREF="node239.html">Tipos, Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html7127"
+  HREF="node240.html">Antepasados y Módulos</A>
+ &nbsp; <B>  <A NAME="tex2html7133"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7135"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
@@ -109,107 +108,123 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html7094"
-  HREF="node241.html#SECTION02821100000000000000">Procs y Bindings</A>
+<LI><A NAME="tex2html7138"
+  HREF="node241.html#SECTION02812100000000000000"><TT>Class</TT>.new, <TT>Module</TT>.new, <TT>define_method</TT>
+y Ambitos</A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H2><A NAME="SECTION02821000000000000000"></A>
-  <A NAME="subsection:bindings"></A>
-<BR>
-Bindings (encarpetados) y eval
+<H2><A NAME="SECTION02812000000000000000">
+Definiendo Clases y Módulos</A>
 </H2>
 
 <P>
-
-<OL>
-<LI>Un <A NAME="10500"></A><A NAME="tex2html478"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
-es un objeto que representa el estado de los bindings 
-definidos por las variables en un instante dado.
-
-<P>
-</LI>
-<LI>El método <A NAME="10504"></A><A NAME="tex2html479"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-binding"><TT>binding</TT></A>
-retorna un objeto <A NAME="tex2html480"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> describiendo
-los bindings en efecto en el punto de la llamada.
-
-<P>
-</LI>
-<LI>Es posible pasarle a <A NAME="10511"></A><A NAME="tex2html481"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
-un segundo argumento de la clase <A NAME="10515"></A><A NAME="tex2html482"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
-que especifique el contexto en que es evaluada la cadena:
-</LI>
-</OL>
+Las clases y los módulos son instancias de las clases <A NAME="10682"></A><A NAME="tex2html470"
+  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>
+y <A NAME="10686"></A><A NAME="tex2html471"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.
+Por tanto, es posible crearlos dinámicamente:
 <PRE>
-~/Chapter8ReflectionandMetaprogramming$ cat -n bindingsAndEval.rb 
-     1  class Demo
-     2    def initialize(n)
-     3      @secret = n
+M = Module.new      # Define a new module M
+C = Class.new       # Define a new class C
+D = Class.new(C) {  # Define a subclass of C
+  include M         # that includes module M
+}
+D.to_s              # =&gt; "D": class gets constant name by magic
+</PRE>
+
+<P>
+Cuando un módulo o clase dinámicamente creado es asignado a una constante el nombre de esa 
+constante es usado como nombre del módulo o clase.
+
+<P>
+<PRE>
+~/Chapter8ReflectionandMetaprogramming$ cat -n dynamicclassesandmodules.rb 
+     1  Fred = Module.new do
+     2    def meth1
+     3      "hello #{args.inspect}"
      4    end
-     5    def getBinding
-     6      return binding()
+     5    def meth2
+     6      "bye #{args.inspect}"
      7    end
      8  end
      9  
-    10  k1 = Demo.new(99)
-    11  b1 = k1.getBinding
-    12  k2 = Demo.new(-3)
-    13  b2 = k2.getBinding
-    14  
-    15  puts eval("@secret", b1)   #=&gt; 99
-    16  puts eval("@secret", b2)   #=&gt; -3
-    17  puts eval("@secret")       #=&gt; nil
+    10  Klass = Class.new do
+    11    include Fred
+    12    attr_accessor 'args'
+    13  
+    14    def initialize(*args)
+    15      @args = args
+    16    end
+    17  end
+    18  
+    19  puts Fred.to_s     # Fred
+    20  puts Klass.name    # Klass
+    21  
+    22  a = Klass.new(4, 5)
+    23  
+    24  puts a.meth1     # hello [4, 5] 
+    25  puts a.meth2     # bye [4, 5]
 </PRE>
-Ejecución:
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ ruby bindingsAndEval.rb 
-99
--3
-nil
-</PRE>
+
+<UL>
+<LI>Cuando una clase o módulo es creado dinámicamente y asignado a una constante, el nombre de la constante
+es utilizado como nombre de la clase 
+
+<P>
+</LI>
+<LI>Si fuera asignado a una
+variable, el método <A NAME="10690"></A><A NAME="tex2html472"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-to_s"><TT>to_s</TT></A>
+devolvería algo del estilo
+<code>#&lt;Class:0x10016a868&gt;</code> y <A NAME="10694"></A><A NAME="tex2html473"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-name"><TT>name</TT></A>
+devolvería <code>nil</code>.
+</LI>
+</UL>
 
 <P>
 
-<H3><A NAME="SECTION02821100000000000000">
-Procs y Bindings</A>
+<H3><A NAME="SECTION02812100000000000000"></A><A NAME="10704"></A>
+<BR>
+<A NAME="tex2html474"
+  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>.new, <A NAME="tex2html475"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.new, <A NAME="tex2html476"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
+y Ambitos
 </H3>
 
 <P>
 
 <OL>
-<LI>La clase <A NAME="10519"></A><A NAME="tex2html483"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>
-define un método <A NAME="10523"></A><A NAME="tex2html484"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html#method-i-binding"><TT>binding</TT></A>.
-Cuando se llama dentro de un proc o de una lambda retorna un objeto 
-<A NAME="10527"></A><A NAME="tex2html485"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
-que representa los bindings en efecto en la clausura
-de ese <A NAME="tex2html486"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>.
-
-<P>
+<LI>El método <A NAME="10708"></A><A NAME="tex2html477"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-local_variables"><TT>local_variables</TT></A>
+del módulo <A NAME="tex2html478"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> nos permite acceder
+a las variables locales visibles en un punto.
 </LI>
-<LI>Además, el método de <A NAME="tex2html487"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> <A NAME="10537"></A><A NAME="tex2html488"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
-nos permite pasar como segundo argumento un <A NAME="tex2html489"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> en vez de un <A NAME="tex2html490"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
-(Véase la sección <A HREF="node155.html#subsection:clausurasybindings">13.6.2</A>).
-
-<P>
+<LI>Algunos lenguajes permiten a un <A NAME="10715"></A><SPAN  CLASS="textbf">ámbito</SPAN> interno ver las variables
+de un ámbito mas externo. Este tipo de visibilidad no ocurre en Ruby
 </LI>
-<LI>Además, Ruby 1.9 define un método <A NAME="10547"></A><A NAME="tex2html491"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html#method-i-eval"><TT>eval</TT></A>
-para los objetos <A NAME="tex2html492"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>.
+<LI>Hay tres puntos en los que un programa abandona el ámbito previo y
+abre un nuevo ámbito (<A NAME="10717"></A><SPAN  CLASS="textbf">scope gates</SPAN> en al terminología del libro <SPAN  CLASS="textbf">Metaprogramming Ruby</SPAN>
+[<A
+ HREF="node806.html#metaprogramming">8</A>]):
+
+<OL>
+<LI>Definiciones de clase
+</LI>
+<LI>Definiciones de módulo
+</LI>
+<LI>Definiciones de método
+</LI>
+</OL>
+</LI>
+<LI>Las variables globales son visibles desde cualquier ámbito
+</LI>
+<LI>las variables de instancia son visibles desde cualquier punto en el que 
+<code>self</code> se refiere al mismo objeto
 </LI>
 </OL>
 
@@ -220,43 +235,40 @@ para los objetos <A NAME="tex2html492"
     </pre>
 
 <P>
-ejecución:
-<PRE>
-~/Chapter8ReflectionandMetaprogramming$ ruby procsAndBindings.rb 
-99
-99
-********************************
-2
-4
-6
-********************************
-3
-6
-9
-********************************
-5
-10
-15
-</PRE>
+Puesto que <A NAME="tex2html479"
+  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>.new, <A NAME="tex2html480"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.new y <A NAME="10725"></A><A NAME="tex2html481"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
+usan el bloque que les sigue y los bloques no abandonan el <A NAME="10729"></A><SPAN  CLASS="textbf">ámbito</SPAN> previo (aunque 
+crean uno nuevo),
+podemos jugar con estos tres métodos para crear clausuras en las que se comparten
+variables locales entre clases, métodos y ámbitos. Observe como en esta
+reescritura del programa anterior cambia la visibilidad:
+
+<P>
+
+    <pre>
+
+    </pre>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html7092"
+<A NAME="tex2html7136"
   HREF="node242.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7086"
-  HREF="node240.html">
+<A NAME="tex2html7130"
+  HREF="node239.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7080"
+<A NAME="tex2html7126"
   HREF="node240.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7088"
-  HREF="node798.html">
+<A NAME="tex2html7132"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7090"
-  HREF="node801.html">
+<A NAME="tex2html7134"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -307,20 +319,20 @@ ejecución:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7093"
-  HREF="node242.html">instance_eval y class_eval</A>
-<B> Subir:</B> <A NAME="tex2html7087"
-  HREF="node240.html">Evaluando Strings y Bloques</A>
-<B> Anterior:</B> <A NAME="tex2html7081"
-  HREF="node240.html">Evaluando Strings y Bloques</A>
- &nbsp; <B>  <A NAME="tex2html7089"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7091"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html7137"
+  HREF="node242.html">Evaluando Strings y Bloques</A>
+<B> Subir:</B> <A NAME="tex2html7131"
+  HREF="node239.html">Tipos, Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html7127"
+  HREF="node240.html">Antepasados y Módulos</A>
+ &nbsp; <B>  <A NAME="tex2html7133"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7135"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

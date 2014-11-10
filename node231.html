@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Clase Game</TITLE>
-<META NAME="description" CONTENT="La Clase Game">
+<TITLE>Ejemplo de Partida</TITLE>
+<META NAME="description" CONTENT="Ejemplo de Partida">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node232.html">
 <LINK REL="previous" HREF="node230.html">
-<LINK REL="up" HREF="node228.html">
+<LINK REL="up" HREF="node230.html">
 <LINK REL="next" HREF="node232.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6868"
+<A NAME="tex2html6918"
   HREF="node232.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6862"
-  HREF="node228.html">
+<A NAME="tex2html6912"
+  HREF="node230.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6856"
+<A NAME="tex2html6906"
   HREF="node230.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6864"
-  HREF="node798.html">
+<A NAME="tex2html6914"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6866"
-  HREF="node801.html">
+<A NAME="tex2html6916"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,64 +92,90 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6869"
-  HREF="node232.html">La Clase Player: Un</A>
-<B> Subir:</B> <A NAME="tex2html6863"
-  HREF="node228.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html6857"
-  HREF="node230.html">Programa Principal</A>
- &nbsp; <B>  <A NAME="tex2html6865"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6867"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6919"
+  HREF="node232.html">Programa Principal</A>
+<B> Subir:</B> <A NAME="tex2html6913"
+  HREF="node230.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6907"
+  HREF="node230.html">Jugador de TicTacToe (Tres</A>
+ &nbsp; <B>  <A NAME="tex2html6915"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6917"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027173000000000000000">
-La Clase Game</A>
+<H2><A NAME="SECTION027171000000000000000">
+Ejemplo de Partida</A>
 </H2>
-
-<P>
-La clase <code>Game</code> define los objetos que describen una <SPAN  CLASS="textbf">partida</SPAN>.
-El constructor recibe como argumentos las clases que describen a los jugadores:
+Comencemos viendo un ejemplo de partida:
 <PRE>
-module TicTacToe
-  class Game
-    def initialize( player1, player2, random = true )
-      if random and rand(2) == 1 # decidimos quien juega con "X" y quien con "O"
-        @x_player = player2.new("X")
-        @o_player = player1.new("O")
-      else
-        @x_player = player1.new("X")
-        @o_player = player2.new("O")
-      end
-      
-      @board = Board.new([" "] * 9) # Usamos la clase "Board"
-    end
-    
-    attr_reader :x_player, :o_player
-    
-    def play
-      until @board.won?
-        @board[@x_player.move(@board)] = @x_player.mark
-        break if @board.won?
-        
-        @board[@o_player.move(@board)] = @o_player.mark
-      end
-      
-      @o_player.finish @board
-      @x_player.finish @board
-    end
-  end
-end
+[~/srcLPP/tictactoe(master)]$ ruby lpp_solution.rb 
+
+  +---+---+---+
+a |   |   |   |
+  +---+---+---+
+b |   | X |   |
+  +---+---+---+
+c |   |   |   |
+  +---+---+---+
+    1   2   3
+
+Your move?  (format: b3)  c1
+
+  +---+---+---+
+a |   |   | X |
+  +---+---+---+
+b |   | X |   |
+  +---+---+---+
+c | O |   |   |
+  +---+---+---+
+    1   2   3
+
+Your move?  (format: b3)  a1
+
+  +---+---+---+
+a | O |   | X |
+  +---+---+---+
+b | X | X |   |
+  +---+---+---+
+c | O |   |   |
+  +---+---+---+
+    1   2   3
+
+Your move?  (format: b3)  b3
+
+  +---+---+---+
+a | O |   | X |
+  +---+---+---+
+b | X | X | O |
+  +---+---+---+
+c | O |   | X |
+  +---+---+---+
+    1   2   3
+
+Your move?  (format: b3)  a2
+
+  +---+---+---+
+a | O | O | X |
+  +---+---+---+
+b | X | X | O |
+  +---+---+---+
+c | O | X | X |
+  +---+---+---+
+    1   2   3
+
+Tie game.
+
+[~/srcLPP/tictactoe(master)]$
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

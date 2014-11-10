@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Rack::URLMap</TITLE>
-<META NAME="description" CONTENT="Rack::URLMap">
+<TITLE>Rack::Cascade</TITLE>
+<META NAME="description" CONTENT="Rack::Cascade">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node371.html">
 <LINK REL="previous" HREF="node369.html">
-<LINK REL="up" HREF="node331.html">
+<LINK REL="up" HREF="node333.html">
 <LINK REL="next" HREF="node371.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9434"
+<A NAME="tex2html9483"
   HREF="node371.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9428"
-  HREF="node331.html">
+<A NAME="tex2html9477"
+  HREF="node333.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9422"
+<A NAME="tex2html9471"
   HREF="node369.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9430"
-  HREF="node798.html">
+<A NAME="tex2html9479"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9432"
-  HREF="node801.html">
+<A NAME="tex2html9481"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,197 +92,190 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9435"
-  HREF="node371.html">El método run de</A>
-<B> Subir:</B> <A NAME="tex2html9429"
-  HREF="node331.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9423"
-  HREF="node369.html">Rack::Mount</A>
- &nbsp; <B>  <A NAME="tex2html9431"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9433"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9484"
+  HREF="node371.html">Rack::Mount</A>
+<B> Subir:</B> <A NAME="tex2html9478"
+  HREF="node333.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9472"
+  HREF="node369.html">Código de Rack::Builder</A>
+ &nbsp; <B>  <A NAME="tex2html9480"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9482"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031240000000000000000"></A>
-<BR>
-<A NAME="tex2html833"
-  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A>
+<H1><A NAME="SECTION031220000000000000000">
+Rack::Cascade</A>
 </H1>
 
 <P>
-<A NAME="tex2html834"
-  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A> takes a hash mapping urls or paths to apps, and
-dispatches accordingly. Support for HTTP/1.1 host names exists if
-the URLs start with http:// or https://.
-
-<P>
 <A NAME="tex2html835"
-  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A> modifies the <code>SCRIPT_NAME</code> and 
-<code>PATH_INFO</code> such that the part
-relevant for dispatch is in the 
-<code>SCRIPT_NAME</code>, and the rest in the
-<code>PATH_INFO</code>. 
-This should be taken care of when you need to reconstruct
-the URL in order to create links.
+  HREF="http://rack.rubyforge.org/doc/Rack/Cascade.html">Rack::Cascade</A> 
+tries an request on several apps, and returns the first response
+that is not 404 (or in a list of configurable status codes).
 
 <P>
-<A NAME="tex2html836"
-  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A>  dispatches in such a way that the longest paths are
-tried first, since they are most specific.
+
+<H4><A NAME="SECTION031220010000000000000">
+Ejemplo</A>
+</H4>
+  
 
 <P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-urlmap(master)]$ cat config.ru 
-app1 = lambda { |e| [200, {}, ["one\n"]]}
-app2 = lambda { |e| [200, {}, ["two\n"]]}
-app3 = lambda { |e| [200, {}, ["one + two = three\n"]]}
-
-app = Rack::URLMap.new "/one" =&gt; app1, "/two" =&gt; app2, "/one/two" =&gt; app3
-
-run app
+[~/local/src/ruby/sinatra/rack/rack-cascade]$ cat cascade2.ru 
+statuses = [200,404]
+apps = [
+  lambda {|env| 
+    status = statuses.sample
+    [status, {}, ["I'm the first app. Status = #{status}\n"]]
+  }, 
+  lambda {|env| 
+    status = statuses.sample
+    [status, {}, ["I'm the second app. Status = #{status}\n"]]
+  }, 
+  lambda {|env| 
+    status = statuses.sample
+    [status, {}, ["I'm the last app. Status = #{status}\n"]]
+  } 
+]
+use Rack::ContentLength 
+use Rack::ContentType 
+run Rack::Cascade.new(apps)
 </PRE>
 
 <P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-urlmap(master)]$ cat Rakefile 
-desc "run the server"
-task :default do
-  sh "rackup"
-end
-
-desc "run the client with one"
-task :one do
-  sh %q{curl -v 'http://localhost:9292/one'}
-end
-
-desc "run the client with two"
-task :two do
-  sh %q{curl -v 'http://localhost:9292/two'}
-end
-
-desc "run the client with one/two"
-task :onetwo do
-  sh %q{curl -v 'http://localhost:9292/one/two'}
-end
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-urlmap]$ rake
-rackup
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-127.0.0.1 - - [17/Oct/2013 21:24:48] "GET /two HTTP/1.1" 200 - 0.0006
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-urlmap(master)]$ rake onetwo
-curl -v 'http://localhost:9292/one/two'
+[~/local/src/ruby/sinatra/rack/rack-cascade]$ rake client
+curl -v 'http://localhost:9292'
 * About to connect() to localhost port 9292 (#0)
-*   Trying ::1... Connection refused
 *   Trying 127.0.0.1... connected
 * Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET /one/two HTTP/1.1
+&gt; GET / HTTP/1.1
 &gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
 &gt; Host: localhost:9292
 &gt; Accept: */*
 &gt; 
 &lt; HTTP/1.1 200 OK
-&lt; Transfer-Encoding: chunked
-&lt; Connection: close
+&lt; Content-Type: text/html
+&lt; Content-Length: 33
+&lt; Connection: keep-alive
 &lt; Server: thin 1.5.1 codename Straight Razor
 &lt; 
-one + two = three
+I'm the second app. Status = 200
+* Connection #0 to host localhost left intact
 * Closing connection #0
 </PRE>
 
 <P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-cascade]$ rake client
+curl -v 'http://localhost:9292'
+* About to connect() to localhost port 9292 (#0)
+*   Trying 127.0.0.1... connected
+* Connected to localhost (127.0.0.1) port 9292 (#0)
+&gt; GET / HTTP/1.1
+&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
+&gt; Host: localhost:9292
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html
+&lt; Content-Length: 31
+&lt; Connection: keep-alive
+&lt; Server: thin 1.5.1 codename Straight Razor
+&lt; 
+I'm the last app. Status = 200
+* Connection #0 to host localhost left intact
+* Closing connection #0
+</PRE>
 
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html9434"
-  HREF="node371.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9428"
-  HREF="node331.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9422"
-  HREF="node369.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9430"
-  HREF="node798.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9432"
-  HREF="node801.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html9435"
-  HREF="node371.html">El método run de</A>
-<B> Subir:</B> <A NAME="tex2html9429"
-  HREF="node331.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9423"
-  HREF="node369.html">Rack::Mount</A>
- &nbsp; <B>  <A NAME="tex2html9431"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9433"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-cascade]$ rake client
+curl -v 'http://localhost:9292'
+* About to connect() to localhost port 9292 (#0)
+*   Trying 127.0.0.1... connected
+* Connected to localhost (127.0.0.1) port 9292 (#0)
+&gt; GET / HTTP/1.1
+&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
+&gt; Host: localhost:9292
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html
+&lt; Content-Length: 32
+&lt; Connection: keep-alive
+&lt; Server: thin 1.5.1 codename Straight Razor
+&lt; 
+I'm the first app. Status = 200
+* Connection #0 to host localhost left intact
+* Closing connection #0]
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031220020000000000000">
+Código del Constructor</A>
+</H4>
+  
+
+<P>
+<PRE>
+        # File lib/rack/cascade.rb, line 11
+11:     def initialize(apps, catch=404)
+12:       @apps = []; @has_app = {}
+13:       apps.each { |app| add app }
+14: 
+15:       @catch = {}
+16:       [*catch].each { |status| @catch[status] = true }
+17:     end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031220030000000000000">
+Código de <TT>call</TT></A>
+</H4>
+  
+
+<P>
+<PRE>
+        # File lib/rack/cascade.rb, line 19
+19:     def call(env)
+20:       result = NotFound
+21: 
+22:       @apps.each do |app|
+23:         result = app.call(env)
+24:         break unless @catch.include?(result[0].to_i)
+25:       end
+26: 
+27:       result
+28:     end
+</PRE>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html9485"
+  HREF="node370.html#SECTION031220010000000000000">Ejemplo</A>
+<LI><A NAME="tex2html9486"
+  HREF="node370.html#SECTION031220020000000000000">Código del Constructor</A>
+<LI><A NAME="tex2html9487"
+  HREF="node370.html#SECTION031220030000000000000">Código de <TT>call</TT></A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

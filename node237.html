@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Tipos, Clases y Módulos</TITLE>
-<META NAME="description" CONTENT="Tipos, Clases y Módulos">
+<TITLE>Código Completo del TicTacToe</TITLE>
+<META NAME="description" CONTENT="Código Completo del TicTacToe">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node240.html">
 <LINK REL="previous" HREF="node236.html">
-<LINK REL="up" HREF="node236.html">
+<LINK REL="up" HREF="node230.html">
 <LINK REL="next" HREF="node238.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7025"
+<A NAME="tex2html7000"
   HREF="node238.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7019"
-  HREF="node236.html">
+<A NAME="tex2html6994"
+  HREF="node230.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7013"
+<A NAME="tex2html6990"
   HREF="node236.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7021"
-  HREF="node798.html">
+<A NAME="tex2html6996"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7023"
-  HREF="node801.html">
+<A NAME="tex2html6998"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,97 +91,276 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7026"
-  HREF="node238.html">Antepasados y Módulos</A>
-<B> Subir:</B> <A NAME="tex2html7020"
-  HREF="node236.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7014"
-  HREF="node236.html">Reflexión y Metaprogramación</A>
- &nbsp; <B>  <A NAME="tex2html7022"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7024"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7001"
+  HREF="node238.html">Reflexión y Metaprogramación</A>
+<B> Subir:</B> <A NAME="tex2html6995"
+  HREF="node230.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html6991"
+  HREF="node236.html">La Clase Row</A>
+ &nbsp; <B>  <A NAME="tex2html6997"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6999"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02810000000000000000">
-Tipos, Clases y Módulos</A>
-</H1>
-
-<P>
-Los <A NAME="10363"></A><SPAN  CLASS="textbf">métodos introspectivos</SPAN> mas usados son los que determinan el tipo de un objeto.
-
-<P>
+<H2><A NAME="SECTION027177000000000000000">
+Código Completo del TicTacToe</A>
+</H2>
 <PRE>
-&gt;&gt; obj = [1, {:a =&gt; 2}]
-=&gt; [1, {:a=&gt;2}]
-&gt;&gt; obj.class                      # retorna la clase de un objeto
-=&gt; Array
-&gt;&gt; obj.class.superclass           # retorna la superclase de un objeto
-=&gt; Object
-&gt;&gt; obj.instance_of? Object        # determina si obj.class == Object
-=&gt; false
-&gt;&gt; obj.instance_of? Array
-=&gt; true
-&gt;&gt; obj.is_a? Object               # determina si obj es de una subclase de Object
-=&gt; true
-&gt;&gt; obj.is_a? Array
-=&gt; true
-&gt;&gt; obj.kind_of? Object            # kind_of? es un sinónimo de is_a?
-=&gt; true
-&gt;&gt; Array === obj                  # equivalente a obj.is_a? Array
-=&gt; true
-&gt;&gt; Object === obj
-=&gt; true
-&gt;&gt; obj.respond_to? 'each'        # si tiene un método público o protected llamado 'each'
-=&gt; true                          # si se le pasa true como segundo argumento se comprueban
-                                 # también los privados
-&gt;&gt; Array.instance_methods(false) 
-=&gt; ["insert"
- "sort" "include?" "size" "&amp;" "to_ary" "clear" "yaml_initialize" "shuffle"
- "replace" "pack" "zip" "flatten!" "to_s" "pop" "pretty_print_cycle" "hash"
- "cycle" "*" "indices" "nitems" "index" "collect" "+" "compact!"
- "last" "rassoc" "count" "drop" "delete" "delete_at" "combination" "collect!"
- "select" "each_index" "-" "flatten" "eql?" "fill" "length" "uniq!"
- "at" "choice" "reject!" "[]" "take" "inspect" "shift" "compact"
- "pretty_print" "[]=" "|" "find_index" "slice!" "each" "empty?" "transpose"
- "&lt;&lt;" "frozen?" "rindex" "map" "reverse_each" "reverse!" "to_a" "push"
- "uniq" "delete_if" "first" "product" "drop_while" "concat" "reject"
- "map!" "join" "slice" "indexes" "taguri" "&lt;=&gt;" "assoc" "fetch" "to_yaml"
- "==" "values_at" "permutation" "take_while" "unshift" "reverse"
- "sort!" "shuffle!"  "taguri="]
+#!/usr/bin/env ruby
+#---
+# Visit http://www.pragmaticprogrammer.com/titles/fr_quiz 
+#---
+
+
+module TicTacToe
+  module SquaresContainer
+    def []( index ) @squares[index] end
+
+    def blanks()  @squares.find_all { |s| s == " " }.size end
+    def os()      @squares.find_all { |s| s == "O" }.size end
+    def xs()      @squares.find_all { |s| s == "X" }.size end
+  end
+  
+  class Board
+    class Row
+      def initialize( squares, names )
+        @squares  = squares
+        @names    = names
+      end
+      
+      include SquaresContainer
+      
+      def to_board_name( index ) 
+        Board.index_to_name(@names[index]) 
+      end
+    end
+    
+    MOVES = %w{a1    a2   a3   b1   b2   b3   c1   c2   c3}
+    # Define constant INDICES
+    INDICES = Hash.new { |h, k| h[k] = MOVES.find_index(k) }
+
+    def self.name_to_index( name )# Receives "b2" and returns 4
+      INDICES[name]
+    end
+    
+    def self.index_to_name( index ) # Receives the index, like 4 and returns "b2"
+      MOVES[index]
+    end
+    
+    def initialize( squares )
+      @squares = squares # An array of Strings: [ " ", " ", " ", " ", "X", " ", " ", " ", "O"]
+    end
+      
+    include SquaresContainer
+    
+    def []( *indices )
+      if indices.size == 2                  # board[1,2] is @squares[7]
+        super indices[0] + indices[1] * 3   # calls SquaresContainer [] method
+      elsif indices[0].is_a? Fixnum         # board[7]
+        super indices[0]
+      else                                  # board["b2"]
+        super Board.name_to_index(indices[0].to_s)
+      end
+    end
+
+    def []=(indice, value)                  # board["b2"] = "X"
+      m = Board.name_to_index(indice)
+      @squares[m] = value
+    end
+    
+    HORIZONTALS = [ [0, 1, 2], [3, 4, 5], [6, 7, 8] ]
+    COLUMNS     = [ [0, 3, 6], [1, 4, 7], [2, 5, 8] ]
+    DIAGONALS   = [ [0, 4, 8], [2, 4, 6] ]
+    ROWS = HORIZONTALS + COLUMNS + DIAGONALS
+
+    def each_row
+      ROWS.each do |e|
+        yield Row.new(@squares.values_at(*e), e)
+      end
+    end
+    
+    def moves
+      moves = [ ]
+      @squares.each_with_index do |s, i|
+        moves &lt;&lt; Board.index_to_name(i) if s == " "
+      end
+      moves # returns the set of feasible moves [ "b3", "c2", ... ]
+    end
+    
+    def won?
+      each_row do |row|
+        return "X" if row.xs == 3 # "X" wins
+        return "O" if row.os == 3 # "O" wins
+      end
+      return " " if blanks == 0   # tie
+      false
+    end
+    
+    BOARD =&lt;&lt;EOS
+
+  +---+---+---+
+a | 0 | 1 | 2 |
+  +---+---+---+
+b | 3 | 4 | 5 |
+  +---+---+---+
+c | 6 | 7 | 8 |
+  +---+---+---+
+    1   2   3
+
+EOS
+    def to_s
+      BOARD.gsub(/(\d)(?= \|)/) { |i| @squares[i.to_i] }
+    end
+
+  end
+end
+
+module TicTacToe
+  class Player
+    def initialize( mark )
+      @mark = mark # "X" or "O" or " "
+    end
+    
+    attr_reader :mark
+    
+    def move( board )
+      raise NotImplementedError, "Player subclasses must define move()."
+    end
+    
+    def finish( final_board )  
+    end
+  end
+end
+
+module TicTacToe
+  class HumanPlayer &lt; Player
+    def move( board )
+      print board
+      
+      moves = board.moves
+      print "Your move?  (format: b3)  "
+      move = $stdin.gets
+      until moves.include?(move.chomp.downcase)
+        print "Invalid move.  Try again.  "
+        move = $stdin.gets
+      end
+      move.chomp
+    end
+    
+    def finish( final_board )
+      print final_board
+      
+      if final_board.won? == @mark
+        print "Congratulations, you win.\n\n"
+      elsif final_board.won? == " "
+        print "Tie game.\n\n"
+      else
+        print "You lost tic-tac-toe?!\n\n"
+      end
+    end
+    
+  end
+end
+
+module TicTacToe
+  class DumbPlayer &lt; Player
+    def move( board )
+      moves = board.moves
+      moves[rand(moves.size)]
+    end
+  end
+  
+  class SmartPlayer &lt; Player
+    def move( board )
+      moves = board.moves
+      
+      # If I have a win, take it.  If he is threatening to win, stop it.
+      board.each_row do |row|
+        if row.blanks == 1 and (row.xs == 2 or row.os == 2)
+          (0..2).each do |e|
+            return row.to_board_name(e) if row[e] == " "
+          end
+        end
+      end
+
+      # Take the center if open.
+      return "b2" if moves.include? "b2"
+
+      # Defend opposite corners.
+      if board[0] != @mark and board[0] != " " and board[8] == " "
+        return "c3"
+      elsif board[8] != @mark and board[8] != " " and board[0] == " "
+        return "a1"
+      elsif board[2] != @mark and board[2] != " " and board[6] == " "
+        return "c1"
+      elsif board[6] != @mark and board[6] != " " and board[2] == " "
+        return "a3"
+      end
+      
+      # Defend against the special case XOX on a diagonal.
+      if board.xs == 2 and board.os == 1 and board[4] == "O" and
+         (board[0] == "X" and board[8] == "X") or
+         (board[2] == "X" and board[6] == "X")
+        return %w{a2 b1 b3 c2}[rand(4)]
+      end
+      
+      # Or make a random move.
+      moves[rand(moves.size)]
+    end
+  end
+end
+
+module TicTacToe
+  class Game
+    def initialize( player1, player2, random = true )
+      if random and rand(2) == 1
+        @x_player = player2.new("X")
+        @o_player = player1.new("O")
+      else
+        @x_player = player1.new("X")
+        @o_player = player2.new("O")
+      end
+      
+      @board = Board.new([" "] * 9)
+    end
+    
+    attr_reader :x_player, :o_player
+    
+    def play
+      until @board.won?
+        @board[@x_player.move(@board)] = @x_player.mark
+        break if @board.won?
+        
+        @board[@o_player.move(@board)] = @o_player.mark
+      end
+      
+      @o_player.finish @board
+      @x_player.finish @board
+    end
+    
+  end
+end
+
+if __FILE__ == $0
+  if ARGV.size &gt; 0 and ARGV[0] == "-d"
+    game = TicTacToe::Game.new TicTacToe::HumanPlayer,
+                   TicTacToe::DumbPlayer
+  else
+    game = TicTacToe::Game.new TicTacToe::HumanPlayer,
+                   TicTacToe::SmartPlayer
+  end
+  game.play
+end
 </PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html7027"
-  HREF="node238.html">Antepasados y Módulos</A>
-<UL>
-<LI><A NAME="tex2html7028"
-  HREF="node238.html#SECTION02811100000000000000">El método <TT>extend</TT>
-de la clase <TT>Object</TT></A>
-<LI><A NAME="tex2html7029"
-  HREF="node238.html#SECTION02811200000000000000">El Método <TT>nesting</TT>
-de la clase <TT>Module</TT></A>
-</UL>
-<BR>
-<LI><A NAME="tex2html7030"
-  HREF="node239.html">Definiendo Clases y Módulos</A>
-<UL>
-<LI><A NAME="tex2html7031"
-  HREF="node239.html#SECTION02812100000000000000"><TT>Class</TT>.new, <TT>Module</TT>.new, <TT>define_method</TT>
-y Ambitos</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

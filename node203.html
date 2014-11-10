@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Delegación</TITLE>
-<META NAME="description" CONTENT="Delegación">
+<TITLE>Herencia y Constantes</TITLE>
+<META NAME="description" CONTENT="Herencia y Constantes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node204.html">
 <LINK REL="previous" HREF="node202.html">
-<LINK REL="up" HREF="node194.html">
+<LINK REL="up" HREF="node195.html">
 <LINK REL="next" HREF="node204.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6442"
+<A NAME="tex2html6492"
   HREF="node204.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6436"
-  HREF="node194.html">
+<A NAME="tex2html6486"
+  HREF="node195.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6432"
+<A NAME="tex2html6480"
   HREF="node202.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6438"
-  HREF="node798.html">
+<A NAME="tex2html6488"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6440"
-  HREF="node801.html">
+<A NAME="tex2html6490"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,204 +92,98 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6443"
-  HREF="node204.html">Creación e Inicialización de</A>
-<B> Subir:</B> <A NAME="tex2html6437"
-  HREF="node194.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6433"
-  HREF="node202.html">Herencia y Constantes</A>
- &nbsp; <B>  <A NAME="tex2html6439"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6441"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6493"
+  HREF="node204.html">Averiguando los Descendientes de</A>
+<B> Subir:</B> <A NAME="tex2html6487"
+  HREF="node195.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6481"
+  HREF="node202.html">Herencia y Variables de</A>
+ &nbsp; <B>  <A NAME="tex2html6489"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6491"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html6444"
-  HREF="node203.html#SECTION02739010000000000000">Véase</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02739000000000000000">
-Delegación</A>
+<H2><A NAME="SECTION02738000000000000000"></A>
+<A NAME="subsection:herenciayconstantes"></A>
+<BR>
+Herencia y Constantes
 </H2>
 
 <P>
-La delegación es un patrón de diseño que consiste en que ciertas tareas, en vez de ser realizadas por el objeto
-son delegadas en ciertos objetos asistentes.
-
-<P>
-Una forma de delegar en Ruby consiste en que la clase sea una subclase de <code>DelegateClass</code>,
-a la que se le pasa el nombre de la clase en la que se delega como parámetro (<code>Flintstone</code> en el ejemplo).
-<PRE>
-class Fred &lt; DelegateClass(Flintstone)
-  def initialize
-    # ...
-    super(Flintstone.new(...))
-  end
-  # ...
- end
-</PRE>
-Luego, en el <code>initialize</code> llamamos al de la superclase, pasandole como argumento el objeto en el que se delega.
-
-<P>
-Por ejemplo, podríamos reescribir la práctica de los conjuntos delegando en la clase <code>Array</code> los métodos <code>length</code>
-e <code>include?</code>:
+Las constantes son heredadas y pueden ser sobredominadas en la misma forma que los métodos.
 
 <P>
 <PRE>
-~/rubytesting/sets$ cat -n setsdelegate.rb 
-     1  require 'delegate'
-     2  class Set2 &lt; DelegateClass(Array)
-     3  
-     4    attr_accessor :sep
-     5    attr_reader :a
-     6    protected :a
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n  InheritanceAndConstants.rb 
+     1  class Point
+     2    def initialize(x,y)
+     3      @x,@y = x, y
+     4    end
+     5  
+     6    ORIGIN = Point.new(0,0)   
      7  
-     8    def initialize(a)
-     9      @sep = ', '
-    10      @a = a.uniq.sort
-    11      super(@a)
+     8    def to_s;  "#@x #@y" end
+     9  
+    10    def chuchu
+    11      puts ORIGIN
     12    end
-    13  
-    14    def to_s
-    15      @a.join(@sep)
-    16    end
-    17  
-    18    # delegated
-    19    #def length 
-    20    #  @a.length
-    21    #end
-    22  
-    23    alias cardinal length
-    24  
-    25    # delegated
-    26    #def include?(x)
-    27    #  @a.include? x
-    28    #end
-    29  
-    30  end
-    31  
-    32  if __FILE__  == $0
-    33    x = Set2.new [1, 2, 3, 3, 4]
-    34    puts "x = #{x}"
-    35    puts "x.length = #{x.length}"              # x.length = 4 
-    36    puts "x.cardinal = #{x.cardinal}"          # x.cardinal = 4
-    37  
-    38    puts "x includes 2 = #{x.include? 2}"      # x includes 2 = true
-    39    puts "x includes 8 = #{x.include? 8}"      # x includes 8 = false
-    40  end
+    13  end
+    14  
+    15  class Point3D &lt; Point
+    16    def initialize(x, y, z)
+    17      super(x, y); @z = z
+    18    end
+    19    def to_s; super+" #@z" end
+    20  
+    21    puts ORIGIN                  # 0 0
+    22    ORIGIN = Point3D.new(0, 0, 0)
+    23    puts ORIGIN                  # 0 0 0
+    24    puts Point::ORIGIN           # 0 0
+    25  
+    26  end
+    27  
+    28  x = Point3D.new(1, 2, 3)
+    29  x.chuchu                       # 0 0
 </PRE>
-En realidad <code>DelegateClass(Array)</code> es una llamada al método <code>DelegateClass</code>
-del package <A NAME="tex2html405"
-  HREF="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/delegate/rdoc/"><TT>delegate</TT></A>. Esta llamada crea y retorna una nueva clase, la cual define un <code>method_missing</code> que redirecciona las llamadas al objeto en el que se 
-delega.
-<PRE>
-~/rubytesting/sets$ ruby setsdelegate.rb 
-x = 1, 2, 3, 4
-x.length = 4
-x.cardinal = 4
-x includes 2 = true
-x includes 8 = false
-</PRE>
-
-<P>
-Otra forma de delegar es usar el método <code>delegate</code> de <code>Rails</code>.
-Podemos instalar <code>rails</code> usando <code>gem</code>:
-<PRE>
-~$ sudo gem install rails
-Password:
-Successfully installed rails-3.1.1
-1 gem installed
-Installing ri documentation for rails-3.1.1...
-file 'lib' not found
-Installing RDoc documentation for rails-3.1.1...
-file 'lib' not found
-~$
-</PRE>
-
-<P>
-El método <code>delegate</code> recibe la lista de nombres de los métodos (especificados como
-símbolos o strings) a delegar
-y el nombre del objeto atributo en el que se delega, especificado mediante
-la clave <code>:to</code>.
+Obsérvese como la llamada al método <code>chuchu</code>
+de la línea 29  muestra <code>Point::ORIGIN</code> y no
+<code>Point3D::ORIGIN</code>:
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n delegation2.rb 
-   1  require "rails"
-   2  module I
-   3    def f
-   4      puts "#{self.class}: doing f()"
-   5    end
-   6   
-   7    def g
-   8      puts "#{self.class}: doing g()"
-   9    end
-  10  end
-  11   
-  13  class A
-  14    include I
-  15  end
-  16   
-  18  class B
-  19    include I
-  20  end
-  22   
-  23  class C
-  24    attr_accessor :i
-  25    delegate :f, :g, :to =&gt; :i
-  26   
-  27    def initialize(klass = A)
-  28      self.i = klass.new
-  29    end
-  30  end
-  32   
-  33  c = C.new
-  34  c.f         # output: A: doing f()
-  35  c.g         # output: A: doing g()
-  36  c = C.new(B)
-  37  c.f         # output: B: doing f()
-  38  c.g         # output: B: doing g()
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby InheritanceAndConstants.rb 
+0 0                 # linea 21
+0 0 0               #       23
+0 0                 #       24
+0 0                 #       29
 </PRE>
-
-<P>
-
-<H4><A NAME="SECTION02739010000000000000">
-Véase</A>
-</H4>
-  
-
-<OL>
-<LI><A NAME="tex2html406"
-  HREF="http://gdakram.com/past/2010/12/2/multiple_ways_in_implementing_delegation_pattern_in_ruby/">Multiple ways in implementing delegation pattern in ruby DEC 2010 by shahrier akram gdakram</A>
-</LI>
-</OL>
+<SPAN  CLASS="textbf">La diferencia entre constantes y métodos es que las constantes se buscan en el ámbito 
+léxico del lugar en el que son usadas antes de mirar en la jerarquía de herencia</SPAN>.
+Esto significa que si <code>Point3D</code> hereda de 
+<code>Point</code> métodos que usan la constante <code>ORIGIN</code>, la conducta de dichos métodos no cambia 
+cuando <code>Point3D</code> define su propia constante <code>ORIGIN</code>.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6442"
+<A NAME="tex2html6492"
   HREF="node204.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6436"
-  HREF="node194.html">
+<A NAME="tex2html6486"
+  HREF="node195.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6432"
+<A NAME="tex2html6480"
   HREF="node202.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6438"
-  HREF="node798.html">
+<A NAME="tex2html6488"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6440"
-  HREF="node801.html">
+<A NAME="tex2html6490"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -339,20 +234,20 @@ Véase</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6443"
-  HREF="node204.html">Creación e Inicialización de</A>
-<B> Subir:</B> <A NAME="tex2html6437"
-  HREF="node194.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6433"
-  HREF="node202.html">Herencia y Constantes</A>
- &nbsp; <B>  <A NAME="tex2html6439"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6441"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6493"
+  HREF="node204.html">Averiguando los Descendientes de</A>
+<B> Subir:</B> <A NAME="tex2html6487"
+  HREF="node195.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6481"
+  HREF="node202.html">Herencia y Variables de</A>
+ &nbsp; <B>  <A NAME="tex2html6489"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6491"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

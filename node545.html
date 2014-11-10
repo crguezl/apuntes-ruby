@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Modulos</TITLE>
-<META NAME="description" CONTENT="Modulos">
+<TITLE>Usando REPL via un socket TCP</TITLE>
+<META NAME="description" CONTENT="Usando REPL via un socket TCP">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node554.html">
+<LINK REL="next" HREF="node546.html">
 <LINK REL="previous" HREF="node544.html">
-<LINK REL="up" HREF="node537.html">
+<LINK REL="up" HREF="node541.html">
 <LINK REL="next" HREF="node546.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12393"
+<A NAME="tex2html12492"
   HREF="node546.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12387"
-  HREF="node537.html">
+<A NAME="tex2html12486"
+  HREF="node541.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12381"
+<A NAME="tex2html12480"
   HREF="node544.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12389"
-  HREF="node798.html">
+<A NAME="tex2html12488"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12391"
-  HREF="node801.html">
+<A NAME="tex2html12490"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,61 +92,63 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12394"
-  HREF="node546.html">Introducción</A>
-<B> Subir:</B> <A NAME="tex2html12388"
-  HREF="node537.html">JavaScript en el Lado</A>
-<B> Anterior:</B> <A NAME="tex2html12382"
-  HREF="node544.html">Debugger</A>
- &nbsp; <B>  <A NAME="tex2html12390"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12392"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12493"
+  HREF="node546.html">Referencias sobre REPL</A>
+<B> Subir:</B> <A NAME="tex2html12487"
+  HREF="node541.html">JavaScript en el Lado</A>
+<B> Anterior:</B> <A NAME="tex2html12481"
+  HREF="node544.html">Usando REPL desde un</A>
+ &nbsp; <B>  <A NAME="tex2html12489"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12491"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04580000000000000000">
-Modulos</A>
+<H1><A NAME="SECTION04540000000000000000">
+Usando REPL via un socket TCP</A>
 </H1>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+[~/Dropbox/src/javascript/node.js/repl(master)]$ cat repl_server.js 
+var net = require("net"),
+    repl = require("repl");
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html12395"
-  HREF="node546.html">Introducción</A>
-<LI><A NAME="tex2html12396"
-  HREF="node547.html">Ciclos</A>
-<LI><A NAME="tex2html12397"
-  HREF="node548.html">Especificación de Ficheros Conteniendo Módulos</A>
-<LI><A NAME="tex2html12398"
-  HREF="node549.html">Carga desde Carpetas <TT>node_modules</TT></A>
-<LI><A NAME="tex2html12399"
-  HREF="node550.html">Las Carpetas Usadas Como Módulos</A>
-<LI><A NAME="tex2html12400"
-  HREF="node551.html">Caching</A>
-<LI><A NAME="tex2html12401"
-  HREF="node552.html">El Objeto <TT>module</TT> y <TT>module.exports</TT></A>
-<LI><A NAME="tex2html12402"
-  HREF="node553.html">Algoritmo de Búsqueda Ejecutado por <TT>require</TT></A>
-<UL>
-<LI><A NAME="tex2html12403"
-  HREF="node553.html#SECTION04588010000000000000">require(X) from module at path Y</A>
-<LI><A NAME="tex2html12404"
-  HREF="node553.html#SECTION04588020000000000000">LOAD_AS_FILE(X)</A>
-<LI><A NAME="tex2html12405"
-  HREF="node553.html#SECTION04588030000000000000">LOAD_AS_DIRECTORY(X)</A>
-<LI><A NAME="tex2html12406"
-  HREF="node553.html#SECTION04588040000000000000">LOAD_NODE_MODULES(X, START)</A>
-<LI><A NAME="tex2html12407"
-  HREF="node553.html#SECTION04588050000000000000">NODE_MODULES_PATHS(START)</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
+connections = 0;
+
+net.createServer(function (socket) {
+  connections += 1;
+  repl.start({
+    prompt: "node via TCP socket&gt; ",
+    input: socket,
+    output: socket
+  }).on('exit', function() {
+    socket.end();
+  });
+}).listen(5001);
+
+[~/Dropbox/src/javascript/node.js/repl(master)]$ node repl_server.js
+</PRE>
+
+<P>
+Podemos ahora usar <A NAME="23014"></A><SPAN  CLASS="textbf">netcat</SPAN> para comunicar con el servidor:
+<PRE>
+[~/Dropbox/src/javascript/node.js/hector_correa_introduction_to_node(master)]$ nc -v localhost 5001
+nc: connect to localhost port 5001 (tcp) failed: Connection refused
+Connection to localhost 5001 port [tcp/commplex-link] succeeded!
+node via TCP socket&gt; a = 2+3
+5
+node via TCP socket&gt; a
+5
+node via TCP socket&gt; .exit
+[~/Dropbox/src/javascript/node.js/hector_correa_introduction_to_node(master)]$
+</PRE>
+
+<P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

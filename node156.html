@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Repaso</TITLE>
-<META NAME="description" CONTENT="Repaso">
+<TITLE>Clausuras y Bindings</TITLE>
+<META NAME="description" CONTENT="Clausuras y Bindings">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node157.html">
-<LINK REL="previous" HREF="node153.html">
-<LINK REL="up" HREF="node128.html">
+<LINK REL="previous" HREF="node155.html">
+<LINK REL="up" HREF="node154.html">
 <LINK REL="next" HREF="node157.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5638"
+<A NAME="tex2html5670"
   HREF="node157.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5632"
-  HREF="node128.html">
+<A NAME="tex2html5664"
+  HREF="node154.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5626"
+<A NAME="tex2html5660"
   HREF="node155.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5634"
-  HREF="node798.html">
+<A NAME="tex2html5666"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5636"
-  HREF="node801.html">
+<A NAME="tex2html5668"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,96 +91,115 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5639"
-  HREF="node157.html">Objetos Method</A>
-<B> Subir:</B> <A NAME="tex2html5633"
-  HREF="node128.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5627"
-  HREF="node155.html">Clausuras y Bindings</A>
- &nbsp; <B>  <A NAME="tex2html5635"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5637"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5671"
+  HREF="node157.html">Repaso</A>
+<B> Subir:</B> <A NAME="tex2html5665"
+  HREF="node154.html">Clausuras</A>
+<B> Anterior:</B> <A NAME="tex2html5661"
+  HREF="node155.html">Clausuras y Variables Compartidas</A>
+ &nbsp; <B>  <A NAME="tex2html5667"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5669"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H1><A NAME="SECTION02670000000000000000">
-Repaso</A>
-</H1>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html5672"
+  HREF="node156.html#SECTION02662010000000000000">Véase</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02662000000000000000"></A>
+<A NAME="subsection:clausurasybindings"></A>
+<BR>
+Clausuras y Bindings
+</H2>
+La clase <A NAME="tex2html284"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> define un método denominado <code>binding</code>.
+Cuando se llama este método en un proc o en una lambda retorna un objeto
+<A NAME="tex2html285"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> que representa las ligaduras en efecto para esa clausura.
+
+<P>
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=397>Los <A NAME="6351"></A><SPAN  CLASS="textit">bindings</SPAN> conllevan mas que variables: <SPAN  CLASS="textit">guardan toda la
+información necesaria para poder ejecutar el método incluyendo el
+valor de</SPAN> <code>self</code> <SPAN  CLASS="textit">y - si existe - el bloque que será
+ejecutado con</SPAN>
+<code>yield</code></TD>
+</TR>
+</TABLE>
+
+<P>
+<PRE>
+# Return a lambda that retains or "closes over" the argument n
+def multiplier(n) 
+  lambda {|data| data.collect{|x| x*n } }
+end
+doubler = multiplier(2)     # Get a lambda that knows how to double
+puts doubler.call([1,2,3])  # Prints 2,4,6
+</PRE>
+
+<P>
+El Módulo <A NAME="tex2html286"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> proporciona la función global <A NAME="6356"></A><A NAME="tex2html287"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
+que admite como segundo argumento un objeto <A NAME="tex2html288"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> que provee el 
+contexto para evaluar la cadena de código Ruby:
+<PRE>
+eval("n=3", doubler.binding) # Or doubler.binding.eval("n=3") in Ruby 1.9
+puts doubler.call([1,2,3])   # Now this prints 3,6,9!
+</PRE>
+Como atajo, el método <A NAME="6363"></A><A NAME="tex2html289"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-eval"><TT>eval</TT></A>
+nos permite pasar directamente un objeto <A NAME="tex2html290"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>
+en vez de pasar el  <A NAME="tex2html291"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> del objeto <A NAME="tex2html292"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>:
+<PRE>
+eval("n=3", doubler)
+</PRE>
+
+<P>
+El método <A NAME="6376"></A><A NAME="tex2html293"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html#method-i-binding"><TT>binding</TT></A>
+de <A NAME="tex2html294"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A> retorna un objeto <A NAME="tex2html295"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> que representa 
+los bindings en efecto en el punto de la llamada.
+
+<P>
+<PRE>
+[~/Chapter6MethodsProcsLambdasAndClosures]$ cat binding.rb 
+def tutu(p)
+  x = 4
+  x = 2*p
+  return [p, binding]
+end
+p, b = tutu(8)
+p eval("p", b) #  8  
+p eval("x", b) # 16
+</PRE>
 
 <P>
 
+<H4><A NAME="SECTION02662010000000000000">
+Véase</A>
+</H4>
+  
+
 <OL>
-<LI>¿Qué es <A NAME="tex2html295"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>?
-</LI>
-<LI>¿Que queda en <code>z</code>?
-<PRE>
-z  = -&gt;(x){ x*x }[4]
-</PRE>
-</LI>
-<LI>¿Qué valor contiene <code>@fn</code> al final de la ejecución?
-<PRE>
-  def tutu(p)
-    @fn = 3; p[]
-  end
-  fn = -&gt; {@fn = 88 }
-  tutu(fn)
-  fn[]
-</PRE>
-</LI>
-<LI>¿Cuál es la salida?
-<PRE>
-class Array
-  def each!(code)
-    self.each_with_index do |n,i|
-      self[i] = code[n]
-    end
-  end
-end
-puts [1,2,3].each!(lambda { |n|  n+1 })
-</PRE>
-</LI>
-<LI>¿Cuál es la salida?
-<PRE>
-[15] pry(main)&gt; { 2+3 }
-</PRE>
-</LI>
-<LI>¿Cuál es la salida?
-<PRE>
-def tutu
-  z = proc { return }
-  z.call
-  puts "In a_method"
-end
-tutu()
-</PRE>
-Véase 
-<A HREF="node149.html#subsubsection:returnenbloques">13.5.5</A>
-</LI>
-<LI>¿Cuál es la salida?
-<PRE>
-def tutu
-  z = lambda { return }
-  z.call
-  puts "In a_method"
-end
-tutu()
-</PRE>
-</LI>
-<LI>¿Qué es un iterador?
-</LI>
-<LI>¿Qué valor contiene la variable <code>v</code> definida en la línea 1 al final del programa?
-<PRE>
-  v = 34 # linea 1 
-  def tutu
-    yield 3.14159
-  end
-  tutu { |v| puts v }
-</PRE>
-</LI>
-<LI>¿Qué es un bloque?
+<LI><A NAME="tex2html296"
+  HREF="http://youtu.be/VBC-G6hahWA">An Introduction to Procs, Lambdas and Closures in Ruby</A>
+(CooperPress) (YouTube)
 </LI>
 </OL>
 
@@ -189,20 +207,20 @@ tutu()
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5638"
+<A NAME="tex2html5670"
   HREF="node157.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5632"
-  HREF="node128.html">
+<A NAME="tex2html5664"
+  HREF="node154.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5626"
+<A NAME="tex2html5660"
   HREF="node155.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5634"
-  HREF="node798.html">
+<A NAME="tex2html5666"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5636"
-  HREF="node801.html">
+<A NAME="tex2html5668"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -253,20 +271,20 @@ tutu()
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5639"
-  HREF="node157.html">Objetos Method</A>
-<B> Subir:</B> <A NAME="tex2html5633"
-  HREF="node128.html">Métodos, Procs, Lambdas y</A>
-<B> Anterior:</B> <A NAME="tex2html5627"
-  HREF="node155.html">Clausuras y Bindings</A>
- &nbsp; <B>  <A NAME="tex2html5635"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5637"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5671"
+  HREF="node157.html">Repaso</A>
+<B> Subir:</B> <A NAME="tex2html5665"
+  HREF="node154.html">Clausuras</A>
+<B> Anterior:</B> <A NAME="tex2html5661"
+  HREF="node155.html">Clausuras y Variables Compartidas</A>
+ &nbsp; <B>  <A NAME="tex2html5667"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5669"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

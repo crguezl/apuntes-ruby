@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Algoritmo de Búsqueda Ejecutado por require</TITLE>
-<META NAME="description" CONTENT="Algoritmo de Búsqueda Ejecutado por require">
+<TITLE>Carga desde Carpetas node_modules</TITLE>
+<META NAME="description" CONTENT="Carga desde Carpetas node_modules">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node554.html">
 <LINK REL="previous" HREF="node552.html">
-<LINK REL="up" HREF="node545.html">
+<LINK REL="up" HREF="node549.html">
 <LINK REL="next" HREF="node554.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12516"
+<A NAME="tex2html12617"
   HREF="node554.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12510"
-  HREF="node545.html">
+<A NAME="tex2html12611"
+  HREF="node549.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12506"
+<A NAME="tex2html12605"
   HREF="node552.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12512"
-  HREF="node798.html">
+<A NAME="tex2html12613"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12514"
-  HREF="node801.html">
+<A NAME="tex2html12615"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,169 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12517"
-  HREF="node554.html">Como Crear tu Propio</A>
-<B> Subir:</B> <A NAME="tex2html12511"
-  HREF="node545.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html12507"
-  HREF="node552.html">El Objeto module y</A>
- &nbsp; <B>  <A NAME="tex2html12513"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12515"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12618"
+  HREF="node554.html">Las Carpetas Usadas Como</A>
+<B> Subir:</B> <A NAME="tex2html12612"
+  HREF="node549.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12606"
+  HREF="node552.html">Especificación de Ficheros Conteniendo</A>
+ &nbsp; <B>  <A NAME="tex2html12614"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12616"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html12518"
-  HREF="node553.html#SECTION04588010000000000000">require(X) from module at path Y</A>
-<LI><A NAME="tex2html12519"
-  HREF="node553.html#SECTION04588020000000000000">LOAD_AS_FILE(X)</A>
-<LI><A NAME="tex2html12520"
-  HREF="node553.html#SECTION04588030000000000000">LOAD_AS_DIRECTORY(X)</A>
-<LI><A NAME="tex2html12521"
-  HREF="node553.html#SECTION04588040000000000000">LOAD_NODE_MODULES(X, START)</A>
-<LI><A NAME="tex2html12522"
-  HREF="node553.html#SECTION04588050000000000000">NODE_MODULES_PATHS(START)</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION04588000000000000000">
-Algoritmo de Búsqueda Ejecutado por <TT>require</TT></A>
+<H2><A NAME="SECTION04584000000000000000">
+Carga desde Carpetas <TT>node_modules</TT></A>
 </H2>
 
 <P>
 
-<H4><A NAME="SECTION04588010000000000000">
-require(X) from module at path Y</A>
-</H4>
-  
-
 <OL>
-<LI>If X is a core module,
+<LI>If the module identifier passed to <code>require()</code> is not a native module,
+and does not begin with <code>'/'</code>, <code>'../'</code>, or <code>'./'</code>, then node starts at the
+parent directory of the current module, and adds <code>/node_mo1dules</code>, and
+attempts to load the module from that location.
 
-<OL>
-<LI>return the core module
+<P>
 </LI>
-<LI>STOP
-</LI>
-</OL>
-</LI>
-<LI>If X begins with './' or '/' or '../'
-
-<OL>
-<LI><code>LOAD_AS_FILE(Y + X)</code>
-</LI>
-<LI><code>LOAD_AS_DIRECTORY(Y + X)</code>
-</LI>
-</OL>
-</LI>
-<LI><code>LOAD_NODE_MODULES(X, dirname(Y))</code>
-</LI>
-<LI>THROW "not found"
+<LI>If it is not found there, then it moves to the parent directory, and so
+on, until the root of the tree is reached.
 </LI>
 </OL>
 
 <P>
-
-<H4><A NAME="SECTION04588020000000000000">
-LOAD_AS_FILE(X)</A>
-</H4>
-  
-
-<OL>
-<LI>If X is a file, load X as JavaScript text.  STOP
-</LI>
-<LI>If X.js is a file, load X.js as JavaScript text.  STOP
-</LI>
-<LI>If X.node is a file, load X.node as binary addon.  STOP
-</LI>
-</OL>
+For example, if the file at <code>'/home/ry/projects/foo.js'</code> called
+require(<code>'bar.js'</code>), then node would look in the following locations,
+in this order:
 
 <P>
-
-<H4><A NAME="SECTION04588030000000000000">
-LOAD_AS_DIRECTORY(X)</A>
-</H4>
-  
-
-<OL>
-<LI>If X/package.json is a file,
-   a. Parse X/package.json, and look for "main" field.
-   b. let M = X + (json main field)
-   c. <code>LOAD_AS_FILE(M)</code>
-</LI>
-<LI>If X/index.js is a file, load X/index.js as JavaScript text.  STOP
-</LI>
-<LI>If X/index.node is a file, load X/index.node as binary addon.  STOP
-</LI>
-</OL>
+<PRE>
+/home/ry/projects/node_modules/bar.js
+/home/ry/node_modules/bar.js
+/home/node_modules/bar.js
+/node_modules/bar.js
+</PRE>
 
 <P>
-
-<H4><A NAME="SECTION04588040000000000000">
-LOAD_NODE_MODULES(X, START)</A>
-</H4>
-  
-
-<OL>
-<LI>let <code>DIRS=NODE_MODULES_PATHS(START)</code>
-</LI>
-<LI>for each DIR in DIRS:
-   a. <code>LOAD_AS_FILE(DIR/X)</code>
-   b. <code>LOAD_AS_DIRECTORY(DIR/X)</code>
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION04588050000000000000">
-NODE_MODULES_PATHS(START)</A>
-</H4>
-  
-
-<OL>
-<LI>let PARTS = path split(START)
-</LI>
-<LI>let ROOT = index of first instance of "node_modules" in PARTS, or 0
-</LI>
-<LI>let I = count of PARTS - 1
-</LI>
-<LI>let DIRS = []
-</LI>
-<LI>while I &gt; ROOT,
-   a. if PARTS[I] = "node_modules" CONTINUE
-   c. DIR = path join(PARTS[0 .. I] + "node_modules")
-   b. DIRS = DIRS + DIR
-   c. let I = I - 1
-</LI>
-<LI>return DIRS
-</LI>
-</OL>
+This allows programs to localize their dependencies, so that they do not clash.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12516"
+<A NAME="tex2html12617"
   HREF="node554.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12510"
-  HREF="node545.html">
+<A NAME="tex2html12611"
+  HREF="node549.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12506"
+<A NAME="tex2html12605"
   HREF="node552.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12512"
-  HREF="node798.html">
+<A NAME="tex2html12613"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12514"
-  HREF="node801.html">
+<A NAME="tex2html12615"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -304,20 +209,20 @@ NODE_MODULES_PATHS(START)</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12517"
-  HREF="node554.html">Como Crear tu Propio</A>
-<B> Subir:</B> <A NAME="tex2html12511"
-  HREF="node545.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html12507"
-  HREF="node552.html">El Objeto module y</A>
- &nbsp; <B>  <A NAME="tex2html12513"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12515"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12618"
+  HREF="node554.html">Las Carpetas Usadas Como</A>
+<B> Subir:</B> <A NAME="tex2html12612"
+  HREF="node549.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html12606"
+  HREF="node552.html">Especificación de Ficheros Conteniendo</A>
+ &nbsp; <B>  <A NAME="tex2html12614"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12616"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>new, allocate e initialize</TITLE>
-<META NAME="description" CONTENT="new, allocate e initialize">
+<TITLE>Delegación</TITLE>
+<META NAME="description" CONTENT="Delegación">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node206.html">
 <LINK REL="previous" HREF="node204.html">
-<LINK REL="up" HREF="node204.html">
+<LINK REL="up" HREF="node195.html">
 <LINK REL="next" HREF="node206.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6478"
+<A NAME="tex2html6518"
   HREF="node206.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6472"
-  HREF="node204.html">
+<A NAME="tex2html6512"
+  HREF="node195.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6466"
+<A NAME="tex2html6508"
   HREF="node204.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6474"
-  HREF="node798.html">
+<A NAME="tex2html6514"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6476"
-  HREF="node801.html">
+<A NAME="tex2html6516"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,101 +91,242 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6479"
-  HREF="node206.html">Métodos Factoría</A>
-<B> Subir:</B> <A NAME="tex2html6473"
-  HREF="node204.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html6467"
-  HREF="node204.html">Creación e Inicialización de</A>
- &nbsp; <B>  <A NAME="tex2html6475"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6477"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6519"
+  HREF="node206.html">Creación e Inicialización de</A>
+<B> Subir:</B> <A NAME="tex2html6513"
+  HREF="node195.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6509"
+  HREF="node204.html">Averiguando los Descendientes de</A>
+ &nbsp; <B>  <A NAME="tex2html6515"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6517"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02741000000000000000">
-new, allocate e initialize</A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html6520"
+  HREF="node205.html#SECTION027310010000000000000">Delegación usando DelegateClass</A>
+<LI><A NAME="tex2html6521"
+  HREF="node205.html#SECTION027310020000000000000">Delegación usando Rails</A>
+<LI><A NAME="tex2html6522"
+  HREF="node205.html#SECTION027310030000000000000">Véase</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION027310000000000000000"></A>
+<A NAME="subsection:delegacion"></A>
+<BR>
+Delegación
 </H2>
-Todas las clases heredan el método de clase <code>new</code>.
-Este método tiene dos tareas: 
+
+<P>
+La delegación es un patrón de diseño que consiste en que ciertas tareas, en vez de ser realizadas por el objeto
+son delegadas en ciertos objetos asistentes.
 
 <P>
 
-<OL>
-<LI>debe alojar al objeto y 
-</LI>
-<LI>debe inicializarlo.
-</LI>
-</OL>
-Para estas tareas, delega en los métodos.
-Este es el seudocódigo de <code>new</code>: 
-<code>allocate</code> e <code>initialize</code>:
+<H4><A NAME="SECTION027310010000000000000">
+Delegación usando DelegateClass</A>
+</H4>
+  
+
+Una forma de delegar en Ruby consiste en que la clase sea una subclase de <code>DelegateClass</code>,
+a la que se le pasa el nombre de la clase en la que se delega como parámetro (<code>Flintstone</code> en el ejemplo).
 <PRE>
-def new(* args)
-  o = self.allocate       # crear el objeto
-  o.initialize(* args)    # inicializarlo
-  o                       # retornar el objeto
-end
+class Fred &lt; DelegateClass(Flintstone)
+  def initialize
+    # ...
+    super(Flintstone.new(...))
+  end
+  # ...
+ end
+</PRE>
+Luego, en el <code>initialize</code> llamamos al de la superclase, pasandole como argumento el objeto en el que se delega.
+
+<P>
+Por ejemplo, podríamos reescribir la 
+práctica de los conjuntos 
+en la sección <A HREF="node212.html#practica:conjuntos">14.6</A>
+delegando en la clase <code>Array</code> los métodos <code>length</code>
+e <code>include?</code> (Puede encontar este fichero en
+<A NAME="tex2html410"
+  HREF="https://gist.github.com/crguezl/6455bb73968254cf9cd9">https://gist.github.com/crguezl/</A>):
+
+<P>
+<PRE>
+~/rubytesting/sets$ cat -n setsdelegate.rb 
+     1  require 'delegate'
+     2  class Set2 &lt; DelegateClass(Array)
+     3  
+     4    attr_accessor :sep
+     5    attr_reader :a
+     6    protected :a
+     7  
+     8    def initialize(a)
+     9      @sep = ', '
+    10      @a = a.uniq.sort
+    11      super(@a)
+    12    end
+    13  
+    14    def to_s
+    15      @a.join(@sep)
+    16    end
+    17  
+    18    # delegated
+    19    #def length 
+    20    #  @a.length
+    21    #end
+    22  
+    23    alias cardinal length
+    24  
+    25    # delegated
+    26    #def include?(x)
+    27    #  @a.include? x
+    28    #end
+    29  
+    30  end
+    31  
+    32  if __FILE__  == $0
+    33    x = Set2.new [1, 2, 3, 3, 4]
+    34    puts "x = #{x}"
+    35    puts "x.length = #{x.length}"              # x.length = 4 
+    36    puts "x.cardinal = #{x.cardinal}"          # x.cardinal = 4
+    37  
+    38    puts "x includes 2 = #{x.include? 2}"      # x includes 2 = true
+    39    puts "x includes 8 = #{x.include? 8}"      # x includes 8 = false
+    40  end
+</PRE>
+En realidad <code>DelegateClass(Array)</code> es una llamada al método <code>DelegateClass</code>
+del package <A NAME="tex2html411"
+  HREF="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/delegate/rdoc/"><TT>delegate</TT></A>. 
+
+<P>
+
+<UL>
+<LI>Esta llamada crea y retorna una nueva clase, la cual define un <code>method_missing</code> 
+</LI>
+<LI>Este  <code>method_missing</code> redirecciona las llamadas al objeto en el que se 
+delega.
+</LI>
+</UL>
+<PRE>
+~/rubytesting/sets$ ruby setsdelegate.rb 
+x = 1, 2, 3, 4
+x.length = 4
+x.cardinal = 4
+x includes 2 = true
+x includes 8 = false
+</PRE>
+
+<P>
+Otra forma de delegar es usar el método <code>delegate</code> de <code>Rails</code>.
+Podemos instalar <code>rails</code> usando <code>gem</code>:
+<PRE>
+~$ sudo gem install rails
+Password:
+Successfully installed rails-3.1.1
+1 gem installed
+Installing ri documentation for rails-3.1.1...
+file 'lib' not found
+Installing RDoc documentation for rails-3.1.1...
+file 'lib' not found
+~$
 </PRE>
 
 <P>
 
-<UL>
-<LI>El método <code>allocate</code> es un método de instancia de la clase <code>Class</code>.
-</LI>
-<LI>Es heredado por todos los objetos clase. 
-</LI>
-<LI>Ruby invoca al
-método directamente.
-No puede ser sobreescrito. 
-</LI>
-</UL>
+<H4><A NAME="SECTION027310020000000000000">
+Delegación usando Rails</A>
+</H4>
+  
+
+<P>
+El método <code>delegate</code> recibe la lista de nombres de los métodos (especificados como
+símbolos o strings) a delegar
+y el nombre del objeto atributo en el que se delega, especificado mediante
+la clave <code>:to</code>.
+Véase 
+<A NAME="tex2html412"
+  HREF="https://gist.github.com/crguezl/6376214ef8daee6cee7b">https://gist.github.com/crguezl/</A>.
+
+<P>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n delegation2.rb 
+   1  require "rails"
+   2  module I
+   3    def f
+   4      puts "#{self.class}: doing f()"
+   5    end
+   6   
+   7    def g
+   8      puts "#{self.class}: doing g()"
+   9    end
+  10  end
+  11   
+  13  class A
+  14    include I
+  15  end
+  16   
+  18  class B
+  19    include I
+  20  end
+  22   
+  23  class C
+  24    attr_accessor :i
+  25    delegate :f, :g, :to =&gt; :i
+  26   
+  27    def initialize(klass = A)
+  28      self.i = klass.new
+  29    end
+  30  end
+  32   
+  33  c = C.new
+  34  c.f         # output: A: doing f()
+  35  c.g         # output: A: doing g()
+  36  c = C.new(B)
+  37  c.f         # output: B: doing f()
+  38  c.g         # output: B: doing g()
+</PRE>
 
 <P>
 
-<UL>
-<LI><code>initialize</code> es un método de instancia y privado
-</LI>
-<LI>La mayor parte de las clases deberían usar <code>super</code>
-para encadenar con el <code>initialize</code> de la superclase.
-</LI>
-<LI>La tarea habitual de <code>initialize</code> es crear e inicializar
-las variables de instancia del objeto, cuyos valores normalmente 
-se derivan de los argumentos pasados a <code>new</code>.
-</LI>
-<LI>El valor retornado por <code>initialize</code> es ignorado.
-</LI>
-<LI>En realidad, <code>Class</code> define dos métodos con nombre <code>new</code>:
+<H4><A NAME="SECTION027310030000000000000">
+Véase</A>
+</H4>
+  
 
-<UL>
-<LI>Uno <code>Class#new</code> es el método de instancia descrito aquí.
+<OL>
+<LI><A NAME="tex2html413"
+  HREF="http://radar.oreilly.com/2014/02/delegation-patterns-in-ruby.html">Delegation patterns in Ruby.
+Reducing object bloat begins with doing less</A>
+by Samuel Mullen 
 </LI>
-<LI>El otro <code>Class::new</code> es un método de clase y se usa para crear nuevas clases.
-</LI>
-</UL>
-</LI>
-</UL>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6478"
+<A NAME="tex2html6518"
   HREF="node206.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6472"
-  HREF="node204.html">
+<A NAME="tex2html6512"
+  HREF="node195.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6466"
+<A NAME="tex2html6508"
   HREF="node204.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6474"
-  HREF="node798.html">
+<A NAME="tex2html6514"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6476"
-  HREF="node801.html">
+<A NAME="tex2html6516"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -237,20 +377,20 @@ se derivan de los argumentos pasados a <code>new</code>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6479"
-  HREF="node206.html">Métodos Factoría</A>
-<B> Subir:</B> <A NAME="tex2html6473"
-  HREF="node204.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html6467"
-  HREF="node204.html">Creación e Inicialización de</A>
- &nbsp; <B>  <A NAME="tex2html6475"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6477"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6519"
+  HREF="node206.html">Creación e Inicialización de</A>
+<B> Subir:</B> <A NAME="tex2html6513"
+  HREF="node195.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6509"
+  HREF="node204.html">Averiguando los Descendientes de</A>
+ &nbsp; <B>  <A NAME="tex2html6515"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6517"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ambito</TITLE>
-<META NAME="description" CONTENT="Ambito">
+<TITLE>Environments</TITLE>
+<META NAME="description" CONTENT="Environments">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node419.html">
 <LINK REL="previous" HREF="node417.html">
-<LINK REL="up" HREF="node386.html">
+<LINK REL="up" HREF="node388.html">
 <LINK REL="next" HREF="node419.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10243"
+<A NAME="tex2html10295"
   HREF="node419.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10237"
-  HREF="node386.html">
+<A NAME="tex2html10289"
+  HREF="node388.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10231"
+<A NAME="tex2html10283"
   HREF="node417.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10239"
-  HREF="node798.html">
+<A NAME="tex2html10291"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10241"
-  HREF="node801.html">
+<A NAME="tex2html10293"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,281 +92,84 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10244"
-  HREF="node419.html">Sinatra Authentication</A>
-<B> Subir:</B> <A NAME="tex2html10238"
-  HREF="node386.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10232"
-  HREF="node417.html">Correo</A>
- &nbsp; <B>  <A NAME="tex2html10240"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10242"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10296"
+  HREF="node419.html">Correo</A>
+<B> Subir:</B> <A NAME="tex2html10290"
+  HREF="node388.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10284"
+  HREF="node417.html">Settings disponibles/Available Settings</A>
+ &nbsp; <B>  <A NAME="tex2html10292"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10294"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033240000000000000000">
-Ambito</A>
+<H1><A NAME="SECTION033220000000000000000">
+Environments</A>
 </H1>
-The scope you are currently in determines what methods and variables are available.
-
-<P>
-
-<H4><A NAME="SECTION033240010000000000000">
-Ámbito de Clase/Class Scope</A>
-</H4>
-  
-
-<P>
 
 <OL>
-<LI>Every Sinatra application corresponds to a subclass of <A NAME="tex2html914"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Base</A>
-</LI>
-<LI>If you are using the top-level DSL (<code>require 'sinatra'</code>), then this class is <A NAME="tex2html915"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/main.rb">Sinatra::Application</A>, otherwise it is the subclass you created explicitly
-</LI>
-<LI>At class level you have methods like <code>get</code> or <code>before</code>, 
-but you cannot access the <code>request</code> or <code>session</code> objects, 
-as there is only a single application class for all requests
-</LI>
-</OL>
+<LI>There are three predefined environments:
+ <TT>development</TT> ,  <TT>production</TT>  and  <TT>test</TT> . 
 
 <P>
-Options created via <code>set</code> are methods at class level:
+</LI>
+<LI>Environments can be set through the <code>RACK_ENV</code> environment variable. 
+
+<P>
+</LI>
+<LI>The default value is <code>development</code>
+</LI>
+<LI>In the <code>development</code> environment all templates are
+reloaded between requests, and special <code>not_found</code> and 
+<code>error</code> handlers
+display stack traces in your browser
+</LI>
+<LI>In the <code>production</code> and <code>test</code> environments, templates are cached by default
+</LI>
+<LI>To run different environments, set the <code>RACK_ENV</code> environment variable:
 
 <P>
 <PRE>
-class MyApp &lt; Sinatra::Base
-  # Hey, I'm in the application scope!
-  set :foo, 42
-  foo # =&gt; 42
+RACK_ENV=production ruby my_app.rb
+</PRE>
+</LI>
+<LI>You can use predefined methods: <code>development?</code>, <code>test?</code> 
+and <code>production?</code> to check the current environment setting:
 
-  get '/foo' do
-    # Hey, I'm no longer in the application scope!
+<P>
+<PRE>
+get '/' do
+  if settings.development?
+    "development!"
+  else
+    "not development!"
   end
 end
 </PRE>
-
-<P>
-You have the application scope binding inside:
-
-<P>
-
-<OL>
-<LI>Your application class body
-</LI>
-<LI>Methods defined by extensions
-</LI>
-<LI>The block passed to <code>helpers</code>
-</LI>
-<LI>Procs/blocks used as value for <code>set</code>
-</LI>
-<LI>The block passed to <code>Sinatra.new</code>
 </LI>
 </OL>
 
 <P>
-You can reach the scope object (the class) like this:
-
-<P>
-
-<OL>
-<LI>Via the object passed to configure blocks (<code>configure { |c| ... }</code>)
-</LI>
-<LI><code>settings</code> from within the request scope
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION033240020000000000000">
-Ámbito de Instancia/Instance Scope</A>
-</H4>
-  
-
-<P>
-For every incoming request, a new instance of your application class is created and all handler blocks run in that scope
-
-<OL>
-<LI>From within this scope you can access the <code>request</code> and <code>session</code> objects or 
-</LI>
-<LI>call rendering methods like <code>erb</code> or <code>haml</code>
-</LI>
-<LI>You can access the application scope from within the <code>request</code> scope via the <code>settings</code> helper:
-</LI>
-</OL>
-
-<P>
-<PRE>
-[~/sinatra/sinatra-scope]$ cat app.rb 
-require 'sinatra'
-
-class MyApp &lt; Sinatra::Base
-  # Hey, I'm in the application scope!
-  get '/define_route/:name' do
-    # Request scope for '/define_route/:name'
-    @value = 42
-    puts "Inside /define_route/:name @value = #{@value}"
-    puts self.class
-
-    settings.get("/#{params[:name]}") do
-      # Request scope for "/#{params[:name]}"
-      puts "@value = &lt;#{@value}&gt;"
-      "Inside defined route #{params[:name]}"
-    end
-
-    "Route #{params[:name]} defined!"
-  end
-  
-  run! if __FILE__ == $0
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION033240030000000000000">
-Ejecución en el servidor</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-scope]$ ruby app.rb 
-== Sinatra/1.4.4 has taken the stage on 4567 for development with backup from Thin
-Thin web server (v1.6.1 codename Death Proof)
-Maximum connections set to 1024
-Listening on localhost:4567, CTRL+C to stop
-Inside /define_route/:name @value = 42
-MyApp
-@value = &lt;&gt;
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION033240040000000000000">
-Ejecución en el cliente. Ruta: /define_route/juan</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-scope]$ curl -v 'http://localhost:4567/define_route/juan'
-* Adding handle: conn: 0x7fbacb004000
-* Adding handle: send: 0
-* Adding handle: recv: 0
-* Curl_addHandleToPipeline: length: 1
-* - Conn 0 (0x7fbacb004000) send_pipe: 1, recv_pipe: 0
-* About to connect() to localhost port 4567 (#0)
-*   Trying 127.0.0.1...
-* Connected to localhost (127.0.0.1) port 4567 (#0)
-&gt; GET /define_route/juan HTTP/1.1
-&gt; User-Agent: curl/7.30.0
-&gt; Host: localhost:4567
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html;charset=utf-8
-&lt; Content-Length: 19
-&lt; X-XSS-Protection: 1; mode=block
-&lt; X-Content-Type-Options: nosniff
-&lt; X-Frame-Options: SAMEORIGIN
-&lt; Connection: keep-alive
-* Server thin 1.6.1 codename Death Proof is not blacklisted
-&lt; Server: thin 1.6.1 codename Death Proof
-&lt; 
-* Connection #0 to host localhost left intact
-Route juan defined!
-[~/sinatra/sinatra-scope]$
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION033240050000000000000">
-Ejecución en el cliente. Ruta: /juan</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-scope]$ curl -v 'http://localhost:4567/juan'
-* Adding handle: conn: 0x7fbdd1800000
-* Adding handle: send: 0
-* Adding handle: recv: 0
-* Curl_addHandleToPipeline: length: 1
-* - Conn 0 (0x7fbdd1800000) send_pipe: 1, recv_pipe: 0
-* About to connect() to localhost port 4567 (#0)
-*   Trying ::1...
-*   Trying 127.0.0.1...
-* Connected to localhost (127.0.0.1) port 4567 (#0)
-&gt; GET /juan HTTP/1.1
-&gt; User-Agent: curl/7.30.0
-&gt; Host: localhost:4567
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html;charset=utf-8
-&lt; Content-Length: 21
-&lt; X-XSS-Protection: 1; mode=block
-&lt; X-Content-Type-Options: nosniff
-&lt; X-Frame-Options: SAMEORIGIN
-&lt; Connection: keep-alive
-* Server thin 1.6.1 codename Death Proof is not blacklisted
-&lt; Server: thin 1.6.1 codename Death Proof
-&lt; 
-* Connection #0 to host localhost left intact
-Inside defined route
-</PRE>
-You have the request scope binding inside:
-
-<P>
-
-<OL>
-<LI><code>get</code>, <code>head</code>, <code>post</code>, <code>put</code>, <code>delete</code>, <code>options</code>, <code>patch</code>, <code>link</code>, and <code>unlink</code> blocks
-</LI>
-<LI><code>before</code> and <code>after</code> filters
-</LI>
-<LI><code>helper</code> methods
-</LI>
-<LI>templates/views
-</LI>
-</OL>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html10245"
-  HREF="node418.html#SECTION033240010000000000000">Ámbito de Clase/Class Scope</A>
-<LI><A NAME="tex2html10246"
-  HREF="node418.html#SECTION033240020000000000000">Ámbito de Instancia/Instance Scope</A>
-<LI><A NAME="tex2html10247"
-  HREF="node418.html#SECTION033240030000000000000">Ejecución en el servidor</A>
-<LI><A NAME="tex2html10248"
-  HREF="node418.html#SECTION033240040000000000000">Ejecución en el cliente. Ruta: /define_route/juan</A>
-<LI><A NAME="tex2html10249"
-  HREF="node418.html#SECTION033240050000000000000">Ejecución en el cliente. Ruta: /juan</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10243"
+<A NAME="tex2html10295"
   HREF="node419.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10237"
-  HREF="node386.html">
+<A NAME="tex2html10289"
+  HREF="node388.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10231"
+<A NAME="tex2html10283"
   HREF="node417.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10239"
-  HREF="node798.html">
+<A NAME="tex2html10291"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10241"
-  HREF="node801.html">
+<A NAME="tex2html10293"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -417,20 +220,20 @@ You have the request scope binding inside:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10244"
-  HREF="node419.html">Sinatra Authentication</A>
-<B> Subir:</B> <A NAME="tex2html10238"
-  HREF="node386.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10232"
-  HREF="node417.html">Correo</A>
- &nbsp; <B>  <A NAME="tex2html10240"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10242"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10296"
+  HREF="node419.html">Correo</A>
+<B> Subir:</B> <A NAME="tex2html10290"
+  HREF="node388.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10284"
+  HREF="node417.html">Settings disponibles/Available Settings</A>
+ &nbsp; <B>  <A NAME="tex2html10292"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10294"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

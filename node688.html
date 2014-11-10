@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Integración Contínua: Travis</TITLE>
-<META NAME="description" CONTENT="Integración Contínua: Travis">
+<TITLE>Declaring dependencies: Runtime vs. development</TITLE>
+<META NAME="description" CONTENT="Declaring dependencies: Runtime vs. development">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node695.html">
-<LINK REL="previous" HREF="node671.html">
-<LINK REL="up" HREF="node592.html">
+<LINK REL="next" HREF="node689.html">
+<LINK REL="previous" HREF="node687.html">
+<LINK REL="up" HREF="node675.html">
 <LINK REL="next" HREF="node689.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14828"
+<A NAME="tex2html14927"
   HREF="node689.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14822"
-  HREF="node592.html">
+<A NAME="tex2html14921"
+  HREF="node675.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14816"
+<A NAME="tex2html14915"
   HREF="node687.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14824"
-  HREF="node798.html">
+<A NAME="tex2html14923"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14826"
-  HREF="node801.html">
+<A NAME="tex2html14925"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,144 +92,97 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14829"
-  HREF="node689.html">Uso de Travis</A>
-<B> Subir:</B> <A NAME="tex2html14823"
-  HREF="node592.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14817"
-  HREF="node687.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html14825"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14827"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14928"
+  HREF="node689.html">Pessimistic version constraint</A>
+<B> Subir:</B> <A NAME="tex2html14922"
+  HREF="node675.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14916"
+  HREF="node687.html">Semantic Versioning</A>
+ &nbsp; <B>  <A NAME="tex2html14924"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14926"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061500000000000000000"></A>
-<A NAME="chapter:travis"></A>
-<BR>
-Integración Contínua: Travis
+<H1><A NAME="SECTION0614130000000000000000">
+Declaring dependencies: Runtime vs. development</A>
 </H1>
 
 <P>
-<A NAME="27723"></A><SPAN  CLASS="textbf">Continuous integration</SPAN> (<A NAME="27725"></A><SPAN  CLASS="textbf">CI</SPAN>) is the practice, in software engineering,
-of merging all developer workspaces with a shared mainline several
-times a day. It was first named and proposed as part of extreme
-programming (<A NAME="27727"></A><SPAN  CLASS="textbf">XP</SPAN>). 
-
-<P>
-Its main aim is to prevent integration problems,
-referred to as "integration hell" in early descriptions of XP. 
-
-<P>
-CI
-can be seen as an intensification of practices of periodic integration
-advocated by earlier published methods of incremental and iterative
-software development. 
+<A NAME="tex2html1593"
+  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A> provides two main types of dependencies: 
+runtime and development. 
 
 <P>
 
 <OL>
-<LI>CI was originally intended to be used in combination with automated
-unit tests written through the practices of test-driven development.
+<LI>Runtime dependencies are what your gem needs to work (such as rails needing activesupport).
 </LI>
-<LI>Initially this was conceived of as running all unit tests and
-verifying they all passed before committing to the mainline. 
-</LI>
-<LI>Later
-elaborations of the concept introduced build servers, which
-automatically run the unit tests periodically or even after every
-commit and report the results to the developers. 
-</LI>
-<LI>In the same vein the practice of <A NAME="27729"></A><SPAN  CLASS="textbf">continuous delivery</SPAN> 
-further extends CI by making sure the software checked in 
-on the mainline is always in a state that can be deployed 
-to users and makes the actual deployment process very rapid.
+<LI>Development dependencies are useful for when someone wants to make modifications to your gem. 
 </LI>
 </OL>
 
 <P>
-<SPAN  CLASS="textbf">The use of build
-servers (not necessarily running unit tests) had already been
-practised by some teams outside the XP community. Now, many
-organisations have adopted CI without adopting all of XP.</SPAN>
+When you specify development dependencies, another developer can run 
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+gem install --dev your_gem
+</PRE>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html14830"
-  HREF="node689.html">Uso de Travis</A>
-<UL>
-<LI><A NAME="tex2html14831"
-  HREF="node689.html#SECTION061510010000000000000">Step one: Sign in</A>
-<LI><A NAME="tex2html14832"
-  HREF="node689.html#SECTION061510020000000000000">Step two: Activate GitHub Service Hook</A>
-<LI><A NAME="tex2html14833"
-  HREF="node689.html#SECTION061510030000000000000">Step three: Add <TT>.travis.yml</TT> file to your repository</A>
-<LI><A NAME="tex2html14834"
-  HREF="node689.html#SECTION061510040000000000000">Validate Your <TT>.travis.yml</TT></A>
-<LI><A NAME="tex2html14835"
-  HREF="node689.html#SECTION061510050000000000000">Default Test Script</A>
-<LI><A NAME="tex2html14836"
-  HREF="node689.html#SECTION061510060000000000000">Testing Against Multiple Versions of Gems</A>
-<LI><A NAME="tex2html14837"
-  HREF="node689.html#SECTION061510070000000000000">Custom Bundler arguments and Gemfile locations</A>
-<LI><A NAME="tex2html14838"
-  HREF="node689.html#SECTION061510080000000000000">Rakefile</A>
-<LI><A NAME="tex2html14839"
-  HREF="node689.html#SECTION061510090000000000000">Ejemplo de Jerarquía</A>
-<LI><A NAME="tex2html14840"
-  HREF="node689.html#SECTION0615100100000000000000">Página de Travis Mostrando los Resultados de unas Pruebas con Rspec</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html14841"
-  HREF="node690.html">Enlaces</A>
-<LI><A NAME="tex2html14842"
-  HREF="node691.html">Notificaciones/Notifications</A>
-<LI><A NAME="tex2html14843"
-  HREF="node692.html">Limites de Timepo/Build Timeouts</A>
-<LI><A NAME="tex2html14844"
-  HREF="node693.html">Databases and other services</A>
-<LI><A NAME="tex2html14845"
-  HREF="node694.html">Travis en la Línea de Comandos</A>
-<UL>
-<LI><A NAME="tex2html14846"
-  HREF="node694.html#SECTION061560010000000000000">The Travis Client</A>
-<LI><A NAME="tex2html14847"
-  HREF="node694.html#SECTION061560020000000000000">login</A>
-<LI><A NAME="tex2html14848"
-  HREF="node694.html#SECTION061560030000000000000">init</A>
-<LI><A NAME="tex2html14849"
-  HREF="node694.html#SECTION061560040000000000000">Ejecutando las pruebas en Travis</A>
-<LI><A NAME="tex2html14850"
-  HREF="node694.html#SECTION061560050000000000000">show</A>
-<LI><A NAME="tex2html14851"
-  HREF="node694.html#SECTION061560060000000000000">logs</A>
-<LI><A NAME="tex2html14852"
-  HREF="node694.html#SECTION061560070000000000000">open</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
+<P>
+and RubyGems will grab both sets of dependencies (runtime and development). 
+
+<P>
+Typical development dependencies include test frameworks (like <code>rspec</code>) and build systems
+(like <code>rake</code>).
+
+<P>
+Setting dependencies in your gemspec is easy. 
+
+<P>
+Just use <code>add_runtime_dependency</code> and <code>add_development_dependency</code>:
+<PRE>
+Gem::Specification.new do |s|
+  s.name = "hola"
+  s.version = "2.0.0"
+  s.add_runtime_dependency "daemons",
+    ["= 1.1.0"]
+  s.add_development_dependency "bourne",
+    ["&gt;= 0"]
+</PRE>
+
+<P>
+Inside the <code>Gemfile</code> we can also specify groups.
+Each  gem  may  specify  membership in one or more groups. 
+Any gem that does not specify membership in any  group  is  placed  in  the
+default group.
+<PRE>
+   gem "rspec", :group =&gt; :test
+   gem "wirble", :groups =&gt; [:development, :test]
+</PRE>
+then we can run <code>bundle install --without development test</code> to omit some groups.
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14828"
+<A NAME="tex2html14927"
   HREF="node689.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14822"
-  HREF="node592.html">
+<A NAME="tex2html14921"
+  HREF="node675.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14816"
+<A NAME="tex2html14915"
   HREF="node687.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14824"
-  HREF="node798.html">
+<A NAME="tex2html14923"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14826"
-  HREF="node801.html">
+<A NAME="tex2html14925"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -280,20 +233,20 @@ organisations have adopted CI without adopting all of XP.</SPAN>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14829"
-  HREF="node689.html">Uso de Travis</A>
-<B> Subir:</B> <A NAME="tex2html14823"
-  HREF="node592.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14817"
-  HREF="node687.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html14825"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14827"
-  HREF="node801.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14928"
+  HREF="node689.html">Pessimistic version constraint</A>
+<B> Subir:</B> <A NAME="tex2html14922"
+  HREF="node675.html">Creando Gemas</A>
+<B> Anterior:</B> <A NAME="tex2html14916"
+  HREF="node687.html">Semantic Versioning</A>
+ &nbsp; <B>  <A NAME="tex2html14924"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14926"
+  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

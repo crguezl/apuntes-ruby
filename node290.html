@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Minitest</TITLE>
-<META NAME="description" CONTENT="Minitest">
+<TITLE>Setup y Teardown</TITLE>
+<META NAME="description" CONTENT="Setup y Teardown">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="previous" HREF="node284.html">
-<LINK REL="up" HREF="node283.html">
+<LINK REL="next" HREF="node291.html">
+<LINK REL="previous" HREF="node289.html">
+<LINK REL="up" HREF="node286.html">
 <LINK REL="next" HREF="node291.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7845"
+<A NAME="tex2html7899"
   HREF="node291.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7839"
-  HREF="node283.html">
+<A NAME="tex2html7893"
+  HREF="node286.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7835"
+<A NAME="tex2html7887"
   HREF="node289.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7841"
-  HREF="node798.html">
+<A NAME="tex2html7895"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7843"
-  HREF="node801.html">
+<A NAME="tex2html7897"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,38 +92,99 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7846"
-  HREF="node291.html">Programación Orientada a Eventos</A>
-<B> Subir:</B> <A NAME="tex2html7840"
-  HREF="node283.html">Pruebas</A>
-<B> Anterior:</B> <A NAME="tex2html7836"
-  HREF="node289.html">Veáse</A>
- &nbsp; <B>  <A NAME="tex2html7842"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7844"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7900"
+  HREF="node291.html">Veáse</A>
+<B> Subir:</B> <A NAME="tex2html7894"
+  HREF="node286.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7888"
+  HREF="node289.html">Organizando las pruebas</A>
+ &nbsp; <B>  <A NAME="tex2html7896"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7898"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02920000000000000000">
-Minitest</A>
-</H1>
+<H2><A NAME="SECTION02914000000000000000"></A>
+<A NAME="subsection:setupteardown"></A>
+<BR>
+Setup y Teardown
+</H2>
+There are many cases where a small bit of code needs to be run
+before and/or after each test. <A NAME="tex2html597"
+  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A> provides the  <TT>setup</TT>  and
+ <TT>teardown</TT>  <A NAME="12048"></A><SPAN  CLASS="textbf">member functions</SPAN>, which are run before and after every
+test (member function).
 
-<OL>
-<LI>Documentación de <A NAME="tex2html594"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/minitest/rdoc/MiniTest.html"><TT>MiniTest</TT></A>
-</LI>
-<LI>Documentación de <A NAME="tex2html595"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/minitest/rdoc/MiniTest/Assertions.html"><TT>MiniTest/Assertions</TT></A>
-</LI>
-</OL>
+<P>
+<PRE>
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat test/tc_simple_number3.rb 
+# File:  tc_simple_number3.rb
+ 
+require "simple_number"
+require "test/unit"
+ 
+class TestSimpleNumber &lt; Test::Unit::TestCase
+ 
+  def setup
+    @num = SimpleNumber.new(2)
+  end
+ 
+  def teardown
+    ## Nothing really
+  end
+ 
+  def test_simple
+    assert_equal(4, @num.add(2) )
+  end
+ 
+  def test_simple2
+    assert_equal(4, @num.multiply(2) )
+  end
+ 
+end
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat Rakefile 
+desc "Test class SimpleNumber"
+task :test do
+  sh "ruby -Ilib -Itest test/tc_simple_number.rb"
+end
+
+desc "Test with test/tc_simple_number2.rb. Expect failures"
+task :test2 do
+  sh "ruby -Ilib -Itest test/tc_simple_number2.rb"
+end
+
+desc "Test with test/tc_simple_number3.rb. setup adn teardown"
+task :test3 do
+  sh "ruby -Ilib -Itest test/tc_simple_number3.rb"
+end
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ rake test3
+ruby -Ilib -Itest test/tc_simple_number3.rb
+Run options: 
+
+# Running tests:
+
+..
+
+Finished tests in 0.000988s, 2024.2915 tests/s, 2024.2915 assertions/s.
+
+2 tests, 2 assertions, 0 failures, 0 errors, 0 skips
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>

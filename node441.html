@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Sinatra usando Streaming, Rack MiddleWare y map</TITLE>
-<META NAME="description" CONTENT="Sinatra usando Streaming, Rack MiddleWare y map">
+<TITLE>Streaming</TITLE>
+<META NAME="description" CONTENT="Streaming">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node442.html">
+<LINK REL="next" HREF="node459.html">
 <LINK REL="previous" HREF="node440.html">
-<LINK REL="up" HREF="node438.html">
+<LINK REL="up" HREF="node332.html">
 <LINK REL="next" HREF="node442.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10627"
+<A NAME="tex2html10662"
   HREF="node442.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10621"
-  HREF="node438.html">
+<A NAME="tex2html10656"
+  HREF="node332.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10615"
+<A NAME="tex2html10650"
   HREF="node440.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10623"
-  HREF="node798.html">
+<A NAME="tex2html10658"
+  HREF="node802.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10625"
-  HREF="node801.html">
+<A NAME="tex2html10660"
+  HREF="node805.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,129 +92,121 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10628"
-  HREF="node442.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html10622"
-  HREF="node438.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10616"
-  HREF="node440.html">Streaming y Valores de</A>
- &nbsp; <B>  <A NAME="tex2html10624"
-  HREF="node798.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10626"
-  HREF="node801.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10663"
+  HREF="node442.html">Introducción</A>
+<B> Subir:</B> <A NAME="tex2html10657"
+  HREF="node332.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html10651"
+  HREF="node440.html">CoffeeScript y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html10659"
+  HREF="node802.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10661"
+  HREF="node805.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03830000000000000000">
-Sinatra usando Streaming, Rack MiddleWare y map</A>
+<H1><A NAME="SECTION03800000000000000000"></A>
+<A NAME="section:streaming"></A><A NAME="chapter:streaming"></A>
+<BR>
+Streaming
 </H1>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-Véase el código en 
-<A NAME="tex2html976"
-  HREF="https://github.com/crguezl/sinatra_intro/blob/master/streaming/better_middleware_handling.rb">sinatra_intro/streaming/better_middleware_handling.rb</A>
-en GitHub.
-
-<P>
-Otro beneficio que obtenemos cuando usamos Sinatra::Streaming (parte de Sinatra::Contrib) es que:
-
-<P>
-Blocks passed to <code>#map!</code> or 
-<code>#map</code> will actually be applied when streaming takes place (véase 
-<A NAME="tex2html977"
-  HREF="http://www.sinatrarb.com/contrib/streaming.html">http://www.sinatrarb.com/contrib/streaming.html</A>:
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/intro-streaming(master)]$ cat better_middleware_handling.rb 
-# http://www.sinatrarb.com/contrib/streaming.html
-
-require 'sinatra'
-require 'sinatra/streaming'
-
-class StupidMiddleware
-  def initialize(app) 
-    @app = app 
-  end
-
-  def call(env)
-    status, headers, body = @app.call(env)
-    # Blocks passed to #map! or #map will actually be applied when streaming takes place
-    body.map! { |e| e.upcase }
-    [status, headers, body]
-  end
-end
-
-use StupidMiddleware
-
-before do
-  content_type :html
-end
-
-song = %q{
-And now, the end is near 
-And so I face the final curtain 
-My friend, I'll say it clear 
-I'll state my case, of which I'm certain 
-I've lived a life that's full 
-I traveled each and ev'ry highway 
-And more, much more than this, I did it my way 
-
-Regrets, I've had a few 
-But then again, too few to mention 
-I did what I had to do , I saw it through without exemption 
-I planned each charted course, each careful step along the highway 
-And more, much more than this, I did it my way 
-
-Yes, there were times, I'm sure you knew 
-When I bit off more than I could chew 
-And through it all, when there was doubt 
-I ate it up and spit it out 
-I faced it all and I stood tall and did it my way 
-
-I've loved, I've laughed and cried 
-I've had my fill, my share of losing 
-And now, as tears subside, I find it all so amusing 
-To think I did all that 
-And may I say, not in a shy way, 
-"Oh, no, oh, no, not me, I did it my way" 
-
-For what is a man, what has he got? 
-If not himself, then he has naught 
-The right to say the things he feels and not the words of one who kneels 
-The record shows I took the blows and did it my way!
-}.split(/\n/)
-
-song.map! { |x| x.split(/\s+/) }
-
-set :song, song
-set :colors, ["red", "blue", "black", "green", "yellow", "blueviolet" ]
-
-get '/' do
-  color = 0
-  stream do |out|
-    out.puts '&lt;pre&gt;'
-    settings.song.each do |line|
-      line.each do |w|
-        out.print %Q{&lt;font color="#{settings.colors[color]}"&gt;#{w} &lt;/font&gt;}
-        color = (color+1) % settings.colors.size
-        sleep 0.02
-      end
-      out.puts "\n"
-      sleep 1
-   end
-   out.puts '&lt;/pre&gt;'
-   out.close
-  end
-end
-</PRE>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html10664"
+  HREF="node442.html">Introducción</A>
+<UL>
+<LI><A NAME="tex2html10665"
+  HREF="node442.html#SECTION03810010000000000000"><TT>Sinatra::Streaming</TT></A>
+<LI><A NAME="tex2html10666"
+  HREF="node442.html#SECTION03810020000000000000">sinatra/streaming en Aplicaciones Modulares</A>
+<LI><A NAME="tex2html10667"
+  HREF="node442.html#SECTION03810030000000000000">Manteniendo la Conexión Abierta: <TT>keep_open</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10668"
+  HREF="node443.html">Streaming y Valores de Retorno</A>
+<LI><A NAME="tex2html10669"
+  HREF="node444.html">Sinatra usando Streaming, Rack MiddleWare y map</A>
+<LI><A NAME="tex2html10670"
+  HREF="node445.html">Enlaces Relacionados</A>
+<LI><A NAME="tex2html10671"
+  HREF="node446.html">A simple demonstration of streaming Redis pub/sub data</A>
+<UL>
+<LI><A NAME="tex2html10672"
+  HREF="node446.html#SECTION03850010000000000000">web.rb</A>
+<LI><A NAME="tex2html10673"
+  HREF="node446.html#SECTION03850020000000000000">worker.rb</A>
+<LI><A NAME="tex2html10674"
+  HREF="node446.html#SECTION03850030000000000000">Procfile</A>
+<LI><A NAME="tex2html10675"
+  HREF="node446.html#SECTION03850040000000000000">Gemfile</A>
+<LI><A NAME="tex2html10676"
+  HREF="node446.html#SECTION03850050000000000000">Ejecución: Arranca el Servidor Redis</A>
+<LI><A NAME="tex2html10677"
+  HREF="node446.html#SECTION03850060000000000000">Ejecución 2: Arranca la aplicación Sinatra y el Worker</A>
+<LI><A NAME="tex2html10678"
+  HREF="node446.html#SECTION03850070000000000000">Ejecución 3: Arranca un Cliente</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10679"
+  HREF="node447.html">Comet</A>
+<LI><A NAME="tex2html10680"
+  HREF="node448.html">Chat Utilizando Streaming y Server Sent Events (SSE)</A>
+<UL>
+<LI><A NAME="tex2html10681"
+  HREF="node449.html">Enlaces Relacionados</A>
+<LI><A NAME="tex2html10682"
+  HREF="node450.html">Código Completo del Chat</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10683"
+  HREF="node451.html">Chat Simple</A>
+<UL>
+<LI><A NAME="tex2html10684"
+  HREF="node451.html#SECTION03880010000000000000">Donde</A>
+<LI><A NAME="tex2html10685"
+  HREF="node451.html#SECTION03880020000000000000">Código</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10686"
+  HREF="node452.html">Práctica: Chat con Mensajes Individuales</A>
+<LI><A NAME="tex2html10687"
+  HREF="node453.html">Práctica: Chat con Estilo</A>
+<LI><A NAME="tex2html10688"
+  HREF="node454.html">Práctica: Chat con TicTacToe</A>
+<LI><A NAME="tex2html10689"
+  HREF="node455.html">Embedding Sinatra within EventMachine</A>
+<UL>
+<LI><A NAME="tex2html10690"
+  HREF="node455.html#SECTION038120010000000000000">Véase</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10691"
+  HREF="node456.html">Ejemplo de Server Sent Events: irb en el navegador</A>
+<UL>
+<LI><A NAME="tex2html10692"
+  HREF="node456.html#SECTION038130010000000000000">example.rb</A>
+<LI><A NAME="tex2html10693"
+  HREF="node456.html#SECTION038130020000000000000">showoff.json</A>
+<LI><A NAME="tex2html10694"
+  HREF="node456.html#SECTION038130030000000000000">slides/01_slides.md </A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10695"
+  HREF="node457.html">Asynchronous responses in Rack</A>
+<UL>
+<LI><A NAME="tex2html10696"
+  HREF="node458.html">Deferred or streaming response bodies</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-10-22
+2014-11-10
 </ADDRESS>
 </BODY>
 </HTML>
