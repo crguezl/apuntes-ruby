@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Programa para Experimentar con las Expresiones Regulares Usando Ajax</TITLE>
-<META NAME="description" CONTENT="Un Programa para Experimentar con las Expresiones Regulares Usando Ajax">
+<TITLE>Código Completo del Chat</TITLE>
+<META NAME="description" CONTENT="Código Completo del Chat">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node474.html">
 <LINK REL="previous" HREF="node472.html">
-<LINK REL="up" HREF="node472.html">
+<LINK REL="up" HREF="node471.html">
 <LINK REL="next" HREF="node474.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11202"
+<A NAME="tex2html11273"
   HREF="node474.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11196"
-  HREF="node472.html">
+<A NAME="tex2html11267"
+  HREF="node471.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11190"
+<A NAME="tex2html11263"
   HREF="node472.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11198"
-  HREF="node802.html">
+<A NAME="tex2html11269"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11200"
-  HREF="node805.html">
+<A NAME="tex2html11271"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,73 +91,91 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11203"
-  HREF="node474.html">Un Ejemplo Simple</A>
-<B> Subir:</B> <A NAME="tex2html11197"
-  HREF="node472.html">Ajax in Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11191"
-  HREF="node472.html">Ajax in Sinatra</A>
- &nbsp; <B>  <A NAME="tex2html11199"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11201"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11274"
+  HREF="node474.html">Chat Simple</A>
+<B> Subir:</B> <A NAME="tex2html11268"
+  HREF="node471.html">Chat Utilizando Streaming y</A>
+<B> Anterior:</B> <A NAME="tex2html11264"
+  HREF="node472.html">Enlaces Relacionados</A>
+ &nbsp; <B>  <A NAME="tex2html11270"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11272"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031210000000000000000">
-Un Programa para Experimentar con las Expresiones Regulares Usando Ajax</A>
-</H1>
-
-<P>
-<A NAME="tex2html1087"
-  HREF="https://gist.github.com/blazeeboy/9259204">regular expression testing playground with ruby and sinatra</A>
-<P>
+<H2><A NAME="SECTION03872000000000000000">
+Código Completo del Chat</A>
+</H2>
 <PRE>
-[~/sinatra/regexp(master)]$ cat regex-tester.rb 
-require 'sinatra' # gem install sinatra --no-ri --no-rdoc
-set :port, 3000
-html = &lt;&lt;-EOT
-&lt;html&gt;&lt;head&gt;&lt;style&gt;
-#regex,#text{ width:100%; font-size:15px; display:block; margin-bottom:5px; }
-#text{ height: 200px; }
-span{ background:rgb(230,191,161); display:inline-block; border-radius:3px;}
-&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
- 
-  &lt;input id="regex" placeholder="Regex"/&gt;
-  &lt;textarea id="text" placeholder="Text"&gt;&lt;/textarea&gt;
-  &lt;div id="result"&gt;&lt;/div&gt;
- 
-  &lt;script src="http://code.jquery.com/jquery-1.11.0.min.js"&gt;&lt;/script&gt;
-  &lt;script&gt;
-  $('#regex,#text').keyup(function(){
-      $.get('/preview',{
-        reg:$('#regex').val(),
-        text:$('#text').val()
-      },function(r){
-        $('#result').html(r);
-      });
-  });
-  &lt;/script&gt;
- 
-&lt;/body&gt;&lt;/html&gt;
-EOT
- 
-get('/'){ html }
-get '/preview' do 
-  begin
-    params['text'].gsub(/(#{params['reg']})/,'&lt;span&gt;\1&lt;/span&gt;')
-  rescue
-    'Your regex is invalid'
+[17:51][~/srcSTW/streaming/chat_with_streaming(master)]$ cat chat.rb 
+# coding: utf-8
+require 'sinatra'
+set server: 'thin', connections: []
+
+get '/' do
+  halt erb(:login) unless params[:user]
+  erb :chat, locals: { user: params[:user].gsub(/\W/, '') }
+end
+
+get '/stream', provides: 'text/event-stream' do
+  stream :keep_open do |out|
+    settings.connections &lt;&lt; out
+    out.callback { settings.connections.delete(out) }
   end
 end
+
+post '/' do
+  settings.connections.each { |out| out &lt;&lt; "data: #{params[:msg]}\n\n" }
+  204 # response without entity body
+end
+
+__END__
+
+@@ layout
+&lt;html&gt;
+  &lt;head&gt; 
+    &lt;title&gt;Super Simple Chat with Sinatra&lt;/title&gt; 
+    &lt;meta charset="utf-8" /&gt;
+    &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"&gt;&lt;/script&gt; 
+  &lt;/head&gt; 
+  &lt;body&gt;&lt;%= yield %&gt;&lt;/body&gt;
+&lt;/html&gt;
+
+@@ login
+&lt;form action='/'&gt;
+  &lt;label for='user'&gt;User Name:&lt;/label&gt;
+  &lt;input name='user' value='' /&gt;
+  &lt;input type='submit' value="GO!" /&gt;
+&lt;/form&gt;
+
+@@ chat
+&lt;pre id='chat'&gt;&lt;/pre&gt;
+
+&lt;script&gt;
+  // reading
+  var es = new EventSource('/stream');
+  es.onmessage = function(e) { $('#chat').append(e.data + "\n") };
+
+  // writing
+  $("form").live("submit", function(e) {
+    $.post('/', {msg: "&lt;%= user %&gt;: " + $('#msg').val()});
+    $('#msg').val(''); $('#msg').focus();
+    e.preventDefault();
+  });
+&lt;/script&gt;
+
+&lt;form&gt;
+  &lt;input id='msg' placeholder='type message here...' /&gt;
+&lt;/form&gt;[
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un server</TITLE>
-<META NAME="description" CONTENT="Un server">
+<TITLE>2: Red</TITLE>
+<META NAME="description" CONTENT="2: Red">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node298.html">
 <LINK REL="previous" HREF="node296.html">
-<LINK REL="up" HREF="node296.html">
+<LINK REL="up" HREF="node294.html">
 <LINK REL="next" HREF="node298.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8017"
+<A NAME="tex2html8056"
   HREF="node298.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8011"
-  HREF="node296.html">
+<A NAME="tex2html8050"
+  HREF="node294.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8005"
+<A NAME="tex2html8044"
   HREF="node296.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8013"
-  HREF="node802.html">
+<A NAME="tex2html8052"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8015"
-  HREF="node805.html">
+<A NAME="tex2html8054"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,211 +92,84 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8018"
-  HREF="node298.html">Deferrable</A>
-<B> Subir:</B> <A NAME="tex2html8012"
-  HREF="node296.html">EventMachine</A>
-<B> Anterior:</B> <A NAME="tex2html8006"
-  HREF="node296.html">EventMachine</A>
- &nbsp; <B>  <A NAME="tex2html8014"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8016"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8057"
+  HREF="node298.html">3: Green</A>
+<B> Subir:</B> <A NAME="tex2html8051"
+  HREF="node294.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html8045"
+  HREF="node296.html">1: Green</A>
+ &nbsp; <B>  <A NAME="tex2html8053"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8055"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html8019"
-  HREF="node297.html#SECTION021031010000000000000">callback y errback</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION021031000000000000000">
-Un server</A>
+<H2><A NAME="SECTION021013000000000000000">
+2: Red</A>
 </H2>
-<PRE>
-~/ruby/eventmachine/simple_server]$ cat server.rb 
- require 'eventmachine'
-
- module EchoServer
-   def post_init
-     puts "-- someone connected to the echo server!"
-   end
-
-   def receive_data data
-     send_data "&gt;&gt;&gt;you sent: #{data}"
-     puts "received #{data}"
-     close_connection if data =~ /quit/i
-   end
-
-   def unbind
-     puts "-- someone disconnected from the echo server!"
-  end
-end
-
-# Note that this will block current thread.
-EventMachine.run {
-  EventMachine.start_server "127.0.0.1", 8081, EchoServer
-}
-</PRE>
 
 <P>
 <PRE>
-[~/ruby/eventmachine/simple_server]$ cat Rakefile 
-task :default =&gt; :server
-
-desc "run server"
-task :server do
- sh "ruby server.rb"
-end
-
-SERVER = "127.0.0.1 8081"
-M = %q{
-And now, the end is near 
-And so I face the final curtain 
-My friend, I'll say it clear 
-I'll state my case, of which I'm certain 
-I've lived a life that's full 
-I traveled each and ev'ry highway 
-And more, much more than this, I did it my way 
-quit
-}.split(/\n+/)
-
-desc "run a client"
-task :client do
-  IO.popen("telnet #{SERVER}", "r+", 
-           :external_encoding=&gt;"utf-8", 
-           :err=&gt;[:child, :out]) do |chan|
-    3.times do
-      output = chan.gets
-      puts "SERVER says: #{output}"
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(1)]$ cat spec/math/rpcalc_spec.rb 
+#require File.join(File.dirname(__FILE__), "/../spec_helper")
+require "spec_helper"
+module Math
+  describe RPCalc do
+    before :each do
+      @c = Math::RPCalc.new
     end
 
-    M.each do |line|
-      puts "client dending #{line}"
-      chan.puts line
-      output = chan.gets
-      puts "SERVER says: #{output}"
+    context "When an erroneous input is given" do
+      it "must raise an exception" do
+        expect { @c.calc('a') }.to raise_error(SyntaxError)
+        expect { @c.calc('a') }.to raise_error("Error. found 'a'. Expected number or operator")
+      end
     end
-  end # popen
-end
-</PRE>
-
-<P>
-<PRE>
-[~/ruby/eventmachine/simple_server]$ rake
-ruby server.rb
-</PRE>
-
-<P>
-<PRE>
-[~/ruby/eventmachine/simple_server]$ rake client
-SERVER says: Trying 127.0.0.1...
-SERVER says: Connected to localhost.
-SERVER says: Escape character is '^]'.
-client dending 
-SERVER says: &gt;&gt;&gt;you sent: 
-client dending And now, the end is near 
-SERVER says: &gt;&gt;&gt;you sent: And now, the end is near 
-client dending And so I face the final curtain 
-SERVER says: &gt;&gt;&gt;you sent: And so I face the final curtain &gt;&gt;&gt;you sent: 
-client dending My friend, I'll say it clear 
-SERVER says: &gt;&gt;&gt;you sent: My friend, I'll say it clear 
-client dending I'll state my case, of which I'm certain 
-SERVER says: &gt;&gt;&gt;you sent: I'll state my case, of which I'm certain 
-client dending I've lived a life that's full 
-SERVER says: &gt;&gt;&gt;you sent: I've lived a life that's full &gt;&gt;&gt;you sent: 
-client dending I traveled each and ev'ry highway 
-SERVER says: &gt;&gt;&gt;you sent: I traveled each and ev'ry highway 
-client dending And more, much more than this, I did it my way 
-SERVER says: &gt;&gt;&gt;you sent: And more, much more than this, I did it my way 
-client dending quit
-SERVER says: Connection closed by foreign host.
-</PRE>
-
-<P>
-<PRE>
-[~/ruby/eventmachine/simple_server]$ rake
-ruby server.rb
--- someone connected to the echo server!
-received 
-received And now, the end is near 
-received And so I face the final curtain 
-received 
-received My friend, I'll say it clear 
-received I'll state my case, of which I'm certain 
-received I've lived a life that's full 
-received 
-received I traveled each and ev'ry highway 
-received And more, much more than this, I did it my way 
-received quit
--- someone disconnected from the echo server!
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021031010000000000000">
-callback y errback</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/eventmachine/simple(master)]$ cat callback_errback.rb 
-require 'rubygems'
-require 'eventmachine'
-require 'em-http'
-
-urls = ARGV 
-if urls.size &lt; 1
-  puts "Usage: #{$0} &lt;url&gt; &lt;url&gt; &lt;...&gt;"
-  exit
-end
-
-pending = urls.size
-
-EM.run do
-  urls.each do |url|
-    http = EM::HttpRequest.new(url).get
-    http.callback {
-      puts "#{url}\n#{http.response_header.status} - #{http.response.length} bytes\n"
-      puts http.response
-
-      pending -= 1
-      EM.stop if pending &lt; 1
-    }
-    http.errback {
-      puts "#{url}\n" + http.error
-
-      pending -= 1
-      EM.stop if pending &lt; 1
-    }
   end
-end
 </PRE>
 
 <P>
 <PRE>
-[~/ruby/eventmachine/simple(master)]$ ruby callback_errback.rb 'http://www.google.com'
-http://www.google.com
-302 - 258 bytes
-&lt;HTML&gt;&lt;HEAD&gt;&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
-&lt;TITLE&gt;302 Moved&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;
-&lt;H1&gt;302 Moved&lt;/H1&gt;
-The document has moved
-&lt;A HREF="http://www.google.es/?gws_rd=cr&amp;amp;ei=x2OSUtLYD4aatQb-74GgCQ"&gt;here&lt;/A&gt;.
-&lt;/BODY&gt;&lt;/HTML&gt;
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(1)]$ rake spec
+rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
+
+Math::RPCalc
+  When an erroneous input is given
+    must raise an exception (FAILED - 1)
+
+Failures:
+
+  1) Math::RPCalc When an erroneous input is given must raise an exception
+     Failure/Error: expect { @c.calc('a') }.to raise_error(SyntaxError)
+       expected SyntaxError, got #&lt;NoMethodError: undefined method `calc' for #&lt;Math::RPCalc:0x007fd4aabfb180&gt;&gt; with backtrace:
+         # ./spec/math/rpcalc_spec.rb:11:in `block (4 levels) in &lt;module:Math&gt;'
+         # ./spec/math/rpcalc_spec.rb:11:in `block (3 levels) in &lt;module:Math&gt;'
+     # ./spec/math/rpcalc_spec.rb:11:in `block (3 levels) in &lt;module:Math&gt;'
+
+Finished in 0.00196 seconds
+1 example, 1 failure
+
+Failed examples:
+
+rspec ./spec/math/rpcalc_spec.rb:10 # Math::RPCalc When an erroneous input is given must raise an exception
 </PRE>
 
 <P>
+
+<OL>
+<LI><A NAME="tex2html608"
+  HREF="http://rubydoc.info/gems/rspec-expectations/2.4.0/RSpec/Matchers#expect-instance_method">expect</A>
+</LI>
+<LI><A NAME="tex2html609"
+  HREF="http://rubydoc.info/gems/rspec-expectations/2.4.0/RSpec/Matchers#raise_error-instance_method">raise_error</A>
+</LI>
+</OL>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

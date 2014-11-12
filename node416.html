@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configuring attack protection</TITLE>
-<META NAME="description" CONTENT="Configuring attack protection">
+<TITLE>Vistas</TITLE>
+<META NAME="description" CONTENT="Vistas">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node417.html">
+<LINK REL="next" HREF="node424.html">
 <LINK REL="previous" HREF="node415.html">
-<LINK REL="up" HREF="node388.html">
+<LINK REL="up" HREF="node411.html">
 <LINK REL="next" HREF="node417.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10267"
+<A NAME="tex2html10358"
   HREF="node417.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10261"
-  HREF="node388.html">
+<A NAME="tex2html10352"
+  HREF="node411.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10255"
+<A NAME="tex2html10346"
   HREF="node415.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10263"
-  HREF="node802.html">
+<A NAME="tex2html10354"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10265"
-  HREF="node805.html">
+<A NAME="tex2html10356"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,87 +92,116 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10268"
-  HREF="node417.html">Settings disponibles/Available Settings</A>
-<B> Subir:</B> <A NAME="tex2html10262"
-  HREF="node388.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10256"
-  HREF="node415.html">Configuration / Configuración</A>
- &nbsp; <B>  <A NAME="tex2html10264"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10266"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10359"
+  HREF="node417.html">Templates Inline</A>
+<B> Subir:</B> <A NAME="tex2html10353"
+  HREF="node411.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10347"
+  HREF="node415.html">Ficheros Estáticos</A>
+ &nbsp; <B>  <A NAME="tex2html10355"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10357"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033200000000000000000">
-Configuring attack protection</A>
+<H1><A NAME="SECTION03340000000000000000">
+Vistas</A>
 </H1>
-Sinatra is using <A NAME="tex2html920"
-  HREF="http://rubydoc.info/gems/rack-protection/">Rack::Protection</A>
-to defend your application against common, opportunistic attacks.
 
 <P>
-
-<OL>
-<LI>You can easily disable this behavior (which will open up your
-application to tons of common vulnerabilities):
+<BLOCKQUOTE>
+Writing a program that spits out HTML is often more difficult than
+you might imagine. Although programming languages are better at
+creating text than they used to be (some of us remember character
+handling in Fortran and standard Pascal), creating and concatenating
+string constructs is still painful. If there isn't much to do, it
+isn't too bad, but a whole HTML page is a lot of text manipulation.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>With static HTML pages - those that don't change from request to
+request - you can use nice WYSIWG editors. Even those of us who
+like raw text editors find it easier to just type in the text and
+tags rather than fiddle with string concatenation in a programming
+language.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>Of course the issue is with dynamic Web pages - those that take the
+results of something like database queries and embed them into the
+HTML. The page looks different with each result, and as a result
+regular HTML editors aren't up to the job.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>The best way to work is to compose the dynamic Web page as you do
+a static page but put in markers that can be resolved into calls
+to gather dynamic information. Since the static part of the page
+acts as a template for the particular response, I call this a
+<A NAME="18081"></A><SPAN  CLASS="textbf">Template View</SPAN>.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>
+<DIV ALIGN="RIGHT">Martin Fowler
+</BLOCKQUOTE>
+<P>
 
 <P>
-<code>disable :protection</code>
-</LI>
-<LI>To skip a single defense layer, set protection to an options hash:
+Views in Sinatra  are <A NAME="18083"></A><SPAN  CLASS="textbf">HTML templates</SPAN> that can optionally contain data
+passed from the application.
 
 <P>
-<PRE>
-set :protection, :except =&gt; :path_traversal
-</PRE>
-</LI>
-<LI>You can also hand in an array in order to disable a list of protections:
+There are two ways to work with views in Sinatra: <A NAME="18085"></A><SPAN  CLASS="textbf">inline templates</SPAN> and
+<A NAME="18087"></A><SPAN  CLASS="textbf">external templates</SPAN>.
 
 <P>
-<PRE>
-set :protection, :except =&gt; [:path_traversal, :session_hijacking]
-</PRE>
-</LI>
-<LI>By default, Sinatra will only set up session based protection if
-<code>:sessions</code> has been enabled. 
+Véase en GitHub 
+<A NAME="tex2html1002"
+  HREF="https://github.com/crguezl/sinatra-up-and-running/tree/master/chapter2/views">sinatra-up-and-running/tree/master/chapter2/views</A>.
 
 <P>
-Sometimes you want to set up sessions
-on your own, though. 
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-In that case you can get it to set up session
-based protections by passing the <code>:session option</code>:
-
-<P>
-<PRE>
-use Rack::Session::Pool
-set :protection, :session =&gt; true
-</PRE>
-</LI>
-</OL>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html10360"
+  HREF="node417.html">Templates Inline</A>
+<LI><A NAME="tex2html10361"
+  HREF="node418.html">Named Templates</A>
+<LI><A NAME="tex2html10362"
+  HREF="node419.html">Templates Externos</A>
+<LI><A NAME="tex2html10363"
+  HREF="node420.html">Templates Externos en Subcarpetas</A>
+<LI><A NAME="tex2html10364"
+  HREF="node421.html">Variables en las Vistas</A>
+<UL>
+<LI><A NAME="tex2html10365"
+  HREF="node421.html#SECTION03345010000000000000">Comunicación vía variables de instancia</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10366"
+  HREF="node422.html">Pasando variables a la vista explícitamente via un hash</A>
+<LI><A NAME="tex2html10367"
+  HREF="node423.html">Opciones pasadas a los Métodos de los Templates</A>
+</UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10267"
+<A NAME="tex2html10358"
   HREF="node417.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10261"
-  HREF="node388.html">
+<A NAME="tex2html10352"
+  HREF="node411.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10255"
+<A NAME="tex2html10346"
   HREF="node415.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10263"
-  HREF="node802.html">
+<A NAME="tex2html10354"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10265"
-  HREF="node805.html">
+<A NAME="tex2html10356"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -223,20 +252,20 @@ set :protection, :session =&gt; true
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10268"
-  HREF="node417.html">Settings disponibles/Available Settings</A>
-<B> Subir:</B> <A NAME="tex2html10262"
-  HREF="node388.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10256"
-  HREF="node415.html">Configuration / Configuración</A>
- &nbsp; <B>  <A NAME="tex2html10264"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10266"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10359"
+  HREF="node417.html">Templates Inline</A>
+<B> Subir:</B> <A NAME="tex2html10353"
+  HREF="node411.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10347"
+  HREF="node415.html">Ficheros Estáticos</A>
+ &nbsp; <B>  <A NAME="tex2html10355"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10357"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

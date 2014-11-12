@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Rspec con Rack</TITLE>
-<META NAME="description" CONTENT="Rspec con Rack">
+<TITLE>Ejercicio: Race Conditions. Concurrencia</TITLE>
+<META NAME="description" CONTENT="Ejercicio: Race Conditions. Concurrencia">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,27 +20,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="previous" HREF="node376.html">
-<LINK REL="up" HREF="node375.html">
+<LINK REL="up" HREF="node376.html">
 <LINK REL="next" HREF="node378.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9592"
+<A NAME="tex2html9674"
   HREF="node378.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9586"
-  HREF="node375.html">
+<A NAME="tex2html9668"
+  HREF="node376.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9582"
+<A NAME="tex2html9664"
   HREF="node376.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9588"
-  HREF="node802.html">
+<A NAME="tex2html9670"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9590"
-  HREF="node805.html">
+<A NAME="tex2html9672"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,295 +91,167 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9593"
-  HREF="node378.html">Práctica: Añada Pruebas a</A>
-<B> Subir:</B> <A NAME="tex2html9587"
-  HREF="node375.html">Pruebas/Testing</A>
-<B> Anterior:</B> <A NAME="tex2html9583"
-  HREF="node376.html">Pruebas Unitarias</A>
- &nbsp; <B>  <A NAME="tex2html9589"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9591"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9675"
+  HREF="node378.html">Ejemplo Simple Combinando Rack::Request,</A>
+<B> Subir:</B> <A NAME="tex2html9669"
+  HREF="node376.html">Gestión de Sesiones</A>
+<B> Anterior:</B> <A NAME="tex2html9665"
+  HREF="node376.html">Gestión de Sesiones</A>
+ &nbsp; <B>  <A NAME="tex2html9671"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9673"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html9594"
-  HREF="node377.html#SECTION031272010000000000000">Véase</A>
-<LI><A NAME="tex2html9595"
-  HREF="node377.html#SECTION031272020000000000000">Jerarquía</A>
-<LI><A NAME="tex2html9596"
-  HREF="node377.html#SECTION031272030000000000000">lib/rsack.rb</A>
-<LI><A NAME="tex2html9597"
-  HREF="node377.html#SECTION031272040000000000000">lib/rsack/server.rb</A>
-<LI><A NAME="tex2html9598"
-  HREF="node377.html#SECTION031272050000000000000">spec/rsack/server_spec.rb</A>
-<LI><A NAME="tex2html9599"
-  HREF="node377.html#SECTION031272060000000000000">spec/spec_helper.rb</A>
-<LI><A NAME="tex2html9600"
-  HREF="node377.html#SECTION031272070000000000000">Rakefile</A>
-<LI><A NAME="tex2html9601"
-  HREF="node377.html#SECTION031272080000000000000">Gemfile</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION031272000000000000000"></A>
-<A NAME="subsection:rspecconrack"></A>
+<H2><A NAME="SECTION03191000000000000000"></A>
+<A NAME="subsection:raceconditionsrack"></A>
 <BR>
-Rspec con Rack
+Ejercicio: Race Conditions. Concurrencia
 </H2>
 
 <P>
+Supongamos el siguiente programa <A NAME="tex2html869"
+  HREF="http://rack.github.io/">rack</A> en el que se incrementa 
+la variable <code>@some_key</code>
+(Véase <A NAME="tex2html870"
+  HREF="https://github.com/crguezl/rack-race-conditions">GitHub: crguezl/rack-race-conditions</A>):
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-appvswebserver(icon)]$ cat configapp.ru 
+class Persistence
 
-<H4><A NAME="SECTION031272010000000000000">
-Véase</A>
-</H4>
-  
+  def call(env)
+    
+    res = Rack::Response.new
+    req = Rack::Request.new env
+
+    @some_key ||= 0
+    @some_key = @some_key + 1 
+
+    res.write("@some_key = #{@some_key}\n")
+
+    res.finish
+  end
+
+end
+
+run Persistence.new
+</PRE>
+
+<P>
+Supongamos que arranco el servidor:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-appvswebserver(master)]$ rackup configapp.ru &gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+</PRE>
+
+<P>
+Nótese que con <code>thin</code> arrancado desde <code>rack</code>
+se tienen los valores de <code>env</code> para las claves:
+<PRE>
+rack.multithread =&gt; false
+rack.multiprocess =&gt; false
+</PRE>
+lo que indica que el servidor no está soportando multithreading ni multiproceso.
+
+<P>
+Responda a estas preguntas:
 
 <OL>
-<LI>Los fuentes de este ejemplo están en:
-<A NAME="tex2html855"
-  HREF="https://github.com/crguezl/rack-rspec">https://github.com/crguezl/rack-rspec</A>
+<LI>¿Que valores de <code>@some_key</code> serán mostrados cuando me conecto a <code>localhost:9292</code>?
 </LI>
-<LI><A NAME="tex2html856"
-  HREF="http://youtu.be/FV6AQEKxBOg">Using RSpec with Rack</A>
-en Youtube por 
-<A NAME="tex2html857"
-  HREF="https://github.com/mikbe?tab=repositories">Mike Bethany</A>
+<LI>¿Y si recargo la página varias veces?
 </LI>
-<LI>Documentación en rubydoc.info del módulo Rack::MockSession
-<A NAME="tex2html858"
-  HREF="http://rdoc.info/github/brynary/rack-test/master/Rack/MockSession">http://rdoc.info/github/brynary/rack-test/master/Rack/MockSession</A>
+<LI>¿Y si abro un nuevo navegador o ventana de incógnito en la misma URL?
 </LI>
-<LI><A NAME="tex2html859"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/mock.rb">Código fuente en lib/rack/mock.rb</A>
+<LI>¿Y si re-arranco el servidor?
 </LI>
-<LI>Documentación en rubydoc.info del módulo Rack::Test::Methods:
-<A NAME="tex2html860"
-  HREF="http://rdoc.info/github/brynary/rack-test/master/Rack/Test/Methods">http://rdoc.info/github/brynary/rack-test/master/Rack/Test/Methods</A>
+<LI>¿Como afectaría a la conducta que el servidor fuera multithreading?
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-appvswebserver(icon)]$ rvm use jruby-1.7.3
+Using /Users/casiano/.rvm/gems/jruby-1.7.3
+[~/local/src/ruby/sinatra/rack/rack-appvswebserver(icon)]$ rackup configapp.ru 
+Puma 2.6.0 starting...
+* Min threads: 0, max threads: 16
+* Environment: development
+* Listening on tcp://0.0.0.0:9292
+rack.multithread =&gt; true
+rack.multiprocess =&gt; false
+</PRE>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-appvswebserver(icon)]$ cat Rakefile 
+desc "run the server"
+task :default do
+  sh &lt;&lt;-"EOS"
+  #rvm use jruby-1.7.3 &amp;&amp;
+  #ruby -v &amp;&amp;
+  rackup -s puma configapp.ru 
+  EOS
+end
+
+desc "run the client"
+task :client do
+  pids = []
+  (0...100).each do
+    pids &lt;&lt; fork do
+      sh %q{curl -v 'http://localhost:9292' &gt;&gt; salida 2&gt;&gt; logs}
+    end
+  end
+  puts pids
+end
+
+desc "remove output and logs"
+task :clean do
+  sh "rm -f salida logs"
+end
+</PRE>
 </LI>
-<LI>Documentación de <A NAME="tex2html861"
-  HREF="http://rdoc.info/github/brynary/rack-test/master/Rack/Test/Session">Rack::Test::Session</A>
+</OL>
+
+<P>
+De acuerdo a  una respuesta en StackOverflow a la pregunta:
+<A NAME="tex2html871"
+  HREF="http://stackoverflow.com/questions/6278817/is-sinatra-multi-threaded">Is Sinatra multi-threaded? I read else where that "sinatra is multi-threaded by default", what does that imply?</A>
+<BLOCKQUOTE>
+The choice is mainly made by the server and middleware you use:
+</BLOCKQUOTE>
+<P>
+<OL>
+<LI>Multi-Process, non-preforking: Mongrel, Thin, WEBrick, Zbatery
 </LI>
-<LI><A NAME="tex2html862"
-  HREF="https://github.com/bblimke/webmock">webmock</A>
-gem
+<LI>Multi-Process, preforking: Unicorn, Rainbows, Passenger
 </LI>
-<LI><A NAME="tex2html863"
-  HREF="http://rubydoc.info/github/rack/rack/master/Rack/MockRequest">Class: Rack::MockRequest documentation</A>
+<LI>Evented (suited for sinatra-synchrony): Thin, Rainbows, Zbatery
 </LI>
-<LI><A NAME="tex2html864"
-  HREF="http://robots.thoughtbot.com/how-to-test-sinatra-based-web-services">How to Test Sinatra-Based Web Services by Harlow Ward, March 17, 2013</A>
-Webmock
-Written by thoughtbot Harlow Ward
-March 17, 2013
+<LI>Threaded: Net::HTTP::Server, Threaded Mongrel, Puma, Rainbows,
+Zbatery, Phusion Passenger Enterprise &gt;= 4
+</LI>
+<LI>Since Sinatra 1.3.0, Thin will be started in threaded mode, if
+it is started by Sinatra (i.e. with ruby app.rb, but not with the
+thin command, nor with rackup).
 </LI>
 </OL>
 
 <P>
 
-<H4><A NAME="SECTION031272020000000000000">
-Jerarquía</A>
-</H4>
-  
-
-<PRE>
-[~/rack/rack-rspec(master)]$ tree
-.
-|--- Gemfile
-|--- Gemfile.lock
-|--- README
-|--- Rakefile
-|--- lib
-|   |--- rsack
-|   |   `--- server.rb
-|   `--- rsack.rb
-`--- spec
-    |--- rsack
-    |   `--- server_spec.rb
-    `--- spec_helper.rb
-
-4 directories, 8 files
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031272030000000000000">
-lib/rsack.rb</A>
-</H4>
-  
-
-<PRE>
-[~/rack/rack-rspec(master)]$ cat lib/rsack.rb 
-require 'rack'
-require 'rsack/server'
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031272040000000000000">
-lib/rsack/server.rb</A>
-</H4>
-  
-
-<PRE>
-[~/rack/rack-rspec(master)]$ cat lib/rsack/server.rb 
-module Rsack
-  class Server
-    def call(env)
-      #["200", {}, "hello"]
-      response = Rack::Response.new
-      response.write("Hello world!")
-      response.finish
-    end
-  end
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031272050000000000000">
-spec/rsack/server_spec.rb</A>
-</H4>
-  
-
-<PRE>
-[~/rack/rack-rspec(master)]$ cat spec/rsack/server_spec.rb 
-require 'spec_helper'
-
-describe Rsack::Server do
-
-  #let(:server) { Rack::MockRequest.new(Rsack::Server.new) }
-  def server
-    Rack::MockRequest.new(Rsack::Server.new) 
-  end
-
-  context '/' do
-    it "should return a 200 code" do
-      response = server.get('/')
-      response.status.should == 200
-    end
-  end
-end
-</PRE>
-<A NAME="tex2html865"
-  HREF="http://rack.rubyforge.org/doc/classes/Rack/MockRequest.html">Rack::MockRequest</A>
-helps testing your Rack application without
-actually using HTTP.
-<PRE>
-    Rack::MockRequest.new(Rsack::Server.new)
-</PRE>
-After performing a request on a URL <code>response = server.get('/')</code>
-with <code>get/post/put/patch/delete</code>, it
-returns a 
-<A NAME="tex2html866"
-  HREF="http://rack.rubyforge.org/doc/Rack/MockResponse.html">MockResponse</A>
-with useful helper methods for effective
-testing (Véase el código de MockResponse en Github en el fichero
-<A NAME="tex2html867"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/mock.rb#L149-L189">lib/rack/mock.rb</A>).
-
-<P>
-Un objeto <A NAME="tex2html868"
-  HREF="http://rack.rubyforge.org/doc/Rack/MockResponse.html">MockResponse</A>
-dispone de los métodos:
-<PRE>
-=~   []   match   new
-</PRE>
-y de los atributos:
-<PRE>
-body   [R]   Body
-errors   [RW]    Errors
-headers  [R]   Headers
-original_headers   [R]   Headers
-status   [R]   Status
-</PRE>
-
-<P>
-Si se usan middleware adicionales es necesario especificarlo en <code>server</code>. Por ejemplo:
-<PRE>
- Rack::MockRequest.new(Rack::Session::Cookie.new(RockPaperScissors::App.new, 
-                                                 :secret =&gt;'cookie'))
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031272060000000000000">
-spec/spec_helper.rb</A>
-</H4>
-  
-
-<PRE>
-[~/rack/rack-rspec(master)]$ cat spec/spec_helper.rb 
-$:.unshift File.expand_path(File.dirname(__FILE__)+'../lib')
-$:.unshift File.dirname(__FILE__)
-
-#puts $:.inspect
-
-require 'rspec'
-require 'rack'
-
-require 'rsack'
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031272070000000000000">
-Rakefile</A>
-</H4>
-  
-
-<PRE>
-[~/rack/rack-rspec(master)]$ cat Rakefile 
-desc "run rspec tests"
-task :default do
-  sh "rspec spec/rsack/server_spec.rb"
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031272080000000000000">
-Gemfile</A>
-</H4>
-  
-
-<PRE>
-[~/rack/rack-rspec(master)]$ cat Gemfile
-# A sample Gemfile
-source "https://rubygems.org"
-
-gem 'rack'
-
-group :development, :test do
-  gem 'rspec'
-end
-</PRE>
-
-<P>
-
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9592"
+<A NAME="tex2html9674"
   HREF="node378.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9586"
-  HREF="node375.html">
+<A NAME="tex2html9668"
+  HREF="node376.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9582"
+<A NAME="tex2html9664"
   HREF="node376.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9588"
-  HREF="node802.html">
+<A NAME="tex2html9670"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9590"
-  HREF="node805.html">
+<A NAME="tex2html9672"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -430,20 +302,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9593"
-  HREF="node378.html">Práctica: Añada Pruebas a</A>
-<B> Subir:</B> <A NAME="tex2html9587"
-  HREF="node375.html">Pruebas/Testing</A>
-<B> Anterior:</B> <A NAME="tex2html9583"
-  HREF="node376.html">Pruebas Unitarias</A>
- &nbsp; <B>  <A NAME="tex2html9589"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9591"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9675"
+  HREF="node378.html">Ejemplo Simple Combinando Rack::Request,</A>
+<B> Subir:</B> <A NAME="tex2html9669"
+  HREF="node376.html">Gestión de Sesiones</A>
+<B> Anterior:</B> <A NAME="tex2html9665"
+  HREF="node376.html">Gestión de Sesiones</A>
+ &nbsp; <B>  <A NAME="tex2html9671"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9673"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

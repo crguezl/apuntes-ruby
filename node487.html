@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</TITLE>
-<META NAME="description" CONTENT="Configurando la Base de Datos en Heroku con DataMapper. Despliegue">
+<TITLE>Ruby y WebSockets: TCP for the Browser</TITLE>
+<META NAME="description" CONTENT="Ruby y WebSockets: TCP for the Browser">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node488.html">
 <LINK REL="previous" HREF="node486.html">
-<LINK REL="up" HREF="node481.html">
+<LINK REL="up" HREF="node482.html">
 <LINK REL="next" HREF="node488.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11490"
+<A NAME="tex2html11486"
   HREF="node488.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11484"
-  HREF="node481.html">
+<A NAME="tex2html11480"
+  HREF="node482.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11478"
+<A NAME="tex2html11474"
   HREF="node486.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11486"
-  HREF="node802.html">
+<A NAME="tex2html11482"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11488"
-  HREF="node805.html">
+<A NAME="tex2html11484"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,214 +92,192 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11491"
-  HREF="node488.html">Asociaciones Simples</A>
-<B> Subir:</B> <A NAME="tex2html11485"
-  HREF="node481.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11479"
-  HREF="node486.html">Ejemplo de uso de</A>
- &nbsp; <B>  <A NAME="tex2html11487"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11489"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11487"
+  HREF="node488.html">Una Aplicación Usando Websockets</A>
+<B> Subir:</B> <A NAME="tex2html11481"
+  HREF="node482.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html11475"
+  HREF="node486.html">websocket/rack</A>
+ &nbsp; <B>  <A NAME="tex2html11483"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11485"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031660000000000000000"></A>
-<A NAME="section:herokupostgres"></A>
-<BR>
-Configurando la Base de Datos en Heroku con DataMapper. Despliegue
+<H1><A NAME="SECTION03930000000000000000">
+Ruby y WebSockets: TCP for the Browser</A>
 </H1>
 
 <P>
-<A NAME="tex2html1154"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A> utiliza la base de datos PostgreSQL y una URL en una variable 
-de entorno <code>ENV['DATABASE_URL']</code>.
+Esta sección está sacada del blog de 
+<A NAME="tex2html1164"
+  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ilya Grigorik </A>.
 
 <P>
-<PRE>
-configure :development, :test do
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
-end
-
-configure :production do
-  DataMapper.setup(:default, ENV['DATABASE_URL'])
-end
-</PRE>
+WebSockets in HTML5 were designed from
+the ground up to be data agnostic (binary or text) with support for
+full-duplex communication. 
 
 <P>
-Estas líneas especifican que se usa SQLite en desarrollo y testing y
-PostgreSQL en producción.
-Obsérvese que el <code>Gemfile</code> debe estar coherente:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ cat Gemfile
-source 'https://rubygems.org'
-gem "sinatra"
-gem "slim"
-gem "sass"
-gem "dm-core"
-gem "dm-migrations"
-gem "thin"
-gem "pg", :group =&gt; :production
-gem "dm-postgres-adapter", :group =&gt; :production
-gem "dm-sqlite-adapter", :group =&gt; [:development, :test]
-</PRE>
-o mejor:
-<PRE>
-group :production do
-    gem "pg"
-    gem "dm-postgres-adapter"
-end
+WebSockets are TCP for the web-browser.
+They require only a single connection,
+which translates into much better resource utilization for both the
+server and the client. 
 
-group :development, :test do
-  gem "dm-sqlite-adapter"
-end
-</PRE>
+<P>
+Likewise, WebSockets are proxy and firewall
+aware, can operate over SSL and leverage the HTTP channel to
+accomplish all of the above - your existing load balancers, proxies
+and routers will work just fine.
 
 <P>
 
-<H4><A NAME="SECTION031660010000000000000">
-Bundle: installing groups. General considerations</A>
+<H4><A NAME="SECTION03930010000000000000">
+The Server</A>
 </H4>
   
 
 <P>
-By  default, bundle install will install all gems in all groups in your
-Gemfile, except those declared for a different 
-<code>platform</code><A NAME="tex2html1155"
-  HREF="footnode.html#foot20706"><SUP><SPAN CLASS="arabic">40</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
-
-<P>
-However, you can explicitly tell bundler  to  skip  installing  certain
-groups  with  the <code>--without option</code>. 
-This option takes a space-separated list of groups.
-
-<P>
-While the <code>--without</code> option will skip installing the gems in the  specified  groups, 
-<FONT COLOR="#0000ff"> it will still download those gems and use them to resolve the dependencies of every gem in your Gemfile</FONT>.
-
-<P>
-This is so that installing a different set of groups on another machine (such  as  a  production  server) will not change the gems and versions that you have already developed and tested against.
-
-<P>
-Bundler guarantees that the third-party code you are running in development and testing is also the third-party code you are running in production. You can choose to exclude some of that  code  in different  environments,  but  you  will never be caught flat-footed by 
-different versions of third-party code being used in different environments.
-
-<P>
-For a simple illustration, consider the following <code>Gemfile</code>:
-
-<P>
 <PRE>
-           source "https://rubygems.org"
+[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat server.rb
+require 'em-websocket'
 
-           gem "sinatra"
-
-           group :production do
-             gem "rack-perftools-profiler"
-           end
+EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
+  ws.onopen    { ws.send "Hello Client!"}
+  ws.onmessage { |msg| ws.send "Pong: #{msg}" }
+  ws.onclose   { puts "WebSocket closed" }
+end
 </PRE>
 
 <P>
-In  this  case,  <code>sinatra</code>  
-depends on any version of <code>Rack (&gt;= 1.0)</code>,
- while <code>rack-perftools-profiler</code> depends on <code>1.x (~&gt; 1.0)</code>.
 
-<P>
-When you run <code>bundle install --without  production</code>  
-in  <code>development</code>,  we
-look  at the dependencies of 
-<code>rack-perftools-profiler</code> as well. 
-
-<P>
-That way,
-you do not spend all your time developing against <code>Rack 2.0</code>,  
-using  new
-APIs  unavailable  in <code>Rack 1.x</code>, 
-only to have bundler switch to <code>Rack 1.2</code>
-when the <code>production</code> group is used.
-
-<P>
-This should not cause any problems  in  practice,  because  bundle  
-does  not
-attempt  to  install the gems in the excluded groups, and only 
-evaluates them
-as part of the dependency resolution process.
-
-<P>
-This also means that 
-
-<FONT COLOR="#0000ff"> you cannot include different versions of the  same
-gem  in  different  groups</FONT>,  
-because doing so would result in different
-sets of dependencies used in development and production. 
-
-<P>
-Because of the
-vagaries  of  the  dependency  resolution process, this usually affects
-more than just the gems you list in your <code>Gemfile</code>, 
-and can  (surprisingly) radically change the gems you are using.
-
-<P>
-
-<H4><A NAME="SECTION031660020000000000000">
-Recordando los pasos para el despliegue en Heroku</A>
+<H4><A NAME="SECTION03930020000000000000">
+The Client</A>
 </H4>
   
 
 <PRE>
-heroku create ...
+[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat index.html 
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'&gt;&lt;/script&gt;
+    &lt;script&gt;
+      $(document).ready(function(){
+        function debug(str){ 
+          $("#debug").append("&lt;p&gt;"+str+"&lt;/p&gt;"); 
+        };
+
+        ws = new WebSocket("ws://www.example.com:8080/websocket");
+        ws.onmessage = function(evt) { 
+          $("#msg").append("&lt;p&gt;"+evt.data+"&lt;/p&gt;"); 
+        };
+        ws.onclose = function() { 
+          debug("socket closed"); 
+        };
+        ws.onopen = function() {
+          debug("connected...");
+          ws.send("hello server");
+        };
+      });
+    &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="debug"&gt;&lt;/div&gt;
+    &lt;div id="msg"&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
 </PRE>
+You open up a WebSocket connection simply by calling the WebSocket constructor:
 
 <P>
 <PRE>
-git push heroku master
+var connection = new WebSocket('ws://html5rocks.websocket.org/echo', ['soap', 'xmpp']);
 </PRE>
+Notice the <code>ws:</code>. This is the new URL schema for WebSocket connections.
+There is also <code>wss</code>: for secure WebSocket connection the same way
+https: is used for secure HTTP connections.
+
+<P>
+Attaching some event handlers immediately to the connection allows
+you to know when the connection is opened, received incoming messages,
+or there is an error.
+
+<P>
+The second argument accepts optional subprotocols. It can be a
+string or an array of strings. Each string should represent a
+subprotocol name and server accepts only one of passed subprotocols
+in the array. Accepted subprotocol can be determined by accessing
+protocol property of WebSocket object.
 
 <P>
 <PRE>
-heroku open
+// When the connection is open, send some data to the server
+connection.onopen = function () {
+  connection.send('Ping'); // Send the message 'Ping' to the server
+};
+
+// Log errors
+connection.onerror = function (error) {
+  console.log('WebSocket Error ' + error);
+};
+
+// Log messages from the server
+connection.onmessage = function (e) {
+  console.log('Server: ' + e.data);
+};
 </PRE>
+As soon as we have a connection to the server (when the open event
+is fired) we can start sending data to the server using the send('your
+message') method on the connection object. It used to support only
+strings, but in the latest spec it now can send binary messages
+too. To send binary data, you can use either <code>Blob</code> or <code>ArrayBuffer</code>
+bject.
+
+<P>
+The server might send us messages at any time. Whenever this happens
+the <code>onmessage</code> callback fires. The callback receives an <code>event</code> object
+and the actual message is accessible via the <code>data</code> property.
+parrafoEjecución
 
 <P>
 <PRE>
-heroku logs --source app
+[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ ruby server.rb
+</PRE>
+
+<P>
+Cuando abrimos <code>index.html</code> con el navegador obtenemos una página como esta:
+<PRE>
+connected...
+
+Hello Client!
+
+Pong: hello server
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION031660030000000000000">
-Creando/Modificando la base de datos en Heroku con heroku run console</A>
+<H4><A NAME="SECTION03930030000000000000">
+Véase</A>
 </H4>
   
 
-<P>
-Ahora ejecutamos la consola de heroku:
-
-<P>
-<PRE>
-heroku run console
-</PRE>
-lo que nos abre una sesión <code>irb</code>.
-
-<P>
-Ahora creamos la base de datos en <A NAME="tex2html1156"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ heroku run console
-Running `console` attached to terminal... up, run.8011
-irb(main):001:0&gt; require './main'
-=&gt; true
-irb(main):002:0&gt; DataMapper.auto_migrate!
-=&gt; #&lt;DataMapper::DescendantSet:0x007fb89c878230 @descendants=#&lt;DataMapper::SubjectSet:0x007fb89c8781b8 @entries=#&lt;DataMapper::OrderedSet:0x007fb89c878190 @cache=#&lt;DataMapper::SubjectSet::NameCache:0x007fb89c878168 @cache={"Song"=&gt;0}&gt;, @entries=[Song]&gt;&gt;&gt;
-irb(main):003:0&gt;
-</PRE>
-Véase también 
-la práctica TicTacToe
-<A HREF="node426.html#practica:ticatactoe">27.29</A>
-y
-el capítulo <I>Despliegue en Heroku</I> 
-<A HREF="node501.html#chapter:despliegueenheroku">46</A>.
+<OL>
+<LI><A NAME="tex2html1165"
+  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ruby and WebSockets: TCP for the Browser</A>
+</LI>
+<LI><A NAME="tex2html1166"
+  HREF="http://www.html5rocks.com/en/tutorials/websockets/basics/">Introducing WebSockets: Bringing Sockets to the Web by Malte Ubl
+and Eiji Kitamura</A>
+2010
+</LI>
+<LI><A NAME="tex2html1167"
+  HREF="http://youtu.be/XVtEyilJD8M">Clean, simple websockets on Sinatra example
+by Austen Conrad Austen Conrad</A>
+YouTube
+</LI>
+</OL>
 
 <P>
 <BR><HR>
@@ -309,31 +287,31 @@ el capítulo <I>Despliegue en Heroku</I>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html11492"
-  HREF="node487.html#SECTION031660010000000000000">Bundle: installing groups. General considerations</A>
-<LI><A NAME="tex2html11493"
-  HREF="node487.html#SECTION031660020000000000000">Recordando los pasos para el despliegue en Heroku</A>
-<LI><A NAME="tex2html11494"
-  HREF="node487.html#SECTION031660030000000000000">Creando/Modificando la base de datos en Heroku con heroku run console</A>
+<LI><A NAME="tex2html11488"
+  HREF="node487.html#SECTION03930010000000000000">The Server</A>
+<LI><A NAME="tex2html11489"
+  HREF="node487.html#SECTION03930020000000000000">The Client</A>
+<LI><A NAME="tex2html11490"
+  HREF="node487.html#SECTION03930030000000000000">Véase</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11490"
+<A NAME="tex2html11486"
   HREF="node488.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11484"
-  HREF="node481.html">
+<A NAME="tex2html11480"
+  HREF="node482.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11478"
+<A NAME="tex2html11474"
   HREF="node486.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11486"
-  HREF="node802.html">
+<A NAME="tex2html11482"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11488"
-  HREF="node805.html">
+<A NAME="tex2html11484"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -384,20 +362,20 @@ el capítulo <I>Despliegue en Heroku</I>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11491"
-  HREF="node488.html">Asociaciones Simples</A>
-<B> Subir:</B> <A NAME="tex2html11485"
-  HREF="node481.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11479"
-  HREF="node486.html">Ejemplo de uso de</A>
- &nbsp; <B>  <A NAME="tex2html11487"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11489"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11487"
+  HREF="node488.html">Una Aplicación Usando Websockets</A>
+<B> Subir:</B> <A NAME="tex2html11481"
+  HREF="node482.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html11475"
+  HREF="node486.html">websocket/rack</A>
+ &nbsp; <B>  <A NAME="tex2html11483"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11485"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Random bouncy particles using ruby Gosu games library</TITLE>
-<META NAME="description" CONTENT="Random bouncy particles using ruby Gosu games library">
+<TITLE>Un server</TITLE>
+<META NAME="description" CONTENT="Un server">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node321.html">
 <LINK REL="previous" HREF="node319.html">
-<LINK REL="up" HREF="node316.html">
+<LINK REL="up" HREF="node319.html">
 <LINK REL="next" HREF="node321.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8375"
+<A NAME="tex2html8458"
   HREF="node321.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8369"
-  HREF="node316.html">
+<A NAME="tex2html8452"
+  HREF="node319.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8365"
+<A NAME="tex2html8446"
   HREF="node319.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8371"
-  HREF="node802.html">
+<A NAME="tex2html8454"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8373"
-  HREF="node805.html">
+<A NAME="tex2html8456"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,114 +92,211 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8376"
-  HREF="node321.html">Shoes</A>
-<B> Subir:</B> <A NAME="tex2html8370"
-  HREF="node316.html">Juegos con Gosu</A>
-<B> Anterior:</B> <A NAME="tex2html8366"
-  HREF="node319.html">Starfighter</A>
- &nbsp; <B>  <A NAME="tex2html8372"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8374"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8459"
+  HREF="node321.html">Deferrable</A>
+<B> Subir:</B> <A NAME="tex2html8453"
+  HREF="node319.html">EventMachine</A>
+<B> Anterior:</B> <A NAME="tex2html8447"
+  HREF="node319.html">EventMachine</A>
+ &nbsp; <B>  <A NAME="tex2html8455"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8457"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-
-<H1><A NAME="SECTION021440000000000000000">
-Random bouncy particles using ruby Gosu games library</A>
-</H1>
-<A NAME="tex2html708"
-  HREF="https://gist.github.com/blazeeboy/9463030">Random bouncy particles using ruby Gosu games library</A>
-<P>
-
-<H4><A NAME="SECTION021440010000000000000">
-Donde</A>
-</H4>
-  
-
-<PRE>
-[~/src/ruby/rubytesting/gosu]$ pwd -P
-/Users/casiano/local/src/ruby/rubytesting/gosu
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021440020000000000000">
-Código</A>
-</H4>
-  
-
-<PRE>
-[~/src/ruby/rubytesting/gosu]$ cat bouncing.rb 
-require 'gosu'
-$width, $height = 200, 200
-$number_of_particles = 200
-
-class Quad
-  def initialize
-    @pos = {x:rand($width), y:rand($width)}
-    @vel = { x:(rand(5)+1)*[1,-1].sample, y:(rand(5)+1)*[1,-1].sample }
-    @size = rand(4)*[1,-1].sample
-    @color = [  Gosu::Color::GRAY, Gosu::Color::WHITE,
-                Gosu::Color::AQUA, Gosu::Color::RED,
-                Gosu::Color::GREEN, Gosu::Color::BLUE,
-                Gosu::Color::YELLOW, Gosu::Color::FUCHSIA,
-                Gosu::Color::CYAN ].sample
-  end
-  def update
-    @vel[:x] = @vel[:x] * -1 if @pos[:x] &lt;= 0 or @pos[:x] &gt;= $width
-    @vel[:y] = @vel[:y] * -1 if @pos[:y] &lt;= 0 or @pos[:y] &gt;= $height
-    @pos[:x] += @vel[:x]
-    @pos[:y] += @vel[:y] 
-  end
-  def draw win
-    win.draw_quad @pos[:x]-@size, @pos[:y]-@size, @color,
-                  @pos[:x]+@size, @pos[:y]-@size, @color,
-                  @pos[:x]+@size, @pos[:y]+@size, @color,
-                  @pos[:x]-@size, @pos[:y]+@size, @color
-  end
-end
-
-class GameWindow &lt; Gosu::Window
-  def initialize
-    super $width, $height, false
-    self.caption = "Quads"
-    @quads = []
-    $number_of_particles.times { @quads &lt;&lt; Quad.new }
-  end
-  def update
-    @quads.each {|q| q.update }
-  end
-  def draw
-    color = Gosu::Color::WHITE
-    draw_quad 0, 0, color, $width, 0, color, $width, $height, color, 0, $height, color
-    @quads.each { |q| q.draw self }
-  end
-end
-
-window = GameWindow.new
-window.show
-</PRE>
-
-<P>
-<BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
 <LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html8377"
-  HREF="node320.html#SECTION021440010000000000000">Donde</A>
-<LI><A NAME="tex2html8378"
-  HREF="node320.html#SECTION021440020000000000000">Código</A>
-</UL></UL></UL>
+<LI><A NAME="tex2html8460"
+  HREF="node320.html#SECTION021531010000000000000">callback y errback</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION021531000000000000000">
+Un server</A>
+</H2>
+<PRE>
+~/ruby/eventmachine/simple_server]$ cat server.rb 
+ require 'eventmachine'
+
+ module EchoServer
+   def post_init
+     puts "-- someone connected to the echo server!"
+   end
+
+   def receive_data data
+     send_data "&gt;&gt;&gt;you sent: #{data}"
+     puts "received #{data}"
+     close_connection if data =~ /quit/i
+   end
+
+   def unbind
+     puts "-- someone disconnected from the echo server!"
+  end
+end
+
+# Note that this will block current thread.
+EventMachine.run {
+  EventMachine.start_server "127.0.0.1", 8081, EchoServer
+}
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple_server]$ cat Rakefile 
+task :default =&gt; :server
+
+desc "run server"
+task :server do
+ sh "ruby server.rb"
+end
+
+SERVER = "127.0.0.1 8081"
+M = %q{
+And now, the end is near 
+And so I face the final curtain 
+My friend, I'll say it clear 
+I'll state my case, of which I'm certain 
+I've lived a life that's full 
+I traveled each and ev'ry highway 
+And more, much more than this, I did it my way 
+quit
+}.split(/\n+/)
+
+desc "run a client"
+task :client do
+  IO.popen("telnet #{SERVER}", "r+", 
+           :external_encoding=&gt;"utf-8", 
+           :err=&gt;[:child, :out]) do |chan|
+    3.times do
+      output = chan.gets
+      puts "SERVER says: #{output}"
+    end
+
+    M.each do |line|
+      puts "client dending #{line}"
+      chan.puts line
+      output = chan.gets
+      puts "SERVER says: #{output}"
+    end
+  end # popen
+end
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple_server]$ rake
+ruby server.rb
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple_server]$ rake client
+SERVER says: Trying 127.0.0.1...
+SERVER says: Connected to localhost.
+SERVER says: Escape character is '^]'.
+client dending 
+SERVER says: &gt;&gt;&gt;you sent: 
+client dending And now, the end is near 
+SERVER says: &gt;&gt;&gt;you sent: And now, the end is near 
+client dending And so I face the final curtain 
+SERVER says: &gt;&gt;&gt;you sent: And so I face the final curtain &gt;&gt;&gt;you sent: 
+client dending My friend, I'll say it clear 
+SERVER says: &gt;&gt;&gt;you sent: My friend, I'll say it clear 
+client dending I'll state my case, of which I'm certain 
+SERVER says: &gt;&gt;&gt;you sent: I'll state my case, of which I'm certain 
+client dending I've lived a life that's full 
+SERVER says: &gt;&gt;&gt;you sent: I've lived a life that's full &gt;&gt;&gt;you sent: 
+client dending I traveled each and ev'ry highway 
+SERVER says: &gt;&gt;&gt;you sent: I traveled each and ev'ry highway 
+client dending And more, much more than this, I did it my way 
+SERVER says: &gt;&gt;&gt;you sent: And more, much more than this, I did it my way 
+client dending quit
+SERVER says: Connection closed by foreign host.
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple_server]$ rake
+ruby server.rb
+-- someone connected to the echo server!
+received 
+received And now, the end is near 
+received And so I face the final curtain 
+received 
+received My friend, I'll say it clear 
+received I'll state my case, of which I'm certain 
+received I've lived a life that's full 
+received 
+received I traveled each and ev'ry highway 
+received And more, much more than this, I did it my way 
+received quit
+-- someone disconnected from the echo server!
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021531010000000000000">
+callback y errback</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ cat callback_errback.rb 
+require 'rubygems'
+require 'eventmachine'
+require 'em-http'
+
+urls = ARGV 
+if urls.size &lt; 1
+  puts "Usage: #{$0} &lt;url&gt; &lt;url&gt; &lt;...&gt;"
+  exit
+end
+
+pending = urls.size
+
+EM.run do
+  urls.each do |url|
+    http = EM::HttpRequest.new(url).get
+    http.callback {
+      puts "#{url}\n#{http.response_header.status} - #{http.response.length} bytes\n"
+      puts http.response
+
+      pending -= 1
+      EM.stop if pending &lt; 1
+    }
+    http.errback {
+      puts "#{url}\n" + http.error
+
+      pending -= 1
+      EM.stop if pending &lt; 1
+    }
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/eventmachine/simple(master)]$ ruby callback_errback.rb 'http://www.google.com'
+http://www.google.com
+302 - 258 bytes
+&lt;HTML&gt;&lt;HEAD&gt;&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
+&lt;TITLE&gt;302 Moved&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;
+&lt;H1&gt;302 Moved&lt;/H1&gt;
+The document has moved
+&lt;A HREF="http://www.google.es/?gws_rd=cr&amp;amp;ei=x2OSUtLYD4aatQb-74GgCQ"&gt;here&lt;/A&gt;.
+&lt;/BODY&gt;&lt;/HTML&gt;
+</PRE>
+
+<P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

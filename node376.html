@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Pruebas Unitarias</TITLE>
-<META NAME="description" CONTENT="Pruebas Unitarias">
+<TITLE>Gestión de Sesiones</TITLE>
+<META NAME="description" CONTENT="Gestión de Sesiones">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node377.html">
+<LINK REL="next" HREF="node378.html">
 <LINK REL="previous" HREF="node375.html">
-<LINK REL="up" HREF="node375.html">
+<LINK REL="up" HREF="node356.html">
 <LINK REL="next" HREF="node377.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9580"
+<A NAME="tex2html9658"
   HREF="node377.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9574"
-  HREF="node375.html">
+<A NAME="tex2html9652"
+  HREF="node356.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9568"
+<A NAME="tex2html9646"
   HREF="node375.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9576"
-  HREF="node802.html">
+<A NAME="tex2html9654"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9578"
-  HREF="node805.html">
+<A NAME="tex2html9656"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,257 +92,278 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9581"
-  HREF="node377.html">Rspec con Rack</A>
-<B> Subir:</B> <A NAME="tex2html9575"
-  HREF="node375.html">Pruebas/Testing</A>
-<B> Anterior:</B> <A NAME="tex2html9569"
-  HREF="node375.html">Pruebas/Testing</A>
- &nbsp; <B>  <A NAME="tex2html9577"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9579"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9659"
+  HREF="node377.html">Ejercicio: Race Conditions. Concurrencia</A>
+<B> Subir:</B> <A NAME="tex2html9653"
+  HREF="node356.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9647"
+  HREF="node375.html">Cookies y Rack</A>
+ &nbsp; <B>  <A NAME="tex2html9655"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9657"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION031271000000000000000"></A>
-<A NAME="subsectionpruebasunitarias"></A>
+<H1><A NAME="SECTION03190000000000000000"></A>
+<A NAME="section:gestiondesesiones"></A>
 <BR>
-Pruebas Unitarias
-</H2>
+Gestión de Sesiones
+</H1>
+
+<P>
+
+<H4><A NAME="SECTION03190010000000000000">
+Introducción</A>
+</H4>
+  
 
 <P>
 
 <OL>
-<LI>Los fuentes de este ejemplo están en
-<A NAME="tex2html850"
-  HREF="https://github.com/crguezl/rack-unit-test">https://github.com/crguezl/rack-unit-test</A>
+<LI>Hypertext Transfer Protocol (HTTP) is stateless: a client computer
+running a web browser must establish a new Transmission Control
+Protocol (TCP) network connection to the web server with each new
+HTTP GET or POST request. 
+
+<P>
 </LI>
-<LI>Fuentes en GitHub de Rack::Test:
-<A NAME="tex2html851"
-  HREF="https://github.com/brynary/rack-test">https://github.com/brynary/rack-test</A>
+<LI>The web server, therefore, cannot rely
+on an established TCP network connection for longer than a single
+HTTP GET or POST operation. 
+
+<P>
+</LI>
+<LI><A NAME="16501"></A><SPAN  CLASS="textbf">Session management</SPAN> is the technique
+used by the web developer to make the stateless HTTP protocol support
+session state. 
+
+<P>
+</LI>
+<LI>For example, once a user has been authenticated to
+the web server, the user's next HTTP request (GET or POST) should
+not cause the web server to ask for the user's account and password
+again. 
+
+<P>
+</LI>
+<LI>The session information is stored on the web server using the 
+<A NAME="16503"></A><SPAN  CLASS="textbf">session identifier</SPAN>
+generated as a result of the first (sometimes
+the first authenticated) request from the end user running a web
+browser. 
+
+<P>
+</LI>
+<LI>The "storage" of Session IDs and the associated session
+data (user name, account number, etc.) on the web server is
+accomplished using a variety of techniques including, but not limited
+to, local memory, flat files, and databases.
+
+<P>
+</LI>
+<LI>A <A NAME="16505"></A><SPAN  CLASS="textbf">session token</SPAN> 
+<FONT COLOR="#0000ff"> is a unique identifier that is generated and sent
+from a server to a client to identify the current interaction
+session</FONT>. 
+
+<P>
+</LI>
+<LI>The client usually stores and sends the token as an HTTP
+cookie and/or sends it as a parameter in GET or POST queries. The
+reason to use session tokens is that the client only has to handle
+the identifier—all session data is stored on the server (usually
+in a database, to which the client does not have direct access)
+linked to that identifier. 
 </LI>
 </OL>
 
 <P>
-<PRE>
-[~/rack/rack-unit-test(master)]$ cat rack_hello_world.rb 
-# my_app.rb
-#
-require 'rack'
 
+<H4><A NAME="SECTION03190020000000000000">
+Uso de Cookies para el manejo de sesiones</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>Allowing users to log into a website is a frequent use of
+    cookies. 
+</LI>
+<LI>A web server typically sends a cookie containing a unique 
+    <A NAME="16513"></A><SPAN  CLASS="textbf">session identifier</SPAN>. 
+</LI>
+<LI>The web browser will send back that session identifier
+   with each subsequent request and 
+<FONT COLOR="#0000ff"> related items are stored
+   associated with this unique session identifier</FONT>.
+</LI>
+<LI>Typically the web server will first send a cookie
+    containing a unique session identifier. Users then submit their
+    credentials and the web application authenticates the session
+    and allows the user access to services.
+</LI>
+<LI>Applications today usually store the gathered information
+    in a database on the server side, rather than storing them 
+    in cookies
+  
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION03190030000000000000">
+Ejemplo</A>
+</H4>
+  
+
+<P>
+<A NAME="tex2html868"
+  HREF="http://rack.rubyforge.org/doc/Rack/Session/Cookie.html">Rack::Session::Cookie</A> proporciona un sencillo sistema para gestionar
+sesiones basado en cookies.
+
+<P>
+
+<OL>
+<LI>La <code>session</code> es un cookie que contiene un
+hash almacenado mediante marshalling codificado en base64.
+</LI>
+<LI>Por defecto el nombre del cookie es <code>rack.session</code> pero puede ser 
+modificado mediante el atributo <code>:key</code>.
+</LI>
+<LI>Dándole un valor a <code>secret_key</code> se garantiza que es comprobada 
+la integridad de los datos de la cookie
+</LI>
+<LI>Para acceder dentro de nuestro programa
+a la sesión accedemos al hash <code>env["rack.session"]</code> o bien
+<code>env["key-value"]</code> si hemos especificado el atributo
+<code>:key</code>
+</LI>
+</OL>
+
+<P>
+Sigue un ejemplo:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat configapp.ru 
+require 'pp'
+require './myapp'
+
+use Rack::Session::Cookie, 
+      :key =&gt; 'rack.session', 
+      :domain =&gt; 'example.com',
+      :secret =&gt; 'some_secret'
+
+run MyApp.new
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat myapp.rb 
 class MyApp
-  def call env
-    [200, {"Content-Type" =&gt; "text/html"}, ["Hello"]] 
+
+  def set_env(env)
+    @env = env
+    @session = env['rack.session']
   end
+
+  def some_key 
+    return @session['some_key'].to_i if @session['some_key']
+    @session['some_key'] = 0
+  end
+
+  def some_key=(value)
+    @session['some_key'] = value
+  end
+
+  def call(env)
+    set_env(env)
+    res = Rack::Response.new
+    req = Rack::Request.new env
+
+    self.some_key = self.some_key + 1 if req.path == '/'
+
+    res.write("some_key = #{@session['some_key']}\n")
+
+    res.finish
+  end
+
 end
 </PRE>
 
 <P>
-<PRE>
-[~/rack/rack-unit-test(master)]$ cat test_hello_world.rb 
-require "test/unit"
-require "rack/test"
-require './rack_hello_world'
-
-class AppTest &lt; Test::Unit::TestCase
-  include Rack::Test::Methods
-
-  def app
-    Rack::Builder.new do
-      run MyApp.new
-    end.to_app
-  end
-
-  def test_index
-    get "/"
-    #puts last_response.inspect
-    assert last_response.ok?
-  end
-
-  def test_body
-    get "/"
-    assert_equal last_response.body,  'Hello', "body must be hello"
-  end
-end
-</PRE>
-
-<OL>
-<LI>The 
-<A NAME="tex2html852"
-  HREF="http://rdoc.info/github/brynary/rack-test/master/Rack/Test/Methods">Rack::Test::Methods</A>
-module serves as the primary integration point for using
-<code>Rack::Test</code> in a testing environment. 
-
-<P>
-It depends on an <code>app</code> method
-being defined in the same context, 
-<PRE>
-  def app
-    Rack::Builder.new do
-      run MyApp.new
-    end.to_app
-  end
-</PRE>
-
-<P>
-and provides the <code>Rack::Test</code> API
-methods (see 
-<A NAME="tex2html853"
-  HREF="http://rubydoc.info/github/brynary/rack-test/Rack/Test/Session">Rack::Test::Session</A>
-for their documentation).
-</LI>
-<LI>The <code>get</code> method issue a <code>GET</code> request for the given URI.
-Stores the issues request object in <code>#last_request</code> and the app's response in 
-<code>#last_response</code> (whose class is 
-<A NAME="tex2html854"
-  HREF="http://rack.rubyforge.org/doc/Rack/MockResponse.html">Rack::MockResponse</A>) . 
-
-<P>
-Yield <code>#last_response</code> to a block if given.
-<PRE>
-  def test_index
-    get "/"
-    assert last_response.ok?
-  end
-</PRE>
-
-<P>
-</LI>
-<LI>Otros métodos que se pueden usar son:
-
-<OL>
-<LI><code>(Object) basic_authorize(username, password) (also: #authorize)</code>
-Set the username and password for <code>HTTP</code> Basic authorization, to be included in subsequent requests in the <code>HTTP_AUTHORIZATION</code> header.
-</LI>
-<LI><code>(Object) delete(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>DELETE</code> request for the given URI.
-</LI>
-<LI><code>(Object) digest_authorize(username, password)</code>
-Set the username and password for <code>HTTP</code> Digest authorization, to be included in subsequent requests in the <code>HTTP_AUTHORIZATION</code> header.
-</LI>
-<LI><code>(Object) env(name, value)</code>
-Set an env var to be included on all subsequent requests through the session.
-</LI>
-<LI><code>(Object) follow_redirect!</code>
-Rack::Test will not follow any redirects automatically.
-</LI>
-<LI><code>(Object) get(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>GET</code> request for the given <code>URI</code> with the given params and Rack environment.
-</LI>
-<LI><code>(Object) head(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>HEAD</code> request for the given URI.
-</LI>
-<LI><code>(Object) header(name, value)</code>
-Set a header to be included on all subsequent requests through the session.
-</LI>
-<LI><code>(Session) initialize(mock_session) constructor</code>
-Creates a Rack::Test::Session for a given Rack app or Rack::MockSession.
-</LI>
-<LI><code>(Object) options(uri, params = {}, env = {}, &amp;block)</code>
-Issue an <code>OPTIONS</code> request for the given URI.
-</LI>
-<LI><code>(Object) patch(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>PATCH</code> request for the given URI.
-</LI>
-<LI><code>(Object) post(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>POST</code> request for the given URI.
-</LI>
-<LI><code>(Object) put(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>PUT</code> request for the given URI.
-</LI>
-<LI><code>(Object) request(uri, env = {}, &amp;block)</code>
-Issue a request to the Rack app for the given <code>URI</code> and optional Rack environment.
-</LI>
-</OL>
-
-<P>
-</LI>
-<LI>The <code>#last_response</code> object has methods:
-<PRE>
-          =~(other) body() empty?() match(other)
-</PRE>
-and attributes:
-<PRE>
-errors          [RW]
-original_headers[R]
-Headers
-</PRE>
-</LI>
-<LI>Si se usan middleware adicionales es necesario especificarlo 
-en <code>app</code>:
-<PRE>
-  def app 
-    Rack::Builder.new do
-      use(Rack::Session::Cookie, {:key =&gt; 'rack session',·
-                                  #:domain =&gt; 'localhost',
-                                  #:path =&gt; '/', #:expire_after =&gt; 2592000,·
-                                  :secret =&gt; 'change_me'})
-      run RockPaperScissors::App.new
-    end.to_app
-  end
-</PRE>
-</LI>
-<LI>El método 
-<code>last_response.body</code>
-returns the last response received in the session. Raises an error
-if no requests have been sent yet.
-</LI>
-</OL>
+Hagamos la prueba conectándonos a <code>www.example.com</code>. Para ello
+edtiamos <code>/etc/hosts</code> para que <code>localhost</code> apunte a
+<code>www.example.com</code>:
 
 <P>
 <PRE>
-[~/rack/rack-unit-test(master)]$ cat Rakefile 
-task :default =&gt; :test
-desc "run the tests"
-task :test do
-  sh "ruby test_hello_world.rb"
-end
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat /etc/hosts
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1 localhost www.example.com
+...
 </PRE>
+
+<P>
+Arrancamos el servidor:
 
 <P>
 <PRE>
-[~/rack/rack-unit-test(master)]$ cat Gemfile
-source 'https://rubygems.org'
-
-gem 'rack'
-gem 'rack-test'
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ rackup  configapp.ru 
+&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
 </PRE>
 
 <P>
-<PRE>
-[~/rack/rack-unit-test(master)]$ rake
-ruby test_hello_world.rb
-Run options: 
+Y visitamos <code>www.example.com</code> con nuestro navegador:
 
-# Running tests:
-
-..
-
-Finished tests in 0.015253s, 131.1217 tests/s, 131.1217 assertions/s.
-
-2 tests, 2 assertions, 0 failures, 0 errors, 0 skips
-</PRE>
+<img src="rack_session_example.png" />
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html9660"
+  HREF="node376.html#SECTION03190010000000000000">Introducción</A>
+<LI><A NAME="tex2html9661"
+  HREF="node376.html#SECTION03190020000000000000">Uso de Cookies para el manejo de sesiones</A>
+<LI><A NAME="tex2html9662"
+  HREF="node376.html#SECTION03190030000000000000">Ejemplo</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html9663"
+  HREF="node377.html">Ejercicio: Race Conditions. Concurrencia</A>
+</UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9580"
+<A NAME="tex2html9658"
   HREF="node377.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9574"
-  HREF="node375.html">
+<A NAME="tex2html9652"
+  HREF="node356.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9568"
+<A NAME="tex2html9646"
   HREF="node375.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9576"
-  HREF="node802.html">
+<A NAME="tex2html9654"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9578"
-  HREF="node805.html">
+<A NAME="tex2html9656"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -393,20 +414,20 @@ Finished tests in 0.015253s, 131.1217 tests/s, 131.1217 assertions/s.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9581"
-  HREF="node377.html">Rspec con Rack</A>
-<B> Subir:</B> <A NAME="tex2html9575"
-  HREF="node375.html">Pruebas/Testing</A>
-<B> Anterior:</B> <A NAME="tex2html9569"
-  HREF="node375.html">Pruebas/Testing</A>
- &nbsp; <B>  <A NAME="tex2html9577"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9579"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9659"
+  HREF="node377.html">Ejercicio: Race Conditions. Concurrencia</A>
+<B> Subir:</B> <A NAME="tex2html9653"
+  HREF="node356.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9647"
+  HREF="node375.html">Cookies y Rack</A>
+ &nbsp; <B>  <A NAME="tex2html9655"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9657"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

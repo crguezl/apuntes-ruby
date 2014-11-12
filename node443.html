@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Streaming y Valores de Retorno</TITLE>
-<META NAME="description" CONTENT="Streaming y Valores de Retorno">
+<TITLE>Ambito</TITLE>
+<META NAME="description" CONTENT="Ambito">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node444.html">
 <LINK REL="previous" HREF="node442.html">
-<LINK REL="up" HREF="node441.html">
+<LINK REL="up" HREF="node411.html">
 <LINK REL="next" HREF="node444.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10726"
+<A NAME="tex2html10765"
   HREF="node444.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10720"
-  HREF="node441.html">
+<A NAME="tex2html10759"
+  HREF="node411.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10714"
+<A NAME="tex2html10753"
   HREF="node442.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10722"
-  HREF="node802.html">
+<A NAME="tex2html10761"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10724"
-  HREF="node805.html">
+<A NAME="tex2html10763"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,142 +92,281 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10727"
-  HREF="node444.html">Sinatra usando Streaming, Rack</A>
-<B> Subir:</B> <A NAME="tex2html10721"
-  HREF="node441.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10715"
-  HREF="node442.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html10723"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10725"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10766"
+  HREF="node444.html">Sinatra Authentication</A>
+<B> Subir:</B> <A NAME="tex2html10760"
+  HREF="node411.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10754"
+  HREF="node442.html">Correo</A>
+ &nbsp; <B>  <A NAME="tex2html10762"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10764"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03820000000000000000">
-Streaming y Valores de Retorno</A>
+<H1><A NAME="SECTION033240000000000000000">
+Ambito</A>
 </H1>
-
-<P>
-El valor de retorno del bloque de una ruta determina
-el cuerpo de respuesta pasado al cliente HTTP, o al menos al siguiente middleware en la pila de Rack.
-Lo habitual es que sea una <code>String</code> pero puede ser otra cosa.
-
-<P>
-De hecho, podemos retornar cualquier tipo de objeto que sea una respuesta Rack válida,
-un objeto que disponga de un <code>each</code> o un código de estatus HTTP:
+The scope you are currently in determines what methods and variables are available.
 
 <P>
 
-<UL>
-<LI>Un <code>Array</code> con tres elementos: <code>[status (Fixnum), headers (Hash), response body (responds to #each)]</code>
+<H4><A NAME="SECTION033240010000000000000">
+Ámbito de Clase/Class Scope</A>
+</H4>
+  
 
 <P>
+
+<OL>
+<LI>Every Sinatra application corresponds to a subclass of <A NAME="tex2html1025"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Base</A>
 </LI>
-<LI>Un <code>Array</code> con dos elementos:
- <code>[status (Fixnum), response body (responds to #each)]</code>
+<LI>If you are using the top-level DSL (<code>require 'sinatra'</code>), then this class is <A NAME="tex2html1026"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/main.rb">Sinatra::Application</A>, otherwise it is the subclass you created explicitly
+</LI>
+<LI>At class level you have methods like <code>get</code> or <code>before</code>, 
+but you cannot access the <code>request</code> or <code>session</code> objects, 
+as there is only a single application class for all requests
+</LI>
+</OL>
 
 <P>
-</LI>
-<LI>Un objeto que responde a <code>#each</code> y que le pasa strings al bloque dado
-
-<P>
-</LI>
-<LI>Un <code>Fixnum</code> que representa el status code
-</LI>
-</UL>
-
-<P>
-Así podemos, implementar el siguiente ejemplo que funciona en streaming cuando se usa con 
-<code>puma</code>:
+Options created via <code>set</code> are methods at class level:
 
 <P>
 <PRE>
-[~/sinatra/sinatra-streaming/intro-streaming(master)]$ cat stream.rb 
-require 'sinatra'
+class MyApp &lt; Sinatra::Base
+  # Hey, I'm in the application scope!
+  set :foo, 42
+  foo # =&gt; 42
 
-before do
-  content_type :txt
-end
-
-class Flujo
-  def each
-    5.times do |i| 
-      yield "#{i}: #{Time.now}\n"
-      sleep 1
-    end
+  get '/foo' do
+    # Hey, I'm no longer in the application scope!
   end
 end
-
-get '/' do
-  puts env
-  Flujo.new
-end
 </PRE>
-Véase el código en
-<A NAME="tex2html988"
-  HREF="https://github.com/crguezl/sinatra_intro/tree/master/streaming">https://github.com/crguezl/sinatra_intro/tree/master/streaming</A>.
+
+<P>
+You have the application scope binding inside:
+
+<P>
+
+<OL>
+<LI>Your application class body
+</LI>
+<LI>Methods defined by extensions
+</LI>
+<LI>The block passed to <code>helpers</code>
+</LI>
+<LI>Procs/blocks used as value for <code>set</code>
+</LI>
+<LI>The block passed to <code>Sinatra.new</code>
+</LI>
+</OL>
+
+<P>
+You can reach the scope object (the class) like this:
+
+<P>
+
+<OL>
+<LI>Via the object passed to configure blocks (<code>configure { |c| ... }</code>)
+</LI>
+<LI><code>settings</code> from within the request scope
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION033240020000000000000">
+Ámbito de Instancia/Instance Scope</A>
+</H4>
+  
+
+<P>
+For every incoming request, a new instance of your application class is created and all handler blocks run in that scope
+
+<OL>
+<LI>From within this scope you can access the <code>request</code> and <code>session</code> objects or 
+</LI>
+<LI>call rendering methods like <code>erb</code> or <code>haml</code>
+</LI>
+<LI>You can access the application scope from within the <code>request</code> scope via the <code>settings</code> helper:
+</LI>
+</OL>
 
 <P>
 <PRE>
-[~/sinatra/sinatra-streaming/intro-streaming(master)]$ cat Rakefile 
-task :default =&gt; :puma
-desc "run stream.rb using puma server"
-task :puma do
-  sh "ruby stream.rb -e production -s puma"
+[~/sinatra/sinatra-scope]$ cat app.rb 
+require 'sinatra'
+
+class MyApp &lt; Sinatra::Base
+  # Hey, I'm in the application scope!
+  get '/define_route/:name' do
+    # Request scope for '/define_route/:name'
+    @value = 42
+    puts "Inside /define_route/:name @value = #{@value}"
+    puts self.class
+
+    settings.get("/#{params[:name]}") do
+      # Request scope for "/#{params[:name]}"
+      puts "@value = &lt;#{@value}&gt;"
+      "Inside defined route #{params[:name]}"
+    end
+
+    "Route #{params[:name]} defined!"
+  end
+  
+  run! if __FILE__ == $0
 end
-
-desc "run stream.rb using thin server"
-task :thin do
-  sh "ruby stream.rb -e production -s thin"
-end
 </PRE>
 
 <P>
+
+<H4><A NAME="SECTION033240030000000000000">
+Ejecución en el servidor</A>
+</H4>
+  
+
 <PRE>
-[~/sinatra/sinatra-streaming/intro-streaming(master)]$ rake
-ruby stream.rb -e production -s puma
-Puma 2.6.0 starting...
-* Min threads: 0, max threads: 16
-* Environment: development
-* Listening on tcp://0.0.0.0:4567
-== Sinatra/1.4.4 has taken the stage on 4567 for production with backup from Puma
-127.0.0.1 - - [01/Dec/2013 21:05:32] "GET / HTTP/1.1" 200 - 5.0094
+[~/sinatra/sinatra-scope]$ ruby app.rb 
+== Sinatra/1.4.4 has taken the stage on 4567 for development with backup from Thin
+Thin web server (v1.6.1 codename Death Proof)
+Maximum connections set to 1024
+Listening on localhost:4567, CTRL+C to stop
+Inside /define_route/:name @value = 42
+MyApp
+@value = &lt;&gt;
 </PRE>
-Nota: con <code>thin</code> no funciona en modo streaming Prepara la página completa y la suelta
-de golpe.
 
 <P>
-Cuando visitamos <code>localhost:4567</code> obtenemos una salida en la que cada línea
-aparece un segundo después que la anterior:
+
+<H4><A NAME="SECTION033240040000000000000">
+Ejecución en el cliente. Ruta: /define_route/juan</A>
+</H4>
+  
+
 <PRE>
-0: 2013-12-01 21:05:27 +0000
-1: 2013-12-01 21:05:28 +0000
-2: 2013-12-01 21:05:29 +0000
-3: 2013-12-01 21:05:30 +0000
-4: 2013-12-01 21:05:31 +0000
+[~/sinatra/sinatra-scope]$ curl -v 'http://localhost:4567/define_route/juan'
+* Adding handle: conn: 0x7fbacb004000
+* Adding handle: send: 0
+* Adding handle: recv: 0
+* Curl_addHandleToPipeline: length: 1
+* - Conn 0 (0x7fbacb004000) send_pipe: 1, recv_pipe: 0
+* About to connect() to localhost port 4567 (#0)
+*   Trying 127.0.0.1...
+* Connected to localhost (127.0.0.1) port 4567 (#0)
+&gt; GET /define_route/juan HTTP/1.1
+&gt; User-Agent: curl/7.30.0
+&gt; Host: localhost:4567
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html;charset=utf-8
+&lt; Content-Length: 19
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Content-Type-Options: nosniff
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Connection: keep-alive
+* Server thin 1.6.1 codename Death Proof is not blacklisted
+&lt; Server: thin 1.6.1 codename Death Proof
+&lt; 
+* Connection #0 to host localhost left intact
+Route juan defined!
+[~/sinatra/sinatra-scope]$
 </PRE>
 
 <P>
+
+<H4><A NAME="SECTION033240050000000000000">
+Ejecución en el cliente. Ruta: /juan</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra/sinatra-scope]$ curl -v 'http://localhost:4567/juan'
+* Adding handle: conn: 0x7fbdd1800000
+* Adding handle: send: 0
+* Adding handle: recv: 0
+* Curl_addHandleToPipeline: length: 1
+* - Conn 0 (0x7fbdd1800000) send_pipe: 1, recv_pipe: 0
+* About to connect() to localhost port 4567 (#0)
+*   Trying ::1...
+*   Trying 127.0.0.1...
+* Connected to localhost (127.0.0.1) port 4567 (#0)
+&gt; GET /juan HTTP/1.1
+&gt; User-Agent: curl/7.30.0
+&gt; Host: localhost:4567
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html;charset=utf-8
+&lt; Content-Length: 21
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Content-Type-Options: nosniff
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Connection: keep-alive
+* Server thin 1.6.1 codename Death Proof is not blacklisted
+&lt; Server: thin 1.6.1 codename Death Proof
+&lt; 
+* Connection #0 to host localhost left intact
+Inside defined route
+</PRE>
+You have the request scope binding inside:
+
+<P>
+
+<OL>
+<LI><code>get</code>, <code>head</code>, <code>post</code>, <code>put</code>, <code>delete</code>, <code>options</code>, <code>patch</code>, <code>link</code>, and <code>unlink</code> blocks
+</LI>
+<LI><code>before</code> and <code>after</code> filters
+</LI>
+<LI><code>helper</code> methods
+</LI>
+<LI>templates/views
+</LI>
+</OL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html10767"
+  HREF="node443.html#SECTION033240010000000000000">Ámbito de Clase/Class Scope</A>
+<LI><A NAME="tex2html10768"
+  HREF="node443.html#SECTION033240020000000000000">Ámbito de Instancia/Instance Scope</A>
+<LI><A NAME="tex2html10769"
+  HREF="node443.html#SECTION033240030000000000000">Ejecución en el servidor</A>
+<LI><A NAME="tex2html10770"
+  HREF="node443.html#SECTION033240040000000000000">Ejecución en el cliente. Ruta: /define_route/juan</A>
+<LI><A NAME="tex2html10771"
+  HREF="node443.html#SECTION033240050000000000000">Ejecución en el cliente. Ruta: /juan</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10726"
+<A NAME="tex2html10765"
   HREF="node444.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10720"
-  HREF="node441.html">
+<A NAME="tex2html10759"
+  HREF="node411.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10714"
+<A NAME="tex2html10753"
   HREF="node442.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10722"
-  HREF="node802.html">
+<A NAME="tex2html10761"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10724"
-  HREF="node805.html">
+<A NAME="tex2html10763"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -278,20 +417,20 @@ aparece un segundo después que la anterior:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10727"
-  HREF="node444.html">Sinatra usando Streaming, Rack</A>
-<B> Subir:</B> <A NAME="tex2html10721"
-  HREF="node441.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10715"
-  HREF="node442.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html10723"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10725"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10766"
+  HREF="node444.html">Sinatra Authentication</A>
+<B> Subir:</B> <A NAME="tex2html10760"
+  HREF="node411.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10754"
+  HREF="node442.html">Correo</A>
+ &nbsp; <B>  <A NAME="tex2html10762"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10764"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

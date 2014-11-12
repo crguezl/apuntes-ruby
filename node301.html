@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Programación distribuída/Distributed Programming</TITLE>
-<META NAME="description" CONTENT="Programación distribuída/Distributed Programming">
+<TITLE>6: Green</TITLE>
+<META NAME="description" CONTENT="6: Green">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node304.html">
-<LINK REL="previous" HREF="node293.html">
-<LINK REL="up" HREF="node25.html">
+<LINK REL="next" HREF="node302.html">
+<LINK REL="previous" HREF="node300.html">
+<LINK REL="up" HREF="node294.html">
 <LINK REL="next" HREF="node302.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8070"
+<A NAME="tex2html8113"
   HREF="node302.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8064"
-  HREF="node25.html">
+<A NAME="tex2html8107"
+  HREF="node294.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8058"
+<A NAME="tex2html8101"
   HREF="node300.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8066"
-  HREF="node802.html">
+<A NAME="tex2html8109"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8068"
-  HREF="node805.html">
+<A NAME="tex2html8111"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,41 +92,116 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8071"
-  HREF="node302.html">DRb</A>
-<B> Subir:</B> <A NAME="tex2html8065"
-  HREF="node25.html">EL LENGUAJE DE PROGRAMACIÓN</A>
-<B> Anterior:</B> <A NAME="tex2html8059"
-  HREF="node300.html">Véase</A>
- &nbsp; <B>  <A NAME="tex2html8067"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8069"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8114"
+  HREF="node302.html">7: un poco mas</A>
+<B> Subir:</B> <A NAME="tex2html8108"
+  HREF="node294.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html8102"
+  HREF="node300.html">5: Red: should and</A>
+ &nbsp; <B>  <A NAME="tex2html8110"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8112"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021100000000000000000">
-Programación distribuída/Distributed Programming</A>
-</H1>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<H2><A NAME="SECTION021017000000000000000">
+6: Green</A>
+</H2>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html8072"
-  HREF="node302.html">DRb</A>
-<LI><A NAME="tex2html8073"
-  HREF="node303.html">Distributed Ruby and SSH: drbssh</A>
-<UL>
-<LI><A NAME="tex2html8074"
-  HREF="node303.html#SECTION021120010000000000000">Ejecución</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/math/rpcalc.rb
+module Math
+  class RPCalc
+    attr_accessor :stack
+
+    def initialize()
+      @stack = []
+    end
+
+    def calc(expr)
+      @stack = []
+      expr.split(/\s+/).each do |x|
+      case x
+        when '+', '*', '-', '/' 
+          op2 = @stack.pop
+          op1 = @stack.pop
+          @stack.push eval "(#{op1} #{x} #{op2})"
+        when /^-?\s*\d+(\.\d+)?([eE][+-]?\d+)?\s*$/
+          @stack.push x
+        else
+          raise SyntaxError, "Error. found '#{x}'. Expected number or operator"       
+        end
+      end
+      @stack.pop
+    end
+
+  end  # class RPCalc
+end    # Math
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/math/rpcalc_spec.rb 
+#require File.join(File.dirname(__FILE__), "/../spec_helper")
+require "spec_helper"
+module Math
+  describe RPCalc do
+    before :each do
+      @c = Math::RPCalc.new
+    end
+
+    context "When an erroneous input is given" do
+      before :each do
+        @e = proc { @c.calc('a') }
+      end
+      it "must raise an exception" do
+        expect { @e[] }.to raise_error(SyntaxError)
+        expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
+      end
+    end
+
+    context "When a correct input is given" do
+      it "must give the correct answer for integer expressions" do
+        r = @c.calc('2 3 + 4 *')
+        r.should eq 20
+        @c.stack.should eq []
+      end
+
+      it "must give the correct answer for float expressions" do
+        r = @c.calc('4 3 + 2.5 3.5 +')
+        r.should be_within(0.01).of(6.0)
+        @c.stack.should eq [ 7 ]
+      end
+    end
+
+  end    # RPCalc
+end      # Math
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
+rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
+
+Math::RPCalc
+  When an erroneous input is given
+    must raise an exception
+  When a correct input is given
+    must give the correct answer for integer expressions
+    must give the correct answer for float expressions
+
+Finished in 0.00457 seconds
+3 examples, 0 failures
+</PRE>
+
+<P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

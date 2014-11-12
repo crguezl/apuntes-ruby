@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Underscores and Dashes</TITLE>
-<META NAME="description" CONTENT="Underscores and Dashes">
+<TITLE>Rake::TestTask</TITLE>
+<META NAME="description" CONTENT="Rake::TestTask">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node679.html">
 <LINK REL="previous" HREF="node677.html">
-<LINK REL="up" HREF="node675.html">
+<LINK REL="up" HREF="node676.html">
 <LINK REL="next" HREF="node679.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14782"
+<A NAME="tex2html14828"
   HREF="node679.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14776"
-  HREF="node675.html">
+<A NAME="tex2html14822"
+  HREF="node676.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14770"
+<A NAME="tex2html14816"
   HREF="node677.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14778"
-  HREF="node802.html">
+<A NAME="tex2html14824"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14780"
-  HREF="node805.html">
+<A NAME="tex2html14826"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,110 +92,138 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14783"
-  HREF="node679.html">Dependencias de la Gema</A>
-<B> Subir:</B> <A NAME="tex2html14777"
-  HREF="node675.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14771"
-  HREF="node677.html">Creando la Estructura Inicial</A>
- &nbsp; <B>  <A NAME="tex2html14779"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14781"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14829"
+  HREF="node679.html">Enlaces</A>
+<B> Subir:</B> <A NAME="tex2html14823"
+  HREF="node676.html">Rake</A>
+<B> Anterior:</B> <A NAME="tex2html14817"
+  HREF="node677.html">Argumentos en una Tarea</A>
+ &nbsp; <B>  <A NAME="tex2html14825"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14827"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061430000000000000000">
-Underscores and Dashes</A>
+<H1><A NAME="SECTION06820000000000000000"></A>
+<A NAME="section:raketesttask"></A>
+<BR>
+Rake::TestTask
 </H1>
+La clase <A NAME="tex2html1603"
+  HREF="http://rake.rubyforge.org/classes/Rake/TestTask.html">Rake::TestTask</A>
+nos permite crear una tarea que ejecuta un conjunto de pruebas;
+<PRE>
+  Rake::TestTask.new do |t|
+    t.libs &lt;&lt; "test"
+    t.test_files = FileList['test/test*.rb']
+    t.verbose = true
+  end
+</PRE>
+Si se llama a <code>rake</code> con la opción <code>TEST=filename</code> entonces sólo se ejecutará esa prueba.
 
 <P>
-Véanse las recomendaciones en:
-<A NAME="tex2html1574"
-  HREF="http://guides.rubygems.org/name-your-gem/">Name your gem</A>.
+Si se invoca con la opción <code>TESTOPTS=options</code>, las opciones se pasarán  a <code>Test::Unit</code>.
+Ejemplos:
+<PRE>
+  rake test                           # run tests normally
+  rake test TEST=just_one_file.rb     # run just one test file.
+  rake test TESTOPTS="-v"             # run in verbose mode
+</PRE>
+
+<P>
+Sigue otro ejemplo:
+
+<P>
+<PRE>
+MacBookdeJohn:htmlRB john$ cat Rakefile 
+$:.unshift 'lib/'
+require 'rake/testtask'
+
+# rake test TEST=just_one_file.rb     # run just one test file.
+# rake test TESTOPTS="-v"             # run in verbose mode
+Rake::TestTask.new do |t|
+  # t.libs: List of directories to be added to $LOAD_PATH. (default is ‘lib’)
+  t.libs &lt;&lt; "test" 
+  t.pattern = 'test/tc*.rb' # or t.test_files = FileList['test/tc*.rb'] 
+  t.warning = true
+  t.verbose = true # verbose test output. (default is false)
+end
+</PRE>
+
+<P>
+Ejecuciones:
+<PRE>
+MacBookdeJohn:htmlRB john$ ls -ltr test/
+total 16
+-rw-r--r--  1 john  staff   835 29 nov 12:27 tc_01_smoke.rb
+-rw-r--r--  1 john  staff  1023  9 dic 11:35 tc_02_smoke.rb
+MacBookdeJohn:htmlRB john$ rake test
+(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" 
+./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
+Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
+Started
+...
+Finished in 0.001125 seconds.
+
+3 tests, 7 assertions, 0 failures, 0 errors
+</PRE>
+Con la opción <code>TESTOPTS="-v"</code> la salida es mas detallada:
+
+<P>
+<PRE>
+MacBookdeJohn:htmlRB john$ rake test TESTOPTS="-v" 
+(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" -v
+./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
+Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
+Started
+test_attr(TestHTML): .
+test_attr2(TestHTML): .
+test_simplepage(TestHTML): .
+
+Finished in 0.000844 seconds.
+
+3 tests, 7 assertions, 0 failures, 0 errors
+</PRE>
+Ejecución de un solo programa de prueba:
+
+<P>
+<PRE>
+MacBookdeJohn:htmlRB john$ rake test TEST=tc_02_smoke.rb
+(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "tc_02_smoke.rb" 
+./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
+Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
+Started
+..
+Finished in 0.000623 seconds.
+
+2 tests, 6 assertions, 0 failures, 0 errors
+</PRE>
 
 <P>
 
-<table><thead><tr><th>Gem name</th><th>Require statement</th><th>Main class or module</th></tr></thead><tbody><tr><td style='text-align: left;'><code>fancy_require</code></td><td style='text-align: left;'><code>require &#39;fancy_require&#39;</code></td><td style='text-align: left;'><code>FancyRequire</code></td>
-</tr><tr><td style='text-align: left;'><code>ruby_parser</code></td><td style='text-align: left;'><code>require &#39;ruby_parser&#39;</code></td><td style='text-align: left;'><code>RubyParser</code></td>
-</tr><tr><td style='text-align: left;'><code>net-http-persistent</code></td><td style='text-align: left;'><code>require &#39;net/http/persistent&#39;</code></td><td style='text-align: left;'><code>Net::HTTP::Persistent</code></td>
-</tr><tr><td style='text-align: left;'><code>rdoc-data</code></td><td style='text-align: left;'><code>require &#39;rdoc/data&#39;</code></td><td style='text-align: left;'><code>RDoc::Data</code></td>
-</tr><tr><td style='text-align: left;'><code>autotest-growl</code></td><td style='text-align: left;'><code>require &#39;autotest/growl&#39;</code></td><td style='text-align: left;'><code>Autotest::Growl</code></td>
-</tr><tr><td style='text-align: left;'><code>net-http-digest_auth</code></td><td style='text-align: left;'><code>require &#39;net/http/digest_auth&#39;</code></td><td style='text-align: left;'><code>Net::HTTP::DigestAuth</code></td>
-</tr></tbody></table>
-
-<P>
-
-<H4><A NAME="SECTION061430010000000000000">
-Use underscores for multiple words</A>
+<H4><A NAME="SECTION06820010000000000000">
+Donde</A>
 </H4>
   
-
-<P>
-If a class or module has multiple words, use underscores to separate
-them. This matches the file the user will require, making it easier
-for the user to start using your gem.
-
-<P>
-
-<H4><A NAME="SECTION061430020000000000000">
-Use dashes for extensions</A>
-</H4>
-  
-
-<P>
-If you’re adding functionality to another gem, use a dash. This
-usually corresponds to a <code>/</code> in the <code>require</code> statement 
-(and therefore
-your gem’s directory structure) and a <code>::</code> in the name of your main
-class or module.
-
-<P>
-
-<H4><A NAME="SECTION061430030000000000000">
-Mix underscores and dashes appropriately</A>
-</H4>
-  
-
-<P>
-If your class or module has multiple words and you’re also adding
-functionality to another gem, follow both of the rules above. For
-example, <code>net-http-digest_auth</code> adds HTTP digest authentication to
-<code>net/http</code>. The user will require <code>net/http/digest_auth</code> to use the
-extension (in class <code>Net::HTTP::DigestAuth</code>).
-
-<P>
-
-<H4><A NAME="SECTION061430040000000000000">
-Don’t use UPPERCASE letters</A>
-</H4>
-  
-
-<P>
-OS X and Windows have case-insensitive filesystems by default. 
-Users may mistakenly require files from a gem using uppercase letters
-which will be non-portable if they move it to a non-windows or OS
-X system. While this will mostly be a newbie mistake we don’t need
-to be confusing them more than necessary.
-
-<P>
-
-<H4><A NAME="SECTION061430050000000000000">
-Ventajas</A>
-</H4>
-  
-
-By following the community conventions you:
 
 <P>
 
 <UL>
-<LI>Make your library easier to "guess" how to use because developers can
-use common idioms to which they have become accustomed.
+<LI><A NAME="tex2html1604"
+  HREF="https://github.com/crguezl/html-method_missing-example/tree/master/test">Este ejemplo en gitHub</A>
 </LI>
-<LI>Make your library easier for contributors to join by providing familiar
-patterns and locations for code
+<LI><PRE>
+[~/rubytesting/htmlRB(master)]$ pwd -P
+/Users/casiano/local/src/ruby/rubytesting/htmlRB
+[~/rubytesting/htmlRB(master)]$ git remote -v
+origin  git@github.com:crguezl/html-method_missing-example.git (fetch)
+origin  git@github.com:crguezl/html-method_missing-example.git (push)
+</PRE>
 </LI>
 </UL>
 
@@ -207,35 +235,27 @@ patterns and locations for code
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html14784"
-  HREF="node678.html#SECTION061430010000000000000">Use underscores for multiple words</A>
-<LI><A NAME="tex2html14785"
-  HREF="node678.html#SECTION061430020000000000000">Use dashes for extensions</A>
-<LI><A NAME="tex2html14786"
-  HREF="node678.html#SECTION061430030000000000000">Mix underscores and dashes appropriately</A>
-<LI><A NAME="tex2html14787"
-  HREF="node678.html#SECTION061430040000000000000">Don’t use UPPERCASE letters</A>
-<LI><A NAME="tex2html14788"
-  HREF="node678.html#SECTION061430050000000000000">Ventajas</A>
+<LI><A NAME="tex2html14830"
+  HREF="node678.html#SECTION06820010000000000000">Donde</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14782"
+<A NAME="tex2html14828"
   HREF="node679.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14776"
-  HREF="node675.html">
+<A NAME="tex2html14822"
+  HREF="node676.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14770"
+<A NAME="tex2html14816"
   HREF="node677.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14778"
-  HREF="node802.html">
+<A NAME="tex2html14824"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14780"
-  HREF="node805.html">
+<A NAME="tex2html14826"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -286,20 +306,20 @@ patterns and locations for code
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14783"
-  HREF="node679.html">Dependencias de la Gema</A>
-<B> Subir:</B> <A NAME="tex2html14777"
-  HREF="node675.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html14771"
-  HREF="node677.html">Creando la Estructura Inicial</A>
- &nbsp; <B>  <A NAME="tex2html14779"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14781"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14829"
+  HREF="node679.html">Enlaces</A>
+<B> Subir:</B> <A NAME="tex2html14823"
+  HREF="node676.html">Rake</A>
+<B> Anterior:</B> <A NAME="tex2html14817"
+  HREF="node677.html">Argumentos en una Tarea</A>
+ &nbsp; <B>  <A NAME="tex2html14825"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14827"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

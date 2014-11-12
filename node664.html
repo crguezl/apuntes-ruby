@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>6: Green</TITLE>
-<META NAME="description" CONTENT="6: Green">
+<TITLE>Diferencias entre fetch y pull</TITLE>
+<META NAME="description" CONTENT="Diferencias entre fetch y pull">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node665.html">
 <LINK REL="previous" HREF="node663.html">
-<LINK REL="up" HREF="node657.html">
+<LINK REL="up" HREF="node658.html">
 <LINK REL="next" HREF="node665.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14556"
+<A NAME="tex2html14628"
   HREF="node665.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14550"
-  HREF="node657.html">
+<A NAME="tex2html14622"
+  HREF="node658.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14544"
+<A NAME="tex2html14616"
   HREF="node663.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14552"
-  HREF="node802.html">
+<A NAME="tex2html14624"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14554"
-  HREF="node805.html">
+<A NAME="tex2html14626"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,116 +92,157 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14557"
-  HREF="node665.html">7: un poco mas</A>
-<B> Subir:</B> <A NAME="tex2html14551"
-  HREF="node657.html">Introducción</A>
-<B> Anterior:</B> <A NAME="tex2html14545"
-  HREF="node663.html">5: Red: should and</A>
- &nbsp; <B>  <A NAME="tex2html14553"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14555"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14629"
+  HREF="node665.html">Mezclando Ficheros Específicos desde</A>
+<B> Subir:</B> <A NAME="tex2html14623"
+  HREF="node658.html">Git</A>
+<B> Anterior:</B> <A NAME="tex2html14617"
+  HREF="node663.html">Véase: Tutoriales de Git</A>
+ &nbsp; <B>  <A NAME="tex2html14625"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14627"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION06917000000000000000">
-6: Green</A>
-</H2>
+<H1><A NAME="SECTION06660000000000000000">
+Diferencias entre fetch y pull</A>
+</H1>
+Git was designed to support a distributed model with no need for a central
+repository (though you can certainly use one if you like.) Also git was
+designed so that the client and the "server"
+don't need to be online at the same time. 
 
 <P>
-<PRE>
-[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/math/rpcalc.rb
-module Math
-  class RPCalc
-    attr_accessor :stack
-
-    def initialize()
-      @stack = []
-    end
-
-    def calc(expr)
-      @stack = []
-      expr.split(/\s+/).each do |x|
-      case x
-        when '+', '*', '-', '/' 
-          op2 = @stack.pop
-          op1 = @stack.pop
-          @stack.push eval "(#{op1} #{x} #{op2})"
-        when /^-?\s*\d+(\.\d+)?([eE][+-]?\d+)?\s*$/
-          @stack.push x
-        else
-          raise SyntaxError, "Error. found '#{x}'. Expected number or operator"       
-        end
-      end
-      @stack.pop
-    end
-
-  end  # class RPCalc
-end    # Math
-</PRE>
+Git was designed so that people on an unreliable link could exchange
+code via email, even. 
 
 <P>
-<PRE>
-[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/math/rpcalc_spec.rb 
-#require File.join(File.dirname(__FILE__), "/../spec_helper")
-require "spec_helper"
-module Math
-  describe RPCalc do
-    before :each do
-      @c = Math::RPCalc.new
-    end
-
-    context "When an erroneous input is given" do
-      before :each do
-        @e = proc { @c.calc('a') }
-      end
-      it "must raise an exception" do
-        expect { @e[] }.to raise_error(SyntaxError)
-        expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
-      end
-    end
-
-    context "When a correct input is given" do
-      it "must give the correct answer for integer expressions" do
-        r = @c.calc('2 3 + 4 *')
-        r.should eq 20
-        @c.stack.should eq []
-      end
-
-      it "must give the correct answer for float expressions" do
-        r = @c.calc('4 3 + 2.5 3.5 +')
-        r.should be_within(0.01).of(6.0)
-        @c.stack.should eq [ 7 ]
-      end
-    end
-
-  end    # RPCalc
-end      # Math
-</PRE>
+In order to support this model git maintains 
+a local repository with your
+code and also an additional local repository that mirrors the state of
+the remote repository. 
+By keeping a copy of the remote
+repository locally, git can figure out the changes needed even when the remote repository is not reachable. 
 
 <P>
-<PRE>
-[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
-rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
-
-Math::RPCalc
-  When an erroneous input is given
-    must raise an exception
-  When a correct input is given
-    must give the correct answer for integer expressions
-    must give the correct answer for float expressions
-
-Finished in 0.00457 seconds
-3 examples, 0 failures
-</PRE>
+Later when you need to send the changes to someone else, git can transfer them as a set of
+changes from a point in time known to the remote repository.
 
 <P>
-<BR><HR>
+
+<UL>
+<LI>The command <code>git fetch</code> is the command that says <I>bring my local copy of the remote repository up to date.</I> 
+</LI>
+<LI>The command <code>git pull</code> says "bring the changes in the remote repository where I keep my own
+code." 
+</LI>
+</UL>
+
+<P>
+Normally <code>git pull</code> does this by doing a <code>git fetch</code> to bring
+the local copy of the remote repository up to date, and then merging
+the changes into your own code repository and possibly your
+working copy.
+
+<P>
+The take away is to keep in mind that there are often at least <SPAN  CLASS="textbf">three copies</SPAN> 
+of a project on your workstation. 
+
+<UL>
+<LI>One copy is your own repository
+with your own commit history. 
+</LI>
+<LI>The second copy is your
+working copy where you are editing and building. 
+</LI>
+<LI>The third copy is your local "cached" copy of a remote repository.
+</LI>
+</UL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14628"
+  HREF="node665.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14622"
+  HREF="node658.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14616"
+  HREF="node663.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html14624"
+  HREF="node804.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14626"
+  HREF="node807.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html14629"
+  HREF="node665.html">Mezclando Ficheros Específicos desde</A>
+<B> Subir:</B> <A NAME="tex2html14623"
+  HREF="node658.html">Git</A>
+<B> Anterior:</B> <A NAME="tex2html14617"
+  HREF="node663.html">Véase: Tutoriales de Git</A>
+ &nbsp; <B>  <A NAME="tex2html14625"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14627"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

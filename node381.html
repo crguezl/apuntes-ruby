@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Despliegue en Heroku su Aplicación Rock, Paper,Scissors</TITLE>
-<META NAME="description" CONTENT="Práctica: Despliegue en Heroku su Aplicación Rock, Paper,Scissors">
+<TITLE>Redirección</TITLE>
+<META NAME="description" CONTENT="Redirección">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node382.html">
 <LINK REL="previous" HREF="node380.html">
-<LINK REL="up" HREF="node333.html">
+<LINK REL="up" HREF="node356.html">
 <LINK REL="next" HREF="node382.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9657"
+<A NAME="tex2html9738"
   HREF="node382.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9651"
-  HREF="node333.html">
+<A NAME="tex2html9732"
+  HREF="node356.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9645"
+<A NAME="tex2html9726"
   HREF="node380.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9653"
-  HREF="node802.html">
+<A NAME="tex2html9734"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9655"
-  HREF="node805.html">
+<A NAME="tex2html9736"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,41 +92,54 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9658"
-  HREF="node382.html">Faking Sinatra with Rack</A>
-<B> Subir:</B> <A NAME="tex2html9652"
-  HREF="node333.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9646"
-  HREF="node380.html">Despliegue de una Aplicación</A>
- &nbsp; <B>  <A NAME="tex2html9654"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9656"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9739"
+  HREF="node382.html">La Estructura de una</A>
+<B> Subir:</B> <A NAME="tex2html9733"
+  HREF="node356.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9727"
+  HREF="node380.html">Ejemplo: Basic Authentication</A>
+ &nbsp; <B>  <A NAME="tex2html9735"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9737"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031310000000000000000"></A>
-   <A NAME="16503"></A>
-  
-<A NAME="practica:despliegueenherokurps"></A>
-<BR>
-Práctica: Despliegue en Heroku su Aplicación Rock, Paper,Scissors
+<H1><A NAME="SECTION031130000000000000000">
+Redirección</A>
 </H1>
 
 <P>
-Despliegue en Heroku la practica realizada en la sección
-<I>Añada Pruebas a Rock, Paper,Scissors</I>
-<A HREF="node378.html#practica:rpsconsessionsypruebas">25.28</A>.
-Repase la sección 
-<I>Despliegue en Heroku</I>
-<A HREF="node501.html#chapter:despliegueenheroku">46</A>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat redirect.rb 
+require 'rack'
+require 'thin'
+
+app = lambda do |env|
+  req = Rack::Request.new env
+  res = Rack::Response.new
+
+  if req.path_info == '/redirect'
+    res.redirect('https://plus.google.com/u/0/')
+  else
+    res.write "You did not get redirected"
+  end
+  res.finish
+end
+
+Rack::Server.start(
+ :app =&gt; app,
+ :Port =&gt; 9292,
+ :server =&gt; 'thin'
+)
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

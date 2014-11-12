@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Véase</TITLE>
-<META NAME="description" CONTENT="Véase">
+<TITLE>Agentes SSH</TITLE>
+<META NAME="description" CONTENT="Agentes SSH">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node650.html">
 <LINK REL="previous" HREF="node648.html">
-<LINK REL="up" HREF="node648.html">
+<LINK REL="up" HREF="node643.html">
 <LINK REL="next" HREF="node650.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14321"
+<A NAME="tex2html14364"
   HREF="node650.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14315"
-  HREF="node648.html">
+<A NAME="tex2html14358"
+  HREF="node643.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14309"
+<A NAME="tex2html14352"
   HREF="node648.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14317"
-  HREF="node802.html">
+<A NAME="tex2html14360"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14319"
-  HREF="node805.html">
+<A NAME="tex2html14362"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,65 +92,311 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14322"
-  HREF="node650.html">ruby-debug Cheat Sheet</A>
-<B> Subir:</B> <A NAME="tex2html14316"
-  HREF="node648.html">Debugging, Depurando</A>
-<B> Anterior:</B> <A NAME="tex2html14310"
-  HREF="node648.html">Debugging, Depurando</A>
- &nbsp; <B>  <A NAME="tex2html14318"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14320"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14365"
+  HREF="node650.html">Mejor un Sólo Agente</A>
+<B> Subir:</B> <A NAME="tex2html14359"
+  HREF="node643.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14353"
+  HREF="node648.html">Deshabilitar la Asignación de</A>
+ &nbsp; <B>  <A NAME="tex2html14361"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14363"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06710000000000000000">
-Véase</A>
+<H1><A NAME="SECTION06560000000000000000">
+Agentes SSH</A>
 </H1>
 
+<P>
+Un agente SSH es un programa que guarda de forma segura 
+las frases-clave asociadas con las claves privadas y responde a consultas 
+autentificadas de los clientes SSH.
+El agente recuerda la passphrase de manera que el usuario 
+no tenga que teclearla cada vez que la clave es usada.
+
+<P>
+El agente crea un socket en un subdirectorio de <code>/tmp</code> 
+en el que escucha las peticiones de conexión SSH.
+Cualquiera que tenga acceso a dicho socket puede acceder al agente. Los permisos
+unix para el socket son suficientemente restrictivos.
+
+<P>
+Los programas que se usan son  <TT>ssh-agent</TT>  y  <TT>ssh-add</TT> . 
+Utilizamos <A NAME="tex2html1511"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
+para añadir claves privadas a la cache del agente
+ssh. A partir de ese momento el cliente ssh no nos importunará
+solicitando la passphrase, comúnicandose con el agente 
+para superar el proceso de autentificación.
+El agente <code>ssh-agent</code> actúa como un daemon que permanece dando el
+servicio de autentificación a los clientes SSH.
+
+<P>
+
+<H4><A NAME="SECTION06560010000000000000">
+ssh-add</A>
+</H4>
+  
+
+<P>
+El programa
+<code>ssh-add</code> permite añadir, listar y suprimir claves de la cache del agente:
+
+<P>
+<PRE>
+someone@localhost:~/.ssh$ ssh-add ~/.ssh/conpass
+Enter passphrase for /home/someone/.ssh/conpass: **********
+Identity added: /home/someone/.ssh/conpass (/home/someone/.ssh/conpass)
+someone@localhost:~/.ssh$ ssh-add -l
+2048 da:13:....:ee /home/someone/.ssh/conpass (RSA)
+</PRE>
+Una vez establecida la clave en el agente es posible conectarse sin necesidad
+de proporcionar la frase clave:
+
+<P>
+<PRE>
+someone@localhost:~/.kde/shutdown$ ssh remote.machine
+Linux remote.machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Tue Mar 11 14:03:59 2008 from localhost.deioc.ull.es
+user@remote.machine:~$
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560020000000000000">
+Arrancando un Agente SSH</A>
+</H4>
+  
+
+<P>
+Para arrancar el agente SSH se ejecuta el comando:
+<PRE>
+eval `ssh-agent`
+</PRE>
+Esto se hace asi porque el resultado retornado por <code>ssh-agent</code>
+es una cadena conteniendo un script <A NAME="tex2html1512"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?bash"><TT>bash</TT></A>. Este guión establece las variables de 
+entorno necesarias para que las futuras llamadas a clientes SSH 
+puedan encontrar al agente. Observe el resultado de una ejecución sin <code>eval</code> ni backticks:
+<PRE>
+$ ssh-agent
+SSH_AUTH_SOCK=/tmp/ssh-jaDVTd5583/agent.5583; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=5584; export SSH_AGENT_PID;
+echo Agent pid 5584;
+</PRE>
+
+<P>
+La variable <code>SSH_AUTH_SOCK</code> contiene el camino al socket de dominio UNIX que será 
+utilizado por los clientes <code>ssh</code>, <code>scp</code>, etc. para comunicarse 
+con el agente.
+
+<P>
+El pid proporcionado en <code>SSH_AGENT_PID</code> nos permite eliminar al agente mediante <code>kill</code>. 
+Sin embargo una llamada a <code>kill</code> no elimina 
+las variables de entorno establecidas.
+La forma correcta de terminar el agente es usando la opción <code>-k</code>
+de <code>ssh-agent</code>:
+<PRE>
+pp2@localhost:~/Lbook$ eval `ssh-agent`
+Agent pid 5606
+pp2@localhost:~/Lbook$ env | grep -i ssh
+SSH_AGENT_PID=5606
+SSH_AUTH_SOCK=/tmp/ssh-ALUJyJ5605/agent.5605
+CVS_RSH=/usr/bin/ssh
+pp2@localhost:~/Lbook$ eval `ssh-agent -k`
+Agent pid 5606 killed
+pp2@localhost:~/Lbook$ env | grep -i ssh
+CVS_RSH=/usr/bin/ssh
+pp2@localhost:~/Lbook$
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560030000000000000">
+El Protocolo</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>El usuario escribe el comando que da lugar a la conexión inicial y especifica el username asi como 
+la petición de usar una clave. El programa cliente envía el username y la petición de uso
+de  la clave.
+
+<P>
+</LI>
+<LI>El demonio de SSH mira en el fichero <code>authorized_keys</code> y
+construye un reto basado en esa clave y lo envía al cliente.
+
+<P>
+</LI>
+<LI>El cliente recibe el reto asociado con la clave y lo redirige al
+agente. Supongamos que la clave fué previamente cargada con <A NAME="tex2html1513"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
+<P>
+</LI>
+<LI>El agente construye la respuesta y la devuelve al proceso <A NAME="tex2html1514"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+el cual la envía al proceso <A NAME="tex2html1515"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+que escucha en el otro extremo.
+El cliente <A NAME="tex2html1516"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+nunca ve la clave privada, lo que ve 
+es la respuesta. 
+
+<P>
+</LI>
+<LI>El servidor <A NAME="tex2html1517"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+valida la respuesta. Si es correcta permite 
+el acceso al sistema.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">82</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Establezca claves con passphrase, instale un agente ssh y compruebe su buen
+funcionamiento.</I></DIV><P></P>
+
+<P>
+
+<H4><A NAME="SECTION06560040000000000000">
+Bloqueando el acceso a un Agente</A>
+</H4>
+  
+
+<P>
+Es posible cerrar el acceso al agente usando la opción <code>-x</code> de <A NAME="tex2html1518"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
+<PRE>
+pp2@europa:~$ ssh-add -x
+Enter lock password:
+Again:
+Agent locked.
+pp2@europa:~$ ssh orion
+Enter passphrase for key '/home/pp2/.ssh/id_dsa': ********
+Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Mon Apr 27 13:29:32 2009 from europa.deioc.ull.es
+casiano@orion:~$
+</PRE>
+
+<P>
+Para abrir el acceso al agente usaremos la opción <code>-X</code> de <A NAME="tex2html1519"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
+<PRE>
+pp2@europa:~$ ssh-add -X
+Enter lock password: ****************
+Agent unlocked.
+pp2@europa:~$
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560050000000000000">
+Poniendo Fecha de Caducidad</A>
+</H4>
+  
+
+<P>
+La opción <code>-t lifetime</code> de <A NAME="tex2html1520"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>
+puede ser utilizada para 
+limitar el tiempo de caducidad de las identidades en un agente. El tiempo
+se expresará en segundos o bien de la forma <code>time[qualifier]</code>, donde
+<code>time</code> es un entero positivo y <code>qualifier</code> es:
+
+<P>
+<PRE>
+           nada    segundos
+           s | S   segundos
+           m | M   minutos
+           h | H   horas
+           d | D   dias
+           w | W   semanas
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560060000000000000">
+Véase también</A>
+</H4>
+  
+
+<P>
+
 <UL>
-<LI><A NAME="tex2html1488"
-  HREF="http://youtu.be/hYtUODuxy9c">Jason R. Clark - Spelunking in Ruby. Baruco 2014</A>
+<LI>Wikipedia <A NAME="tex2html1521"
+  HREF="http://en.wikipedia.org/wiki/Ssh-agent">Ssh-agent</A>
 </LI>
-<LI><A NAME="tex2html1489"
-  HREF="http://blog.donwilson.net/2010/11/tutorial-debugging-in-ruby/">Tutorial: Debugging in Ruby by dontangg on November 5, 2010</A>
+<LI><A NAME="tex2html1522"
+  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
 </LI>
-<LI><A NAME="tex2html1490"
-  HREF="http://www.ibm.com/developerworks/opensource/tutorials/os-distruby/">Debugging Ruby programs 101.  How to use Ruby's debugger to fix problems in your code.  Pat Eyler (pat.eyler@gmail.com), Co-founder, Seattle Ruby Brigade</A>
-</LI>
-<LI><A NAME="tex2html1491"
-  HREF="http://video.sdruby.org/video/111_ruby_debugger.m4v">Sand Diego Ruby Community: Episode 111 Ruby Debugging: Life After "Puts"</A>
-<UL>
-<LI><A NAME="tex2html1492"
-  HREF="http://video.sdruby.org/video/111_ruby_debugger.m4v">podcast</A>
-</LI>
-<LI><A NAME="tex2html1493"
-  HREF="http://www.slideshare.net/notch8/ruby-debug">slides</A>
-</LI>
-</UL>
+<LI><A NAME="tex2html1523"
+  HREF="http://mah.everybody.org/docs/ssh">Using ssh-agent with ssh</A>
 </LI>
 </UL>
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14366"
+  HREF="node649.html#SECTION06560010000000000000">ssh-add</A>
+<LI><A NAME="tex2html14367"
+  HREF="node649.html#SECTION06560020000000000000">Arrancando un Agente SSH</A>
+<LI><A NAME="tex2html14368"
+  HREF="node649.html#SECTION06560030000000000000">El Protocolo</A>
+<LI><A NAME="tex2html14369"
+  HREF="node649.html#SECTION06560040000000000000">Bloqueando el acceso a un Agente</A>
+<LI><A NAME="tex2html14370"
+  HREF="node649.html#SECTION06560050000000000000">Poniendo Fecha de Caducidad</A>
+<LI><A NAME="tex2html14371"
+  HREF="node649.html#SECTION06560060000000000000">Véase también</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14321"
+<A NAME="tex2html14364"
   HREF="node650.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14315"
-  HREF="node648.html">
+<A NAME="tex2html14358"
+  HREF="node643.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14309"
+<A NAME="tex2html14352"
   HREF="node648.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14317"
-  HREF="node802.html">
+<A NAME="tex2html14360"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14319"
-  HREF="node805.html">
+<A NAME="tex2html14362"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -201,20 +447,20 @@ Véase</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14322"
-  HREF="node650.html">ruby-debug Cheat Sheet</A>
-<B> Subir:</B> <A NAME="tex2html14316"
-  HREF="node648.html">Debugging, Depurando</A>
-<B> Anterior:</B> <A NAME="tex2html14310"
-  HREF="node648.html">Debugging, Depurando</A>
- &nbsp; <B>  <A NAME="tex2html14318"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14320"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14365"
+  HREF="node650.html">Mejor un Sólo Agente</A>
+<B> Subir:</B> <A NAME="tex2html14359"
+  HREF="node643.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14353"
+  HREF="node648.html">Deshabilitar la Asignación de</A>
+ &nbsp; <B>  <A NAME="tex2html14361"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14363"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

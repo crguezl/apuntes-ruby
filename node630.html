@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Los Ficheros de Configuración</TITLE>
-<META NAME="description" CONTENT="Los Ficheros de Configuración">
+<TITLE>rvmrc</TITLE>
+<META NAME="description" CONTENT="rvmrc">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node631.html">
 <LINK REL="previous" HREF="node629.html">
-<LINK REL="up" HREF="node619.html">
+<LINK REL="up" HREF="node622.html">
 <LINK REL="next" HREF="node631.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14018"
+<A NAME="tex2html14006"
   HREF="node631.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14012"
-  HREF="node619.html">
+<A NAME="tex2html14000"
+  HREF="node622.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14006"
+<A NAME="tex2html13994"
   HREF="node629.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14014"
-  HREF="node802.html">
+<A NAME="tex2html14002"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14016"
-  HREF="node805.html">
+<A NAME="tex2html14004"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,358 +92,156 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14019"
-  HREF="node631.html">Copia Segura de un</A>
-<B> Subir:</B> <A NAME="tex2html14013"
-  HREF="node619.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14007"
-  HREF="node629.html">Depuración/Debugging</A>
- &nbsp; <B>  <A NAME="tex2html14015"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14017"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14007"
+  HREF="node631.html">Gemsets</A>
+<B> Subir:</B> <A NAME="tex2html14001"
+  HREF="node622.html">Ruby Version Manager: RVM</A>
+<B> Anterior:</B> <A NAME="tex2html13995"
+  HREF="node629.html">.rvmrc, .ruby-version y .ruby-gemset</A>
+ &nbsp; <B>  <A NAME="tex2html14003"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14005"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION065110000000000000000">
-Los Ficheros de Configuración</A>
+<H1><A NAME="SECTION06280000000000000000">
+rvmrc</A>
 </H1>
 
 <P>
-En vez de llenar nuestra llamada a <code>ssh</code> de parámetros lo aconsejable
-es configurar la llamada en uno de los ficheros de configuración (<code>man ssh_config</code>).
-SSH consulta las opciones en el siguiente orden:
-
-<P>
-
-<OL>
-<LI>Línea de comandos
-</LI>
-<LI>Fichero de configuración del usuario <code>~/.ssh/config</code>
-	     Este fichero debe tener permisos de lectura/escritura para el usuario
-       y no ser accesible al resto. 
-</LI>
-<LI>Fichero de configuración global <code>/etc/ssh/ssh_config</code>
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION065110010000000000000">
-Estructura de un Fichero de Configuración</A>
-</H4>
-  
-
-<P>
-Para cada parámetro el primer valor encontrado será el utilizado. 
-Los ficheros de configuración contienen secciones. Cada sección comienza con una
-especificación de <code>Host</code>. Las especificaciones en esa sección sólo 
-se aplican a los máquinas (tal y como se especifico en la línea de comandos)
-que casen con el patrón especificado en  <TT>Host</TT> . Por ejemplo, si escribo en la
-línea de comandos:
-
-<P>
-<PRE>
-pp2@nereida:~/Lbook$ ssh rbeo
-</PRE>
-
-<P>
-Se buscará en mi fichero de configuración <code>~/.ssh/config</code> por una especificación
-<code>Host rbeo</code>. En efecto, en mi fichero existe una:
-
-<P>
-<PRE>
-...
-
-Host rbeo
-user otheruser
-Hostname localhost
-Port 2048
-IdentityFile /home/pp2/.ssh/ursu
-
-...
-</PRE>
-
-<P>
-La sección dice que opciones deben aplicarse cuando nos conectamos a <code>rbeo</code>:
-
-<UL>
-<LI>La opción  <TT>user</TT>  indica que debo proporcionar como usuario <code>otheruser</code>
-</LI>
-<LI>La opción  <TT>Hostname</TT>  dice que el nombre auténtico de la máquina es <code>localhost</code>
-</LI>
-<LI>La opción  <TT>Port</TT>  indica que nos debemos conectar via el puerto 2048
-</LI>
-<LI>La opción  <TT>IdentityFile</TT>  nos dice que debemos usar autentificación automática
-con fichero de identidad (que fué previamente generado con <code>ssh-keygen</code>)
-<code>/home/pp2/.ssh/ursu</code>
-</LI>
-</UL>
-
-<P>
-Las líneas que comienzan por el carácter <code>#</code> son tratadas como comentarios.
-Es posible añadir líneas en blanco para aumentar la legibilidad.
-
-<P>
-El resto de las líneas deben seguir el patrón 
-
-<P>
-<PRE>
-PALABRACLAVE argumentos
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION065110020000000000000">
-Palabras Clave</A>
-</H4>
-  
-
-<P>
-Algunas palabras clave importantes son:
+You can have a <code>.rvmrc</code> file in three different places: 
 
 <P>
 
 <UL>
-<LI><TT>Host</TT>  Se pueden usar patrones como <code>*</code> y <code>?</code>. 
-     Define la sección. Si el nombre proveído en la línea de comandos 
-     casa con él las reglas de la sección serán aplicadas.
+<LI><code>/etc/rvmrc</code> sets options for the whole system; 
 
 <P>
 </LI>
-<LI><TT>BatchMode</TT> 
-Se desactivará la petición de <code>passphrase/password</code>.
-
-<P>
-Además las opciones  <TT>ServerAliveInterval</TT> <A NAME="tex2html1449"
-  HREF="footnode.html#foot24833"><SUP><SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> 
-y  <TT>SetupTimeOut</TT> <A NAME="tex2html1450"
-  HREF="footnode.html#foot24834"><SUP><SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> 
-se establecen a 300 segundos. Esta opción es útil cuando se usan 
-procesos por lotes o programas - por ejemplo cuando se usa <A NAME="tex2html1452"
-  HREF="http://search.cpan.org/perldoc?GRID::Machine"><TT>GRID::Machine</TT></A>
--
-en los que no hay un usuario presente para proporcionar
-una clave y es necesario detectar la caída de la red. El argumento 
-debe ser <code>yes</code> o <code>no</code>. El valor por defecto es <code>no</code>
+<LI><code>~/.rvmrc</code> sets options for the current user; 
 
 <P>
 </LI>
-<LI><TT>BindAddress</TT> 
-Se usa para especificar la dirección de la máquina local. Sólo es útil
-si la máquina dispone de mas de una dirección. Esta opción no funciona
-si  <TT>UsePrivilegedPort</TT> <A NAME="tex2html1451"
-  HREF="footnode.html#foot24835"><SUP><SPAN CLASS="arabic">77</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>se pone a <code>yes</code>.
-
-<P>
+<LI>a <code>.rvmrc</code> file in a specific directory customizes things for that project.
 </LI>
-<LI><TT>Compression</TT>  y  <TT>CompressionLevel</TT> 
+</UL>
+The global and user <code>.rvmrc</code> files are mainly compile options for installing new Rubies. 
+However, the project-specific <code>.rvmrc</code> files are the fun ones.
 
 <P>
-Si se establece la opción
-<TT>Compression</TT> se compactarán los datos según diga  <TT>CompressionLevel</TT>  (de 1 a 9)
+Here's how you do it: 
 
 <P>
+
+<UL>
+<LI>when you start a new project, you'll what to create a <code>.rvmrc</code>
+file in that directory. 
 </LI>
-<LI><TT>ConnectionAttempts</TT> 
-Especifica el número de intentos antes de abandonar. El argumento debe ser un número 
-(por defecto 1). Puede ser útil cuando se esta usando un
-procesado por lotes y la conexión falla a menudo.
-
-<P>
+<LI>Let’s say you have a rails app that needs Ruby 1.8.6 to run; 
+you have Ruby 1.9.2 as the default, and you don’t want to have 
+to remember to switch Rubies when you’re working on that project. 
 </LI>
-<LI><TT>ConnectTimeout</TT> 
-Especifica el límite de tiempo (segundos) antes de abandonar
-cuando se conecta a un servidor <code>ssh</code>
-
-<P>
-</LI>
-<LI><TT>HostName</TT> 
-El nombre real del <code>host</code> al que entramos. Esto nos permite
-tener apodos y abreviaciones. El valor usado por defecto es el
-proveído en la línea de comandos. Se permite poner direciones IP
-numéricas.
-
-<P>
-</LI>
-<LI><TT>IdentityFile</TT> 
-Especifica el fichero conteniendo la identidad de autentificación (RSA o DSA)
-a ser usado. Por defecto toma el valor <code>~/.ssh/identity</code> para la versión 1
-del protocolo y <code>~/.ssh/id_rsa</code> y <code>~/.ssh/id_dsa</code> para la versión
-2. Si hay un agente cargado el agente intentará también las otras identidades.
-Es posible especificar múltiples identidades, las cuales serán intentadas
-en secuencia.
-
-<P>
-</LI>
-<LI><TT>NoHostAuthenticationForLocalhost</TT> 
-
-<P>
-Esta opción es conveniente cuando el directorio <code>home</code> 
-es compartido entre un conjunto de máquinas (via NFS por ejemplo).
-En ese caso  <TT>localhost</TT>  refiere a una máquina distinta
-en cada una de las máquinas del conjunto.
-En tal caso, las conexiones a <code>localhost</code>
-dan lugar a un buen número de warnings indicando
-que la clave ha cambiado. 
-
-<P>
-</LI>
-<LI><TT>Port</TT>  Especifica el número de puerto.
-
-<P>
-</LI>
-<LI><TT>ServerAliveInterval</TT> 
-Si después del intervalo especificado en segundos no 
-se obtiene respuesta alguna del servidor, se envía un mensaje
-al servidor para solicitar una respuesta del mismo.
-Por defecto es 0, indicando que estos mensajes no deben ser emitidos.
-
-<P>
-Es útil probar con esta opción si la conexión se desconecta después de un corto periodo
-de inactividad.
-Ciertos administradores configuran sus servidores
-de manera que responden muy tardíamente.
-Sigue un fragmento de mi configuración desde fuera de la Universidad:
-
-<P>
+<LI>So, type this command:
 <PRE>
-Host cardon
-user pepito
-Hostname cardon.ull.es
-ForwardX11 yes
-ServerAliveInterval=30
+rvm --rvmrc --create 1.8.6-p334
 </PRE>
-
-<P>
-</LI>
-<LI><TT>ServerAliveCountMax</TT> 
-
-<P>
-Establece el número de mensajes <SPAN  CLASS="textbf">alive</SPAN> que
-pueden ser enviados por el cliente <code>ssh</code> sin que este reciba 
-respuesta desde el servidor. Si se supera este umbral el
-cliente abandona, finalizando la sesión. El valor por
-defecto es 3. (Sólo para el protocolo 2).
-
-<P>
-</LI>
-<LI><TT>TCPKeepAlive</TT> 
-
-<P>
-Especifica si se deben enviar mensajes TCP  <TT>keepalive</TT> 
-al otro lado. Si se envían se podrán detectar los fallos
-en las máquinas remotas. El valor por defecto es <code>yes</code>,
-de modo que el cliente se percate de la caída del remoto.
-
-<P>
-</LI>
-<LI><TT>User</TT>  El usuario
-
-<P>
-</LI>
-<LI><TT>UserKnownHostsFile</TT>  especifica un fichero alternativo
-a <code>~/.ssh/known_hosts</code> para las claves de máquinas
-
-<P>
+This will create a heavily commented <code>.rmvrc</code> file that will change
+your Ruby environment when you switch into that directory. 
 </LI>
 </UL>
 
 <P>
+It gets even better with gemsets. 
 
-<H4><A NAME="SECTION065110030000000000000">
-Ejemplo</A>
-</H4>
-  
-
-<P>
-Sigue un ejemplo de fichero de configuración de usuario:
-
-<P>
+<UL>
+<LI>I use Ruby 1.9.2 for all my projects, but I like to have a different gemset for each project. 
+So, if I’ve got a project that’s called <code>superproj</code>, I can do this:
 <PRE>
-pp2@nereida:~/.ssh$ cat -n config
- 1  # man  ssh_config
- 2
- 3  GSSAPIAuthentication no
- 4
- 5  Host somemachine
- 6  user myname
- 7  Hostname somemachine.pcg.ull.es
- 8  #ForwardX11 yes
- 9
-10  Host ursu
-11  user otheruser
-12  Hostname somemachine.pcg.ull.es
-13  IdentityFile /home/pp2/.ssh/ursu
-14  #ForwardX11 yes
-15
-16  Host chazam chazam.pcg.ull.es chazam.deioc.ull.es chum
-17  user myname
-18  # The real name of the machine
-19  Hostname chazam.pcg.ull.es
-20
-21  # Example to be used when connecting via reverse tunneling
-22  # myname@somemachine:~$ ssh -R2048:localhost:22 pp2@nereida
-23  # Logic name for the machine
-24  Host rbeo
-25  # user in the remote machine
-26  user otheruser
-27  # The 'real name' of the machine after the tunnel
-28  Hostname localhost
-29  # Port to connect to
-30  Port 2048
-31  IdentityFile /home/pp2/.ssh/ursu
+rvm --rvmrc --create 1.9.2@superproj
+</PRE>
+Just add an at-sign after the Ruby name and follow that with your gemset
+name. 
+</LI>
+<LI>This will load the right gems for that
+project. If this gemset hasn't been created yet, RVM will do that for
+you, too.
+</LI>
+</UL>
+
+<P>
+Sigue un ejemplo. Creo un <code>.rvmrc</code> en un directorio conteniendo el proyecto de un alumno:
+<PRE>
+[~/eleazar-src/prueba-activedirectory(testeo)]$ rvm --rvmrc --create 1.9.3-p392@eleazar-pfc
+</PRE>
+Veamos la cabecera del <code>.rvmrc</code>:
+<PRE>
+[~/eleazar-src/prueba-activedirectory(testeo)]$ head -3 .rvmrc 
+#!/usr/bin/env bash
+
+# This is an RVM Project .rvmrc file, used to automatically load the ruby
+</PRE>
+Ahora si entro en el directorio, la primera vez me lanza un warning:
+<PRE>
+[~/eleazar-src]$ rvm use 2.0.0-p0
+Using /Users/casiano/.rvm/gems/ruby-2.0.0-p0
+[~/eleazar-src]$ ruby -v
+ruby 2.0.0p0 (2013-02-24 revision 39474) [x86_64-darwin11.4.2]
+[~/eleazar-src]$ cd prueba-activedirectory/
+You are using '.rvmrc', it requires trusting, it is slower and 
+it is not compatible with other ruby managers,
+you can switch to '.ruby-version' using 
+            'rvm rvmrc to [.]ruby-version'
+* Do you wish to trust '/Users/casiano/eleazar-src/prueba-activedirectory/.rvmrc'?  
+y[es], n[o], v[iew], c[ancel]&gt; y
+-bash: /usr/bin/shasum: Permission denied
+[~/eleazar-src/prueba-activedirectory(testeo)]$ ruby -v
+ruby 1.9.3p392 (2013-02-22 revision 39386) [x86_64-darwin11.4.2]
+[~/eleazar-src/prueba-activedirectory(testeo)]$
+</PRE>
+Para hacer que el mensaje de advertencia no aparezca:
+<PRE>
+$ rvm rvmrc warning ignore /Users/casiano/eleazar-src/prueba-activedirectory/.rvmrc
+Using /Users/casiano/.rvm/gems/ruby-2.0.0-p0
+$ cd prueba-activedirectory/
+-bash: /usr/bin/shasum: Permission denied
+$ ruby --version
+ruby 1.9.3p392 (2013-02-22 revision 39386) [x86_64-darwin11.4.2]
 </PRE>
 
 <P>
+Véanse:
 
-<H4><A NAME="SECTION065110040000000000000">
-El fichero <TT>rc</TT></A>
-</H4>
-  
+<UL>
+<LI><A NAME="tex2html1477"
+  HREF="https://rvm.io/workflow/rvmrc/">https://rvm.io/workflow/rvmrc/</A>
+</LI>
+<LI>NetTuts+: 
+<A NAME="tex2html1478"
+  HREF="http://net.tutsplus.com/tutorials/why-you-should-use-rvm/?search_index=2">Why You Should Use RVM.
+Andrew Burgess on Apr 12th 2011 with 20 Comments</A>
+</LI>
+</UL>
 
 <P>
-Cada vez que ocurre una conexión SSH el servidor ejecuta el script
-en <code>/etc/sshrc</code>. Si existe un fichero <code>~/.ssh/rc</code> (SSH1, OpenSSH) o <code>~/.ssh2/rc</code> (SSH2),
-será invocado. Su presencia inhibe la ejecución de <code>/etc/sshrc</code>.
-Se ejecuta tanto si la sesión es interactiva como si es un comando.
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html14020"
-  HREF="node630.html#SECTION065110010000000000000">Estructura de un Fichero de Configuración</A>
-<LI><A NAME="tex2html14021"
-  HREF="node630.html#SECTION065110020000000000000">Palabras Clave</A>
-<LI><A NAME="tex2html14022"
-  HREF="node630.html#SECTION065110030000000000000">Ejemplo</A>
-<LI><A NAME="tex2html14023"
-  HREF="node630.html#SECTION065110040000000000000">El fichero <TT>rc</TT></A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14018"
+<A NAME="tex2html14006"
   HREF="node631.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14012"
-  HREF="node619.html">
+<A NAME="tex2html14000"
+  HREF="node622.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14006"
+<A NAME="tex2html13994"
   HREF="node629.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14014"
-  HREF="node802.html">
+<A NAME="tex2html14002"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14016"
-  HREF="node805.html">
+<A NAME="tex2html14004"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -494,20 +292,20 @@ Se ejecuta tanto si la sesión es interactiva como si es un comando.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14019"
-  HREF="node631.html">Copia Segura de un</A>
-<B> Subir:</B> <A NAME="tex2html14013"
-  HREF="node619.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14007"
-  HREF="node629.html">Depuración/Debugging</A>
- &nbsp; <B>  <A NAME="tex2html14015"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14017"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14007"
+  HREF="node631.html">Gemsets</A>
+<B> Subir:</B> <A NAME="tex2html14001"
+  HREF="node622.html">Ruby Version Manager: RVM</A>
+<B> Anterior:</B> <A NAME="tex2html13995"
+  HREF="node629.html">.rvmrc, .ruby-version y .ruby-gemset</A>
+ &nbsp; <B>  <A NAME="tex2html14003"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14005"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

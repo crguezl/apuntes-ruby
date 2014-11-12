@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Comet</TITLE>
-<META NAME="description" CONTENT="Comet">
+<TITLE>Sinatra como Middleware</TITLE>
+<META NAME="description" CONTENT="Sinatra como Middleware">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node448.html">
 <LINK REL="previous" HREF="node446.html">
-<LINK REL="up" HREF="node441.html">
+<LINK REL="up" HREF="node411.html">
 <LINK REL="next" HREF="node448.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10789"
+<A NAME="tex2html10825"
   HREF="node448.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10783"
-  HREF="node441.html">
+<A NAME="tex2html10819"
+  HREF="node411.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10777"
+<A NAME="tex2html10813"
   HREF="node446.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10785"
-  HREF="node802.html">
+<A NAME="tex2html10821"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10787"
-  HREF="node805.html">
+<A NAME="tex2html10823"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,95 +92,153 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10790"
-  HREF="node448.html">Chat Utilizando Streaming y</A>
-<B> Subir:</B> <A NAME="tex2html10784"
-  HREF="node441.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10778"
-  HREF="node446.html">A simple demonstration of</A>
- &nbsp; <B>  <A NAME="tex2html10786"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10788"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10826"
+  HREF="node448.html">Práctica: Aplicación Web con</A>
+<B> Subir:</B> <A NAME="tex2html10820"
+  HREF="node411.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10814"
+  HREF="node446.html">Autentificación Básica</A>
+ &nbsp; <B>  <A NAME="tex2html10822"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10824"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03860000000000000000">
-Comet</A>
+<H1><A NAME="SECTION033270000000000000000">
+Sinatra como Middleware</A>
 </H1>
 
 <P>
-<A NAME="19009"></A><SPAN  CLASS="textbf">Comet</SPAN> is a web application architecture in which a long-held HTTP
-request allows a web server to push data to a browser, without the
-browser explicitly requesting it.
+Not only is Sinatra able to use other Rack middleware, any Sinatra
+application can in turn be added in front of any Rack endpoint as
+middleware itself. 
 
 <P>
-In Ajax the client pulls data from the server. With Comet the server pushes data to the client.
+This endpoint could be another Sinatra application,
+or any other Rack-based application (Rails/Ramaze/Camping/…):
 
 <P>
-Other names for Comet are
 
 <OL>
-<LI><A NAME="19011"></A><SPAN  CLASS="textbf">Server Push</SPAN>
+<LI>When a request comes in, all <code>before</code> filters are triggered
 </LI>
-<LI><A NAME="19013"></A><SPAN  CLASS="textbf">Ajax Push</SPAN>
+<LI>Then, if a route matches, the corresponding block will be executed
 </LI>
-<LI><A NAME="19015"></A><SPAN  CLASS="textbf">HTTP Streaming</SPAN>
+<LI>If no route matches, the request is handed off to the wrapped application
+</LI>
+<LI>The <code>after</code> filters are executed after we've got a response back from the
+route or  the wrapped app
 </LI>
 </OL>
+Thus, our Sinatra app is a middleware.
 
 <P>
-<A NAME="19017"></A><SPAN  CLASS="textbf">Server Sent Events</SPAN> defines a simple Comet API in the form of a <A NAME="tex2html1005"
-  HREF="http://www.w3.org/TR/eventsource/#the-eventsource-interface"><TT>EventSource</TT> </A>
-object.
-Server-Sent Events (SSE) is a standard describing how servers can initiate data transmission towards clients once an initial client connection has been established. 
 
-<P>
-The Server-Sent Events draft standard defines an <A NAME="tex2html1006"
-  HREF="http://www.w3.org/TR/eventsource/#the-eventsource-interface"><TT>EventSource</TT> </A> that makes Comet applications
-easy to write.
+<DIV ALIGN="CENTER"><A NAME="figure:requestobject"></A><A NAME="18683"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figura 32.2:</STRONG>
+La pila Rack</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+[scale=0.6]sinatra/rack_stack.png
+
+</DIV></TD></TR>
+</TABLE>
+</DIV>
 
 <P>
 <PRE>
-var ticker = new EventSource("stockprices.php"); 
-ticker.onmessage = function(e) {
-  var type = e.type; 
-  var data = e.data;
-  // Now process the event type and event data strings. 
-}
+[~/sinatra/sinatra-as-middleware]$ cat app.rb
+require 'sinatra/base'
+require 'haml'
+require 'pp'
+
+class LoginScreen &lt; Sinatra::Base
+  enable :sessions
+  enable :inline_templates
+
+  get('/login') { haml :login }
+
+  post('/login') do
+    if params[:name] == 'admin' &amp;&amp; params[:password] == 'admin'
+      puts "params = "
+      pp params
+      session['user_name'] = params[:name]
+      redirect '/'
+    else
+      redirect '/login'
+    end
+  end
+end
+
+class MyApp &lt; Sinatra::Base
+  enable :inline_templates
+  # middleware will run before filters
+  use LoginScreen
+
+  before do
+    unless session['user_name']
+      halt haml :denied
+    end
+  end
+
+  get('/') do
+    haml :cheer, :locals =&gt; { :name =&gt; session['user_name'] }
+  end
+
+  run!
+end
+
+__END__
+
+@@ layout
+!!!
+%html
+  %head
+    %title Sinatra as Middleware
+  %body
+    %h1 Sinatra as Middleware
+    = yield
+
+@@ login
+%form{:action=&gt;'/login', :method=&gt;'post'}
+  %label{:for=&gt;'name'} Name
+  %input#name{:type=&gt;"text",     :name=&gt;"name", :autofocus =&gt; true }
+  %br
+  %label{:for=&gt;'password'} Password
+  %input#password{:type=&gt;"password", :name=&gt;"password"}
+  %br
+  %button#go{:type=&gt;"submit",  :name=&gt;"submit", :value=&gt;"submit"} Click me!
+
+@@ cheer
+%h1
+  Hello #{name}
+  %br
+
+@@ denied
+%h1 
+  Access denied, please 
+  %a{:href=&gt;'/login'}login.
 </PRE>
-
-<P>
-The event object associated with a message event has a <code>data</code> property
-that holds whatever the server sent as the payload for this event.
-
-<P>
-The <code>type</code> property by default is <code>"message"</code> but the event source 
-can sepcify a different string for the property.
-
-<P>
-A single <code>onmessage</code> event handler receives all events from a given server event
-source, and can dispatch them, if necessary, based on their <code>type</code> property.
-
-<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10789"
+<A NAME="tex2html10825"
   HREF="node448.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10783"
-  HREF="node441.html">
+<A NAME="tex2html10819"
+  HREF="node411.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10777"
+<A NAME="tex2html10813"
   HREF="node446.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10785"
-  HREF="node802.html">
+<A NAME="tex2html10821"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10787"
-  HREF="node805.html">
+<A NAME="tex2html10823"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -231,20 +289,20 @@ source, and can dispatch them, if necessary, based on their <code>type</code> pr
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10790"
-  HREF="node448.html">Chat Utilizando Streaming y</A>
-<B> Subir:</B> <A NAME="tex2html10784"
-  HREF="node441.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10778"
-  HREF="node446.html">A simple demonstration of</A>
- &nbsp; <B>  <A NAME="tex2html10786"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10788"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10826"
+  HREF="node448.html">Práctica: Aplicación Web con</A>
+<B> Subir:</B> <A NAME="tex2html10820"
+  HREF="node411.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10814"
+  HREF="node446.html">Autentificación Básica</A>
+ &nbsp; <B>  <A NAME="tex2html10822"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10824"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

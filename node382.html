@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Faking Sinatra with Rack and Middleware</TITLE>
-<META NAME="description" CONTENT="Faking Sinatra with Rack and Middleware">
+<TITLE>La Estructura de una Aplicación Rack: Ejemplo de Middleware</TITLE>
+<META NAME="description" CONTENT="La Estructura de una Aplicación Rack: Ejemplo de Middleware">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node383.html">
 <LINK REL="previous" HREF="node381.html">
-<LINK REL="up" HREF="node333.html">
+<LINK REL="up" HREF="node356.html">
 <LINK REL="next" HREF="node383.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9671"
+<A NAME="tex2html9752"
   HREF="node383.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9665"
-  HREF="node333.html">
+<A NAME="tex2html9746"
+  HREF="node356.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9659"
+<A NAME="tex2html9740"
   HREF="node381.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9667"
-  HREF="node802.html">
+<A NAME="tex2html9748"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9669"
-  HREF="node805.html">
+<A NAME="tex2html9750"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,46 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9672"
-  HREF="node383.html">Véase También</A>
-<B> Subir:</B> <A NAME="tex2html9666"
-  HREF="node333.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9660"
-  HREF="node381.html">Práctica: Despliegue en Heroku</A>
- &nbsp; <B>  <A NAME="tex2html9668"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9670"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9753"
+  HREF="node383.html">rackup</A>
+<B> Subir:</B> <A NAME="tex2html9747"
+  HREF="node356.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9741"
+  HREF="node381.html">Redirección</A>
+ &nbsp; <B>  <A NAME="tex2html9749"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9751"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031320000000000000000">
-Faking Sinatra with Rack and Middleware</A>
+<H1><A NAME="SECTION031140000000000000000">
+La Estructura de una Aplicación Rack: Ejemplo de Middleware</A>
 </H1>
 
 <P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat middlefoo.rb 
+require 'rack'
 
-<OL>
-<LI><A NAME="tex2html871"
-  HREF="https://vimeo.com/15244536">Faking Sinatra with Rack and Middleware</A>
-por
-Charles Max Wood (Vimeo)
-</LI>
-<LI><A NAME="tex2html872"
-  HREF="https://github.com/crguezl/rack-sinatra-in-5-minutes">crguezl/rack-sinatra-in-5-minutes</A>
-en GitHub
-</LI>
-<LI><A NAME="tex2html873"
-  HREF="http://youtu.be/evDJMLb1d28">Noah Gibbs Ruby Hangout</A>
-</LI>
-</OL>
+class MiddleFoo
+  
+  def initialize(app)
+    @app = app
+  end
+
+  def call env
+    # Podemos modificar el request (env) aqui
+    env['chuchu'] = 'SYTW'
+    status, headers, body = @app.call(env)
+    # Podemos modificar la respuesta aqui
+    newbody = body.map(&amp;:upcase)
+    [status, headers, newbody]
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat hello_middle.rb 
+require 'rack'
+require './middlefoo'
+
+class HelloWorld
+  def call env
+    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world\nchuchu=#{env['chuchu']}\n"]]
+  end
+end
+
+Rack::Handler::WEBrick::run MiddleFoo.new(HelloWorld.new)
+</PRE>
+
+<P>
+Cuando ejecutamos el programa produce la salida:
+<PRE>
+HELLO WORLD
+CHUCHU=SYTW
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

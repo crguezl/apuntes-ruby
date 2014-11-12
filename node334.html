@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Introducción</TITLE>
-<META NAME="description" CONTENT="Introducción">
+<TITLE>Creación de Threads</TITLE>
+<META NAME="description" CONTENT="Creación de Threads">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node335.html">
 <LINK REL="previous" HREF="node333.html">
-<LINK REL="up" HREF="node333.html">
+<LINK REL="up" HREF="node332.html">
 <LINK REL="next" HREF="node335.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8912"
+<A NAME="tex2html8674"
   HREF="node335.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8906"
-  HREF="node333.html">
+<A NAME="tex2html8668"
+  HREF="node332.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8900"
+<A NAME="tex2html8662"
   HREF="node333.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8908"
-  HREF="node802.html">
+<A NAME="tex2html8670"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8910"
-  HREF="node805.html">
+<A NAME="tex2html8672"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,228 +92,165 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8913"
-  HREF="node335.html">Analizando env con pry-debugger</A>
-<B> Subir:</B> <A NAME="tex2html8907"
-  HREF="node333.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8901"
-  HREF="node333.html">Rack, un Webserver Ruby</A>
- &nbsp; <B>  <A NAME="tex2html8909"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8911"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8675"
+  HREF="node335.html">Exclusión Mutua y la</A>
+<B> Subir:</B> <A NAME="tex2html8669"
+  HREF="node332.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html8663"
+  HREF="node333.html">Enlaces /Véase</A>
+ &nbsp; <B>  <A NAME="tex2html8671"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8673"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03110000000000000000">
-Introducción</A>
+<H1><A NAME="SECTION021820000000000000000">
+Creación de Threads</A>
 </H1>
 
 <P>
 
-<H4><A NAME="SECTION03110010000000000000">
-Que es Rack</A>
+<H4><A NAME="SECTION021820010000000000000">
+new</A>
 </H4>
   
 
-<A NAME="tex2html743"
-  HREF="http://rack.github.io/">rack</A> provides an minimal interface between webservers supporting Ruby and Ruby frameworks.
-
-<P>
-Ruby on Rails, Ramaze, Sinatra and other Ruby frameworks use it by 
-default to talk to web servers, including Mongrel, Thin or Apache via Passenger.
-
-<P>
-Lo que hace Rack es que unifica la API de los diferentes web servers
-envolviendo las peticiones y respuestas HTTP en la forma mas simple posible.
-
-<P>
-
 <OL>
-<LI>Rack includes <A NAME="14107"></A><SPAN  CLASS="textbf">handlers</SPAN> that connect Rack to all these web application
-servers (WEBrick, Mongrel etc.).
-
-<P>
+<LI>Ruby makes it easy to write multi-threaded programs with the <A NAME="tex2html748"
+  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A> class
 </LI>
-<LI>Rack includes <A NAME="14109"></A><SPAN  CLASS="textbf">adapters</SPAN> that connect Rack to various web frameworks (Sinatra, Rails etc.).
-
-<P>
+<LI>To start a new thread, just associate a block with a call to <A NAME="tex2html749"
+  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A>.<code>new</code>
 </LI>
-<LI>Between the server and the framework, Rack can be customized to your
-applications needs using <A NAME="14111"></A><SPAN  CLASS="textbf">middleware</SPAN>. 
+<LI>A new thread will be created to execute the code in the block, 
+</LI>
+<LI>the original thread will return from <A NAME="tex2html750"
+  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A>.<code>new</code> immediately and resume execution with the next statement
 </LI>
 </OL>
-
-<P>
-The fundamental idea behind 
-<A NAME="14113"></A><SPAN  CLASS="textbf">Rack middleware</SPAN> is – come between the calling client and the
-server, process the HTTP request before sending it to the server, and
-processing the HTTP response before returning it to the client.
-
-<P>
-
-<img src="rack.jpeg">
-
-<P>
-
-<H4><A NAME="SECTION03110020000000000000">
-Que es una Aplicación Rack</A>
-</H4>
-  
-
-Una aplicación Rack es un objeto que 
-
-<P>
-
-<OL>
-<LI>Debe responder al método <code>call</code>.
-</LI>
-<LI>El método <code>call</code> será llamado por el servidor y se le pasa como
-argumento <code>env</code> que es un hash que contiene información sobre el entorno CGI.
-</LI>
-<LI>El método <code>call</code> debe retornar un array con tres elementos:
-  
-<OL>
-<LI><code>status</code>: un entero
-</LI>
-<LI><code>headers</code>: un hash
-</LI>
-<LI><code>body</code>: un objeto que responde al método <code>each</code> y que para cada llamada de
-  <code>each</code> retorna una <A NAME="tex2html744"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>.
-  
-</LI>
-</OL>
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION03110030000000000000">
-Un Ejemplo Sencillo</A>
-</H4>
-  
-
-<P>
-<A NAME="14126"></A><SPAN  CLASS="textbf">Rack</SPAN> uses a 
-configuration file with extension 
-<code>.ru</code>, that instructs 
-<A NAME="tex2html745"
-  HREF="http://rack.rubyforge.org/doc/Rack/Builder.html">Rack::Builder</A>
-what middleware should it use and in which order. Let’s create one:
 
 <P>
 <PRE>
-[~/sinatra/rackup/simple(master)]$ cat myapp.rb 
-# my_app.rb
-#
-class MyApp
-  def call env
-    [200, {"Content-Type" =&gt; "text/html"}, ["Hello Rack Participants"]] 
+arr = []
+a, b, c = 1, 2, 3
+Thread.new(a,b,c) { |d,e,f| arr &lt;&lt; d &lt;&lt; e &lt;&lt; f }.join
+arr #=&gt; [1, 2, 3]
+</PRE>
+A ThreadError exception is raised if <code>::new</code> is called without a block.
+
+<P>
+
+<H4><A NAME="SECTION021820020000000000000">
+join</A>
+</H4>
+  
+
+<OL>
+<LI>When a thread calls <code>thr.join</code>
+The calling thread 
+will suspend execution and run <code>thr</code>. 
+</LI>
+<LI>The calling thread does not return until <code>thr</code> exits or until <code>limit</code> seconds have passed
+if we have used <code>thr.join(limit)</code>. 
+</LI>
+<LI>If the time <code>limit</code> expires, <code>nil</code> will be returned, otherwise <code>thr</code> 
+is returned.
+</LI>
+<LI>Any threads not joined will be killed when the main program exits. 
+</LI>
+<LI>If <code>thr</code> had previously raised an exception and the 
+exception has not yet been processed, it will be processed at this time.
+</LI>
+</OL>
+<PRE>
+[~/ruby/threads(master)]$ cat join_with_timer.rb 
+require 'thread'
+
+y = Thread.new { 4.times { sleep 0.2; puts 'tick... ' }}
+puts "Waiting" until y.join(0.1)
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/threads(master)]$ ruby join_with_timer.rb 
+Waiting
+tick... 
+Waiting
+Waiting
+tick... 
+Waiting
+Waiting
+tick... 
+Waiting
+Waiting
+tick...
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021820030000000000000">
+Localidad y Privacidad</A>
+</H4>
+  
+
+<P>
+A thread can normally access any variables that are in scope when
+the thread is created. 
+
+<P>
+Variables local to the block containing the
+thread code are local to the thread and are not shared.
+
+<P>
+Class <A NAME="tex2html751"
+  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A> features a special facility that allows thread-local variables to be created and accessed by name. 
+
+<P>
+You simply treat the thread object as if it were a <A NAME="tex2html752"
+  HREF="http://ruby-doc.org/core-2.0.0/Hash.html"><TT>Hash</TT></A>, 
+writing to elements using <code>[]=</code> and reading them back using <code>[]</code>.
+
+<P>
+Veamos un ejemplo:
+<PRE>
+[~/ruby/threads(master)]$ cat sharing.rb 
+require 'thread'
+require 'barrier'
+
+numthreads = 4
+lastthread = numthreads-1
+th = []
+b = Barrier.new(numthreads)
+(0..lastthread).each do |i|
+  th[i] = Thread.new(i) do
+    b.wait
+    th[(i+1)%numthreads][:my_x] = i 
   end
 end
+th.each do |t| 
+  t.join 
+  print t[:my_x].to_s+"\n" 
+end
 </PRE>
+Necesitamos la barrera proveida por 
+<A NAME="tex2html753"
+  HREF="http://rubydoc.info/gems/barrier/">Barrier</A>
+para asegurarnos de que todas las threads han sido creadas en el momento
+en el que que cada thread escribe en la variable
+<code>my_x</code>
+de la thread siguiente.
 
 <P>
-Esta es la aplicación Rack mas simple posible.
-
-<P>
+La ejecución resulta en:
 <PRE>
-[~/sinatra/rackup/simple(master)]$ cat config.ru
-require './myapp'
-run MyApp.new
+[~/ruby/threads(master)]$ ruby sharing.rb 
+3
+0
+1
+2
 </PRE>
-To start your newly created app, you need to use <code>rackup</code> command:
-
-<P>
-<PRE>
-$ rackup config.ru
-</PRE>
-The application will be available by default on port 9292, 
-so you have to visit <code>http://localhost:9292</code> to see it. 
-
-<P>
-Donde se encuentra este ejemplo:
-
-<UL>
-<LI><PRE>
-[~/sinatra/rack/rack-simple(env)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/rack/rackup/simple
-</PRE>
-</LI>
-<LI><PRE>
-[~/sinatra/rack/rack-simple(env)]$ git remote -v
-origin  git@github.com:crguezl/a-quick-introduction-to-rack.git (fetch)
-origin  git@github.com:crguezl/a-quick-introduction-to-rack.git (push)
-</PRE>
-</LI>
-<LI><A NAME="tex2html746"
-  HREF="https://github.com/crguezl/a-quick-introduction-to-rack">Repo: crguezl/a-quick-introduction-to-rack</A>
-</LI>
-</UL>
-
-<P>
-
-<H4><A NAME="SECTION03110040000000000000">
-Un Ejemplo con la Consola Interactiva de Ruby</A>
-</H4>
-  
-
-<P>
-Arranquemos la consola interactiva de Ruby. Cargamos <code>rack</code>:
-
-<P>
-<PRE>
-1] pry(main)&gt; require 'rack'
-=&gt; true
-</PRE>
-Comprobemos que handlers tenemos instalados:
-<PRE>
-[2] pry(main)&gt; Rack::Handler::constants
-=&gt; [:CGI,
- :FastCGI,
- :Mongrel,
- :EventedMongrel,
- :SwiftipliedMongrel,
- :WEBrick,
- :LSWS,
- :SCGI,
- :Thin]
-</PRE>
-
-<P>
-Todos los handlers Rack tienen un método <code>run</code> por lo que podemos 
-llamar el método <code>run</code> en cualquiera de esos handlers instalados.
-
-<P>
-Un objeto que tiene un método <code>call</code> es cualquier objeto <A NAME="tex2html747"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> y por 
-tanto podemos usar una lambda que se atenga al protocolo de rack para nuestro ejemplo:
-<PRE>
-[3] pry(main)&gt; Rack::Handler::WEBrick.run lambda 
-                  { |env| [200, 
-                           {"Content-Type" =&gt; "text/plain"}, 
-                          ["Hello. The time is #{Time.now}"]] }
-[2013-09-11 17:59:07] INFO  WEBrick 1.3.1
-[2013-09-11 17:59:07] INFO  ruby 1.9.3 (2013-02-22) [x86_64-darwin11.4.2]
-[2013-09-11 17:59:07] INFO  WEBrick::HTTPServer#start: pid=25123 port=8080
-localhost - - [11/Sep/2013:17:59:26 WEST] "GET / HTTP/1.1" 200 44
-- -&gt; /
-localhost - - [11/Sep/2013:17:59:26 WEST] "GET /favicon.ico HTTP/1.1" 200 44
-- -&gt; /favicon.ico
-</PRE>
-El primer argumento de <code>run</code> es nuestra aplicación Rack 
-<PRE>
-lambda { |env| [200, {"Content-Type" =&gt; "text/plain"}, ["Hello. The time is #{Time.now}"]] }
-</PRE>
-y el segundo es el conjunto de opciones para nuestro programa.
-
-<P>
-ahora podemos visitar la aplicación con nuestro navegador
-en <code>http://localhost:8080</code>
-
-<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
@@ -321,33 +258,31 @@ en <code>http://localhost:8080</code>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html8914"
-  HREF="node334.html#SECTION03110010000000000000">Que es Rack</A>
-<LI><A NAME="tex2html8915"
-  HREF="node334.html#SECTION03110020000000000000">Que es una Aplicación Rack</A>
-<LI><A NAME="tex2html8916"
-  HREF="node334.html#SECTION03110030000000000000">Un Ejemplo Sencillo</A>
-<LI><A NAME="tex2html8917"
-  HREF="node334.html#SECTION03110040000000000000">Un Ejemplo con la Consola Interactiva de Ruby</A>
+<LI><A NAME="tex2html8676"
+  HREF="node334.html#SECTION021820010000000000000">new</A>
+<LI><A NAME="tex2html8677"
+  HREF="node334.html#SECTION021820020000000000000">join</A>
+<LI><A NAME="tex2html8678"
+  HREF="node334.html#SECTION021820030000000000000">Localidad y Privacidad</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8912"
+<A NAME="tex2html8674"
   HREF="node335.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8906"
-  HREF="node333.html">
+<A NAME="tex2html8668"
+  HREF="node332.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8900"
+<A NAME="tex2html8662"
   HREF="node333.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8908"
-  HREF="node802.html">
+<A NAME="tex2html8670"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8910"
-  HREF="node805.html">
+<A NAME="tex2html8672"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -398,20 +333,20 @@ en <code>http://localhost:8080</code>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8913"
-  HREF="node335.html">Analizando env con pry-debugger</A>
-<B> Subir:</B> <A NAME="tex2html8907"
-  HREF="node333.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8901"
-  HREF="node333.html">Rack, un Webserver Ruby</A>
- &nbsp; <B>  <A NAME="tex2html8909"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8911"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8675"
+  HREF="node335.html">Exclusión Mutua y la</A>
+<B> Subir:</B> <A NAME="tex2html8669"
+  HREF="node332.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html8663"
+  HREF="node333.html">Enlaces /Véase</A>
+ &nbsp; <B>  <A NAME="tex2html8671"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8673"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

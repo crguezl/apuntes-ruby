@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Aplicaciones Modulares</TITLE>
-<META NAME="description" CONTENT="Aplicaciones Modulares">
+<TITLE>Triggering Another Route: calling call</TITLE>
+<META NAME="description" CONTENT="Triggering Another Route: calling call">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node435.html">
-<LINK REL="previous" HREF="node429.html">
-<LINK REL="up" HREF="node332.html">
+<LINK REL="previous" HREF="node433.html">
+<LINK REL="up" HREF="node411.html">
 <LINK REL="next" HREF="node435.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10532"
+<A NAME="tex2html10636"
   HREF="node435.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10526"
-  HREF="node332.html">
+<A NAME="tex2html10630"
+  HREF="node411.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10520"
+<A NAME="tex2html10624"
   HREF="node433.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10528"
-  HREF="node802.html">
+<A NAME="tex2html10632"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10530"
-  HREF="node805.html">
+<A NAME="tex2html10634"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,88 +92,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10533"
-  HREF="node435.html">Testing en Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html10527"
-  HREF="node332.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html10521"
-  HREF="node433.html">Petición y Respuesta</A>
- &nbsp; <B>  <A NAME="tex2html10529"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10531"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10637"
+  HREF="node435.html">Logging</A>
+<B> Subir:</B> <A NAME="tex2html10631"
+  HREF="node411.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10625"
+  HREF="node433.html">Passing a Request</A>
+ &nbsp; <B>  <A NAME="tex2html10633"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10635"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03500000000000000000"></A>
-<A NAME="chapter:aplicacionesmodularessinatra"></A>
-<BR>
-Aplicaciones Modulares
+<H1><A NAME="SECTION033150000000000000000">
+Triggering Another Route: calling <TT>call</TT></A>
 </H1>
-
-<P>
-Las aplicaciones normales Sinatra se denominan <A NAME="18145"></A><SPAN  CLASS="textbf">aplicaciones clásicas sinatra</SPAN>
-y viven en <A NAME="tex2html952"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Application</A>,
-que es una subclase de <A NAME="tex2html953"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Base</A>.
-
-<P>
-En las aplicaciones clásicas Sinatra extiende la clase <code>Object</code> en el momento 
-de cargarse lo que, en cierto modo, contamina el espacio de nombres global. Eso dificulta que nuestra aplicación 
-pueda ser distribuída como una gema y que se puedan tener varias aplicaciones clásicas 
-en un único proceso.
-
-<P>
-Una aplicación Sinatra se dice una <A NAME="18151"></A><SPAN  CLASS="textbf">aplicación modular sinatra</SPAN>
-si no hace uso de <A NAME="tex2html954"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Application</A>,
-renunciando al DSL de alto nivel proveído por Sinatra,
-sino que hereda de <A NAME="tex2html955"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Base</A>.
-
-<P>
-Podemos combinar una aplicación clásica  con una modular, pero sólo puede haber una aplicación clásica por proceso.
+Sometimes <code>pass</code> is not what you want, 
+instead you would like to get the result of calling another route. 
+Simply use <code>call</code> to achieve this:
 
 <P>
 <PRE>
-[~/sinatra/sinatra-simple(master)]$ cat app.rb 
-require 'sinatra/base'
+get '/foo' do
+  status, headers, body = call env.merge("PATH_INFO" =&gt; '/bar')
+  [status, headers, body.map(&amp;:upcase)]
+end
 
-class App &lt; Sinatra::Base
-  get '/' do
-    "hello get!"
-  end
+get '/bar' do
+  "bar"
 end
 </PRE>
 
 <P>
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ cat config.ru 
-require './app'
+Note that in the example above, you would ease testing and increase performance by simply moving <code>"bar"</code> into a helper used by both <code>/foo</code> and <code>/bar</code>.
 
-run App
-</PRE>
+<P>
+If you want the request to be sent to the same application instance rather than a duplicate, use <code>call!</code> instead of <code>call</code>.
+
+<P>
+Check out the Rack specification if you want to learn more about <code>call</code>.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10532"
+<A NAME="tex2html10636"
   HREF="node435.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10526"
-  HREF="node332.html">
+<A NAME="tex2html10630"
+  HREF="node411.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10520"
+<A NAME="tex2html10624"
   HREF="node433.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10528"
-  HREF="node802.html">
+<A NAME="tex2html10632"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10530"
-  HREF="node805.html">
+<A NAME="tex2html10634"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -224,20 +202,20 @@ run App
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10533"
-  HREF="node435.html">Testing en Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html10527"
-  HREF="node332.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html10521"
-  HREF="node433.html">Petición y Respuesta</A>
- &nbsp; <B>  <A NAME="tex2html10529"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10531"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10637"
+  HREF="node435.html">Logging</A>
+<B> Subir:</B> <A NAME="tex2html10631"
+  HREF="node411.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10625"
+  HREF="node433.html">Passing a Request</A>
+ &nbsp; <B>  <A NAME="tex2html10633"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10635"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

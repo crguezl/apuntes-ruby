@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Correo</TITLE>
-<META NAME="description" CONTENT="Correo">
+<TITLE>Templates Externos</TITLE>
+<META NAME="description" CONTENT="Templates Externos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node420.html">
 <LINK REL="previous" HREF="node418.html">
-<LINK REL="up" HREF="node388.html">
+<LINK REL="up" HREF="node416.html">
 <LINK REL="next" HREF="node420.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10309"
+<A NAME="tex2html10408"
   HREF="node420.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10303"
-  HREF="node388.html">
+<A NAME="tex2html10402"
+  HREF="node416.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10297"
+<A NAME="tex2html10396"
   HREF="node418.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10305"
-  HREF="node802.html">
+<A NAME="tex2html10404"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10307"
-  HREF="node805.html">
+<A NAME="tex2html10406"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,65 +92,140 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10310"
-  HREF="node420.html">Ambito</A>
-<B> Subir:</B> <A NAME="tex2html10304"
-  HREF="node388.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10298"
-  HREF="node418.html">Environments</A>
- &nbsp; <B>  <A NAME="tex2html10306"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10308"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10409"
+  HREF="node420.html">Templates Externos en Subcarpetas</A>
+<B> Subir:</B> <A NAME="tex2html10403"
+  HREF="node416.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html10397"
+  HREF="node418.html">Named Templates</A>
+ &nbsp; <B>  <A NAME="tex2html10405"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10407"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033230000000000000000"></A>
-<A NAME="section:correo"></A>
-<BR>
-Correo
-</H1>
+<H2><A NAME="SECTION03343000000000000000">
+Templates Externos</A>
+</H2>
+
+<P>
 <PRE>
-[~/srcSTW/sinatra-faq/mail(esau)]$ cat app.rb 
-require 'sinatra'
-require 'pony'
-raise "Execute:\n\t#{$0} password email_to email_from" if ARGV.length.zero?
-get '/' do
-    email = ARGV.shift
-    pass = ARGV.shift
-    Pony.mail({
-      :to =&gt; email,
-      :body =&gt; "Hello Casiano",
-      :subject =&gt; 'Howdy, Partna!',
-      :via =&gt; :smtp,
-      :via_options =&gt; {
-          :address              =&gt; 'smtp.gmail.com',
-          :port                 =&gt; '587',
-          :enable_starttls_auto =&gt; true,
-          :user_name            =&gt; ARGV.shift,
-          :password             =&gt; pass,
-          :authentication       =&gt; :plain, # :plain, :login, :cram_md5, no auth by default
-          :domain               =&gt; "localhost.localdomain" # the HELO domain provided by the client to the server
-        }
-    })
-    "Check your email at #{email}"
+$ ls
+Rakefile               example2-16.rb         views
+config.ru
+</PRE>
+
+<P>
+<PRE>
+$ cat example2-16.rb 
+require 'sinatra/base'
+
+class App &lt; Sinatra::Base
+  get '/index' do 
+    puts "Visiting #{request.url}"
+    erb :index
+  end
 end
 </PRE>
 
 <P>
+<PRE>
+$ cat views/index.erb 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Inline template&lt;/title&gt; 
+  &lt;/head&gt;
+  &lt;body&gt; 
+    &lt;h1&gt;Worked!&lt;/h1&gt;
+  &lt;/body&gt; 
+&lt;/html&gt;
+</PRE>
 
-<OL>
-<LI><A NAME="tex2html921"
-  HREF="http://www.millwoodonline.co.uk/blog/getting-started-with-sinatra">Getting started with Sinatra</A>
-</LI>
-</OL>
+<P>
+<PRE>
+$ cat config.ru 
+require './example2-16'
+
+run App
+</PRE>
+
+<P>
+<PRE>
+$ cat Rakefile 
+task :default =&gt; :server
+
+desc "run server"
+task :server do
+  sh "rackup"
+end
+
+desc "make a get / request via curl"
+task :root do
+  sh "curl -v localhost:9292"
+end
+
+desc "make a get /index request via curl"
+task :index do 
+  sh "curl -v localhost:9292/index"
+end
+</PRE>
+
+<P>
+<PRE>
+$ rake server
+rackup
+&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+Visiting http://localhost:9292/index
+127.0.0.1 - - [03/Jul/2013 22:30:16] "GET /index HTTP/1.1" 200 157 0.0774
+</PRE>
+
+<P>
+<PRE>
+$ rake index
+curl -v localhost:9292/index
+* About to connect() to localhost port 9292 (#0)
+*   Trying 127.0.0.1... connected
+* Connected to localhost (127.0.0.1) port 9292 (#0)
+&gt; GET /index HTTP/1.1
+&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8x zlib/1.2.5
+&gt; Host: localhost:9292
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Content-Type: text/html;charset=utf-8
+&lt; Content-Length: 157
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Content-Type-Options: nosniff
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Connection: keep-alive
+&lt; Server: thin 1.5.1 codename Straight Razor
+&lt; 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Inline template&lt;/title&gt; 
+  &lt;/head&gt;
+  &lt;body&gt; 
+    &lt;h1&gt;Worked!&lt;/h1&gt;
+  &lt;/body&gt; 
+&lt;/html&gt;
+
+* Connection #0 to host localhost left intact
+* Closing connection #0
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

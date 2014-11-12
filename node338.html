@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Detectando el Proceso que está Usando un Puerto</TITLE>
-<META NAME="description" CONTENT="Detectando el Proceso que está Usando un Puerto">
+<TITLE>El Problema de los Filósosofos Comensales / The Dining Philosophers Problem</TITLE>
+<META NAME="description" CONTENT="El Problema de los Filósosofos Comensales / The Dining Philosophers Problem">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node339.html">
-<LINK REL="previous" HREF="node335.html">
-<LINK REL="up" HREF="node333.html">
+<LINK REL="previous" HREF="node337.html">
+<LINK REL="up" HREF="node332.html">
 <LINK REL="next" HREF="node339.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8972"
+<A NAME="tex2html8742"
   HREF="node339.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8966"
-  HREF="node333.html">
+<A NAME="tex2html8736"
+  HREF="node332.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8960"
+<A NAME="tex2html8732"
   HREF="node337.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8968"
-  HREF="node802.html">
+<A NAME="tex2html8738"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8970"
-  HREF="node805.html">
+<A NAME="tex2html8740"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,77 +91,64 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8973"
-  HREF="node339.html">Usando PATH_INFO y erubis</A>
-<B> Subir:</B> <A NAME="tex2html8967"
-  HREF="node333.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8961"
-  HREF="node337.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
- &nbsp; <B>  <A NAME="tex2html8969"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8971"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8743"
+  HREF="node339.html">Juegos con Gosu</A>
+<B> Subir:</B> <A NAME="tex2html8737"
+  HREF="node332.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html8733"
+  HREF="node337.html">Colas</A>
+ &nbsp; <B>  <A NAME="tex2html8739"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8741"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03130000000000000000">
-Detectando el Proceso que está Usando un Puerto</A>
+<H1><A NAME="SECTION021860000000000000000">
+El Problema de los Filósosofos Comensales / The Dining Philosophers Problem</A>
 </H1>
+ The Dining Philosophers problem was formulated by Edsger Djisktra in 1965 to illustrate the kind of issues we can find when multiple processes compete to gain access to exclusive resources.
 
 <P>
-Si intentamos ejecutar una segunda instancia del servidor mientras otra instancia esta ejecutandose 
-obtenemos un error que indica que el puerto está en uso:
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ rackup
-Thin web server (v1.6.1 codename Death Proof)
-Maximum connections set to 1024
-Listening on 0.0.0.0:9292, CTRL+C to stop
-/Users/casiano/.rvm/gems/ruby-2.0.0-p247/gems/eventmachine-1.0.3/lib/eventmachine.rb:526:
-  in `start_tcp_server': no acceptor 
-  (port is in use or requires root privileges) (RuntimeError)
-  from /Users/casiano/.rvm/gems/ruby-2.0.0-p247/gems/eventmachine-1.0.3/lib/eventmachine.rb:526:
-    in `start_server'
-...
-</PRE>
-Si sabemos en que puerto esta corriendo - como es el caso - podemos hacer algo así
-para saber el PID del proceso que lo ocupa:
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ lsof -i :9292
-COMMAND   PID    USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
-ruby    52870 casiano    9u  IPv4 0x9f3ffc595152af29      0t0  TCP *:armtechdaemon (LISTEN)
-</PRE>
-Si no lo sabemos podemos hacer:
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ ps -fA | egrep ruby
-  501 52870   565   0 11:16AM ttys003    0:00.61 ruby /Users/casiano/.rvm/gems/ruby-2.0.0-p247/bin/rackup
-  501 53230 52950   0 11:35AM ttys006    0:00.00 egrep ruby
-</PRE>
-Si tenemos privilegios suficientes podemos ahora eliminar el proceso:
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ kill -9 52870
-</PRE>
-
-<P>
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ rackup
-Thin web server (v1.6.1 codename Death Proof)
-Maximum connections set to 1024
-Listening on 0.0.0.0:9292, CTRL+C to stop
-Killed: 9
-</PRE>
-
-<P>
-El comando 
-<PRE>
-$ lsof -i | egrep -i 'tcp.*(\d+.)+'
-</PRE>
-Nos da una lista bastante completa de como están nuestras conexiones.
 
 <OL>
-<LI><code>-i [i]</code>   selects  the  listing  of  files  any of whose Internet address matches the address
-                specified in i.  If no address is specified, this option selects the listing of all
-                Internet and x.25 (HP-UX) network files.
+<LI><A NAME="tex2html792"
+  HREF="https://practicingruby.com/articles/gentle-intro-to-actor-based-concurrency?u=e43d1d9b8c">A gentle introduction to actor-based concurrency</A>. 
+
+<P>
+</LI>
+<LI>Source code from this article.  
+All of the code from this article is in 
+Practicing Ruby's <A NAME="tex2html793"
+  HREF="https://github.com/elm-city-craftworks/practicing-ruby-examples/tree/master/v6/003">example repository</A>,
+but the links below highlight the main points of interest:
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html794"
+  HREF="https://github.com/elm-city-craftworks/practicing-ruby-examples/blob/master/v6/003/mutex_uncoordinated/dining_philosophers.rb">A solution that leads to deadlocks</A>
+<P>
+</LI>
+<LI><A NAME="tex2html795"
+  HREF="https://github.com/elm-city-craftworks/practicing-ruby-examples/blob/master/v6/003/mutex_coordinated/dining_philosophers.rb">A coordinated mutex-based solution</A>
+<P>
+<A NAME="tex2html796"
+  HREF="https://github.com/elm-city-craftworks/practicing-ruby-examples/blob/master/v6/003/lib/chopstick.rb">Chopsticks class definition</A>
+<P>
+</LI>
+<LI><A NAME="tex2html797"
+  HREF="https://github.com/elm-city-craftworks/practicing-ruby-examples/blob/master/v6/003/lib/table.rb">Table class definition</A>
+<P>
+</LI>
+</UL>
+
+<P>
+</LI>
+<LI><A NAME="tex2html798"
+  HREF="http://www.confreaks.com/videos/702-rubyconf2011-scaling-ruby-with-actors-or-how-i-learned-to-stop-worrying-and-love-threads">Scaling Ruby with Actors, or How I Learned to Stop Worrying and Love Threads by Mike Perham</A>
+Rubyconf 2011
 </LI>
 </OL>
 
@@ -170,20 +156,20 @@ Nos da una lista bastante completa de como están nuestras conexiones.
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8972"
+<A NAME="tex2html8742"
   HREF="node339.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8966"
-  HREF="node333.html">
+<A NAME="tex2html8736"
+  HREF="node332.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8960"
+<A NAME="tex2html8732"
   HREF="node337.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8968"
-  HREF="node802.html">
+<A NAME="tex2html8738"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8970"
-  HREF="node805.html">
+<A NAME="tex2html8740"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -234,20 +220,20 @@ Nos da una lista bastante completa de como están nuestras conexiones.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8973"
-  HREF="node339.html">Usando PATH_INFO y erubis</A>
-<B> Subir:</B> <A NAME="tex2html8967"
-  HREF="node333.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html8961"
-  HREF="node337.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
- &nbsp; <B>  <A NAME="tex2html8969"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8971"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8743"
+  HREF="node339.html">Juegos con Gosu</A>
+<B> Subir:</B> <A NAME="tex2html8737"
+  HREF="node332.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html8733"
+  HREF="node337.html">Colas</A>
+ &nbsp; <B>  <A NAME="tex2html8739"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8741"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

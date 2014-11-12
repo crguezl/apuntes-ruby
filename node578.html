@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>n</TITLE>
-<META NAME="description" CONTENT="n">
+<TITLE>Las Carpetas Usadas Como Módulos</TITLE>
+<META NAME="description" CONTENT="Las Carpetas Usadas Como Módulos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node579.html">
-<LINK REL="previous" HREF="node576.html">
-<LINK REL="up" HREF="node575.html">
+<LINK REL="previous" HREF="node577.html">
+<LINK REL="up" HREF="node573.html">
 <LINK REL="next" HREF="node579.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12975"
+<A NAME="tex2html13088"
   HREF="node579.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12969"
-  HREF="node575.html">
+<A NAME="tex2html13082"
+  HREF="node573.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12963"
+<A NAME="tex2html13076"
   HREF="node577.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12971"
-  HREF="node802.html">
+<A NAME="tex2html13084"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12973"
-  HREF="node805.html">
+<A NAME="tex2html13086"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,74 +92,160 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12976"
-  HREF="node579.html">Google Chrome y Javascript</A>
-<B> Subir:</B> <A NAME="tex2html12970"
-  HREF="node575.html">Herramientas para JavaScript</A>
-<B> Anterior:</B> <A NAME="tex2html12964"
-  HREF="node577.html">Specifying dependencies in Node.js</A>
- &nbsp; <B>  <A NAME="tex2html12972"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12974"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13089"
+  HREF="node579.html">Caching</A>
+<B> Subir:</B> <A NAME="tex2html13083"
+  HREF="node573.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13077"
+  HREF="node577.html">Carga desde Carpetas node_modules</A>
+ &nbsp; <B>  <A NAME="tex2html13085"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13087"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION041120000000000000000">
-n</A>
-</H1>
+<H2><A NAME="SECTION04585000000000000000">
+Las Carpetas Usadas Como Módulos</A>
+</H2>
+It is convenient to organize programs and libraries into self-contained
+directories, and then provide a single entry point to that library. 
 
 <P>
- <TT>n</TT>  es una herramienta parecida a  <TT>rvm</TT>  para Node.js:
-<PRE>
-$sudo npm install n -g
-</PRE>
-y
+There
+are a few ways in which a folder may be passed to <code>require()</code> as an
+argument.
 
 <P>
-<PRE>
-[~/Dropbox/src/javascript/node.js/creating_modules(master)]$ n help
 
-  Usage: n [options] [COMMAND] [config]
-
-  Commands:
-
-    n                            Output versions installed
-    n latest [config ...]        Install or activate the latest node release
-    n stable [config ...]        Install or activate the latest stable node release
-    n &lt;version&gt; [config ...]     Install and/or use node &lt;version&gt;
-    n use &lt;version&gt; [args ...]   Execute node &lt;version&gt; with [args ...]
-    n bin &lt;version&gt;              Output bin path for &lt;version&gt;
-    n rm &lt;version ...&gt;           Remove the given version(s)
-    n prev                       Revert to the previously activated version
-    n --latest                   Output the latest node version available
-    n --stable                   Output the latest stable node version available
-    n ls                         Output the versions of node available
-
-  Options:
-
-    -V, --version   Output current version of n
-    -h, --help      Display help information
-
-  Aliases:
-
-    which   bin
-    use     as
-    list    ls
-    -       rm
-</PRE>
+<OL>
+<LI>The first is to create a <code>package.json</code> file in the root of the
+folder, which specifies a <code>main</code> module. 
+An example <code>package.json</code> file
+might look like this:
 
 <P>
 <PRE>
-$ sudo n latest
+{ "name" : "some-library",
+  "main" : "./lib/some-library.js" }
 </PRE>
 
 <P>
-<BR><HR>
+If this was in a folder at 
+<code>./some-library</code>, then <code>require('./some-library')</code> would attempt
+to load <code>./some-library/lib/some-library.js</code>.
+
+<P>
+This is the extent of Node's awareness of <code>package.json</code> files.
+
+<P>
+</LI>
+<LI>If there is no <code>package.json</code> 
+file present in the directory, then node will
+attempt to load an 
+<code>index.js</code> or
+<code>index.node</code> 
+file out of that directory. 
+
+<P>
+For
+example, if there was no 
+<code>package.json</code> file in the above example, then
+<code>require('./some-library')</code> would attempt to load:
+
+<P>
+<PRE>
+./some-library/index.js
+./some-library/index.node
+</PRE>
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html13088"
+  HREF="node579.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html13082"
+  HREF="node573.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html13076"
+  HREF="node577.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html13084"
+  HREF="node804.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html13086"
+  HREF="node807.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html13089"
+  HREF="node579.html">Caching</A>
+<B> Subir:</B> <A NAME="tex2html13083"
+  HREF="node573.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13077"
+  HREF="node577.html">Carga desde Carpetas node_modules</A>
+ &nbsp; <B>  <A NAME="tex2html13085"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13087"
+  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>

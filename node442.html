@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Introducción</TITLE>
-<META NAME="description" CONTENT="Introducción">
+<TITLE>Correo</TITLE>
+<META NAME="description" CONTENT="Correo">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node443.html">
 <LINK REL="previous" HREF="node441.html">
-<LINK REL="up" HREF="node441.html">
+<LINK REL="up" HREF="node411.html">
 <LINK REL="next" HREF="node443.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10709"
+<A NAME="tex2html10751"
   HREF="node443.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10703"
-  HREF="node441.html">
+<A NAME="tex2html10745"
+  HREF="node411.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10697"
+<A NAME="tex2html10739"
   HREF="node441.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10705"
-  HREF="node802.html">
+<A NAME="tex2html10747"
+  HREF="node804.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10707"
-  HREF="node805.html">
+<A NAME="tex2html10749"
+  HREF="node807.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,518 +92,65 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10710"
-  HREF="node443.html">Streaming y Valores de</A>
-<B> Subir:</B> <A NAME="tex2html10704"
-  HREF="node441.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10698"
-  HREF="node441.html">Streaming</A>
- &nbsp; <B>  <A NAME="tex2html10706"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10708"
-  HREF="node805.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10752"
+  HREF="node443.html">Ambito</A>
+<B> Subir:</B> <A NAME="tex2html10746"
+  HREF="node411.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10740"
+  HREF="node441.html">Environments</A>
+ &nbsp; <B>  <A NAME="tex2html10748"
+  HREF="node804.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10750"
+  HREF="node807.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03810000000000000000">
-Introducción</A>
+<H1><A NAME="SECTION033230000000000000000"></A>
+<A NAME="section:correo"></A>
+<BR>
+Correo
 </H1>
-En Sinatra 1.3 se introdujo el stream helper. 
-El stream object imita a un objeto IO.
-
-<P>
-
-<OL>
-<LI><A NAME="tex2html974"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L427-L437">Código del método stream</A>
-</LI>
-<LI><A NAME="tex2html975"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L383-L425">Class Stream code</A>: Class of the response body in case you use <code>#stream</code>
-</LI>
-</OL>
-
-<P>
-En ocasiones queremos empezar a enviar datos mientras se esta generando aún el cuerpo de la 
-respuesta.
-Puede que incluso queramos mantener el envío hasta que el cliente cierra la conexión.
-
-<P>
-Para eso podemos usar el <code>stream</code> helper:
-
-<P>
 <PRE>
-[~/sinatra/sinatra-streaming/intro-streaming(master)]$ cat legendary.rb 
+[~/srcSTW/sinatra-faq/mail(esau)]$ cat app.rb 
 require 'sinatra'
-
-before do
- content_type 'text/plain'
-end
-
+require 'pony'
+raise "Execute:\n\t#{$0} password email_to email_from" if ARGV.length.zero?
 get '/' do
-  stream do |out|
-    out &lt;&lt; "It's gonna be legen -\n"
-    sleep 0.5
-    out &lt;&lt; " (wait for it) \n"
-    sleep 1
-    out &lt;&lt; "- dary!\n"
-  end
+    email = ARGV.shift
+    pass = ARGV.shift
+    Pony.mail({
+      :to =&gt; email,
+      :body =&gt; "Hello Casiano",
+      :subject =&gt; 'Howdy, Partna!',
+      :via =&gt; :smtp,
+      :via_options =&gt; {
+          :address              =&gt; 'smtp.gmail.com',
+          :port                 =&gt; '587',
+          :enable_starttls_auto =&gt; true,
+          :user_name            =&gt; ARGV.shift,
+          :password             =&gt; pass,
+          :authentication       =&gt; :plain, # :plain, :login, :cram_md5, no auth by default
+          :domain               =&gt; "localhost.localdomain" # the HELO domain provided by the client to the server
+        }
+    })
+    "Check your email at #{email}"
 end
-</PRE>
-
-<P>
-Esto nos permite implementar 
-
-<UL>
-<LI>streaming APIs,
-</LI>
-<LI><A NAME="tex2html976"
-  HREF="http://en.wikipedia.org/wiki/Server-sent_events">Server Sent Events</A>.
-Server-sent events es una tecnología que proporciona notificaciones push desde el servidor a un 
-navegador cliente en forma de eventos DOM
-</LI>
-<LI>y que 
-puede ser usada como base para <A NAME="tex2html977"
-  HREF="http://en.wikipedia.org/wiki/WebSocket">WebSockets</A>. WebSocket es una tecnología que proporciona un canal de comunicación bidireccional y full-duplex sobre un único socket TCP. Está diseñada para ser implementada en navegadores y servidores web, pero puede utilizarse por cualquier aplicación cliente/servidor.
-</LI>
-<LI>Puede también ser utilizada para incrementar el throughput si parte pero no todo el contenido depende
-de un recurso que es lento.
-</LI>
-</UL>
-
-<P>
-Nótese que la conducta de streaming, en particular
-el número de solicitudes concurrentes, 
-depende en gran medida del servidor web
-que sirve la aplicación.
-
-<P>
-
-<UL>
-<LI>Algunos servidores como <A NAME="tex2html978"
-  HREF="http://naupacto.com/rubydoc/guiaWEBrick/index.html"><TT>Webrick</TT></A> no soportan streaming. En tal caso el cuerpo es 
-envíado en una tacada.
-</LI>
-<LI><A NAME="tex2html979"
-  HREF="http://ruby.about.com/od/sinatra/a/sinatra5.htm"><TT>Shotgun</TT></A> tampoco soporta streaming
-</LI>
-</UL>
-
-<P>
-
-<H4><A NAME="SECTION03810010000000000000">
-<TT>Sinatra::Streaming</TT></A>
-</H4>
-  
-
-<OL>
-<LI>Sinatra 1.3 introduced the stream helper. 
-</LI>
-<LI>The addon provided by the gem
-<code>sinatra-contrib</code> improves the
-streaming API by making the stream object immitate an <code>IO</code> object,
-making the body play nicer
-with middleware unaware of streaming.
-</LI>
-</OL>
-
-<P>
-This is useful when passing the stream object to a library expecting an <A NAME="tex2html980"
-  HREF="http://ruby-doc.org/core-2.0.0/IO.html"><TT>IO</TT></A> or <A NAME="tex2html981"
-  HREF="http://ruby-doc.org/core-2.0.0/StringIO.html"><TT>StringIO</TT></A> object.
-
-<P>
-<PRE>
-06:31][~/srcSTW/streaming/upandrunning_streaming]$ cat -n simple.rb 
-     1  # http://www.sinatrarb.com/contrib/streaming.html
-     2  # $ gem install sinatra-contrib
-     3  require 'sinatra'
-     4  require 'sinatra/streaming'
-     5  set server: 'thin'
-     6  #set server: 'unicorn'
-     7  
-     8  get '/' do
-     9    stream do |out|
-    10      puts out.methods
-    11      out.puts "Hello World!", "How are you?"
-    12      out.write "Written #{out.pos} bytes so far!\n"
-    13      out.putc(65) unless out.closed?
-    14      out.flush
-    15    end
-    16  end
-</PRE>
-<code>out</code> es un objeto 
-<A NAME="tex2html982"
-  HREF="http://rubydoc.info/github/sinatra/sinatra/Sinatra/Helpers/Stream">Sinatra::Helpers::Stream</A>.
-
-<P>
-
-<H4><A NAME="SECTION03810020000000000000">
-sinatra/streaming en Aplicaciones Modulares</A>
-</H4>
-  
-
-<P>
-<PRE>
-require "sinatra/base"
-require "sinatra/streaming"
-
-class MyApp &lt; Sinatra::Base
-  helpers Sinatra::Streaming
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03810030000000000000">
-Manteniendo la Conexión Abierta: <TT>keep_open</TT></A>
-</H4>
-  
-
-<P>
-
-<UL>
-<LI>Si el parámetro opcional se pone a <code>keep_open</code>, 
-<code>close</code> no será llamado al finalizar el bloque,
-permitiendo su cierre en un punto posterior del flujo de 
-ejecución.
-
-<P>
-</LI>
-<LI>Esto sólo funciona en  <A NAME="18959"></A><SPAN  CLASS="textbf">evented servers</SPAN> 
-
-<P>
-Broadly speaking, there are two ways to handle concurrent requests
-to a server: 
-
-<OL>
-<LI>Threaded servers use multiple concurrently-executing
-threads that each handle one client request,
-</LI>
-<LI>evented servers
-run a single event loop that handles events for all connected
-clients
-</LI>
-<LI>Thin y Rainbows son ejemplos de servidores que pueden funcionar como <A NAME="18961"></A><SPAN  CLASS="textbf">evented servers</SPAN>. 
-(Otros servidores quizá cerrarán el stream)
-</LI>
-</OL>
-</LI>
-</UL>
-
-<P>
-El siguiente ejemplo muestra como mantener una conexión persitente, abierta para enviar
-mensajes de broadcast a unos suscriptores:
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ cat a_simple_streaming_example.rb 
-require 'sinatra'
-
-before do
-  content_type :txt
-end
-
-set server: 'thin', connections: []
-
-get '/consume' do
-  stream(:keep_open) do |out|
-    # store connection for later on
-    settings.connections &lt;&lt; out
-    logger.warn "connections.length = #{settings.connections.length}"
-
-    # remove connection when closed properly
-    out.callback do 
-      logger.warn "connection closed. out = #{out}"
-      settings.connections.delete(out) 
-      logger.warn "connections.length = #{settings.connections.length}"
-    end
-
-    # remove connection when due to an error
-    out.errback do
-      logger.warn "we just lost  connection!. out = #{out}"
-      settings.connections.delete(out)
-      logger.warn "connections.length = #{settings.connections.length}"
-    end
-  end # stream
-end
-
-get '/produce/:message' do
-  settings.connections.each do |out|
-    out &lt;&lt; "#{Time.now} -&gt; #{params[:message]}" &lt;&lt; "\n"
-  end
-
-  "Sent #{params[:message]} to all clients."
-end
-</PRE>
-Para usar este ejemplo utilizaremos este Rakefile:
-<PRE>
-[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ cat Rakefile 
-task :default =&gt; :server
-
-desc "run the server for the stream(:keep_open) example"
-task :server do
-  sh "ruby a_simple_streaming_example.rb"
-end
-
-desc "visit with browser 'localhost:4567/consume'"
-task :consume do
-  sh "open http://localhost:4567/consume"
-end
-
-desc "send messages to the consumer"
-task :produce do
- (1..10).each do |i|
-   sh "sleep 1; curl http://localhost:4567/produce/#{i}%0D"
- end
-end
-
-desc "start both consumer and producer"
-task :all =&gt; [ :consume, :produce ]
 </PRE>
 
 <P>
 
 <OL>
-<LI>Primero arrancamos el servidor. Obsérvese que el servidor usado es <code>thin</code>.
-<PRE>
-[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ rake server
-ruby a_simple_streaming_example.rb
-== Sinatra/1.4.4 has taken the stage on 4567 for development with backup from Thin
-Thin web server (v1.6.1 codename Death Proof)
-Maximum connections set to 1024
-Listening on localhost:4567, CTRL+C to stop
-</PRE>
-</LI>
-<LI>Después visitamos con un navegador la página 
-<code>localhost:4567/consume</code>. 
-<PRE>
-[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ rake consume
-open http://localhost:4567/consume
-</PRE>
-Esto abre (en MacOS X) un navegador que queda a la espera del
-servidor de que la ruta de producción genere algún contenido
-</LI>
-<LI>Si se desea abra alguna otra página de navegación privada (nueva ventana de incógnito en Chrome)
-en la misma URL <code>localhost:4567/consume</code>
-</LI>
-<LI>Arranquemos el productor:
-<PRE>
-[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ rake produce
-sleep 1; curl http://localhost:4567/produce/1%0D
- to all clients.sleep 1; curl http://localhost:4567/produce/2%0D
- to all clients.sleep 1; curl http://localhost:4567/produce/3%0D
- to all clients.sleep 1; curl http://localhost:4567/produce/4%0D
- to all clients.sleep 1; curl http://localhost:4567/produce/5%0D
- to all clients.sleep 1; curl http://localhost:4567/produce/6%0D
- to all clients.sleep 1; curl http://localhost:4567/produce/7%0D
- to all clients.sleep 1; curl http://localhost:4567/produce/8%0D
- to all clients.sleep 1; curl http://localhost:4567/produce/9%0D
- to all clients.sleep 1; curl http://localhost:4567/produce/10%0D
- to all clients.
-</PRE>
-</LI>
-<LI>Esto hace que en (los) navegadores/clientes que estaban 
-vistando  <code>localhost:4567/consume</code> aparezca algo parecido a esto:
-<PRE>
-2013-11-22 22:42:24 +0000 -&gt; 1
-2013-11-22 22:42:25 +0000 -&gt; 2
-2013-11-22 22:42:26 +0000 -&gt; 3
-2013-11-22 22:42:27 +0000 -&gt; 4
-2013-11-22 22:42:28 +0000 -&gt; 5
-2013-11-22 22:42:29 +0000 -&gt; 6
-2013-11-22 22:42:30 +0000 -&gt; 7
-2013-11-22 22:42:31 +0000 -&gt; 8
-2013-11-22 22:42:32 +0000 -&gt; 9
-2013-11-22 22:42:33 +0000 -&gt; 10
-</PRE>
-</LI>
-</OL>
-
-<P>
-En la consola del servidor aparecerá algo 
-parecido a esto:
-<PRE>
-[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ rake
-ruby a_simple_streaming_example.rb
-== Sinatra/1.4.4 has taken the stage on 4567 for development with backup from Thin
-Thin web server (v1.6.1 codename Death Proof)
-Maximum connections set to 1024
-Listening on localhost:4567, CTRL+C to stop
-W, [2013-11-22T22:46:17.132773 #21927]  WARN -- : connections.length = 1
-W, [2013-11-22T22:47:16.655453 #21927]  WARN -- : connection closed. out = #&lt;Sinatra::Helpers::Stream:0x007ff10a9ed7b8&gt;
-W, [2013-11-22T22:47:16.655557 #21927]  WARN -- : connections.length = 0
-W, [2013-11-22T22:47:16.655620 #21927]  WARN -- : we just lost  connection!. out = #&lt;Sinatra::Helpers::Stream:0x007ff10a9ed7b8&gt;
-W, [2013-11-22T22:47:16.655677 #21927]  WARN -- : connections.length = 0
-127.0.0.1 - - [22/Nov/2013 22:47:16] "GET /consume HTTP/1.1" 200 - 59.5292
-127.0.0.1 - - [22/Nov/2013 22:50:32] "GET /produce/1%0D HTTP/1.1" 200 23 0.0009
-127.0.0.1 - - [22/Nov/2013 22:50:33] "GET /produce/2%0D HTTP/1.1" 200 23 0.0008
-127.0.0.1 - - [22/Nov/2013 22:50:34] "GET /produce/3%0D HTTP/1.1" 200 23 0.0009
-127.0.0.1 - - [22/Nov/2013 22:50:35] "GET /produce/4%0D HTTP/1.1" 200 23 0.0008
-127.0.0.1 - - [22/Nov/2013 22:50:36] "GET /produce/5%0D HTTP/1.1" 200 23 0.0009
-127.0.0.1 - - [22/Nov/2013 22:50:37] "GET /produce/6%0D HTTP/1.1" 200 23 0.0009
-127.0.0.1 - - [22/Nov/2013 22:50:38] "GET /produce/7%0D HTTP/1.1" 200 23 0.0009
-127.0.0.1 - - [22/Nov/2013 22:50:39] "GET /produce/8%0D HTTP/1.1" 200 23 0.0007
-127.0.0.1 - - [22/Nov/2013 22:50:40] "GET /produce/9%0D HTTP/1.1" 200 23 0.0006
-127.0.0.1 - - [22/Nov/2013 22:50:41] "GET /produce/10%0D HTTP/1.1" 200 24 0.0009
-</PRE>
-
-<P>
-
-<OL>
-<LI>Este ejemplo usa
-<A NAME="tex2html983"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>.
-</LI>
-<LI><A NAME="tex2html984"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A> 
-is a library for Ruby, C++, and Java programs. 
-</LI>
-<LI>It provides event-driven I/O using the <A NAME="tex2html985"
-  HREF="http://en.wikipedia.org/wiki/Reactor_pattern">Reactor pattern</A>. 
-
-<OL>
-<LI>The <A NAME="18969"></A><SPAN  CLASS="textbf">reactor design pattern</SPAN> is an event handling pattern for
-handling service requests delivered concurrently to a service handler
-by one or more inputs.
-</LI>
-<LI>The service handler then demultiplexes the incoming requests and
-dispatches them synchronously to the associated request handlers.
-</LI>
-</OL>
-</LI>
-<LI>El módulo
-<A NAME="tex2html986"
-  HREF="http://eventmachine.rubyforge.org/EventMachine/Deferrable.html">Module: EventMachine::Deferrable</A>
-provee el método <code>(Object) callback(&amp;block)</code>.
-y el método <code>(Object) errback(&amp;block)</code> 
-
-<OL>
-<LI>El método <code>(Object) callback(&amp;block)</code>
-specifies a block to be executed if and when the Deferrable object receives a status of <code>:succeeded</code>.
-<PRE>
-    out.callback do 
-      logger.warn "connection closed. out = #{out}"
-      settings.connections.delete(out) 
-      logger.warn "connections.length = #{settings.connections.length}"
-    end
-</PRE>
-</LI>
-<LI>El método <code>(Object) errback(&amp;block)</code> 
-specifies a block to be executed if and when the Deferrable object receives
-a status of <code>:failed</code>.
-<PRE>
-    out.errback do
-      logger.warn "we just lost  connection!. out = #{out}"
-      settings.connections.delete(out)
-      logger.warn "connections.length = #{settings.connections.length}"
-    end
-</PRE>
-</LI>
-<LI><A NAME="tex2html987"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A> (EM) adds two different formalisms for lightweight concurrency to the Ruby programmer’s toolbox: spawned processes and <A NAME="18973"></A><SPAN  CLASS="textbf">deferrables</SPAN>.
-</LI>
-</OL>
+<LI><A NAME="tex2html1024"
+  HREF="http://www.millwoodonline.co.uk/blog/getting-started-with-sinatra">Getting started with Sinatra</A>
 </LI>
 </OL>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html10711"
-  HREF="node442.html#SECTION03810010000000000000"><TT>Sinatra::Streaming</TT></A>
-<LI><A NAME="tex2html10712"
-  HREF="node442.html#SECTION03810020000000000000">sinatra/streaming en Aplicaciones Modulares</A>
-<LI><A NAME="tex2html10713"
-  HREF="node442.html#SECTION03810030000000000000">Manteniendo la Conexión Abierta: <TT>keep_open</TT></A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html10709"
-  HREF="node443.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10703"
-  HREF="node441.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10697"
-  HREF="node441.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10705"
-  HREF="node802.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10707"
-  HREF="node805.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html10710"
-  HREF="node443.html">Streaming y Valores de</A>
-<B> Subir:</B> <A NAME="tex2html10704"
-  HREF="node441.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html10698"
-  HREF="node441.html">Streaming</A>
- &nbsp; <B>  <A NAME="tex2html10706"
-  HREF="node802.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10708"
-  HREF="node805.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-10
+2014-11-12
 </ADDRESS>
 </BODY>
 </HTML>
