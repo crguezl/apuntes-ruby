@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Mezclando Ficheros Específicos desde otra Rama</TITLE>
-<META NAME="description" CONTENT="Mezclando Ficheros Específicos desde otra Rama">
+<TITLE>Ramificaciones en Git</TITLE>
+<META NAME="description" CONTENT="Ramificaciones en Git">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node666.html">
 <LINK REL="previous" HREF="node664.html">
-<LINK REL="up" HREF="node658.html">
+<LINK REL="up" HREF="node661.html">
 <LINK REL="next" HREF="node666.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14642"
+<A NAME="tex2html14655"
   HREF="node666.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14636"
-  HREF="node658.html">
+<A NAME="tex2html14649"
+  HREF="node661.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14630"
+<A NAME="tex2html14643"
   HREF="node664.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14638"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14640"
+<A NAME="tex2html14651"
   HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14653"
+  HREF="node810.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,181 +92,55 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14643"
-  HREF="node666.html">Configuración y Algunos alias</A>
-<B> Subir:</B> <A NAME="tex2html14637"
-  HREF="node658.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html14631"
-  HREF="node664.html">Diferencias entre fetch y</A>
- &nbsp; <B>  <A NAME="tex2html14639"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14641"
-  HREF="node807.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14656"
+  HREF="node666.html">Véase: Tutoriales de Git</A>
+<B> Subir:</B> <A NAME="tex2html14650"
+  HREF="node661.html">Git</A>
+<B> Anterior:</B> <A NAME="tex2html14644"
+  HREF="node664.html">Un poco de SSH</A>
+ &nbsp; <B>  <A NAME="tex2html14652"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14654"
+  HREF="node810.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06670000000000000000"></A>
-<A NAME="section:mergespecificfilesfromanbotherbranch"></A>
+<H1><A NAME="SECTION06640000000000000000"></A>
+<A NAME="section:ramificaciones-en-git"></A>
 <BR>
-Mezclando Ficheros Específicos desde otra Rama
+Ramificaciones en Git
 </H1>
 
 <UL>
-<LI><PRE>
-(master)$git checkout branchname file1 file2 files3
-
-  git checkout [-p|--patch] [&lt;tree-ish&gt;] [--] &lt;pathspec&gt;...
-
-   When &lt;paths&gt; or --patch are given, git checkout does not switch
-   branches. It updates the named paths in the working tree from the
-   index file or from a named &lt;tree-ish&gt; (most often a commit). 
-   The &lt;tree-ish&gt; argument can be
-   used to specify a specific tree-ish (i.e. commit, tag or tree) to
-   update the index for the given paths before updating the working
-   tree.
-</PRE>
-
-<P>
+<LI>¿Qué es una rama?
 </LI>
-<LI>The following sequence checks out the master branch, reverts the Makefile to two
-revisions back, deletes hello.c by mistake, and gets it back from the index.
-<PRE>
-               $ git checkout master             (1)
-               $ git checkout master~2 Makefile  (2)
-               $ rm -f hello.c
-               $ git checkout hello.c            (3)
-</PRE>
-
-<OL>
-<LI>switch branch
+<LI>Procedimientos básicos para ramificar y fusionar
 </LI>
-<LI>take a file out of another commit
+<LI>Gestión de ramificaciones
 </LI>
-<LI>restore hello.c from the index
+<LI>Flujos de trabajo ramificados
 </LI>
-</OL>
-
-<P>
+<LI>Ramas Remotas
 </LI>
-<LI>If you want to check out all C source files out of the index, you can say
-<PRE>
-               $ git checkout -- '*.c'
-</PRE>
-Note the quotes around <code>*.c</code>. 
-
-<P>
-The removed file <code>hello.c</code> will also be checked out, even though it is
-no longer in the working tree, because the file globbing is used to match entries in the
-<SPAN ID="txt27630">index</SPAN> (not in the working tree by the shell).
-
-<P>
+<LI>Reorganizando el trabajo realizado
 </LI>
-<LI>If you have an unfortunate branch that is named <code>hello.c</code>, this step:
-
-<P>
-<PRE>
-       $ git checkout hello.c
-</PRE>
-would be confused as
-an instruction to switch to that branch. 
-
-<P>
-You should instead write:
-
-<P>
-<PRE>
-               $ git checkout -- hello.c
-</PRE>
-</LI>
-<LI><A NAME="tex2html1583"
-  HREF="http://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/">Git Tip: How to "Merge" Specific Files from Another Branch</A>
-<P>
+<LI>Recapitulación
 </LI>
 </UL>
+Véanse 
+<A NAME="tex2html1579"
+  HREF="http://git-scm.com/book/es/Ramificaciones-en-Git">Chapter 3. Ramificaciones en Git</A>
+del libro de Scott Chacon
+y las anotaciones en este 
+<A NAME="tex2html1580"
+  HREF="GitBranchingScottChacon.pdf">pdf</A>.
 
 <P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html14642"
-  HREF="node666.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14636"
-  HREF="node658.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14630"
-  HREF="node664.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14638"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14640"
-  HREF="node807.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html14643"
-  HREF="node666.html">Configuración y Algunos alias</A>
-<B> Subir:</B> <A NAME="tex2html14637"
-  HREF="node658.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html14631"
-  HREF="node664.html">Diferencias entre fetch y</A>
- &nbsp; <B>  <A NAME="tex2html14639"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14641"
-  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-12
+2014-11-17
 </ADDRESS>
 </BODY>
 </HTML>

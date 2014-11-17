@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>MySQL</TITLE>
-<META NAME="description" CONTENT="MySQL">
+<TITLE>Configuring Apache</TITLE>
+<META NAME="description" CONTENT="Configuring Apache">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node777.html">
 <LINK REL="previous" HREF="node775.html">
-<LINK REL="up" HREF="node772.html">
+<LINK REL="up" HREF="node775.html">
 <LINK REL="next" HREF="node777.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16333"
+<A NAME="tex2html16362"
   HREF="node777.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16327"
-  HREF="node772.html">
+<A NAME="tex2html16356"
+  HREF="node775.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16321"
+<A NAME="tex2html16350"
   HREF="node775.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16329"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16331"
+<A NAME="tex2html16358"
   HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html16360"
+  HREF="node810.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,67 +92,103 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16334"
-  HREF="node777.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html16328"
-  HREF="node772.html">Apache en Mac OS</A>
-<B> Anterior:</B> <A NAME="tex2html16322"
-  HREF="node775.html">Perl</A>
- &nbsp; <B>  <A NAME="tex2html16330"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16332"
-  HREF="node807.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16363"
+  HREF="node777.html">PHP</A>
+<B> Subir:</B> <A NAME="tex2html16357"
+  HREF="node775.html">Apache en Mac OS</A>
+<B> Anterior:</B> <A NAME="tex2html16351"
+  HREF="node775.html">Apache en Mac OS</A>
+ &nbsp; <B>  <A NAME="tex2html16359"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16361"
+  HREF="node810.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION062914000000000000000">
-MySQL</A>
+<H2><A NAME="SECTION062911000000000000000">
+Configuring Apache</A>
 </H2>
 
-<P>
-MySQL is again a missing component in OS X 10.9 and needs to be
-dowloaded from the MySQL site use the Mac OS X ver. 10.7 (x86,
-64-bit), DMG Archive version (works fine on 10.9).
+<OL>
+<LI>The default system document root is still found at - 
+<code>http://localhost/</code>
+The files are shared in the filing system at -  
+<PRE>
+/Library/WebServer/Documents/
+</PRE>
+</LI>
+<LI>The other web root directory which is missing by default is the
+<code>~/Sites</code> folder in the User account. 
 
 <P>
-When downloading you don’t have to sign up, look for <I>No thanks,
-just take me to the downloads!</I>  - go straight to the download mirrors
-and download the software from a mirror which is closest to you.
+</LI>
+<LI>Check that you have a <code>username.conf</code> filed under:
+<PRE>
+/etc/apache2/users/
+</PRE>
+If you don’t (very likely), then create one named by the short
+username of the account with the suffix <code>.conf</code>, it's location and
+permissions/ownership is best tackled by using the Terminal:
 
 <P>
-Once downloaded install the 3 components. 
+<PRE>
+[~/LPPbook(master)]$ ls -l /etc/apache2/users/
+total 40
+-rw-r--r--  1 root  wheel  143 15 feb  2010 casiano.conf
+</PRE>
 
 <P>
-You may need to adjust the Security and Privacy System Pref to allow installs of 3rd party
-apps because of the new security feature of Mountain Lion known as
-the <code>Gatekeeper</code>, which keeps unscrupulous installer packages at
-bay.
+</LI>
+<LI><PRE>
+[~/LPPbook(master)]$ cat /etc/apache2/users/casiano.conf 
+&lt;Directory "/Users/casiano/Sites/"&gt;
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+&lt;/Directory&gt;
+</PRE>
+</LI>
+<LI>Permissions on the file should be:
 
 <P>
-To get around this without changing the global preferences (better!)
-right click or command click the <code>.pkg</code> installer to bring up the
-contextual menu and select open, then you get the warning - then
-click Open.
+<PRE>
+-rw-r--r--   1 root  wheel  298 Jun 28 16:47 username.conf
+</PRE>
+</LI>
+<LI>Restart Apache for the new file to be read:
+
+<P>
+<PRE>
+sudo apachectl restart
+</PRE>
+</LI>
+<LI>Then this user level document root will be viewable at:
+<PRE>
+http://localhost/~username/
+</PRE>
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html16333"
+<A NAME="tex2html16362"
   HREF="node777.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16327"
-  HREF="node772.html">
+<A NAME="tex2html16356"
+  HREF="node775.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16321"
+<A NAME="tex2html16350"
   HREF="node775.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16329"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16331"
+<A NAME="tex2html16358"
   HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html16360"
+  HREF="node810.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -203,20 +239,20 @@ click Open.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16334"
-  HREF="node777.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html16328"
-  HREF="node772.html">Apache en Mac OS</A>
-<B> Anterior:</B> <A NAME="tex2html16322"
-  HREF="node775.html">Perl</A>
- &nbsp; <B>  <A NAME="tex2html16330"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16332"
-  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html16363"
+  HREF="node777.html">PHP</A>
+<B> Subir:</B> <A NAME="tex2html16357"
+  HREF="node775.html">Apache en Mac OS</A>
+<B> Anterior:</B> <A NAME="tex2html16351"
+  HREF="node775.html">Apache en Mac OS</A>
+ &nbsp; <B>  <A NAME="tex2html16359"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16361"
+  HREF="node810.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-12
+2014-11-17
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ciclos</TITLE>
-<META NAME="description" CONTENT="Ciclos">
+<TITLE>Debugger</TITLE>
+<META NAME="description" CONTENT="Debugger">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,7 +21,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node576.html">
 <LINK REL="previous" HREF="node574.html">
-<LINK REL="up" HREF="node573.html">
+<LINK REL="up" HREF="node568.html">
 <LINK REL="next" HREF="node576.html">
 </HEAD>
 
@@ -32,16 +32,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   HREF="node576.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
 <A NAME="tex2html13040"
-  HREF="node573.html">
+  HREF="node568.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
 <A NAME="tex2html13034"
   HREF="node574.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
 <A NAME="tex2html13042"
-  HREF="node804.html">
+  HREF="node807.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
 <A NAME="tex2html13044"
-  HREF="node807.html">
+  HREF="node810.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -93,159 +93,36 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
 <B> Siguiente:</B> <A NAME="tex2html13047"
-  HREF="node576.html">Especificación de Ficheros Conteniendo</A>
+  HREF="node576.html">Modulos</A>
 <B> Subir:</B> <A NAME="tex2html13041"
-  HREF="node573.html">Modulos</A>
+  HREF="node568.html">JavaScript en el Lado</A>
 <B> Anterior:</B> <A NAME="tex2html13035"
-  HREF="node574.html">Introducción</A>
+  HREF="node574.html">Entrada Salida en Node.js</A>
  &nbsp; <B>  <A NAME="tex2html13043"
-  HREF="node804.html">&#205;ndice General</A></B> 
+  HREF="node807.html">&#205;ndice General</A></B> 
  &nbsp; <B>  <A NAME="tex2html13045"
-  HREF="node807.html">&#205;ndice de Materias</A></B> 
+  HREF="node810.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04582000000000000000">
-Ciclos</A>
-</H2>
-
-<P>
-<PRE>
-[~/javascript/node.js/creating_modules/cycles(master)]$ cat a.js
-console.log('a starting');
-exports.done = false;
-var b = require('./b.js');
-console.log('in a, b.done = %j', b.done);
-exports.done = true;
-console.log('a done');
-</PRE>
-
-<P>
-<PRE>
-[~/javascript/node.js/creating_modules/cycles(master)]$ cat b.js
-console.log('b starting');
-exports.done = false;
-var a = require('./a.js');
-console.log('in b, a.done = %j', a.done);
-exports.done = true;
-console.log('b done');
-</PRE>
-
-<P>
-<PRE>
-[~/javascript/node.js/creating_modules/cycles(master)]$ cat main.js
-console.log('main starting');
-var a = require('./a.js');
-var b = require('./b.js');
-console.log('in main, a.done=%j, b.done=%j', a.done, b.done);
-</PRE>
-When <code>main.js</code> loads <code>a.js</code>, then <code>a.js</code> in turn loads
-<code>b.js</code>. At that point, <code>b.js</code> tries to load <code>a.js</code>. In
-order to prevent an infinite loop an unfinished copy of the <code>a.js</code>
-exports object is returned to the <code>b.js</code> module. <code>b.js</code> then
-finishes loading, and its exports object is provided to the <code>a.js</code>
-module.
-
-<P>
-By the time <code>main.js</code> has loaded both modules, they're both finished. The
-output of this program would thus be:
-
-<P>
-<PRE>
-[~/javascript/node.js/creating_modules/cycles(master)]$ node main.js 
-main starting
-a starting
-b starting
-in b, a.done = false
-b done
-in a, b.done = true
-a done
-in main, a.done=true, b.done=true
-</PRE>
+<H1><A NAME="SECTION04670000000000000000">
+Debugger</A>
+</H1>
 
 <P>
 
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html13046"
-  HREF="node576.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13040"
-  HREF="node573.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13034"
-  HREF="node574.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13042"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13044"
-  HREF="node807.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html13047"
-  HREF="node576.html">Especificación de Ficheros Conteniendo</A>
-<B> Subir:</B> <A NAME="tex2html13041"
-  HREF="node573.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html13035"
-  HREF="node574.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html13043"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13045"
-  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<OL>
+<LI><A NAME="tex2html1371"
+  HREF="http://nodejs.org/api/debugger.html">Node.js debugger</A>
+</LI>
+</OL>
+
+<P>
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-12
+2014-11-17
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Transferencia de ficheros por sftp</TITLE>
-<META NAME="description" CONTENT="Transferencia de ficheros por sftp">
+<TITLE>Depuración/Debugging</TITLE>
+<META NAME="description" CONTENT="Depuración/Debugging">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node657.html">
 <LINK REL="previous" HREF="node655.html">
-<LINK REL="up" HREF="node655.html">
+<LINK REL="up" HREF="node646.html">
 <LINK REL="next" HREF="node657.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14496"
+<A NAME="tex2html14492"
   HREF="node657.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14490"
-  HREF="node655.html">
+<A NAME="tex2html14486"
+  HREF="node646.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14484"
+<A NAME="tex2html14480"
   HREF="node655.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14492"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14494"
+<A NAME="tex2html14488"
   HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14490"
+  HREF="node810.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,84 +92,190 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14497"
-  HREF="node657.html">Copias de Seguridad con</A>
-<B> Subir:</B> <A NAME="tex2html14491"
-  HREF="node655.html">Copia Segura de un</A>
-<B> Anterior:</B> <A NAME="tex2html14485"
-  HREF="node655.html">Copia Segura de un</A>
- &nbsp; <B>  <A NAME="tex2html14493"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14495"
-  HREF="node807.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14493"
+  HREF="node657.html">Los Ficheros de Configuración</A>
+<B> Subir:</B> <A NAME="tex2html14487"
+  HREF="node646.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14481"
+  HREF="node655.html">Consideraciones sobre la Seguridad</A>
+ &nbsp; <B>  <A NAME="tex2html14489"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14491"
+  HREF="node810.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION065121000000000000000">
-Transferencia de ficheros por <TT>sftp</TT></A>
-</H2>
+<H1><A NAME="SECTION065100000000000000000">
+Depuración/Debugging</A>
+</H1>
 
 <P>
-El protocolo <A NAME="26573"></A><SPAN  CLASS="textbf">SFTP</SPAN> no es el resultado de
-ejecutar <A NAME="26575"></A><SPAN  CLASS="textbf">FTP</SPAN> sobre SSH. Se trata de un nuevo protocolo
-para la transferencia segura de ficheros.
-
-<P>
-Si se establece autentificación no interactiva con una máquina que provee
-un servicio SFTP es posible usar
- <TT>sftp</TT>  en modo batch:
+La opción <code>-v</code> hace que los clientes <code>scp</code> y <code>ssh</code> proporcionen
+información de depuración. Observemos la siguiente copia remota:
 
 <P>
 <PRE>
-pp2@mymachine:~/Lbook$ ssh-copy-id -i ~/.ssh/id_dsa.pub casiano@ftp.someplace.ull.es
-25
-Now try logging into the machine, with "ssh 'casiano@ftp.someplace.ull.es'", and check in:
-
-  .ssh/authorized_keys
-
-  to make sure we haven't added extra keys that you weren't expecting.
+pp2@nereida:~/Lbook$ scp procesos.tex orion:
+procesos.tex                         100%  250KB 249.5KB/s   00:01
 </PRE>
-
-<P>
-Ahora escribimos un guión para el cliente <A NAME="tex2html1557"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sftp"><TT>sftp</TT></A>:
+La opción <code>-v</code> nos informa de la existencia de un problema:
 
 <P>
 <PRE>
-pp2@nereida:~/Lbook$ cat -n instituto.sftp
-     1  cd asignas/asignas/PRGPAR2/perlexamples
-     2  lcd /home/pp2/public_html/perlexamples/
-     3  put *
+pp2@nereida:~/Lbook$ scp -v procesos.tex orion:
+Executing: program /usr/bin/ssh host orion, user (unspecified), command scp -v -t .
+OpenSSH_4.3p2 Debian-9, OpenSSL 0.9.8c 05 Sep 2006
+debug1: Reading configuration data /home/pp2/.ssh/config
+debug1: Applying options for orion
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Applying options for *
+debug1: Connecting to orion [193.145.105.17] port 22.
+debug1: Connection established.
+debug1: identity file /home/pp2/.ssh/identity type -1
+debug1: identity file /home/pp2/.ssh/id_rsa type 1
+debug1: identity file /home/pp2/.ssh/id_dsa type 2
+debug1: Remote protocol version 2.0, remote software version OpenSSH_4.3p2 Debian-9
+debug1: match: OpenSSH_4.3p2 Debian-9 pat OpenSSH*
+debug1: Enabling compatibility mode for protocol 2.0
+debug1: Local version string SSH-2.0-OpenSSH_4.3p2 Debian-9
+debug1: An invalid name was supplied
+Configuration file does not specify default realm
+
+debug1: An invalid name was supplied
+A parameter was malformed
+Validation error
+
+debug1: An invalid name was supplied
+Configuration file does not specify default realm
+
+debug1: An invalid name was supplied
+A parameter was malformed
+Validation error
+
+debug1: SSH2_MSG_KEXINIT sent
+....................................................
+debug1: Transferred: stdin 0, stdout 0, stderr 0 bytes in 0.3 seconds
+debug1: Bytes per second: stdin 0.0, stdout 0.0, stderr 0.0
+debug1: Exit status 0
 </PRE>
 
 <P>
-La opción <code>-b</code> de <code>sftp</code> nos permite hacer la transferencia
-de forma automática:
+Después de buscar en <code>Google</code> vemos
+cual es la causa del problema:
 
 <P>
+<BLOCKQUOTE>
+<I>What happens is that SSH will hang for a long period of time before
+providing a password prompt or performing key authentication. In either
+case the problem is the GSSAPI that is now being used by clients and
+not by most servers.
+</I>
+
+</BLOCKQUOTE>
+
+<P>
+La solución recomendada es desactivar <code>GSSAPIAuthentication</code>:
 <PRE>
-pp2@nereida:~/Lbook$ sftp -b instituto.sftp casiano@ftp.instituto.ull.es &gt;/dev/null
+pp2@nereida:~/Lbook$ vi ~/.ssh/config
+pp2@nereida:~/Lbook$ grep -i gss ~/.ssh/config
+GSSAPIAuthentication no
+</PRE>
+Ejecutamos con <code>-v</code> de nuevo. El error ha desaparecido. La velocidad de transferencia
+a aumentado ligeramente:
+<PRE>
+pp2@nereida:~/Lbook$ scp procesos.tex orion:
+procesos.tex                              100%  253KB 252.9KB/s   00:00
 </PRE>
 
 <P>
+
+<H4><A NAME="SECTION065100010000000000000">
+Lista de Comprobaciones en Caso de Error</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>Añada la opción <code>-v</code>  el número de veces que sea necesario
+</LI>
+<LI>Añada la opción de depuración al servidor; <code>/usr/sbin/sshd -d -p 2222</code>. 
+El número <code>2222</code> se refiere aquí al puerto.
+</LI>
+<LI>Observe el fichero de log del servicio SSH usando <A NAME="tex2html1555"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?tail"><TT>tail</TT></A>
+<code>-f</code>: 
+<code>tail -f /var/log/auth.log</code> ( en el servidor)
+</LI>
+<LI>Asegúrese que el agente se está ejecutando: <code>ps aux|grep ssh-agent</code>.  
+Si se está usando <code>keychain</code> asegúrese de que el agente, el PID y el socket
+están correctamente actualizados
+</LI>
+<LI>Asegúrese que su clave ha sido añadida al agente SSH.
+Use <code>ssh-add -l</code> para comprobarlo.  
+</LI>
+<LI>Compruebe los permisos en sus directorios <code>HOME</code>, <code>~/.ssh</code>
+y en el fichero <code>authorized_keys</code>. El servidor 
+rechazará el uso de claves públicas si 
+esta en modo <code>StrictModes on</code> si los permisos no son
+suficientemente restrictivos.
+</LI>
+</OL>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">83</SPAN>.<SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Establezca una conexión SSH:
+¿Que protocolo se esta usando en la conexión?
+¿Que identidad se esta usando?</I></DIV><P></P>
+
+<P>
+
+<H4><A NAME="SECTION065100020000000000000">
+Véase también</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1556"
+  HREF="http://blog.codefront.net/2007/02/28/debugging-ssh-public-key-authentication-problems/">Debugging SSH public key authentication problems</A>
+</LI>
+</UL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14494"
+  HREF="node656.html#SECTION065100010000000000000">Lista de Comprobaciones en Caso de Error</A>
+<LI><A NAME="tex2html14495"
+  HREF="node656.html#SECTION065100020000000000000">Véase también</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14496"
+<A NAME="tex2html14492"
   HREF="node657.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14490"
-  HREF="node655.html">
+<A NAME="tex2html14486"
+  HREF="node646.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14484"
+<A NAME="tex2html14480"
   HREF="node655.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14492"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14494"
+<A NAME="tex2html14488"
   HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14490"
+  HREF="node810.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -220,20 +326,20 @@ pp2@nereida:~/Lbook$ sftp -b instituto.sftp casiano@ftp.instituto.ull.es &gt;/de
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14497"
-  HREF="node657.html">Copias de Seguridad con</A>
-<B> Subir:</B> <A NAME="tex2html14491"
-  HREF="node655.html">Copia Segura de un</A>
-<B> Anterior:</B> <A NAME="tex2html14485"
-  HREF="node655.html">Copia Segura de un</A>
- &nbsp; <B>  <A NAME="tex2html14493"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14495"
-  HREF="node807.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14493"
+  HREF="node657.html">Los Ficheros de Configuración</A>
+<B> Subir:</B> <A NAME="tex2html14487"
+  HREF="node646.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14481"
+  HREF="node655.html">Consideraciones sobre la Seguridad</A>
+ &nbsp; <B>  <A NAME="tex2html14489"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14491"
+  HREF="node810.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-12
+2014-11-17
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Debugger</TITLE>
-<META NAME="description" CONTENT="Debugger">
+<TITLE>Usando REPL via un socket TCP</TITLE>
+<META NAME="description" CONTENT="Usando REPL via un socket TCP">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node573.html">
 <LINK REL="previous" HREF="node571.html">
-<LINK REL="up" HREF="node565.html">
+<LINK REL="up" HREF="node568.html">
 <LINK REL="next" HREF="node573.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12991"
+<A NAME="tex2html13004"
   HREF="node573.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12985"
-  HREF="node565.html">
+<A NAME="tex2html12998"
+  HREF="node568.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12979"
+<A NAME="tex2html12992"
   HREF="node571.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12987"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12989"
+<A NAME="tex2html13000"
   HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html13002"
+  HREF="node810.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,37 +92,63 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12992"
-  HREF="node573.html">Modulos</A>
-<B> Subir:</B> <A NAME="tex2html12986"
-  HREF="node565.html">JavaScript en el Lado</A>
-<B> Anterior:</B> <A NAME="tex2html12980"
-  HREF="node571.html">Entrada Salida en Node.js</A>
- &nbsp; <B>  <A NAME="tex2html12988"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12990"
-  HREF="node807.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13005"
+  HREF="node573.html">Referencias sobre REPL</A>
+<B> Subir:</B> <A NAME="tex2html12999"
+  HREF="node568.html">JavaScript en el Lado</A>
+<B> Anterior:</B> <A NAME="tex2html12993"
+  HREF="node571.html">Usando REPL desde un</A>
+ &nbsp; <B>  <A NAME="tex2html13001"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13003"
+  HREF="node810.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04570000000000000000">
-Debugger</A>
+<H1><A NAME="SECTION04640000000000000000">
+Usando REPL via un socket TCP</A>
 </H1>
+<PRE>
+[~/Dropbox/src/javascript/node.js/repl(master)]$ cat repl_server.js 
+var net = require("net"),
+    repl = require("repl");
+
+connections = 0;
+
+net.createServer(function (socket) {
+  connections += 1;
+  repl.start({
+    prompt: "node via TCP socket&gt; ",
+    input: socket,
+    output: socket
+  }).on('exit', function() {
+    socket.end();
+  });
+}).listen(5001);
+
+[~/Dropbox/src/javascript/node.js/repl(master)]$ node repl_server.js
+</PRE>
 
 <P>
-
-<OL>
-<LI><A NAME="tex2html1367"
-  HREF="http://nodejs.org/api/debugger.html">Node.js debugger</A>
-</LI>
-</OL>
+Podemos ahora usar <A NAME="24367"></A><SPAN  CLASS="textbf">netcat</SPAN> para comunicar con el servidor:
+<PRE>
+[~/Dropbox/src/javascript/node.js/hector_correa_introduction_to_node(master)]$ nc -v localhost 5001
+nc: connect to localhost port 5001 (tcp) failed: Connection refused
+Connection to localhost 5001 port [tcp/commplex-link] succeeded!
+node via TCP socket&gt; a = 2+3
+5
+node via TCP socket&gt; a
+5
+node via TCP socket&gt; .exit
+[~/Dropbox/src/javascript/node.js/hector_correa_introduction_to_node(master)]$
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-12
+2014-11-17
 </ADDRESS>
 </BODY>
 </HTML>

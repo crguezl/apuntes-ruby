@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Git</TITLE>
-<META NAME="description" CONTENT="Git">
+<TITLE>Copia Segura de un Fichero</TITLE>
+<META NAME="description" CONTENT="Copia Segura de un Fichero">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node672.html">
-<LINK REL="previous" HREF="node643.html">
-<LINK REL="up" HREF="node620.html">
+<LINK REL="previous" HREF="node657.html">
+<LINK REL="up" HREF="node646.html">
 <LINK REL="next" HREF="node659.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14531"
+<A NAME="tex2html14524"
   HREF="node659.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14525"
-  HREF="node620.html">
+<A NAME="tex2html14518"
+  HREF="node646.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14519"
+<A NAME="tex2html14514"
   HREF="node657.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14527"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14529"
+<A NAME="tex2html14520"
   HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14522"
+  HREF="node810.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,65 +91,246 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14532"
-  HREF="node659.html">Instalar Git</A>
-<B> Subir:</B> <A NAME="tex2html14526"
-  HREF="node620.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html14520"
-  HREF="node657.html">Copias de Seguridad con</A>
- &nbsp; <B>  <A NAME="tex2html14528"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14530"
-  HREF="node807.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14525"
+  HREF="node659.html">Transferencia de ficheros por</A>
+<B> Subir:</B> <A NAME="tex2html14519"
+  HREF="node646.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14515"
+  HREF="node657.html">Los Ficheros de Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html14521"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14523"
+  HREF="node810.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06600000000000000000"></A>
-<A NAME="chapter:git"></A>
-<BR>
-Git
+<H1><A NAME="SECTION065120000000000000000">
+Copia Segura de un Fichero</A>
 </H1>
+
+<P>
+
+<H4><A NAME="SECTION065120010000000000000">
+Transferencia de Ficheros con <TT>scp</TT></A>
+</H4>
+  
+
+<P>
+El protocolo <A NAME="26622"></A><SPAN  CLASS="textbf">SCP</SPAN> implementa la transferencia de ficheros.
+El cliente se conecta a la máquina remota usando SSH y solicita la ejecución 
+de un programa servidor  (normalmente el mismo programa cliente <code>scp</code> es capaz de funcionar
+como servidor).
+
+<P>
+Para la subida de ficheros el cliente alimenta al servidor
+con los ficheros que deberán ser cargados, incluyendo opcionalmente los 
+atributos básicos como permisos y fechas.
+
+<P>
+Para las descargas el cliente envía una solicitud indicando los ficheros y directorios que
+deben ser descargados. 
+
+<P>
+Veamos un ejemplo:
+<PRE>
+nereida:~&gt; scp mm.c orion:/tmp/
+mm.c
+</PRE>
+La sintáxis de <A NAME="tex2html1561"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?scp"><TT>scp</TT></A>
+es:
+<PRE>
+scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file] 
+    [-l limit] [-o ssh_option] [-P port] [-S program]
+    [[user@]host1:]file1 ... [[user@]host2:]file2
+</PRE>
+Es posible copiar entre dos máquinas remotas  emitiendo
+la orden desde una tercera máquina:
+<PRE>
+portatil@user:/tmp$ scp europa:/tmp/prueba.batch nereida:/tmp/prueba.batch
+</PRE>
+Es posible usar comodines (wildcards), protegiéndolos de la shell local:
+<PRE>
+portatil@user:/tmp$ scp 'europa:/tmp/*.tex' nereida:/tmp/
+</PRE>
+Es posible copiar de dos máquinas remotas a una tercera:
+<PRE>
+pp2@europa:~/Lnet-parscp$ scp orion:Makefile.PL nereida:texput.log beowulf:
+pp2@europa:~/Lnet-parscp$ ssh beowulf ls -ltr | tail -2
+-rw-r--r--  1 casiano casiano    615 mar 26 13:56 texput.log
+-rw-r--r--  1 casiano casiano   1485 mar 26 13:56 Makefile.PL
+</PRE>
+Hemos copiado desde la máquina orion y desde la máquina nereida
+diferentes ficheros. La máquina <code>beowulf</code> es la máquina de destino
+a la que fueron transferidos.
+
+<P>
+La opción <code>-r</code> permite copiar subdirectorios.
+La opción <code>-p</code> permite preservar permisos.
+
+<P>
+
+<H4><A NAME="SECTION065120020000000000000">
+Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
+</H4>
+  
+
+<P>
+Un comando como este edita dos ficheros en sendos tabs:
+
+<P>
+<PRE>
+vi -p scp://orion/AUTOMATICBACKUPCHECKOUT /home/casiano/europabackup.log
+</PRE>
+
+<P>
+El primero es un fichero <code>~/AUTOMATICBACKUPCHECKOUT</code>
+en una máquina remota con nombre <code>orion</code>. El segundo
+es un fichero local. El editor <code>vim</code> emite el comando <code>scp</code> 
+apropiado para copiar el fichero remoto en un fichero temporal.
+
+<P>
+Durantre la edición, cada vez que salve el fichero
+<code>~/AUTOMATICBACKUPCHECKOUT</code> de <code>orion</code>, <code>vim</code>
+tasladará la orden <code>:w</code> en el comando <code>scp</code> adecuado:
+<PRE>
+:!scp -q '/tmp/v611122/1' 'orion:AUTOMATICBACKUPCHECKOUT'
+</PRE>
+
+<P>
+o bien podemos emitir una orden de edición de un nuevo fichero remoto:
+<PRE>
+:vsplit scp://casiano@some.machine.com/somefile.txt
+</PRE>
+
+<P>
+Es incluso posible ver los contenidos de un directorio:
+<PRE>
+:tabedit scp://orion/pp2/
+</PRE>
+
+<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html14533"
-  HREF="node659.html">Instalar Git</A>
-<LI><A NAME="tex2html14534"
-  HREF="node660.html">Introducción al uso de Git con GitHub en GitHub</A>
-<LI><A NAME="tex2html14535"
-  HREF="node661.html">Un poco de SSH</A>
-<LI><A NAME="tex2html14536"
-  HREF="node662.html">Ramificaciones en Git</A>
-<LI><A NAME="tex2html14537"
-  HREF="node663.html">Véase: Tutoriales de Git</A>
-<LI><A NAME="tex2html14538"
-  HREF="node664.html">Diferencias entre fetch y pull</A>
-<LI><A NAME="tex2html14539"
-  HREF="node665.html">Mezclando Ficheros Específicos desde otra Rama</A>
-<LI><A NAME="tex2html14540"
-  HREF="node666.html">Configuración y Algunos alias</A>
-<UL>
-<LI><A NAME="tex2html14541"
-  HREF="node667.html">Alias lg</A>
-<LI><A NAME="tex2html14542"
-  HREF="node668.html">Auto-completado</A>
-<LI><A NAME="tex2html14543"
-  HREF="node669.html">Poner la rama en el prompt de la shell</A>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14526"
+  HREF="node658.html#SECTION065120010000000000000">Transferencia de Ficheros con <TT>scp</TT></A>
+<LI><A NAME="tex2html14527"
+  HREF="node658.html#SECTION065120020000000000000">Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
+</UL>
 </UL>
 <BR>
-<LI><A NAME="tex2html14544"
-  HREF="node670.html">Hub</A>
-<LI><A NAME="tex2html14545"
-  HREF="node671.html">Vim y Git. FuGitive: a Git wrapper so awesome, it should be illegal</A>
-</UL>
+<LI><A NAME="tex2html14528"
+  HREF="node659.html">Transferencia de ficheros por <TT>sftp</TT></A>
+<LI><A NAME="tex2html14529"
+  HREF="node660.html">Copias de Seguridad con <TT>rsync</TT></A>
+<UL>
+<LI><A NAME="tex2html14530"
+  HREF="node660.html#SECTION065122010000000000000">El Algoritmo</A>
+<LI><A NAME="tex2html14531"
+  HREF="node660.html#SECTION065122020000000000000">Mode de Uso</A>
+<LI><A NAME="tex2html14532"
+  HREF="node660.html#SECTION065122030000000000000">Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
+<LI><A NAME="tex2html14533"
+  HREF="node660.html#SECTION065122040000000000000">Backups con <TT>rsync</TT> en un Medio Externo</A>
+<LI><A NAME="tex2html14534"
+  HREF="node660.html#SECTION065122050000000000000">El fichero <TT>/etc/fstab</TT></A>
+<LI><A NAME="tex2html14535"
+  HREF="node660.html#SECTION065122060000000000000">El Programa de Copia</A>
+<LI><A NAME="tex2html14536"
+  HREF="node660.html#SECTION065122070000000000000">Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
+<LI><A NAME="tex2html14537"
+  HREF="node660.html#SECTION065122080000000000000">El fichero de <TT>cron</TT></A>
+<LI><A NAME="tex2html14538"
+  HREF="node660.html#SECTION065122090000000000000">Comprobación de la Copia</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14524"
+  HREF="node659.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14518"
+  HREF="node646.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14514"
+  HREF="node657.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html14520"
+  HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14522"
+  HREF="node810.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html14525"
+  HREF="node659.html">Transferencia de ficheros por</A>
+<B> Subir:</B> <A NAME="tex2html14519"
+  HREF="node646.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14515"
+  HREF="node657.html">Los Ficheros de Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html14521"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14523"
+  HREF="node810.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-12
+2014-11-17
 </ADDRESS>
 </BODY>
 </HTML>

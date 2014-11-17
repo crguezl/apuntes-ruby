@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Entrada Salida en Node.js</TITLE>
-<META NAME="description" CONTENT="Entrada Salida en Node.js">
+<TITLE>Usando REPL desde un programa</TITLE>
+<META NAME="description" CONTENT="Usando REPL desde un programa">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node572.html">
 <LINK REL="previous" HREF="node570.html">
-<LINK REL="up" HREF="node565.html">
+<LINK REL="up" HREF="node568.html">
 <LINK REL="next" HREF="node572.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12977"
+<A NAME="tex2html12990"
   HREF="node572.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12971"
-  HREF="node565.html">
+<A NAME="tex2html12984"
+  HREF="node568.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12965"
+<A NAME="tex2html12978"
   HREF="node570.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12973"
-  HREF="node804.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12975"
+<A NAME="tex2html12986"
   HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html12988"
+  HREF="node810.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,38 +92,200 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12978"
-  HREF="node572.html">Debugger</A>
-<B> Subir:</B> <A NAME="tex2html12972"
-  HREF="node565.html">JavaScript en el Lado</A>
-<B> Anterior:</B> <A NAME="tex2html12966"
-  HREF="node570.html">Referencias sobre REPL</A>
- &nbsp; <B>  <A NAME="tex2html12974"
-  HREF="node804.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12976"
-  HREF="node807.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12991"
+  HREF="node572.html">Usando REPL via un</A>
+<B> Subir:</B> <A NAME="tex2html12985"
+  HREF="node568.html">JavaScript en el Lado</A>
+<B> Anterior:</B> <A NAME="tex2html12979"
+  HREF="node570.html">Primeros Pasos. Un Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html12987"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12989"
+  HREF="node810.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04560000000000000000">
-Entrada Salida en Node.js</A>
+<H1><A NAME="SECTION04630000000000000000">
+Usando REPL desde un programa</A>
 </H1>
+
+<P>
+Es posible crear un bucle REPL en cualquier punto de nuestro programa - quizá para depurarlo.
+Para ello usamos la función 
+ <TT>repl.start</TT> .
+Esta función retorna una instancia REPLServer. Acepta como argumento un objeto
+<code>options</code> que toma los siguientes valores:
 
 <P>
 
 <OL>
-<LI><A NAME="tex2html1366"
-  HREF="http://st-on-it.blogspot.com.es/2011/05/how-to-read-user-input-with-nodejs.html">How To Read User Input With NodeJS</A>
-por Nikolay V. Nemshilov
+<LI><code>prompt</code> - the prompt and stream for all I/O. Defaults to &gt; .
+</LI>
+<LI><code>input</code> - the readable stream to listen to. Defaults to process.stdin.
+</LI>
+<LI><code>output</code> - the writable stream to write readline data to. Defaults to process.stdout.
+</LI>
+<LI><code>terminal</code> - pass true if the stream should be treated
+like a TTY, and have ANSI/VT100 escape codes written to it. Defaults
+to checking isTTY on the output stream upon instantiation.
+</LI>
+<LI><code>eval</code> - function that will be used to eval each given
+line. Defaults to an async wrapper for eval(). 
+</LI>
+<LI><code>useColors</code> - a boolean which specifies whether or not
+the writer function should output colors. If a different writer
+function is set then this does nothing. Defaults to the repl's
+terminal value.
+</LI>
+<LI><code>useGlobal</code> - if set to true, then the repl will use the
+global object, instead of running scripts in a separate context.
+Defaults to false.
+</LI>
+<LI><code>ignoreUndefined</code> - if set to true, then the repl will
+not output the return value of command if it's undefined. Defaults
+to false.
+</LI>
+<LI><code>writer</code> - the function to invoke for each command that
+gets evaluated which returns the formatting (including coloring)
+to display. Defaults to util.inspect.
 </LI>
 </OL>
 
 <P>
-<BR><HR>
+<PRE>
+[~/Dropbox/src/javascript/node.js/repl(master)]$ cat repl.js 
+var repl = require("repl");
+
+connections = 0;
+
+repl.start({
+  prompt: "node via stdin&gt; ",
+  input: process.stdin,
+  output: process.stdout
+});
+</PRE>
+
+<P>
+<PRE>
+[~/Dropbox/src/javascript/node.js/repl(master)]$ node repl.js 
+node via stdin&gt; 2+3
+5
+node via stdin&gt; .exit
+</PRE>
+
+<P>
+el bucle REPL proporciona acceso a las variables de ámbito global. Es posible
+hacer explícitamente visible una variable al REPL asignándosela al
+<code>context</code> asociado con el
+REPLServer. Por ejemplo:
+
+<P>
+<PRE>
+[~/Dropbox/src/javascript/node.js/repl(master)]$ cat repl2.js 
+var repl = require("repl");
+
+z = 4
+repl.start({
+  prompt: "node via stdin&gt; ",
+  input: process.stdin,
+  output: process.stdout
+}).context.m = "message";
+</PRE>
+Las variables en el objeto <code>context</code> se ven como locales 
+al  REPL:
+
+<P>
+<PRE>
+[~/Dropbox/src/javascript/node.js/repl(master)]$ node repl2.js 
+node via stdin&gt; z
+4
+node via stdin&gt; m
+'message'
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12990"
+  HREF="node572.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12984"
+  HREF="node568.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12978"
+  HREF="node570.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html12986"
+  HREF="node807.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html12988"
+  HREF="node810.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html12991"
+  HREF="node572.html">Usando REPL via un</A>
+<B> Subir:</B> <A NAME="tex2html12985"
+  HREF="node568.html">JavaScript en el Lado</A>
+<B> Anterior:</B> <A NAME="tex2html12979"
+  HREF="node570.html">Primeros Pasos. Un Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html12987"
+  HREF="node807.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12989"
+  HREF="node810.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-12
+2014-11-17
 </ADDRESS>
 </BODY>
 </HTML>
