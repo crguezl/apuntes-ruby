@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Auth Hash Schema</TITLE>
-<META NAME="description" CONTENT="Auth Hash Schema">
+<TITLE>Introduction to OAuth</TITLE>
+<META NAME="description" CONTENT="Introduction to OAuth">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,6 +19,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node727.html">
 <LINK REL="previous" HREF="node725.html">
 <LINK REL="up" HREF="node725.html">
 <LINK REL="next" HREF="node727.html">
@@ -27,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15622"
+<A NAME="tex2html15625"
   HREF="node727.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15616"
+<A NAME="tex2html15619"
   HREF="node725.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15612"
+<A NAME="tex2html15613"
   HREF="node725.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15618"
-  HREF="node807.html">
+<A NAME="tex2html15621"
+  HREF="node812.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15620"
-  HREF="node810.html">
+<A NAME="tex2html15623"
+  HREF="node815.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,195 +92,621 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15623"
-  HREF="node727.html">OmniAuth OAuth2 gem</A>
-<B> Subir:</B> <A NAME="tex2html15617"
-  HREF="node725.html">OmniAuth gem: Standardized Multi-Provider</A>
-<B> Anterior:</B> <A NAME="tex2html15613"
-  HREF="node725.html">OmniAuth gem: Standardized Multi-Provider</A>
- &nbsp; <B>  <A NAME="tex2html15619"
-  HREF="node807.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15621"
-  HREF="node810.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15626"
+  HREF="node727.html">Google Developers Console</A>
+<B> Subir:</B> <A NAME="tex2html15620"
+  HREF="node725.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html15614"
+  HREF="node725.html">OAuth</A>
+ &nbsp; <B>  <A NAME="tex2html15622"
+  HREF="node812.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15624"
+  HREF="node815.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html15624"
-  HREF="node726.html#SECTION061431010000000000000">Ejemplos</A>
-<LI><A NAME="tex2html15625"
-  HREF="node726.html#SECTION061431020000000000000">Documentación de la Gema</A>
-<LI><A NAME="tex2html15626"
-  HREF="node726.html#SECTION061431030000000000000">Véase</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION061431000000000000000">
-Auth Hash Schema</A>
-</H2>
+<H1><A NAME="SECTION061410000000000000000">
+Introduction to OAuth</A>
+</H1>
+OAuth 2 is rapidly becoming a preferred authorization protocol, and is used by major service providers such as Google, Facebook and Github. 
 
 <P>
-<A NAME="tex2html1731"
-  HREF="https://github.com/intridea/omniauth/wiki/Auth-Hash-Schema">OmniAuth is a flexible authentication system utilizing Rack middleware.</A>
-<P>
-OmniAuth will always return a hash of information after authenticating
-with an external provider in the Rack environment under the key
-<code>omniauth.auth</code>. 
-
-<P>
-This information is meant to be as normalized as
-possible, so the schema below will be filled to the greatest degree
-available given the provider upon authentication. Fields marked required
-will always be present. 
+An excellent introduction to  Oauth is in the
+article
+<A NAME="tex2html1719"
+  HREF="http://blog.varonis.com/introduction-to-oauth/">Introduction to OAuth (in plain English)</A>. by Ron Sobers
 
 <P>
 
-<UL>
-<LI><code>provider (required)</code> The provider with which the user
-authenticated (e.g. <code>twitter</code> or <code>facebook</code>)
-
-<P>
-</LI>
-<LI><code>uid (required)</code> An identifier unique to the given provider,
-such as a 
-<FONT COLOR="#ff0000"> Twitter user ID</FONT>. Should be stored as a string.
-
-<P>
-</LI>
-<LI><code>info (required)</code> A hash containing information about the user
+<H4><A NAME="SECTION061410010000000000000">
+Valet Key for the Web</A>
+</H4>
   
-<UL>
-<LI><code>name (required)</code> The best display name known to the
-strategy. Usually a concatenation of first and last name, but may also
-be an arbitrary designator or nickname for some strategies
-</LI>
-<LI><code>email</code> The e-mail of the authenticating user. Should be provided if at all possible (but some sites such as Twitter do not provide this information)
-</LI>
-<LI><code>nickname</code> The username of an authenticating user (such
-    as your <code>@-name</code> from Twitter or GitHub account name)
-</LI>
-<LI><code>first_name</code>
-</LI>
-<LI><code>last_name</code>
-</LI>
-<LI><code>location</code> The general location of the user, usually a city and state.
-</LI>
-<LI><code>description</code> A short description of the authenticating user.
-</LI>
-<LI><code>image</code> A URL representing a profile image of the
-    authenticating user. Where possible, should be specified to a square,
-    roughly 50x50 pixel image.
-</LI>
-<LI><code>phone</code> The telephone number of the authenticating user (no formatting is enforced).
-</LI>
-<LI><code>urls</code> A hash containing key value pairs of an identifier
-    for the website and its URL. 
 
 <P>
-For instance, an entry could be 
+Many luxury cars come with a 
+<FONT COLOR="#0000ff"> valet key</FONT>. 
+It is a special key 
+<FONT COLOR="#0000ff"> you</FONT>
+ give the
+
+<FONT COLOR="#0000ff"> parking attendant</FONT> and unlike your regular key, will only allow the 
+
+<FONT COLOR="#0000ff"> car</FONT>
+to be driven a short distance while 
+<FONT COLOR="#ff0000"> blocking access to the trunk and the
+onboard cell phone</FONT>. 
+
+<P>
+Regardless of the restrictions the valet key imposes,
+the idea is very clever. 
+<FONT COLOR="#ff0000"> You give someone limited access to your car
+with a special key</FONT>, while using another key to unlock everything else.
+
+<P>
+As the web grows, more and more sites rely on distributed services and
+cloud computing: 
+
+<UL>
+<LI>a photo lab printing your Flickr photos, 
+</LI>
+<LI>a social network
+using your Google address book to look for friends, or 
+</LI>
+<LI>a third-party
+application utilizing APIs from multiple services.
+</LI>
+</UL>
+
+<P>
+The problem is, in order for these applications to access user data
+on other sites, they ask for usernames and passwords. 
+<FONT COLOR="#ff0000"> Not only does
+this require exposing user passwords to someone else – often the same
+passwords used for online banking and other sites – it also provides
+these application <SPAN ID="txt29624">unlimited access</SPAN> to do as they wish</FONT>. They can do
+anything, including changing the passwords and lock users out.
+
+<P>
+ <A NAME="tex2html1720"
+  HREF="http://oauth.net/">OAuth</A>
+ provides a method for 
+<FONT COLOR="#0000ff"> users</FONT> (you) 
+to grant 
+<FONT COLOR="#0000ff"> third-party</FONT> (parking attendant) access to
+their 
+<FONT COLOR="#0000ff"> resources</FONT> (your luxury car)
+without sharing their 
+<FONT COLOR="#0000ff"> passwords</FONT> (the key of your car). 
+It also provides a way
+to <SPAN ID="txt29288">grant limited access</SPAN> (in scope, duration, etc. the equivalent of
+not having access to the trunk or the onboard cell phone).
+
+<P>
+For example, 
+
+<UL>
+<LI>a web 
+<FONT COLOR="#0000ff"> user</FONT> (resource owner) can grant a 
+</LI>
+<LI>printing service
+
+<FONT COLOR="#0000ff"> (client/consumer)</FONT>
+</LI>
+<LI>access to her private photos (
+<FONT COLOR="#0000ff"> partial resource</FONT>) 
+</LI>
+<LI>stored at a photo sharing service (
+<FONT COLOR="#0000ff"> service provider</FONT>)
+(server), 
+</LI>
+<LI>without sharing her username and password with the printing
+service.  
+</LI>
+</UL>
+Instead, she authenticates directly with the photo sharing
+service which issues the printing service 
+delegation-specific credentials.
+
+<P>
+In OAuth, the 
+<FONT COLOR="#0000ff"> client</FONT> requests access to resources controlled
+by the 
+<FONT COLOR="#0000ff"> resource owner</FONT> and hosted by the 
+<FONT COLOR="#0000ff"> resource server</FONT>, 
+and <I>is
+issued a different set of credentials than those of the resource
+owner</I>.
+
+<P>
+Instead of using the resource owner's credentials to access protected
+resources, the 
+<FONT COLOR="#0000ff"> client</FONT> obtains an 
+<FONT COLOR="#ff0000"> access token</FONT> 
+- <I>a string denoting a
+specific scope, lifetime, and other access attributes</I>.  
+
+<P>
+
+<FONT COLOR="#ff0000"> Access tokens</FONT>
+are issued to third-party clients by an 
+<FONT COLOR="#0000ff"> authorization server</FONT> with the
+approval of the 
+<FONT COLOR="#0000ff"> resource owner</FONT>.  
+
+<P>
+The client uses the 
+<FONT COLOR="#ff0000"> access token</FONT> to
+access the 
+<FONT COLOR="#0000ff"> protected resources</FONT> hosted by the 
+<FONT COLOR="#0000ff"> resource server</FONT>.
+
+<P>
+
+<img src="oauth-print-service-access-token-flow.gif" />
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html1721"
+  HREF="http://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization Framework</A>
+proposed standard document
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION061410020000000000000">
+Roles in OAuth</A>
+</H4>
+  
+
+   OAuth defines four roles:
+
+<P>
+
+<OL>
+<LI><A NAME="29669"></A><SPAN  CLASS="textbf">resource owner</SPAN>
+
+<P>
+An entity capable of granting access to a protected resource.
+      When the resource owner is a person, it is referred to as an
+      <A NAME="29671"></A><SPAN  CLASS="textbf">end-user</SPAN>.
+
+<P>
+</LI>
+<LI><A NAME="29673"></A><SPAN  CLASS="textbf">resource server</SPAN>
+
+<P>
+The server hosting the protected resources, capable of accepting
+      and responding to protected resource requests using access tokens.
+
+<P>
+</LI>
+<LI><A NAME="29675"></A><SPAN  CLASS="textbf">client</SPAN>
+
+<P>
+An application making protected resource requests on behalf of the
+      resource owner and with its authorization.  
+
+<P>
+The term "
+<FONT COLOR="#0000ff"> client</FONT>" does
+      not imply any particular implementation characteristics (e.g.,
+      whether the application executes on a server, a desktop, or other
+      devices).
+
+<P>
+</LI>
+<LI><A NAME="29679"></A><SPAN  CLASS="textbf">authorization server</SPAN>
+
+<P>
+The server issuing access tokens to the client after successfully
+      authenticating the resource owner and obtaining authorization.
+
+<P>
+From an application developer's point of view, a service's API
+      fulfills both the resource and authorization server roles.
+</LI>
+</OL>
+
+<P>
+
+<img src="oauth-players.jpg" />
+
+<P>
+The authorization server
+may be the same server as the resource server or a separate entity.
+A single authorization server may issue access tokens accepted by
+multiple resource servers.
+
+<P>
+
+<H4><A NAME="SECTION061410030000000000000">
+Abstract Flow</A>
+</H4>
+  
+
+<P>
+
+<img src="abstract_flow.png" />
+
+<P>
+
+<OL>
+<LI>The application requests authorization to access service resources from the user
+</LI>
+<LI>If the user authorized the request, the application receives an authorization grant
+</LI>
+<LI>The application requests an access token from the authorization server (API) by presenting authentication of its own identity, and the authorization grant
+</LI>
+<LI>If the application identity is authenticated and the authorization grant is valid, the authorization server (API) issues an access token to the application. Authorization is complete.
+</LI>
+<LI>The application requests the resource from the resource server (API) and presents the access token for authentication
+</LI>
+<LI>If the access token is valid, the resource server (API) serves the resource to the application
+</LI>
+</OL>
+The actual flow of this process will differ depending on the authorization grant type in use, but this is the general idea.
+
+<P>
+
+<H4><A NAME="SECTION061410040000000000000">
+Application Registration</A>
+</H4>
+  
+
+<P>
+Before using  <A NAME="tex2html1722"
+  HREF="http://oauth.net/">OAuth</A>
+ with your application, you must register your
+application with the service. 
+
+<P>
+This is done through a registration form
+in the <code>developer</code> or <code>API</code> portion of the service's website, where
+you will provide the following information (and probably details about
+your application):
+
+<P>
 <PRE>
-"Blog" =&gt; "http://intridea.com/blog"
+Application Name
+Application Website
+Redirect URI or Callback URL
 </PRE>
-</LI>
-</UL>
-</LI>
-<LI><code>credentials</code> If the authenticating service provides some
-kind of access token or other credentials upon authentication, these
-are passed through here.
-</LI>
-<LI><code>token</code> Supplied by OAuth and OAuth 2.0 providers, the access token.
-</LI>
-<LI><code>secret</code> Supplied by OAuth providers, the access token secret.
-</LI>
-<LI><code>extra</code> Contains extra information returned from the
-authentication provider. May be in provider-specific formats.
-</LI>
-<LI><code>raw_info</code> A hash of all information gathered about a user
-in the format it was gathered. 
-
-<P>
-For example, for Twitter users this is
-a hash representing the JSON hash returned from the Twitter API.
-</LI>
-</UL>
+The redirect URI is where the 
+<FONT COLOR="#0000ff"> service</FONT> 
+will redirect the user after they
+authorize (or deny) your application, and therefore the part of your
+application that will handle authorization codes or access tokens.
 
 <P>
 
-<H4><A NAME="SECTION061431010000000000000">
-Ejemplos</A>
+<H4><A NAME="SECTION061410050000000000000">
+Client ID and Client Secret</A>
 </H4>
   
 
 <P>
-
-<UL>
-<LI><A NAME="tex2html1732"
-  HREF="https://github.com/intridea/omniauth/wiki/Sinatra-Example">Omniauth Sinatra Example (Twitter y OpenID)</A>
-</LI>
-<LI><A NAME="tex2html1733"
-  HREF="https://gist.github.com/crguezl/9857758">Omniauth Sinatra Gist Example: Facebook, Twitter, GitHub</A>
-</LI>
-</UL>
+Once your application is registered, the service will issue 
+<code>client credentials</code> in the form of a <code>client identifier</code> and 
+a <code>client secret</code>. 
 
 <P>
 
-<H4><A NAME="SECTION061431020000000000000">
-Documentación de la Gema</A>
+<OL>
+<LI>The <code>Client</code> ID 
+<FONT COLOR="#0000ff"> is a publicly exposed string that is used by the service API to
+identify the application, and is also used to build authorization URLs
+that are presented to users</FONT>. 
+
+<P>
+</LI>
+<LI>The <code>Client Secret</code> is 
+<FONT COLOR="#0000ff"> used to authenticate
+the identity of the application to the service API when the application
+requests to access a user's account, and must be kept private between
+the application and the API</FONT>.
+</LI>
+</OL>
+
+<P>
+
+<img src="Google_APIs_Console_Redirect_URI.png" width="80%" />
+<br/>
+Visit <a href="https://console.developers.google.com/project">Google Developers Console</a>
+<br/>
+
+<P>
+
+<H4><A NAME="SECTION061410060000000000000">
+Authorization Grant</A>
 </H4>
   
 
 <P>
+In the Abstract Protocol Flow above, the first four steps cover obtaining
+an <code>authorization grant</code> and <code>access token</code>. 
+
+<P>
+The authorization grant type
+depends on the 
+<FONT COLOR="#0000ff"> method used by the application to request authorization,
+and the grant types supported by the API</FONT>. 
+
+<P>
+OAuth 2 defines four grant
+types, each of which is useful in different cases:
+
+<P>
 
 <UL>
-<LI><A NAME="tex2html1734"
-  HREF="http://rubydoc.info/github/intridea/omniauth/master/frames">API doc: OmniAuth: Standardized Multi-Provider Authentication</A>
+<LI>Authorization Code: used with server-side Applications
 </LI>
-<LI><A NAME="tex2html1735"
-  HREF="http://rubydoc.info/github/intridea/omniauth/master/OmniAuth">Module: OmniAuth</A>
+<LI>Implicit: used with Mobile Apps or Web Applications (applications that run on the user's device)
 </LI>
-<LI>Esta clase contiene información sobre el usuario.
-<A NAME="tex2html1736"
-  HREF="http://rubydoc.info/github/intridea/omniauth/master/OmniAuth/AuthHash/InfoHash">Class: OmniAuth::AuthHash::InfoHash</A>
+<LI>Resource Owner Password Credentials: used with trusted Applications, such as those owned by the service itself
+</LI>
+<LI>Client Credentials: used with Applications API access
 </LI>
 </UL>
 
 <P>
+OAuth 2.0 is a version of the protocol which introduces different
 
-<H4><A NAME="SECTION061431030000000000000">
+<FONT COLOR="#0000ff"> flows</FONT> for web, mobile, and desktop applications.  It also has the
+notion of token expiration (similar to cookie expiration), 
+requires SSL, and reduces the complexity for developers 
+by no longer requiring signing.
+
+<P>
+
+<H4><A NAME="SECTION061410070000000000000">
+Grant Type: Authorization Code</A>
+</H4>
+  
+
+<P>
+The authorization code grant type is the most commonly used because it is
+optimized for server-side applications, where source code is not publicly
+exposed, and Client Secret confidentiality can be maintained. 
+
+<P>
+This is a
+redirection-based flow, which means that the application must be capable
+of interacting with the user-agent (i.e. the user's web browser) and
+receiving API authorization codes that are routed through the user-agent.
+
+<P>
+Now we will describe the authorization code flow:
+
+<P>
+
+<img src="auth_code_flow.png" />
+
+<P>
+
+<OL>
+<LI>User Authorization Request
+
+<P>
+
+<OL>
+<LI><B>The user is redirected to the service provider</B>.
+
+<P>
+This is the scary part.  If the consumer were super-shady Evil Co. it could
+pop up a window that looked like the service provider but was really phishing for
+your username and password.  
+<FONT COLOR="#ff0000"> Always be sure to verify that the
+URL you’re directed to is actually the service provider</FONT> 
+</LI>
+<LI><B>Authorization Code Link</B>
+
+<P>
+First, the 
+<FONT COLOR="#ff0000"> user</FONT> is given an 
+<FONT COLOR="#0000ff"> authorization code link</FONT> 
+that looks like the following:
+
+<P>
+<PRE>
+https://cloud.digitalocean.com/v1/oauth/authorize?response_type=code&amp;
+       client_id=CLIENT_ID&amp;
+       redirect_uri=CALLBACK_URL&amp;scope=read
+</PRE>
+Here is an explanation of the link components:
+
+<P>
+
+<UL>
+<LI><code>https://cloud.digitalocean.com/v1/oauth/authorize</code>: 
+  the API authorization endpoint
+</LI>
+<LI><code>client_id=CLIENT_ID</code>: the application's client ID (how the API identifies the application)
+</LI>
+<LI><code>redirect_uri=CALLBACK_URL</code>: where the service redirects the user-agent after an authorization code is granted
+</LI>
+<LI><code>response_type=code</code>: specifies that your application is requesting an authorization code grant
+</LI>
+<LI><code>scope=read</code>: specifies the level of access that the application is requesting
+  
+</LI>
+</UL>
+
+<P>
+</LI>
+<LI><B>User Authorizes Application</B>
+
+<P>
+When the user clicks the link, they must first log in to the service,
+to authenticate their identity (unless they are already logged in). 
+
+<P>
+Then
+they will be prompted by the service to authorize or deny the application
+access to their account. 
+
+<P>
+Here is an example authorize application prompt:
+
+<img src="authcode.png" width="85%"/>
+
+This particular screenshot is of DigitalOcean's authorization screen,
+and we can see that <code>Thedropletbook App</code> is requesting authorization for
+<code>read</code> access to the account of <code>manicas@digitalocean.com</code>
+</LI>
+</OL>
+
+<P>
+</LI>
+<LI><B>Application Receives Authorization Code</B>
+If the user clicks <code>Authorize Application</code>, the service redirects the
+user-agent to the <code>application redirect URI</code>, which was specified during the
+client registration, along with an authorization code. 
+
+<P>
+The redirect would
+look something like this (assuming the application is <code>dropletbook.com</code>):
+
+<P>
+<PRE>
+https://dropletbook.com/callback?code=AUTHORIZATION_CODE
+</PRE>
+
+<P>
+</LI>
+<LI><B>Application Requests Access Token</B>
+The application requests an access token from the API, by passing
+the authorization code along with authentication details, including
+the client secret, to the API token endpoint. 
+
+<P>
+Here is an example POST
+request to DigitalOcean's token endpoint:
+
+<P>
+<PRE>
+https://cloud.digitalocean.com/v1/oauth/token?client_id=CLIENT_ID&amp;
+  client_secret=CLIENT_SECRET&amp;
+  grant_type=authorization_code&amp;
+  code=AUTHORIZATION_CODE&amp;
+  redirect_uri=CALLBACK_URL
+</PRE>
+
+<P>
+</LI>
+<LI><B>Application Receives Access Token</B>
+
+<P>
+If the authorization is valid, the API will send a response containing the access token (and optionally, a refresh token) to the application. 
+
+<P>
+The entire response will look something like this:
+
+<P>
+<PRE>
+{"access_token":"ACCESS_TOKEN",
+ "token_type":"bearer",
+ "expires_in":2592000,
+ "refresh_token":"REFRESH_TOKEN",
+ "scope":"read",
+ "uid":100101,
+ "info":{"name":"Mark E. Mark","email":"mark@thefunkybunch.com"}
+}
+</PRE>
+Now the application is authorized! It may use the token to access the
+user's account via the service API, limited to the scope of access,
+until the token expires or is revoked.
+
+<P>
+If a refresh token was issued, it may be used to request new access
+tokens if the original token has expired
+
+<P>
+</LI>
+</OL>
+Once the application has an access token, it may use the token to access the user's account via the API, limited to the scope of access, until the token expires or is revoked.
+
+<P>
+Here is an example of an API request, using curl. Note that it includes the access token:
+
+<P>
+<PRE>
+curl -X POST -H "Authorization: Bearer ACCESS_TOKEN""https://api.digitalocean.com/v2/$OBJECT"
+</PRE>
+Assuming the access token is valid, the API will process the request
+according to its API specifications. 
+
+<P>
+If the access token is expired or
+otherwise invalid, the API will return an <code>invalid_request</code> error.
+
+<P>
+
+<H4><A NAME="SECTION061410080000000000000">
 Véase</A>
 </H4>
   
 
 <UL>
-<LI><A NAME="tex2html1737"
-  HREF="https://plus.google.com/+RaymondCamden/posts/idUKfLscAuV">Blog Post: ColdFusion and OAuth part 3- Google authentication.</A>
-Raymond Camden
+<LI><A NAME="tex2html1723"
+  HREF="http://blog.varonis.com/introduction-to-oauth/">Introduction to OAuth (In Plain English)</A>
+by Rob Sobers
+</LI>
+<LI><A NAME="tex2html1724"
+  HREF="https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2">An Introduction to OAuth 2</A>
+by Mitchell Anicas
+</LI>
+<LI><A NAME="tex2html1725"
+  HREF="https://plus.google.com/+NachoColoma/posts/SQ7F1ncvSkn">Nacho Coloma: Our love-hate relationship with OAuth</A>
 </LI>
 </UL>
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html15627"
+  HREF="node726.html#SECTION061410010000000000000">Valet Key for the Web</A>
+<LI><A NAME="tex2html15628"
+  HREF="node726.html#SECTION061410020000000000000">Roles in OAuth</A>
+<LI><A NAME="tex2html15629"
+  HREF="node726.html#SECTION061410030000000000000">Abstract Flow</A>
+<LI><A NAME="tex2html15630"
+  HREF="node726.html#SECTION061410040000000000000">Application Registration</A>
+<LI><A NAME="tex2html15631"
+  HREF="node726.html#SECTION061410050000000000000">Client ID and Client Secret</A>
+<LI><A NAME="tex2html15632"
+  HREF="node726.html#SECTION061410060000000000000">Authorization Grant</A>
+<LI><A NAME="tex2html15633"
+  HREF="node726.html#SECTION061410070000000000000">Grant Type: Authorization Code</A>
+<LI><A NAME="tex2html15634"
+  HREF="node726.html#SECTION061410080000000000000">Véase</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15622"
+<A NAME="tex2html15625"
   HREF="node727.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15616"
+<A NAME="tex2html15619"
   HREF="node725.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15612"
+<A NAME="tex2html15613"
   HREF="node725.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15618"
-  HREF="node807.html">
+<A NAME="tex2html15621"
+  HREF="node812.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15620"
-  HREF="node810.html">
+<A NAME="tex2html15623"
+  HREF="node815.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -330,16 +757,16 @@ Raymond Camden
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15623"
-  HREF="node727.html">OmniAuth OAuth2 gem</A>
-<B> Subir:</B> <A NAME="tex2html15617"
-  HREF="node725.html">OmniAuth gem: Standardized Multi-Provider</A>
-<B> Anterior:</B> <A NAME="tex2html15613"
-  HREF="node725.html">OmniAuth gem: Standardized Multi-Provider</A>
- &nbsp; <B>  <A NAME="tex2html15619"
-  HREF="node807.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15621"
-  HREF="node810.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15626"
+  HREF="node727.html">Google Developers Console</A>
+<B> Subir:</B> <A NAME="tex2html15620"
+  HREF="node725.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html15614"
+  HREF="node725.html">OAuth</A>
+ &nbsp; <B>  <A NAME="tex2html15622"
+  HREF="node812.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15624"
+  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

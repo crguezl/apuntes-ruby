@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Push Permissions on RubyGems.org</TITLE>
-<META NAME="description" CONTENT="Push Permissions on RubyGems.org">
+<TITLE>Gemas con Un Gran Número de Utilidades Independientes</TITLE>
+<META NAME="description" CONTENT="Gemas con Un Gran Número de Utilidades Independientes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node698.html">
 <LINK REL="previous" HREF="node696.html">
-<LINK REL="up" HREF="node688.html">
+<LINK REL="up" HREF="node691.html">
 <LINK REL="next" HREF="node698.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15159"
+<A NAME="tex2html15168"
   HREF="node698.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15153"
-  HREF="node688.html">
+<A NAME="tex2html15162"
+  HREF="node691.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15147"
+<A NAME="tex2html15156"
   HREF="node696.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15155"
-  HREF="node807.html">
+<A NAME="tex2html15164"
+  HREF="node812.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15157"
-  HREF="node810.html">
+<A NAME="tex2html15166"
+  HREF="node815.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,66 +92,167 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15160"
-  HREF="node698.html">Gem Security</A>
-<B> Subir:</B> <A NAME="tex2html15154"
-  HREF="node688.html">Creando Gemas</A>
-<B> Anterior:</B> <A NAME="tex2html15148"
-  HREF="node696.html">Publishing to RubyGems.org</A>
- &nbsp; <B>  <A NAME="tex2html15156"
-  HREF="node807.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15158"
-  HREF="node810.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15169"
+  HREF="node698.html">Sharing Source Code From</A>
+<B> Subir:</B> <A NAME="tex2html15163"
+  HREF="node691.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15157"
+  HREF="node696.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html15165"
+  HREF="node812.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15167"
+  HREF="node815.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061190000000000000000">
-Push Permissions on RubyGems.org</A>
+<H1><A NAME="SECTION061160000000000000000">
+Gemas con Un Gran Número de Utilidades Independientes</A>
 </H1>
+Some
+gems, however, may be made up of multiple parts that could be used
+independently of each other. <code>ActiveSupport</code>, for example, provides a
+large number of useful utilities that, while they function together,
+can also function separately.
 
 <P>
-If you have multiple maintainers for your gem you can give your
-fellow maintainers permission to push the gem to <A NAME="tex2html1660"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>.org through
-the <code>gem owner</code> command.
+If I add require <code>active_support</code> to my code I load all of
+<code>ActiveSupport</code>. While this may be what I want in some cases (like inside
+a Rails application) in other cases I may just want a specific piece
+of <code>ActiveSupport</code>. Luckily, <code>ActiveSupport</code> is designed to handle this
+well. If I, for instance, add require <code>active_support/core_ext</code> I will
+only be loading the Ruby core extensions that are a part of <code>ActiveSupport</code>.
+
+<P>
+How can you make this work in your library? It's quite simple: your
+base file should, when required, require all the other parts of your
+library. However, each part of your library should, at its top, require
+any other parts or external dependencies so that it may be included
+without the user having previously required the base file. Let's take
+a look at an example:
 
 <P>
 <PRE>
-$ gem help owner
-Usage: gem owner GEM [options]
+# in lib/my_gem.rb
 
-  Options:
-    -k, --key KEYNAME                Use the given API key
-                                     from ~/.gem/credentials
-    -a, --add EMAIL                  Add an owner
-    -r, --remove EMAIL               Remove an owner
-
-
-  Local/Remote Options:
-    -p, --[no-]http-proxy [URL]      Use HTTP proxy for remote operations
-
-
-  Common Options:
-    -h, --help                       Get help on this command
-    -V, --[no-]verbose               Set the verbose level of output
-    -q, --quiet                      Silence commands
-        --config-file FILE           Use this config file instead of default
-        --backtrace                  Show stack backtrace on errors
-        --debug                      Turn on Ruby debugging
-
-
-  Arguments:
-    GEM       gem to manage owners for
-
-  Summary:
-    Manage gem owners on RubyGems.org.
-
-  Description:
+require 'my_gem/widget'
+require 'my_gem/widgets/foo_bar'
+require 'my_gem/widgets/baz'
 </PRE>
 
 <P>
-<BR><HR>
+<PRE>
+# in lib/my_gem/widget.rb
+
+require 'external_library'
+
+module MyGem
+  class Widget
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+# in lib/my_gem/widgets/foo_bar
+
+require 'my_gem/widget'
+
+module MyGem
+  module Widgets
+    class FooBar &lt; MyGem::Widget
+    end
+  end
+end
+</PRE>
+Each of the files in the above example can be required independently,
+giving developers the flexibility to use only a subset of your library's
+functionality if needed. 
+
+<P>
+Remember that <code>require</code> statements will only
+load the code from a file once, so it is safe to <code>require</code> the same file
+multiple times.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15168"
+  HREF="node698.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15162"
+  HREF="node691.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15156"
+  HREF="node696.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html15164"
+  HREF="node812.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html15166"
+  HREF="node815.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html15169"
+  HREF="node698.html">Sharing Source Code From</A>
+<B> Subir:</B> <A NAME="tex2html15163"
+  HREF="node691.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15157"
+  HREF="node696.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html15165"
+  HREF="node812.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15167"
+  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
 2014-11-17
