@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Sinatra::Flash</TITLE>
-<META NAME="description" CONTENT="Sinatra::Flash">
+<TITLE>Sinatra + Sprockets + Slim + Sinatra-reloader Example</TITLE>
+<META NAME="description" CONTENT="Sinatra + Sprockets + Slim + Sinatra-reloader Example">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,7 +20,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node540.html">
-<LINK REL="previous" HREF="node538.html">
+<LINK REL="previous" HREF="node536.html">
 <LINK REL="up" HREF="node355.html">
 <LINK REL="next" HREF="node540.html">
 </HEAD>
@@ -28,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12447"
+<A NAME="tex2html12467"
   HREF="node540.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12441"
+<A NAME="tex2html12461"
   HREF="node355.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12435"
+<A NAME="tex2html12455"
   HREF="node538.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12443"
-  HREF="node812.html">
+<A NAME="tex2html12463"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12445"
-  HREF="node815.html">
+<A NAME="tex2html12465"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,202 +92,37 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12448"
-  HREF="node540.html">Alternativas a Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12442"
+<B> Siguiente:</B> <A NAME="tex2html12468"
+  HREF="node540.html">Sinatra::Flash</A>
+<B> Subir:</B> <A NAME="tex2html12462"
   HREF="node355.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html12436"
-  HREF="node538.html">Sinatra + Sprockets +</A>
- &nbsp; <B>  <A NAME="tex2html12444"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12446"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Anterior:</B> <A NAME="tex2html12456"
+  HREF="node538.html">Ejemplo de un servicio</A>
+ &nbsp; <B>  <A NAME="tex2html12464"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12466"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION032600000000000000000">
-Sinatra::Flash</A>
+<H1><A NAME="SECTION032500000000000000000">
+Sinatra + Sprockets + Slim + Sinatra-reloader Example</A>
 </H1>
-<A NAME="tex2html1330"
-  HREF="https://github.com/SFEley/sinatra-flash">Sinatra::Flash</A>
-is an extension that lets you store information between
-requests. 
-
-<P>
-Often, when an application processes a request, it will redirect
-to another URL upon finishing, which generates another request. 
-
-<P>
-This
-means that any information from the previous request is lost (due to the
-stateless nature of HTTP). 
-
-<P>
-<A NAME="tex2html1331"
-  HREF="https://github.com/SFEley/sinatra-flash">Sinatra::Flash</A>
-overcomes this by providing
-access to the 
-<FONT COLOR="#ff0000"> flash</FONT>—a hash-like object that stores temporary values
-such as error messages so that they can be retrieved later—usually
-on the next request. 
-
-<P>
-It also removes the information once it’s been
-used. 
-
-<P>
-All this can be achieved via sessions (and that’s exactly how
-<A NAME="tex2html1332"
-  HREF="https://github.com/SFEley/sinatra-flash">Sinatra::Flash</A>
-does it), but 
-<A NAME="tex2html1333"
-  HREF="https://github.com/SFEley/sinatra-flash">Sinatra::Flash</A>
-is easy to implement and
-provides a number of helper methods.
 
 <P>
 
-<H4><A NAME="SECTION032600010000000000000">
-Ejemplo</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-flash]$ cat app.rb 
-require 'sinatra'
-require 'sinatra/flash'
-
-enable :sessions
-
-get '/blah' do
-  # This message won't be seen until the NEXT Web request that accesses the flash collection
-  flash[:blah] = "You were feeling blah at #{Time.now}."
-
-  # Accessing the flash displays messages set from the LAST request
-  "Feeling blah again? That's too bad. #{flash[:blah]}"
-end
-
-get '/pum' do
-  # This message won't be seen until the NEXT Web request that accesses the flash collection
-  flash[:pum] = "You were feeling pum at #{Time.now}."
-
-  # Accessing the flash displays messages set from the LAST request
-  "Feeling pum again? That's too bad. #{flash[:pum]}"
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION032600020000000000000">
-Gemfile</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-flash]$ cat Gemfile
-source 'https://rubygems.org'
-
-gem 'sinatra'
-gem 'sinatra-flash'
-</PRE>
+<UL>
+<LI><A NAME="tex2html1330"
+  HREF="https://github.com/crguezl/sinatra-sprockets-slim-backbone-example">https://github.com/crguezl/sinatra-sprockets-slim-backbone-example</A>
+</LI>
+</UL>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html12449"
-  HREF="node539.html#SECTION032600010000000000000">Ejemplo</A>
-<LI><A NAME="tex2html12450"
-  HREF="node539.html#SECTION032600020000000000000">Gemfile</A>
-</UL></UL></UL></UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html12447"
-  HREF="node540.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12441"
-  HREF="node355.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12435"
-  HREF="node538.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12443"
-  HREF="node812.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12445"
-  HREF="node815.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html12448"
-  HREF="node540.html">Alternativas a Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12442"
-  HREF="node355.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html12436"
-  HREF="node538.html">Sinatra + Sprockets +</A>
- &nbsp; <B>  <A NAME="tex2html12444"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12446"
-  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

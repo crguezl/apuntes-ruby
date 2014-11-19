@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Gemsets</TITLE>
-<META NAME="description" CONTENT="Gemsets">
+<TITLE>rvmrc</TITLE>
+<META NAME="description" CONTENT="rvmrc">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node635.html">
 <LINK REL="previous" HREF="node633.html">
-<LINK REL="up" HREF="node625.html">
+<LINK REL="up" HREF="node626.html">
 <LINK REL="next" HREF="node635.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14086"
+<A NAME="tex2html14109"
   HREF="node635.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14080"
-  HREF="node625.html">
+<A NAME="tex2html14103"
+  HREF="node626.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14074"
+<A NAME="tex2html14097"
   HREF="node633.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14082"
-  HREF="node812.html">
+<A NAME="tex2html14105"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14084"
-  HREF="node815.html">
+<A NAME="tex2html14107"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,71 +92,135 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14087"
-  HREF="node635.html">Lista de Comandos para</A>
-<B> Subir:</B> <A NAME="tex2html14081"
-  HREF="node625.html">Ruby Version Manager: RVM</A>
-<B> Anterior:</B> <A NAME="tex2html14075"
-  HREF="node633.html">rvmrc</A>
- &nbsp; <B>  <A NAME="tex2html14083"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14085"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14110"
+  HREF="node635.html">Gemsets</A>
+<B> Subir:</B> <A NAME="tex2html14104"
+  HREF="node626.html">Ruby Version Manager: RVM</A>
+<B> Anterior:</B> <A NAME="tex2html14098"
+  HREF="node633.html">.rvmrc, .ruby-version y .ruby-gemset</A>
+ &nbsp; <B>  <A NAME="tex2html14106"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14108"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06290000000000000000">
-Gemsets</A>
+<H1><A NAME="SECTION06280000000000000000">
+rvmrc</A>
 </H1>
-Las gemas constituyen la forma típica de distribución de códigos Ruby.
-Puesto que a menudo diferentes versiones de una misma gema entran en conflicto,
-es conveniente tener espacios de trabajo separados que contienen diferentes
-conjuntos de gemas. A estos espacios <code>rvm</code> los denomina <A NAME="25431"></A><SPAN  CLASS="textbf">gemsets</SPAN>.
 
 <P>
-<PRE>
-[~]$ rvm gemset list
-
-gemsets for ruby-2.0.0-p0 (found in /Users/casiano/.rvm/gems/ruby-2.0.0-p0)
-   (default)
-   global
-=&gt; rails3tutorial2ndEd
-</PRE>
-RVM by default allows creating multiple environments for one ruby - called <A NAME="25433"></A><SPAN  CLASS="textbf">gemsets</SPAN>.
-
-<P>
-Gemsets can be specified together with ruby name using gemsets separator(<code>@</code>):
-
-<P>
-<PRE>
- ruby-1.9.3-p125@my-project
-</PRE>
-
-<P>
-During installation of Ruby, RVM creates two gemsets:
+You can have a <code>.rvmrc</code> file in three different places: 
 
 <P>
 
 <UL>
-<LI><code>default</code> - automatically selected when no <code>@gemset</code> specified: <code>rvm use 1.9.3</code>
+<LI><code>/etc/rvmrc</code> sets options for the whole system; 
+
+<P>
 </LI>
-<LI><code>global</code>  - super gemset, inherited by all other gemsets for the given ruby
+<LI><code>~/.rvmrc</code> sets options for the current user; 
+
+<P>
+</LI>
+<LI>a <code>.rvmrc</code> file in a specific directory customizes things for that project.
 </LI>
 </UL>
-A little bit about where the default and global gemsets differ: 
+The global and user <code>.rvmrc</code> files are mainly compile options for installing new Rubies. 
+However, the project-specific <code>.rvmrc</code> files are the fun ones.
+
+<P>
+Here's how you do it: 
 
 <P>
 
 <UL>
-<LI>If you
-don't use a gemset at all, you get the gems in the <code>default</code> set. 
-<code>default</code> is the gemset used without selecting one for a specific installed ruby.
+<LI>when you start a new project, you'll what to create a <code>.rvmrc</code>
+file in that directory. 
 </LI>
-<LI>If
-you use a specific gemset (say <code>@testing</code>), it will inherit gems from
-that ruby's <code>@global</code>. The <code>global</code> gemset is to allow you to share gems
-to all your gemsets. 
+<LI>Let’s say you have a rails app that needs Ruby 1.8.6 to run; 
+you have Ruby 1.9.2 as the default, and you don’t want to have 
+to remember to switch Rubies when you’re working on that project. 
+</LI>
+<LI>So, type this command:
+<PRE>
+rvm --rvmrc --create 1.8.6-p334
+</PRE>
+This will create a heavily commented <code>.rmvrc</code> file that will change
+your Ruby environment when you switch into that directory. 
+</LI>
+</UL>
+
+<P>
+It gets even better with gemsets. 
+
+<UL>
+<LI>I use Ruby 1.9.2 for all my projects, but I like to have a different gemset for each project. 
+So, if I’ve got a project that’s called <code>superproj</code>, I can do this:
+<PRE>
+rvm --rvmrc --create 1.9.2@superproj
+</PRE>
+Just add an at-sign after the Ruby name and follow that with your gemset
+name. 
+</LI>
+<LI>This will load the right gems for that
+project. If this gemset hasn't been created yet, RVM will do that for
+you, too.
+</LI>
+</UL>
+
+<P>
+Sigue un ejemplo. Creo un <code>.rvmrc</code> en un directorio conteniendo el proyecto de un alumno:
+<PRE>
+[~/eleazar-src/prueba-activedirectory(testeo)]$ rvm --rvmrc --create 1.9.3-p392@eleazar-pfc
+</PRE>
+Veamos la cabecera del <code>.rvmrc</code>:
+<PRE>
+[~/eleazar-src/prueba-activedirectory(testeo)]$ head -3 .rvmrc 
+#!/usr/bin/env bash
+
+# This is an RVM Project .rvmrc file, used to automatically load the ruby
+</PRE>
+Ahora si entro en el directorio, la primera vez me lanza un warning:
+<PRE>
+[~/eleazar-src]$ rvm use 2.0.0-p0
+Using /Users/casiano/.rvm/gems/ruby-2.0.0-p0
+[~/eleazar-src]$ ruby -v
+ruby 2.0.0p0 (2013-02-24 revision 39474) [x86_64-darwin11.4.2]
+[~/eleazar-src]$ cd prueba-activedirectory/
+You are using '.rvmrc', it requires trusting, it is slower and 
+it is not compatible with other ruby managers,
+you can switch to '.ruby-version' using 
+            'rvm rvmrc to [.]ruby-version'
+* Do you wish to trust '/Users/casiano/eleazar-src/prueba-activedirectory/.rvmrc'?  
+y[es], n[o], v[iew], c[ancel]&gt; y
+-bash: /usr/bin/shasum: Permission denied
+[~/eleazar-src/prueba-activedirectory(testeo)]$ ruby -v
+ruby 1.9.3p392 (2013-02-22 revision 39386) [x86_64-darwin11.4.2]
+[~/eleazar-src/prueba-activedirectory(testeo)]$
+</PRE>
+Para hacer que el mensaje de advertencia no aparezca:
+<PRE>
+$ rvm rvmrc warning ignore /Users/casiano/eleazar-src/prueba-activedirectory/.rvmrc
+Using /Users/casiano/.rvm/gems/ruby-2.0.0-p0
+$ cd prueba-activedirectory/
+-bash: /usr/bin/shasum: Permission denied
+$ ruby --version
+ruby 1.9.3p392 (2013-02-22 revision 39386) [x86_64-darwin11.4.2]
+</PRE>
+
+<P>
+Véanse:
+
+<UL>
+<LI><A NAME="tex2html1483"
+  HREF="https://rvm.io/workflow/rvmrc/">https://rvm.io/workflow/rvmrc/</A>
+</LI>
+<LI>NetTuts+: 
+<A NAME="tex2html1484"
+  HREF="http://net.tutsplus.com/tutorials/why-you-should-use-rvm/?search_index=2">Why You Should Use RVM.
+Andrew Burgess on Apr 12th 2011 with 20 Comments</A>
 </LI>
 </UL>
 
@@ -164,20 +228,20 @@ to all your gemsets.
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14086"
+<A NAME="tex2html14109"
   HREF="node635.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14080"
-  HREF="node625.html">
+<A NAME="tex2html14103"
+  HREF="node626.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14074"
+<A NAME="tex2html14097"
   HREF="node633.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14082"
-  HREF="node812.html">
+<A NAME="tex2html14105"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14084"
-  HREF="node815.html">
+<A NAME="tex2html14107"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -228,20 +292,20 @@ to all your gemsets.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14087"
-  HREF="node635.html">Lista de Comandos para</A>
-<B> Subir:</B> <A NAME="tex2html14081"
-  HREF="node625.html">Ruby Version Manager: RVM</A>
-<B> Anterior:</B> <A NAME="tex2html14075"
-  HREF="node633.html">rvmrc</A>
- &nbsp; <B>  <A NAME="tex2html14083"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14085"
-  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14110"
+  HREF="node635.html">Gemsets</A>
+<B> Subir:</B> <A NAME="tex2html14104"
+  HREF="node626.html">Ruby Version Manager: RVM</A>
+<B> Anterior:</B> <A NAME="tex2html14098"
+  HREF="node633.html">.rvmrc, .ruby-version y .ruby-gemset</A>
+ &nbsp; <B>  <A NAME="tex2html14106"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14108"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Copia Segura de un Fichero</TITLE>
-<META NAME="description" CONTENT="Copia Segura de un Fichero">
+<TITLE>Los Ficheros de Configuración</TITLE>
+<META NAME="description" CONTENT="Los Ficheros de Configuración">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node659.html">
 <LINK REL="previous" HREF="node657.html">
-<LINK REL="up" HREF="node646.html">
+<LINK REL="up" HREF="node647.html">
 <LINK REL="next" HREF="node659.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14535"
+<A NAME="tex2html14556"
   HREF="node659.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14529"
-  HREF="node646.html">
+<A NAME="tex2html14550"
+  HREF="node647.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14525"
+<A NAME="tex2html14544"
   HREF="node657.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14531"
-  HREF="node812.html">
+<A NAME="tex2html14552"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14533"
-  HREF="node815.html">
+<A NAME="tex2html14554"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,124 +92,322 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14536"
-  HREF="node659.html">Transferencia de ficheros por</A>
-<B> Subir:</B> <A NAME="tex2html14530"
-  HREF="node646.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14526"
-  HREF="node657.html">Los Ficheros de Configuración</A>
- &nbsp; <B>  <A NAME="tex2html14532"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14534"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14557"
+  HREF="node659.html">Copia Segura de un</A>
+<B> Subir:</B> <A NAME="tex2html14551"
+  HREF="node647.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14545"
+  HREF="node657.html">Depuración/Debugging</A>
+ &nbsp; <B>  <A NAME="tex2html14553"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14555"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION065120000000000000000">
-Copia Segura de un Fichero</A>
+<H1><A NAME="SECTION065110000000000000000">
+Los Ficheros de Configuración</A>
 </H1>
 
 <P>
+En vez de llenar nuestra llamada a <code>ssh</code> de parámetros lo aconsejable
+es configurar la llamada en uno de los ficheros de configuración (<code>man ssh_config</code>).
+SSH consulta las opciones en el siguiente orden:
 
-<H4><A NAME="SECTION065120010000000000000">
-Transferencia de Ficheros con <TT>scp</TT></A>
+<P>
+
+<OL>
+<LI>Línea de comandos
+</LI>
+<LI>Fichero de configuración del usuario <code>~/.ssh/config</code>
+	     Este fichero debe tener permisos de lectura/escritura para el usuario
+       y no ser accesible al resto. 
+</LI>
+<LI>Fichero de configuración global <code>/etc/ssh/ssh_config</code>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION065110010000000000000">
+Estructura de un Fichero de Configuración</A>
 </H4>
   
 
 <P>
-El protocolo <A NAME="26649"></A><SPAN  CLASS="textbf">SCP</SPAN> implementa la transferencia de ficheros.
-El cliente se conecta a la máquina remota usando SSH y solicita la ejecución 
-de un programa servidor  (normalmente el mismo programa cliente <code>scp</code> es capaz de funcionar
-como servidor).
+Para cada parámetro el primer valor encontrado será el utilizado. 
+Los ficheros de configuración contienen secciones. Cada sección comienza con una
+especificación de <code>Host</code>. Las especificaciones en esa sección sólo 
+se aplican a los máquinas (tal y como se especifico en la línea de comandos)
+que casen con el patrón especificado en  <TT>Host</TT> . Por ejemplo, si escribo en la
+línea de comandos:
 
 <P>
-Para la subida de ficheros el cliente alimenta al servidor
-con los ficheros que deberán ser cargados, incluyendo opcionalmente los 
-atributos básicos como permisos y fechas.
+<PRE>
+pp2@nereida:~/Lbook$ ssh rbeo
+</PRE>
 
 <P>
-Para las descargas el cliente envía una solicitud indicando los ficheros y directorios que
-deben ser descargados. 
+Se buscará en mi fichero de configuración <code>~/.ssh/config</code> por una especificación
+<code>Host rbeo</code>. En efecto, en mi fichero existe una:
 
 <P>
-Veamos un ejemplo:
 <PRE>
-nereida:~&gt; scp mm.c orion:/tmp/
-mm.c
+...
+
+Host rbeo
+user otheruser
+Hostname localhost
+Port 2048
+IdentityFile /home/pp2/.ssh/ursu
+
+...
 </PRE>
-La sintáxis de <A NAME="tex2html1561"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?scp"><TT>scp</TT></A>
-es:
-<PRE>
-scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file] 
-    [-l limit] [-o ssh_option] [-P port] [-S program]
-    [[user@]host1:]file1 ... [[user@]host2:]file2
-</PRE>
-Es posible copiar entre dos máquinas remotas  emitiendo
-la orden desde una tercera máquina:
-<PRE>
-portatil@user:/tmp$ scp europa:/tmp/prueba.batch nereida:/tmp/prueba.batch
-</PRE>
-Es posible usar comodines (wildcards), protegiéndolos de la shell local:
-<PRE>
-portatil@user:/tmp$ scp 'europa:/tmp/*.tex' nereida:/tmp/
-</PRE>
-Es posible copiar de dos máquinas remotas a una tercera:
-<PRE>
-pp2@europa:~/Lnet-parscp$ scp orion:Makefile.PL nereida:texput.log beowulf:
-pp2@europa:~/Lnet-parscp$ ssh beowulf ls -ltr | tail -2
--rw-r--r--  1 casiano casiano    615 mar 26 13:56 texput.log
--rw-r--r--  1 casiano casiano   1485 mar 26 13:56 Makefile.PL
-</PRE>
-Hemos copiado desde la máquina orion y desde la máquina nereida
-diferentes ficheros. La máquina <code>beowulf</code> es la máquina de destino
-a la que fueron transferidos.
 
 <P>
-La opción <code>-r</code> permite copiar subdirectorios.
-La opción <code>-p</code> permite preservar permisos.
+La sección dice que opciones deben aplicarse cuando nos conectamos a <code>rbeo</code>:
+
+<UL>
+<LI>La opción  <TT>user</TT>  indica que debo proporcionar como usuario <code>otheruser</code>
+</LI>
+<LI>La opción  <TT>Hostname</TT>  dice que el nombre auténtico de la máquina es <code>localhost</code>
+</LI>
+<LI>La opción  <TT>Port</TT>  indica que nos debemos conectar via el puerto 2048
+</LI>
+<LI>La opción  <TT>IdentityFile</TT>  nos dice que debemos usar autentificación automática
+con fichero de identidad (que fué previamente generado con <code>ssh-keygen</code>)
+<code>/home/pp2/.ssh/ursu</code>
+</LI>
+</UL>
+
+<P>
+Las líneas que comienzan por el carácter <code>#</code> son tratadas como comentarios.
+Es posible añadir líneas en blanco para aumentar la legibilidad.
+
+<P>
+El resto de las líneas deben seguir el patrón 
+
+<P>
+<PRE>
+PALABRACLAVE argumentos
+</PRE>
 
 <P>
 
-<H4><A NAME="SECTION065120020000000000000">
-Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
+<H4><A NAME="SECTION065110020000000000000">
+Palabras Clave</A>
 </H4>
   
 
 <P>
-Un comando como este edita dos ficheros en sendos tabs:
+Algunas palabras clave importantes son:
+
+<P>
+
+<UL>
+<LI><TT>Host</TT>  Se pueden usar patrones como <code>*</code> y <code>?</code>. 
+     Define la sección. Si el nombre proveído en la línea de comandos 
+     casa con él las reglas de la sección serán aplicadas.
+
+<P>
+</LI>
+<LI><TT>BatchMode</TT> 
+Se desactivará la petición de <code>passphrase/password</code>.
+
+<P>
+Además las opciones  <TT>ServerAliveInterval</TT> <A NAME="tex2html1558"
+  HREF="footnode.html#foot26281"><SUP><SPAN CLASS="arabic">83</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> 
+y  <TT>SetupTimeOut</TT> <A NAME="tex2html1559"
+  HREF="footnode.html#foot26282"><SUP><SPAN CLASS="arabic">83</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> 
+se establecen a 300 segundos. Esta opción es útil cuando se usan 
+procesos por lotes o programas - por ejemplo cuando se usa <A NAME="tex2html1561"
+  HREF="http://search.cpan.org/perldoc?GRID::Machine"><TT>GRID::Machine</TT></A>
+-
+en los que no hay un usuario presente para proporcionar
+una clave y es necesario detectar la caída de la red. El argumento 
+debe ser <code>yes</code> o <code>no</code>. El valor por defecto es <code>no</code>
+
+<P>
+</LI>
+<LI><TT>BindAddress</TT> 
+Se usa para especificar la dirección de la máquina local. Sólo es útil
+si la máquina dispone de mas de una dirección. Esta opción no funciona
+si  <TT>UsePrivilegedPort</TT> <A NAME="tex2html1560"
+  HREF="footnode.html#foot26283"><SUP><SPAN CLASS="arabic">83</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>se pone a <code>yes</code>.
+
+<P>
+</LI>
+<LI><TT>Compression</TT>  y  <TT>CompressionLevel</TT> 
+
+<P>
+Si se establece la opción
+<TT>Compression</TT> se compactarán los datos según diga  <TT>CompressionLevel</TT>  (de 1 a 9)
+
+<P>
+</LI>
+<LI><TT>ConnectionAttempts</TT> 
+Especifica el número de intentos antes de abandonar. El argumento debe ser un número 
+(por defecto 1). Puede ser útil cuando se esta usando un
+procesado por lotes y la conexión falla a menudo.
+
+<P>
+</LI>
+<LI><TT>ConnectTimeout</TT> 
+Especifica el límite de tiempo (segundos) antes de abandonar
+cuando se conecta a un servidor <code>ssh</code>
+
+<P>
+</LI>
+<LI><TT>HostName</TT> 
+El nombre real del <code>host</code> al que entramos. Esto nos permite
+tener apodos y abreviaciones. El valor usado por defecto es el
+proveído en la línea de comandos. Se permite poner direciones IP
+numéricas.
+
+<P>
+</LI>
+<LI><TT>IdentityFile</TT> 
+Especifica el fichero conteniendo la identidad de autentificación (RSA o DSA)
+a ser usado. Por defecto toma el valor <code>~/.ssh/identity</code> para la versión 1
+del protocolo y <code>~/.ssh/id_rsa</code> y <code>~/.ssh/id_dsa</code> para la versión
+2. Si hay un agente cargado el agente intentará también las otras identidades.
+Es posible especificar múltiples identidades, las cuales serán intentadas
+en secuencia.
+
+<P>
+</LI>
+<LI><TT>NoHostAuthenticationForLocalhost</TT> 
+
+<P>
+Esta opción es conveniente cuando el directorio <code>home</code> 
+es compartido entre un conjunto de máquinas (via NFS por ejemplo).
+En ese caso  <TT>localhost</TT>  refiere a una máquina distinta
+en cada una de las máquinas del conjunto.
+En tal caso, las conexiones a <code>localhost</code>
+dan lugar a un buen número de warnings indicando
+que la clave ha cambiado. 
+
+<P>
+</LI>
+<LI><TT>Port</TT>  Especifica el número de puerto.
+
+<P>
+</LI>
+<LI><TT>ServerAliveInterval</TT> 
+Si después del intervalo especificado en segundos no 
+se obtiene respuesta alguna del servidor, se envía un mensaje
+al servidor para solicitar una respuesta del mismo.
+Por defecto es 0, indicando que estos mensajes no deben ser emitidos.
+
+<P>
+Es útil probar con esta opción si la conexión se desconecta después de un corto periodo
+de inactividad.
+Ciertos administradores configuran sus servidores
+de manera que responden muy tardíamente.
+Sigue un fragmento de mi configuración desde fuera de la Universidad:
 
 <P>
 <PRE>
-vi -p scp://orion/AUTOMATICBACKUPCHECKOUT /home/casiano/europabackup.log
+Host cardon
+user pepito
+Hostname cardon.ull.es
+ForwardX11 yes
+ServerAliveInterval=30
 </PRE>
 
 <P>
-El primero es un fichero <code>~/AUTOMATICBACKUPCHECKOUT</code>
-en una máquina remota con nombre <code>orion</code>. El segundo
-es un fichero local. El editor <code>vim</code> emite el comando <code>scp</code> 
-apropiado para copiar el fichero remoto en un fichero temporal.
+</LI>
+<LI><TT>ServerAliveCountMax</TT> 
 
 <P>
-Durantre la edición, cada vez que salve el fichero
-<code>~/AUTOMATICBACKUPCHECKOUT</code> de <code>orion</code>, <code>vim</code>
-tasladará la orden <code>:w</code> en el comando <code>scp</code> adecuado:
+Establece el número de mensajes <SPAN  CLASS="textbf">alive</SPAN> que
+pueden ser enviados por el cliente <code>ssh</code> sin que este reciba 
+respuesta desde el servidor. Si se supera este umbral el
+cliente abandona, finalizando la sesión. El valor por
+defecto es 3. (Sólo para el protocolo 2).
+
+<P>
+</LI>
+<LI><TT>TCPKeepAlive</TT> 
+
+<P>
+Especifica si se deben enviar mensajes TCP  <TT>keepalive</TT> 
+al otro lado. Si se envían se podrán detectar los fallos
+en las máquinas remotas. El valor por defecto es <code>yes</code>,
+de modo que el cliente se percate de la caída del remoto.
+
+<P>
+</LI>
+<LI><TT>User</TT>  El usuario
+
+<P>
+</LI>
+<LI><TT>UserKnownHostsFile</TT>  especifica un fichero alternativo
+a <code>~/.ssh/known_hosts</code> para las claves de máquinas
+
+<P>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION065110030000000000000">
+Ejemplo</A>
+</H4>
+  
+
+<P>
+Sigue un ejemplo de fichero de configuración de usuario:
+
+<P>
 <PRE>
-:!scp -q '/tmp/v611122/1' 'orion:AUTOMATICBACKUPCHECKOUT'
+pp2@nereida:~/.ssh$ cat -n config
+ 1  # man  ssh_config
+ 2
+ 3  GSSAPIAuthentication no
+ 4
+ 5  Host somemachine
+ 6  user myname
+ 7  Hostname somemachine.pcg.ull.es
+ 8  #ForwardX11 yes
+ 9
+10  Host ursu
+11  user otheruser
+12  Hostname somemachine.pcg.ull.es
+13  IdentityFile /home/pp2/.ssh/ursu
+14  #ForwardX11 yes
+15
+16  Host chazam chazam.pcg.ull.es chazam.deioc.ull.es chum
+17  user myname
+18  # The real name of the machine
+19  Hostname chazam.pcg.ull.es
+20
+21  # Example to be used when connecting via reverse tunneling
+22  # myname@somemachine:~$ ssh -R2048:localhost:22 pp2@nereida
+23  # Logic name for the machine
+24  Host rbeo
+25  # user in the remote machine
+26  user otheruser
+27  # The 'real name' of the machine after the tunnel
+28  Hostname localhost
+29  # Port to connect to
+30  Port 2048
+31  IdentityFile /home/pp2/.ssh/ursu
 </PRE>
 
 <P>
-o bien podemos emitir una orden de edición de un nuevo fichero remoto:
-<PRE>
-:vsplit scp://casiano@some.machine.com/somefile.txt
-</PRE>
+
+<H4><A NAME="SECTION065110040000000000000">
+El fichero <TT>rc</TT></A>
+</H4>
+  
 
 <P>
-Es incluso posible ver los contenidos de un directorio:
-<PRE>
-:tabedit scp://orion/pp2/
-</PRE>
+Cada vez que ocurre una conexión SSH el servidor ejecuta el script
+en <code>/etc/sshrc</code>. Si existe un fichero <code>~/.ssh/rc</code> (SSH1, OpenSSH) o <code>~/.ssh2/rc</code> (SSH2),
+será invocado. Su presencia inhibe la ejecución de <code>/etc/sshrc</code>.
+Se ejecuta tanto si la sesión es interactiva como si es un comando.
 
 <P>
 <BR><HR>
@@ -218,55 +417,33 @@ Es incluso posible ver los contenidos de un directorio:
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html14537"
-  HREF="node658.html#SECTION065120010000000000000">Transferencia de Ficheros con <TT>scp</TT></A>
-<LI><A NAME="tex2html14538"
-  HREF="node658.html#SECTION065120020000000000000">Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html14539"
-  HREF="node659.html">Transferencia de ficheros por <TT>sftp</TT></A>
-<LI><A NAME="tex2html14540"
-  HREF="node660.html">Copias de Seguridad con <TT>rsync</TT></A>
-<UL>
-<LI><A NAME="tex2html14541"
-  HREF="node660.html#SECTION065122010000000000000">El Algoritmo</A>
-<LI><A NAME="tex2html14542"
-  HREF="node660.html#SECTION065122020000000000000">Mode de Uso</A>
-<LI><A NAME="tex2html14543"
-  HREF="node660.html#SECTION065122030000000000000">Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
-<LI><A NAME="tex2html14544"
-  HREF="node660.html#SECTION065122040000000000000">Backups con <TT>rsync</TT> en un Medio Externo</A>
-<LI><A NAME="tex2html14545"
-  HREF="node660.html#SECTION065122050000000000000">El fichero <TT>/etc/fstab</TT></A>
-<LI><A NAME="tex2html14546"
-  HREF="node660.html#SECTION065122060000000000000">El Programa de Copia</A>
-<LI><A NAME="tex2html14547"
-  HREF="node660.html#SECTION065122070000000000000">Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
-<LI><A NAME="tex2html14548"
-  HREF="node660.html#SECTION065122080000000000000">El fichero de <TT>cron</TT></A>
-<LI><A NAME="tex2html14549"
-  HREF="node660.html#SECTION065122090000000000000">Comprobación de la Copia</A>
-</UL></UL>
+<LI><A NAME="tex2html14558"
+  HREF="node658.html#SECTION065110010000000000000">Estructura de un Fichero de Configuración</A>
+<LI><A NAME="tex2html14559"
+  HREF="node658.html#SECTION065110020000000000000">Palabras Clave</A>
+<LI><A NAME="tex2html14560"
+  HREF="node658.html#SECTION065110030000000000000">Ejemplo</A>
+<LI><A NAME="tex2html14561"
+  HREF="node658.html#SECTION065110040000000000000">El fichero <TT>rc</TT></A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14535"
+<A NAME="tex2html14556"
   HREF="node659.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14529"
-  HREF="node646.html">
+<A NAME="tex2html14550"
+  HREF="node647.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14525"
+<A NAME="tex2html14544"
   HREF="node657.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14531"
-  HREF="node812.html">
+<A NAME="tex2html14552"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14533"
-  HREF="node815.html">
+<A NAME="tex2html14554"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -317,20 +494,20 @@ Es incluso posible ver los contenidos de un directorio:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14536"
-  HREF="node659.html">Transferencia de ficheros por</A>
-<B> Subir:</B> <A NAME="tex2html14530"
-  HREF="node646.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14526"
-  HREF="node657.html">Los Ficheros de Configuración</A>
- &nbsp; <B>  <A NAME="tex2html14532"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14534"
-  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14557"
+  HREF="node659.html">Copia Segura de un</A>
+<B> Subir:</B> <A NAME="tex2html14551"
+  HREF="node647.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14545"
+  HREF="node657.html">Depuración/Debugging</A>
+ &nbsp; <B>  <A NAME="tex2html14553"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14555"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

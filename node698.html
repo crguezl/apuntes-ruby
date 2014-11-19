@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Sharing Source Code From a Public git Repository</TITLE>
-<META NAME="description" CONTENT="Sharing Source Code From a Public git Repository">
+<TITLE>Dependencias de la Gema</TITLE>
+<META NAME="description" CONTENT="Dependencias de la Gema">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node699.html">
 <LINK REL="previous" HREF="node697.html">
-<LINK REL="up" HREF="node691.html">
+<LINK REL="up" HREF="node694.html">
 <LINK REL="next" HREF="node699.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15182"
+<A NAME="tex2html15221"
   HREF="node699.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15176"
-  HREF="node691.html">
+<A NAME="tex2html15215"
+  HREF="node694.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15170"
+<A NAME="tex2html15209"
   HREF="node697.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15178"
-  HREF="node812.html">
+<A NAME="tex2html15217"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15180"
-  HREF="node815.html">
+<A NAME="tex2html15219"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,66 +92,95 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15183"
-  HREF="node699.html">Publishing to RubyGems.org</A>
-<B> Subir:</B> <A NAME="tex2html15177"
-  HREF="node691.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15171"
-  HREF="node697.html">Gemas con Un Gran</A>
- &nbsp; <B>  <A NAME="tex2html15179"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15181"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15222"
+  HREF="node699.html">Jerarquía de Ficheros y</A>
+<B> Subir:</B> <A NAME="tex2html15216"
+  HREF="node694.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15210"
+  HREF="node697.html">Underscores and Dashes</A>
+ &nbsp; <B>  <A NAME="tex2html15218"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15220"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061170000000000000000">
-Sharing Source Code From a Public git Repository</A>
-</H1>
+<H1><A NAME="SECTION061140000000000000000">
+Dependencias de la Gema</A>
+</H1><I>
+Nearly all gems are going to have dependencies upon other libraries that
+they require in order to function. These dependencies are explicitly
+declared in the gemspec so that when a gem is installed, all of the gems
+that are needed to run that gem can automatically be installed with it.
+</I>
+<P>
+<I>There are two types of gem dependencies, <A NAME="28827"></A><SPAN  CLASS="textbf">runtime dependencies</SPAN> and
+<A NAME="28829"></A><SPAN  CLASS="textbf">development dependencies</SPAN>. 
+</I>
+<P>
+<UL>
+<LI>
+<FONT COLOR="#0000ff"> Runtime dependencies</FONT> are libraries that
+your gem needs in order to function. For example, if you built a Rails
+extension, you would need to add Rails to the runtime dependencies of
+your project. 
 
 <P>
-The simplest way (from the author’s perspective) to share a gem for
-other developers’ use is to distribute it in source code form. If
-you place the full source code for your gem on a public git repository, then
-other users can install it with 
-<FONT COLOR="#0000ff"> Bundler's git functionality</FONT>.
+</LI>
+<LI>
+<FONT COLOR="#0000ff"> Development dependencies</FONT>, on the other hand, are gems
+that are only needed by people who are going to contribute to the
+code of the gem. 
 
 <P>
-For example, you can install the latest code for the <code>wicked_pdf</code> gem
-in a project by including this line in your <code>Gemfile</code>:
-
+</LI>
+<LI>Gems are, by default, installed only with the runtime
+dependencies. This avoids cluttering up an environment with development
+dependencies if they aren't needed.
+</LI>
+</UL>
 <P>
-<PRE>
-gem "wicked_pdf", :git =&gt; "git://github.com/mileszs/wicked_pdf.git"
+<I>Adding dependencies to your <code>gemspec</code> is extremely simple; all you need
+to do is add a line to the <code>gemspec</code> file for each dependency:
+</I>
+<P><PRE>
+# -*- encoding: utf-8 -*-
+require File.expand_path('../lib/my_gem/version', __FILE__)
+
+Gem::Specification.new do |gem|
+  # ...
+
+  gem.add_dependency 'rails'
+  gem.add_development_dependency 'rspec', '~&gt; 2.7'
+end
 </PRE>
-(Véase <code>bundle help gemfile</code>)
-
 <P>
-
-<FONT COLOR="#0000ff"> Installing a gem directly from a git repository is a feature of
-Bundler</FONT>, not a feature of <A NAME="tex2html1654"
-  HREF="https://rubygems.org/"><TT>RubyGems.org</TT></A>. Gems installed this way will
-not show up when you run <code>gem list</code>.
-
+<I>In addition to specifying the gem name of a dependency, you can also
+specify a version of the gem to get even more specific. 
+Rubygems will default to the latest version if no specific version is required.
+</I>
+<P><PRE>
+git add . 
+git commit -m "Initial Import"
+</PRE>
 <P>
-
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15182"
+<A NAME="tex2html15221"
   HREF="node699.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15176"
-  HREF="node691.html">
+<A NAME="tex2html15215"
+  HREF="node694.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15170"
+<A NAME="tex2html15209"
   HREF="node697.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15178"
-  HREF="node812.html">
+<A NAME="tex2html15217"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15180"
-  HREF="node815.html">
+<A NAME="tex2html15219"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -202,20 +231,20 @@ not show up when you run <code>gem list</code>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15183"
-  HREF="node699.html">Publishing to RubyGems.org</A>
-<B> Subir:</B> <A NAME="tex2html15177"
-  HREF="node691.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15171"
-  HREF="node697.html">Gemas con Un Gran</A>
- &nbsp; <B>  <A NAME="tex2html15179"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15181"
-  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15222"
+  HREF="node699.html">Jerarquía de Ficheros y</A>
+<B> Subir:</B> <A NAME="tex2html15216"
+  HREF="node694.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15210"
+  HREF="node697.html">Underscores and Dashes</A>
+ &nbsp; <B>  <A NAME="tex2html15218"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15220"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

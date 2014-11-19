@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>YARD</TITLE>
-<META NAME="description" CONTENT="YARD">
+<TITLE>RDoc</TITLE>
+<META NAME="description" CONTENT="RDoc">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node686.html">
 <LINK REL="previous" HREF="node684.html">
-<LINK REL="up" HREF="node683.html">
+<LINK REL="up" HREF="node684.html">
 <LINK REL="next" HREF="node686.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14963"
+<A NAME="tex2html14981"
   HREF="node686.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14957"
-  HREF="node683.html">
+<A NAME="tex2html14975"
+  HREF="node684.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14951"
+<A NAME="tex2html14969"
   HREF="node684.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14959"
-  HREF="node812.html">
+<A NAME="tex2html14977"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14961"
-  HREF="node815.html">
+<A NAME="tex2html14979"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,37 +92,543 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14964"
-  HREF="node686.html">Diagramas UML</A>
-<B> Subir:</B> <A NAME="tex2html14958"
-  HREF="node683.html">Documentado el Código: RDoc,</A>
-<B> Anterior:</B> <A NAME="tex2html14952"
-  HREF="node684.html">RDoc</A>
- &nbsp; <B>  <A NAME="tex2html14960"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14962"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14982"
+  HREF="node686.html">YARD</A>
+<B> Subir:</B> <A NAME="tex2html14976"
+  HREF="node684.html">Documentado el Código: RDoc,</A>
+<B> Anterior:</B> <A NAME="tex2html14970"
+  HREF="node684.html">Documentado el Código: RDoc,</A>
+ &nbsp; <B>  <A NAME="tex2html14978"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14980"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06920000000000000000">
-YARD</A>
+<H1><A NAME="SECTION06910000000000000000">
+RDoc</A>
 </H1>
-Una alternativa a <A NAME="tex2html1641"
-  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> es <A NAME="tex2html1642"
-  HREF="http://rubydoc.info/gems/yard/"><TT>YARD</TT></A>.
-<A NAME="tex2html1643"
-  HREF="http://rubydoc.info/gems/yard/"><TT>YARD</TT></A> does not impose a specific markup. It can use standard RDoc
-markup formatting, but YARD also supports textile and markdown via
-the command-line switch or <code>.yardopts</code> file. This means that you are
-free to use whatever formatting you like. 
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html1618"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> is an application that produces documentation for one or
+more Ruby source files. 
+
+<P>
+</LI>
+<LI>It works similarly to JavaDoc, parsing the
+source, and extracting the definition for classes, modules, and
+methods (along with includes and requires). 
+
+<P>
+</LI>
+<LI>It associates with these
+optional documentation contained in the immediately preceding comment
+block, and then render the result using a pluggable output formatter.
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION06910010000000000000">
+Opciones</A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/LPPbook(master)]$ rdoc --help
+Usage: rdoc [options] [names...]
+
+  Files are parsed, and the information they contain collected, before any
+  output is produced. This allows cross references between all files to be
+  resolved. If a name is a directory, it is traversed. If no names are
+  specified, all Ruby files in the current directory (and subdirectories) are
+  processed.
+
+  How RDoc generates output depends on the output formatter being used, and on
+  the options you give.
+
+  Options can be specified via the RDOCOPT environment variable, which
+  functions similar to the RUBYOPT environment variable for ruby.
+
+    $ export RDOCOPT="--show-hash"
+
+  will make rdoc show hashes in method links by default.  Command-line options
+  always will override those in RDOCOPT.
+
+  Available formatters:
+
+  darkfish - HTML generator, written by Michael Granger
+  ri       - creates ri data files
+
+  RDoc understands the following file formats:
+
+  - C: \.(?:([CcHh])\1?|c([+xp])\2|y)\z
+  - ChangeLog: (/|\\|\A)ChangeLog[^/\\]*\z
+  - Markdown: \.(md|markdown)(?:\.[^.]+)?$
+  - RD: \.rd(?:\.[^.]+)?$
+  - Ruby: \.rbw?$
+  - Simple: 
+
+  The following options are deprecated:
+
+    --accessor       support discontinued
+    --diagram        support discontinued
+    --help-output    support discontinued
+    --image-format   was an option for --diagram
+    --inline-source  source code is now always inlined
+    --merge          ri now always merges class information
+    --one-file       support discontinued
+    --op-name        support discontinued
+    --opname         support discontinued
+    --promiscuous    files always only document their content
+    --ri-system      Ruby installers use other techniques
+
+Parsing options:
+
+    -e is preferred over --charset,  Specifies the output encoding.  All files
+        --encoding                   read will be converted to this encoding.
+                                     The default encoding is UTF-8.
+
+    -a, --all                        Synonym for --visibility=private.
+
+    -x, --exclude=PATTERN            Do not process files or directories
+                                     matching PATTERN.
+
+    -E, --extension=NEW=OLD          Treat files ending with .new as if they
+                                     ended with .old. Using '-E cgi=rb' will
+                                     cause xxx.cgi to be parsed as a Ruby file.
+
+    -U, --[no-]force-update          Forces rdoc to scan all sources even if
+                                     newer than the flag file.
+
+    -p, --pipe                       Convert RDoc on stdin to HTML
+
+    -w, --tab-width=WIDTH            Set the width of tab characters.
+
+    -V, --visibility=VISIBILITY      Minimum visibility to document a method.
+                                     One of 'public', 'protected' (the default)
+                                     or 'private'. Can be abbreviated.
+
+        --markup=MARKUP              The markup format for the named files.
+                                     The default is rdoc.  Valid values are:
+                                     markdown, rd, rdoc, tomdoc
+
+        --root=ROOT                  Root of the source tree documentation
+                                     will be generated for.  Set this when
+                                     building documentation outside the
+                                     source directory.  Default is the
+                                     current directory.
+
+        --page-dir=DIR               Directory where guides, your FAQ or
+                                     other pages not associated with a class
+                                     live.  Set this when you don't store
+                                     such files at your project root.
+                                     NOTE: Do not use the same file name in
+                                     the page dir and the root of your project
+
+Common generator options:
+
+    -O, --force-output               Forces rdoc to write the output files,
+                                     even if the output directory exists
+                                     and does not seem to have been created
+                                     by rdoc.
+
+    -f, --fmt, --format=FORMAT       Set the output formatter.  One of:
+                                       darkfish
+                                       ri
+
+    -i, --include=DIRECTORIES        Set (or add to) the list of directories to
+                                     be searched when satisfying :include:
+                                     requests. Can be used more than once.
+
+    -C[LEVEL],                       Prints a report on undocumented items.
+        --[no-]coverage-report       Does not generate files.
+        --[no-]dcov
+
+    -o, --output, --op=DIR           Set the output directory.
+
+    -d                               Deprecated --diagram option.
+                                     Prevents firing debug mode
+                                     with legacy invocation.
+
+HTML generator options:
+
+    -c, --charset=CHARSET            Specifies the output HTML character-set.
+                                     Use --encoding instead of --charset if
+                                     available.
+
+    -A, --hyperlink-all              Generate hyperlinks for all words that
+                                     correspond to known methods, even if they
+                                     do not start with '#' or '::' (legacy
+                                     behavior).
+
+    -m, --main=NAME                  NAME will be the initial page displayed.
+
+    -N, --[no-]line-numbers          Include line numbers in the source code.
+                                     By default, only the number of the first
+                                     line is displayed, in a leading comment.
+
+    -H, --show-hash                  A name of the form #name in a comment is a
+                                     possible hyperlink to an instance method
+                                     name. When displayed, the '#' is removed
+                                     unless this option is specified.
+
+    -T, --template=NAME              Set the template used when generating
+                                     output. The default depends on the
+                                     formatter used.
+
+    -t, --title=TITLE                Set TITLE as the title for HTML output.
+
+        --copy-files=PATH            Specify a file or directory to copy static
+                                     files from.
+                                     If a file is given it will be copied into
+                                     the output dir.  If a directory is given the
+                                     entire directory will be copied.
+                                     You can use this multiple times
+
+    -W, --webcvs=URL                 Specify a URL for linking to a web frontend
+                                     to CVS. If the URL contains a '%s', the
+                                     name of the current file will be
+                                     substituted; if the URL doesn't contain a
+                                     '%s', the filename will be appended to it.
+
+ri generator options:
+
+    -r, --ri                         Generate output for use by `ri`. The files
+                                     are stored in the '.rdoc' directory under
+                                     your home directory unless overridden by a
+                                     subsequent --op parameter, so no special
+                                     privileges are needed.
+
+    -R, --ri-site                    Generate output for use by `ri`. The files
+                                     are stored in a site-wide directory,
+                                     making them accessible to others, so
+                                     special privileges are needed.
+
+Generic options:
+
+        --write-options              Write .rdoc_options to the current
+                                     directory with the given options.  Not all
+                                     options will be used.  See RDoc::Options
+                                     for details.
+
+        --[no-]dry-run               Don't write any files
+
+    -D, --[no-]debug                 Displays lots on internal stuff.
+
+        --[no-]ignore-invalid        Ignore invalid options and continue
+                                     (default true).
+
+    -q, --quiet                      Don't show progress as we parse.
+
+    -v, --verbose                    Display extra progress as RDoc parses
+
+        --help                       Display this help
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06910020000000000000">
+RDoc y Rake</A>
+</H4>
+  
+
+<OL>
+<LI>Generate <code>rdoc</code> by hand – the <code>rdoc</code> command ships with Ruby and by default generates all <code>.rb</code> files in or below the current directory.  
+</LI>
+<LI>You probably want something like <code>rdoc lib</code> to just include your project’s main Ruby code.
+</LI>
+<LI>Integrate <A NAME="tex2html1619"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> into <A NAME="tex2html1620"
+  HREF="http://rake.rubyforge.org/"><TT>Rake</TT></A>.
+<A NAME="tex2html1621"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> comes with
+<A NAME="tex2html1622"
+  HREF="http://rdoc.rubyforge.org/RDoc/Task.html">RDoc/Task</A>
+which can be configured for your project, so you can just run
+<code>rake rdoc</code>.
+Once generated, you can view the generated output at <code>doc/index.html</code>.
+The RDocTask will create the following targets:
+<PRE>
+:rdoc
+Main task for this RDOC task.
+:clobber_rdoc
+Delete all the rdoc files. This target is automatically added to the main clobber target.
+:rerdoc
+Rebuild the rdoc files from scratch, even if they are not out of date.
+</PRE>
+Simple Example:
+<PRE>
+  require 'rdoc/task'
+
+  Rake::RDocTask.new do |rd|
+    rd.main = "README.rdoc"
+    rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+  end
+</PRE>
+You may wish to give the task a different name, such as if you are
+generating two sets of documentation. 
+
+<P>
+For instance, if you want to
+have a <A NAME="28145"></A><SPAN  CLASS="textbf">development set of documentation</SPAN> 
+including private methods:
+<PRE>
+  require 'rdoc/task'
+
+  Rake::RDocTask.new(:rdoc_dev) do |rd|
+    rd.main = "README.doc"
+    rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+    rd.options &lt;&lt; "--all"
+  end
+</PRE>
+The tasks would then be named <code>:rdoc_dev</code>, <code>:clobber_rdoc_dev</code>, and <code>:rerdoc_dev</code>.
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION06910030000000000000">
+Servidor de Documentación Local</A>
+</H4>
+  
+
+Rubygems has built-in support for generating and viewing the <A NAME="tex2html1623"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> for installed gems.  
+
+<P>
+<A NAME="tex2html1624"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> is generated when the gem is installed (using 
+<code>gem install --no-rdoc [name]</code> skips the local <A NAME="tex2html1625"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> generation).  
+
+<P>
+You can then use <code>gem server</code> to view your local gem <A NAME="tex2html1626"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> at <code>http://localhost:8808</code>.
+
+<P>
+
+<H4><A NAME="SECTION06910040000000000000">
+Ejemplo</A>
+</H4>
+  
+
+<P>
+A typical small Ruby program commented using <A NAME="tex2html1627"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> might be as
+follows. You can see the formatted result in 
+<A NAME="tex2html1628"
+  HREF="http://rdoc.sourceforge.net/doc/files/EXAMPLE_rb.html">EXAMPLE.rb</A>
+and 
+<A NAME="tex2html1629"
+  HREF="http://rdoc.sourceforge.net/doc/classes/Anagram.html">Anagram</A>.
+
+<P>
+En el repositorio
+<A NAME="tex2html1630"
+  HREF="https://github.com/crguezl/rdoc-example">https://github.com/crguezl/rdoc-example</A>
+puede encontrar los fuentes.
+
+<P>
+<PRE>
+       # The program takes an initial word or phrase from
+       # the command line (or in the absence of a
+       # parameter from the first line of standard
+       # input).  In then reads successive words or
+       # phrases from standard input and reports whether
+       # they are angrams of the first word.
+       #
+       # Author::    Dave Thomas  (mailto:dave@x.y)
+       # Copyright:: Copyright (c) 2002 The Pragmatic Programmers, LLC
+       # License::   Distributes under the same terms as Ruby
+
+       # This class holds the letters in the original
+       # word or phrase. The is_anagram? method allows us
+       # to test if subsequent words or phrases are
+       # anagrams of the original.
+       class Anagram
+
+         # Remember the letters in the initial word
+         def initialize(text)
+           @initial_letters = letters_of(text)
+         end
+         # Test to see if a new word contains the same
+         # letters as the original
+         def is_anagram?(text)
+           @initial_letters == letters_of(text)
+         end
+
+         # Determine the letters in a word or phrase
+         #
+         # * all letters are converted to lower case
+         # * anything not a letter is stripped out
+         # * the letters are converted into an array
+         # * the array is sorted
+         # * the letters are joined back into a string
+         def letters_of(text)
+           text.downcase.delete('^a-z').split('').sort.join
+         end
+       end
+
+       tester = Anagram.new(ARGV.shift || gets)
+       ARGF.each do |text|
+         puts "Anagram! " if tester.is_anagram? text
+       end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06910050000000000000">
+Enlaces</A>
+</H4>
+  
+
+<UL>
+<LI><A NAME="tex2html1631"
+  HREF="http://www.humbug.in/docs/ruby-best-practices/I_sect18_d1e10174.html">API Documentation via RDoc</A>
+del libro <A NAME="tex2html1632"
+  HREF="http://www.humbug.in/docs/ruby-best-practices/index.html"><TT>Ruby Best Practices</TT></A>
+[<A
+ HREF="node820.html#RBP">3</A>] 
+</LI>
+<LI><A NAME="tex2html1633"
+  HREF="http://www.mikeperham.com/2010/12/16/using-rdoc/">Using RDoc</A>
+a tutorial by Mark Perham
+</LI>
+<LI><A NAME="tex2html1634"
+  HREF="http://jan.varwig.org/wp-content/uploads/2006/09/Rdoc%20Cheat%20Sheet.pdf">Cheat sheet</A>
+</LI>
+<LI><A NAME="tex2html1635"
+  HREF="http://www.mikeperham.com/wp-content/uploads/2010/12/rdoc.html">RDoc markup reference</A>
+</LI>
+<LI><A NAME="tex2html1636"
+  HREF="https://we.riseup.net/crabgrass-dev/rdoc-how-to">RDoc how to</A>
+</LI>
+<LI><A NAME="tex2html1637"
+  HREF="http://rdoc.rubyforge.org/RDoc/Markup.html">Manual de Sintáxis: RDoc::Markup</A>
+</LI>
+<LI><A NAME="tex2html1638"
+  HREF="http://docs.seattlerb.org/rdoc/RDoc/Markup.html"><SPAN  CLASS="textbf">RDOC::Markup</SPAN></A>
+</LI>
+<LI><A NAME="tex2html1639"
+  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/RubyDoc">RubyDoc en WikiBooks</A>
+</LI>
+<LI><A NAME="tex2html1640"
+  HREF="http://rdoc.sourceforge.net/doc/index.html"><SPAN  CLASS="textbf">RDOC</SPAN></A>
+en sourceforge
+</LI>
+<LI><A NAME="tex2html1641"
+  HREF="http://youtu.be/BEdmtC03who">Programming With Ruby Episode 12, Documentation</A>
+en YouTube
+</LI>
+</UL>
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14983"
+  HREF="node685.html#SECTION06910010000000000000">Opciones</A>
+<LI><A NAME="tex2html14984"
+  HREF="node685.html#SECTION06910020000000000000">RDoc y Rake</A>
+<LI><A NAME="tex2html14985"
+  HREF="node685.html#SECTION06910030000000000000">Servidor de Documentación Local</A>
+<LI><A NAME="tex2html14986"
+  HREF="node685.html#SECTION06910040000000000000">Ejemplo</A>
+<LI><A NAME="tex2html14987"
+  HREF="node685.html#SECTION06910050000000000000">Enlaces</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14981"
+  HREF="node686.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14975"
+  HREF="node684.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14969"
+  HREF="node684.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html14977"
+  HREF="node816.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14979"
+  HREF="node819.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html14982"
+  HREF="node686.html">YARD</A>
+<B> Subir:</B> <A NAME="tex2html14976"
+  HREF="node684.html">Documentado el Código: RDoc,</A>
+<B> Anterior:</B> <A NAME="tex2html14970"
+  HREF="node684.html">Documentado el Código: RDoc,</A>
+ &nbsp; <B>  <A NAME="tex2html14978"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14980"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

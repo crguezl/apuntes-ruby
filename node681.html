@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Rake::TestTask</TITLE>
-<META NAME="description" CONTENT="Rake::TestTask">
+<TITLE>Argumentos en una Tarea</TITLE>
+<META NAME="description" CONTENT="Argumentos en una Tarea">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node682.html">
 <LINK REL="previous" HREF="node680.html">
-<LINK REL="up" HREF="node679.html">
+<LINK REL="up" HREF="node680.html">
 <LINK REL="next" HREF="node682.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14894"
+<A NAME="tex2html14917"
   HREF="node682.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14888"
-  HREF="node679.html">
+<A NAME="tex2html14911"
+  HREF="node680.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14882"
+<A NAME="tex2html14905"
   HREF="node680.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14890"
-  HREF="node812.html">
+<A NAME="tex2html14913"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14892"
-  HREF="node815.html">
+<A NAME="tex2html14915"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,170 +92,110 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14895"
-  HREF="node682.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html14889"
-  HREF="node679.html">Rake</A>
-<B> Anterior:</B> <A NAME="tex2html14883"
-  HREF="node680.html">Argumentos en una Tarea</A>
- &nbsp; <B>  <A NAME="tex2html14891"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14893"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14918"
+  HREF="node682.html">Rake::TestTask</A>
+<B> Subir:</B> <A NAME="tex2html14912"
+  HREF="node680.html">Rake</A>
+<B> Anterior:</B> <A NAME="tex2html14906"
+  HREF="node680.html">Rake</A>
+ &nbsp; <B>  <A NAME="tex2html14914"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14916"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06820000000000000000"></A>
-<A NAME="section:raketesttask"></A>
-<BR>
-Rake::TestTask
+<H1><A NAME="SECTION06810000000000000000">
+Argumentos en una Tarea</A>
 </H1>
-La clase <A NAME="tex2html1608"
-  HREF="http://rake.rubyforge.org/classes/Rake/TestTask.html">Rake::TestTask</A>
-nos permite crear una tarea que ejecuta un conjunto de pruebas;
-<PRE>
-  Rake::TestTask.new do |t|
-    t.libs &lt;&lt; "test"
-    t.test_files = FileList['test/test*.rb']
-    t.verbose = true
-  end
-</PRE>
-Si se llama a <code>rake</code> con la opción <code>TEST=filename</code> entonces sólo se ejecutará esa prueba.
+Véase 
+<A NAME="tex2html1608"
+  HREF="http://stackoverflow.com/questions/825748/how-do-i-pass-command-line-arguments-to-a-rake-task">How do I pass command line arguments to a rake task?</A>
+en Stackoverflow.
 
 <P>
-Si se invoca con la opción <code>TESTOPTS=options</code>, las opciones se pasarán  a <code>Test::Unit</code>.
-Ejemplos:
+You can specify formal arguments in rake by adding symbol arguments to the task call. For example:
 <PRE>
-  rake test                           # run tests normally
-  rake test TEST=just_one_file.rb     # run just one test file.
-  rake test TESTOPTS="-v"             # run in verbose mode
-</PRE>
+require 'rake'
 
-<P>
-Sigue otro ejemplo:
+task :my_task, :arg1, :arg2 do |t, args|
+  puts "Args were: #{args}"
+end
 
-<P>
-<PRE>
-MacBookdeJohn:htmlRB john$ cat Rakefile 
-$:.unshift 'lib/'
-require 'rake/testtask'
+task :invoke_my_task do
+  Rake.application.invoke_task("my_task[1, 2]")
+end
 
-# rake test TEST=just_one_file.rb     # run just one test file.
-# rake test TESTOPTS="-v"             # run in verbose mode
-Rake::TestTask.new do |t|
-  # t.libs: List of directories to be added to $LOAD_PATH. (default is ‘lib’)
-  t.libs &lt;&lt; "test" 
-  t.pattern = 'test/tc*.rb' # or t.test_files = FileList['test/tc*.rb'] 
-  t.warning = true
-  t.verbose = true # verbose test output. (default is false)
+# or if you prefer this syntax...
+task :invoke_my_task_2 do
+  Rake::Task[:my_task].invoke(3, 4)
+end
+
+# a task with prerequisites passes its 
+# arguments to it prerequisites
+task :with_prerequisite, :arg1, :arg2, :needs =&gt; :my_task
+
+# equivalently...
+task :with_prerequisite_2, [:arg1, :arg2] =&gt; :my_task
+
+# to specify default values, 
+# we take advantage of args being a Rake::TaskArguments object
+task :with_defaults, :arg1, :arg2 do |t, args|
+  args.with_defaults(:arg1 =&gt; :default_1, :arg2 =&gt; :default_2)
+  puts "Args with defaults were: #{args}"
 end
 </PRE>
-
-<P>
-Ejecuciones:
-<PRE>
-MacBookdeJohn:htmlRB john$ ls -ltr test/
-total 16
--rw-r--r--  1 john  staff   835 29 nov 12:27 tc_01_smoke.rb
--rw-r--r--  1 john  staff  1023  9 dic 11:35 tc_02_smoke.rb
-MacBookdeJohn:htmlRB john$ rake test
-(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
-/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" 
-./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
-Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
-Started
-...
-Finished in 0.001125 seconds.
-
-3 tests, 7 assertions, 0 failures, 0 errors
-</PRE>
-Con la opción <code>TESTOPTS="-v"</code> la salida es mas detallada:
+Then, from the command line:
 
 <P>
 <PRE>
-MacBookdeJohn:htmlRB john$ rake test TESTOPTS="-v" 
-(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
-/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" -v
-./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
-Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
-Started
-test_attr(TestHTML): .
-test_attr2(TestHTML): .
-test_simplepage(TestHTML): .
+&gt; rake my_task[1,2]
+Args were: {:arg1=&gt;"1", :arg2=&gt;"2"}
 
-Finished in 0.000844 seconds.
+&gt; rake "my_task[1, 2]"
+Args were: {:arg1=&gt;"1", :arg2=&gt;"2"}
 
-3 tests, 7 assertions, 0 failures, 0 errors
+&gt; rake invoke_my_task
+Args were: {:arg1=&gt;"1", :arg2=&gt;"2"}
+
+&gt; rake invoke_my_task_2
+Args were: {:arg1=&gt;3, :arg2=&gt;4}
+
+&gt; rake with_prerequisite[5,6]
+Args were: {:arg1=&gt;"5", :arg2=&gt;"6"}
+
+&gt; rake with_prerequisite_2[7,8]
+Args were: {:arg1=&gt;"7", :arg2=&gt;"8"}
+
+&gt; rake with_defaults
+Args with defaults were: {:arg1=&gt;:default_1, :arg2=&gt;:default_2}
+
+&gt; rake with_defaults['x','y']
+Args with defaults were: {:arg1=&gt;"x", :arg2=&gt;"y"}
 </PRE>
-Ejecución de un solo programa de prueba:
+As demonstrated in the second example, if you want to use spaces,
+the quotes around the target name are necessary to keep the shell
+from splitting up the arguments at the space.
 
 <P>
-<PRE>
-MacBookdeJohn:htmlRB john$ rake test TEST=tc_02_smoke.rb
-(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
-/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "tc_02_smoke.rb" 
-./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
-Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
-Started
-..
-Finished in 0.000623 seconds.
-
-2 tests, 6 assertions, 0 failures, 0 errors
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06820010000000000000">
-Donde</A>
-</H4>
-  
-
-<P>
-
-<UL>
-<LI><A NAME="tex2html1609"
-  HREF="https://github.com/crguezl/html-method_missing-example/tree/master/test">Este ejemplo en gitHub</A>
-</LI>
-<LI><PRE>
-[~/rubytesting/htmlRB(master)]$ pwd -P
-/Users/casiano/local/src/ruby/rubytesting/htmlRB
-[~/rubytesting/htmlRB(master)]$ git remote -v
-origin  git@github.com:crguezl/html-method_missing-example.git (fetch)
-origin  git@github.com:crguezl/html-method_missing-example.git (push)
-</PRE>
-</LI>
-</UL>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html14896"
-  HREF="node681.html#SECTION06820010000000000000">Donde</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14894"
+<A NAME="tex2html14917"
   HREF="node682.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14888"
-  HREF="node679.html">
+<A NAME="tex2html14911"
+  HREF="node680.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14882"
+<A NAME="tex2html14905"
   HREF="node680.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14890"
-  HREF="node812.html">
+<A NAME="tex2html14913"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14892"
-  HREF="node815.html">
+<A NAME="tex2html14915"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -306,20 +246,20 @@ origin  git@github.com:crguezl/html-method_missing-example.git (push)
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14895"
-  HREF="node682.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html14889"
-  HREF="node679.html">Rake</A>
-<B> Anterior:</B> <A NAME="tex2html14883"
-  HREF="node680.html">Argumentos en una Tarea</A>
- &nbsp; <B>  <A NAME="tex2html14891"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14893"
-  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14918"
+  HREF="node682.html">Rake::TestTask</A>
+<B> Subir:</B> <A NAME="tex2html14912"
+  HREF="node680.html">Rake</A>
+<B> Anterior:</B> <A NAME="tex2html14906"
+  HREF="node680.html">Rake</A>
+ &nbsp; <B>  <A NAME="tex2html14914"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14916"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

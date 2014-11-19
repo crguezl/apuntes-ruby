@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</TITLE>
-<META NAME="description" CONTENT="Configurando la Base de Datos en Heroku con DataMapper. Despliegue">
+<TITLE>Ejemplo de uso de Sinatra y DataMapper: Acortador de URLs</TITLE>
+<META NAME="description" CONTENT="Ejemplo de uso de Sinatra y DataMapper: Acortador de URLs">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node512.html">
 <LINK REL="previous" HREF="node510.html">
-<LINK REL="up" HREF="node505.html">
+<LINK REL="up" HREF="node506.html">
 <LINK REL="next" HREF="node512.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11963"
+<A NAME="tex2html11983"
   HREF="node512.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11957"
-  HREF="node505.html">
+<A NAME="tex2html11977"
+  HREF="node506.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11951"
+<A NAME="tex2html11971"
   HREF="node510.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11959"
-  HREF="node812.html">
+<A NAME="tex2html11979"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11961"
-  HREF="node815.html">
+<A NAME="tex2html11981"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,312 +92,47 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11964"
-  HREF="node512.html">Asociaciones Simples</A>
-<B> Subir:</B> <A NAME="tex2html11958"
-  HREF="node505.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11952"
-  HREF="node510.html">Ejemplo de uso de</A>
- &nbsp; <B>  <A NAME="tex2html11960"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11962"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11984"
+  HREF="node512.html">Configurando la Base de</A>
+<B> Subir:</B> <A NAME="tex2html11978"
+  HREF="node506.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html11972"
+  HREF="node510.html">Ejemplo de Uso de</A>
+ &nbsp; <B>  <A NAME="tex2html11980"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11982"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031660000000000000000"></A>
-<A NAME="section:herokupostgres"></A>
+<H1><A NAME="SECTION031650000000000000000"></A>
+<A NAME="section:abreviadorurls"></A>
 <BR>
-Configurando la Base de Datos en Heroku con DataMapper. Despliegue
+Ejemplo de uso de Sinatra y DataMapper: Acortador de URLs
 </H1>
 
 <P>
-<A NAME="tex2html1258"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A> utiliza la base de datos PostgreSQL y una URL en una variable 
-de entorno <code>ENV['DATABASE_URL']</code>.
 
-<P>
-<PRE>
-configure :development, :test do
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
-end
-
-configure :production do
-  DataMapper.setup(:default, ENV['DATABASE_URL'])
-end
+<UL>
+<LI><A NAME="tex2html1258"
+  HREF="https://github.com/crguezl/url_shortener_with_datamapper">Acortador de URLs</A>
+</LI>
+<LI><PRE>
+[~/srcSTW/url_shortener_with_datamapper(initial)]$ pwd -P
+/Users/casiano/local/src/ruby/STW/url_shortener_with_datamapper
+[~/srcSTW/url_shortener_with_datamapper(master)]$ git remote -v
+origin  git@github.com:crguezl/url_shortener_with_datamapper.git (fetch)
+origin  git@github.com:crguezl/url_shortener_with_datamapper.git (push)
 </PRE>
-
-<P>
-Estas líneas especifican que se usa SQLite en desarrollo y testing y
-PostgreSQL en producción.
-Obsérvese que el <code>Gemfile</code> debe estar coherente:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ cat Gemfile
-source 'https://rubygems.org'
-gem "sinatra"
-gem "slim"
-gem "sass"
-gem "dm-core"
-gem "dm-migrations"
-gem "thin"
-gem "pg", :group =&gt; :production
-gem "dm-postgres-adapter", :group =&gt; :production
-gem "dm-sqlite-adapter", :group =&gt; [:development, :test]
-</PRE>
-o mejor:
-<PRE>
-group :production do
-    gem "pg"
-    gem "dm-postgres-adapter"
-end
-
-group :development, :test do
-  gem "dm-sqlite-adapter"
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031660010000000000000">
-Bundle: installing groups. General considerations</A>
-</H4>
-  
-
-<P>
-By  default, bundle install will install all gems in all groups in your
-Gemfile, except those declared for a different 
-<code>platform</code><A NAME="tex2html1259"
-  HREF="footnode.html#foot22065"><SUP><SPAN CLASS="arabic">45</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
-
-<P>
-However, you can explicitly tell bundler  to  skip  installing  certain
-groups  with  the <code>--without option</code>. 
-This option takes a space-separated list of groups.
-
-<P>
-While the <code>--without</code> option will skip installing the gems in the  specified  groups, 
-<FONT COLOR="#0000ff"> it will still download those gems and use them to resolve the dependencies of every gem in your Gemfile</FONT>.
-
-<P>
-This is so that installing a different set of groups on another machine (such  as  a  production  server) will not change the gems and versions that you have already developed and tested against.
-
-<P>
-Bundler guarantees that the third-party code you are running in development and testing is also the third-party code you are running in production. You can choose to exclude some of that  code  in different  environments,  but  you  will never be caught flat-footed by 
-different versions of third-party code being used in different environments.
-
-<P>
-For a simple illustration, consider the following <code>Gemfile</code>:
-
-<P>
-<PRE>
-           source "https://rubygems.org"
-
-           gem "sinatra"
-
-           group :production do
-             gem "rack-perftools-profiler"
-           end
-</PRE>
-
-<P>
-In  this  case,  <code>sinatra</code>  
-depends on any version of <code>Rack (&gt;= 1.0)</code>,
- while <code>rack-perftools-profiler</code> depends on <code>1.x (~&gt; 1.0)</code>.
-
-<P>
-When you run <code>bundle install --without  production</code>  
-in  <code>development</code>,  we
-look  at the dependencies of 
-<code>rack-perftools-profiler</code> as well. 
-
-<P>
-That way,
-you do not spend all your time developing against <code>Rack 2.0</code>,  
-using  new
-APIs  unavailable  in <code>Rack 1.x</code>, 
-only to have bundler switch to <code>Rack 1.2</code>
-when the <code>production</code> group is used.
-
-<P>
-This should not cause any problems  in  practice,  because  bundle  
-does  not
-attempt  to  install the gems in the excluded groups, and only 
-evaluates them
-as part of the dependency resolution process.
-
-<P>
-This also means that 
-
-<FONT COLOR="#0000ff"> you cannot include different versions of the  same
-gem  in  different  groups</FONT>,  
-because doing so would result in different
-sets of dependencies used in development and production. 
-
-<P>
-Because of the
-vagaries  of  the  dependency  resolution process, this usually affects
-more than just the gems you list in your <code>Gemfile</code>, 
-and can  (surprisingly) radically change the gems you are using.
-
-<P>
-
-<H4><A NAME="SECTION031660020000000000000">
-Recordando los pasos para el despliegue en Heroku</A>
-</H4>
-  
-
-<PRE>
-heroku create ...
-</PRE>
-
-<P>
-<PRE>
-git push heroku master
-</PRE>
-
-<P>
-<PRE>
-heroku open
-</PRE>
-
-<P>
-<PRE>
-heroku logs --source app
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031660030000000000000">
-Creando/Modificando la base de datos en Heroku con heroku run console</A>
-</H4>
-  
-
-<P>
-Ahora ejecutamos la consola de heroku:
-
-<P>
-<PRE>
-heroku run console
-</PRE>
-lo que nos abre una sesión <code>irb</code>.
-
-<P>
-Ahora creamos la base de datos en <A NAME="tex2html1260"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ heroku run console
-Running `console` attached to terminal... up, run.8011
-irb(main):001:0&gt; require './main'
-=&gt; true
-irb(main):002:0&gt; DataMapper.auto_migrate!
-=&gt; #&lt;DataMapper::DescendantSet:0x007fb89c878230 @descendants=#&lt;DataMapper::SubjectSet:0x007fb89c8781b8 @entries=#&lt;DataMapper::OrderedSet:0x007fb89c878190 @cache=#&lt;DataMapper::SubjectSet::NameCache:0x007fb89c878168 @cache={"Song"=&gt;0}&gt;, @entries=[Song]&gt;&gt;&gt;
-irb(main):003:0&gt;
-</PRE>
-Véase también 
-la práctica TicTacToe
-<A HREF="node449.html#practica:ticatactoe">32.29</A>
-y
-el capítulo <I>Despliegue en Heroku</I> 
-<A HREF="node525.html#chapter:despliegueenheroku">51</A>.
+</LI>
+</UL>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html11965"
-  HREF="node511.html#SECTION031660010000000000000">Bundle: installing groups. General considerations</A>
-<LI><A NAME="tex2html11966"
-  HREF="node511.html#SECTION031660020000000000000">Recordando los pasos para el despliegue en Heroku</A>
-<LI><A NAME="tex2html11967"
-  HREF="node511.html#SECTION031660030000000000000">Creando/Modificando la base de datos en Heroku con heroku run console</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html11963"
-  HREF="node512.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11957"
-  HREF="node505.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11951"
-  HREF="node510.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11959"
-  HREF="node812.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11961"
-  HREF="node815.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html11964"
-  HREF="node512.html">Asociaciones Simples</A>
-<B> Subir:</B> <A NAME="tex2html11958"
-  HREF="node505.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11952"
-  HREF="node510.html">Ejemplo de uso de</A>
- &nbsp; <B>  <A NAME="tex2html11960"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11962"
-  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

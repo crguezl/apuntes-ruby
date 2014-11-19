@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Caching</TITLE>
-<META NAME="description" CONTENT="Caching">
+<TITLE>Las Carpetas Usadas Como Módulos</TITLE>
+<META NAME="description" CONTENT="Las Carpetas Usadas Como Módulos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node583.html">
 <LINK REL="previous" HREF="node581.html">
-<LINK REL="up" HREF="node576.html">
+<LINK REL="up" HREF="node577.html">
 <LINK REL="next" HREF="node583.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13163"
+<A NAME="tex2html13183"
   HREF="node583.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13157"
-  HREF="node576.html">
+<A NAME="tex2html13177"
+  HREF="node577.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13151"
+<A NAME="tex2html13171"
   HREF="node581.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13159"
-  HREF="node812.html">
+<A NAME="tex2html13179"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13161"
-  HREF="node815.html">
+<A NAME="tex2html13181"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,50 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13164"
-  HREF="node583.html">El Objeto module y</A>
-<B> Subir:</B> <A NAME="tex2html13158"
-  HREF="node576.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html13152"
-  HREF="node581.html">Las Carpetas Usadas Como</A>
- &nbsp; <B>  <A NAME="tex2html13160"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13162"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13184"
+  HREF="node583.html">Caching</A>
+<B> Subir:</B> <A NAME="tex2html13178"
+  HREF="node577.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13172"
+  HREF="node581.html">Carga desde Carpetas node_modules</A>
+ &nbsp; <B>  <A NAME="tex2html13180"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13182"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04686000000000000000">
-Caching</A>
+<H2><A NAME="SECTION04685000000000000000">
+Las Carpetas Usadas Como Módulos</A>
 </H2>
+It is convenient to organize programs and libraries into self-contained
+directories, and then provide a single entry point to that library. 
+
+<P>
+There
+are a few ways in which a folder may be passed to <code>require()</code> as an
+argument.
 
 <P>
 
 <OL>
-<LI>Modules are cached after the first time they are loaded. This means
-(among other things) that every call to <code>require('foo')</code> will get exactly
-the same object returned, if it would resolve to the same file.
+<LI>The first is to create a <code>package.json</code> file in the root of the
+folder, which specifies a <code>main</code> module. 
+An example <code>package.json</code> file
+might look like this:
+
+<P>
+<PRE>
+{ "name" : "some-library",
+  "main" : "./lib/some-library.js" }
+</PRE>
+
+<P>
+If this was in a folder at 
+<code>./some-library</code>, then <code>require('./some-library')</code> would attempt
+to load <code>./some-library/lib/some-library.js</code>.
+
+<P>
+This is the extent of Node's awareness of <code>package.json</code> files.
 
 <P>
 </LI>
-<LI>Multiple calls to <code>require('foo')</code> may not cause the module code
-to be executed multiple times. This is an important feature. With it,
-<A NAME="24519"></A><SPAN  CLASS="textbf">partially done</SPAN> objects can be returned, thus allowing transitive
-dependencies to be loaded even when they would cause cycles.
+<LI>If there is no <code>package.json</code> 
+file present in the directory, then node will
+attempt to load an 
+<code>index.js</code> or
+<code>index.node</code> 
+file out of that directory. 
 
 <P>
-</LI>
-<LI>If you want to have a module execute code multiple times, then export
-a function, and call that function.
+For
+example, if there was no 
+<code>package.json</code> file in the above example, then
+<code>require('./some-library')</code> would attempt to load:
 
 <P>
-</LI>
-<LI>Modules are cached based on their <B>resolved filename</B>. Since modules may
-resolve to a different filename based on the location of the calling
-module (loading from <code>node_modules folders</code>), it is not a guarantee that
-<code>require('foo')</code> will always return the exact same object, if it would
-resolve to different files.
+<PRE>
+./some-library/index.js
+./some-library/index.node
+</PRE>
 
 <P>
 </LI>
@@ -145,20 +168,20 @@ resolve to different files.
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13163"
+<A NAME="tex2html13183"
   HREF="node583.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13157"
-  HREF="node576.html">
+<A NAME="tex2html13177"
+  HREF="node577.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13151"
+<A NAME="tex2html13171"
   HREF="node581.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13159"
-  HREF="node812.html">
+<A NAME="tex2html13179"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13161"
-  HREF="node815.html">
+<A NAME="tex2html13181"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -209,20 +232,20 @@ resolve to different files.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13164"
-  HREF="node583.html">El Objeto module y</A>
-<B> Subir:</B> <A NAME="tex2html13158"
-  HREF="node576.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html13152"
-  HREF="node581.html">Las Carpetas Usadas Como</A>
- &nbsp; <B>  <A NAME="tex2html13160"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13162"
-  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13184"
+  HREF="node583.html">Caching</A>
+<B> Subir:</B> <A NAME="tex2html13178"
+  HREF="node577.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13172"
+  HREF="node581.html">Carga desde Carpetas node_modules</A>
+ &nbsp; <B>  <A NAME="tex2html13180"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13182"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

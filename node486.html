@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>websocket/rack</TITLE>
-<META NAME="description" CONTENT="websocket/rack">
+<TITLE>Negociación del protocolo WebSocket</TITLE>
+<META NAME="description" CONTENT="Negociación del protocolo WebSocket">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node487.html">
-<LINK REL="previous" HREF="node483.html">
-<LINK REL="up" HREF="node482.html">
+<LINK REL="previous" HREF="node485.html">
+<LINK REL="up" HREF="node484.html">
 <LINK REL="next" HREF="node487.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11488"
+<A NAME="tex2html11508"
   HREF="node487.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11482"
-  HREF="node482.html">
+<A NAME="tex2html11502"
+  HREF="node484.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11476"
+<A NAME="tex2html11498"
   HREF="node485.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11484"
-  HREF="node812.html">
+<A NAME="tex2html11504"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11486"
-  HREF="node815.html">
+<A NAME="tex2html11506"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,29 +91,174 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11489"
-  HREF="node487.html">Ruby y WebSockets: TCP</A>
-<B> Subir:</B> <A NAME="tex2html11483"
-  HREF="node482.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html11477"
-  HREF="node485.html">Negociación del protocolo WebSocket</A>
- &nbsp; <B>  <A NAME="tex2html11485"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11487"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11509"
+  HREF="node487.html">websocket/rack</A>
+<B> Subir:</B> <A NAME="tex2html11503"
+  HREF="node484.html">WebSockets</A>
+<B> Anterior:</B> <A NAME="tex2html11499"
+  HREF="node485.html">Que es WebSocket y</A>
+ &nbsp; <B>  <A NAME="tex2html11505"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11507"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03920000000000000000">
-websocket/rack</A>
-</H1>
+<H2><A NAME="SECTION03912000000000000000">
+Negociación del protocolo WebSocket</A>
+</H2>
 
 <P>
-<BR><HR>
+Para establecer una conexión WebSocket, el cliente manda una petición de
+negociación WebSocket, y el servidor manda una respuesta de negociación
+WebSocket, como se puede ver en el siguiente ejemplo:
+
+<P>
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
+Petición del navegador al servidor:
+GET /demo HTTP/1.1
+Host: example.com
+Connection: Upgrade
+Sec-WebSocket-Key2: 12998 5 Y3 1 .P00
+Sec-WebSocket-Protocol: sample
+Upgrade: WebSocket
+Sec-WebSocket-Key1: 4 @1 46546xW%0l 1 5
+Origin: http://example.com
+ 
+ ^n:ds[4U
+</PRE></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
+ Respuesta del servidor:
+ HTTP/1.1 101 WebSocket Protocol Handshake
+ Upgrade: WebSocket
+ Connection: Upgrade
+ Sec-WebSocket-Origin: http://example.com
+ Sec-WebSocket-Location: ws://example.com/demo
+ Sec-WebSocket-Protocol: sample
+  
+  8jKS'y:G*Co,Wxa-
+</PRE></TD>
+</TR>
+</TABLE>
+
+<P>
+The WebSocket protocol was designed to work well with the existing
+Web infrastructure. As part of this design principle, the protocol
+specification defines that the WebSocket connection starts its
+life as an HTTP connection, guaranteeing full backwards compatibility
+with the pre-WebSocket world. 
+
+<P>
+The protocol switch from HTTP to WebSocket
+is referred to as a the WebSocket handshake.
+
+<P>
+Una vez establecida, las tramas WebSocket de datos pueden empezar
+a enviarse en ambos sentidos entre el cliente y el servidor en modo
+full-duplex. 
+
+<P>
+Las tramas de texto pueden ser enviadas en modo full-duplex
+también, en ambas direcciones al mismo tiempo. 
+
+<P>
+Tramas de datos binarios no están soportadas todavía en el API. 
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1163"
+  HREF="http://www.websocket.org/aboutwebsocket.html">About HTML5 WebSockets</A>
+en 
+<A NAME="tex2html1164"
+  HREF="http://www.websocket.org">http://www.websocket.org</A>
+</LI>
+</UL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11508"
+  HREF="node487.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11502"
+  HREF="node484.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11498"
+  HREF="node485.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html11504"
+  HREF="node816.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html11506"
+  HREF="node819.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html11509"
+  HREF="node487.html">websocket/rack</A>
+<B> Subir:</B> <A NAME="tex2html11503"
+  HREF="node484.html">WebSockets</A>
+<B> Anterior:</B> <A NAME="tex2html11499"
+  HREF="node485.html">Que es WebSocket y</A>
+ &nbsp; <B>  <A NAME="tex2html11505"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11507"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

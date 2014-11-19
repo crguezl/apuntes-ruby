@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>RVM gives you a separate gem directory for each and every Ruby version and gemset</TITLE>
-<META NAME="description" CONTENT="RVM gives you a separate gem directory for each and every Ruby version and gemset">
+<TITLE>Ejemplo de uso de gemsets</TITLE>
+<META NAME="description" CONTENT="Ejemplo de uso de gemsets">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node638.html">
 <LINK REL="previous" HREF="node636.html">
-<LINK REL="up" HREF="node625.html">
+<LINK REL="up" HREF="node626.html">
 <LINK REL="next" HREF="node638.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14128"
+<A NAME="tex2html14151"
   HREF="node638.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14122"
-  HREF="node625.html">
+<A NAME="tex2html14145"
+  HREF="node626.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14116"
+<A NAME="tex2html14139"
   HREF="node636.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14124"
-  HREF="node812.html">
+<A NAME="tex2html14147"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14126"
-  HREF="node815.html">
+<A NAME="tex2html14149"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,76 +92,163 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14129"
-  HREF="node638.html">Desinstalar rvm</A>
-<B> Subir:</B> <A NAME="tex2html14123"
-  HREF="node625.html">Ruby Version Manager: RVM</A>
-<B> Anterior:</B> <A NAME="tex2html14117"
-  HREF="node636.html">Ejemplo de uso de</A>
- &nbsp; <B>  <A NAME="tex2html14125"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14127"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14152"
+  HREF="node638.html">RVM gives you a</A>
+<B> Subir:</B> <A NAME="tex2html14146"
+  HREF="node626.html">Ruby Version Manager: RVM</A>
+<B> Anterior:</B> <A NAME="tex2html14140"
+  HREF="node636.html">Lista de Comandos para</A>
+ &nbsp; <B>  <A NAME="tex2html14148"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14150"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION062120000000000000000">
-RVM gives you a separate gem directory for each and every Ruby version and gemset</A>
+<H1><A NAME="SECTION062110000000000000000">
+Ejemplo de uso de gemsets</A>
 </H1>
-
-<P>
-This means that gems must be explicitly installed for each revision and gemset. 
+To illustrate the point, let's talk about a common use case. Assume you
+are testing out a rails application against a new Rails release. RVM
+makes such testing very easy, by letting you quickly switch between
+multiple Rails versions. First, let's set up the environments:
 
 <P>
 <PRE>
-[~/.rvm]$ rvm list
+$ rvm 1.9.2-head
+$ gem install rails -v 2.3.3
 
-rvm rubies
+$ rvm gemset create rails222 rails126
+Gemset 'rails222' created.
+Gemset 'rails126' created.
 
-   jruby-1.7.3 [ x86_64 ]
-   ruby-1.8.7-p352 [ i686 ]
-   ruby-1.9.2-head [ x86_64 ]
-   ruby-1.9.2-p290 [ x86_64 ]
-   ruby-1.9.3-head [ x86_64 ]
-=&gt; ruby-1.9.3-p392 [ x86_64 ]
- * ruby-2.0.0-p0 [ x86_64 ]
+$ rvm 1.9.2-head@rails222
+$ gem install rails -v 2.2.2
 
-# =&gt; - current
-# =* - current &amp;&amp; default
-#  * - default
+$ rvm 1.9.2-head@rails126
+$ gem install rails -v 1.2.6
 
-[~/.rvm]$ rvm gemset list
+$ rvm 1.8.7
+$ gem install rails -v 1.2.3
+</PRE>
+Note that, for each of the ruby installs above, you can have completely
+separate versions!
 
-gemsets for ruby-1.9.3-p392 (found in /Users/casiano/.rvm/gems/ruby-1.9.3-p392)
-=&gt; (default)
-   eleazar-pfc
-   global
-   rails3tutorial2ndEd
+<P>
+Now that your environments are set up, you can simply switch between
+Rails versions and Ruby versions as follows.
 
-[~/.rvm]$ cat ~/.rvm/environments/ruby-1.9.3-p392\@eleazar-pfc
-export PATH ; PATH="/Users/casiano/.rvm/gems/ruby-1.9.3-p392@eleazar-pfc/bin:
-                    /Users/casiano/.rvm/gems/ruby-1.9.3-p392@global/bin:
-                    /Users/casiano/.rvm/rubies/ruby-1.9.3-p392/bin:
-                    /Users/casiano/.rvm/bin:$PATH"
-export rvm_env_string ; rvm_env_string='ruby-1.9.3-p392@eleazar-pfc'
-export rvm_path ; rvm_path='/Users/casiano/.rvm'
-export rvm_ruby_string ; rvm_ruby_string='ruby-1.9.3-p392'
-export rvm_gemset_name ; rvm_gemset_name='eleazar-pfc'
-export RUBY_VERSION ; RUBY_VERSION='ruby-1.9.3-p392'
-export GEM_HOME ; GEM_HOME='/Users/casiano/.rvm/gems/ruby-1.9.3-p392@eleazar-pfc'
-export GEM_PATH ; GEM_PATH='/Users/casiano/.rvm/gems/ruby-1.9.3-p392@eleazar-pfc:/Users/casiano/.rvm/gems/ruby-1.9.3-p392@global'
-export MY_RUBY_HOME ; MY_RUBY_HOME='/Users/casiano/.rvm/rubies/ruby-1.9.3-p392'
-export IRBRC ; IRBRC='/Users/casiano/.rvm/rubies/ruby-1.9.3-p392/.irbrc'
-unset MAGLEV_HOME
-unset RBXOPT
+<P>
+<PRE>
+$ rvm 1.9.2-head@rails126 ; rails --version
+
+Rails 1.2.6
+
+$ rvm 1.8.7 ; rails --version
+
+Rails 1.2.3
+
+$ rvm 1.9.2-head@rails220 ; rails --version
+
+Rails 2.2.0
+
+$ rvm 1.9.2-head ; rails --version
+
+Rails 2.3.3
+</PRE>
+If you are deploying to a server, or you do not want to wait around for
+<code>rdoc</code> and <code>ri</code> to install for each gem, you can disable them for gem installs
+and updates. Just add these two lines to your <code>~/.gemrc or /etc/gemrc</code>:
+
+<P>
+<PRE>
+install: --no-rdoc --no-ri
+update: --no-rdoc --no-ri
 </PRE>
 
 <P>
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14151"
+  HREF="node638.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14145"
+  HREF="node626.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14139"
+  HREF="node636.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html14147"
+  HREF="node816.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14149"
+  HREF="node819.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html14152"
+  HREF="node638.html">RVM gives you a</A>
+<B> Subir:</B> <A NAME="tex2html14146"
+  HREF="node626.html">Ruby Version Manager: RVM</A>
+<B> Anterior:</B> <A NAME="tex2html14140"
+  HREF="node636.html">Lista de Comandos para</A>
+ &nbsp; <B>  <A NAME="tex2html14148"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14150"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

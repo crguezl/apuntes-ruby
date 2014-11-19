@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Deshabilitar la Asignación de una TTY</TITLE>
-<META NAME="description" CONTENT="Deshabilitar la Asignación de una TTY">
+<TITLE>El fichero authorized_keys</TITLE>
+<META NAME="description" CONTENT="El fichero authorized_keys">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node652.html">
 <LINK REL="previous" HREF="node650.html">
-<LINK REL="up" HREF="node646.html">
+<LINK REL="up" HREF="node647.html">
 <LINK REL="next" HREF="node652.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14416"
+<A NAME="tex2html14438"
   HREF="node652.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14410"
-  HREF="node646.html">
+<A NAME="tex2html14432"
+  HREF="node647.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14404"
+<A NAME="tex2html14426"
   HREF="node650.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14412"
-  HREF="node812.html">
+<A NAME="tex2html14434"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14414"
-  HREF="node815.html">
+<A NAME="tex2html14436"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,63 +92,236 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14417"
-  HREF="node652.html">Agentes SSH</A>
-<B> Subir:</B> <A NAME="tex2html14411"
-  HREF="node646.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14405"
-  HREF="node650.html">El fichero authorized_keys</A>
- &nbsp; <B>  <A NAME="tex2html14413"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14415"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14439"
+  HREF="node652.html">Deshabilitar la Asignación de</A>
+<B> Subir:</B> <A NAME="tex2html14433"
+  HREF="node647.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14427"
+  HREF="node650.html">Claves Pública y Privada:</A>
+ &nbsp; <B>  <A NAME="tex2html14435"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14437"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06550000000000000000">
-Deshabilitar la Asignación de una TTY</A>
+<H1><A NAME="SECTION06540000000000000000"></A>
+<A NAME="subsection:authorizedkeys"></A>
+<BR>
+El fichero <TT>authorized_keys</TT>
 </H1>
 
 <P>
-Normalmente, cuando nos conectamos via SSH-1 el servidor abre una
-seudoterminal. Esto no es asi si se ejecuta un comando no interactivo.
-La variable de entorno <code>SSH_TTY</code> contiene el nombre de la terminal 
-asignada. La asignación ocurre incluso si se ha configurado  un comando forzado
-Por ejemplo, si en <code>authorized_keys</code> tenemos:
-<PRE>
-command="echo SSH_TTY is [$SSH_TTY]" ssh-rsa AAA...
-</PRE>
-Tenemos:
-<PRE>
-someone@localhost:~$ ssh -l user machine.domain.es
-SSH_TTY is [/dev/pts/5]
-Connection to orion closed.
-someone@localhost:~$ ssh -l user machine.domain.es echo "tutu"
-SSH_TTY is []
-</PRE>
-Use la opción <code>no-pty</code> para deshabilitar la
-asignación de <code>TTY</code>. Esto funciona incluso si el 
-cliente utiliza la opción <code>-t</code> para requerir una <code>TTY</code>.
+Cada línea del fichero SSH1  <TT>authorized_keys</TT>  
+(habitualmente en <code>~/.ssh/authorized_keys</code>) 
+contiene una clave pública. Tiene el siguiente formato:
+Cada entrada va en una sóla línea. Los campos se separan por comas.
+Las líneas en blanco y las que empiezan por <code>#</code> se ignoran.
 
 <P>
 
+<UL>
+<LI>Primero van las opciones, separadas por comas, por ejemplo:
+
+<UL>
+<LI><code>from="pattern-list"</code>
+El servidor <A NAME="tex2html1509"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+puede limitar que máquinas pueden conectarse a la máquina usando wrappers TCP, pero 
+no a nivel de usuario. Utilizando esta opción es posible limitar las conexiones para una identidad a un conjunto especifico
+de máquinas. Los hosts se separan por comas y pueden contener comodines como <code>*</code> y <code>?</code>. Se pueden 
+rechazar hosts específicos prefijándolos con <code>!</code>. Por ejemplo:
+
+<P>
+<PRE>
+      from="!enemy.my_isp.net,*.my_isp.net,home.example.com"
+</PRE>
+
+<P>
+</LI>
+<LI><code>command="command"</code>
+</LI>
+<LI><code>environment="NAME=value"</code>
+Se usa si se quiere tener un entorno específico cuando se usa esta clave. Por ejemplo 
+podemos poner un <code>$PATH</code> restrictivo para que no pueda ejecutar ciertos comandos,
+cambiar <code>$HOME</code>, etc. 
+
+<P>
+Si se tiene varias personas accediendo via diferentes identidades a la misma cuenta - 
+usando tal vez un comando forzado - puede
+ser útil establecer la variable <code>$LOGNAME</code> de manera que identifique quién se conecta.
+</LI>
+<LI><code>nopty</code>
+</LI>
+</UL>
+Este campo es opcional. Su presencia se detecta 
+viendo si la línea comienza por un número o no
+</LI>
+<LI>La clave pública: bits, exponente y módulo
+</LI>
+<LI>Un comentario (<code>user@machine.domain.es</code> en el ejemplo que sigue)
+</LI>
+</UL>
+
+<P>
+Sigue un ejemplo. Primero generemos una pareja especial para esto:
+
+<P>
+<PRE>
+$ ssh-keygen -tdsa -C 'limited command to millo' -P '' -f ~/.ssh/limited_command
+$ ssh-copy-id -i ~/.ssh/limited_command.pub millo
+</PRE>
+Ahora podemos entrar a la máquina usando esa pareja con:
+<PRE>
+$ ssh -i ~/.ssh/limited_command millo
+Last login: Mon Apr 20 09:05:11 2009 from 192.168.100.242
+millo:~$ vi ~/.ssh/authorized_keys
+millo:~$
+</PRE>
+Editamos el fichero <code>~/.ssh/authorized_keys</code> y añadimos la opción comando
+<PRE>
+17 # Prueba de comando limitado
+18 command="ls" ssh-dss AAAAB3NzaC1kc3...= limited command to millo
+</PRE>
+
+<P>
+La presencia de la opción <code>command</code> permite dar acceso a nuestra cuenta a usuarios
+restringiendo el uso de los comandos que pueden utilizar.
+<PRE>
+tonga:~/.ssh$ ssh -i ~/.ssh/limited_command millo
+ADVENS_OF_SHERLOCK.html  cshrc       Imágenes  LSimple-Scope     
+asignas                  Desktop     LEyapp    machines.sample  
+autosave                 doc         Llhp      Makefile.PL     
+bidirwithnamedpipes.pl   Documentos  LPLdoc    Música         
+bin                      exrc        LPLsrc    myprofile     
+cat                      help        LPL-Tutu  Net-ParSCP.tar.gz 
+Connection to millo closed.
+</PRE>
+
+<P>
+Es posible obtener los argumentos escritos en la línea de comandos de la llamada 
+al cliente
+consultando la variable de entorno <code>SSH_ORIGINAL_COMMAND</code>.
+Existen otras variables de entorno que están definidas cuando
+se ejecuta una conexión (véase la sección <code>ENVIRONMENT</code> en la 
+página del manual de <A NAME="tex2html1510"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>)
+Para ilustrar el punto usaremos el siguiente programa 
+como comando forzado:
+<PRE>
+$ cat -n get_ssh_env
+ 1  #!/usr/bin/perl -w
+ 2  use strict;
+ 3
+ 4  my @keys = qw{
+ 5         SSH_ORIGINAL_COMMAND
+ 6         SSH_CONNECTION
+ 7         SSH_AUTH_SOCK
+ 8         SSH_TTY
+ 9         DISPLAY
+10         HOME
+11         LOGNAME
+12         MAIL PATH TZ USER
+13      };
+14  my ($args, $con, $sock, $tty,
+15      $display, $home, $logname, $mail, $path, $tz, $user
+16     ) = map { $ENV{$_} || '' } @keys;
+17
+18  print &lt;&lt; "INFO";
+19  args=&lt;$args&gt;
+20  con=&lt;$con&gt;
+21  sock=&lt;$sock&gt;
+22  tty=&lt;$tty&gt;
+23  display=&lt;$display&gt;
+24  home=&lt;$home&gt;
+25  logname=&lt;$logname&gt;
+26  mail=&lt;$mail&gt;
+27  path=&lt;$path&gt;
+28  tz=&lt;$tz&gt;
+29  user=&lt;$user&gt;
+30  INFO
+</PRE>
+Cuando se fuerza en <code>authorized_keys</code> y se ejecuta la conexión
+se obtiene:
+
+<P>
+<PRE>
+casiano@tonga:~$ ssh -i ~/.ssh/show_arguments millo chum cham chim
+args=&lt;chum cham chim&gt;
+con=&lt;XXX.XXX.XXX.XXX 55286 XXX.XXX.XXX.XXX 22&gt;
+sock=&lt;&gt;
+tty=&lt;&gt;
+display=&lt;localhost:11.0&gt;
+home=&lt;/home/casiano&gt;
+logname=&lt;casiano&gt;
+mail=&lt;/var/mail/casiano&gt;
+path=&lt;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/soft/perl5lib/bin:/home/casiano/bin&gt;
+tz=&lt;&gt;
+user=&lt;casiano&gt;
+</PRE>
+
+<P>
+Si el administrador tiene configurada la opción <code>PermitUserEnvironment</code> de <A NAME="tex2html1511"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd_config"><TT>sshd_config</TT></A>
+a <code>yes</code> (el valor por defecto es <code>no</code>), <A NAME="tex2html1512"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+leerá el fichero <code>~/.ssh/environment</code> (si existe)
+añadiendo al entorno líneas con el formato <code>VARNAME=value</code>.
+
+<P>
+
+<H4><A NAME="SECTION06540010000000000000">
+Véase También</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1513"
+  HREF="http://www.jms1.net/ssh.shtml">http://www.jms1.net/ssh.shtml</A>
+</LI>
+<LI><A NAME="tex2html1514"
+  HREF="http://troy.jdmz.net/rsync/index.html">http://troy.jdmz.net/rsync/index.html</A>
+</LI>
+<LI><A NAME="tex2html1515"
+  HREF="http://www.hackinglinuxexposed.com/articles/20030109.html">http://www.hackinglinuxexposed.com/articles/20030109.html</A>
+</LI>
+<LI><A NAME="tex2html1516"
+  HREF="http://www.snailbook.com/faq/restricted-scp.auto.html">http://www.snailbook.com/faq/restricted-scp.auto.html</A>)
+</LI>
+</UL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14440"
+  HREF="node651.html#SECTION06540010000000000000">Véase También</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14416"
+<A NAME="tex2html14438"
   HREF="node652.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14410"
-  HREF="node646.html">
+<A NAME="tex2html14432"
+  HREF="node647.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14404"
+<A NAME="tex2html14426"
   HREF="node650.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14412"
-  HREF="node812.html">
+<A NAME="tex2html14434"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14414"
-  HREF="node815.html">
+<A NAME="tex2html14436"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -199,20 +372,20 @@ cliente utiliza la opción <code>-t</code> para requerir una <code>TTY</code>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14417"
-  HREF="node652.html">Agentes SSH</A>
-<B> Subir:</B> <A NAME="tex2html14411"
-  HREF="node646.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14405"
-  HREF="node650.html">El fichero authorized_keys</A>
- &nbsp; <B>  <A NAME="tex2html14413"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14415"
-  HREF="node815.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14439"
+  HREF="node652.html">Deshabilitar la Asignación de</A>
+<B> Subir:</B> <A NAME="tex2html14433"
+  HREF="node647.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14427"
+  HREF="node650.html">Claves Pública y Privada:</A>
+ &nbsp; <B>  <A NAME="tex2html14435"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14437"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejercicios</TITLE>
-<META NAME="description" CONTENT="Ejercicios">
+<TITLE>Herencia</TITLE>
+<META NAME="description" CONTENT="Herencia">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node565.html">
 <LINK REL="previous" HREF="node563.html">
-<LINK REL="up" HREF="node562.html">
+<LINK REL="up" HREF="node563.html">
 <LINK REL="next" HREF="node565.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12870"
+<A NAME="tex2html12892"
   HREF="node565.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12864"
-  HREF="node562.html">
+<A NAME="tex2html12886"
+  HREF="node563.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12860"
+<A NAME="tex2html12880"
   HREF="node563.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12866"
-  HREF="node812.html">
+<A NAME="tex2html12888"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12868"
-  HREF="node815.html">
+<A NAME="tex2html12890"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,140 +92,74 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12871"
-  HREF="node565.html">Ajax</A>
-<B> Subir:</B> <A NAME="tex2html12865"
-  HREF="node562.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html12861"
-  HREF="node563.html">Herencia</A>
- &nbsp; <B>  <A NAME="tex2html12867"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12869"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12893"
+  HREF="node565.html">Ejercicios</A>
+<B> Subir:</B> <A NAME="tex2html12887"
+  HREF="node563.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html12881"
+  HREF="node563.html">Clases y Módulos</A>
+ &nbsp; <B>  <A NAME="tex2html12889"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12891"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04420000000000000000">
-Ejercicios</A>
+<H1><A NAME="SECTION04410000000000000000">
+Herencia</A>
 </H1>
 
-<OL>
-<LI>¿Cual es la salida?
+<P>
 <PRE>
-&gt; String.prototype.repeat = function(times) {
-...   return new Array(times+1).join(this)
-... }
-[Function]
-&gt;  
-undefined
-&gt; "hello".repeat(3)
+[~/Dropbox/src/javascript/inheritance]$ cat inh1.js 
+//Shape - superclass
+function Shape() {
+  this.x = 0;
+  this.y = 0;
+}
+ 
+Shape.prototype.toString = function() {
+  return "("+this.x+", "+this.y+")";
+}
 
-&gt;
+Shape.prototype.move = function(x, y) {
+    this.x += x;
+    this.y += y;
+    console.info("Shape moved to "+this);
+};
+ 
+// Rectangle - subclass
+function Rectangle() {
+  Shape.call(this); //call super constructor.
+}
+ 
+// Rectangle inherits from Shape
+Rectangle.prototype = Object.create(Shape.prototype);
+ 
+var rect = new Rectangle();
+ 
+console.log("x = "+rect);
+console.log("rect is an instance of Rectangle? "+(rect instanceof Rectangle)) //true.
+console.log("rect is an instance of Shape? "+(rect instanceof Shape))         //true.
+ 
+rect.move(1, 2); //Outputs, "Shape moved."
 </PRE>
 
 <P>
-</LI>
-<LI>¿Cuales son los resultados?
 <PRE>
-&gt; z = Object.create({x:1, y:2})
-{}
-&gt; z.x
-
-&gt; z.y
-
-&gt; z.__proto__
-
-&gt; z.__proto__.__proto__
-
-&gt; z.__proto__.__proto__.__proto__
+[~/Dropbox/src/javascript/inheritance]$ node inh1.js 
+x = (0, 0)
+rect is an instance of Rectangle? true
+rect is an instance of Shape? true
+Shape moved to (1, 2)
 </PRE>
-</LI>
-<LI>Describa las salidas:
-<PRE>
-&gt; obj = {x : 'something' }
-{ x: 'something' }
-&gt; w = Object.create(obj)
-{}
-&gt; w.x
-'something'
-&gt; w.x = "another thing"
-'another thing'
-&gt; w.__proto__
-
-&gt; obj == w.__proto__
-</PRE>
-</LI>
-<LI>Explique la salida:
-<PRE>
-&gt; obj = {x : { y : 1} }
-{ x: { y: 1 } }
-&gt; w = Object.create(obj)
-{}
-&gt; w.x == obj.x
-true
-&gt; w.x.y = 2
-2
-&gt; obj
-{ x: { y: 2 } }
-&gt;
-</PRE>
-</LI>
-<LI>Explique las salidas:
-<PRE>
-&gt; inherit = Object.create
-[Function: create]
-&gt; o = {}
-{}
-&gt; o.x = 1
-1
-&gt; p = inherit(o)
-{}
-&gt; p.x
-1
-&gt; p.y = 2
-2
-&gt; p
-{ y: 2 }
-&gt; o
-{ x: 1 }
-&gt; o.y
-undefined
-&gt; q = inherit(p)
-{}
-&gt; q.z = 3
-3
-&gt; q
-{ z: 3 }
-&gt; s = q.toString()
-'[object Object]'
-&gt; q.x+q.y+q.z
-6
-&gt; o.x
-1
-&gt; o.x = 4
-4
-&gt; p.x
-4
-&gt; q.x
-4
-&gt; q.x = 5
-5
-&gt; p.x
-4
-&gt; o.x
-4
-</PRE>
-</LI>
-</OL>
-
-<P>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

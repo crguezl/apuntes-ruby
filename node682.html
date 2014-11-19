@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Enlaces</TITLE>
-<META NAME="description" CONTENT="Enlaces">
+<TITLE>Rake::TestTask</TITLE>
+<META NAME="description" CONTENT="Rake::TestTask">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node683.html">
 <LINK REL="previous" HREF="node681.html">
-<LINK REL="up" HREF="node679.html">
+<LINK REL="up" HREF="node680.html">
 <LINK REL="next" HREF="node683.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14907"
+<A NAME="tex2html14931"
   HREF="node683.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14901"
-  HREF="node679.html">
+<A NAME="tex2html14925"
+  HREF="node680.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14897"
+<A NAME="tex2html14919"
   HREF="node681.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14903"
-  HREF="node812.html">
+<A NAME="tex2html14927"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14905"
-  HREF="node815.html">
+<A NAME="tex2html14929"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,60 +92,234 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14908"
-  HREF="node683.html">Documentado el Código: RDoc,</A>
-<B> Subir:</B> <A NAME="tex2html14902"
-  HREF="node679.html">Rake</A>
-<B> Anterior:</B> <A NAME="tex2html14898"
-  HREF="node681.html">Rake::TestTask</A>
- &nbsp; <B>  <A NAME="tex2html14904"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14906"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14932"
+  HREF="node683.html">Enlaces</A>
+<B> Subir:</B> <A NAME="tex2html14926"
+  HREF="node680.html">Rake</A>
+<B> Anterior:</B> <A NAME="tex2html14920"
+  HREF="node681.html">Argumentos en una Tarea</A>
+ &nbsp; <B>  <A NAME="tex2html14928"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14930"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06830000000000000000">
-Enlaces</A>
+<H1><A NAME="SECTION06820000000000000000"></A>
+<A NAME="section:raketesttask"></A>
+<BR>
+Rake::TestTask
 </H1>
+La clase <A NAME="tex2html1609"
+  HREF="http://rake.rubyforge.org/classes/Rake/TestTask.html">Rake::TestTask</A>
+nos permite crear una tarea que ejecuta un conjunto de pruebas;
+<PRE>
+  Rake::TestTask.new do |t|
+    t.libs &lt;&lt; "test"
+    t.test_files = FileList['test/test*.rb']
+    t.verbose = true
+  end
+</PRE>
+Si se llama a <code>rake</code> con la opción <code>TEST=filename</code> entonces sólo se ejecutará esa prueba.
+
+<P>
+Si se invoca con la opción <code>TESTOPTS=options</code>, las opciones se pasarán  a <code>Test::Unit</code>.
+Ejemplos:
+<PRE>
+  rake test                           # run tests normally
+  rake test TEST=just_one_file.rb     # run just one test file.
+  rake test TESTOPTS="-v"             # run in verbose mode
+</PRE>
+
+<P>
+Sigue otro ejemplo:
+
+<P>
+<PRE>
+MacBookdeJohn:htmlRB john$ cat Rakefile 
+$:.unshift 'lib/'
+require 'rake/testtask'
+
+# rake test TEST=just_one_file.rb     # run just one test file.
+# rake test TESTOPTS="-v"             # run in verbose mode
+Rake::TestTask.new do |t|
+  # t.libs: List of directories to be added to $LOAD_PATH. (default is ‘lib’)
+  t.libs &lt;&lt; "test" 
+  t.pattern = 'test/tc*.rb' # or t.test_files = FileList['test/tc*.rb'] 
+  t.warning = true
+  t.verbose = true # verbose test output. (default is false)
+end
+</PRE>
+
+<P>
+Ejecuciones:
+<PRE>
+MacBookdeJohn:htmlRB john$ ls -ltr test/
+total 16
+-rw-r--r--  1 john  staff   835 29 nov 12:27 tc_01_smoke.rb
+-rw-r--r--  1 john  staff  1023  9 dic 11:35 tc_02_smoke.rb
+MacBookdeJohn:htmlRB john$ rake test
+(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" 
+./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
+Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
+Started
+...
+Finished in 0.001125 seconds.
+
+3 tests, 7 assertions, 0 failures, 0 errors
+</PRE>
+Con la opción <code>TESTOPTS="-v"</code> la salida es mas detallada:
+
+<P>
+<PRE>
+MacBookdeJohn:htmlRB john$ rake test TESTOPTS="-v" 
+(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" -v
+./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
+Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
+Started
+test_attr(TestHTML): .
+test_attr2(TestHTML): .
+test_simplepage(TestHTML): .
+
+Finished in 0.000844 seconds.
+
+3 tests, 7 assertions, 0 failures, 0 errors
+</PRE>
+Ejecución de un solo programa de prueba:
+
+<P>
+<PRE>
+MacBookdeJohn:htmlRB john$ rake test TEST=tc_02_smoke.rb
+(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "tc_02_smoke.rb" 
+./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
+Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
+Started
+..
+Finished in 0.000623 seconds.
+
+2 tests, 6 assertions, 0 failures, 0 errors
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06820010000000000000">
+Donde</A>
+</H4>
+  
 
 <P>
 
 <UL>
 <LI><A NAME="tex2html1610"
-  HREF="http://jasonseifer.com/2010/04/06/rake-tutorial">Rake Tutorial por Jason Seifer</A>
+  HREF="https://github.com/crguezl/html-method_missing-example/tree/master/test">Este ejemplo en gitHub</A>
 </LI>
-<LI><A NAME="tex2html1611"
-  HREF="http://martinfowler.com/articles/rake.html">Using the Rake Build Language</A>
-por Martin Fowler (2005)
-</LI>
-<LI><A NAME="tex2html1612"
-  HREF="http://onestepback.org/articles/buildingwithrake">Building with Rake</A>
-por Jim Weirich (2003)
-</LI>
-<LI><A NAME="tex2html1613"
-  HREF="http://rake.rubyforge.org/"><TT>Rake</TT></A>
-</LI>
-<LI><A NAME="tex2html1614"
-  HREF="http://www.stuartellis.eu/articles/rake/">Using Rake to Automate Tasks</A>
-por Stuart Ellis
-</LI>
-<LI><A NAME="tex2html1615"
-  HREF="http://docs.rubyrake.org/user_guide/index.html">Rake User Guide</A>
-por Jim Weirich
-</LI>
-<LI><A NAME="tex2html1616"
-  HREF="http://railscasts.com/episodes/66-custom-rake-tasks">Custom Rake Tasks</A>
-en RailCasts por Ryan Bates
+<LI><PRE>
+[~/rubytesting/htmlRB(master)]$ pwd -P
+/Users/casiano/local/src/ruby/rubytesting/htmlRB
+[~/rubytesting/htmlRB(master)]$ git remote -v
+origin  git@github.com:crguezl/html-method_missing-example.git (fetch)
+origin  git@github.com:crguezl/html-method_missing-example.git (push)
+</PRE>
 </LI>
 </UL>
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14933"
+  HREF="node682.html#SECTION06820010000000000000">Donde</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14931"
+  HREF="node683.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14925"
+  HREF="node680.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14919"
+  HREF="node681.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html14927"
+  HREF="node816.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14929"
+  HREF="node819.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html14932"
+  HREF="node683.html">Enlaces</A>
+<B> Subir:</B> <A NAME="tex2html14926"
+  HREF="node680.html">Rake</A>
+<B> Anterior:</B> <A NAME="tex2html14920"
+  HREF="node681.html">Argumentos en una Tarea</A>
+ &nbsp; <B>  <A NAME="tex2html14928"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14930"
+  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>

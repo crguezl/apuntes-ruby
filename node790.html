@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>ostruct</TITLE>
-<META NAME="description" CONTENT="ostruct">
+<TITLE>DataMapper</TITLE>
+<META NAME="description" CONTENT="DataMapper">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node791.html">
-<LINK REL="previous" HREF="node789.html">
-<LINK REL="up" HREF="node623.html">
+<LINK REL="previous" HREF="node783.html">
+<LINK REL="up" HREF="node624.html">
 <LINK REL="next" HREF="node791.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16580"
+<A NAME="tex2html16627"
   HREF="node791.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16574"
-  HREF="node623.html">
+<A NAME="tex2html16621"
+  HREF="node624.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16568"
+<A NAME="tex2html16615"
   HREF="node789.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16576"
-  HREF="node812.html">
+<A NAME="tex2html16623"
+  HREF="node816.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16578"
-  HREF="node815.html">
+<A NAME="tex2html16625"
+  HREF="node819.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,90 +92,35 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16581"
-  HREF="node791.html">flickr</A>
-<B> Subir:</B> <A NAME="tex2html16575"
-  HREF="node623.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html16569"
-  HREF="node789.html">Ruport</A>
- &nbsp; <B>  <A NAME="tex2html16577"
-  HREF="node812.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16579"
-  HREF="node815.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16628"
+  HREF="node791.html">Perpetuity</A>
+<B> Subir:</B> <A NAME="tex2html16622"
+  HREF="node624.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html16616"
+  HREF="node789.html">Enlaces</A>
+ &nbsp; <B>  <A NAME="tex2html16624"
+  HREF="node816.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16626"
+  HREF="node819.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION063400000000000000000">
-ostruct</A>
+<H1><A NAME="SECTION063000000000000000000">
+DataMapper</A>
 </H1>
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n ostruct.rb 
-     1  require 'ostruct'
-     2  
-     3  alu = OpenStruct.new
-     4  alu.nombre = "Jose"
-     5  alu.apellidos = "Rodriguez Quintero"
-     6  alu.edad = 97
-     7  alu.calificacion = 10
-     8  
-     9  puts alu
-</PRE>
-
 <P>
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ ruby ostruct.rb 
-#&lt;OpenStruct nombre="Jose", apellidos="Rodriguez Quintero", edad=97, calificacion=10&gt;
-</PRE>
-
-<P>
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n my_ostruct.rb 
-     1  class MyOpenStruct
-     2    def initialize(h = {})
-     3      @attrs = h
-     4    end
-     5  
-     6    def method_missing(name, *args)
-     7      attr = name.to_s
-     8      if attr =~ /=$/
-     9        @attrs[attr.chop] = args[0]
-    10      else
-    11        @attrs[attr]
-    12      end
-    13    end
-    14  
-    15    def to_s
-    16      self.inspect
-    17    end
-    18  end
-    19  
-    20  alu = MyOpenStruct.new
-    21  alu.nombre = "Jose"
-    22  alu.apellidos = "Rodriguez Quintero"
-    23  alu.edad = 97
-    24  alu.calificacion =  10
-    25  
-    26  puts alu.nombre
-    27  puts alu.edad
-    28  puts alu.calificacion
-    29  puts alu
-</PRE>
-
-<P>
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ ruby my_ostruct.rb 
-Jose
-97
-10
-#&lt;MyOpenStruct:0x10016a408 @attrs={"nombre"=&gt;"Jose", "calificacion"=&gt;10, "edad"=&gt;97, "apellidos"=&gt;"Rodriguez Quintero"}&gt;
-</PRE>
-
+<OL>
+<LI><A NAME="tex2html1865"
+  HREF="http://net.tutsplus.com/tutorials/ruby/ruby-for-newbies-working-with-datamapper/?search_index=1">Ruby for Newbies: Working with DataMapper</A>
+por Andrew Burgess on Apr 19th 2011 
+</LI>
+</OL>
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-17
+2014-11-19
 </ADDRESS>
 </BODY>
 </HTML>
