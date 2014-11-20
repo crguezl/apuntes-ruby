@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Comet</TITLE>
-<META NAME="description" CONTENT="Comet">
+<TITLE>Streaming y EventSource</TITLE>
+<META NAME="description" CONTENT="Streaming y EventSource">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -28,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11264"
+<A NAME="tex2html11288"
   HREF="node471.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11258"
+<A NAME="tex2html11282"
   HREF="node464.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11252"
+<A NAME="tex2html11276"
   HREF="node469.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11260"
-  HREF="node816.html">
+<A NAME="tex2html11284"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11262"
-  HREF="node819.html">
+<A NAME="tex2html11286"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,95 +92,260 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11265"
-  HREF="node471.html">Chat Utilizando Streaming y</A>
-<B> Subir:</B> <A NAME="tex2html11259"
+<B> Siguiente:</B> <A NAME="tex2html11289"
+  HREF="node471.html">Comet</A>
+<B> Subir:</B> <A NAME="tex2html11283"
   HREF="node464.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11253"
+<B> Anterior:</B> <A NAME="tex2html11277"
   HREF="node469.html">A simple demonstration of</A>
- &nbsp; <B>  <A NAME="tex2html11261"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11263"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11285"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11287"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
 <H1><A NAME="SECTION03860000000000000000">
-Comet</A>
+Streaming y EventSource</A>
 </H1>
 
 <P>
-<A NAME="20312"></A><SPAN  CLASS="textbf">Comet</SPAN> is a web application architecture in which a long-held HTTP
-request allows a web server to push data to a browser, without the
-browser explicitly requesting it.
+
+<H4><A NAME="SECTION03860010000000000000">
+Server-Sent Events</A>
+</H4>
+  
 
 <P>
-In Ajax the client pulls data from the server. With Comet the server pushes data to the client.
+The 
+<A NAME="tex2html1111"
+  HREF="http://www.w3.org/TR/2009/WD-eventsource-20091029/">Server-Sent Events draft standard</A>
+defines an <code>EventSource</code> object
+that makes <A NAME="20391"></A><SPAN  CLASS="textbf">Comet applications</SPAN><A NAME="tex2html1110"
+  HREF="footnode.html#foot19948"><SUP><SPAN CLASS="arabic">37</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> trivial to write. 
 
 <P>
-Other names for Comet are
-
-<OL>
-<LI><A NAME="20314"></A><SPAN  CLASS="textbf">Server Push</SPAN>
-</LI>
-<LI><A NAME="20316"></A><SPAN  CLASS="textbf">Ajax Push</SPAN>
-</LI>
-<LI><A NAME="20318"></A><SPAN  CLASS="textbf">HTTP Streaming</SPAN>
-</LI>
-</OL>
-
-<P>
-<A NAME="20320"></A><SPAN  CLASS="textbf">Server Sent Events</SPAN> defines a simple Comet API in the form of a <A NAME="tex2html1108"
-  HREF="http://www.w3.org/TR/eventsource/#the-eventsource-interface"><TT>EventSource</TT> </A>
-object.
-Server-Sent Events (SSE) is a standard describing how servers can initiate data transmission towards clients once an initial client connection has been established. 
-
-<P>
-The Server-Sent Events draft standard defines an <A NAME="tex2html1109"
-  HREF="http://www.w3.org/TR/eventsource/#the-eventsource-interface"><TT>EventSource</TT> </A> that makes Comet applications
-easy to write.
+Simply pass a URL to
+the <code>EventSource()</code> 
+constructor and then listen for message events on the
+returned object:
 
 <P>
 <PRE>
-var ticker = new EventSource("stockprices.php"); 
+var ticker = new EventSource("/stockprices"); 
 ticker.onmessage = function(e) {
   var type = e.type; 
   var data = e.data;
+
   // Now process the event type and event data strings. 
 }
 </PRE>
 
 <P>
-The event object associated with a message event has a <code>data</code> property
-that holds whatever the server sent as the payload for this event.
+
+<UL>
+<LI>The event object associated with a message event has a <code>data</code> 
+property
+that holds whatever string the server sent as the payload for this
+event. 
 
 <P>
-The <code>type</code> property by default is <code>"message"</code> but the event source 
-can sepcify a different string for the property.
+</LI>
+<LI>The event object also has a <code>type</code> property like all event objects
+do. The default value is <code>message</code>, 
+but the event source can specify
+a different string for the property. 
 
 <P>
-A single <code>onmessage</code> event handler receives all events from a given server event
-source, and can dispatch them, if necessary, based on their <code>type</code> property.
+</LI>
+<LI>A single <code>onmessage</code> event handler
+receives all events from a given server event source, and can dispatch
+them, if necessary, based on their <code>type</code> property.
+</LI>
+</UL>
 
 <P>
+
+<H4><A NAME="SECTION03860020000000000000">
+The Server-Sent Event protocol</A>
+</H4>
+  
+
+<P>
+The <A NAME="20397"></A><SPAN  CLASS="textbf">Server-Sent Event</SPAN> protocol is straightforward:
+
+<P>
+
+<OL>
+<LI>The client initiates a connection to the server 
+(when it creates the <code>EventSource</code> object) 
+and the 
+<FONT COLOR="#0000ff"> server keeps this connection open</FONT>. 
+
+<P>
+</LI>
+<LI>When an event occurs, the server writes lines of text to the connection. 
+
+<P>
+</LI>
+<LI>An event going over the wire might look like this:
+<PRE>
+event: bid    # sets the type of the event object
+data: GOOG    # sets the data property
+data: 999     # appends a newline and more data
+              # a blank line triggers the message event
+</PRE>
+
+<P>
+</LI>
+<LI>There are some additional details to the protocol that allow events to
+be given IDs and 
+<FONT COLOR="#0000ff"> allow a reconnecting client to tell the server what
+the ID of the last event it received was</FONT>, so that a server can resend
+any events it missed.
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION03860030000000000000">
+Donde</A>
+</H4>
+  
+
+<UL>
+<LI><PRE>
+[~/local/src/ruby/sinatra/sinatra-streaming/jquery-streaming(master)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/sinatra-streaming/jquery-streaming
+</PRE>
+</LI>
+<LI><A NAME="tex2html1112"
+  HREF="https://github.com/crguezl/sinatra-eventsource-jquery">https://github.com/crguezl/sinatra-eventsource-jquery</A>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION03860040000000000000">
+app.rb</A>
+</H4>
+  
+
+<PRE>
+[~/local/src/ruby/sinatra/sinatra-streaming/jquery-streaming(master)]$ cat app.rb 
+require 'sinatra'
+require 'pp'
+
+set :server, :thin
+
+get '/' do
+  send_file "index.html"
+end
+
+get '/bottles' do
+  content_type "text/event-stream"
+  stream do |out|
+    0.upto(50) do |i|
+      out &lt;&lt; "id: #{i}\n"
+      out &lt;&lt; "data: #{i} bottle(s) on a wall...\n\n"
+      sleep 0.3
+    end
+    out &lt;&lt; "data: CLOSE\n\n"
+  end
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03860050000000000000">
+index.html</A>
+</H4>
+  
+
+<PRE>
+[~/local/src/ruby/sinatra/sinatra-streaming/jquery-streaming(master)]$ cat index.html 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Sinatra streaming example&lt;/title&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;script src="http://code.jquery.com/jquery-1.9.0.min.js"&gt;&lt;/script&gt;
+    &lt;style&gt;body {font-family: sans-serif;}&lt;/style&gt;
+ &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Welcome to this Sinatra Streaming example!&lt;/h1&gt;
+    &lt;input id="bottles-button" type="button" value="Bottles!"/&gt;
+    &lt;pre id="bottles-output"&gt;
+    &lt;/pre&gt;
+    &lt;script&gt;
+      $("#bottles-button").click(function() {
+        var src = new EventSource('/bottles?foo=bar');
+        src.onmessage = function(e) {
+          console.log(e)
+          $('#bottles-output').append("\n" + e.data)
+          if ( e.data == 'CLOSE' ) src.close()
+        };
+      });
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03860060000000000000">
+Véase</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1113"
+  HREF="http://www.eriwen.com/javascript/server-sent-events/">Pushing updates in real-time with Server-Sent Events</A>
+</LI>
+</UL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html11290"
+  HREF="node470.html#SECTION03860010000000000000">Server-Sent Events</A>
+<LI><A NAME="tex2html11291"
+  HREF="node470.html#SECTION03860020000000000000">The Server-Sent Event protocol</A>
+<LI><A NAME="tex2html11292"
+  HREF="node470.html#SECTION03860030000000000000">Donde</A>
+<LI><A NAME="tex2html11293"
+  HREF="node470.html#SECTION03860040000000000000">app.rb</A>
+<LI><A NAME="tex2html11294"
+  HREF="node470.html#SECTION03860050000000000000">index.html</A>
+<LI><A NAME="tex2html11295"
+  HREF="node470.html#SECTION03860060000000000000">Véase</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11264"
+<A NAME="tex2html11288"
   HREF="node471.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11258"
+<A NAME="tex2html11282"
   HREF="node464.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11252"
+<A NAME="tex2html11276"
   HREF="node469.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11260"
-  HREF="node816.html">
+<A NAME="tex2html11284"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11262"
-  HREF="node819.html">
+<A NAME="tex2html11286"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -231,20 +396,20 @@ source, and can dispatch them, if necessary, based on their <code>type</code> pr
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11265"
-  HREF="node471.html">Chat Utilizando Streaming y</A>
-<B> Subir:</B> <A NAME="tex2html11259"
+<B> Siguiente:</B> <A NAME="tex2html11289"
+  HREF="node471.html">Comet</A>
+<B> Subir:</B> <A NAME="tex2html11283"
   HREF="node464.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11253"
+<B> Anterior:</B> <A NAME="tex2html11277"
   HREF="node469.html">A simple demonstration of</A>
- &nbsp; <B>  <A NAME="tex2html11261"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11263"
-  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+ &nbsp; <B>  <A NAME="tex2html11285"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11287"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

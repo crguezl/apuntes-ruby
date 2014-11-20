@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</TITLE>
-<META NAME="description" CONTENT="Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo">
+<TITLE>Ruby y WebSockets: TCP for the Browser</TITLE>
+<META NAME="description" CONTENT="Ruby y WebSockets: TCP for the Browser">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node491.html">
+<LINK REL="next" HREF="node490.html">
 <LINK REL="previous" HREF="node488.html">
-<LINK REL="up" HREF="node483.html">
+<LINK REL="up" HREF="node484.html">
 <LINK REL="next" HREF="node490.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11553"
+<A NAME="tex2html11580"
   HREF="node490.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11547"
-  HREF="node483.html">
+<A NAME="tex2html11574"
+  HREF="node484.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11541"
+<A NAME="tex2html11568"
   HREF="node488.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11549"
-  HREF="node816.html">
+<A NAME="tex2html11576"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11551"
-  HREF="node819.html">
+<A NAME="tex2html11578"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,242 +92,192 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11554"
-  HREF="node490.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html11548"
-  HREF="node483.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html11542"
-  HREF="node488.html">Ruby y WebSockets: TCP</A>
- &nbsp; <B>  <A NAME="tex2html11550"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11552"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11581"
+  HREF="node490.html">Una Aplicación Usando Websockets</A>
+<B> Subir:</B> <A NAME="tex2html11575"
+  HREF="node484.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html11569"
+  HREF="node488.html">websocket/rack</A>
+ &nbsp; <B>  <A NAME="tex2html11577"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11579"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03940000000000000000">
-Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</A>
+<H1><A NAME="SECTION03930000000000000000">
+Ruby y WebSockets: TCP for the Browser</A>
 </H1>
 
 <P>
+Esta sección está sacada del blog de 
+<A NAME="tex2html1171"
+  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ilya Grigorik </A>.
 
-<H4><A NAME="SECTION03940010000000000000">
-server.rb</A>
+<P>
+WebSockets in HTML5 were designed from
+the ground up to be data agnostic (binary or text) with support for
+full-duplex communication. 
+
+<P>
+WebSockets are TCP for the web-browser.
+They require only a single connection,
+which translates into much better resource utilization for both the
+server and the client. 
+
+<P>
+Likewise, WebSockets are proxy and firewall
+aware, can operate over SSL and leverage the HTTP channel to
+accomplish all of the above - your existing load balancers, proxies
+and routers will work just fine.
+
+<P>
+
+<H4><A NAME="SECTION03930010000000000000">
+The Server</A>
 </H4>
   
 
 <P>
 <PRE>
-[19:36][~/srcSTW/streaming/websocketsDrawEM(master)]$ cat -n server.rb 
-     1  require 'em-websocket'
-     2  require 'json'
-     3  require 'sinatra/base'
-     4  
-     5  EventMachine.run {
-     6    @channel = EM::Channel.new
-     7    @users = {}
-     8    @messages = []
-     9  
-    10    EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
-    11        
-    12      ws.onopen {
-    13        #Subscribe the new user to the channel with the callback function for the push action
-    14        new_user = @channel.subscribe { |msg| ws.send msg }
-    15        
-    16        #Add the new user to the user list
-    17        @users[ws.object_id] = new_user
-    18        
-    19        #Push the last messages to the user
-    20        @messages.each do |message|
-    21          ws.send message
-    22        end
-    23     }
-    24  
-    25      ws.onmessage { |msg|
-    26        
-    27        #append the message at the end of the queue
-    28        @messages &lt;&lt; msg
-    29        @messages.shift if @messages.length &gt; 10
-    30  
-    31        #Broadcast the message to all users connected to the channel
-    32        @channel.push msg
-    33      }
-    34  
-    35      ws.onclose { 
-    36        @channel.unsubscribe(@users[ws.object_id])
-    37        @users.delete(ws.object_id)
-    38      }
-    39    end
-    40  
-    41    #Run a Sinatra server for serving index.html
-    42    class App &lt; Sinatra::Base
-    43      set :public_folder, settings.root
-    44      
-    45      get '/' do
-    46        send_file 'index.html'
-    47      end
-    48    end
-    49    App.run!
-    50  }
+[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat server.rb
+require 'em-websocket'
+
+EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
+  ws.onopen    { ws.send "Hello Client!"}
+  ws.onmessage { |msg| ws.send "Pong: #{msg}" }
+  ws.onclose   { puts "WebSocket closed" }
+end
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION03940020000000000000">
-index.html.haml</A>
+<H4><A NAME="SECTION03930020000000000000">
+The Client</A>
 </H4>
   
 
 <PRE>
-!!! 5
-%html
-  %head
-    %meta(charset="utf-8")
-    %meta(content="IE=edge,chrome=1" http-equiv="X-UA-Compatible")
-    %meta(name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;")  
-    %link(rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css")
-    %script(type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js")
-    %script(type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js")
-    %title
-      WebSockets Drawing
-  %body
-    :javascript
-      var WebSocket = window.WebSocket || window.MozWebSocket;
-
-      $(function() {
-
-        var socket = new WebSocket("ws://" + location.hostname + ":8080");
-       
-        var currentX = 0;
-        var currentY = 0;
-        var lastX;
-        var lastY;
-        var lastReceivedX;
-        var lastReceivedY;
-        
-        var ctx = $('#canvas')[0].getContext('2d');
-
-        $('#canvas').bind('vmousemove',function(ev){
-          ev = ev || window.event;
-          currentX = ev.pageX || ev.clientX;
-          currentY = ev.pageY || ev.clientY;
-        });
-        
-        socket.onopen = function(event) {
-          setInterval(function(){
-            if(currentX !== lastX || currentY !== lastY){
-              lastX = currentX;
-              lastY = currentY;
-              socket.send( JSON.stringify({x:currentX, y: currentY}) );
-            }
-          }, 30); // send every 300 milliseconds if position has changed
-        }
-        socket.onmessage = function(event) {
-          var msg = $.parseJSON(event.data);
-          
-          ctx.beginPath();
-          ctx.moveTo(lastReceivedX,lastReceivedY);
-          ctx.lineTo(msg.x,msg.y);
-          ctx.closePath();
-          ctx.stroke();
-          lastReceivedX = msg.x;
-          lastReceivedY = msg.y;
-        }
-      });
-
-    %div(data-role="page")
-      %canvas#canvas(width='1000' height='1000')
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03940030000000000000">
-index.html</A>
-</H4>
-  
-
-<PRE>
-&lt;!DOCTYPE html&gt;
+[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat index.html 
 &lt;html&gt;
   &lt;head&gt;
-    &lt;meta charset='utf-8' /&gt;
-    &lt;meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible' /&gt;
-    &lt;meta content='width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;' name='viewport' /&gt;
-    &lt;link href='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css' rel='stylesheet' /&gt;
-    &lt;script src='http://code.jquery.com/jquery-1.6.4.min.js' type='text/javascript'&gt;&lt;/script&gt;
-    &lt;script src='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js' type='text/javascript'&gt;&lt;/script&gt;
-    &lt;title&gt;
-      WebSockets Drawing
-    &lt;/title&gt;
+    &lt;script src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'&gt;&lt;/script&gt;
+    &lt;script&gt;
+      $(document).ready(function(){
+        function debug(str){ 
+          $("#debug").append("&lt;p&gt;"+str+"&lt;/p&gt;"); 
+        };
+
+        ws = new WebSocket("ws://www.example.com:8080/websocket");
+        ws.onmessage = function(evt) { 
+          $("#msg").append("&lt;p&gt;"+evt.data+"&lt;/p&gt;"); 
+        };
+        ws.onclose = function() { 
+          debug("socket closed"); 
+        };
+        ws.onopen = function() {
+          debug("connected...");
+          ws.send("hello server");
+        };
+      });
+    &lt;/script&gt;
   &lt;/head&gt;
   &lt;body&gt;
-    &lt;script type='text/javascript'&gt;
-      //&lt;![CDATA[
-        var WebSocket = window.WebSocket || window.MozWebSocket;
-        
-        $(function() {
-        
-          var socket = new WebSocket("ws://" + location.hostname + ":8080");
-         
-          var currentX = 0;
-          var currentY = 0;
-          var lastX;
-          var lastY;
-          var lastReceivedX;
-          var lastReceivedY;
-          
-          var ctx = $('#canvas')[0].getContext('2d');
-        
-          $('#canvas').bind('vmousemove',function(ev){
-            ev = ev || window.event;
-            currentX = ev.pageX || ev.clientX;
-            currentY = ev.pageY || ev.clientY;
-          });
-          
-          socket.onopen = function(event) {
-            setInterval(function(){
-              if(currentX !== lastX || currentY !== lastY){
-                lastX = currentX;
-                lastY = currentY;
-                socket.send( JSON.stringify({x:currentX, y: currentY}) );
-              }
-            }, 30); // send every 300 milliseconds if position has changed
-          }
-          socket.onmessage = function(event) {
-            var msg = $.parseJSON(event.data);
-            
-            ctx.beginPath();
-            ctx.moveTo(lastReceivedX,lastReceivedY);
-            ctx.lineTo(msg.x,msg.y);
-            ctx.closePath();
-            ctx.stroke();
-            lastReceivedX = msg.x;
-            lastReceivedY = msg.y;
-          }
-        });
-      //]]&gt;
-    &lt;/script&gt;
-    &lt;div data-role='page'&gt;
-      &lt;canvas height='1000' id='canvas' width='1000'&gt;&lt;/canvas&gt;
-    &lt;/div&gt;
+    &lt;div id="debug"&gt;&lt;/div&gt;
+    &lt;div id="msg"&gt;&lt;/div&gt;
   &lt;/body&gt;
 &lt;/html&gt;
 </PRE>
+You open up a WebSocket connection simply by calling the WebSocket constructor:
+
+<P>
+<PRE>
+var connection = new WebSocket('ws://html5rocks.websocket.org/echo', ['soap', 'xmpp']);
+</PRE>
+Notice the <code>ws:</code>. This is the new URL schema for WebSocket connections.
+There is also <code>wss</code>: for secure WebSocket connection the same way
+https: is used for secure HTTP connections.
+
+<P>
+Attaching some event handlers immediately to the connection allows
+you to know when the connection is opened, received incoming messages,
+or there is an error.
+
+<P>
+The second argument accepts optional subprotocols. It can be a
+string or an array of strings. Each string should represent a
+subprotocol name and server accepts only one of passed subprotocols
+in the array. Accepted subprotocol can be determined by accessing
+protocol property of WebSocket object.
+
+<P>
+<PRE>
+// When the connection is open, send some data to the server
+connection.onopen = function () {
+  connection.send('Ping'); // Send the message 'Ping' to the server
+};
+
+// Log errors
+connection.onerror = function (error) {
+  console.log('WebSocket Error ' + error);
+};
+
+// Log messages from the server
+connection.onmessage = function (e) {
+  console.log('Server: ' + e.data);
+};
+</PRE>
+As soon as we have a connection to the server (when the open event
+is fired) we can start sending data to the server using the send('your
+message') method on the connection object. It used to support only
+strings, but in the latest spec it now can send binary messages
+too. To send binary data, you can use either <code>Blob</code> or <code>ArrayBuffer</code>
+bject.
+
+<P>
+The server might send us messages at any time. Whenever this happens
+the <code>onmessage</code> callback fires. The callback receives an <code>event</code> object
+and the actual message is accessible via the <code>data</code> property.
+parrafoEjecución
+
+<P>
+<PRE>
+[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ ruby server.rb
+</PRE>
+
+<P>
+Cuando abrimos <code>index.html</code> con el navegador obtenemos una página como esta:
+<PRE>
+connected...
+
+Hello Client!
+
+Pong: hello server
+</PRE>
 
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="figure:websockets"></A><A NAME="20928"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
-Múltiples clientes pueden dibujar en el lienzo</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.7]sinatra/chapter2fundamentos/websockets.png
+<H4><A NAME="SECTION03930030000000000000">
+Véase</A>
+</H4>
+  
 
-</DIV></TD></TR>
-</TABLE>
-</DIV>
+<OL>
+<LI><A NAME="tex2html1172"
+  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ruby and WebSockets: TCP for the Browser</A>
+</LI>
+<LI><A NAME="tex2html1173"
+  HREF="http://www.html5rocks.com/en/tutorials/websockets/basics/">Introducing WebSockets: Bringing Sockets to the Web by Malte Ubl
+and Eiji Kitamura</A>
+2010
+</LI>
+<LI><A NAME="tex2html1174"
+  HREF="http://youtu.be/XVtEyilJD8M">Clean, simple websockets on Sinatra example
+by Austen Conrad Austen Conrad</A>
+YouTube
+</LI>
+</OL>
 
 <P>
 <BR><HR>
@@ -337,36 +287,31 @@ Múltiples clientes pueden dibujar en el lienzo</CAPTION>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html11555"
-  HREF="node489.html#SECTION03940010000000000000">server.rb</A>
-<LI><A NAME="tex2html11556"
-  HREF="node489.html#SECTION03940020000000000000">index.html.haml</A>
-<LI><A NAME="tex2html11557"
-  HREF="node489.html#SECTION03940030000000000000">index.html</A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html11558"
-  HREF="node490.html">Enlaces Relacionados</A>
-</UL>
+<LI><A NAME="tex2html11582"
+  HREF="node489.html#SECTION03930010000000000000">The Server</A>
+<LI><A NAME="tex2html11583"
+  HREF="node489.html#SECTION03930020000000000000">The Client</A>
+<LI><A NAME="tex2html11584"
+  HREF="node489.html#SECTION03930030000000000000">Véase</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11553"
+<A NAME="tex2html11580"
   HREF="node490.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11547"
-  HREF="node483.html">
+<A NAME="tex2html11574"
+  HREF="node484.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11541"
+<A NAME="tex2html11568"
   HREF="node488.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11549"
-  HREF="node816.html">
+<A NAME="tex2html11576"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11551"
-  HREF="node819.html">
+<A NAME="tex2html11578"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -417,20 +362,20 @@ Múltiples clientes pueden dibujar en el lienzo</CAPTION>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11554"
-  HREF="node490.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html11548"
-  HREF="node483.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html11542"
-  HREF="node488.html">Ruby y WebSockets: TCP</A>
- &nbsp; <B>  <A NAME="tex2html11550"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11552"
-  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11581"
+  HREF="node490.html">Una Aplicación Usando Websockets</A>
+<B> Subir:</B> <A NAME="tex2html11575"
+  HREF="node484.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html11569"
+  HREF="node488.html">websocket/rack</A>
+ &nbsp; <B>  <A NAME="tex2html11577"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11579"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

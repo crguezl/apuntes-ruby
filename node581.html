@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Carga desde Carpetas node_modules</TITLE>
-<META NAME="description" CONTENT="Carga desde Carpetas node_modules">
+<TITLE>Especificación de Ficheros Conteniendo Módulos</TITLE>
+<META NAME="description" CONTENT="Especificación de Ficheros Conteniendo Módulos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node582.html">
 <LINK REL="previous" HREF="node580.html">
-<LINK REL="up" HREF="node577.html">
+<LINK REL="up" HREF="node578.html">
 <LINK REL="next" HREF="node582.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13169"
+<A NAME="tex2html13199"
   HREF="node582.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13163"
-  HREF="node577.html">
+<A NAME="tex2html13193"
+  HREF="node578.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13157"
+<A NAME="tex2html13187"
   HREF="node580.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13165"
-  HREF="node816.html">
+<A NAME="tex2html13195"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13167"
-  HREF="node819.html">
+<A NAME="tex2html13197"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,73 +92,74 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13170"
-  HREF="node582.html">Las Carpetas Usadas Como</A>
-<B> Subir:</B> <A NAME="tex2html13164"
-  HREF="node577.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html13158"
-  HREF="node580.html">Especificación de Ficheros Conteniendo</A>
- &nbsp; <B>  <A NAME="tex2html13166"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13168"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13200"
+  HREF="node582.html">Carga desde Carpetas node_modules</A>
+<B> Subir:</B> <A NAME="tex2html13194"
+  HREF="node578.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13188"
+  HREF="node580.html">Ciclos</A>
+ &nbsp; <B>  <A NAME="tex2html13196"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13198"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04684000000000000000">
-Carga desde Carpetas <TT>node_modules</TT></A>
+<H2><A NAME="SECTION04683000000000000000">
+Especificación de Ficheros Conteniendo Módulos</A>
 </H2>
 
 <P>
 
 <OL>
-<LI>If the module identifier passed to <code>require()</code> is not a native module,
-and does not begin with <code>'/'</code>, <code>'../'</code>, or <code>'./'</code>, then node starts at the
-parent directory of the current module, and adds <code>/node_mo1dules</code>, and
-attempts to load the module from that location.
+<LI>If the exact filename is not found, then node will attempt to
+load the required filename with the added extension of <code>.js</code>,
+<code>.json</code>, and then <code>.node</code>.
 
 <P>
 </LI>
-<LI>If it is not found there, then it moves to the parent directory, and so
-on, until the root of the tree is reached.
+<LI><code>.js</code> files are interpreted as JavaScript text files, and <code>.json</code> files are parsed as JSON text files. <code>.node</code> files are interpreted as compiled addon modules 
+
+<P>
+</LI>
+<LI>A module prefixed with <code>'/'</code> is an absolute path to the file. For example,
+<code>require('/home/marco/foo.js')</code> will load the file at <code>/home/marco/foo.js</code>.
+
+<P>
+</LI>
+<LI>A module prefixed with <code>'./'</code> is relative to the file calling require(). 
+
+<P>
+</LI>
+<LI>Without a leading verb|'/'| or <code>'./'</code> to indicate a file, the module is either a 
+<A NAME="24753"></A><SPAN  CLASS="textbf">core module</SPAN> or is loaded from a <code>node_modules</code> folder.
+
+<P>
+</LI>
+<LI>If the given path does not exist, <code>require()</code> 
+will throw an Error with its code property set to <code>MODULE_NOT_FOUND</code>.
 </LI>
 </OL>
-
-<P>
-For example, if the file at <code>'/home/ry/projects/foo.js'</code> called
-require(<code>'bar.js'</code>), then node would look in the following locations,
-in this order:
-
-<P>
-<PRE>
-/home/ry/projects/node_modules/bar.js
-/home/ry/node_modules/bar.js
-/home/node_modules/bar.js
-/node_modules/bar.js
-</PRE>
-
-<P>
-This allows programs to localize their dependencies, so that they do not clash.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13169"
+<A NAME="tex2html13199"
   HREF="node582.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13163"
-  HREF="node577.html">
+<A NAME="tex2html13193"
+  HREF="node578.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13157"
+<A NAME="tex2html13187"
   HREF="node580.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13165"
-  HREF="node816.html">
+<A NAME="tex2html13195"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13167"
-  HREF="node819.html">
+<A NAME="tex2html13197"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -209,20 +210,20 @@ This allows programs to localize their dependencies, so that they do not clash.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13170"
-  HREF="node582.html">Las Carpetas Usadas Como</A>
-<B> Subir:</B> <A NAME="tex2html13164"
-  HREF="node577.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html13158"
-  HREF="node580.html">Especificación de Ficheros Conteniendo</A>
- &nbsp; <B>  <A NAME="tex2html13166"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13168"
-  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13200"
+  HREF="node582.html">Carga desde Carpetas node_modules</A>
+<B> Subir:</B> <A NAME="tex2html13194"
+  HREF="node578.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13188"
+  HREF="node580.html">Ciclos</A>
+ &nbsp; <B>  <A NAME="tex2html13196"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13198"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

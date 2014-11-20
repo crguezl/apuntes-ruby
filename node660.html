@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Transferencia de ficheros por sftp</TITLE>
-<META NAME="description" CONTENT="Transferencia de ficheros por sftp">
+<TITLE>Copia Segura de un Fichero</TITLE>
+<META NAME="description" CONTENT="Copia Segura de un Fichero">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node661.html">
 <LINK REL="previous" HREF="node659.html">
-<LINK REL="up" HREF="node659.html">
+<LINK REL="up" HREF="node648.html">
 <LINK REL="next" HREF="node661.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14599"
+<A NAME="tex2html14622"
   HREF="node661.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14593"
-  HREF="node659.html">
+<A NAME="tex2html14616"
+  HREF="node648.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14587"
+<A NAME="tex2html14612"
   HREF="node659.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14595"
-  HREF="node816.html">
+<A NAME="tex2html14618"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14597"
-  HREF="node819.html">
+<A NAME="tex2html14620"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,84 +91,182 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14600"
-  HREF="node661.html">Copias de Seguridad con</A>
-<B> Subir:</B> <A NAME="tex2html14594"
-  HREF="node659.html">Copia Segura de un</A>
-<B> Anterior:</B> <A NAME="tex2html14588"
-  HREF="node659.html">Copia Segura de un</A>
- &nbsp; <B>  <A NAME="tex2html14596"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14598"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14623"
+  HREF="node661.html">Transferencia de ficheros por</A>
+<B> Subir:</B> <A NAME="tex2html14617"
+  HREF="node648.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14613"
+  HREF="node659.html">Los Ficheros de Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html14619"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14621"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION065121000000000000000">
-Transferencia de ficheros por <TT>sftp</TT></A>
-</H2>
+<H1><A NAME="SECTION065120000000000000000">
+Copia Segura de un Fichero</A>
+</H1>
 
 <P>
-El protocolo <A NAME="26725"></A><SPAN  CLASS="textbf">SFTP</SPAN> no es el resultado de
-ejecutar <A NAME="26727"></A><SPAN  CLASS="textbf">FTP</SPAN> sobre SSH. Se trata de un nuevo protocolo
-para la transferencia segura de ficheros.
+
+<H4><A NAME="SECTION065120010000000000000">
+Transferencia de Ficheros con <TT>scp</TT></A>
+</H4>
+  
 
 <P>
-Si se establece autentificación no interactiva con una máquina que provee
-un servicio SFTP es posible usar
- <TT>sftp</TT>  en modo batch:
+El protocolo <A NAME="26885"></A><SPAN  CLASS="textbf">SCP</SPAN> implementa la transferencia de ficheros.
+El cliente se conecta a la máquina remota usando SSH y solicita la ejecución 
+de un programa servidor  (normalmente el mismo programa cliente <code>scp</code> es capaz de funcionar
+como servidor).
+
+<P>
+Para la subida de ficheros el cliente alimenta al servidor
+con los ficheros que deberán ser cargados, incluyendo opcionalmente los 
+atributos básicos como permisos y fechas.
+
+<P>
+Para las descargas el cliente envía una solicitud indicando los ficheros y directorios que
+deben ser descargados. 
+
+<P>
+Veamos un ejemplo:
+<PRE>
+nereida:~&gt; scp mm.c orion:/tmp/
+mm.c
+</PRE>
+La sintáxis de <A NAME="tex2html1568"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?scp"><TT>scp</TT></A>
+es:
+<PRE>
+scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file] 
+    [-l limit] [-o ssh_option] [-P port] [-S program]
+    [[user@]host1:]file1 ... [[user@]host2:]file2
+</PRE>
+Es posible copiar entre dos máquinas remotas  emitiendo
+la orden desde una tercera máquina:
+<PRE>
+portatil@user:/tmp$ scp europa:/tmp/prueba.batch nereida:/tmp/prueba.batch
+</PRE>
+Es posible usar comodines (wildcards), protegiéndolos de la shell local:
+<PRE>
+portatil@user:/tmp$ scp 'europa:/tmp/*.tex' nereida:/tmp/
+</PRE>
+Es posible copiar de dos máquinas remotas a una tercera:
+<PRE>
+pp2@europa:~/Lnet-parscp$ scp orion:Makefile.PL nereida:texput.log beowulf:
+pp2@europa:~/Lnet-parscp$ ssh beowulf ls -ltr | tail -2
+-rw-r--r--  1 casiano casiano    615 mar 26 13:56 texput.log
+-rw-r--r--  1 casiano casiano   1485 mar 26 13:56 Makefile.PL
+</PRE>
+Hemos copiado desde la máquina orion y desde la máquina nereida
+diferentes ficheros. La máquina <code>beowulf</code> es la máquina de destino
+a la que fueron transferidos.
+
+<P>
+La opción <code>-r</code> permite copiar subdirectorios.
+La opción <code>-p</code> permite preservar permisos.
+
+<P>
+
+<H4><A NAME="SECTION065120020000000000000">
+Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
+</H4>
+  
+
+<P>
+Un comando como este edita dos ficheros en sendos tabs:
 
 <P>
 <PRE>
-pp2@mymachine:~/Lbook$ ssh-copy-id -i ~/.ssh/id_dsa.pub casiano@ftp.someplace.ull.es
-25
-Now try logging into the machine, with "ssh 'casiano@ftp.someplace.ull.es'", and check in:
-
-  .ssh/authorized_keys
-
-  to make sure we haven't added extra keys that you weren't expecting.
+vi -p scp://orion/AUTOMATICBACKUPCHECKOUT /home/casiano/europabackup.log
 </PRE>
 
 <P>
-Ahora escribimos un guión para el cliente <A NAME="tex2html1563"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sftp"><TT>sftp</TT></A>:
+El primero es un fichero <code>~/AUTOMATICBACKUPCHECKOUT</code>
+en una máquina remota con nombre <code>orion</code>. El segundo
+es un fichero local. El editor <code>vim</code> emite el comando <code>scp</code> 
+apropiado para copiar el fichero remoto en un fichero temporal.
 
 <P>
+Durantre la edición, cada vez que salve el fichero
+<code>~/AUTOMATICBACKUPCHECKOUT</code> de <code>orion</code>, <code>vim</code>
+tasladará la orden <code>:w</code> en el comando <code>scp</code> adecuado:
 <PRE>
-pp2@nereida:~/Lbook$ cat -n instituto.sftp
-     1  cd asignas/asignas/PRGPAR2/perlexamples
-     2  lcd /home/pp2/public_html/perlexamples/
-     3  put *
+:!scp -q '/tmp/v611122/1' 'orion:AUTOMATICBACKUPCHECKOUT'
 </PRE>
 
 <P>
-La opción <code>-b</code> de <code>sftp</code> nos permite hacer la transferencia
-de forma automática:
-
-<P>
+o bien podemos emitir una orden de edición de un nuevo fichero remoto:
 <PRE>
-pp2@nereida:~/Lbook$ sftp -b instituto.sftp casiano@ftp.instituto.ull.es &gt;/dev/null
+:vsplit scp://casiano@some.machine.com/somefile.txt
 </PRE>
 
 <P>
+Es incluso posible ver los contenidos de un directorio:
+<PRE>
+:tabedit scp://orion/pp2/
+</PRE>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14624"
+  HREF="node660.html#SECTION065120010000000000000">Transferencia de Ficheros con <TT>scp</TT></A>
+<LI><A NAME="tex2html14625"
+  HREF="node660.html#SECTION065120020000000000000">Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html14626"
+  HREF="node661.html">Transferencia de ficheros por <TT>sftp</TT></A>
+<LI><A NAME="tex2html14627"
+  HREF="node662.html">Copias de Seguridad con <TT>rsync</TT></A>
+<UL>
+<LI><A NAME="tex2html14628"
+  HREF="node662.html#SECTION065122010000000000000">El Algoritmo</A>
+<LI><A NAME="tex2html14629"
+  HREF="node662.html#SECTION065122020000000000000">Mode de Uso</A>
+<LI><A NAME="tex2html14630"
+  HREF="node662.html#SECTION065122030000000000000">Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
+<LI><A NAME="tex2html14631"
+  HREF="node662.html#SECTION065122040000000000000">Backups con <TT>rsync</TT> en un Medio Externo</A>
+<LI><A NAME="tex2html14632"
+  HREF="node662.html#SECTION065122050000000000000">El fichero <TT>/etc/fstab</TT></A>
+<LI><A NAME="tex2html14633"
+  HREF="node662.html#SECTION065122060000000000000">El Programa de Copia</A>
+<LI><A NAME="tex2html14634"
+  HREF="node662.html#SECTION065122070000000000000">Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
+<LI><A NAME="tex2html14635"
+  HREF="node662.html#SECTION065122080000000000000">El fichero de <TT>cron</TT></A>
+<LI><A NAME="tex2html14636"
+  HREF="node662.html#SECTION065122090000000000000">Comprobación de la Copia</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14599"
+<A NAME="tex2html14622"
   HREF="node661.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14593"
-  HREF="node659.html">
+<A NAME="tex2html14616"
+  HREF="node648.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14587"
+<A NAME="tex2html14612"
   HREF="node659.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14595"
-  HREF="node816.html">
+<A NAME="tex2html14618"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14597"
-  HREF="node819.html">
+<A NAME="tex2html14620"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -220,20 +317,20 @@ pp2@nereida:~/Lbook$ sftp -b instituto.sftp casiano@ftp.instituto.ull.es &gt;/de
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14600"
-  HREF="node661.html">Copias de Seguridad con</A>
-<B> Subir:</B> <A NAME="tex2html14594"
-  HREF="node659.html">Copia Segura de un</A>
-<B> Anterior:</B> <A NAME="tex2html14588"
-  HREF="node659.html">Copia Segura de un</A>
- &nbsp; <B>  <A NAME="tex2html14596"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14598"
-  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14623"
+  HREF="node661.html">Transferencia de ficheros por</A>
+<B> Subir:</B> <A NAME="tex2html14617"
+  HREF="node648.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14613"
+  HREF="node659.html">Los Ficheros de Configuración</A>
+ &nbsp; <B>  <A NAME="tex2html14619"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14621"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

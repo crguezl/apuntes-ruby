@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Redireccionado al Agente SSH</TITLE>
-<META NAME="description" CONTENT="Redireccionado al Agente SSH">
+<TITLE>Mejor un Sólo Agente</TITLE>
+<META NAME="description" CONTENT="Mejor un Sólo Agente">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node656.html">
 <LINK REL="previous" HREF="node654.html">
-<LINK REL="up" HREF="node647.html">
+<LINK REL="up" HREF="node648.html">
 <LINK REL="next" HREF="node656.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14511"
+<A NAME="tex2html14537"
   HREF="node656.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14505"
-  HREF="node647.html">
+<A NAME="tex2html14531"
+  HREF="node648.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14499"
+<A NAME="tex2html14525"
   HREF="node654.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14507"
-  HREF="node816.html">
+<A NAME="tex2html14533"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14509"
-  HREF="node819.html">
+<A NAME="tex2html14535"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,132 +92,508 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14512"
-  HREF="node656.html">Consideraciones sobre la Seguridad</A>
-<B> Subir:</B> <A NAME="tex2html14506"
-  HREF="node647.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14500"
-  HREF="node654.html">Mejor un Sólo Agente</A>
- &nbsp; <B>  <A NAME="tex2html14508"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14510"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14538"
+  HREF="node656.html">Redireccionado al Agente SSH</A>
+<B> Subir:</B> <A NAME="tex2html14532"
+  HREF="node648.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14526"
+  HREF="node654.html">Agentes SSH</A>
+ &nbsp; <B>  <A NAME="tex2html14534"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14536"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06580000000000000000">
-Redireccionado al Agente SSH</A>
+<H1><A NAME="SECTION06570000000000000000">
+Mejor un Sólo Agente</A>
 </H1>
 
 <P>
-El mismo agente SSH puede servir los retos producidos por conexiones SSH indirectas, es decir conexiones SSH arrancadas desde una conexión SSH.
-La idea general es que el reto producido por el servidor SSH será redirigido via los servidores intermedios hasta el agente en la máquina
-local. El reto será resuelto por este último y la solución emprenderá el camino de vuelta hasta el último servidor en la lista de saltos.
+Si decidimos poner la línea <code>eval `ssh-agent`</code> en nuestro 
+<code>~/.bash_profile</code> (véase <A NAME="tex2html1536"
+  HREF="http://www.joshstaiger.org/archives/2005/07/bash_profile_vs.html">.bash_profile vs .bashrc</A>)
+tenemos un problema: con cada sesión se lanza una nueva copia del agente ssh. 
+Es cierto que el asunto no es preocupante si sólo abrimos una o dos cónsolas, pero
+si - como es mi caso - abrimos muchas en una sesión X  tendremos que escribir la passphrase
+bastantes veces. Un único agente debería ser suficiente.
 
 <P>
-Para habilitar <A NAME="26637"></A><SPAN  CLASS="textbf">Agent forwarding</SPAN> 
-usamos la opción <code>-A</code>.
+Otro problema son las tareas automáticas que usan <A NAME="tex2html1537"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?cron"><TT>cron</TT></A>.
+Las tareas arrancadas mediante <A NAME="tex2html1538"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?cron"><TT>cron</TT></A>
+no heredan las variables de entorno
+<code>SSH_AUTH_SOCK</code> y <code>SSH_AGENT_PID</code> y por tanto no saben
+que proceso <code>ssh-agent</code> deben contactar.
+
+<P>
+
+<H4><A NAME="SECTION06570010000000000000">
+<TT>ssh-agent</TT> y Sesiones X</A>
+</H4>
+  
+
+<P>
+Es común ver que en ciertos Unix el arranque de la sesión X 
+lleva aparejado el arranque de un agente SSH.
+Si ese es nuestro caso, tenemos la mayor parte del trabajo hecho.
+Por ejemplo en una configuración típica de Kubuntu vemos lo
+siguiente:
 
 <P>
 <PRE>
-  desktop$ ssh -A user@remotehost
+$ cat -n /etc/X11/Xsession.options
+ 1  # $Id: Xsession.options 189 2005-06-11 00:04:27Z branden $
+ 2  #
+ 3  # configuration options for /etc/X11/Xsession
+ 4  # See Xsession.options(5) for an explanation of the available options.
+ 5  allow-failsafe
+ 6  allow-user-resources
+ 7  allow-user-xsession
+ 8  use-ssh-agent
+ 9  use-session-dbus
 </PRE>
 
 <P>
-Si se quiere habilitar agent-forwarding desde el fichero de configuración
-pondremos <code>ForwardAgent yes</code> en la correspondiente
-entrada para ese host en <code>~/.ssh/config</code>:
-
-<P>
+La opción <code>use-ssh-agent</code> hace que se dispare un agente en el momento
+de arrancar las X. En efecto si vemos los procesos en el sistema
+descubrimos la presencia de un agente:
 <PRE>
-  $ cat ~/.ssh/config
-  Host shellserver
-    ForwardAgent yes
-  
-  Host management-server
-    ForwardAgent yes
-  
-  Host *
-    ForwardAgent no
+casiano@europa:~$ ps -fA | grep agent
+casiano   6976  6911  0 10:57 ?        00:00:00 /usr/bin/ssh-agent x-session-manager
+casiano   8018  7625  0 11:07 pts/3    00:00:00 grep agent
 </PRE>
-
-<P>
-Obsérvese la presencia de la sección restrictiva <code>Host *</code>
-en el fichero de configuración.
-
-<P>
-Veamos un ejemplo:
-
-<P>
-
-<OL>
-<LI>El cliente <code>ssh</code> conecta con el servidor SSH remoto, se produce la autentificación via el agente
-que previamente ha sido cargado  con la identidad.  Se le solicita al servidor agent-forwarding.
-
-<P>
+Viendo las variables de entorno podemos ver el lugar en el que está el socket:
 <PRE>
-lusasoft@LusaSoft:~$ ssh -A orion
+casiano@europa:~$ env | grep -i ssh
+SSH_AGENT_PID=6976
+SSH_AUTH_SOCK=/tmp/ssh-qkuycC6911/agent.6911
+</PRE>
+Podemos ver que el socket tiene los permisos puestos para que pueda ser accedida por el usuario
+que arrancó las X:
+<PRE>
+casiano@europa:~$ ls -ld /tmp/ssh-qkuycC6911/
+drwx------ 2 casiano casiano 4096 2009-04-27 10:57 /tmp/ssh-qkuycC6911/
+casiano@europa:~$ ls -l /tmp/ssh-qkuycC6911/
+total 0
+srw------- 1 casiano casiano 0 2009-04-27 10:57 agent.6911
+</PRE>
+por tanto el usuario que arrancó las X puede acceder a ese agente.
+Veamos que claves están en ese agente:
+<PRE>
+rw------- 1 casiano casiano 0 2009-04-27 10:57 agent.6911
+casiano@europa:~$ ssh-add -l
+1024 49:4c:e1:b4:1a:ea:e6:73:fc:a1:e5:6b:54:c9:da:62 /home/casiano/.ssh/id_dsa (DSA)
+</PRE>
+Ya esta la clave <code>/home/casiano/.ssh/id_dsa</code>. 
+Probablemente lo haya hecho en alguna prueba anterior.
+Para empezar esta nueva prueba desde una situación inicial
+vamos a suprimir todas las claves del agente.
+<PRE>
+casiano@europa:~$ ssh-add -D
+All identities removed.
+</PRE>
+Si ahora intento conectarme a una máquina con esa clave,
+me es solicitada la passphrase:
+<PRE>
+casiano@europa:~$ ssh orion
+Enter passphrase for key '/home/casiano/.ssh/id_dsa':
+^C
+</PRE>
+Interrumpo la conexión pulsando CTRL-C y paso a añadir la 
+clave al agente:
+<PRE>
+casiano@europa:~$ ssh-add /home/casiano/.ssh/id_dsa
+Enter passphrase for /home/casiano/.ssh/id_dsa:
+Identity added: /home/casiano/.ssh/id_dsa (/home/casiano/.ssh/id_dsa)
+</PRE>
+Ahora puedo hacer la conexión sin necesidad de introducir la passphrase:
+<PRE>
+casiano@europa:~$ ssh orion
 Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
 </PRE>
-El servidor crea un socket en <code>/tmp/ssh-XXXXXXX/agent.#####</code> y 
-inicializa la variable <code>SSH_AUTH_SOCK</code>.
-El  daemon SSH abre nuestra shell y comenzamos a trabajar en el servidor.
+
+<P>
+
+<H4><A NAME="SECTION06570020000000000000">
+Arrancando el Agente en KDE</A>
+</H4>
+  
+
+<P>
+Una solución parcial es arrancar el agente tan pronto como se inicia la sesión
+del escritorio. El siguiente procedimiento funciona en un escritorio 
+KDE: 
+
+<P>
+
+<UL>
+<LI>Cree <code>/.kde/env/ssh-agent.sh</code>
+<PRE>
+mkdir ~/.kde/env
+vim ~/.kde/env/ssh-agent.sh
+chmod u+x ~/.kde/env/ssh-agent.sh
+</PRE>
+con estos contenidos:
+<PRE>
+someone@localhost:~/.kde/env$ cat -n ssh-agent.sh
+     1  #!/bin/sh
+     2  /usr/bin/ssh-agent -s &gt; $HOME/.ssh/agent-env.sh
+     3  $HOME/.ssh/agent-env.sh &gt; /dev/null
+</PRE>
+
+<P>
+La opción <code>-s</code> de <A NAME="tex2html1539"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-agent"><TT>ssh-agent</TT></A>
+le indica que debe generar 
+comandos de Bourne shell en stdout.
+Esta es la conducta por defecto a menos que <code>SHELL</code>
+sea de la familia de shells <code>csh</code>.
+La alternativa es usar la opción <code>-c</code> la cual genera comandos
+C-shell. Esta es la conducta por defecto si <code>SHELL</code> 
+es <code>csh</code> o <code>tcsh</code>.
+
+<P>
+La redirección de la línea 2 produce el guión que es ejecutado en la línea 3:
 
 <P>
 <PRE>
-Last login: Fri May  1 10:21:38 2009 from 85.155.13.48.dyn.user.ono.com
-casiano@orion:~$ env | grep -i SSH
-SSH_CLIENT=85.155.13.48 35107 22
-SSH_TTY=/dev/pts/3
-SSH_AUTH_SOCK=/tmp/ssh-ngwpX26103/agent.26103
-SSH_CONNECTION=85.155.13.48 35107 193.145.105.17 22
-casiano@orion:~$ ls -lR /tmp/ssh-ngwpX26103/agent.26103
-srwxr-xr-x 1 casiano casiano 0 2009-05-01 10:53 /tmp/ssh-ngwpX26103/agent.26103
+someone@localhost:~/src$ cat $HOME/.ssh/agent-env.sh
+SSH_AUTH_SOCK=/tmp/ssh-LDdzn31114/agent.31114; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=31115; export SSH_AGENT_PID;
+echo Agent pid 31115;
 </PRE>
-En la máquina en la que estamos no existen ningunas identidades operativas:
-<PRE>
-casiano@orion:~$ ls -ltra .ssh
-total 60
--rw-rw-r--  1 casiano casiano   505 2009-03-30 08:53 config
--rw-r--r--  1 casiano casiano  4960 2009-04-04 11:43 known_hosts
--rw-------  1 casiano casiano  6466 2009-04-04 11:43 authorized_keys
-drwx------  2 casiano casiano  4096 2009-05-01 10:19 .
-drwxr-x--x 50 casiano casiano 12288 2009-05-01 11:13 ..
-</PRE>
+
+<P>
 </LI>
-<LI>Ahora decidimos conectarnos en orion via <code>ssh</code> a otra máquina <code>europa</code>. El cliente
-<code>ssh</code> observa la presencia de la variable
-<code>SSH_AUTH_SOCK</code> y se conecta al socket. El cliente le indica 
-al servidor que quiere usar la misma clave que se ha usado
-para esta conexión.
+<LI>Cree <code>~/.kde/shutdown</code>:
 
 <P>
 <PRE>
-casiano@orion:~$ ssh europa
-Linux europa 2.6.24-23-generic #1 SMP Wed Apr 1 21:43:24 UTC 2009 x86_64
-casiano@europa:~$
+mkdir ~/.kde/shutdown
+vim ~/.kde/shutdown/shutdown-ssh.sh
+chmod u+x ~/.kde/shutdown/shutdown-ssh.sh
 </PRE>
-Vemos que hemos entrado sin necesidad de introducir una clave por teclado.
-La clave pública de la identidad que reside en la máquina inicial
-ha sido instalada también en <code>europa</code>. ¿Que ha ocurrido?
 
 <P>
-El servidor en <code>europa</code> prepara el reto y se lo envía al cliente. 
-El cliente en <code>orion</code> recibe el reto y se lo pasa a su servidor el cual actúa 
-- desde el punto de vista del cliente - como si fuera un agente.
-El servidro <code>sshd</code> en <code>orion</code> mueve el reto al cliente de la primera conexión.
-Este primer cliente se lo pasa al agente inicial que es quien conoce
-la clave privada. La solución es preparada por el agente.
-Ahora la solución recorre el camino de vuelta.
+con los siguientes contenidos:
+
+<P>
+<PRE>
+someone@localhost:~/.kde/shutdown$ cat -n shutdown-ssh.sh
+     1  #!/bin/sh
+     2  /usr/bin/ssh-agent -k
+</PRE>
 
 <P>
 </LI>
-</OL>
+</UL>
+
+<P>
+La opción recomendada es aprovechar el agente ssh creado al arrancar las X.
+Puede que quiera que las identidades se añadan tan pronto como entra en su
+escritorio KDE. En ese caso cambie los contenidos de <code>/.kde/env/ssh-agent.sh</code>
+por algo parecido a esto:
+<PRE>
+someone@localhost:~/.kde/env$ cat -n ssh-agent.sh
+     1  #!/bin/sh
+     2  /usr/bin/ssh-add $HOME/.ssh/id_dsa
+     3  /usr/bin/ssh-add $HOME/.ssh/thatmachinebackupidentity
+</PRE>
 
 <P>
 
-<H4><A NAME="SECTION06580010000000000000">
+<H4><A NAME="SECTION06570030000000000000">
+Introducción a <TT>keychain</TT></A>
+</H4>
+  
+
+<P>
+La metodología usada en los párrafos anteriores no es válida si
+no somos el usuario que arranca las X. Este es el caso si estamos
+ya en una sesión <code>ssh</code> o hemos cambiado de usuario 
+ejecutando <A NAME="tex2html1540"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=su"><TT>su</TT></A>
+(switch user) 
+o bien queremos ejecutar un proceso por lotes bajo un <A NAME="tex2html1541"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=cron"><TT>cron</TT></A>.
+
+<P>
+En estos casos <A NAME="tex2html1542"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=keychain"><TT>keychain</TT></A>
+puede ayudar.
+
+<P>
+
+<H4><A NAME="SECTION06570040000000000000">
+Suprimiendo los Agentes Activos con <TT>keychain</TT></A>
+</H4>
+  
+
+<P>
+Comencemos usando la opción <code>-k</code> para suprimir los
+agentes activos y asegurarnos que  empezamos desde una
+situación inicial:
+
+<P>
+<PRE>
+lusasoft@LusaSoft:~/.ssh$ keychain -k all
+
+KeyChain 2.6.8; http://www.gentoo.org/proj/en/keychain/
+Copyright 2002-2004 Gentoo Foundation; Distributed under the GPL
+
+ * All lusasoft's ssh-agent(s) (5678) are now stopped
+ * All lusasoft's gpg-agent(s) (6823) are now stopped
+</PRE>
+
+<P>
+La opción <code>-k</code> tiene la sintáxis:
+<PRE>
+     -k which
+</PRE>
+Las siguientes opciones son válidas para <code>which</code>:
+
+<P>
+
+<UL>
+<LI><code>all</code>  eliminar a todos los agentes y terminar 
+</LI>
+<LI><code>others</code> eliminar a los agentes que no sean de <A NAME="tex2html1543"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=keychain"><TT>keychain</TT></A>
+</LI>
+<LI><code>mine</code> eliminar a los agentes <A NAME="tex2html1544"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=keychain"><TT>keychain</TT></A>
+dejando el resto.
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION06570050000000000000">
+Funcionamiento de <TT>keychain</TT></A>
+</H4>
+  
+
+<P>
+Cuando se ejecuta <A NAME="tex2html1545"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=keychain"><TT>keychain</TT></A>
+comprueba si existe ya un agente <A NAME="tex2html1546"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-agent"><TT>ssh-agent</TT></A>
+ejecutándose.
+Si no es el caso arranca uno. Si existe no cargará uno nuevo. Sin embargo
+es necesario que el usuario o el script llamen a <code>~/.keychain/europa-sh</code>
+para tener acceso al agente.
+
+<P>
+<PRE>
+lusasoft@LusaSoft:~/.ssh$ keychain ~/.ssh/id_dsa
+
+KeyChain 2.6.8; http://www.gentoo.org/proj/en/keychain/
+Copyright 2002-2004 Gentoo Foundation; Distributed under the GPL
+
+ * Initializing /home/lusasoft/.keychain/LusaSoft-sh file...
+ * Initializing /home/lusasoft/.keychain/LusaSoft-csh file...
+ * Initializing /home/lusasoft/.keychain/LusaSoft-fish file...
+ * Starting ssh-agent
+ * Initializing /home/lusasoft/.keychain/LusaSoft-sh-gpg file...
+ * Initializing /home/lusasoft/.keychain/LusaSoft-csh-gpg file...
+ * Initializing /home/lusasoft/.keychain/LusaSoft-fish-gpg file...
+ * Starting gpg-agent
+ * Adding 1 ssh key(s)...
+Identity added: /home/lusasoft/.ssh/id_dsa (/home/lusasoft/.ssh/id_dsa)
+</PRE>
+Salva las variables de entorno en <code>~/.keychain/${HOSTNAME}-sh</code>,
+<PRE>
+lusasoft@LusaSoft:~$ tree .keychain/
+.keychain/
+|-- LusaSoft-csh
+|-- LusaSoft-csh-gpg
+|-- LusaSoft-fish
+|-- LusaSoft-fish-gpg
+|-- LusaSoft-sh
+`-- LusaSoft-sh-gpg
+</PRE>
+Estos ficheros contienen los comandos para establecer las variables de entorno.
+Por ejemplo:
+<PRE>
+$ cat -n .keychain/europa-sh
+     1  SSH_AUTH_SOCK=/tmp/ssh-ctTDo22823/agent.22823; export SSH_AUTH_SOCK;
+     2  SSH_AGENT_PID=22824; export SSH_AGENT_PID;
+</PRE>
+De este modo las subsiguientes llamadas no interactivas a <A NAME="tex2html1547"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh"><TT>ssh</TT></A>
+- por ejemplo, cron jobs - pueden hacer un <code>source</code> del correspondiente
+guión y conectarse con el único agente obviando asi la necesidad de solicitar las claves. 
+<PRE>
+$ source ~/.keychain/europa-sh
+$ ssh orion
+Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+</PRE>
+Si abrimos otra terminal deberemos hacer de nuevo la llamada a <code>source ~/.keychain/europa-sh</code>.
+Por supuesto, lo mejor es poner la llamada a <code>keychain</code> y a <code>source ~/.keychain/europa-sh</code>
+en nuestro fichero de arranque <code>~/.bashrc</code> o <code>bash_profile</code>.
+
+<P>
+<PRE>
+/usr/bin/keychain ~/.ssh/id_dsa
+source ~/.keychain/europa-sh
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06570060000000000000">
+Cuando el Agente no Conoce la Clave</A>
+</H4>
+  
+
+<P>
+Cuando se ejecuta, <A NAME="tex2html1548"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=keychain"><TT>keychain</TT></A>
+verifica que la clave especificada 
+es conocida por el agente. Si no es así nos solicitará la passphrase.
+
+<P>
+Véase la siguiente secuencia de comandos. 
+Primero ponemos una passphrase a la identidad por defecto:
+
+<P>
+<PRE>
+lusasoft@LusaSoft:~$ ssh-keygen -p
+Enter file in which the key is (/home/lusasoft/.ssh/id_rsa): /home/lusasoft/.ssh/id_dsa
+Key has comment '/home/lusasoft/.ssh/id_dsa'
+Enter new passphrase (empty for no passphrase): ***************
+Enter same passphrase again: ***************
+Your identification has been saved with the new passphrase.
+</PRE>
+A continuación limpiamos los agentes:
+<PRE>
+lusasoft@LusaSoft:~$ keychain --clear
+
+KeyChain 2.6.8; http://www.gentoo.org/proj/en/keychain/
+Copyright 2002-2004 Gentoo Foundation; Distributed under the GPL
+
+ * Found existing ssh-agent (6927)
+ * Found existing gpg-agent (6951)
+ * ssh-agent: All identities removed.
+ * gpg-agent: All identities removed.
+</PRE>
+
+<P>
+Cargamos de nuevo <A NAME="tex2html1549"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=keychain"><TT>keychain</TT></A>
+con la identidad por defecto:
+<PRE>
+lusasoft@LusaSoft:~$ keychain ~/.ssh/id_dsa
+
+KeyChain 2.6.8; http://www.gentoo.org/proj/en/keychain/
+Copyright 2002-2004 Gentoo Foundation; Distributed under the GPL
+
+ * Found existing ssh-agent (6927)
+ * Found existing gpg-agent (6951)
+ * Adding 1 ssh key(s)...
+Identity added: /home/lusasoft/.ssh/id_dsa (/home/lusasoft/.ssh/id_dsa)
+</PRE>
+Ahora se nos solicita la passphrase (por defecto mediante <A NAME="tex2html1550"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-askpass"><TT>ssh-askpass</TT></A>).
+Después de escribirla la identidad es añadida al agente.
+
+<P>
+<PRE>
+lusasoft@LusaSoft:~$ keychain --nogui ~/.ssh/id_dsa
+
+KeyChain 2.6.8; http://www.gentoo.org/proj/en/keychain/
+Copyright 2002-2004 Gentoo Foundation; Distributed under the GPL
+
+ * Found existing ssh-agent (6927)
+ * Found existing gpg-agent (6951)
+ * Adding 1 ssh key(s)...
+Enter passphrase for /home/lusasoft/.ssh/id_dsa: *********************
+Identity added: /home/lusasoft/.ssh/id_dsa (/home/lusasoft/.ssh/id_dsa)
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06570070000000000000">
+Tipos de Agentes</A>
+</H4>
+  
+
+<P>
+<A NAME="tex2html1551"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=keychain"><TT>keychain</TT></A>
+soporta también <A NAME="tex2html1552"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=gpg-agent"><TT>gpg-agent</TT></A>. Por defecto arranca 
+todos los agentes disponibles. Se puede limitar los agentes arrancados
+usando la opción <code>--agents</code>. Por ejemplo <code>--agents 'gpg,ssh'</code>
+
+<P>
+
+<H4><A NAME="SECTION06570080000000000000">
+Agentes en Mal Estado</A>
+</H4>
+  
+
+<P>
+La llamada a <code>keychain</code> creará un nuevo 
+agente si el fichero <code>/home/pp2/.keychain/europa-sh</code> queda obsoleto
+(por ejemplo, si <code>SSH_AUTH_SOCK</code> referencia un socket que no existe
+o no existe un proceso con pid el referenciado en <code>SSH_AGENT_PID</code>).
+Véase la siguiente sesión de comandos:
+
+<P>
+<PRE>
+pp2@europa:~$ ps -fA | grep agent
+casiano   6976  6911  0 10:57 ?        00:00:00 /usr/bin/ssh-agent x-session-manager
+pp2      22824     1  0 12:42 ?        00:00:00 ssh-agent
+pp2      22848     1  0 12:42 ?        00:00:00 gpg-agent --daemon
+pp2      32569 30843  0 13:06 pts/13   00:00:00 grep agent
+pp2@europa:~$ kill -9 22824
+pp2@europa:~$ ps -fA | grep agent
+pp2       3165 30843  0 13:07 pts/13   00:00:00 grep agent
+casiano   6976  6911  0 10:57 ?        00:00:00 /usr/bin/ssh-agent x-session-manager
+pp2      22848     1  0 12:42 ?        00:00:00 gpg-agent --daemon
+pp2@europa:~$ keychain
+
+KeyChain 2.6.8; http://www.gentoo.org/proj/en/keychain/
+Copyright 2002-2004 Gentoo Foundation; Distributed under the GPL
+
+ * Initializing /home/pp2/.keychain/europa-sh file...
+ * Initializing /home/pp2/.keychain/europa-csh file...
+ * Initializing /home/pp2/.keychain/europa-fish file...
+ * Starting ssh-agent
+ * Found existing gpg-agent (22848)
+
+pp2@europa:~$ ps -fA | grep agent
+pp2       3198     1  0 13:07 ?        00:00:00 ssh-agent
+pp2       3225 30843  0 13:08 pts/13   00:00:00 grep agent
+casiano   6976  6911  0 10:57 ?        00:00:00 /usr/bin/ssh-agent x-session-manager
+pp2      22848     1  0 12:42 ?        00:00:00 gpg-agent --daemon
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06570090000000000000">
+La opción <TT>-eval</TT> de <TT>keychain</TT></A>
+</H4>
+  
+
+<P>
+La opción <code>-eval</code> de <A NAME="tex2html1553"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=keychain"><TT>keychain</TT></A>
+hace que 
+<A NAME="tex2html1554"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=keychain"><TT>keychain</TT></A>
+envíe a stdout el contenido del script.
+Así podemos arrancar el agente y añadirle la clave en un paso con:
+<PRE>
+pp2@europa:~/Lbook$ eval `keychain -eval ~/.ssh/id_dsa`
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION065700100000000000000">
 Véase También</A>
 </H4>
   
@@ -225,12 +601,23 @@ Véase También</A>
 <P>
 
 <UL>
-<LI><A NAME="tex2html1554"
-  HREF="http://www.securityfocus.com/infocus/1812">ssh and ssh-agent</A>
-por Brian Hatch
-</LI>
 <LI><A NAME="tex2html1555"
-  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+  HREF="http://www.ibm.com/developerworks/linux/library/l-keyc.html">Common threads: OpenSSH key management, Part 1: 
+Understanding RSA/DSA authentication</A>
+</LI>
+<LI><A NAME="tex2html1556"
+  HREF="http://www.ibm.com/developerworks/linux/library/l-keyc2/">Common threads: OpenSSH key management, Part 2:
+Introducing ssh agent and keychain</A>
+</LI>
+<LI><A NAME="tex2html1557"
+  HREF="http://www.ibm.com/developerworks/linux/library/l-keyc3/">Common threads: OpenSSH key management, Part 3:
+Agent forwarding and keychain improvements</A>
+</LI>
+<LI><A NAME="tex2html1558"
+  HREF="http://www.ibm.com/developerworks/linux/library/l-backup/">Automate backups on Linux. No excuses: do-it-yourself, secure, distributed network backups made easy</A>
+</LI>
+<LI><A NAME="tex2html1559"
+  HREF="http://www.gentoo.org/proj/en/keychain/">keychain en Gentoo</A>
 </LI>
 </UL>
 
@@ -242,27 +629,45 @@ por Brian Hatch
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html14513"
-  HREF="node655.html#SECTION06580010000000000000">Véase También</A>
+<LI><A NAME="tex2html14539"
+  HREF="node655.html#SECTION06570010000000000000"><TT>ssh-agent</TT> y Sesiones X</A>
+<LI><A NAME="tex2html14540"
+  HREF="node655.html#SECTION06570020000000000000">Arrancando el Agente en KDE</A>
+<LI><A NAME="tex2html14541"
+  HREF="node655.html#SECTION06570030000000000000">Introducción a <TT>keychain</TT></A>
+<LI><A NAME="tex2html14542"
+  HREF="node655.html#SECTION06570040000000000000">Suprimiendo los Agentes Activos con <TT>keychain</TT></A>
+<LI><A NAME="tex2html14543"
+  HREF="node655.html#SECTION06570050000000000000">Funcionamiento de <TT>keychain</TT></A>
+<LI><A NAME="tex2html14544"
+  HREF="node655.html#SECTION06570060000000000000">Cuando el Agente no Conoce la Clave</A>
+<LI><A NAME="tex2html14545"
+  HREF="node655.html#SECTION06570070000000000000">Tipos de Agentes</A>
+<LI><A NAME="tex2html14546"
+  HREF="node655.html#SECTION06570080000000000000">Agentes en Mal Estado</A>
+<LI><A NAME="tex2html14547"
+  HREF="node655.html#SECTION06570090000000000000">La opción <TT>-eval</TT> de <TT>keychain</TT></A>
+<LI><A NAME="tex2html14548"
+  HREF="node655.html#SECTION065700100000000000000">Véase También</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14511"
+<A NAME="tex2html14537"
   HREF="node656.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14505"
-  HREF="node647.html">
+<A NAME="tex2html14531"
+  HREF="node648.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14499"
+<A NAME="tex2html14525"
   HREF="node654.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14507"
-  HREF="node816.html">
+<A NAME="tex2html14533"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14509"
-  HREF="node819.html">
+<A NAME="tex2html14535"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -313,20 +718,20 @@ por Brian Hatch
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14512"
-  HREF="node656.html">Consideraciones sobre la Seguridad</A>
-<B> Subir:</B> <A NAME="tex2html14506"
-  HREF="node647.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14500"
-  HREF="node654.html">Mejor un Sólo Agente</A>
- &nbsp; <B>  <A NAME="tex2html14508"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14510"
-  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14538"
+  HREF="node656.html">Redireccionado al Agente SSH</A>
+<B> Subir:</B> <A NAME="tex2html14532"
+  HREF="node648.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14526"
+  HREF="node654.html">Agentes SSH</A>
+ &nbsp; <B>  <A NAME="tex2html14534"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14536"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

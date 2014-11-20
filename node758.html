@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Despliegue de una Aplicación Web en la ETSII</TITLE>
-<META NAME="description" CONTENT="Despliegue de una Aplicación Web en la ETSII">
+<TITLE>Modos de Uso</TITLE>
+<META NAME="description" CONTENT="Modos de Uso">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -28,20 +28,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16157"
+<A NAME="tex2html16203"
   HREF="node759.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16151"
+<A NAME="tex2html16197"
   HREF="node756.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16145"
+<A NAME="tex2html16191"
   HREF="node757.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16153"
-  HREF="node816.html">
+<A NAME="tex2html16199"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16155"
-  HREF="node819.html">
+<A NAME="tex2html16201"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,100 +92,130 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16158"
-  HREF="node759.html">Gemas instaladas en local</A>
-<B> Subir:</B> <A NAME="tex2html16152"
-  HREF="node756.html">ETSII</A>
-<B> Anterior:</B> <A NAME="tex2html16146"
-  HREF="node757.html">Prácticas: Centro de Cálculo</A>
- &nbsp; <B>  <A NAME="tex2html16154"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16156"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16204"
+  HREF="node759.html">Referencias</A>
+<B> Subir:</B> <A NAME="tex2html16198"
+  HREF="node756.html">SASS (Syntactically Awesome StyleSheets)</A>
+<B> Anterior:</B> <A NAME="tex2html16192"
+  HREF="node757.html">Introduccion</A>
+ &nbsp; <B>  <A NAME="tex2html16200"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16202"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061920000000000000000">
-Despliegue de una Aplicación Web en la ETSII</A>
+<H1><A NAME="SECTION061720000000000000000">
+Modos de Uso</A>
 </H1><I>
-Para desplegar una aplicación web usaremos <code>exthost2</code> (en 2013).
+Sass can be used in three ways: 
 </I>
 <P>
-<I>Veamos que puertos están libres usando  <TT>netstat</TT> :
-</I><PRE>
-casiano@exthost2:~$ netstat -an | less
-</PRE><I>
-o bien usamos  <TT>lsof</TT> : 
-</I><PRE>
-lsof -i | less
-</PRE><I>
-y después - si es necesario - terminamos el proceso que ya estuviera escuchando en el puerto
-</I><PRE>
-kill -9 PID
+<OL>
+<LI>as a command-line tool,
+</LI>
+<LI>as a
+standalone Ruby module,
+</LI>
+<LI>and as a plugin for any Rack-enabled
+framework, including Ruby on Rails and Sinatra. 
+</LI>
+</OL><I>
+The first step for all
+of these is to install the Sass gem:
+</I>
+<P><PRE>
+gem install sass
 </PRE>
 <P>
-<I>Veamos una simple aplicación usando <code>rack</code>:
-</I><PRE>
-casiano@exthost2:~/src/ruby/simplewebapp$ cat hello.rb 
-require 'rack'
-
-app = lambda { |env| [200, {"Content-Type" =&gt; "text/plain"}, ["Hello. The time is #{Time.now}"]] }
-Rack::Handler::WEBrick.run app,:Port =&gt; 4567
-</PRE><I>
-La ejecutamos:
-</I><PRE>
-casiano@exthost2:~/src/ruby/simplewebapp$ ruby hello.rb 
-[2013-10-28 09:58:54] INFO  WEBrick 1.3.1
-[2013-10-28 09:58:54] INFO  ruby 1.9.3 (2011-10-30) [i686-linux]
-[2013-10-28 09:58:54] WARN  TCPServer Error: Address already in use - bind(2)
-[2013-10-28 09:58:54] INFO  WEBrick::HTTPServer#start: pid=16597 port=4567
-</PRE><I>
-Ya tenemos disponible la página en <code>exthost2</code> en el puerto correspondiente.
+<I>To run Sass from the command line, just use
 </I>
-<P>
-<I>El acceso al servidor está limitado a
-la red de la ULL.
+<P><PRE>
+sass input.scss output.css
+</PRE><I>
+You can also tell Sass to watch the file and update the CSS every time the Sass file changes:
 </I>
-<P>
-<H4><A NAME="SECTION061920010000000000000">
-Véase también</A>
-</H4>
-<OL>
-<LI><I>Gemas instaladas en local</I> <A HREF="node759.html#section:gemasinstaladasenlocal">97.3</A>
-</LI>
-</OL>
-<P>
-<I></I>
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<P><PRE>
+sass --watch input.scss:output.css
+</PRE><I>
+If you have a directory with many Sass files, you can also tell Sass to watch the entire directory:
+</I>
+<P><PRE>
+sass --watch app/sass:public/stylesheets
+</PRE><I>
+Use <code>sass --help</code> for full documentation.
+</I><PRE>
+[~/sinatra/sinatra-tictactoe/sinatra-tictactoe-ajax(master)]$ sass --help
+Usage: sass [options] [INPUT] [OUTPUT]
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html16159"
-  HREF="node758.html#SECTION061920010000000000000">Véase también</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
+Description:
+  Converts SCSS or Sass files to CSS.
 
+Options:
+    -s, --stdin                      Read input from standard input instead of an input file
+        --trace                      Show a full traceback on error
+        --unix-newlines              Use Unix-style newlines in written files.
+        --scss                       Use the CSS-superset SCSS syntax.
+        --watch                      Watch files or directories for changes.
+                                     The location of the generated CSS can be set using a colon:
+                                       sass --watch input.sass:output.css
+                                       sass --watch input-dir:output-dir
+        --update                     Compile files or directories to CSS.
+                                     Locations are set like --watch.
+        --stop-on-error              If a file fails to compile, exit immediately.
+                                     Only meaningful for --watch and --update.
+        --poll                       Check for file changes manually, rather than relying on the OS.
+                                     Only meaningful for --watch.
+    -f, --force                      Recompile all Sass files, even if the CSS file is newer.
+                                     Only meaningful for --update.
+    -c, --check                      Just check syntax, don't evaluate.
+    -t, --style NAME                 Output style. Can be nested (default), compact, compressed, or expanded.
+        --precision NUMBER_OF_DIGITS How many digits of precision to use when outputting decimal numbers. Defaults to 3.
+    -q, --quiet                      Silence warnings and status messages during compilation.
+        --compass                    Make Compass imports available and load project configuration.
+    -g, --debug-info                 Emit extra information in the generated CSS that can be used by the FireSass Firebug plugin.
+    -l, --line-numbers               Emit comments in the generated CSS indicating the corresponding source line.
+        --line-comments
+    -i, --interactive                Run an interactive SassScript shell.
+    -I, --load-path PATH             Add a sass import path.
+    -r, --require LIB                Require a Ruby library before running Sass.
+        --cache-location PATH        The path to put cached Sass files. Defaults to .sass-cache.
+    -C, --no-cache                   Don't cache to sassc files.
+    -E encoding                      Specify the default encoding for Sass files.
+    -?, -h, --help                   Show this message
+    -v, --version                    Print version
+</PRE>
+<P>
+<I>Using Sass in Ruby code is very simple. After installing the Sass
+gem, you can use it by running <code>require "sass"</code> 
+and using <A NAME="tex2html1793"
+  HREF="http://sass-lang.com/documentation/Sass/Engine.html"><TT>Saas::Engine</TT></A>
+like so:
+</I>
+<P><PRE>
+template = File.load('stylesheets/sassy.sass')
+sass_engine = Sass::Engine.new(template)
+output = sass_engine.render
+puts output
+</PRE>
+<P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html16157"
+<A NAME="tex2html16203"
   HREF="node759.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16151"
+<A NAME="tex2html16197"
   HREF="node756.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16145"
+<A NAME="tex2html16191"
   HREF="node757.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16153"
-  HREF="node816.html">
+<A NAME="tex2html16199"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16155"
-  HREF="node819.html">
+<A NAME="tex2html16201"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -236,20 +266,20 @@ Véase también</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16158"
-  HREF="node759.html">Gemas instaladas en local</A>
-<B> Subir:</B> <A NAME="tex2html16152"
-  HREF="node756.html">ETSII</A>
-<B> Anterior:</B> <A NAME="tex2html16146"
-  HREF="node757.html">Prácticas: Centro de Cálculo</A>
- &nbsp; <B>  <A NAME="tex2html16154"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16156"
-  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html16204"
+  HREF="node759.html">Referencias</A>
+<B> Subir:</B> <A NAME="tex2html16198"
+  HREF="node756.html">SASS (Syntactically Awesome StyleSheets)</A>
+<B> Anterior:</B> <A NAME="tex2html16192"
+  HREF="node757.html">Introduccion</A>
+ &nbsp; <B>  <A NAME="tex2html16200"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16202"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

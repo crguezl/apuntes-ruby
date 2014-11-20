@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Consideraciones sobre la Seguridad del Uso de Agentes</TITLE>
-<META NAME="description" CONTENT="Consideraciones sobre la Seguridad del Uso de Agentes">
+<TITLE>Redireccionado al Agente SSH</TITLE>
+<META NAME="description" CONTENT="Redireccionado al Agente SSH">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node657.html">
 <LINK REL="previous" HREF="node655.html">
-<LINK REL="up" HREF="node647.html">
+<LINK REL="up" HREF="node648.html">
 <LINK REL="next" HREF="node657.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14526"
+<A NAME="tex2html14561"
   HREF="node657.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14520"
-  HREF="node647.html">
+<A NAME="tex2html14555"
+  HREF="node648.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14514"
+<A NAME="tex2html14549"
   HREF="node655.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14522"
-  HREF="node816.html">
+<A NAME="tex2html14557"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14524"
-  HREF="node819.html">
+<A NAME="tex2html14559"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,166 +92,177 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14527"
-  HREF="node657.html">Depuración/Debugging</A>
-<B> Subir:</B> <A NAME="tex2html14521"
-  HREF="node647.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14515"
-  HREF="node655.html">Redireccionado al Agente SSH</A>
- &nbsp; <B>  <A NAME="tex2html14523"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14525"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14562"
+  HREF="node657.html">Consideraciones sobre la Seguridad</A>
+<B> Subir:</B> <A NAME="tex2html14556"
+  HREF="node648.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14550"
+  HREF="node655.html">Mejor un Sólo Agente</A>
+ &nbsp; <B>  <A NAME="tex2html14558"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14560"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06590000000000000000">
-Consideraciones sobre la Seguridad del Uso de Agentes</A>
+<H1><A NAME="SECTION06580000000000000000">
+Redireccionado al Agente SSH</A>
 </H1>
 
 <P>
-El uso de agentes previene que la passphrase o la clave 
-tengan que viajar por la red y nos proteje contra el róbo de la clave.
+El mismo agente SSH puede servir los retos producidos por conexiones SSH indirectas, es decir conexiones SSH arrancadas desde una conexión SSH.
+La idea general es que el reto producido por el servidor SSH será redirigido via los servidores intermedios hasta el agente en la máquina
+local. El reto será resuelto por este último y la solución emprenderá el camino de vuelta hasta el último servidor en la lista de saltos.
 
 <P>
-Sin embargo, existe la posibilidad de que alguien tenga 
-acceso al socket usado por el agente. Cualquiera que pueda
-leer/escribir en ese socket tiene la posibilidad de suplantarnos.
-En particular el administrador de un sistema tiene siempre 
-esa posibilidad. 
+Para habilitar <A NAME="26808"></A><SPAN  CLASS="textbf">Agent forwarding</SPAN> 
+usamos la opción <code>-A</code>.
 
 <P>
-Supongamos que el usuario <code>casiano</code> tiene acceso a dos máquinas:
-<code>orion</code> y <code>beowulf</code> a las que accede desde <code>europa</code>. 
-Supongamos que el administrador de <code>orion</code> es malicioso e intenta
-obtener acceso a las máquinas  de sus usuarios. Supongamos que tanto
-<code>europa</code> como <code>beowulf</code> son máquinas fiables. 
-Asumimos también que la máquina <code>beowulf</code> contiene información 
-importante y es un servidor que el usuario <code>casiano</code> tiene en su casa.
+<PRE>
+  desktop$ ssh -A user@remotehost
+</PRE>
 
 <P>
-La sesión que sigue muestra como el malvado administrador de <code>orion</code>
-puede secuestrar al agente utilizado por <code>casiano</code> para obtener acceso
-a <code>beowulf</code>:
+Si se quiere habilitar agent-forwarding desde el fichero de configuración
+pondremos <code>ForwardAgent yes</code> en la correspondiente
+entrada para ese host en <code>~/.ssh/config</code>:
+
+<P>
+<PRE>
+  $ cat ~/.ssh/config
+  Host shellserver
+    ForwardAgent yes
+  
+  Host management-server
+    ForwardAgent yes
+  
+  Host *
+    ForwardAgent no
+</PRE>
+
+<P>
+Obsérvese la presencia de la sección restrictiva <code>Host *</code>
+en el fichero de configuración.
+
+<P>
+Veamos un ejemplo:
 
 <P>
 
 <OL>
-<LI>Supongamos que cierto usuario <code>casiano</code> abre una conexión SSH
-con <code>orion</code> desde la máquina 
-<code>europa</code>, utilizando <A NAME="26647"></A><SPAN  CLASS="textbf">agent forwarding</SPAN>
+<LI>El cliente <code>ssh</code> conecta con el servidor SSH remoto, se produce la autentificación via el agente
+que previamente ha sido cargado  con la identidad.  Se le solicita al servidor agent-forwarding.
 
 <P>
 <PRE>
-casiano@europa:~$ ps -fA | grep ssh-agent
-casiano   7618     1  0 Apr28 ?        00:00:00 /usr/bin/ssh-agent -s
-casiano  16288 16223  0 Apr29 ?        00:00:00 /usr/bin/ssh-agent x-session-manager
-casiano  16970 13271  0 17:25 pts/31   00:00:00 grep ssh-agent
-pp2      28048     1  0 May02 ?        00:00:00 ssh-agent
-casiano@europa:~$ ssh-add -l
-1024 49:Xc:eX:bX:Xa:ea:eX:XX:fc:aX:eX:Xb:XX:cX:da:XX /home/casiano/.ssh/id_dsa (DSA)
-1024 56:XX:XX:dX:XX:eX:ca:XX:Xd:Xf:Xb:XX:Xd:fX:Xc:XX /home/casiano/.ssh/orionbackupidentity (DSA)
-casiano@europa:~$ ssh -A orion
+lusasoft@LusaSoft:~$ ssh -A orion
 Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
 </PRE>
-Posteriormente el usuario se conecta a una tercera máquina <code>beowulf</code>
-desde su sesión en <code>orion</code>:
-<PRE>
-casiano@orion:~$                                                   
-casiano@orion:~$ ssh beowulf
-Linux beowulf 2.6.15-1-686-smp #2 SMP Mon Mar 6 15:34:50 UTC 2006 i686
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-No mail.
-Last login: Mon May  4 17:44:35 2009 from orion.pcg.ull.es
-casiano@beowulf:~$
-</PRE>
-</LI>
-<LI>En otra sesión en <code>orion</code> el malvado administrador busca por sockets de agentes en <code>/tmp</code>:
-<PRE>
-root@orion:~# ls -ltr /tmp/ssh*
-total 0
-srwxr-xr-x 1 casiano casiano 0 2009-05-04 17:35 agent.7932
-root@orion:~# ls -ldtr /tmp/ssh*
-drwx------ 2 casiano casiano 4096 2009-05-04 17:35 /tmp/ssh-jrQQgf7932
-</PRE>
-El root puede ver que el usuario <code>casiano</code> tiene un agente arrancado.
-
-<P>
-En el caso del agente, la opción <TT>-a</TT> de <TT>ssh-agent</TT>
-permite definir un lugar alternativo para el socket Unix a usar:
-<PRE>
-lusasoft@LusaSoft:~$ eval `ssh-agent -a myagentsocket`
-Agent pid 6475
-lusasoft@LusaSoft:~$ ls -ltrd my*
-srw------- 1 lusasoft lusasoft 0 2009-05-02 08:56 myagentsocket
-</PRE>
-esta opción sin embargo no afecta al socket creado por el daemon en <code>orion</code>
-
-<P>
-</LI>
-<LI><P>
-El malvado administrador vigila lo que hace el usuario casiano:
-<PRE>
-root@orion:~# ps -fu casiano
-UID        PID  PPID  C STIME TTY          TIME CMD
-casiano   7682  7680  0 17:16 ?        00:00:00 sshd: casiano@pts/1
-casiano   7683  7682  0 17:16 pts/1    00:00:00 -bash
-casiano   7932  7930  0 17:35 ?        00:00:00 sshd: casiano@pts/0
-casiano   7933  7932  0 17:35 pts/0    00:00:00 -bash
-casiano   7939  7933  0 17:35 pts/0    00:00:00 ssh beowulf
-</PRE>
-Ummmmhhh... tiene una conexión ssh a una máquina llamada <code>beowulf</code>? 
-demasiado breve para ser el nombre real de una máquina. 
-Debe estar definida en su fichero de configuración.
-</LI>
-<LI>Bueno, el root decide usar el socket de casiano:
-<PRE>
-root@orion:~# export SSH_AUTH_SOCK=/tmp/ssh-jrQQgf7932/agent.7932
-</PRE>
-</LI>
-<LI><P>
-El administrador malvado ya puede conectarse. Usará el fichero de configuración de <code>casiano</code> (opción <code>-F</code>)
-para que la conexión ocurra según la configuración de ese usuario (por supuesto, antes comprueba que
-existe tal configuración):
+El servidor crea un socket en <code>/tmp/ssh-XXXXXXX/agent.#####</code> y 
+inicializa la variable <code>SSH_AUTH_SOCK</code>.
+El  daemon SSH abre nuestra shell y comenzamos a trabajar en el servidor.
 
 <P>
 <PRE>
-root@orion:~# ssh -F ~casiano/.ssh/config casiano@beowulf
-casiano@beowulf:~$
+Last login: Fri May  1 10:21:38 2009 from 85.155.13.48.dyn.user.ono.com
+casiano@orion:~$ env | grep -i SSH
+SSH_CLIENT=85.155.13.48 35107 22
+SSH_TTY=/dev/pts/3
+SSH_AUTH_SOCK=/tmp/ssh-ngwpX26103/agent.26103
+SSH_CONNECTION=85.155.13.48 35107 193.145.105.17 22
+casiano@orion:~$ ls -lR /tmp/ssh-ngwpX26103/agent.26103
+srwxr-xr-x 1 casiano casiano 0 2009-05-01 10:53 /tmp/ssh-ngwpX26103/agent.26103
 </PRE>
+En la máquina en la que estamos no existen ningunas identidades operativas:
+<PRE>
+casiano@orion:~$ ls -ltra .ssh
+total 60
+-rw-rw-r--  1 casiano casiano   505 2009-03-30 08:53 config
+-rw-r--r--  1 casiano casiano  4960 2009-04-04 11:43 known_hosts
+-rw-------  1 casiano casiano  6466 2009-04-04 11:43 authorized_keys
+drwx------  2 casiano casiano  4096 2009-05-01 10:19 .
+drwxr-x--x 50 casiano casiano 12288 2009-05-01 11:13 ..
+</PRE>
+</LI>
+<LI>Ahora decidimos conectarnos en orion via <code>ssh</code> a otra máquina <code>europa</code>. El cliente
+<code>ssh</code> observa la presencia de la variable
+<code>SSH_AUTH_SOCK</code> y se conecta al socket. El cliente le indica 
+al servidor que quiere usar la misma clave que se ha usado
+para esta conexión.
 
 <P>
-El administrador de orion ha conseguido acceso a una máquina
-en la que no tenía cuenta. Ahora podría proceder a instalar una autentificación automática
-en la cuenta de caiano en beowulf, de modo que le permita posteriores visitas.
+<PRE>
+casiano@orion:~$ ssh europa
+Linux europa 2.6.24-23-generic #1 SMP Wed Apr 1 21:43:24 UTC 2009 x86_64
+casiano@europa:~$
+</PRE>
+Vemos que hemos entrado sin necesidad de introducir una clave por teclado.
+La clave pública de la identidad que reside en la máquina inicial
+ha sido instalada también en <code>europa</code>. ¿Que ha ocurrido?
+
+<P>
+El servidor en <code>europa</code> prepara el reto y se lo envía al cliente. 
+El cliente en <code>orion</code> recibe el reto y se lo pasa a su servidor el cual actúa 
+- desde el punto de vista del cliente - como si fuera un agente.
+El servidro <code>sshd</code> en <code>orion</code> mueve el reto al cliente de la primera conexión.
+Este primer cliente se lo pasa al agente inicial que es quien conoce
+la clave privada. La solución es preparada por el agente.
+Ahora la solución recorre el camino de vuelta.
+
+<P>
 </LI>
 </OL>
 
 <P>
 
+<H4><A NAME="SECTION06580010000000000000">
+Véase También</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1560"
+  HREF="http://www.securityfocus.com/infocus/1812">ssh and ssh-agent</A>
+por Brian Hatch
+</LI>
+<LI><A NAME="tex2html1561"
+  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+</LI>
+</UL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html14563"
+  HREF="node656.html#SECTION06580010000000000000">Véase También</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14526"
+<A NAME="tex2html14561"
   HREF="node657.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14520"
-  HREF="node647.html">
+<A NAME="tex2html14555"
+  HREF="node648.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14514"
+<A NAME="tex2html14549"
   HREF="node655.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14522"
-  HREF="node816.html">
+<A NAME="tex2html14557"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14524"
-  HREF="node819.html">
+<A NAME="tex2html14559"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -302,20 +313,20 @@ en la cuenta de caiano en beowulf, de modo que le permita posteriores visitas.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14527"
-  HREF="node657.html">Depuración/Debugging</A>
-<B> Subir:</B> <A NAME="tex2html14521"
-  HREF="node647.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14515"
-  HREF="node655.html">Redireccionado al Agente SSH</A>
- &nbsp; <B>  <A NAME="tex2html14523"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14525"
-  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14562"
+  HREF="node657.html">Consideraciones sobre la Seguridad</A>
+<B> Subir:</B> <A NAME="tex2html14556"
+  HREF="node648.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14550"
+  HREF="node655.html">Mejor un Sólo Agente</A>
+ &nbsp; <B>  <A NAME="tex2html14558"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14560"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

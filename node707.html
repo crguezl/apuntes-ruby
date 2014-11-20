@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Declaring dependencies: Runtime vs. Development</TITLE>
-<META NAME="description" CONTENT="Declaring dependencies: Runtime vs. Development">
+<TITLE>Gemas con Un Gran Número de Utilidades Independientes</TITLE>
+<META NAME="description" CONTENT="Gemas con Un Gran Número de Utilidades Independientes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node708.html">
 <LINK REL="previous" HREF="node706.html">
-<LINK REL="up" HREF="node694.html">
+<LINK REL="up" HREF="node701.html">
 <LINK REL="next" HREF="node708.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15365"
+<A NAME="tex2html15395"
   HREF="node708.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15359"
-  HREF="node694.html">
+<A NAME="tex2html15389"
+  HREF="node701.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15353"
+<A NAME="tex2html15383"
   HREF="node706.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15361"
-  HREF="node816.html">
+<A NAME="tex2html15391"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15363"
-  HREF="node819.html">
+<A NAME="tex2html15393"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,125 +92,100 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15366"
-  HREF="node708.html">Optimistic and Pessimistic Version</A>
-<B> Subir:</B> <A NAME="tex2html15360"
-  HREF="node694.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15354"
-  HREF="node706.html">Semantic Versioning</A>
- &nbsp; <B>  <A NAME="tex2html15362"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15364"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15396"
+  HREF="node708.html">Sharing Source Code From</A>
+<B> Subir:</B> <A NAME="tex2html15390"
+  HREF="node701.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15384"
+  HREF="node706.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html15392"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15394"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0611130000000000000000">
-Declaring dependencies: Runtime vs. Development</A>
-</H1>
-<P>
-<I><A NAME="tex2html1673"
-  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> provides two main types of dependencies: 
-runtime and development. 
+<H1><A NAME="SECTION061160000000000000000">
+Gemas con Un Gran Número de Utilidades Independientes</A>
+</H1><I>
+Some
+gems, however, may be made up of multiple parts that could be used
+independently of each other. <code>ActiveSupport</code>, for example, provides a
+large number of useful utilities that, while they function together,
+can also function separately.
 </I>
 <P>
-<OL>
-<LI><A NAME="28971"></A><SPAN  CLASS="textbf">Runtime dependencies</SPAN> are what your gem needs to work (such as rails needing activesupport).
-</LI>
-<LI><A NAME="28973"></A><SPAN  CLASS="textbf">Development dependencies</SPAN> are useful for when someone wants to make modifications to your gem. 
-</LI>
-</OL>
+<I>If I add require <code>active_support</code> to my code I load all of
+<code>ActiveSupport</code>. While this may be what I want in some cases (like inside
+a Rails application) in other cases I may just want a specific piece
+of <code>ActiveSupport</code>. Luckily, <code>ActiveSupport</code> is designed to handle this
+well. If I, for instance, add require <code>active_support/core_ext</code> I will
+only be loading the Ruby core extensions that are a part of <code>ActiveSupport</code>.
+</I>
 <P>
-<H4><A NAME="SECTION0611130010000000000000">
-gem install -dev</A>
-</H4>
-<P>
-<I>When you specify development dependencies, another developer can run 
+<I>How can you make this work in your library? It's quite simple: your
+base file should, when required, require all the other parts of your
+library. However, each part of your library should, at its top, require
+any other parts or external dependencies so that it may be included
+without the user having previously required the base file. Let's take
+a look at an example:
 </I>
 <P><PRE>
-gem install --dev your_gem
+# in lib/my_gem.rb
+
+require 'my_gem/widget'
+require 'my_gem/widgets/foo_bar'
+require 'my_gem/widgets/baz'
 </PRE>
-<P>
-<I>and RubyGems will grab both sets of dependencies (runtime and development). 
-</I>
-<P>
-<I>Typical development dependencies include test frameworks (like <code>rspec</code>) and build systems
-(like <code>rake</code>).
-</I>
-<P>
-<H4><A NAME="SECTION0611130020000000000000">
-gemspec: add_runtime_dependency y add_development_dependency</A>
-</H4><I>
+<P><PRE>
+# in lib/my_gem/widget.rb
 
-Setting dependencies in your <code>gemspec</code> is easy. 
-</I>
-<P>
-<I>Just use <code>add_runtime_dependency</code> and <code>add_development_dependency</code>:
-</I><PRE>
-Gem::Specification.new do |s|
-  s.name = "hola"
-  s.version = "2.0.0"
-  s.add_runtime_dependency "daemons",
-    ["= 1.1.0"]
-  s.add_development_dependency "bourne",
-    ["&gt;= 0"]
+require 'external_library'
+
+module MyGem
+  class Widget
+  end
+end
 </PRE>
-<P>
-<H4><A NAME="SECTION0611130030000000000000">
-gem "wirble", :groups =&gt; [:development, :test]</A>
-</H4><I>
+<P><PRE>
+# in lib/my_gem/widgets/foo_bar
 
-Inside the <code>Gemfile</code> we can also specify groups.
-Each  gem  may  specify  membership in one or more groups. 
-Any gem that does not specify membership in any  group  is  placed  in  the
-default group.
-</I><PRE>
-   gem "rspec", :group =&gt; :test
-   gem "wirble", :groups =&gt; [:development, :test]
-</PRE>
-<P>
-<H4><A NAME="SECTION0611130040000000000000">
-bundle install -without development</A>
-</H4>
-<P>
-<I>then we can run <code>bundle install --without development test</code> to omit some groups.
+require 'my_gem/widget'
+
+module MyGem
+  module Widgets
+    class FooBar &lt; MyGem::Widget
+    end
+  end
+end
+</PRE><I>
+Each of the files in the above example can be required independently,
+giving developers the flexibility to use only a subset of your library's
+functionality if needed. 
 </I>
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html15367"
-  HREF="node707.html#SECTION0611130010000000000000">gem install -dev</A>
-<LI><A NAME="tex2html15368"
-  HREF="node707.html#SECTION0611130020000000000000">gemspec: add_runtime_dependency y add_development_dependency</A>
-<LI><A NAME="tex2html15369"
-  HREF="node707.html#SECTION0611130030000000000000">gem "wirble", :groups =&gt; [:development, :test]</A>
-<LI><A NAME="tex2html15370"
-  HREF="node707.html#SECTION0611130040000000000000">bundle install -without development</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-
+<I>Remember that <code>require</code> statements will only
+load the code from a file once, so it is safe to <code>require</code> the same file
+multiple times.
+</I>
+<P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15365"
+<A NAME="tex2html15395"
   HREF="node708.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15359"
-  HREF="node694.html">
+<A NAME="tex2html15389"
+  HREF="node701.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15353"
+<A NAME="tex2html15383"
   HREF="node706.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15361"
-  HREF="node816.html">
+<A NAME="tex2html15391"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15363"
-  HREF="node819.html">
+<A NAME="tex2html15393"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -261,20 +236,20 @@ bundle install -without development</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15366"
-  HREF="node708.html">Optimistic and Pessimistic Version</A>
-<B> Subir:</B> <A NAME="tex2html15360"
-  HREF="node694.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15354"
-  HREF="node706.html">Semantic Versioning</A>
- &nbsp; <B>  <A NAME="tex2html15362"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15364"
-  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15396"
+  HREF="node708.html">Sharing Source Code From</A>
+<B> Subir:</B> <A NAME="tex2html15390"
+  HREF="node701.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15384"
+  HREF="node706.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html15392"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15394"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

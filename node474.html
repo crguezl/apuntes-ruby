@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Chat Simple</TITLE>
-<META NAME="description" CONTENT="Chat Simple">
+<TITLE>Código Completo del Chat</TITLE>
+<META NAME="description" CONTENT="Código Completo del Chat">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node475.html">
-<LINK REL="previous" HREF="node471.html">
-<LINK REL="up" HREF="node464.html">
+<LINK REL="previous" HREF="node473.html">
+<LINK REL="up" HREF="node472.html">
 <LINK REL="next" HREF="node475.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11320"
+<A NAME="tex2html11350"
   HREF="node475.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11314"
-  HREF="node464.html">
+<A NAME="tex2html11344"
+  HREF="node472.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11308"
+<A NAME="tex2html11340"
   HREF="node473.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11316"
-  HREF="node816.html">
+<A NAME="tex2html11346"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11318"
-  HREF="node819.html">
+<A NAME="tex2html11348"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,122 +91,91 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11321"
-  HREF="node475.html">Práctica: Chat con Mensajes</A>
-<B> Subir:</B> <A NAME="tex2html11315"
-  HREF="node464.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11309"
-  HREF="node473.html">Código Completo del Chat</A>
- &nbsp; <B>  <A NAME="tex2html11317"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11319"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11351"
+  HREF="node475.html">Chat Simple</A>
+<B> Subir:</B> <A NAME="tex2html11345"
+  HREF="node472.html">Chat Utilizando Streaming y</A>
+<B> Anterior:</B> <A NAME="tex2html11341"
+  HREF="node473.html">Enlaces Relacionados</A>
+ &nbsp; <B>  <A NAME="tex2html11347"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11349"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03880000000000000000">
-Chat Simple</A>
-</H1>
-
-<P>
-
-<H4><A NAME="SECTION03880010000000000000">
-Donde</A>
-</H4>
-  
-
-<UL>
-<LI><PRE>
-[~/sinatra-streaming/blazeeboychat(master)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/sinatra-streaming/blazeeboychat
-[~/sinatra-streaming/blazeeboychat(master)]$ git remote -v
-origin  git@github.com:crguezl/chat-blazee.git (fetch)
-origin  git@github.com:crguezl/chat-blazee.git (push)
-</PRE>
-</LI>
-<LI><A NAME="tex2html1137"
-  HREF="https://github.com/crguezl/chat-blazee">https://github.com/crguezl/chat-blazee</A>
-</LI>
-<LI><A NAME="tex2html1138"
-  HREF="https://gist.github.com/blazeeboy/9289678">https://gist.github.com/blazeeboy/9289678</A>
-</LI>
-</UL>
-
-<P>
-
-<H4><A NAME="SECTION03880020000000000000">
-Código</A>
-</H4>
-  
-
+<H2><A NAME="SECTION03882000000000000000">
+Código Completo del Chat</A>
+</H2>
 <PRE>
-[~/sinatra-streaming/blazeeboychat(master)]$ cat chat.rb 
-require 'sinatra' # gem install sinatra --no-rdoc --no-ri
-set :port, 3000
-set :environment, :production
- 
-html = &lt;&lt;-EOT
-&lt;html&gt;&lt;head&gt;&lt;style&gt;
-#text{width:100%; font-size: 15px; padding: 5px; display: block;}
-&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
-  &lt;input id="text" placeholder="Write then press Enter."/&gt;
-  &lt;div id="chat"&gt;&lt;/div&gt;
-  &lt;script src="http://code.jquery.com/jquery-1.11.0.min.js"&gt;&lt;/script&gt;
-  &lt;script&gt;
-  $('#text').keypress(function(e){
-    if( e.keyCode==13 ){
-      $.get('/send',{text:$('#text').val()});
-      $('#text').val('');
-    }
-  });
-  last = 0;
-  setInterval(function(){
-    $.get('/update',{last:last},
-      function(response){
-        last = $('&lt;p&gt;').html(response).find('span').data('last');
-        $('#chat').append(response);
-        });
-    },1000);
-  &lt;/script&gt;
-&lt;/body&gt;&lt;/html&gt;
-EOT
- 
-chat = ['welcome..']
-get('/') { html }
-get '/send' do
-  chat &lt;&lt; "#{request.ip} : #{params['text']}"
-  nil
+[17:51][~/srcSTW/streaming/chat_with_streaming(master)]$ cat chat.rb 
+# coding: utf-8
+require 'sinatra'
+set server: 'thin', connections: []
+
+get '/' do
+  halt erb(:login) unless params[:user]
+  erb :chat, locals: { user: params[:user].gsub(/\W/, '') }
 end
-get '/update' do
-  updates = chat[params['last'].to_i..-1]
-  last = "&lt;span data-last=\"#{chat.size}\"&gt;&lt;/span&gt;"
-  if updates.size&gt;0
-  updates.join('&lt;/br&gt;') + "#{last}&lt;/br&gt;"
-  else
-    last
+
+get '/stream', provides: 'text/event-stream' do
+  stream :keep_open do |out|
+    settings.connections &lt;&lt; out
+    out.callback { settings.connections.delete(out) }
   end
 end
+
+post '/' do
+  settings.connections.each { |out| out &lt;&lt; "data: #{params[:msg]}\n\n" }
+  204 # response without entity body
+end
+
+__END__
+
+@@ layout
+&lt;html&gt;
+  &lt;head&gt; 
+    &lt;title&gt;Super Simple Chat with Sinatra&lt;/title&gt; 
+    &lt;meta charset="utf-8" /&gt;
+    &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"&gt;&lt;/script&gt; 
+  &lt;/head&gt; 
+  &lt;body&gt;&lt;%= yield %&gt;&lt;/body&gt;
+&lt;/html&gt;
+
+@@ login
+&lt;form action='/'&gt;
+  &lt;label for='user'&gt;User Name:&lt;/label&gt;
+  &lt;input name='user' value='' /&gt;
+  &lt;input type='submit' value="GO!" /&gt;
+&lt;/form&gt;
+
+@@ chat
+&lt;pre id='chat'&gt;&lt;/pre&gt;
+
+&lt;script&gt;
+  // reading
+  var es = new EventSource('/stream');
+  es.onmessage = function(e) { $('#chat').append(e.data + "\n") };
+
+  // writing
+  $("form").live("submit", function(e) {
+    $.post('/', {msg: "&lt;%= user %&gt;: " + $('#msg').val()});
+    $('#msg').val(''); $('#msg').focus();
+    e.preventDefault();
+  });
+&lt;/script&gt;
+
+&lt;form&gt;
+  &lt;input id='msg' placeholder='type message here...' /&gt;
+&lt;/form&gt;[
 </PRE>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html11322"
-  HREF="node474.html#SECTION03880010000000000000">Donde</A>
-<LI><A NAME="tex2html11323"
-  HREF="node474.html#SECTION03880020000000000000">Código</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

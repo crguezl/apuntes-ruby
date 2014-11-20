@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Introduction to Pair Programing</TITLE>
-<META NAME="description" CONTENT="Introduction to Pair Programing">
+<TITLE>Optimistic and Pessimistic Version Constraint</TITLE>
+<META NAME="description" CONTENT="Optimistic and Pessimistic Version Constraint">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node717.html">
+<LINK REL="next" HREF="node716.html">
 <LINK REL="previous" HREF="node714.html">
-<LINK REL="up" HREF="node714.html">
+<LINK REL="up" HREF="node701.html">
 <LINK REL="next" HREF="node716.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15488"
+<A NAME="tex2html15529"
   HREF="node716.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15482"
-  HREF="node714.html">
+<A NAME="tex2html15523"
+  HREF="node701.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15476"
+<A NAME="tex2html15517"
   HREF="node714.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15484"
-  HREF="node816.html">
+<A NAME="tex2html15525"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15486"
-  HREF="node819.html">
+<A NAME="tex2html15527"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,93 +92,155 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15489"
-  HREF="node716.html">Remote pair programming</A>
-<B> Subir:</B> <A NAME="tex2html15483"
-  HREF="node714.html">Herramientas para la Programacion</A>
-<B> Anterior:</B> <A NAME="tex2html15477"
-  HREF="node714.html">Herramientas para la Programacion</A>
- &nbsp; <B>  <A NAME="tex2html15485"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15487"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15530"
+  HREF="node716.html">Controlando nuestras dependencias: bundle</A>
+<B> Subir:</B> <A NAME="tex2html15524"
+  HREF="node701.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15518"
+  HREF="node714.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html15526"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15528"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061210000000000000000">
-Introduction to Pair Programing</A>
-</H1>
-<P>
-<UL>
-<LI><A NAME="tex2html1687"
-  HREF="http://thomassundberg.wordpress.com/2012/06/15/pair-programing/">Pair Programming</A>
-by Thomas Sundberg
-</LI>
-<LI><A NAME="tex2html1688"
-  HREF="http://youtu.be/C0H-LyZy9Ko">Ben Orenstein - Live Coding with Ben - Ancient City Ruby 2013</A>
-</LI>
-<LI><A NAME="tex2html1689"
-  HREF="http://media.pragprog.com/titles/jkrp/intro.pdf">Remote Pairing. Collaborative Tools for Distributed Development</A>
-by Joe Kutner The Pragmatic BookShelf. 2013.
-</LI>
-</UL>
-<P>
-<I>Why should you do pair programming? There are a number of reasons:
+<H1><A NAME="SECTION0611140000000000000000">
+Optimistic and Pessimistic Version Constraint</A>
+</H1><I>
+If your gem properly follows <A NAME="29191"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
+scheme, then other Ruby developers can take advantage of this when
+choosing a version constraint to lock down your gem in their
+application.
 </I>
-<UL>
-<LI>Solving the right problem – two persons that has understood the problem has a better chance to solve the right problem and not the problem one person has misunderstood.
-</LI>
-<LI>Quality – the co-driver will assist the driver to develop the algorithm and act as a guard against mistakes.
-</LI>
-<LI>Knowledge spread – both participants in the pair will have a great knowledge about the solution when it has been developed in co-operation.
-</LI>
-<LI>Constant code review – instead of having code reviews from time to time you have them all the time. The co-driver will constantly review the code that is being written and suggest improvements.
-</LI>
-<LI>Reduced costs – bringing new developers into the team is expensive. If they are brought in using pair programming then they will learn fast and can soon be productive. A new developer is productive
-</LI>
-<LI>within minutes instead of weeks or even months.
-</LI>
-<LI>Single point of failure – what happens if only one person knows about a certain area of the code and chooses to quit or has an accident on his way to work? Keep your bus count higher than 1. The bus
-</LI>
-<LI>count is the number of buses needed to erase the knowledge your team has.
-</LI>
-<LI>Spread knowledge about the tools being used – every developer knows something different about the development environment and will therefore constantly learn new things from his partner.
-</LI>
-<LI>Discipline – it is really hard not to focus at the task at hand while pair programming. You will therefore get more work done.
-</LI>
-<LI>Focus – your partner will ensure that you focus on the task at hand and not a random page on the web.
-</LI>
-<LI>Direction – your partner will act as guide to ensure that you don’t stray away from the proper path by accident.
-</LI>
-</UL>
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<I>Let’s say the following releases of a gem exist:
+</I>
+<P><PRE>
+Version 2.1.0 — Baseline
+Version 2.2.0 — Introduced some new (backward compatible) features.
+Version 2.2.1 — Removed some bugs
+Version 2.2.2 — Streamlined your code
+Version 2.3.0 — More new features (but still backwards compatible).
+Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
+</PRE><I>
+Someone who wants to use your gem has determined that 
+</I>
+<OL>
+<LI>version 2.2.0
+works with their software, 
+</LI>
+<LI>but version 2.1.0 doesn’t have a feature
+they need. 
+</LI>
+<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
+might look like:
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html15490"
-  HREF="node716.html">Remote pair programming</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  '&gt;= 2.2.0'
+</PRE>
+or 
+<PRE>
+# bundler
+gem 'library', '&gt;= 2.2.0'
+</PRE>
+This is an <A NAME="29193"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
 
+<P>
+It’s saying that all
+changes from <code>2.x</code> on will work with my software, 
+but for version
+<code>3.0.0</code> this may not be true.
+
+<P>
+</LI>
+<LI>The alternative here is to use <A NAME="29195"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
+
+<P>
+This explicitly excludes the version that might break your code.
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  ['&gt;= 2.2.0', '&lt; 3.0']
+</PRE>
+or
+
+<P>
+<PRE>
+# bundler
+gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
+</PRE>
+</LI>
+<LI><A NAME="tex2html1680"
+  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> provides a shortcut for this, commonly known as the <A NAME="29200"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  '~&gt; 2.2'
+</PRE>
+
+<P>
+<PRE>
+# bundler
+gem 'library', '~&gt; 2.2'
+</PRE>
+Notice that we dropped the <code>PATCH</code> level of the version number. 
+
+<P>
+</LI>
+<LI>Had
+we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
+<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
+
+<P>
+</LI>
+<LI>If you want to allow use of newer <A NAME="29202"></A><SPAN  CLASS="textbf">backwards-compatible versions</SPAN><A NAME="tex2html1679"
+  HREF="footnode.html#foot28764"><SUP><SPAN CLASS="arabic">89</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> but
+need a specific bug fix you can use a compound requirement:
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+</PRE>
+
+<P>
+<PRE>
+# bundler
+gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+</PRE>
+</LI>
+<LI>The important note to take home here is to be aware others will be
+using your gems, so guard yourself from potential bugs/failures in
+future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
+if at all possible.
+</LI>
+</OL>
+<P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15488"
+<A NAME="tex2html15529"
   HREF="node716.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15482"
-  HREF="node714.html">
+<A NAME="tex2html15523"
+  HREF="node701.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15476"
+<A NAME="tex2html15517"
   HREF="node714.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15484"
-  HREF="node816.html">
+<A NAME="tex2html15525"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15486"
-  HREF="node819.html">
+<A NAME="tex2html15527"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -229,20 +291,20 @@ by Joe Kutner The Pragmatic BookShelf. 2013.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15489"
-  HREF="node716.html">Remote pair programming</A>
-<B> Subir:</B> <A NAME="tex2html15483"
-  HREF="node714.html">Herramientas para la Programacion</A>
-<B> Anterior:</B> <A NAME="tex2html15477"
-  HREF="node714.html">Herramientas para la Programacion</A>
- &nbsp; <B>  <A NAME="tex2html15485"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15487"
-  HREF="node819.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15530"
+  HREF="node716.html">Controlando nuestras dependencias: bundle</A>
+<B> Subir:</B> <A NAME="tex2html15524"
+  HREF="node701.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15518"
+  HREF="node714.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html15526"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15528"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>

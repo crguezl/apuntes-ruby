@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Web Sockets</TITLE>
-<META NAME="description" CONTENT="Web Sockets">
+<TITLE>Código en sinatra/base.rb: la clase Stream</TITLE>
+<META NAME="description" CONTENT="Código en sinatra/base.rb: la clase Stream">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node492.html">
-<LINK REL="previous" HREF="node464.html">
-<LINK REL="up" HREF="node355.html">
+<LINK REL="previous" HREF="node481.html">
+<LINK REL="up" HREF="node464.html">
 <LINK REL="next" HREF="node484.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11452"
+<A NAME="tex2html11479"
   HREF="node484.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11446"
-  HREF="node355.html">
+<A NAME="tex2html11473"
+  HREF="node464.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11440"
+<A NAME="tex2html11469"
   HREF="node482.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11448"
-  HREF="node816.html">
+<A NAME="tex2html11475"
+  HREF="node823.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11450"
-  HREF="node819.html">
+<A NAME="tex2html11477"
+  HREF="node826.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,73 +91,215 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11453"
-  HREF="node484.html">WebSockets</A>
-<B> Subir:</B> <A NAME="tex2html11447"
-  HREF="node355.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html11441"
-  HREF="node482.html">Código en sinatra/base.rb: la</A>
- &nbsp; <B>  <A NAME="tex2html11449"
-  HREF="node816.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11451"
-  HREF="node819.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11480"
+  HREF="node484.html">Web Sockets</A>
+<B> Subir:</B> <A NAME="tex2html11474"
+  HREF="node464.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11470"
+  HREF="node482.html">Deferred or streaming response</A>
+ &nbsp; <B>  <A NAME="tex2html11476"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11478"
+  HREF="node826.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03900000000000000000"></A>
-<A NAME="chapter:websockets"></A>
+<H1><A NAME="SECTION038160000000000000000"></A>
+<A NAME="section:sinatrabasestream"></A>
 <BR>
-Web Sockets
+Código en <TT>sinatra/base.rb</TT>: la clase <TT>Stream</TT>
 </H1>
+
+<P>
+The close parameter specifies whether <code>Stream#close</code> should be called
+after the block has been executed. This is only relevant for evented
+servers like <code>Thin</code> or Rainbows.
+
+<P>
+
+<H4><A NAME="SECTION038160010000000000000">
+método stream</A>
+</H4>
+  
+
+<P>
+Fichero <code>sinatra/base.rb</code>:
+<PRE>
+  class Stream
+    ...
+    def stream(keep_open = false)
+      # Soporta el servidor callbacks asincronas? (webrick no, thin si)
+      scheduler = env['async.callback'] ? EventMachine : Stream
+      current   = @params.dup
+      body Stream.new(scheduler, keep_open) { |out| 
+        with_params(current) { yield(out) } # llamamos al bloque 
+      }
+    end
+    ...
+  end
+</PRE>
+Si <code>keep_open</code> es <code>true</code> el navegador se queda esperando datos y no
+ciera la conexión.
+
+<P>
+The <code>body</code> method set or retrieve the response body. 
+
+<P>
+When a block is given,
+evaluation is deferred until the body is read with <code>each</code>.
+
+<P>
+<PRE>
+    def body(value = nil, &amp;block)
+      if block_given?
+        def block.each; yield(call) end
+        response.body = block
+      elsif value
+        headers.delete 'Content-Length' unless request.head? || value.is_a?(Rack::File) || value.is_a?(Stream)
+        response.body = value
+      else
+        response.body
+      end
+    end
+</PRE>
+<H4><A NAME="SECTION038160020000000000000">
+initialize</A>
+</H4>
+  
+
+<P>
+<PRE>
+class Stream
+      def self.schedule(*) yield end
+      def self.defer(*)    yield end
+
+      def initialize(scheduler = self.class, keep_open = false, &amp;back)
+        @back, @scheduler, @keep_open = 
+         back.to_proc, scheduler, keep_open
+        @callbacks, @closed = [], false
+      end
+  ...
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION038160030000000000000">
+with_params</A>
+</H4>
+  
+
+<P>
+<PRE>
+  class Stream 
+    ...
+    def with_params(temp_params)
+      original, @params = @params, temp_params # save params
+      yield   # call the block
+    ensure
+      @params = original if original # recover params
+    end
+  end
+</PRE>
+
+<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html11454"
-  HREF="node484.html">WebSockets</A>
-<UL>
-<LI><A NAME="tex2html11455"
-  HREF="node485.html">Que es WebSocket y para que sirve</A>
-<LI><A NAME="tex2html11456"
-  HREF="node486.html">Negociación del protocolo WebSocket</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html11457"
-  HREF="node487.html">websocket/rack</A>
-<LI><A NAME="tex2html11458"
-  HREF="node488.html">Ruby y WebSockets: TCP for the Browser</A>
-<UL>
-<LI><A NAME="tex2html11459"
-  HREF="node488.html#SECTION03930010000000000000">The Server</A>
-<LI><A NAME="tex2html11460"
-  HREF="node488.html#SECTION03930020000000000000">The Client</A>
-<LI><A NAME="tex2html11461"
-  HREF="node488.html#SECTION03930030000000000000">Véase</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html11462"
-  HREF="node489.html">Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</A>
-<UL>
-<LI><A NAME="tex2html11463"
-  HREF="node489.html#SECTION03940010000000000000">server.rb</A>
-<LI><A NAME="tex2html11464"
-  HREF="node489.html#SECTION03940020000000000000">index.html.haml</A>
-<LI><A NAME="tex2html11465"
-  HREF="node489.html#SECTION03940030000000000000">index.html</A>
-<LI><A NAME="tex2html11466"
-  HREF="node490.html">Enlaces Relacionados</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html11467"
-  HREF="node491.html">Using WebSockets on Heroku with Ruby</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html11481"
+  HREF="node483.html#SECTION038160010000000000000">método stream</A>
+<LI><A NAME="tex2html11482"
+  HREF="node483.html#SECTION038160020000000000000">initialize</A>
+<LI><A NAME="tex2html11483"
+  HREF="node483.html#SECTION038160030000000000000">with_params</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11479"
+  HREF="node484.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11473"
+  HREF="node464.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11469"
+  HREF="node482.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html11475"
+  HREF="node823.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html11477"
+  HREF="node826.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html11480"
+  HREF="node484.html">Web Sockets</A>
+<B> Subir:</B> <A NAME="tex2html11474"
+  HREF="node464.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11470"
+  HREF="node482.html">Deferred or streaming response</A>
+ &nbsp; <B>  <A NAME="tex2html11476"
+  HREF="node823.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11478"
+  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-19
+2014-11-20
 </ADDRESS>
 </BODY>
 </HTML>
