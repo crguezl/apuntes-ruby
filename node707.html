@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Gemas con Un Gran Número de Utilidades Independientes</TITLE>
-<META NAME="description" CONTENT="Gemas con Un Gran Número de Utilidades Independientes">
+<TITLE>Creando la Estructura Inicial de la Gema</TITLE>
+<META NAME="description" CONTENT="Creando la Estructura Inicial de la Gema">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node708.html">
 <LINK REL="previous" HREF="node706.html">
-<LINK REL="up" HREF="node701.html">
+<LINK REL="up" HREF="node705.html">
 <LINK REL="next" HREF="node708.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15395"
+<A NAME="tex2html15441"
   HREF="node708.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15389"
-  HREF="node701.html">
+<A NAME="tex2html15435"
+  HREF="node705.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15383"
+<A NAME="tex2html15429"
   HREF="node706.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15391"
-  HREF="node823.html">
+<A NAME="tex2html15437"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15393"
-  HREF="node826.html">
+<A NAME="tex2html15439"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,100 +92,170 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15396"
-  HREF="node708.html">Sharing Source Code From</A>
-<B> Subir:</B> <A NAME="tex2html15390"
-  HREF="node701.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15384"
-  HREF="node706.html">Jerarquía de Ficheros y</A>
- &nbsp; <B>  <A NAME="tex2html15392"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15394"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15442"
+  HREF="node708.html">Underscores and Dashes</A>
+<B> Subir:</B> <A NAME="tex2html15436"
+  HREF="node705.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15430"
+  HREF="node706.html">Eligiendo Nombre</A>
+ &nbsp; <B>  <A NAME="tex2html15438"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15440"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061160000000000000000">
-Gemas con Un Gran Número de Utilidades Independientes</A>
-</H1><I>
-Some
-gems, however, may be made up of multiple parts that could be used
-independently of each other. <code>ActiveSupport</code>, for example, provides a
-large number of useful utilities that, while they function together,
-can also function separately.
-</I>
-<P>
-<I>If I add require <code>active_support</code> to my code I load all of
-<code>ActiveSupport</code>. While this may be what I want in some cases (like inside
-a Rails application) in other cases I may just want a specific piece
-of <code>ActiveSupport</code>. Luckily, <code>ActiveSupport</code> is designed to handle this
-well. If I, for instance, add require <code>active_support/core_ext</code> I will
-only be loading the Ruby core extensions that are a part of <code>ActiveSupport</code>.
-</I>
-<P>
-<I>How can you make this work in your library? It's quite simple: your
-base file should, when required, require all the other parts of your
-library. However, each part of your library should, at its top, require
-any other parts or external dependencies so that it may be included
-without the user having previously required the base file. Let's take
-a look at an example:
-</I>
-<P><PRE>
-# in lib/my_gem.rb
-
-require 'my_gem/widget'
-require 'my_gem/widgets/foo_bar'
-require 'my_gem/widgets/baz'
-</PRE>
-<P><PRE>
-# in lib/my_gem/widget.rb
-
-require 'external_library'
-
-module MyGem
-  class Widget
-  end
-end
-</PRE>
-<P><PRE>
-# in lib/my_gem/widgets/foo_bar
-
-require 'my_gem/widget'
-
-module MyGem
-  module Widgets
-    class FooBar &lt; MyGem::Widget
-    end
-  end
-end
+<H1><A NAME="SECTION061120000000000000000"></A>
+<A NAME="subsection:estructuradelagema"></A>
+<BR>
+Creando la Estructura Inicial de la Gema
+</H1><PRE>
+gem install bundler
 </PRE><I>
-Each of the files in the above example can be required independently,
-giving developers the flexibility to use only a subset of your library's
-functionality if needed. 
+Once you've installed Bundler, you should change directories to the
+location that you want to create your gem folder (for me, that location
+is <code>~/code/gems</code>). 
 </I>
 <P>
-<I>Remember that <code>require</code> statements will only
-load the code from a file once, so it is safe to <code>require</code> the same file
-multiple times.
+<I>Once there you will create the gem like so:
 </I>
+<P><PRE>
+bundle gem my_gem
+</PRE><I>
+Where <code>my_gem</code> is your gem's name. 
+Note that if you are building a command line tool you should add the <code>-b</code> flag to this command 
+(<code>bundle gem my_gem -b</code>). 
+</I>
+<P>
+<I>You should see output that looks something like this:
+</I>
+<P><PRE>
+      create  my_gem/Gemfile
+      create  my_gem/Rakefile
+      create  my_gem/.gitignore
+      create  my_gem/my_gem.gemspec
+      create  my_gem/lib/my_gem.rb
+      create  my_gem/lib/my_gem/version.rb
+Initializating git repo in /Users/mbleigh/code/gems/my_gem
+</PRE><I>
+Bundler has just generated a skeleton for your gem. You should recognize
+many of the files of the general structure
+of a gem. 
+</I>
+<P>
+<I>Some of the nice things that Bundler has done for us include:
+</I>
+<P>
+<UL>
+<LI><code>.gitignore</code>: There are certain files that you will not want to have to your git repository. Bundler automatically excludes the most common of these.
+
+<P>
+</LI>
+<LI><code>version.rb</code>: Bundler creates 
+<code>my_gem/lib/my_gem/version.rb</code> automatically. 
+
+<P>
+This file is used as a single place to track the current version of your library. 
+
+<P>
+By default, Bundler sets the version to 0.0.1.
+</LI>
+<LI><A NAME="item:rakefile"></A><code>Rakefile</code>: The Rakefile created by Bundler is already set up with
+Bundler's gem helpers. 
+
+<P>
+These helpers allow you to release a new version
+of your gem (including creating a release tag in git and pushing the
+compiled gem to <A NAME="tex2html1668"
+  HREF="https://rubygems.org/"><TT>RubyGems</TT></A>) with a single command.
+<PRE>
+$ rake -T
+rake build    # Build my_gem-0.0.1.gem into the pkg directory
+rake install  # Build and install my_gem-0.0.1.gem into system gems
+rake release  # Create tag v0.0.1 and build and push my_gem-0.0.1.gem to Rubygems
+rake spec     # Run RSpec code examples
+</PRE>
+Estos son los contenidos del <code>Rakefile</code>:
+<PRE>
+$ cat Rakefile 
+$:.unshift File.dirname(__FILE__) + 'lib'
+require "bundler/gem_tasks"
+
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new
+task :default =&gt; :spec
+</PRE>
+</LI>
+<LI><code>Gemfile</code> 
+<A NAME="item:gemfile"></A>este es un ejemplo - ya modificado - del <code>Gemfile</code> generado:
+<PRE>
+[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my_gem(master)]$ cat Gemfile
+source 'https://rubygems.org'
+
+# Specify your gem's dependencies in my_gem.gemspec
+gemspec
+
+#gem 'guard'
+#gem 'guard-rspec'
+#gem 'guard-bundler'
+#gem 'rb-fsevent', '~&gt; 0.9.1'
+</PRE>
+</LI>
+<LI><code>gemspec</code>
+<A NAME="item:gemspec"></A><PRE>
+$ cat -n my_gem.gemspec 
+     1  # -*- encoding: utf-8 -*-
+     2  lib = File.expand_path('../lib', __FILE__)
+     3  $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+     4  require 'my_gem/version'
+     5  
+     6  Gem::Specification.new do |gem|
+     7    gem.name          = "my_gem"
+     8    gem.version       = MyGem::VERSION
+     9    gem.authors       = ["John Smith"]
+    10    gem.email         = ["some.name@pochomail.com"]
+    11    gem.description   = %q{TODO: Write a gem description}
+    12    gem.summary       = %q{TODO: Write a gem summary}
+    13    gem.homepage      = ""
+    14  
+    15    gem.files         = `git ls-files`.split($/)
+    16    gem.executables   = gem.files.grep(%r{^bin/}
+                              ).map{ |f| File.basename(f) }
+    17    gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+    18    gem.require_paths = ["lib"]
+    19  
+    20    gem.add_dependency 'sinatra'
+    21    gem.add_development_dependency 'rspec', '~&gt;2.11'
+    22  end
+</PRE>
+</LI>
+<LI><code>version.rb</code>
+<A NAME="item:version"></A><PRE>
+$ cat -n lib/my_gem/version.rb 
+     1  module MyGem
+     2    VERSION = "0.0.1"
+     3  end
+</PRE>
+</LI>
+</UL>
 <P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15395"
+<A NAME="tex2html15441"
   HREF="node708.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15389"
-  HREF="node701.html">
+<A NAME="tex2html15435"
+  HREF="node705.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15383"
+<A NAME="tex2html15429"
   HREF="node706.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15391"
-  HREF="node823.html">
+<A NAME="tex2html15437"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15393"
-  HREF="node826.html">
+<A NAME="tex2html15439"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -236,20 +306,20 @@ multiple times.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15396"
-  HREF="node708.html">Sharing Source Code From</A>
-<B> Subir:</B> <A NAME="tex2html15390"
-  HREF="node701.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15384"
-  HREF="node706.html">Jerarquía de Ficheros y</A>
- &nbsp; <B>  <A NAME="tex2html15392"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15394"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15442"
+  HREF="node708.html">Underscores and Dashes</A>
+<B> Subir:</B> <A NAME="tex2html15436"
+  HREF="node705.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15430"
+  HREF="node706.html">Eligiendo Nombre</A>
+ &nbsp; <B>  <A NAME="tex2html15438"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15440"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

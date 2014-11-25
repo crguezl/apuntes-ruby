@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Named Parameters in Ruby 2.0</TITLE>
-<META NAME="description" CONTENT="Named Parameters in Ruby 2.0">
+<TITLE>Listas de Argumentos de Longitud Variable y Arrays</TITLE>
+<META NAME="description" CONTENT="Listas de Argumentos de Longitud Variable y Arrays">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node144.html">
 <LINK REL="previous" HREF="node142.html">
-<LINK REL="up" HREF="node138.html">
+<LINK REL="up" HREF="node141.html">
 <LINK REL="next" HREF="node144.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5521"
+<A NAME="tex2html5553"
   HREF="node144.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5515"
-  HREF="node138.html">
+<A NAME="tex2html5547"
+  HREF="node141.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5509"
+<A NAME="tex2html5541"
   HREF="node142.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5517"
-  HREF="node823.html">
+<A NAME="tex2html5549"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5519"
-  HREF="node826.html">
+<A NAME="tex2html5551"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,123 +92,142 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5522"
-  HREF="node144.html">Argumentos Bloque</A>
-<B> Subir:</B> <A NAME="tex2html5516"
-  HREF="node138.html">Argumentos de un Método</A>
-<B> Anterior:</B> <A NAME="tex2html5510"
-  HREF="node142.html">Hashes para Argumentos con</A>
- &nbsp; <B>  <A NAME="tex2html5518"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5520"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5554"
+  HREF="node144.html">Asignando Argumentos a los</A>
+<B> Subir:</B> <A NAME="tex2html5548"
+  HREF="node141.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5542"
+  HREF="node142.html">Parámetros por Defecto</A>
+ &nbsp; <B>  <A NAME="tex2html5550"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5552"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02645000000000000000"></A>
-<A NAME="subsection:namedparametersinruby20"></A>
-<BR>
-Named Parameters in Ruby 2.0
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html5555"
+  HREF="node143.html#SECTION02642100000000000000">Pasando Arrays a Métodos que Esperan una Lista de Argumentos</A>
+<LI><A NAME="tex2html5556"
+  HREF="node143.html#SECTION02642200000000000000">Los Enumeradores son Splattables</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02642000000000000000">
+Listas de Argumentos de Longitud Variable y Arrays</A>
 </H2>
-In computer programming, named parameters or keyword arguments refer
-to a computer language’s support for function calls that clearly
-state the name of each parameter within the function call itself.
+
+<P>
+Sometimes we want to write methods that can accept an arbitrary number of arguments. To do this, we put an <code>*</code> before one of the method’s parameters. Within the body of the method, this parameter will
+refer to an array that contains the zero or more arguments passed at that position. For example:
 
 <P>
 <PRE>
-def foo(bar: '12345', baz: 'abcdef')
-  [bar, baz]
+# Return the largest of the one or more arguments passed
+def max(first, *rest)
+  # Assume that the required first argument is the largest
+  max = first
+  # Now loop through each of the optional arguments looking for bigger ones
+  rest.each {|x| max = x if x &gt; max }
+  # Return the largest one we found
+  max
 end
- 
-foo                         # =&gt; ["12345", "abcdefg"]
-foo(bar: 'bar')             # =&gt; ["bar", "abcdef"]
-foo(bar: 'bar', baz: 'baz') # =&gt; ["bar", "baz"]
 </PRE>
 
 <P>
-Si se llama con un nombre 
-no declarado se produce un <code>ArgumentError</code>:
 <PRE>
-[2] pry(main)&gt; require './named_parameters2'
-["12345", "abcdef"]
-["bar", "abcdef"]
-["bar", "baz"]
-=&gt; true
-[3] pry(main)&gt; foo(chuchu: 'chuchu')
-ArgumentError: unknown keyword: chuchu
-from (pry):3:in `__pry__'
-</PRE>
-Also, you can combine them with regular parameters.
-
-<P>
-<PRE>
-def foo(value, bar: '12345', baz: 'abcdef')
-  [value, bar, baz]
-end
- 
-foo('VALUE')                         # =&gt; ["VALUE", "12345", "abcdefg"]
-foo('VALUE', bar: 'bar')             # =&gt; ["VALUE", "bar", "abcdef"]
-foo('VALUE', bar: 'bar', baz: 'baz') # =&gt; ["VALUE", "bar", "baz"]
+max(1)       # first=1, rest=[]   
+max(1,2)     # first=1, rest=[2]  
+max(1,2,3)   # first=1, rest=[2,3]
 </PRE>
 
 <P>
-Se pueden combinar con splats:
 
-<P>
+<H3><A NAME="SECTION02642100000000000000">
+Pasando Arrays a Métodos que Esperan una Lista de Argumentos</A>
+</H3>
 <PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat named_parameters4.rb 
-require 'pp'
-
-def cycle(first_value, *values, name: 'default')
-  return [ first_value, values, name]
+# Return the largest of the one or more arguments passed
+def max(first, *rest)
+  ...
 end
 
-pp cycle(1, 2, 3, 4, name: 'Pedro') # [1, [2, 3, 4], "Pedro"]
+data = [3, 2, 1]
+m = max(*data)   # first = 3, rest=[2,1] =&gt; 3
 </PRE>
 
 <P>
-You can stop an <code>ArgumentError</code> being raised and deal with arbitrary keyword arguments by using a double-splat (double asterisk) to capture all keywords not already assigned and puts them in a hash:
+A veces nos referimos a este uso de <code>*</code> como el <A NAME="6203"></A><SPAN  CLASS="textit">operador de splat</SPAN>
 
 <P>
 <PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat named_parameters5.rb 
-require 'pp'
+m = max(data)   # first = [3,2,1], rest=[] =&gt; [3,2,1]
+</PRE>
 
-def foo(bar: '12345', baz: 'abcdef', **rest)
-  [bar, baz, rest]
+<P>
+<PRE>
+# Convert the Cartesian point (x,y) to polar (magnitude, angle) coordinates
+def polar(x,y)
+  return [ Math.hypot(y,x), Math.atan2(y,x) ]
 end
- 
-pp foo(bar: 'bar', chuchu: 'chuchu', chachi: 'chachi') # ["bar", "abcdef", {:chuchu=&gt;"chuchu", :chachi=&gt;"chachi"}]
+
+# Convert polar coordinates to Cartesian coordinates
+def cartesian(magnitude, angle)
+  [magnitude*Math.cos(angle), magnitude*Math.sin(angle)]
+end
+
+x,y = cartesian(*polar(x, y))
 </PRE>
 
 <P>
 
-<OL>
-<LI><A NAME="tex2html236"
-  HREF="http://chriszetter.com/blog/2012/11/02/keyword-arguments-in-ruby-2-dot-0/">Keyword Arguments in Ruby 2.0</A>
-por Chris Zetter
-</LI>
-</OL>
+<H3><A NAME="SECTION02642200000000000000">
+Los Enumeradores son Splattables</A>
+</H3>
+
+<P>
+Los enumeradores <A NAME="tex2html237"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A> en son objetos con métodos como
+<code>each</code>, <code>each_with_index</code> y <code>next</code>:
+<PRE>
+ruby-1.9.2-head :015 &gt; z = "hello".each_char
+ =&gt; #&lt;Enumerator: "hello":each_char&gt; 
+ruby-1.9.2-head :016 &gt; z.next
+ =&gt; "h" 
+ruby-1.9.2-head :017 &gt; z.next
+ =&gt; "e" 
+ruby-1.9.2-head :022 &gt; z.class.instance_methods(false)
+ =&gt; [:each, :each_with_index, :each_with_object, :with_index,
+     :with_object, :next_values, :peek_values, :next, :peek, :feed,
+     :rewind, :inspect]
+</PRE>
+Los enumeradores en Ruby 1.9 son objetos splattables:
+<PRE>
+max(*"hello world".each_char)  # =&gt; 'w'
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5521"
+<A NAME="tex2html5553"
   HREF="node144.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5515"
-  HREF="node138.html">
+<A NAME="tex2html5547"
+  HREF="node141.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5509"
+<A NAME="tex2html5541"
   HREF="node142.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5517"
-  HREF="node823.html">
+<A NAME="tex2html5549"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5519"
-  HREF="node826.html">
+<A NAME="tex2html5551"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -259,20 +278,20 @@ por Chris Zetter
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5522"
-  HREF="node144.html">Argumentos Bloque</A>
-<B> Subir:</B> <A NAME="tex2html5516"
-  HREF="node138.html">Argumentos de un Método</A>
-<B> Anterior:</B> <A NAME="tex2html5510"
-  HREF="node142.html">Hashes para Argumentos con</A>
- &nbsp; <B>  <A NAME="tex2html5518"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5520"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5554"
+  HREF="node144.html">Asignando Argumentos a los</A>
+<B> Subir:</B> <A NAME="tex2html5548"
+  HREF="node141.html">Argumentos de un Método</A>
+<B> Anterior:</B> <A NAME="tex2html5542"
+  HREF="node142.html">Parámetros por Defecto</A>
+ &nbsp; <B>  <A NAME="tex2html5550"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5552"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

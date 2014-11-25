@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Polimorfismo, Comprobación de Tipos y Tipado Pato (Duck Typing)</TITLE>
-<META NAME="description" CONTENT="Polimorfismo, Comprobación de Tipos y Tipado Pato (Duck Typing)">
+<TITLE>Acceso a los Atributos</TITLE>
+<META NAME="description" CONTENT="Acceso a los Atributos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node180.html">
 <LINK REL="previous" HREF="node178.html">
-<LINK REL="up" HREF="node171.html">
+<LINK REL="up" HREF="node174.html">
 <LINK REL="next" HREF="node180.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6213"
+<A NAME="tex2html6245"
   HREF="node180.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6207"
-  HREF="node171.html">
+<A NAME="tex2html6239"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6201"
+<A NAME="tex2html6233"
   HREF="node178.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6209"
-  HREF="node823.html">
+<A NAME="tex2html6241"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6211"
-  HREF="node826.html">
+<A NAME="tex2html6243"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,193 +92,263 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6214"
-  HREF="node180.html">Coerción</A>
-<B> Subir:</B> <A NAME="tex2html6208"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6202"
-  HREF="node178.html">Tabla de Operadores en</A>
- &nbsp; <B>  <A NAME="tex2html6210"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6212"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6246"
+  HREF="node180.html">Definiendo Operadores (La Clase</A>
+<B> Subir:</B> <A NAME="tex2html6240"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6234"
+  HREF="node178.html">Definiendo un método to_s</A>
+ &nbsp; <B>  <A NAME="tex2html6242"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6244"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02718000000000000000"></A>
-<A NAME="subsub:tiposypatos"></A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html6247"
+  HREF="node179.html#SECTION02715010000000000000">Utilización de  los Setters Dentro de una Clase</A>
+<LI><A NAME="tex2html6248"
+  HREF="node179.html#SECTION02715020000000000000">Los Accessors como <TT>attr_accessor</TT> se Invocan Fuera de las Definiciones de Métodos</A>
+<LI><A NAME="tex2html6249"
+  HREF="node179.html#SECTION02715030000000000000">Todas las clases son módulos</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02715000000000000000"></A>
+<A NAME="subsection:accesoalosatributos"></A>
 <BR>
-Polimorfismo, Comprobación de Tipos y Tipado Pato (Duck Typing)
+Acceso a los Atributos
 </H2>
 
 <P>
-Repase la sección <I>Clase y Tipo de un Objeto. Polimorfismo</I> <A HREF="node75.html#claseytipodeunobjeto">10.8.4</A>.
+Our Point class uses two instance variables. As we've noted, however,
+the value of these variables are only accessible to other instance
+methods. If we want users of the Point class to be able to use the
+X and Y coordinates of a point, we've got to provide accessor methods
+that return the value of the variables:
+
+<P>
+<PRE>
+class Point
+  def initialize(x,y)
+    @x, @y = x, y
+  end
+
+  def x           # The accessor (or getter) method for @x
+    @x
+  end
+
+  def y           # The accessor method for @y
+    @y
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+p = Point.new(1,2)
+q = Point.new(p.x*2, p.y*3)
+</PRE>
+
+<P>
+<PRE>
+class MutablePoint
+  def initialize(x,y); @x, @y = x, y; end
+
+  def x; @x; end       # The getter method for @x
+  def y; @y; end       # The getter method for @y
+
+  def x=(value)        # The setter method for @x
+    @x = value
+  end
+
+  def y=(value)        # The setter method for @y
+    @y = value
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+p = Point.new(1,1)
+p.x = 0
+p.y = 0
+</PRE>
+
+<P>
+This combination of instance variable with trivial getter and setter methods is so common that Ruby provides a way to automate it. The <code>attr_reader</code> and <code>attr_accessor</code> methods are defined by the <A NAME="tex2html378"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A> class. All classes are modules, (the <A NAME="tex2html379"
+  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A> class is a subclass of <A NAME="tex2html380"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>) so you can invoke these method inside any class definition. Both methods take any number of symbols naming attributes. <code>attr_reader</code> creates trivial getter methods for the instance variables with the same name. <code>attr_accessor</code> creates getter and setter methods. Thus, if we were defining a mutable <code>Point</code> class, we could write:
+
+<P>
+<PRE>
+class Point
+  attr_accessor :x, :y # Define accessor methods for our instance variables
+end
+</PRE>
+
+<P>
+<PRE>
+class Point
+  attr_reader :x, :y  # Define reader methods for our instance variables
+end
+</PRE>
+
+<P>
+<PRE>
+attr_reader "x", "y"
+</PRE>
+
+<P>
+<PRE>
+attr :x        # Define a trivial getter method x for @x
+attr :y, true  # Define getter and setter methods for @y. Optional boolean is Obsoleted
+</PRE>
 
 <P>
 <BLOCKQUOTE>
-Red or yellow, black or white, they are all ducks in the VM’s sight. 
+The <code>attr</code>, <code>attr_reader</code>, and <code>attr_accessor</code> methods
+create instance methods for us. This is an example of metaprogramming.
 
 </BLOCKQUOTE>
 
 <P>
-En programación orientada a objetos, el <A NAME="8547"></A><SPAN  CLASS="textbf">polimorfismo</SPAN> se refiere a
-la propiedad por la que es 
-<FONT COLOR="#0000ff"> posible enviar mensajes (llamar a métodos) 
-con el mismo nombre a objetos de clases distintas</FONT>.
+
+<H4><A NAME="SECTION02715010000000000000">
+Utilización de  los Setters Dentro de una Clase</A>
+</H4>
+  
+
+<A NAME="parrafo:usodesettersenunmetodo"></A>Una vez que se ha definido un setter como <code>x=</code> podemos sentirnos tentados de utilizarlo
+dentro de otro método de instancia de la clase.
 
 <P>
-El único requisito que deben
-cumplir los objetos que se utilizan de manera polimórfica es saber
-responder al mensaje que se les envía.
+That is, instead of writing <code>@x=2</code>, you might write
+<code>x=2</code>, intending to invoke <code>x=(2)</code> implicitly on self.
+<OL>
+<LI>It doesn’t work; <code>x=2</code> creates a new
+local variable.
+</LI>
+<LI>The rule is that <I><A NAME="8648"></A><SPAN  CLASS="textbf">assignment expressions</SPAN> will only invoke a
+<A NAME="8650"></A><SPAN  CLASS="textbf">setter method</SPAN> when invoked through an object</I>
+</LI>
+<LI>If you want to use a setter from within the class that defines
+it, invoke it explicitly through self.
+</LI>
+<LI>For example: <code>self.x=2</code>.
+</LI>
+</OL>
 
 <P>
 <PRE>
-[~/srcLPPruby/TheRubyProgrammingLanguage/Chapter3DatatypesAndObjects]$ cat type_versus_class_checking.rb 
-# page 75
-require "stringio"
-class Tutu
-  # Appends " chazam!" to its argument
-  def chazam_check(x) # duck typing style
-    raise "Error in chazam_check" unless x.respond_to? :"&lt;&lt;"
-
-    x &lt;&lt; " chazam!"
-  end
-end
-
-if __FILE__ == $0
-  t = Tutu.new
-
-  t = Tutu.new
-  puts "procesing a String"
-  p t.chazam_check("ban ban")  # "ban ban chazam!""
-  puts "procesing an Array"
-  p t.chazam_check([1,2,3])    # [1, 2, 3, " chazam!"]"
-  begin
-    puts "Processing a Fixnum"
-    p t.chazam_check(6)        # can't convert String into Integer
-  rescue
-    puts "t.chazam_check(6) fails:\n\tException type: &lt;#{$!.class}&gt;\n\tmessage: &lt;#{$!}&gt;"
-  end
-end
+casiano@exthost:~/LPPsrc/221012$ cat -n setters.rb
+     1  class Tutu
+     2    attr_accessor :n
+     3  
+     4    def initialize(n)
+     5      @n = n
+     6    end
+     7  
+     8    def to_s
+     9      "#{n*2}"
+    10    end
+    11  
+    12    def square
+    13      n = n * n # n here is a local variable!
+    14    end
+    15  
+    16    def square2
+    17      self.n = n * n
+    18    end
+    19  end
+    20  
+    21  if __FILE__ == $0
+    22    x = Tutu.new(ARGV.shift || 4)
+    23    puts x                      # to_s gets called: 8
+    24    begin
+    25      x.square
+    26    rescue
+    27        puts "Raised exception '#{$!.class}'. Message: &lt;#{$!}&gt;"
+    28    end
+    29    x.square2                   # 32 = 16 *2
+    30    puts x
+    31  end
 </PRE>
 
 <P>
 <PRE>
-[~/srcLPPruby/TheRubyProgrammingLanguage/Chapter3DatatypesAndObjects]$ ruby type_versus_class_checking.rb 
-procesing a String
-"ban ban chazam!"
-procesing an Array
-[1, 2, 3, " chazam!"]
-Processing a Fixnum
-t.chazam_check(6) fails:
-  Exception type: &lt;TypeError&gt;
-  message: &lt;can't convert String into Integer&gt;
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby setters.rb
+8
+Raised exception 'NoMethodError'. Message: &lt;undefined method `*' for nil:NilClass&gt;
+32
 </PRE>
 
+<P>
+
+<H4><A NAME="SECTION02715020000000000000">
+Los Accessors como <TT>attr_accessor</TT> se Invocan Fuera de las Definiciones de Métodos</A>
+</H4>
+  
+
+<P>
+<code>attr_reader</code> et al. son proveídos por la clase <A NAME="tex2html381"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.
+
+<P>
+
+<H4><A NAME="SECTION02715030000000000000">
+Todas las clases son módulos</A>
+</H4>
+  
+
+<A NAME="parrafo:clasesonmodulos"></A>
 <P>
 <PRE>
-[~/srcLPPruby/TheRubyProgrammingLanguage/Chapter3DatatypesAndObjects]$ cat type_versus_class_checking2.rb 
-# page 75
-require "stringio"
-class Tutu
-  # Print the lengths of the lines in the IO object
-  def show_lengths(x)
-    raise "Error in show_lengths" unless x.is_a? IO
-    #raise "Error in show_lengths" unless x.respond_to? "each_line"
-    x.each_line do |line|
-      print "#{line.length} "
-    end
-    puts ""
-  end
-end
-
-if __FILE__ == $0
-  t = Tutu.new
-
-  #######################################################
-  t.show_lengths(IO.open(File.open($0).to_i)) # 10 19 ...
-  begin
-    t.show_lengths(StringIO.open("Hello World!\nHello Mars!")) # Error in show_lengths
-  rescue
-    puts "t.show_lengths fails with StringIO:\n\tException type: &lt;#{$!.class}&gt;\n\tmessage: &lt;#{$!}&gt;"
-  end
-end
+ruby-1.9.2-head :004 &gt; Class.class
+ =&gt; Class 
+ruby-1.9.2-head :005 &gt; Class.superclass
+ =&gt; Module 
+ruby-1.9.2-head :006 &gt; Class.superclass.superclass
+ =&gt; Object 
+ruby-1.9.2-head :007 &gt; Class.superclass.superclass.superclass
+ =&gt; BasicObject 
+ruby-1.9.2-head :008 &gt; Class.ancestors
+ =&gt; [Class, Module, Object, InteractiveEditor::Editors, 
+     Wirble::Shortcuts, 
+     PP::ObjectMixin, 
+     Kernel, BasicObject]
 </PRE>
 
 <P>
-<PRE>
-[~/srcLPPruby/TheRubyProgrammingLanguage/Chapter3DatatypesAndObjects]$ ruby type_versus_class_checking2.rb 
-10 19 11 52 22 52 68 26 30 8 12 6 4 1 18 15 1 58 58 8 87 9 100 6 4 
-t.show_lengths fails with StringIO:
-  Exception type: &lt;RuntimeError&gt;
-  message: &lt;Error in show_lengths&gt;
-</PRE>
-Aunque quizá sea larga y requiera para su comprensión completa 
-mas conocimientos de los que tenemos en este punto,
-escuchar la charla 
-<SPAN  CLASS="textbf">
-<A NAME="tex2html386"
-  HREF="http://vimeo.com/53154357">Less: The Path to a Better Design</A>
-por <A NAME="8551"></A><SPAN  CLASS="textbf">Sandi Metz</SPAN>
-</SPAN>
-en Vimeo puede resultar útil. 
-Metz 
-muestra como el uso de <A NAME="8553"></A><SPAN  CLASS="textbf">Tipado Pato</SPAN> (<A NAME="8555"></A><SPAN  CLASS="textbf">Duck Typing</SPAN>) 
-puede ayudar a desacoplar nuestras
-clases, mejorando así nuestros diseños y haciéndo que nuestro software 
-sea mas adaptable a los cambios que necesariamente habrán de sobrevenir durante 
-su vida útil.
-
 <P>
-Véanse algunos comentarios de 
-<A NAME="tex2html387"
-  HREF="http://nathany.com/poodr">Nathan Youngman</A>
-sobre la lectura 
-del libro
-<A NAME="tex2html388"
-  HREF="http://my.safaribooksonline.com/book/programming/ruby/9780132930895">"Practical Object Oriented Design in Ruby: An Agile Primer"</A>
-de Sandi Metz:
-<BLOCKQUOTE>
-Procedural programs operate by performing a series of steps, whereas
-object-oriented programs are about sending messages.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>When one object tells another to perform a series of steps, it knows
-too much! To minimize dependencies, an object needs to ask for what
-it wants, and trust that the receiver takes the necessary steps.
-It doesn't need to know the details.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE><SPAN  CLASS="textbf">The distinction between a message that asks for what the sender
-wants and a message that tells the receiver how to behave may seem
-subtle but the consequences are significant</SPAN>.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>Rather than depending on a concrete Class, consider relying on a
-duck type that implements the necessary message. <SPAN  CLASS="textbf">Depending on a
-“duck-like” thing is much more flexible</SPAN>.
-
-</BLOCKQUOTE>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">14</SPAN>.<SPAN CLASS="arabic">1</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>¿<code>attr_accessor</code> es un método de instancia o de clase?</I></DIV><P></P>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6213"
+<A NAME="tex2html6245"
   HREF="node180.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6207"
-  HREF="node171.html">
+<A NAME="tex2html6239"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6201"
+<A NAME="tex2html6233"
   HREF="node178.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6209"
-  HREF="node823.html">
+<A NAME="tex2html6241"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6211"
-  HREF="node826.html">
+<A NAME="tex2html6243"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -329,20 +399,20 @@ duck type that implements the necessary message. <SPAN  CLASS="textbf">Depending
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6214"
-  HREF="node180.html">Coerción</A>
-<B> Subir:</B> <A NAME="tex2html6208"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6202"
-  HREF="node178.html">Tabla de Operadores en</A>
- &nbsp; <B>  <A NAME="tex2html6210"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6212"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6246"
+  HREF="node180.html">Definiendo Operadores (La Clase</A>
+<B> Subir:</B> <A NAME="tex2html6240"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6234"
+  HREF="node178.html">Definiendo un método to_s</A>
+ &nbsp; <B>  <A NAME="tex2html6242"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6244"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

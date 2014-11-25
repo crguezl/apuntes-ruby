@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configuring attack protection</TITLE>
-<META NAME="description" CONTENT="Configuring attack protection">
+<TITLE>Generating URLs</TITLE>
+<META NAME="description" CONTENT="Generating URLs">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node440.html">
 <LINK REL="previous" HREF="node438.html">
-<LINK REL="up" HREF="node411.html">
+<LINK REL="up" HREF="node414.html">
 <LINK REL="next" HREF="node440.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10751"
+<A NAME="tex2html10792"
   HREF="node440.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10745"
-  HREF="node411.html">
+<A NAME="tex2html10786"
+  HREF="node414.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10739"
+<A NAME="tex2html10780"
   HREF="node438.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10747"
-  HREF="node823.html">
+<A NAME="tex2html10788"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10749"
-  HREF="node826.html">
+<A NAME="tex2html10790"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,151 +92,40 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10752"
-  HREF="node440.html">Settings disponibles/Available Settings</A>
-<B> Subir:</B> <A NAME="tex2html10746"
-  HREF="node411.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10740"
-  HREF="node438.html">Configuration / Configuración</A>
- &nbsp; <B>  <A NAME="tex2html10748"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10750"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10793"
+  HREF="node440.html">Redireccionamientos/Browser Redirect</A>
+<B> Subir:</B> <A NAME="tex2html10787"
+  HREF="node414.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10781"
+  HREF="node438.html">Logging</A>
+ &nbsp; <B>  <A NAME="tex2html10789"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10791"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033200000000000000000">
-Configuring attack protection</A>
+<H1><A NAME="SECTION033170000000000000000">
+Generating URLs</A>
 </H1>
-Sinatra is using <A NAME="tex2html1023"
-  HREF="http://rubydoc.info/gems/rack-protection/">Rack::Protection</A>
-to defend your application against common, opportunistic attacks.
-
-<P>
-
-<OL>
-<LI>You can easily disable this behavior (which will open up your
-application to tons of common vulnerabilities):
-
-<P>
-<code>disable :protection</code>
-</LI>
-<LI>To skip a single defense layer, set protection to an options hash:
+For generating URLs you should use the <code>url</code>
+helper method, for instance, in Haml:
 
 <P>
 <PRE>
-set :protection, :except =&gt; :path_traversal
+%a{:href =&gt; url('/foo')} foo
 </PRE>
-</LI>
-<LI>You can also hand in an array in order to disable a list of protections:
+It takes reverse proxies and Rack routers into account, if present.
 
 <P>
-<PRE>
-set :protection, :except =&gt; [:path_traversal, :session_hijacking]
-</PRE>
-</LI>
-<LI>By default, Sinatra will only set up session based protection if
-<code>:sessions</code> has been enabled. 
+This method is also aliased to <code>to</code>.
 
 <P>
-Sometimes you want to set up sessions
-on your own, though. 
-
-<P>
-In that case you can get it to set up session
-based protections by passing the <code>:session option</code>:
-
-<P>
-<PRE>
-use Rack::Session::Pool
-set :protection, :session =&gt; true
-</PRE>
-</LI>
-</OL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html10751"
-  HREF="node440.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10745"
-  HREF="node411.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10739"
-  HREF="node438.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10747"
-  HREF="node823.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10749"
-  HREF="node826.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html10752"
-  HREF="node440.html">Settings disponibles/Available Settings</A>
-<B> Subir:</B> <A NAME="tex2html10746"
-  HREF="node411.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10740"
-  HREF="node438.html">Configuration / Configuración</A>
- &nbsp; <B>  <A NAME="tex2html10748"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10750"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Depuración/Debugging</TITLE>
-<META NAME="description" CONTENT="Depuración/Debugging">
+<TITLE>Agentes SSH</TITLE>
+<META NAME="description" CONTENT="Agentes SSH">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node659.html">
 <LINK REL="previous" HREF="node657.html">
-<LINK REL="up" HREF="node648.html">
+<LINK REL="up" HREF="node652.html">
 <LINK REL="next" HREF="node659.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14590"
+<A NAME="tex2html14623"
   HREF="node659.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14584"
-  HREF="node648.html">
+<A NAME="tex2html14617"
+  HREF="node652.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14578"
+<A NAME="tex2html14611"
   HREF="node657.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14586"
-  HREF="node823.html">
+<A NAME="tex2html14619"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14588"
-  HREF="node826.html">
+<A NAME="tex2html14621"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,147 +92,254 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14591"
-  HREF="node659.html">Los Ficheros de Configuración</A>
-<B> Subir:</B> <A NAME="tex2html14585"
-  HREF="node648.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14579"
-  HREF="node657.html">Consideraciones sobre la Seguridad</A>
- &nbsp; <B>  <A NAME="tex2html14587"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14589"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14624"
+  HREF="node659.html">Mejor un Sólo Agente</A>
+<B> Subir:</B> <A NAME="tex2html14618"
+  HREF="node652.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14612"
+  HREF="node657.html">Deshabilitar la Asignación de</A>
+ &nbsp; <B>  <A NAME="tex2html14620"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14622"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION065100000000000000000">
-Depuración/Debugging</A>
+<H1><A NAME="SECTION06560000000000000000">
+Agentes SSH</A>
 </H1>
 
 <P>
-La opción <code>-v</code> hace que los clientes <code>scp</code> y <code>ssh</code> proporcionen
-información de depuración. Observemos la siguiente copia remota:
+Un agente SSH es un programa que guarda de forma segura 
+las frases-clave asociadas con las claves privadas y responde a consultas 
+autentificadas de los clientes SSH.
+El agente recuerda la passphrase de manera que el usuario 
+no tenga que teclearla cada vez que la clave es usada.
+
+<P>
+El agente crea un socket en un subdirectorio de <code>/tmp</code> 
+en el que escucha las peticiones de conexión SSH.
+Cualquiera que tenga acceso a dicho socket puede acceder al agente. Los permisos
+unix para el socket son suficientemente restrictivos.
+
+<P>
+Los programas que se usan son  <TT>ssh-agent</TT>  y  <TT>ssh-add</TT> . 
+Utilizamos <A NAME="tex2html1531"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
+para añadir claves privadas a la cache del agente
+ssh. A partir de ese momento el cliente ssh no nos importunará
+solicitando la passphrase, comúnicandose con el agente 
+para superar el proceso de autentificación.
+El agente <code>ssh-agent</code> actúa como un daemon que permanece dando el
+servicio de autentificación a los clientes SSH.
+
+<P>
+
+<H4><A NAME="SECTION06560010000000000000">
+ssh-add</A>
+</H4>
+  
+
+<P>
+El programa
+<code>ssh-add</code> permite añadir, listar y suprimir claves de la cache del agente:
 
 <P>
 <PRE>
-pp2@nereida:~/Lbook$ scp procesos.tex orion:
-procesos.tex                         100%  250KB 249.5KB/s   00:01
+someone@localhost:~/.ssh$ ssh-add ~/.ssh/conpass
+Enter passphrase for /home/someone/.ssh/conpass: **********
+Identity added: /home/someone/.ssh/conpass (/home/someone/.ssh/conpass)
+someone@localhost:~/.ssh$ ssh-add -l
+2048 da:13:....:ee /home/someone/.ssh/conpass (RSA)
 </PRE>
-La opción <code>-v</code> nos informa de la existencia de un problema:
+Una vez establecida la clave en el agente es posible conectarse sin necesidad
+de proporcionar la frase clave:
 
 <P>
 <PRE>
-pp2@nereida:~/Lbook$ scp -v procesos.tex orion:
-Executing: program /usr/bin/ssh host orion, user (unspecified), command scp -v -t .
-OpenSSH_4.3p2 Debian-9, OpenSSL 0.9.8c 05 Sep 2006
-debug1: Reading configuration data /home/pp2/.ssh/config
-debug1: Applying options for orion
-debug1: Reading configuration data /etc/ssh/ssh_config
-debug1: Applying options for *
-debug1: Connecting to orion [193.145.105.17] port 22.
-debug1: Connection established.
-debug1: identity file /home/pp2/.ssh/identity type -1
-debug1: identity file /home/pp2/.ssh/id_rsa type 1
-debug1: identity file /home/pp2/.ssh/id_dsa type 2
-debug1: Remote protocol version 2.0, remote software version OpenSSH_4.3p2 Debian-9
-debug1: match: OpenSSH_4.3p2 Debian-9 pat OpenSSH*
-debug1: Enabling compatibility mode for protocol 2.0
-debug1: Local version string SSH-2.0-OpenSSH_4.3p2 Debian-9
-debug1: An invalid name was supplied
-Configuration file does not specify default realm
+someone@localhost:~/.kde/shutdown$ ssh remote.machine
+Linux remote.machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
 
-debug1: An invalid name was supplied
-A parameter was malformed
-Validation error
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
 
-debug1: An invalid name was supplied
-Configuration file does not specify default realm
-
-debug1: An invalid name was supplied
-A parameter was malformed
-Validation error
-
-debug1: SSH2_MSG_KEXINIT sent
-....................................................
-debug1: Transferred: stdin 0, stdout 0, stderr 0 bytes in 0.3 seconds
-debug1: Bytes per second: stdin 0.0, stdout 0.0, stderr 0.0
-debug1: Exit status 0
-</PRE>
-
-<P>
-Después de buscar en <code>Google</code> vemos
-cual es la causa del problema:
-
-<P>
-<BLOCKQUOTE>
-<I>What happens is that SSH will hang for a long period of time before
-providing a password prompt or performing key authentication. In either
-case the problem is the GSSAPI that is now being used by clients and
-not by most servers.
-</I>
-
-</BLOCKQUOTE>
-
-<P>
-La solución recomendada es desactivar <code>GSSAPIAuthentication</code>:
-<PRE>
-pp2@nereida:~/Lbook$ vi ~/.ssh/config
-pp2@nereida:~/Lbook$ grep -i gss ~/.ssh/config
-GSSAPIAuthentication no
-</PRE>
-Ejecutamos con <code>-v</code> de nuevo. El error ha desaparecido. La velocidad de transferencia
-a aumentado ligeramente:
-<PRE>
-pp2@nereida:~/Lbook$ scp procesos.tex orion:
-procesos.tex                              100%  253KB 252.9KB/s   00:00
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Tue Mar 11 14:03:59 2008 from localhost.deioc.ull.es
+user@remote.machine:~$
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION065100010000000000000">
-Lista de Comprobaciones en Caso de Error</A>
+<H4><A NAME="SECTION06560020000000000000">
+Arrancando un Agente SSH</A>
+</H4>
+  
+
+<P>
+Para arrancar el agente SSH se ejecuta el comando:
+<PRE>
+eval `ssh-agent`
+</PRE>
+Esto se hace asi porque el resultado retornado por <code>ssh-agent</code>
+es una cadena conteniendo un script <A NAME="tex2html1532"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?bash"><TT>bash</TT></A>. Este guión establece las variables de 
+entorno necesarias para que las futuras llamadas a clientes SSH 
+puedan encontrar al agente. Observe el resultado de una ejecución sin <code>eval</code> ni backticks:
+<PRE>
+$ ssh-agent
+SSH_AUTH_SOCK=/tmp/ssh-jaDVTd5583/agent.5583; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=5584; export SSH_AGENT_PID;
+echo Agent pid 5584;
+</PRE>
+
+<P>
+La variable <code>SSH_AUTH_SOCK</code> contiene el camino al socket de dominio UNIX que será 
+utilizado por los clientes <code>ssh</code>, <code>scp</code>, etc. para comunicarse 
+con el agente.
+
+<P>
+El pid proporcionado en <code>SSH_AGENT_PID</code> nos permite eliminar al agente mediante <code>kill</code>. 
+Sin embargo una llamada a <code>kill</code> no elimina 
+las variables de entorno establecidas.
+La forma correcta de terminar el agente es usando la opción <code>-k</code>
+de <code>ssh-agent</code>:
+<PRE>
+pp2@localhost:~/Lbook$ eval `ssh-agent`
+Agent pid 5606
+pp2@localhost:~/Lbook$ env | grep -i ssh
+SSH_AGENT_PID=5606
+SSH_AUTH_SOCK=/tmp/ssh-ALUJyJ5605/agent.5605
+CVS_RSH=/usr/bin/ssh
+pp2@localhost:~/Lbook$ eval `ssh-agent -k`
+Agent pid 5606 killed
+pp2@localhost:~/Lbook$ env | grep -i ssh
+CVS_RSH=/usr/bin/ssh
+pp2@localhost:~/Lbook$
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560030000000000000">
+El Protocolo</A>
 </H4>
   
 
 <P>
 
 <OL>
-<LI>Añada la opción <code>-v</code>  el número de veces que sea necesario
+<LI>El usuario escribe el comando que da lugar a la conexión inicial y especifica el username asi como 
+la petición de usar una clave. El programa cliente envía el username y la petición de uso
+de  la clave.
+
+<P>
 </LI>
-<LI>Añada la opción de depuración al servidor; <code>/usr/sbin/sshd -d -p 2222</code>. 
-El número <code>2222</code> se refiere aquí al puerto.
+<LI>El demonio de SSH mira en el fichero <code>authorized_keys</code> y
+construye un reto basado en esa clave y lo envía al cliente.
+
+<P>
 </LI>
-<LI>Observe el fichero de log del servicio SSH usando <A NAME="tex2html1562"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?tail"><TT>tail</TT></A>
-<code>-f</code>: 
-<code>tail -f /var/log/auth.log</code> ( en el servidor)
+<LI>El cliente recibe el reto asociado con la clave y lo redirige al
+agente. Supongamos que la clave fué previamente cargada con <A NAME="tex2html1533"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
+<P>
 </LI>
-<LI>Asegúrese que el agente se está ejecutando: <code>ps aux|grep ssh-agent</code>.  
-Si se está usando <code>keychain</code> asegúrese de que el agente, el PID y el socket
-están correctamente actualizados
+<LI>El agente construye la respuesta y la devuelve al proceso <A NAME="tex2html1534"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+el cual la envía al proceso <A NAME="tex2html1535"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+que escucha en el otro extremo.
+El cliente <A NAME="tex2html1536"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+nunca ve la clave privada, lo que ve 
+es la respuesta. 
+
+<P>
 </LI>
-<LI>Asegúrese que su clave ha sido añadida al agente SSH.
-Use <code>ssh-add -l</code> para comprobarlo.  
-</LI>
-<LI>Compruebe los permisos en sus directorios <code>HOME</code>, <code>~/.ssh</code>
-y en el fichero <code>authorized_keys</code>. El servidor 
-rechazará el uso de claves públicas si 
-esta en modo <code>StrictModes on</code> si los permisos no son
-suficientemente restrictivos.
+<LI>El servidor <A NAME="tex2html1537"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+valida la respuesta. Si es correcta permite 
+el acceso al sistema.
+
+<P>
 </LI>
 </OL>
 
 <P>
 <P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">83</SPAN>.<SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
-<I>Establezca una conexión SSH:
-¿Que protocolo se esta usando en la conexión?
-¿Que identidad se esta usando?</I></DIV><P></P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">83</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Establezca claves con passphrase, instale un agente ssh y compruebe su buen
+funcionamiento.</I></DIV><P></P>
 
 <P>
 
-<H4><A NAME="SECTION065100020000000000000">
+<H4><A NAME="SECTION06560040000000000000">
+Bloqueando el acceso a un Agente</A>
+</H4>
+  
+
+<P>
+Es posible cerrar el acceso al agente usando la opción <code>-x</code> de <A NAME="tex2html1538"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
+<PRE>
+pp2@europa:~$ ssh-add -x
+Enter lock password:
+Again:
+Agent locked.
+pp2@europa:~$ ssh orion
+Enter passphrase for key '/home/pp2/.ssh/id_dsa': ********
+Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Mon Apr 27 13:29:32 2009 from europa.deioc.ull.es
+casiano@orion:~$
+</PRE>
+
+<P>
+Para abrir el acceso al agente usaremos la opción <code>-X</code> de <A NAME="tex2html1539"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
+<PRE>
+pp2@europa:~$ ssh-add -X
+Enter lock password: ****************
+Agent unlocked.
+pp2@europa:~$
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560050000000000000">
+Poniendo Fecha de Caducidad</A>
+</H4>
+  
+
+<P>
+La opción <code>-t lifetime</code> de <A NAME="tex2html1540"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>
+puede ser utilizada para 
+limitar el tiempo de caducidad de las identidades en un agente. El tiempo
+se expresará en segundos o bien de la forma <code>time[qualifier]</code>, donde
+<code>time</code> es un entero positivo y <code>qualifier</code> es:
+
+<P>
+<PRE>
+           nada    segundos
+           s | S   segundos
+           m | M   minutos
+           h | H   horas
+           d | D   dias
+           w | W   semanas
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560060000000000000">
 Véase también</A>
 </H4>
   
@@ -240,8 +347,14 @@ Véase también</A>
 <P>
 
 <UL>
-<LI><A NAME="tex2html1563"
-  HREF="http://blog.codefront.net/2007/02/28/debugging-ssh-public-key-authentication-problems/">Debugging SSH public key authentication problems</A>
+<LI>Wikipedia <A NAME="tex2html1541"
+  HREF="http://en.wikipedia.org/wiki/Ssh-agent">Ssh-agent</A>
+</LI>
+<LI><A NAME="tex2html1542"
+  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+</LI>
+<LI><A NAME="tex2html1543"
+  HREF="http://mah.everybody.org/docs/ssh">Using ssh-agent with ssh</A>
 </LI>
 </UL>
 
@@ -253,29 +366,37 @@ Véase también</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html14592"
-  HREF="node658.html#SECTION065100010000000000000">Lista de Comprobaciones en Caso de Error</A>
-<LI><A NAME="tex2html14593"
-  HREF="node658.html#SECTION065100020000000000000">Véase también</A>
+<LI><A NAME="tex2html14625"
+  HREF="node658.html#SECTION06560010000000000000">ssh-add</A>
+<LI><A NAME="tex2html14626"
+  HREF="node658.html#SECTION06560020000000000000">Arrancando un Agente SSH</A>
+<LI><A NAME="tex2html14627"
+  HREF="node658.html#SECTION06560030000000000000">El Protocolo</A>
+<LI><A NAME="tex2html14628"
+  HREF="node658.html#SECTION06560040000000000000">Bloqueando el acceso a un Agente</A>
+<LI><A NAME="tex2html14629"
+  HREF="node658.html#SECTION06560050000000000000">Poniendo Fecha de Caducidad</A>
+<LI><A NAME="tex2html14630"
+  HREF="node658.html#SECTION06560060000000000000">Véase también</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14590"
+<A NAME="tex2html14623"
   HREF="node659.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14584"
-  HREF="node648.html">
+<A NAME="tex2html14617"
+  HREF="node652.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14578"
+<A NAME="tex2html14611"
   HREF="node657.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14586"
-  HREF="node823.html">
+<A NAME="tex2html14619"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14588"
-  HREF="node826.html">
+<A NAME="tex2html14621"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -326,20 +447,20 @@ Véase también</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14591"
-  HREF="node659.html">Los Ficheros de Configuración</A>
-<B> Subir:</B> <A NAME="tex2html14585"
-  HREF="node648.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14579"
-  HREF="node657.html">Consideraciones sobre la Seguridad</A>
- &nbsp; <B>  <A NAME="tex2html14587"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14589"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14624"
+  HREF="node659.html">Mejor un Sólo Agente</A>
+<B> Subir:</B> <A NAME="tex2html14618"
+  HREF="node652.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14612"
+  HREF="node657.html">Deshabilitar la Asignación de</A>
+ &nbsp; <B>  <A NAME="tex2html14620"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14622"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un DSL para Procesar Documentos XML usando instance_eval</TITLE>
-<META NAME="description" CONTENT="Un DSL para Procesar Documentos XML usando instance_eval">
+<TITLE>Encadenamiento de Alias</TITLE>
+<META NAME="description" CONTENT="Encadenamiento de Alias">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node275.html">
-<LINK REL="previous" HREF="node273.html">
-<LINK REL="up" HREF="node272.html">
+<LINK REL="previous" HREF="node271.html">
+<LINK REL="up" HREF="node241.html">
 <LINK REL="next" HREF="node275.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7720"
+<A NAME="tex2html7737"
   HREF="node275.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7714"
-  HREF="node272.html">
+<A NAME="tex2html7731"
+  HREF="node241.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7708"
+<A NAME="tex2html7725"
   HREF="node273.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7716"
-  HREF="node823.html">
+<A NAME="tex2html7733"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7718"
-  HREF="node826.html">
+<A NAME="tex2html7735"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,501 +92,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7721"
-  HREF="node275.html">Dos DSLs: Generando XML</A>
-<B> Subir:</B> <A NAME="tex2html7715"
-  HREF="node272.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7709"
-  HREF="node273.html">Un Lenguaje de Dominio</A>
- &nbsp; <B>  <A NAME="tex2html7717"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7719"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7738"
+  HREF="node275.html">Lenguajes de Dominio Específico.</A>
+<B> Subir:</B> <A NAME="tex2html7732"
+  HREF="node241.html">Reflexión y Metaprogramación</A>
+<B> Anterior:</B> <A NAME="tex2html7726"
+  HREF="node273.html">Definiendo Métodos con define_methods</A>
+ &nbsp; <B>  <A NAME="tex2html7734"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7736"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html7722"
-  HREF="node274.html#SECTION028122010000000000000">XML</A>
-<LI><A NAME="tex2html7723"
-  HREF="node274.html#SECTION028122020000000000000">REXML</A>
-<LI><A NAME="tex2html7724"
-  HREF="node274.html#SECTION028122030000000000000">Un DSL para XML: Primera Versión. Modo de Uso</A>
-<LI><A NAME="tex2html7725"
-  HREF="node274.html#SECTION028122040000000000000">La Clase XmlRipper: Primera Aproximación</A>
-<LI><A NAME="tex2html7726"
-  HREF="node274.html#SECTION028122050000000000000">Un DSL para XML: Segunda Versión</A>
-<LI><A NAME="tex2html7727"
-  HREF="node274.html#SECTION028122060000000000000">Nueva versión de <TT>initialize</TT></A>
-<LI><A NAME="tex2html7728"
-  HREF="node274.html#SECTION028122070000000000000">Un Ejecutable para Interpretar Guiones en nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN></A>
-<LI><A NAME="tex2html7729"
-  HREF="node274.html#SECTION028122080000000000000">Un Guión Escrito en Nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN> para Nuestro Intérprete <TT>xripper</TT></A>
-<LI><A NAME="tex2html7730"
-  HREF="node274.html#SECTION028122090000000000000">Ejecutando el Intérprete <SPAN  CLASS="textbf">XRipper</SPAN></A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION028122000000000000000"></A><A NAME="11086"></A>
-<BR>
-Un DSL para Procesar Documentos XML usando <A NAME="tex2html559"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html#method-i-instance_eval"><TT>instance_eval</TT></A>
-</H2>
+<H1><A NAME="SECTION028110000000000000000">
+Encadenamiento de Alias</A>
+</H1>
 
 <P>
-
-<OL>
-<LI>Ejemplo modificado de la sección <SPAN  CLASS="textbf">Dealing with XML</SPAN> del libro
-[<A
- HREF="node827.html#ER">9</A>]. 
-</LI>
-<LI>Véase también 
-<A NAME="tex2html560"
-  HREF="https://github.com/cocoa/eloquent-ruby">https://github.com/cocoa/eloquent-ruby</A>.
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION028122010000000000000">
-XML</A>
-</H4>
-  
-
-<P>
-Un ejemplo de XML. Contenidos del fichero <code>fellowship.xml</code>:
-<PRE>
-&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
-&lt;document&gt;
-  &lt;title&gt;The Fellowship of the Ring&lt;/title&gt;
-  &lt;author&gt;J. R. R. Tolken&lt;/author&gt;
-  &lt;published&gt;1954&lt;/published&gt;
-  
-  &lt;chapter&gt;
-    &lt;title&gt;A Long Expected Party&lt;/title&gt;
-    &lt;content&gt;When Mr. Bilbo Bagins from Bag End ...&lt;/content&gt;
-  &lt;/chapter&gt;
-
-  &lt;chapter&gt;
-    &lt;title&gt;A Shadow Of The Past&lt;/title&gt;
-    &lt;content&gt;The talk did not die down ...&lt;/content&gt;
-  &lt;/chapter&gt;
-
-  &lt;!-- etc --&gt;
-&lt;/document&gt;
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122020000000000000">
-REXML</A>
-</H4>
-  
-
-<P>
-Véanse:
-
-<UL>
-<LI><A NAME="tex2html561"
-  HREF="http://www.germane-software.com/software/rexml/docs/tutorial.html">REXML Tutorial</A>
-</LI>
-<LI><A NAME="tex2html562"
-  HREF="http://xml-simple.rubyforge.org/">XmlSimple - XML made easy</A>
-</LI>
-<LI>Veamos un ejemplo de uso de <code>rexml/document</code>:
-<PRE>
-#!/usr/bin/env ruby
-
-require 'rexml/document'
-filename = ARGV.shift || 'fellowship.xml'
-File.open(filename) do |f|
-  doc = REXML::Document.new(f)
-  author = REXML::XPath.first(doc, '/document/author')
-  print "Author: "
-  puts author.text       # J. R. R. Tolken
-
-  puts "Chapters:"
-  REXML::XPath.each(doc, '/document/chapter/title') do |title|
-    puts "  "+title.text # A Long Expected Party
-  end                    # A Shadow Of The Past
-end
-</PRE>
-
-<P>
-Ejecución:
-
-<P>
-<PRE>
-$ ruby find_author.rb 
-Author: J. R. R. Tolken
-Chapters:
-  A Long Expected Party
-  A Shadow Of The Past
-</PRE>
-
-<P>
-</LI>
-<LI>También podemos arreglar la errata en el nombre del autor:
-<PRE>
-#!/usr/bin/env ruby
-
-require 'rexml/document'
-filename = ARGV.shift || 'fellowship.xml'
-File.open(filename) do |f|
-  doc = REXML::Document.new(f)
-  REXML::XPath.each(doc, '/document/author') do |author|
-    author.text = 'J.R.R. Tolkien'
-  end
-  puts doc
-end
-</PRE>
-</LI>
-</UL>
-
-<P>
-
-<H4><A NAME="SECTION028122030000000000000">
-Un DSL para XML: Primera Versión. Modo de Uso</A>
-</H4>
-  
-
-<A NAME="parrafo:dslxmlprimeraversion"></A>
-<P>
-Aunque  <code>REXML</code> es fácil de usar, nos gustaría disponer de un poco mas de expresividad de manera
-que podamos expresar un conjunto de acciones
-que se ejecuten cuando se produce cierto matching.
-El siguiente fragmento de código muestra una primera versión de nuestro DSL:
-
-<P>
-<PRE>
-if $0 == __FILE__
-  ripper = XmlRipper.new do |r|
-    puts "Compiling  ..."
-    r.on_path '/document/title' do |t| 
-      puts "Title: "+t.text 
-    end
-    r.on_path '/document/author' do |a| 
-      puts "Author: "+a.text 
-    end
-    r.action { puts "Chapters: " }
-    r.on_path '/document/chapter/title' do |ct| 
-      puts "  "+ct.text 
-    end
-  end
-  filename = ARGV.shift || 'fellowship.xml'
-  ripper.run filename
-  #  Compiling  ...
-  #  Title: The Fellowship of the Ring
-  #  Author: J. R. R. Tolken
-  #  Chapters: 
-  #    A Long Expected Party
-  #    A Shadow Of The Past
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122040000000000000">
-La Clase XmlRipper: Primera Aproximación</A>
-</H4>
-  
-
-<P>
-<PRE>
-require 'rexml/document'
-
-class XmlRipper
-  def initialize()
-    @before_action = proc { } # do nothing
-    @path_action   = []       # Array: to preserve the order
-    @after_action  = proc { }
-    yield self if block_given?
-  end
-
-  def on_path(path, &amp;block)
-    @path_action &lt;&lt; [ path, block ]
-  end
-
-  def action(&amp;block)
-    @path_action &lt;&lt; [ '', block ]
-  end
-
-  def before(&amp;block)
-    @before_action = block
-  end
-
-  def after(&amp;block)
-    @after_action = block
-  end
-
-  def run_path_actions(doc)
-    @path_action.each do |path_action|
-      path, action = path_action
-      REXML::XPath.each(doc, path) do |element|
-        action[element]
-      end
-    end
-  end
-
-  def run(file_name)
-    File.open(file_name) do |f|
-      doc = REXML::Document.new(f)
-      @before_action[doc]
-      run_path_actions(doc)
-      @after_action[doc]
-    end
-  end
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122050000000000000">
-Un DSL para XML: Segunda Versión</A>
-</H4>
-  
-
-<P>
-Queremos  evitar esas cacofonías de uso del objeto <code>r</code>
-en la versión anterior (sección <A HREF="#parrafo:dslxmlprimeraversion">15.12.2</A>) y poder usarlo así:
-
-<P>
-<PRE>
-[~/chapter8ReflectionandMetaprogramming/DSL/xmlripper]$ cat sample.xr 
-puts "Compiling  ..."
-on_path '/document/title' do |t| 
-  puts "Title: "+t.text 
-end
-on_path '/document/author' do |a| 
-  a.text = "J.R.R. Tolkien"
-  puts "Author: "+a.text 
-end
-action { puts "Chapters: " }
-on_path '/document/chapter/title' do |ct| 
-  puts "  "+ct.text 
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122060000000000000">
-Nueva versión de <TT>initialize</TT></A>
-</H4>
-  
-
-<P>
-Casi lo único que hay que cambiar en la versión anterior es el método
-<code>initialize</code>:
-<PRE>
-  def initialize( path = nil, &amp;block )
-    @before_action = proc { } # do nothing
-    @path_action   = []       # Array: to preserve the order
-    @after_action  = proc { }
-
-    if path then
-      instance_eval( File.read( path ) )
-    else
-      instance_eval( &amp;block ) if block_given?
-    end
-  end
-</PRE>
-
-<P>
-Si queremos que nuestro DSL pueda ser llamado especificando el contexto para que el bloque se ejecute
-podemos usar esta versión ligeramente mas complicada:
-
-<P>
-<PRE>
-  def initialize( path = nil, &amp;block )
-    @before_action = proc { } # do nothing
-    @path_action   = []       # Array: to preserve the order
-    @after_action  = proc { }
-
-    if path then
-      instance_eval( File.read( path ) )
-    elsif block_given?
-      if block.arity &lt; 1
-        instance_eval( &amp;block ) 
-      else
-        block.call(self)
-      end
-    end
-  end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122070000000000000">
-Un Ejecutable para Interpretar Guiones en nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN></A>
-</H4>
-  
-
-<P>
-En la misma forma en que trabajan <code>rake</code> y <code>rspec</code> podemos crear un ejecutable
-que recibe como entrada un fichero escrito en el DSL <code>XRipper</code> y ejecuta las acciones
-asociadas:
-
-<P>
-<PRE>
-[~/DSL/xmlripper]$ cat xripper 
-#!/usr/bin/env ruby
-
-require 'xml_ripper_v2'
-
-scriptname = ARGV.shift
-xmlfile = ARGV.shift
-
-if scriptname and xmlfile and File.exists? scriptname and File.exists? xmlfile
-  XmlRipper.new(scriptname).run(xmlfile)
-else
-  puts "Usage:\n\t#$0 xripper_script file.xml"
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122080000000000000">
-Un Guión Escrito en Nuestro DSL <SPAN  CLASS="textbf">XRipper</SPAN> para Nuestro Intérprete <TT>xripper</TT></A>
-</H4>
-  
-
-<P>
-Ahora lo único que hay que hacer es ejecutar nuestro intérprete <code>xripper</code> sobre un fichero
-escrito en el DSL:
-
-<P>
-<PRE>
-[~/chapter8ReflectionandMetaprogramming/DSL/xmlripper]$ cat sample.xr 
-puts "Compiling  ..."
-on_path '/document/title' do |t| 
-  puts "Title: "+t.text 
-end
-on_path '/document/author' do |a| 
-  a.text = "J.R.R. Tolkien"
-  puts "Author: "+a.text 
-end
-action { puts "Chapters: " }
-on_path '/document/chapter/title' do |ct| 
-  puts "  "+ct.text 
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION028122090000000000000">
-Ejecutando el Intérprete <SPAN  CLASS="textbf">XRipper</SPAN></A>
-</H4>
-  
-
-Para llevar a cabo la ejecución escribimos un <code>Rakefile</code>:
-<PRE>
-[~/DSL/xmlripper]$ cat Rakefile 
-task :default =&gt; :run
-
-desc "run xripper "
-task :run do
-  sh "ruby -I. xripper sample.xr fellowship.xml"
-end
-</PRE>
-La ejecución produce esta salida:
-<PRE>
-[~/chapter8ReflectionandMetaprogramming/DSL/xmlripper]$ rake
-ruby -I. xripper sample.xr fellowship.xml
-Compiling  ...
-Title: The Fellowship of the Ring
-Author: J.R.R. Tolkien
-Chapters: 
-  A Long Expected Party
-  A Shadow Of The Past
-</PRE>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html7720"
-  HREF="node275.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7714"
-  HREF="node272.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7708"
-  HREF="node273.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7716"
-  HREF="node823.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7718"
-  HREF="node826.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html7721"
-  HREF="node275.html">Dos DSLs: Generando XML</A>
-<B> Subir:</B> <A NAME="tex2html7715"
-  HREF="node272.html">Lenguajes de Dominio Específico.</A>
-<B> Anterior:</B> <A NAME="tex2html7709"
-  HREF="node273.html">Un Lenguaje de Dominio</A>
- &nbsp; <B>  <A NAME="tex2html7717"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7719"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Matrices Dispersas</TITLE>
-<META NAME="description" CONTENT="Práctica: Matrices Dispersas">
+<TITLE>Ejecutando Código Cargado</TITLE>
+<META NAME="description" CONTENT="Ejecutando Código Cargado">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node225.html">
 <LINK REL="previous" HREF="node223.html">
-<LINK REL="up" HREF="node170.html">
+<LINK REL="up" HREF="node222.html">
 <LINK REL="next" HREF="node225.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6893"
+<A NAME="tex2html6930"
   HREF="node225.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6887"
-  HREF="node170.html">
+<A NAME="tex2html6924"
+  HREF="node222.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6881"
+<A NAME="tex2html6918"
   HREF="node223.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6889"
-  HREF="node823.html">
+<A NAME="tex2html6926"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6891"
-  HREF="node826.html">
+<A NAME="tex2html6928"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,155 +92,134 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6894"
-  HREF="node225.html">Los Métodos Singleton y</A>
-<B> Subir:</B> <A NAME="tex2html6888"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6882"
-  HREF="node223.html">Práctica: Matrices</A>
- &nbsp; <B>  <A NAME="tex2html6890"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6892"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6931"
+  HREF="node225.html">Autoloading de Módulos</A>
+<B> Subir:</B> <A NAME="tex2html6925"
+  HREF="node222.html">Carga y Solicitud de</A>
+<B> Anterior:</B> <A NAME="tex2html6919"
+  HREF="node223.html">El Camino de Búsqueda</A>
+ &nbsp; <B>  <A NAME="tex2html6927"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6929"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H1><A NAME="SECTION027110000000000000000"></A>
-   <A NAME="8719"></A>
-  
-<A NAME="practica:matricesdispersas"></A>
-<BR>
-Práctica: Matrices Dispersas
-</H1>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html6932"
+  HREF="node224.html#SECTION02792100000000000000">Envolviendo una Carga</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
 
-<P>
-Considere el desarrollo de una aplicación que contemple la creación
-de Matrices. Se ha de utilizar una representación para matrices
-densas y otra diferente para matrices dispersas. 
-
-<P>
-Una matriz se
-considerará dispersa si tiene más de un 60% de ceros. Se ha de
-establecer una relación de herencia entre las clases que se utilicen
-para su representación. Las operaciones básicas con matrices son
-diferentes en cada caso.
+<H2><A NAME="SECTION02792000000000000000">
+Ejecutando Código Cargado</A>
+</H2>
 
 <P>
 
-<OL>
-<LI>El entregable de esta práctica tiene que ser una Gema Ruby. Véase <I>Creando Gemas</I> <A HREF="node701.html#section:gemas_con_bundler">89</A>
+<UL>
+<LI><A NAME="8848"></A><SPAN  CLASS="textbf">load</SPAN> y<A NAME="8850"></A><SPAN  CLASS="textbf">require</SPAN> ejecutan el código en el fichero especificado inmediatamente.
+</LI>
+<LI>La ejecución ocurre en un nuevo ámbito al nivel mas alto, que es diferente
+del ámbito en el que se invocó el <code>load</code> o el <code>require</code>
+</LI>
+<LI>El fichero cargado puede 
+
+<UL>
+<LI>Ver las variables globales
+</LI>
+<LI>Ver las constantes
+</LI>
+<LI>No puede ver  las variables locales
+</LI>
+</UL>
+Esto conlleva:
+
+<UL>
+<LI>Las variables locales creadas por el fichero cargado se descartan una vez que se termina la carga
+</LI>
+<LI>Al comienzo de la carga <code>self</code> es <code>main</code> tal como 
+ocurre cuando el intérprete Ruby  comienza la ejecución. 
+</LI>
+<LI>Invocar <code>load</code> o <code>require</code> no propaga el objeto receptor 
+al fichero cargado.
+</LI>
+<LI>El anidamiento actual de módulos es ignorado.
+Esto es: No podemos , por ejemplo, abrir una clase y luego cargar un fichero con definiciones de métodos y esperar
+que estén en la clase. El fichero será procesado al nivel mas alto de ámbito, no dentro de 
+la clase o módulo.
+</LI>
+</UL>
 
 <P>
 </LI>
-<LI>Partiendo de la implementación que se ha realizado en prácticas anteriores para Fracciones y Matrices reorganice el código.
-</LI>
-<LI>Escribir un conjunto de pruebas unitarias (Unit Testing)
-<code>test/tc_ordenacion.rb</code>. Véase <I>Test/Unit</I> <A HREF="node286.html#section:testunit">16.1</A>
+</UL>
 
 <P>
-</LI>
-<LI>Escribir un fichero de expectativas de comportamiento (TDD)
-<code>spec/ordenacion_spec.rb</code>.  Véase <I>Test Driven Development (TDD) y Rspec</I> <A HREF="node293.html#chapter:tdd">17</A>
-</LI>
-<LI>Comprobar el correcto funcionamiento en distintas plataformas (Continuous Integration)
-<code>travis</code>. Véase <I>Integración Contínua: Travis</I> <A HREF="node307.html#chapter:travis">20</A>
-y
-<I>Custom Bundler arguments and Gemfile locations</I> <A HREF="node308.html#parrafo:travisbundlerargs">20.1</A>
-</LI>
-<LI>Realizar un seguimiento continuo de las pruebas (Continuous Testing)
-<code>guard</code>. Véase <I>Guard</I> <A HREF="node315.html#section:guard">21</A>
-</LI>
-</OL>
+
+<H3><A NAME="SECTION02792100000000000000">
+Envolviendo una Carga</A>
+</H3>
+     Si al método <code>load</code> se le pasa un segundo argumento que sea distinto de <code>nil</code> y <code>false</code>
+     entonces carga el fichero especificado en un módulo anónimo. De esta forma el fichero cargado
+     no puede afectar al espacio de nombres global. Todas las constantes, clases, módulos que define 
+     quedan atrapados dentro del módulo anónimo. Sin embargo puede establecer variables globales que quedan visibles
+en el código que lo carga.
 
 <P>
-Sugerencias: 
 <PRE>
-[~/srcLPPruby/matrices_dispersas]$ cat sparse_matrix.rb 
-require 'pp'
-
-class SparseVector 
-  attr_reader :vector
-
-  def initialize(h = {})
-    @vector = Hash.new(0)
-    @vector = @vector.merge!(h)
-  end
-
-  def [](i)
-    @vector[i] 
-  end
-
-  def to_s
-    @vector.to_s
-  end
-end
-
-class SparseMatrix 
-
-  attr_reader :matrix
-
-  def initialize(h = {})
-    @matrix = Hash.new({})
-    for k in h.keys do 
-      @matrix[k] = if h[k].is_a? SparseVector
-                     h[k]
-                   else 
-                     @matrix[k] = SparseVector.new(h[k])
-                   end
-    end
-  end
-
-  def [](i)
-    @matrix[i]
-  end
-
-  def col(j)
-    c = {}
-    for r in @matrix.keys do
-      c[r] = @matrix[r].vector[j] if @matrix[r].vector.keys.include? j
-    end
-    SparseVector.new c
-  end
-end
-
-if __FILE__ == $0 
-  z = SparseMatrix.new 1000 =&gt; { 100 =&gt; 1, 500 =&gt; 200}, 20000 =&gt; { 1000 =&gt; 3, 9000 =&gt; 200}
-  puts "z[1000] = #{z[1000]}"
-  puts "z[1000][1] = #{z[1000][1]}"
-  puts "z[1000][500] = #{z[1000][500]}"
-  puts "z.col(500) = #{z.col(500)}"
-  puts "z.col(4000) = #{z.col(4000)}"
+[~/srcLPP/Chapter7ClassesAndModules/modules]$ cat -n wrapped_module.rb 
+     1  # Modules do not change the names of instance variables
+     2  # or private methods 
+     3  module Space
+     4    class Chazam
+     5      def tutu
+     6        "inside tutu"
+     7      end
+     8    end
+     9  end
+    10  $Space = Space
 </PRE>
 
 <P>
 <PRE>
-[~/srcLPPruby/matrices_dispersas]$ ruby sparse_matrix.rb 
-z[1000] = {100=&gt;1, 500=&gt;200}
-z[1000][1] = 0
-z[1000][500] = 200
-z.col(500) = {1000=&gt;200}
-z.col(4000) = {}
+[~/srcLPP/Chapter7ClassesAndModules/modules]$ cat -n wrapped_loads.rb 
+     1  load 'wrapped_module.rb', true
+     2  puts $Space.inspect
+     3  
+     4  q = $Space :: Chazam.new # :: is an operator!
+     5  puts q.tutu
+</PRE>
+
+<P>
+<PRE>
+#&lt;Module:0x007fd9c284e790&gt;::Space
+inside tutu
+[~/srcLPP/Chapter7ClassesAndModules/modules]$
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6893"
+<A NAME="tex2html6930"
   HREF="node225.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6887"
-  HREF="node170.html">
+<A NAME="tex2html6924"
+  HREF="node222.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6881"
+<A NAME="tex2html6918"
   HREF="node223.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6889"
-  HREF="node823.html">
+<A NAME="tex2html6926"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6891"
-  HREF="node826.html">
+<A NAME="tex2html6928"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -291,20 +270,20 @@ z.col(4000) = {}
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6894"
-  HREF="node225.html">Los Métodos Singleton y</A>
-<B> Subir:</B> <A NAME="tex2html6888"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6882"
-  HREF="node223.html">Práctica: Matrices</A>
- &nbsp; <B>  <A NAME="tex2html6890"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6892"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6931"
+  HREF="node225.html">Autoloading de Módulos</A>
+<B> Subir:</B> <A NAME="tex2html6925"
+  HREF="node222.html">Carga y Solicitud de</A>
+<B> Anterior:</B> <A NAME="tex2html6919"
+  HREF="node223.html">El Camino de Búsqueda</A>
+ &nbsp; <B>  <A NAME="tex2html6927"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6929"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

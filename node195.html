@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Subclases y Herencia</TITLE>
-<META NAME="description" CONTENT="Subclases y Herencia">
+<TITLE>Visibilidad de los métodos: Público, Privado, Protegido</TITLE>
+<META NAME="description" CONTENT="Visibilidad de los métodos: Público, Privado, Protegido">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node206.html">
-<LINK REL="previous" HREF="node192.html">
-<LINK REL="up" HREF="node170.html">
+<LINK REL="next" HREF="node198.html">
+<LINK REL="previous" HREF="node174.html">
+<LINK REL="up" HREF="node173.html">
 <LINK REL="next" HREF="node196.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6439"
+<A NAME="tex2html6475"
   HREF="node196.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6433"
-  HREF="node170.html">
+<A NAME="tex2html6469"
+  HREF="node173.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6427"
+<A NAME="tex2html6463"
   HREF="node194.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6435"
-  HREF="node823.html">
+<A NAME="tex2html6471"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6437"
-  HREF="node826.html">
+<A NAME="tex2html6473"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,89 +92,255 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6440"
-  HREF="node196.html">Heredando Métodos</A>
-<B> Subir:</B> <A NAME="tex2html6434"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6428"
-  HREF="node194.html">Ejemplo de Visibilidad</A>
- &nbsp; <B>  <A NAME="tex2html6436"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6438"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6476"
+  HREF="node196.html">Ejemplo de Visibilidad de</A>
+<B> Subir:</B> <A NAME="tex2html6470"
+  HREF="node173.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6464"
+  HREF="node194.html">Práctica: La Clase Punto</A>
+ &nbsp; <B>  <A NAME="tex2html6472"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6474"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02730000000000000000"></A>
-<A NAME="section:sublasesyherencia"></A>
+<H1><A NAME="SECTION02720000000000000000"></A>
+<A NAME="section:visibilidaddelosmetodos"></A>
 <BR>
-Subclases y Herencia
+Visibilidad de los métodos: Público, Privado, Protegido
 </H1>
 
 <P>
 
 <UL>
-<LI>Si cuando se define una clase no se especifica una superclase 
-entonces nuestra clase hereda implíctamente de <A NAME="tex2html400"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>.
+<LI><A NAME="8719"></A><SPAN  CLASS="textbf">Encapsulation</SPAN> means that the internal representation of an object is generally hidden from view outside of the object's definition. Typically, only the object's own methods can directly inspect or manipulate its fields. Smalltalk and Ruby only allow access via object methods,
+</LI>
+<LI><A NAME="8721"></A><SPAN  CLASS="textbf">The Uniform Access Principle</SPAN> was put forth by <A NAME="tex2html404"
+  HREF="http://en.wikipedia.org/wiki/Bertrand_Meyer">Bertrand Meyer</A>. It states 
+<I>All services offered by a module should be available through a uniform notation, which does not betray whether they are implemented through storage or through computation</I>.
+
+<P>
+This principle applies generally to the syntax of object-oriented programming languages. 
+In simpler form, it states that there should be no difference between working with an attribute, precomputed property, or method/query:
+
+<OL>
+<LI><PRE>
+[~/srcDaveThomasProgrammingRuby]$ cat virtual_attributes.rb 
+class BookInStock
+  attr_reader :isbn 
+  attr_accessor :price
+  def initialize(isbn, price)
+    @isbn = isbn
+    @price = Float(price) 
+  end
+  def price_in_cents 
+   Integer(price*100 + 0.5)
+  end
+  # ... 
+end
+book = BookInStock.new("isbn1", 33.80)
+puts "Price = #{book.price}"
+puts "Price in cents = #{book.price_in_cents}"
+</PRE>
+Here we’ve used attribute methods to create a virtual instance
+variable. To the outside world, <code>price_in_cents</code> seems to be an
+attribute like any other. Internally, though, it has no corresponding instance variable.
+</LI>
+<LI><PRE>
+[~/srcDaveThomasProgrammingRuby]$ ruby  virtual_attributes.rb 
+Price = 33.8
+Price in cents = 3380
+</PRE>
+</LI>
+</OL>
+</LI>
+<LI>Los métodos son normalmente <code>public</code> a menos que sean explícitamente declarados como <code>private</code> o <code>protected</code>. 
+</LI>
+<LI>Una excepción es <code>initialize</code> que es implícitamente privado.
+</LI>
+<LI>Otra excepción son los métodos declarados fuera de cualquier definición de clase: son declarados como métodos de instancia privados de la clase <A NAME="tex2html405"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
+<PRE>
+[~/rubytesting]$ cat privado_main2.rb 
+require 'pry'
+
+def tutu
+  "tut "
+end
+
+class Titi
+  def toto
+    tutu()
+  end
+end
+
+binding.pry()
+</PRE>
+
+<P>
+<PRE>
+[~/rubytesting]$ ruby privado_main2.rb 
+From: /Users/casiano/local/src/ruby/rubytesting/privado_main2.rb @ line 15 :
+    10:   end
+    11: end
+    12: 
+    13: binding.pry()
+    14: 
+ =&gt; 15: z = Titi.new
+    16: puts z.toto()
+
+[1] pry(main)&gt; self
+=&gt; main
+[2] pry(main)&gt; self.class
+=&gt; Object
+[4] pry(main)&gt; self.private_methods(false).select {|x| x =~ /tut/ }
+=&gt; [:tutu]
+[5] pry(main)&gt; self.tutu
+NoMethodError: private method `tutu' called for main:Object
+from (pry):5:in `&lt;main&gt;'
+[6] pry(main)&gt; tutu
+=&gt; "tut "
+[7] pry(main)&gt; Titi.new.tutu
+NoMethodError: private method `tutu' called for #&lt;Titi:0x007ff03612e700&gt;
+from (pry):7:in `&lt;main&gt;'
+[8] pry(main)&gt; Titi.new.toto
+=&gt; "tut "
+[9] pry(main)&gt;
+</PRE>
+</LI>
+</UL>
+
+<P>
+
+<UL>
+<LI>Un método público puede ser llamado desde cualquier lugar
+</LI>
+<LI>Si <code>m</code> es un método privado, deberá ser invocado implícitamente en <code>self</code>,
+esto es, como <I>función, <code>m()</code></I>,
+y no con receptor explícito: (<code>obj.m</code> o bien <code>self.m</code>).
+</LI>
+<LI>Esto es, un método privado es siempre invocado implícitamente en <code>self</code>
+y no debe ser invocado explícitamente en un objeto
+</LI>
+<LI>Las subclases pueden invocar y sobreescribir los métodos <code>private</code>
 
 <P>
 </LI>
-<LI>The fact that <I>classes may have multiple subclasses but only a single
-superclass (single inheritance) means that they can be arranged in a tree structure</I>,
-which we call the Ruby class hierarchy. 
+<LI>Al igual que los métodos privados, los métodos <code>protected</code>
+pueden ser invocados desde  la clase  o sus subclases
 </LI>
-<LI>The <A NAME="tex2html401"
-  HREF="http://ruby-doc.org/core-2.0.0/BasicObject.html"><TT>BasicObject</TT></A> class is the
-root of this hierarchy, and every class inherits directly or indirectly from <A NAME="tex2html402"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>. 
+<LI>A diferencia de los métodos privados, los métodos <code>protected</code>
+pueden ser invocados en cualquier objeto de la clase
+y no requieren la invocación implícita via <code>self</code>
 </LI>
-<LI>The <A NAME="8605"></A><SPAN  CLASS="textbf">descendants</SPAN> of a class are the subclasses of
-the class plus the subclasses of the subclasses, and so on recursively.
-</LI>
-<LI>The <A NAME="8607"></A><SPAN  CLASS="textbf">ancestors</SPAN> of a class are the superclass, plus the superclass
-of the superclass, and so on up to Object.
-</LI>
-<LI>The syntax for extending a class is simple. Just add a <code>&lt;</code> 
-character
-and the name of the superclass to your class statement.
+<LI>La visibilidad de los métodos se declara mediante tres <SPAN  CLASS="textbf">métodos</SPAN>:
+<code>public</code>, <code>private</code> y <code>protected</code>. 
 
 <P>
-We then create a subclass using class <code>Child &lt; Parent</code>. 
-The <code>&lt;</code> notation
-means we’re creating a subclass of the thing on the right; the fact
-that we use less-than presumably signals that the child class is
-supposed to be a specialization of the parent.
+</LI>
+<LI>Estos tres métodos son métodos 
+de instancia de la clase <code>Module</code>.
+
+<P>
+</LI>
+<LI>Como todas las clases son módulos y dentro de una definición de clase
+(pero fuera de las definiciones de métodos) <code>self</code> se refiere a la clase, podemos usar 
+estos métodos <code>public</code>, <code>private</code> y <code>protected</code> como si de palabras reservadas se tratara.
+
+<P>
+</LI>
+<LI>Una clase puede usarlos así:
 <PRE>
-class Point3D &lt; Point    # Define class Point3D as a subclass of Point
+class Point
+  # public methods go here
+
+  # The following methods are protected
+  protected
+
+  # protected methods go here
+
+  # The following methods are private
+  private
+
+  # private methods go here
 end
 </PRE>
 </LI>
-<LI>Es posible heredar de una subclase definida mediante <A NAME="tex2html403"
-  HREF="http://ruby-doc.org/core-2.0.0/Struct.html"><TT>Struct</TT></A>:
-<PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat subclassing_a_struct.rb 
-class Punto &lt; Struct.new("Point3D", :x, :y, :z)
-  # Superclass struct give us accessor methods, ==, to_s, etc.
-   def modulo
-     Math.sqrt(x*x+y*y+z*z)
-   end
-end
-if $0 == __FILE__
-  p = Punto.new(1,2,3)
-  puts p.x
-  puts p.modulo
-end
-</PRE>
-Ejecución:
+<LI>También pueden ser invocados con los nombres de uno o mas métodos (como símbolos o como
+cadenas). En tal caso la declaración de visibilidad viene después de la definición del método
+y altera la visibilidad del método con ese nombre.
 
 <P>
+</LI>
+<LI>Una práctica es declarar todos los métodos protegidos y privados de golpe,
+al final de la clase
+
+<P>
+</LI>
+<LI>Otra práctica es declarar la visbilidad justo después de la definición del método:
 <PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby subclassing_a_struct.rb 
-1
-3.7416573867739413
+class Widget
+  def x                       # Accessor method for @x
+    @x
+  end
+  protected :x                # Make it protected
+
+  def utility_method          # Define a method
+    nil
+  end
+  private :utility_method     # And make it private
+end
 </PRE>
+</LI>
+<LI>Si se desea declarar un método de clase como privado se usa el <SPAN  CLASS="textbf">método</SPAN>
+<code>private_class_method</code>:
+<PRE>
+        private_class_method :new
+</PRE>
+</LI>
+<LI>Si se desea hacer público de nuevo un método de clase privado se usa el 
+método <code>public_class_method</code>
+</LI>
+<LI>Las capacidades de metaprogramación de Ruby hacen posible
+invocar métodos privados y protegidos e incluso el acceso a variables 
+encapsuladas:
+<PRE>
+$ cat -n accesing_private_method.rb 
+     1  class Widget
+     2    def initialize()
+     3      @x = 4
+     4    end
+     5  
+     6    def x
+     7      @x
+     8    end
+     9    protected :x                # Make it protected
+    10  
+    11    def utility_method          # Define a method
+    12      puts "Inside utility_method"
+    13    end
+    14    private :utility_method     # And make it private
+    15  end
+    16  
+    17  w = Widget.new                      # Create a Widget
+    18  w.send :utility_method              # Invoke private method!
+    19  w.instance_eval { utility_method }  # Another way to invoke it
+    20  
+    21  w.instance_eval { puts @x }              # Read instance variable of w
+</PRE>
+Cuando ejecutamos, obtenemos:
+<PRE>
+[~/point]$ ruby accesing_private_method.rb 
+Inside utility_method
+Inside utility_method
+4
+</PRE>
+
+<P>
+Utilice <code>public_send</code> en vez de <code>send</code> si no se quiere que, 
+por error, se llame inadvertidamente a un método privado.
 </LI>
 </UL>
 
@@ -184,67 +350,29 @@ Ejecución:
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6441"
-  HREF="node196.html">Heredando Métodos</A>
-<LI><A NAME="tex2html6442"
-  HREF="node197.html">super</A>
-<UL>
-<LI><A NAME="tex2html6443"
-  HREF="node197.html#SECTION02732010000000000000">Ejemplo: Heredando de GServer</A>
+<LI><A NAME="tex2html6477"
+  HREF="node196.html">Ejemplo de Visibilidad de Métodos Protegidos</A>
+<LI><A NAME="tex2html6478"
+  HREF="node197.html">Ejemplo de Visibilidad</A>
 </UL>
-<BR>
-<LI><A NAME="tex2html6444"
-  HREF="node198.html">Predominancia/Invalidación de Métodos (overriding)</A>
-<UL>
-<LI><A NAME="tex2html6445"
-  HREF="node198.html#SECTION02733100000000000000">Predominancia de Métodos Privados</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6446"
-  HREF="node199.html">Aumentando la Conducta Mediante Encadenamiento</A>
-<LI><A NAME="tex2html6447"
-  HREF="node200.html">Herencia y Métodos de Clase</A>
-<LI><A NAME="tex2html6448"
-  HREF="node201.html">Herencia y Variables de la Instancia</A>
-<LI><A NAME="tex2html6449"
-  HREF="node202.html">Herencia y Variables de Clase y Variables de Instancia de una Clase</A>
-<UL>
-<LI><A NAME="tex2html6450"
-  HREF="node202.html#SECTION02737010000000000000">Herencia y Variables de Instancia del Objeto Clase</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6451"
-  HREF="node203.html">Herencia y Constantes</A>
-<LI><A NAME="tex2html6452"
-  HREF="node204.html">Averiguando los Descendientes de una Clase (descendants)</A>
-<LI><A NAME="tex2html6453"
-  HREF="node205.html">Delegación</A>
-<UL>
-<LI><A NAME="tex2html6454"
-  HREF="node205.html#SECTION027310010000000000000">Delegación usando DelegateClass</A>
-<LI><A NAME="tex2html6455"
-  HREF="node205.html#SECTION027310020000000000000">Delegación usando Rails</A>
-<LI><A NAME="tex2html6456"
-  HREF="node205.html#SECTION027310030000000000000">Véase</A>
-</UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6439"
+<A NAME="tex2html6475"
   HREF="node196.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6433"
-  HREF="node170.html">
+<A NAME="tex2html6469"
+  HREF="node173.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6427"
+<A NAME="tex2html6463"
   HREF="node194.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6435"
-  HREF="node823.html">
+<A NAME="tex2html6471"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6437"
-  HREF="node826.html">
+<A NAME="tex2html6473"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -295,20 +423,20 @@ Ejecución:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6440"
-  HREF="node196.html">Heredando Métodos</A>
-<B> Subir:</B> <A NAME="tex2html6434"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6428"
-  HREF="node194.html">Ejemplo de Visibilidad</A>
- &nbsp; <B>  <A NAME="tex2html6436"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6438"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6476"
+  HREF="node196.html">Ejemplo de Visibilidad de</A>
+<B> Subir:</B> <A NAME="tex2html6470"
+  HREF="node173.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6464"
+  HREF="node194.html">Práctica: La Clase Punto</A>
+ &nbsp; <B>  <A NAME="tex2html6472"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6474"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

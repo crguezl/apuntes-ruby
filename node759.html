@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Referencias</TITLE>
-<META NAME="description" CONTENT="Referencias">
+<TITLE>MacOS homebrew Package Manager</TITLE>
+<META NAME="description" CONTENT="MacOS homebrew Package Manager">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="previous" HREF="node758.html">
-<LINK REL="up" HREF="node756.html">
+<LINK REL="next" HREF="node760.html">
+<LINK REL="previous" HREF="node741.html">
+<LINK REL="up" HREF="node629.html">
 <LINK REL="next" HREF="node760.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16215"
+<A NAME="tex2html16259"
   HREF="node760.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16209"
-  HREF="node756.html">
+<A NAME="tex2html16253"
+  HREF="node629.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16205"
+<A NAME="tex2html16247"
   HREF="node758.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16211"
-  HREF="node823.html">
+<A NAME="tex2html16255"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16213"
-  HREF="node826.html">
+<A NAME="tex2html16257"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,38 +92,264 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16216"
-  HREF="node760.html">Haml</A>
-<B> Subir:</B> <A NAME="tex2html16210"
-  HREF="node756.html">SASS (Syntactically Awesome StyleSheets)</A>
-<B> Anterior:</B> <A NAME="tex2html16206"
-  HREF="node758.html">Modos de Uso</A>
- &nbsp; <B>  <A NAME="tex2html16212"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16214"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16260"
+  HREF="node760.html">PostgreSQL</A>
+<B> Subir:</B> <A NAME="tex2html16254"
+  HREF="node629.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html16248"
+  HREF="node758.html">Authentication using the Google</A>
+ &nbsp; <B>  <A NAME="tex2html16256"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16258"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061730000000000000000">
-Referencias</A>
-</H1>
-<OL>
-<LI><A NAME="tex2html1794"
-  HREF="http://sass-lang.com/documentation/file.SASS_REFERENCE.html">Sass (Syntactically Awesome StyleSheets): Reference Guide</A>
-</LI>
-<LI>Sass (Syntactically Awesome StyleSheets): 
+<H1><A NAME="SECTION061500000000000000000">
+MacOS homebrew Package Manager</A>
+</H1><I>
+ 
+  </I>
+<H4><A NAME="SECTION061500010000000000000">
+Homebrew installs packages to their own directory</A>
+</H4>
+<P>
+<I>Homebrew installs the stuff you need that Apple didn’t.
+</I>
+<P><PRE>
+$ brew install wget
+</PRE><I>
+Homebrew installs packages to their own directory and then symlinks their files into <code>/usr/local</code>.
+</I>
+<P><PRE>
+$ cd /usr/local
+$ find Cellar
+Cellar/wget/1.12
+Cellar/wget/1.12/bin/wget
+Cellar/wget/1.12/share/man/man1/wget.1
+</PRE>
+<P><PRE>
+$ ls -l bin
+bin/wget -&gt; ../Cellar/wget/1.12/bin/wget
+</PRE>
+<P>
+<I>Homebrew won’t install files outside its prefix, and you can place
+a Homebrew installation wherever you like.
+</I>
+<P>
+<H4><A NAME="SECTION061500020000000000000">
+Create your own Homebrew packages</A>
+</H4>
+<P>
+<I>Trivially create your own Homebrew packages.
+</I>
+<P><PRE>
+$ brew create http://foo.com/bar-1.0.tgz
+Created /usr/local/Library/Formula/bar.rb
+</PRE><I>
+It's all git and ruby underneath, so hack away with the knowledge
+that you can easily revert your modifications and merge upstream
+updates.
+</I>
+<P><PRE>
+$ brew edit wget # opens in $EDITOR!
+</PRE><I>
+Homebrew formulae are simple Ruby scripts:
+</I>
+<P><PRE>
+require 'formula'
+
+class Wget &lt; Formula
+  homepage 'http://www.gnu.org/wget/'
+  url 'http://ftp.gnu.org/wget-1.12.tar.gz'
+  md5 '308a5476fc096a8a525d07279a6f6aa3'
+
+  def install
+    system "./configure --prefix=#{prefix}"
+    system 'make install'
+  end
+end
+</PRE><I>
+Homebrew complements OS X. Install your gems with gem, and their
+dependencies with brew.
+</I>
+<P>
+<H4><A NAME="SECTION061500030000000000000">
+Comandos</A>
+</H4>
+<P><PRE>
+[~/local/src/ruby/sinatra/jump-start-sinatra]$ brew --help
+Example usage:
+  brew [info | home | options ] [FORMULA...]
+  brew install FORMULA...
+  brew uninstall FORMULA...
+  brew search [foo]
+  brew list [FORMULA...]
+  brew update
+  brew upgrade [FORMULA...]
+
+Troubleshooting:
+  brew doctor
+  brew install -vd FORMULA
+  brew [--env | --config]
+
+Brewing:
+  brew create [URL [--no-fetch]]
+  brew edit [FORMULA...]
+  open https://github.com/mxcl/homebrew/wiki/Formula-Cookbook
+
+Further help:
+  man brew
+  brew home
+</PRE>
+<P>
+<H4><A NAME="SECTION061500040000000000000">
+HOMEBREW_GITHUB_API_TOKEN</A>
+</H4>
+<P>
+<I>A personal GitHub API Access token, which
+you can create at 
 <A NAME="tex2html1795"
-  HREF="http://sass-lang.com/guide">Sass Basics</A>
+  HREF="https://github.com/settings/applications">https://github.com/settings/applications</A>.
+If set,
+GitHub will allow you a greater number of API requests. See
+<A NAME="tex2html1796"
+  HREF="http://developer.github.com/v3/#rate-limiting">http://developer.github.com/v3/#rate-limiting</A>
+for more information.
+</I>
+<P>
+<I>Homebrew uses the GitHub API for features such as <code>brew search</code>.
+</I>
+<P><PRE>
+$ brew search postgress
+Error: GitHub Server Error
+You may want to create an API token: https://github.com/settings/applications
+and then set HOMEBREW_GITHUB_API_TOKEN.
+</PRE><I>
+Vete a la página y crea el token.
+Luego añade una línea como esta en tu <code>.bashrc</code>:
+</I><PRE>
+$ export HOMEBREW_GITHUB_API_TOKEN fx0001111111111111111111111eeeeeeeeeeeee
+$ brew search postgress
+No formula found for "postgress". Searching open pull requests...
+</PRE>
+<P>
+<H4><A NAME="SECTION061500050000000000000">
+Véase</A>
+</H4>
+<P>
+<OL>
+<LI><A NAME="tex2html1797"
+  HREF="https://github.com/mxcl/homebrew/blob/master/Library/Contributions/manpages/brew.1.md">brew(1) - The missing package manager for OS X</A>
+</LI>
+<LI><A NAME="tex2html1798"
+  HREF="http://mac.tutsplus.com/tutorials/terminal/homebrew-demystified-os-xs-ultimate-package-manager/">Homebrew Demystified: OS X’s Ultimate Package Manager</A>
 </LI>
 </OL><I>
 </I>
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html16261"
+  HREF="node759.html#SECTION061500010000000000000">Homebrew installs packages to their own directory</A>
+<LI><A NAME="tex2html16262"
+  HREF="node759.html#SECTION061500020000000000000">Create your own Homebrew packages</A>
+<LI><A NAME="tex2html16263"
+  HREF="node759.html#SECTION061500030000000000000">Comandos</A>
+<LI><A NAME="tex2html16264"
+  HREF="node759.html#SECTION061500040000000000000">HOMEBREW_GITHUB_API_TOKEN</A>
+<LI><A NAME="tex2html16265"
+  HREF="node759.html#SECTION061500050000000000000">Véase</A>
+</UL></UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html16259"
+  HREF="node760.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html16253"
+  HREF="node629.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html16247"
+  HREF="node758.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html16255"
+  HREF="node832.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html16257"
+  HREF="node835.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html16260"
+  HREF="node760.html">PostgreSQL</A>
+<B> Subir:</B> <A NAME="tex2html16254"
+  HREF="node629.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html16248"
+  HREF="node758.html">Authentication using the Google</A>
+ &nbsp; <B>  <A NAME="tex2html16256"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16258"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

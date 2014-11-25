@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Introducción a Programación Orientada a Eventos</TITLE>
-<META NAME="description" CONTENT="Introducción a Programación Orientada a Eventos">
+<TITLE>Coveralls: Análisis de Cubrimiento</TITLE>
+<META NAME="description" CONTENT="Coveralls: Análisis de Cubrimiento">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node318.html">
 <LINK REL="previous" HREF="node316.html">
-<LINK REL="up" HREF="node316.html">
+<LINK REL="up" HREF="node310.html">
 <LINK REL="next" HREF="node318.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8446"
+<A NAME="tex2html8465"
   HREF="node318.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8440"
-  HREF="node316.html">
+<A NAME="tex2html8459"
+  HREF="node310.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8434"
+<A NAME="tex2html8455"
   HREF="node316.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8442"
-  HREF="node823.html">
+<A NAME="tex2html8461"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8444"
-  HREF="node826.html">
+<A NAME="tex2html8463"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,108 +91,221 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8447"
-  HREF="node318.html">Building our own I/O</A>
-<B> Subir:</B> <A NAME="tex2html8441"
-  HREF="node316.html">Programación Orientada a Eventos</A>
-<B> Anterior:</B> <A NAME="tex2html8435"
-  HREF="node316.html">Programación Orientada a Eventos</A>
- &nbsp; <B>  <A NAME="tex2html8443"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8445"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8466"
+  HREF="node318.html">Guard</A>
+<B> Subir:</B> <A NAME="tex2html8460"
+  HREF="node310.html">Integración Contínua: Travis</A>
+<B> Anterior:</B> <A NAME="tex2html8456"
+  HREF="node316.html">Travis en la Línea</A>
+ &nbsp; <B>  <A NAME="tex2html8462"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8464"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021510000000000000000">
-Introducción a Programación Orientada a Eventos</A>
+<H1><A NAME="SECTION021370000000000000000"></A>
+<A NAME="section:coveralls"></A>
+<BR>
+Coveralls: Análisis de Cubrimiento
 </H1>
 
 <P>
-De la Wikipedia ():
+Coveralls works with your continuous integration server to give you test coverage history and statistics. 
 
 <P>
-<BLOCKQUOTE>
-In computer programming, <A NAME="13590"></A><SPAN  CLASS="textbf">event-driven programming</SPAN> (<A NAME="13592"></A><SPAN  CLASS="textbf">EDP</SPAN>) or <A NAME="13594"></A><SPAN  CLASS="textbf">event-based programming</SPAN> is a programming paradigm in which the flow of the program is determined by events—e.g., sensor outputs or user actions (mouse clicks, key presses) or messages from other programs or threads.
-</BLOCKQUOTE>
+When you log into 
+<A NAME="tex2html681"
+  HREF="https://coveralls.io/">Coveralls</A>
+for the first time, it will ask you to select
+repositories to monitor. 
+
 <P>
-<BLOCKQUOTE>Event-driven programming can also be defined as an application architecture technique in which the application has a main loop which is clearly divided down to two sections:
-</BLOCKQUOTE>
-<OL>
-<LI>the first is <A NAME="13596"></A><SPAN  CLASS="textbf">event selection</SPAN> (or event detection)
+It works like Travis CI, listing all of your
+repositories for you to enable and disable access. (You
+can also click a button to resynchronize the repository list, in case you’ve added a repository since last syncing).
+
+<img src="coverall.png" width="50%"/>
+
+<P>
+To set up Coveralls, we need to add a file that tells Coverall what to
+do. 
+
+<P>
+For our project, we need to add a file to the root directory named
+<code>.coveralls.yml</code>, in which we'll include a single line of
+configuration:
+
+<P>
+<PRE>
+service_name: travis-ci
+</PRE>
+This tells Coveralls that we're using Travis CI as our CI server. (If
+you've signed up for a Pro account, then use <code>travis-pro</code> 
+instead.)
+
+<P>
+We also need to add the <code>Coveralls</code> gem to our <code>Gemfile</code>
+<PRE>
+group :development, :test do
+  gem 'rspec'
+  gem 'rack-test'
+  gem 'coveralls', require: false
+end
+</PRE>
+Finally, we need to include <code>coveralls</code> code in our 
+<code>spec_helper.rb</code> file:
+<PRE>
+require 'coveralls'
+Coveralls.wear!
+</PRE>
+
+<P>
+
+<FONT COLOR="#0000ff"> Notice that we have to load the code before the app code</FONT>. 
+
+<P>
+If you load Coveralls after the application’s code has loaded, then
+it wouldn’t be able to hook into the application properly.
+
+<P>
+
+<H4><A NAME="SECTION021370010000000000000">
+coveralls en la Línea de Comandos</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra/sinatra-selenium/capybara-selenium(master)]$ coveralls --help
+Commands:
+  coveralls help [COMMAND]  # Describe available commands or one specific command
+  coveralls last            # View the last build for this repository on Coveralls.
+  coveralls open            # View this repository on Coveralls.
+  coveralls push            # Runs your test suite and pushes the coverage results to Cover...
+  coveralls report          # Runs your test suite locally and displays coverage statistics.
+  coveralls service         # View this repository on your CI service's website.
+  coveralls version         # See version
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021370020000000000000">
+Running locally: COVERALLS_REPO_TOKEN</A>
+</H4>
+  
+
+<P>
+When you run the client you get:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-coverall(master)]$ coveralls open
+No repo_token configured.
+</PRE>
+
+<P>
+If you're running locally, you must have a <code>.coveralls.yml</code> 
+with your <code>repo_token</code> in it; or,
+you must provide a <code>COVERALLS_REPO_TOKEN</code> environment-variable on
+the command-line.
+
+<P>
+<PRE>
+[~/sinatra/sinatra-coverall(master)]$ cat .coveralls.yml.bak 
+service_name: travis-ci
+repo_token: HHhhhhhhh9saXXXXZZZ4444444444xdWh
+</PRE>
+
+<P>
+or
+<PRE>
+ export COVERALLS_REPO_TOKEN=HHhhhhhhh9saXXXXZZZ4444444444xdWh
+</PRE>
+
+<P>
+You can get the token in your coveralls repo page on the right side in the
+section <code>REPO TOKEN</code>.
+
+<P>
+
+<H4><A NAME="SECTION021370030000000000000">
+Donde</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI><PRE>
+[~/sinatra/sinatra-coverall(master)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/sinatra-coverall
+</PRE>
 </LI>
-<LI>the second is <A NAME="13598"></A><SPAN  CLASS="textbf">event handling</SPAN>.
+<LI><A NAME="tex2html682"
+  HREF="https://github.com/crguezl/sample-ruby-project">crguezl/sample-ruby-project</A>
 </LI>
-</OL>
-<P>
-<BLOCKQUOTE>In <A NAME="13600"></A><SPAN  CLASS="textbf">embedded systems</SPAN> the same may be achieved using interrupts instead of a constantly running main loop; 
-in that case the former portion of the architecture resides completely in computer hardware. 
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>Event-driven programming is similar to <A NAME="13602"></A><SPAN  CLASS="textbf">data-driven programming</SPAN>, in that both are structured as pattern matching and resulting processing, though they are typically applied to different domains.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>Event-driven programs can be written in any language, although the task is easier in languages that provide high-level abstractions, such as closures
-<A HREF="node154.html#section:clausuras">13.6</A>
-
-</BLOCKQUOTE>
+</UL>
 
 <P>
-De 
-<A NAME="tex2html707"
-  HREF="http://www.bigfastblog.com/rubys-eventmachine-part-1-event-based-programming">Ruby’s EventMachine – Part 1 : Event-based Programming
-by Phil Whelan on September 14, 2012</A>:
+
+<H4><A NAME="SECTION021370040000000000000">
+See</A>
+</H4>
+  
 
 <P>
-<BLOCKQUOTE>
-Within an event-based application, everything must be non-blocking
-to get the real benefit of event-based programming. 
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>The event-loop
-is running in a single thread within a single process. 
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>Therefore,
-the first time you do something that is blocking, it causes the
-whole event loop to stop and wait for you. 
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>That means while you are
-talking to you database for <I>just 10 milliseconds</I>, nothing else
-happens. 
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>You would be surprised at how many operations you can
-perform in those 10ms of halting your entire event loop. 
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>In that
-time, potentially hundreds of connections, that only hit RAM, could
-have come and gone, but instead they get queued waiting for your
-blocking action.
 
-</BLOCKQUOTE>
+<UL>
+<LI><A NAME="tex2html683"
+  HREF="https://coveralls.io/">https://coveralls.io/</A>
+</LI>
+<LI><A NAME="tex2html684"
+  HREF="https://coveralls.zendesk.com/hc/en-us">CoverAlls documentation</A>
+</LI>
+<LI><A NAME="tex2html685"
+  HREF="http://okamuuu.hatenablog.com/entry/2014/08/28/094936">Ejemplo: Ruby, Heroku and Groonga tutorial 2014</A>
+</LI>
+<LI><A NAME="tex2html686"
+  HREF="https://github.com/crguezl/sample-ruby-project">crguezl/sample-ruby-project</A>
+</LI>
+</UL>
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html8467"
+  HREF="node317.html#SECTION021370010000000000000">coveralls en la Línea de Comandos</A>
+<LI><A NAME="tex2html8468"
+  HREF="node317.html#SECTION021370020000000000000">Running locally: COVERALLS_REPO_TOKEN</A>
+<LI><A NAME="tex2html8469"
+  HREF="node317.html#SECTION021370030000000000000">Donde</A>
+<LI><A NAME="tex2html8470"
+  HREF="node317.html#SECTION021370040000000000000">See</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8446"
+<A NAME="tex2html8465"
   HREF="node318.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8440"
-  HREF="node316.html">
+<A NAME="tex2html8459"
+  HREF="node310.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8434"
+<A NAME="tex2html8455"
   HREF="node316.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8442"
-  HREF="node823.html">
+<A NAME="tex2html8461"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8444"
-  HREF="node826.html">
+<A NAME="tex2html8463"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -244,20 +356,20 @@ blocking action.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8447"
-  HREF="node318.html">Building our own I/O</A>
-<B> Subir:</B> <A NAME="tex2html8441"
-  HREF="node316.html">Programación Orientada a Eventos</A>
-<B> Anterior:</B> <A NAME="tex2html8435"
-  HREF="node316.html">Programación Orientada a Eventos</A>
- &nbsp; <B>  <A NAME="tex2html8443"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8445"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8466"
+  HREF="node318.html">Guard</A>
+<B> Subir:</B> <A NAME="tex2html8460"
+  HREF="node310.html">Integración Contínua: Travis</A>
+<B> Anterior:</B> <A NAME="tex2html8456"
+  HREF="node316.html">Travis en la Línea</A>
+ &nbsp; <B>  <A NAME="tex2html8462"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8464"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Los Métodos Singleton y la Singleton Class o Eigenclass</TITLE>
-<META NAME="description" CONTENT="Los Métodos Singleton y la Singleton Class o Eigenclass">
+<TITLE>Autoloading de Módulos</TITLE>
+<META NAME="description" CONTENT="Autoloading de Módulos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node226.html">
 <LINK REL="previous" HREF="node224.html">
-<LINK REL="up" HREF="node170.html">
+<LINK REL="up" HREF="node222.html">
 <LINK REL="next" HREF="node226.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6907"
+<A NAME="tex2html6943"
   HREF="node226.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6901"
-  HREF="node170.html">
+<A NAME="tex2html6937"
+  HREF="node222.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6895"
+<A NAME="tex2html6933"
   HREF="node224.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6903"
-  HREF="node823.html">
+<A NAME="tex2html6939"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6905"
-  HREF="node826.html">
+<A NAME="tex2html6941"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,212 +91,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6908"
-  HREF="node226.html">La Búsqueda por Métodos</A>
-<B> Subir:</B> <A NAME="tex2html6902"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6896"
-  HREF="node224.html">Práctica: Matrices Dispersas</A>
- &nbsp; <B>  <A NAME="tex2html6904"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6906"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6944"
+  HREF="node226.html">Práctica: Matrices</A>
+<B> Subir:</B> <A NAME="tex2html6938"
+  HREF="node222.html">Carga y Solicitud de</A>
+<B> Anterior:</B> <A NAME="tex2html6934"
+  HREF="node224.html">Ejecutando Código Cargado</A>
+ &nbsp; <B>  <A NAME="tex2html6940"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6942"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION027120000000000000000"></A>
-<A NAME="section:singleton_y_eigenclass"></A>
-<BR>
-Los Métodos Singleton y la Singleton Class o Eigenclass
-</H1>
+<H2><A NAME="SECTION02793000000000000000">
+Autoloading de Módulos</A>
+</H2>
 
 <P>
-Vimos en la sección <A HREF="node134.html#subsection:metodos_singleton">13.1.4</A>
-que es posible definir <SPAN  CLASS="textbf">métodos singleton, métodos
-que están definidos para un único objeto mas que para toda una clase 
-de objetos</SPAN>.
-
-<P>
-<PRE>
-def Point.sum
-  # Method body goes here
-end
-</PRE>
-
-<P>
-<SPAN  CLASS="textbf">Los métodos de clase de una clase no son mas que métodos singleton de la
-instancia de la clase <TT>Class</TT> que representa a la clase</SPAN>:
-
-<P>
-
-<UL>
-<LI>Los métodos singleton de un objeto no estan definidos en la clase del objeto
-</LI>
-<LI>Dichos métodos son métodos de una clase anónima asociada con el objeto.
-Dicha clase se conoce como <A NAME="8720"></A><SPAN  CLASS="textbf">Eigenclass</SPAN>, <A NAME="8722"></A><SPAN  CLASS="textbf">Singleton Class</SPAN> o <A NAME="8724"></A><SPAN  CLASS="textbf">Metaclass</SPAN>
-</LI>
-<LI>Ruby define una sintáxis alternativa para abrir la <A NAME="8726"></A><SPAN  CLASS="textbf">singleton class</SPAN> o <A NAME="8728"></A><SPAN  CLASS="textbf">eigenclass</SPAN> de un objeto y añadirle
-métodos. Para abrir la singleton class o eigenclass del objeto <code>obj</code> usamos <code>class &lt;&lt; obj</code>. Por
-ejemplo:
-<PRE>
-class &lt;&lt; Point
-  def class_method1      # This is an instance method of the eigenclass.
-  end                    # It is also a class method of Point.
-
-  def class_method2
-  end
-end
-</PRE>
-</LI>
-<LI>Si abrimos la singleton class o 
-eigenclass de un objeto clase dentro de la definición de la misma clase
-podemos usar <code>self</code> en vez del nombre de la clase:
-<PRE>
-class Point
-  # instance methods go here
-
-  class &lt;&lt; self
-    # class methods go here as instance methods of the eigenclass
-  end
-end
-</PRE>
-</LI>
-<LI>Obsérvese las diferencias entre estas 3 líneas:
-<PRE>
-class Point            # Create or open the class Point
-class Point3D &lt; Point  # Create a subclass of Point
-class &lt;&lt; Point         # Open the eigenclass of the object Point
-</PRE>
-
-<P>
-</LI>
-<LI>Una forma de obtener la singleton class o eigenclass es:
-<PRE>
-eigenclass = class &lt;&lt; o; self; end
-</PRE>
-</LI>
-<LI>Pero es mas fácil llamar al método <code>singleton_class</code> definido en la clase
-<A NAME="tex2html429"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
-<PRE>
-[13] pry(main)&gt; w = String.singleton_class
-=&gt; #&lt;Class:String&gt;
-[14] pry(main)&gt; r = class &lt;&lt; String; self; end
-=&gt; #&lt;Class:String&gt;
-[15] pry(main)&gt; r == w
-=&gt; true
-</PRE>
-</LI>
-<LI>El método <code>singleton_methods</code> definido en la clase <A NAME="tex2html430"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A> 
-devuelve un <A NAME="tex2html431"
-  HREF="http://ruby-doc.org/core-2.0.0/Array.html"><TT>Array</TT></A>
-con la lista de métodos singleton del objeto:
-<PRE>
-[1] pry(main)&gt; z = [1,2,3]
-=&gt; [1, 2, 3]
-[2] pry(main)&gt; z.singleton_class
-=&gt; #&lt;Class:#&lt;Array:0x007ff93a647a90&gt;&gt;
-[3] pry(main)&gt; z.singleton_methods
-=&gt; []
-[4] pry(main)&gt; def z.tutu
-[4] pry(main)*   puts "one two three"
-[4] pry(main)* end  
-=&gt; nil
-[5] pry(main)&gt; z.singleton_methods
-=&gt; [:tutu]
-[6] pry(main)&gt; z.tutu
-one two three
-=&gt; nil
-</PRE>
-
-<P>
-</LI>
-</UL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html6907"
-  HREF="node226.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6901"
-  HREF="node170.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6895"
-  HREF="node224.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6903"
-  HREF="node823.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6905"
-  HREF="node826.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html6908"
-  HREF="node226.html">La Búsqueda por Métodos</A>
-<B> Subir:</B> <A NAME="tex2html6902"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6896"
-  HREF="node224.html">Práctica: Matrices Dispersas</A>
- &nbsp; <B>  <A NAME="tex2html6904"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6906"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

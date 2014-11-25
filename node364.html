@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Introducción</TITLE>
-<META NAME="description" CONTENT="Introducción">
+<TITLE>Detectando el Proceso que está Usando un Puerto</TITLE>
+<META NAME="description" CONTENT="Detectando el Proceso que está Usando un Puerto">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node365.html">
-<LINK REL="previous" HREF="node363.html">
-<LINK REL="up" HREF="node363.html">
+<LINK REL="previous" HREF="node361.html">
+<LINK REL="up" HREF="node359.html">
 <LINK REL="next" HREF="node365.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9508"
+<A NAME="tex2html9537"
   HREF="node365.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9502"
-  HREF="node363.html">
+<A NAME="tex2html9531"
+  HREF="node359.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9496"
+<A NAME="tex2html9525"
   HREF="node363.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9504"
-  HREF="node823.html">
+<A NAME="tex2html9533"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9506"
-  HREF="node826.html">
+<A NAME="tex2html9535"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,103 +92,77 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9509"
-  HREF="node365.html">Sesiones HTTP</A>
-<B> Subir:</B> <A NAME="tex2html9503"
-  HREF="node363.html">HTTP</A>
-<B> Anterior:</B> <A NAME="tex2html9497"
-  HREF="node363.html">HTTP</A>
- &nbsp; <B>  <A NAME="tex2html9505"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9507"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9538"
+  HREF="node365.html">Usando PATH_INFO y erubis</A>
+<B> Subir:</B> <A NAME="tex2html9532"
+  HREF="node359.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9526"
+  HREF="node363.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
+ &nbsp; <B>  <A NAME="tex2html9534"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9536"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03151000000000000000">
-Introducción</A>
-</H2>
+<H1><A NAME="SECTION03130000000000000000">
+Detectando el Proceso que está Usando un Puerto</A>
+</H1>
 
 <P>
+Si intentamos ejecutar una segunda instancia del servidor mientras otra instancia esta ejecutandose 
+obtenemos un error que indica que el puerto está en uso:
+<PRE>
+[~/sinatra/sinatra-simple(master)]$ rackup
+Thin web server (v1.6.1 codename Death Proof)
+Maximum connections set to 1024
+Listening on 0.0.0.0:9292, CTRL+C to stop
+/Users/casiano/.rvm/gems/ruby-2.0.0-p247/gems/eventmachine-1.0.3/lib/eventmachine.rb:526:
+  in `start_tcp_server': no acceptor 
+  (port is in use or requires root privileges) (RuntimeError)
+  from /Users/casiano/.rvm/gems/ruby-2.0.0-p247/gems/eventmachine-1.0.3/lib/eventmachine.rb:526:
+    in `start_server'
+...
+</PRE>
+Si sabemos en que puerto esta corriendo - como es el caso - podemos hacer algo así
+para saber el PID del proceso que lo ocupa:
+<PRE>
+[~/sinatra/sinatra-simple(master)]$ lsof -i :9292
+COMMAND   PID    USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+ruby    52870 casiano    9u  IPv4 0x9f3ffc595152af29      0t0  TCP *:armtechdaemon (LISTEN)
+</PRE>
+Si no lo sabemos podemos hacer:
+<PRE>
+[~/sinatra/sinatra-simple(master)]$ ps -fA | egrep ruby
+  501 52870   565   0 11:16AM ttys003    0:00.61 ruby /Users/casiano/.rvm/gems/ruby-2.0.0-p247/bin/rackup
+  501 53230 52950   0 11:35AM ttys006    0:00.00 egrep ruby
+</PRE>
+Si tenemos privilegios suficientes podemos ahora eliminar el proceso:
+<PRE>
+[~/sinatra/sinatra-simple(master)]$ kill -9 52870
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/sinatra-simple(master)]$ rackup
+Thin web server (v1.6.1 codename Death Proof)
+Maximum connections set to 1024
+Listening on 0.0.0.0:9292, CTRL+C to stop
+Killed: 9
+</PRE>
+
+<P>
+El comando 
+<PRE>
+$ lsof -i | egrep -i 'tcp.*(\d+.)+'
+</PRE>
+Nos da una lista bastante completa de como están nuestras conexiones.
 
 <OL>
-<LI>HTTP es un protocolo sin estado: que no guarda ninguna
-información sobre conexiones anteriores. 
-
-<P>
-</LI>
-<LI>El desarrollo de aplicaciones
-web necesita frecuentemente mantener estado. 
-
-<P>
-</LI>
-<LI>Para esto se usan las
-cookies, que es información que un servidor puede almacenar en el
-sistema cliente. 
-
-<P>
-</LI>
-<LI>Esto le permite a las aplicaciones web introducir
-la noción de <A NAME="16419"></A><SPAN  CLASS="textbf">sesión</SPAN>, y también permite rastrear usuarios ya que
-las cookies pueden guardarse en el cliente por tiempo indeterminado.
-</LI>
-<LI>Una transacción HTTP está formada por un <A NAME="16421"></A><SPAN  CLASS="textbf">encabezado</SPAN> seguido,
-opcionalmente, por una línea en blanco y algún dato. 
-
-<P>
-</LI>
-<LI>El encabezado
-especificará cosas como la acción requerida del servidor, o el tipo
-de dato retornado, o el código de estado.
-</LI>
-<LI>El uso de campos de encabezados enviados en las transacciones HTTP
-le da flexibilidad al protocolo. Estos campos permiten que
-se envíe información descriptiva en la transacción, permitiendo así
-la autenticación, cifrado e identificación de usuario.
-</LI>
-<LI>Un encabezado es un bloque de datos que precede a la información
-propiamente dicha, por lo que a veces se hace referencia a él
-como metadato, porque tiene datos sobre los datos.
-</LI>
-<LI>Si se reciben líneas de encabezado del cliente, el servidor las
-coloca en las variables de entorno de CGI con el prefijo <code>HTTP_</code>
-seguido del nombre del encabezado. Cualquier carácter guion ( <code>-</code> )
-del nombre del encabezado se convierte a caracteres <code>"_"</code>.
-
-<P>
-Ejemplos de estos encabezados del cliente son
-<code>HTTP_ACCEPT</code> y 
-<code>HTTP_USER_AGENT</code>.
-  
-<OL>
-<LI><code>HTTP_ACCEPT</code>. Los tipos MIME que el cliente aceptará, dados
-  los encabezados HTTP. 
-  Los elementos de esta lista deben
-  estar separados por comas
-</LI>
-<LI><code>HTTP_USER_AGENT</code>. El navegador que utiliza el cliente para
-  realizar la petición. El formato general para esta variable es:
-  software/versión biblioteca/versión.
-  
-</LI>
-</OL>
-El servidor envía al cliente:
-  
-<OL>
-<LI>Un <A NAME="16423"></A><SPAN  CLASS="textbf">código de estado</SPAN> que indica si la petición fue correcta o no.
-  Los códigos de error típicos indican que el archivo solicitado no
-  se encontró, que la petición no se realizó de forma correcta o que
-  se requiere autenticación para acceder al archivo.
-</LI>
-<LI>La información propiamente dicha. HTTP permite enviar documentos
-  de todo tipo y formato, como
-  gráficos, audio y video.
-</LI>
-<LI>Información sobre el objeto que se retorna.
-  
-</LI>
-</OL>
+<LI><code>-i [i]</code>   selects  the  listing  of  files  any of whose Internet address matches the address
+                specified in i.  If no address is specified, this option selects the listing of all
+                Internet and x.25 (HP-UX) network files.
 </LI>
 </OL>
 
@@ -196,20 +170,20 @@ El servidor envía al cliente:
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9508"
+<A NAME="tex2html9537"
   HREF="node365.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9502"
-  HREF="node363.html">
+<A NAME="tex2html9531"
+  HREF="node359.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9496"
+<A NAME="tex2html9525"
   HREF="node363.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9504"
-  HREF="node823.html">
+<A NAME="tex2html9533"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9506"
-  HREF="node826.html">
+<A NAME="tex2html9535"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -260,20 +234,20 @@ El servidor envía al cliente:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9509"
-  HREF="node365.html">Sesiones HTTP</A>
-<B> Subir:</B> <A NAME="tex2html9503"
-  HREF="node363.html">HTTP</A>
-<B> Anterior:</B> <A NAME="tex2html9497"
-  HREF="node363.html">HTTP</A>
- &nbsp; <B>  <A NAME="tex2html9505"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9507"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9538"
+  HREF="node365.html">Usando PATH_INFO y erubis</A>
+<B> Subir:</B> <A NAME="tex2html9532"
+  HREF="node359.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9526"
+  HREF="node363.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
+ &nbsp; <B>  <A NAME="tex2html9534"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9536"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

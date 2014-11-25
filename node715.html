@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Optimistic and Pessimistic Version Constraint</TITLE>
-<META NAME="description" CONTENT="Optimistic and Pessimistic Version Constraint">
+<TITLE>gem cert: Gem Security</TITLE>
+<META NAME="description" CONTENT="gem cert: Gem Security">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node716.html">
 <LINK REL="previous" HREF="node714.html">
-<LINK REL="up" HREF="node701.html">
+<LINK REL="up" HREF="node705.html">
 <LINK REL="next" HREF="node716.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15529"
+<A NAME="tex2html15566"
   HREF="node716.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15523"
-  HREF="node701.html">
+<A NAME="tex2html15560"
+  HREF="node705.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15517"
+<A NAME="tex2html15554"
   HREF="node714.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15525"
-  HREF="node823.html">
+<A NAME="tex2html15562"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15527"
-  HREF="node826.html">
+<A NAME="tex2html15564"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,155 +92,224 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15530"
-  HREF="node716.html">Controlando nuestras dependencias: bundle</A>
-<B> Subir:</B> <A NAME="tex2html15524"
-  HREF="node701.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15518"
-  HREF="node714.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html15526"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15528"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15567"
+  HREF="node716.html">gem yank: Retirando una</A>
+<B> Subir:</B> <A NAME="tex2html15561"
+  HREF="node705.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15555"
+  HREF="node714.html">gem owner: Compartiendo la</A>
+ &nbsp; <B>  <A NAME="tex2html15563"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15565"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0611140000000000000000">
-Optimistic and Pessimistic Version Constraint</A>
-</H1><I>
-If your gem properly follows <A NAME="29191"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
-scheme, then other Ruby developers can take advantage of this when
-choosing a version constraint to lock down your gem in their
-application.
+<H1><A NAME="SECTION0611100000000000000000">
+gem cert: Gem Security</A>
+</H1>
+<P>
+<I>Installing a gem allows that gem’s code to run in the context of
+your application. Clearly this has security implications: 
+<FONT COLOR="#0000ff"> installing
+a malicious gem on a server could ultimately result in that server
+being completely penetrated by the gem’s author</FONT>. Because of this,
+the security of gem code is a topic of active discussion within the
+Ruby community.
 </I>
 <P>
-<I>Let’s say the following releases of a gem exist:
+<I><A NAME="tex2html1675"
+  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> 
+<FONT COLOR="#ff0000"> has had the ability to cryptographically sign gems since
+version 0.8.11</FONT>. 
+</I>
+<P>
+<H4><A NAME="SECTION0611100010000000000000">
+gem cert</A>
+</H4>
+<P>
+<I>This signing works by using the <code>gem cert</code> command
+to create a key pair, and then packaging signing data inside the
+gem itself. 
 </I>
 <P><PRE>
-Version 2.1.0 — Baseline
-Version 2.2.0 — Introduced some new (backward compatible) features.
-Version 2.2.1 — Removed some bugs
-Version 2.2.2 — Streamlined your code
-Version 2.3.0 — More new features (but still backwards compatible).
-Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
-</PRE><I>
-Someone who wants to use your gem has determined that 
+[~/srcLPPruby/matrices_dispersas(master)]$ gem help cert
+Usage: gem cert [options]
+
+  Options:
+    -a, --add CERT                   Add a trusted certificate.
+    -l, --list [FILTER]              List trusted certificates where the
+                                     subject contains FILTER
+    -r, --remove FILTER              Remove trusted certificates where the
+                                     subject contains FILTER
+    -b, --build EMAIL_ADDR           Build private key and self-signed
+                                     certificate for EMAIL_ADDR
+    -C, --certificate CERT           Signing certificate for --sign
+    -K, --private-key KEY            Key for --sign or --build
+    -s, --sign CERT                  Signs CERT with the key from -K
+                                     and the certificate from -C
+
+
+  Common Options:
+    -h, --help                       Get help on this command
+    -V, --[no-]verbose               Set the verbose level of output
+    -q, --quiet                      Silence commands
+        --config-file FILE           Use this config file instead of default
+        --backtrace                  Show stack backtrace on errors
+        --debug                      Turn on Ruby debugging
+
+
+  Summary:
+    Manage RubyGems certificates and signing settings
+
+  Description:
+    The cert command manages signing keys and certificates for creating signed
+    gems.  Your signing certificate and private key are typically stored in
+    ~/.gem/gem-public_cert.pem and ~/.gem/gem-private_key.pem respectively.
+    
+    To build a certificate for signing gems:
+    
+      gem cert --build you@example
+    
+    If you already have an RSA key, or are creating a new certificate for an
+    existing key:
+    
+      gem cert --build you@example --private-key /path/to/key.pem
+    
+    If you wish to trust a certificate you can add it to the trust list with:
+    
+      gem cert --add /path/to/cert.pem
+    
+    You can list trusted certificates with:
+    
+      gem cert --list
+    
+    or:
+    
+      gem cert --list cert_subject_substring
+    
+    If you wish to remove a previously trusted certificate:
+    
+      gem cert --remove cert_subject_substring
+    
+    To sign another gem author's certificate:
+    
+      gem cert --sign /path/to/other_cert.pem
+    
+    For further reading on signing gems see `ri Gem::Security`
+</PRE>
+<P>
+<I>The user 
+needs to add the author or source site public key as a trusted certificate (you only need
+to do this once per author/site):
+</I><PRE>
+gem cert --add &lt;(curl -Ls https://gist.github.com/sferik/4701180/raw/public_cert.pem)
+</PRE>
+<P>
+<H4><A NAME="SECTION0611100020000000000000">
+Security Policy: gem install twitter -P HighSecurity</A>
+</H4>
+<P>
+<I>The <code>gem install</code> command optionally lets you set a
+<A NAME="29297"></A><SPAN  CLASS="textbf">security policy</SPAN> 
+(via the option <code>-P</code> or <code>--trust-policy POLICY</code> which
+specifies gem trust policy) and you can verify the signing key for a gem before
+you install it:
+</I><PRE>
+gem install twitter -P HighSecurity
+</PRE>
+<P>
+<H4><A NAME="SECTION0611100030000000000000">
+Available Policies</A>
+</H4>
+<P>
+<I>Available policies are:
 </I>
 <OL>
-<LI>version 2.2.0
-works with their software, 
-</LI>
-<LI>but version 2.1.0 doesn’t have a feature
-they need. 
-</LI>
-<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
-might look like:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '&gt;= 2.2.0'
-</PRE>
-or 
-<PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0'
-</PRE>
-This is an <A NAME="29193"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
-
-<P>
-It’s saying that all
-changes from <code>2.x</code> on will work with my software, 
-but for version
-<code>3.0.0</code> this may not be true.
+<LI>NoSecurity - Well, no security at all. Signed packages are treated like unsigned packages.
 
 <P>
 </LI>
-<LI>The alternative here is to use <A NAME="29195"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
-
-<P>
-This explicitly excludes the version that might break your code.
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  ['&gt;= 2.2.0', '&lt; 3.0']
-</PRE>
-or
-
-<P>
-<PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
-</PRE>
-</LI>
-<LI><A NAME="tex2html1680"
-  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> provides a shortcut for this, commonly known as the <A NAME="29200"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '~&gt; 2.2'
-</PRE>
-
-<P>
-<PRE>
-# bundler
-gem 'library', '~&gt; 2.2'
-</PRE>
-Notice that we dropped the <code>PATCH</code> level of the version number. 
+<LI>LowSecurity - Pretty much no security. If a package is signed then <A NAME="tex2html1676"
+  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> will make sure the signature matches the signing certificate, and that the signing certificate hasn't expired, but that's it. A malicious user could easily circumvent this kind of security.
 
 <P>
 </LI>
-<LI>Had
-we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
-<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
-
-<P>
+<LI>MediumSecurity - Better than LowSecurity and NoSecurity, but still
+fallible. Package contents are verified against the signing
+certificate, and the signing certificate is checked for validity,
+and checked against the rest of the certificate chain.
+The biggest improvement over LowSecurity is that MediumSecurity
+won't install packages that are signed by untrusted sources.
+Unfortunately, MediumSecurity still isn't totally secure – a malicious
+user can still unpack the gem, strip the signatures, and distribute
+the gem unsigned.
 </LI>
-<LI>If you want to allow use of newer <A NAME="29202"></A><SPAN  CLASS="textbf">backwards-compatible versions</SPAN><A NAME="tex2html1679"
-  HREF="footnode.html#foot28764"><SUP><SPAN CLASS="arabic">89</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> but
-need a specific bug fix you can use a compound requirement:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
-</PRE>
-
-<P>
-<PRE>
-# bundler
-gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
-</PRE>
-</LI>
-<LI>The important note to take home here is to be aware others will be
-using your gems, so guard yourself from potential bugs/failures in
-future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
-if at all possible.
+<LI>HighSecurity - The HighSecurity policy is identical to the
+MediumSecurity policy, except that it does not allow unsigned gems.
+A malicious user can't
+modify the package contents without invalidating the signature, and
+he can't modify or remove signature or the signing certificate
+chain
 </LI>
 </OL>
 <P>
+<I>However, this method of securing gems is not widely used. It requires
+a number of manual steps on the part of the developer, and there
+is no well-established chain of trust for gem signing keys. 
+</I>
+<P>
+<H4><A NAME="SECTION0611100040000000000000">
+Véase</A>
+</H4>
+<P>
+<OL>
+<LI><A NAME="tex2html1677"
+  HREF="http://sixarm.com/about/ruby-gems-using-high-security-trust-policy.html">Ruby Gems: Using High Security Trust Policy</A>
+</LI>
+<LI><A NAME="tex2html1678"
+  HREF="http://blog.meldium.com/home/2013/3/3/signed-rubygems-part">A Practical Guide to Using Signed Ruby Gems - Part 1: Bundler</A>
+</LI>
+<LI><A NAME="tex2html1679"
+  HREF="http://blog.meldium.com/home/2013/3/6/signed-gems-on-heroku">A Practical Guide to Using Signed Ruby Gems - Part 2: Heroku</A>
+</LI>
+</OL>
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html15568"
+  HREF="node715.html#SECTION0611100010000000000000">gem cert</A>
+<LI><A NAME="tex2html15569"
+  HREF="node715.html#SECTION0611100020000000000000">Security Policy: gem install twitter -P HighSecurity</A>
+<LI><A NAME="tex2html15570"
+  HREF="node715.html#SECTION0611100030000000000000">Available Policies</A>
+<LI><A NAME="tex2html15571"
+  HREF="node715.html#SECTION0611100040000000000000">Véase</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15529"
+<A NAME="tex2html15566"
   HREF="node716.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15523"
-  HREF="node701.html">
+<A NAME="tex2html15560"
+  HREF="node705.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15517"
+<A NAME="tex2html15554"
   HREF="node714.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15525"
-  HREF="node823.html">
+<A NAME="tex2html15562"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15527"
-  HREF="node826.html">
+<A NAME="tex2html15564"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -291,20 +360,20 @@ if at all possible.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15530"
-  HREF="node716.html">Controlando nuestras dependencias: bundle</A>
-<B> Subir:</B> <A NAME="tex2html15524"
-  HREF="node701.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15518"
-  HREF="node714.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html15526"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15528"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15567"
+  HREF="node716.html">gem yank: Retirando una</A>
+<B> Subir:</B> <A NAME="tex2html15561"
+  HREF="node705.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15555"
+  HREF="node714.html">gem owner: Compartiendo la</A>
+ &nbsp; <B>  <A NAME="tex2html15563"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15565"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

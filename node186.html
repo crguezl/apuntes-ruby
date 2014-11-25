@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Creando Clases con Struct</TITLE>
-<META NAME="description" CONTENT="Creando Clases con Struct">
+<TITLE>Igualdad de Puntos</TITLE>
+<META NAME="description" CONTENT="Igualdad de Puntos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node187.html">
 <LINK REL="previous" HREF="node185.html">
-<LINK REL="up" HREF="node171.html">
+<LINK REL="up" HREF="node174.html">
 <LINK REL="next" HREF="node187.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6313"
+<A NAME="tex2html6348"
   HREF="node187.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6307"
-  HREF="node171.html">
+<A NAME="tex2html6342"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6301"
+<A NAME="tex2html6336"
   HREF="node185.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6309"
-  HREF="node823.html">
+<A NAME="tex2html6344"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6311"
-  HREF="node826.html">
+<A NAME="tex2html6346"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,16 +92,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6314"
-  HREF="node187.html">Un Método de Clase</A>
-<B> Subir:</B> <A NAME="tex2html6308"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6302"
-  HREF="node185.html">Un Punto Mutable</A>
- &nbsp; <B>  <A NAME="tex2html6310"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6312"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6349"
+  HREF="node187.html">Ordenando Puntos</A>
+<B> Subir:</B> <A NAME="tex2html6343"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6337"
+  HREF="node185.html">Enumeración de Coordenadas</A>
+ &nbsp; <B>  <A NAME="tex2html6345"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6347"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
@@ -109,147 +109,125 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html6315"
-  HREF="node186.html#SECTION027115010000000000000">Extendiendo clases creadas con Struct</A>
-<LI><A NAME="tex2html6316"
-  HREF="node186.html#SECTION027115020000000000000">haciendo Inmutable una clase creada con Struct</A>
-</UL></UL>
+<LI><A NAME="tex2html6350"
+  HREF="node186.html#SECTION027112100000000000000"><TT>eql?</TT> y las Claves de un hash</A>
+</UL>
 <!--End of Table of Child-Links-->
 <HR>
 
-<H2><A NAME="SECTION027115000000000000000"></A>
-<A NAME="subsection:clasesmutables"></A>
+<H2><A NAME="SECTION027112000000000000000"></A>
+<A NAME="subsection:igualdaddepuntos"></A>
 <BR>
-Creando Clases con <TT>Struct</TT>
+Igualdad de Puntos
 </H2>
 
 <P>
-<PRE>
-$ cat -n struct_point.rb 
-     1  Point = Struct.new(:x, :y)   # Creates new class, assigns to Point
-     2  
-     3  p = Point.new(1,2)   # =&gt; #&lt;struct Point x=1, y=2&gt;
-     4  p p.x                  # =&gt; 1·
-     5  p p.y                  # =&gt; 2
-     6  p.x = 3                # =&gt; 3
-     7  p p.x                  # =&gt; 3
-     8  #---------------------------
-     9  p[:x] = 7         
-    10  p p[:x]              # =&gt; 7: same as p.x
-    11  p p[1]               # =&gt; 2: same as p.y
-    12  p.each {|c| print c}  # prints "72"
-    13  puts
-    14  p.each_pair {|n,c| print n,c; puts } 
-    15  puts
-    16  #---------------------------
-    17  p = Point.new(4,2)
-    18  q = Point.new(4,2)
-    19  p q == p        # =&gt; true
-    20  h = {q =&gt; 1}  # Create a hash using q as a key
-    21  p h[p]          # =&gt; 1: extract value using p as key
-    22  p q.to_s        # =&gt; "#&lt;struct Point x=4, y=2&gt;"
-    23  
-    24  require 'extending_struct_point'
-    25  
-    26  puts "sorting!"
-    27  puts [p, q].sort
-</PRE>
+Repáse la sección 
+<I>Igualdad de Objetos</I>
+<A HREF="node76.html#subsection:igualdad">10.8.5</A>
 
 <P>
-
-<H4><A NAME="SECTION027115010000000000000">
-Extendiendo clases creadas con Struct</A>
-</H4>
-  
-
-Por supuesto podemos abrir la clase creada con <A NAME="tex2html391"
-  HREF="http://ruby-doc.org/core-2.0.0/Struct.html"><TT>Struct</TT></A> y extenderla:
 <PRE>
-$ cat -n extending_struct_point.rb 
-     1  class Point                  # Open Point class for new methods
-     2    def add!(other)            # Define an add! method
-     3      self.x += other.x
-     4      self.y += other.y
-     5      self
-     6    end
-     7  
-     8    include Comparable         # Include a module for the class
-     9    def &lt;=&gt;(other)             # Define the &lt;=&gt; operator
-    10      return nil unless other.instance_of? Point
-    11      self.x**2 + self.y**2 &lt;=&gt; other.x**2 + other.y**2
-    12    end
-    13  end
+def ==(o)               # Is self == o?
+  if o.is_a? Point      # If o is a Point object
+    @x==o.x &amp;&amp; @y==o.y  # then compare the fields.
+  elsif                 # If o is not a Point
+    false               # then, by definition, self != o.
+  end
+end
 </PRE>
 
 <P>
 <PRE>
-$ ruby -I. struct_point.rb 
-1
-2
-3
-7
-2
-72
-x7
-y2
-
-false
-nil
-"#&lt;struct Point x=4, y=2&gt;"
-sorting!
-#&lt;struct Point x=4, y=2&gt;
-#&lt;struct Point x=7, y=2&gt;
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION027115020000000000000">
-haciendo Inmutable una clase creada con Struct</A>
-</H4>
-  
-
-<P>
-Las clases creadas por <A NAME="tex2html392"
-  HREF="http://ruby-doc.org/core-2.0.0/Struct.html"><TT>Struct</TT></A> son mutables. Si la queremos hacer inmutable
-usamos <code>undef</code>:
-<PRE>
-$ cat -n making_struct_inmutable.rb 
-     1  Point = Struct.new(:x, :y)  # Define mutable class
-     2  class Point                 # Open the class
-     3    undef x=,y=,[]=           # Undefine mutator methods
-     4  end
-     5  
-     6  z = Point.new(2,3)
-     7  
-     8  z.x = 4
+def ==(o)                  # Is self == o?
+  @x == o.x &amp;&amp; @y == o.y   # Assume o has proper x and y methods
+rescue                     # If that assumption fails
+  false                    # Then self != o
+end
 </PRE>
 
 <P>
 <PRE>
-[~/point]$ ruby making_struct_inmutable.rb 
-making_struct_inmutable.rb:8:in `&lt;main&gt;': 
-  undefined method `x=' for #&lt;struct Point x=2, y=3&gt; (NoMethodError)
+class Point
+  alias eql? ==
+end
+</PRE>
+
+<P>
+<PRE>
+def eql?(o)             
+  if o.instance_of? Point      
+    @x.eql?(o.x) &amp;&amp; @y.eql?(o.y)
+  elsif
+    false
+  end
+end
+</PRE>
+
+<P>
+
+<H3><A NAME="SECTION027112100000000000000">
+<TT>eql?</TT> y las Claves de un hash</A>
+</H3>
+
+<P>
+El predicado <code>eql?</code>
+es usado por Ruby para comparar las claves de un hash.
+Por ello, si redefinimos <code>eql?</code> en nuestra clase,
+es conveniente que también definamos el método
+<code>hash</code> que es usado por Ruby para calcular el <I>hashcode</I>
+del objeto. 
+
+<P>
+Se debe cumplir siempre 
+que si dos objetos son iguales según <code>eql?</code> entonces sus hashcodes
+deben ser iguales.
+
+<P>
+No parece que sea una buena idea usar objetos mutables como índices de 
+hashes. Si es el caso, es mejor congelar el objeto
+(véase la sección <A HREF="node83.html#subsection:freezing">10.8.12</A>).
+
+<P>
+Véase  el código en 
+<A HREF="node180.html#subsection:definiendooperadores">14.1.6</A>
+
+<P>
+<PRE>
+def hash
+  @x.hash + @y.hash
+end
+</PRE>
+
+<P>
+<PRE>
+def hash
+  code = 17
+  code = 37*code + @x.hash
+  code = 37*code + @y.hash
+  # Add lines like this for each significant instance variable
+  code  # Return the resulting code
+end
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6313"
+<A NAME="tex2html6348"
   HREF="node187.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6307"
-  HREF="node171.html">
+<A NAME="tex2html6342"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6301"
+<A NAME="tex2html6336"
   HREF="node185.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6309"
-  HREF="node823.html">
+<A NAME="tex2html6344"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6311"
-  HREF="node826.html">
+<A NAME="tex2html6346"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -300,20 +278,20 @@ making_struct_inmutable.rb:8:in `&lt;main&gt;':
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6314"
-  HREF="node187.html">Un Método de Clase</A>
-<B> Subir:</B> <A NAME="tex2html6308"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6302"
-  HREF="node185.html">Un Punto Mutable</A>
- &nbsp; <B>  <A NAME="tex2html6310"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6312"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6349"
+  HREF="node187.html">Ordenando Puntos</A>
+<B> Subir:</B> <A NAME="tex2html6343"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6337"
+  HREF="node185.html">Enumeración de Coordenadas</A>
+ &nbsp; <B>  <A NAME="tex2html6345"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6347"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

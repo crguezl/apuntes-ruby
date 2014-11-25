@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Herencia y Variables de la Instancia</TITLE>
-<META NAME="description" CONTENT="Herencia y Variables de la Instancia">
+<TITLE>Predominancia/Invalidación de Métodos (overriding)</TITLE>
+<META NAME="description" CONTENT="Predominancia/Invalidación de Métodos (overriding)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node202.html">
 <LINK REL="previous" HREF="node200.html">
-<LINK REL="up" HREF="node195.html">
+<LINK REL="up" HREF="node198.html">
 <LINK REL="next" HREF="node202.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6541"
+<A NAME="tex2html6576"
   HREF="node202.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6535"
-  HREF="node195.html">
+<A NAME="tex2html6570"
+  HREF="node198.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6529"
+<A NAME="tex2html6564"
   HREF="node200.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6537"
-  HREF="node823.html">
+<A NAME="tex2html6572"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6539"
-  HREF="node826.html">
+<A NAME="tex2html6574"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,134 +92,266 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6542"
-  HREF="node202.html">Herencia y Variables de</A>
-<B> Subir:</B> <A NAME="tex2html6536"
-  HREF="node195.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6530"
-  HREF="node200.html">Herencia y Métodos de</A>
- &nbsp; <B>  <A NAME="tex2html6538"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6540"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6577"
+  HREF="node202.html">Aumentando la Conducta Mediante</A>
+<B> Subir:</B> <A NAME="tex2html6571"
+  HREF="node198.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6565"
+  HREF="node200.html">super</A>
+ &nbsp; <B>  <A NAME="tex2html6573"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6575"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02736000000000000000"></A>
-<A NAME="subsection:herenciayvariablesdelainstancia"></A>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html6578"
+  HREF="node201.html#SECTION02733100000000000000">Predominancia de Métodos Privados</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02733000000000000000"></A>
+<A NAME="subsection:overriding"></A>
 <BR>
-Herencia y Variables de la Instancia
+Predominancia/Invalidación de Métodos (overriding)
 </H2>
 
 <P>
-Considere el siguiente ejemplo:
-<PRE>
-[~/srcLPP/inheritance]$ cat VariableInheritance.rb 
-class Point
-  def initialize(x,y)
-    @x,@y = x, y
-  end
-
-  def to_s
-    "#@x #@y"
-  end
-end
-
-class Point3D &lt; Point
-  def initialize(x, y, z)
-    super(x, y)
-    @z = z
-  end
-
-  def to_s
-    "#@x #@y #@z"
-  end
-end
-
-if __FILE__ == $0
-  q, r, s = Point3D.new(1,1,1), Point3D.new(2,2,2), Point3D.new(3,3,3)
-  puts q, r, s
-
-  print "The instance variables of point 'q' are: "
-  puts q.instance_variables.join(',')
-end
-</PRE>
-Observe como en la línea 18 accedemos a las referencias <code>@x</code> y <code>@y</code> de la superclase <code>Point</code>.
-Este código funciona como cabría esperar:
+Se entiende por <A NAME="tex2html413"
+  HREF="http://en.wikipedia.org/wiki/Method_overriding">overriding</A>
+la posibilidad de reemplazar la conducta de un método en la superclase.
 
 <P>
 <PRE>
-[~/srcLPP/inheritance]$ ruby VariableInheritance.rb 
-1 1 1
-2 2 2
-3 3 3
-The instance variables of point 'q' are: @x,@y,@z
-[~/srcLPP/inheritance]$
+[19:28][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat overriding_methods.rb 
+class WorldGreeter
+  def greet                      # Display a greeting
+    puts "#{greeting} #{who}"
+  end 
+
+  def greeting                   # What greeting to use 
+    "Hello"
+  end 
+
+  def who                        # Who to greet
+    "World"
+  end 
+end
+
+# Greet the world in Spanish
+class SpanishWorldGreeter &lt; WorldGreeter
+  def greeting                   # Override the greeting
+    "Hola"
+  end 
+end
+
+# We call a method defined in WorldGreeter, which calls the overridden
+# version of greeting in SpanishWorldGreeter, and prints "Hola World"
+SpanishWorldGreeter.new.greet
+</PRE>
+
+<P>
+Ejecución:
+<PRE>
+[19:28][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby overriding_methods.rb 
+Hola World
 </PRE>
 
 <P>
 
 <UL>
-<LI>Una variable de un objeto/instancia
-se crea en el momento en el que se le asigna
-un valor
+<LI>Nótese que es posible definir una clase <A NAME="8761"></A><SPAN  CLASS="textbf">Abstracta</SPAN> que invoca ciertos <A NAME="8763"></A><SPAN  CLASS="textbf">métodos abstractos</SPAN>
+cuya definición se delega a las subclases.
 </LI>
-<LI>Las variables de la instancia no son definidas por la clase
-y no están relacionadas con los mecanismos de herencia
-</LI>
-<LI>Si una subclase utiliza el mismo  nombre 
-para una variable de instancia que alguno de sus ancestros la variable
-será <SPAN  CLASS="textbf">sobreescrita</SPAN>
+<LI>Una clase que extiende una clase <A NAME="8765"></A><SPAN  CLASS="textbf">abstracta</SPAN> es <A NAME="8767"></A><SPAN  CLASS="textbf">concreta</SPAN> si define todos
+los métodos abstractos de sus ancestros.
 </LI>
 </UL>
 
 <P>
-Puesto que las variables de instancia no están relacionadas con la
-herencia, se deduce que una variable de instancia usada por una
-subclase no puede
-<SPAN  CLASS="textbf">ocultar</SPAN> una variable de instancia definida usada en la superclase.
-Si una subclase usa una variable de instancia con el mismo nombre que una variable utilizada por uno de sus
-ancestros, sobreescribirá el valor de la variable de su ancestro.
-<SPAN  CLASS="textbf">Esto puede ser que se haga con intencionalidad, para cambiar la conducta del ancestro
-o puede que ocurra por accidente. En este último caso seguramente dará lugar a bugs</SPAN>.
+<PRE>
+[19:34][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat abstract_and_concrete_classes.rb 
+# This class is abstract; it doesn't define greeting or who
+# No special syntax is required: any class that invokes methods that are
+# intended for a subclass to implement is abstract.
+class AbstractGreeter
+  def greet
+    puts "#{greeting} #{who}"
+  end
+end
+
+# A concrete subclass
+class WorldGreeter &lt; AbstractGreeter
+  def greeting; "Hello"; end
+  def who; "World"; end
+end
+
+WorldGreeter.new.greet  # Displays "Hello World"
+</PRE>
+
+<P>
+Ejecución:
+<PRE>
+[19:34][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby abstract_and_concrete_classes.rb 
+Hello World
+</PRE>
 
 <P>
 
+<H3><A NAME="SECTION02733100000000000000"></A>
+<A NAME="subsubsection:predominancia_de_metodos_privados"></A>
+<BR>
+Predominancia de Métodos Privados
+</H3>
+Los métodos privados no pueden ser invocados con un receptor explícito pero son heredados por las subclases.
+Si ocurre que 
+
 <OL>
-<LI>Observe que, como en el ejemplo, 
-podemos siempre averiguar cuales son las variables de instancia
-de un objeto <code>q</code> llamando a <code>q.instance_variables</code>
+<LI>Nuestra clase hereda de otra
 </LI>
-<LI>En general, el mecanismo de herencia debe ser usado para extender clases en Ruby
-sólo cuando estamos familiarizados y tenemos control de la superclase.
+<LI>Definimos un método (cualquiera que sea su visibilidad)
+en nuestra subclase que tiene el mismo nombre que un método privado en la superclase
 </LI>
-<LI>Compruebe que nombres usa la superclase para sus variables de instancia y evítelos
+<LI>Entonces sobreescribimos el método privado. 
 </LI>
-<LI>Documente sus variables de instancia en la sección para desarrolladores
+<LI>Si lo hemos hecho por equivocación y el método privado 
+así llamado era usado como un helper por la superclase
+<SPAN  CLASS="textbf">es muy posible que esta colisión produzca una conducta indeseable</SPAN>.
 </LI>
-<LI>Prefije los nombres de sus variables de instancia con el nombre de la clase. 
+<LI>Cuando herede procure estar familiarizado con la implementación de la superclase.
 </LI>
 </OL>
+
+<P>
+El siguiente ejemplo ilustra el problema:
+<PRE>
+[~/srcLPP/Chapter7ClassesAndModules/overriding_methods]$ cat overriding_private_methods.rb 
+class MotherFoo
+  def titi 
+   foo
+  end
+
+  private
+  def foo
+   "mother foo"
+  end
+end
+
+class ChildFoo &lt; MotherFoo
+  def foo 
+    "child foo"
+  end
+end
+
+c = ChildFoo.new
+puts c.titi # child foo
+
+print "Private methods of mother class: "
+class MotherFoo
+  puts MotherFoo.private_instance_methods(false)
+end
+</PRE>
+
+<P>
+La llamada a <code>titi</code> hace que se llame al método <code>foo</code> de la clase hija en vez
+de al método <code>foo</code> de la clase madre que era lo que el programador pretendía.
+
+<P>
+Una manera de paliar este problema consiste en documentar los métodos privados de nuestra clase
+en una sección para desarrolladores. 
+
+<P>
+Como muestra la ejecución del anterior ejemplo 
+siempre es posible averiguar que métodos privados tiene la superclase llamando a 
+<code>MotherFoo.private_instance_methods</code>. De esta forma sabemos que nombres 
+evitar en nuestra clase hija:
+
+<P>
+<PRE>
+[~/srcLPP/Chapter7ClassesAndModules/overriding_methods]$ ruby overriding_private_methods.rb 
+child foo
+Private methods of mother class: foo
+[~/srcLPP/Chapter7ClassesAndModules/overriding_methods]$
+</PRE>
+
+<P>
+Otra forma de aliviar el problema es: 
+
+<OL>
+<LI>crear un método anónimo de clase <code>Proc</code> o una lambda
+</LI>
+<LI>usar una variable de instancia de la clase para guardarlo. 
+</LI>
+<LI>crear un accessor de lectura para la variable de instancia de la clase como objeto
+</LI>
+</OL>
+Esto hace mas difícil que las clases que hereden
+puedan colisionar con nuestro método <I>privado</I>.
+
+<P>
+<PRE>
+11:10][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ cat overriding_private_methods3.rb 
+class MotherFoo
+  @ofoo = Proc.new do |x|
+   "mother foo #{x}"
+  end
+
+  def self.foo(x)
+    @ofoo.call(x)
+  end
+
+  def titi(y) 
+    MotherFoo.foo(y) 
+  end
+end
+
+class ChildFoo &lt; MotherFoo
+  # puts @ofoo.call # generates an exception: undefined method `call' for nil:NilClass (NoMethodError))
+  def foo(z) 
+    "child foo #{z}"
+  end
+  puts MotherFoo.foo(9)
+end
+
+c = ChildFoo.new
+puts c.titi(4) 
+puts c.foo(3)
+</PRE>
+Como se vé, es todavía posible - pero ahora explicitándolo con <code>MotherFoo.foo</code> - acceder al método "privado"
+evitando de este modo la colisión casual.
+
+<P>
+Ejecución:
+<PRE>
+[11:13][~/Dropbox/src/ruby/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules]$ ruby overriding_private_methods3.rb 
+mother foo 9
+mother foo 4
+child foo 3
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6541"
+<A NAME="tex2html6576"
   HREF="node202.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6535"
-  HREF="node195.html">
+<A NAME="tex2html6570"
+  HREF="node198.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6529"
+<A NAME="tex2html6564"
   HREF="node200.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6537"
-  HREF="node823.html">
+<A NAME="tex2html6572"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6539"
-  HREF="node826.html">
+<A NAME="tex2html6574"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -270,20 +402,20 @@ sólo cuando estamos familiarizados y tenemos control de la superclase.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6542"
-  HREF="node202.html">Herencia y Variables de</A>
-<B> Subir:</B> <A NAME="tex2html6536"
-  HREF="node195.html">Subclases y Herencia</A>
-<B> Anterior:</B> <A NAME="tex2html6530"
-  HREF="node200.html">Herencia y Métodos de</A>
- &nbsp; <B>  <A NAME="tex2html6538"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6540"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6577"
+  HREF="node202.html">Aumentando la Conducta Mediante</A>
+<B> Subir:</B> <A NAME="tex2html6571"
+  HREF="node198.html">Subclases y Herencia</A>
+<B> Anterior:</B> <A NAME="tex2html6565"
+  HREF="node200.html">super</A>
+ &nbsp; <B>  <A NAME="tex2html6573"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6575"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Coveralls: Análisis de Cubrimiento</TITLE>
-<META NAME="description" CONTENT="Coveralls: Análisis de Cubrimiento">
+<TITLE>Limites de Timepo/Build Timeouts</TITLE>
+<META NAME="description" CONTENT="Limites de Timepo/Build Timeouts">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node315.html">
 <LINK REL="previous" HREF="node313.html">
-<LINK REL="up" HREF="node307.html">
+<LINK REL="up" HREF="node310.html">
 <LINK REL="next" HREF="node315.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8385"
+<A NAME="tex2html8416"
   HREF="node315.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8379"
-  HREF="node307.html">
+<A NAME="tex2html8410"
+  HREF="node310.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8375"
+<A NAME="tex2html8404"
   HREF="node313.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8381"
-  HREF="node823.html">
+<A NAME="tex2html8412"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8383"
-  HREF="node826.html">
+<A NAME="tex2html8414"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,221 +92,46 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8386"
-  HREF="node315.html">Guard</A>
-<B> Subir:</B> <A NAME="tex2html8380"
-  HREF="node307.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html8376"
-  HREF="node313.html">Travis en la Línea</A>
- &nbsp; <B>  <A NAME="tex2html8382"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8384"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8417"
+  HREF="node315.html">Databases and other services</A>
+<B> Subir:</B> <A NAME="tex2html8411"
+  HREF="node310.html">Integración Contínua: Travis</A>
+<B> Anterior:</B> <A NAME="tex2html8405"
+  HREF="node313.html">Notificaciones/Notifications</A>
+ &nbsp; <B>  <A NAME="tex2html8413"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8415"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021370000000000000000"></A>
-<A NAME="section:coveralls"></A>
-<BR>
-Coveralls: Análisis de Cubrimiento
+<H1><A NAME="SECTION021340000000000000000">
+Limites de Timepo/Build Timeouts</A>
 </H1>
+Because it is very common to see test suites or before scripts to hang up, Travis CI has hard time limits. If a script or test suite takes longer to run, the build will be forcefully terminated and you will see a message about this in your build log.
 
 <P>
-Coveralls works with your continuous integration server to give you test coverage history and statistics. 
+With our current timeouts, a build will be terminated if it's still running after 50 minutes (respectively 70 on travis-ci.com), or if there hasn't been any log output in 10 minutes.
 
 <P>
-When you log into 
-<A NAME="tex2html674"
-  HREF="https://coveralls.io/">Coveralls</A>
-for the first time, it will ask you to select
-repositories to monitor. 
-
-<P>
-It works like Travis CI, listing all of your
-repositories for you to enable and disable access. (You
-can also click a button to resynchronize the repository list, in case you’ve added a repository since last syncing).
-
-<img src="coverall.png" width="50%"/>
-
-<P>
-To set up Coveralls, we need to add a file that tells Coverall what to
-do. 
-
-<P>
-For our project, we need to add a file to the root directory named
-<code>.coveralls.yml</code>, in which we'll include a single line of
-configuration:
-
-<P>
-<PRE>
-service_name: travis-ci
-</PRE>
-This tells Coveralls that we're using Travis CI as our CI server. (If
-you've signed up for a Pro account, then use <code>travis-pro</code> 
-instead.)
-
-<P>
-We also need to add the <code>Coveralls</code> gem to our <code>Gemfile</code>
-<PRE>
-group :development, :test do
-  gem 'rspec'
-  gem 'rack-test'
-  gem 'coveralls', require: false
-end
-</PRE>
-Finally, we need to include <code>coveralls</code> code in our 
-<code>spec_helper.rb</code> file:
-<PRE>
-require 'coveralls'
-Coveralls.wear!
-</PRE>
-
-<P>
-
-<FONT COLOR="#0000ff"> Notice that we have to load the code before the app code</FONT>. 
-
-<P>
-If you load Coveralls after the application’s code has loaded, then
-it wouldn’t be able to hook into the application properly.
-
-<P>
-
-<H4><A NAME="SECTION021370010000000000000">
-coveralls en la Línea de Comandos</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-selenium/capybara-selenium(master)]$ coveralls --help
-Commands:
-  coveralls help [COMMAND]  # Describe available commands or one specific command
-  coveralls last            # View the last build for this repository on Coveralls.
-  coveralls open            # View this repository on Coveralls.
-  coveralls push            # Runs your test suite and pushes the coverage results to Cover...
-  coveralls report          # Runs your test suite locally and displays coverage statistics.
-  coveralls service         # View this repository on your CI service's website.
-  coveralls version         # See version
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021370020000000000000">
-Running locally: COVERALLS_REPO_TOKEN</A>
-</H4>
-  
-
-<P>
-When you run the client you get:
-
-<P>
-<PRE>
-[~/sinatra/sinatra-coverall(master)]$ coveralls open
-No repo_token configured.
-</PRE>
-
-<P>
-If you're running locally, you must have a <code>.coveralls.yml</code> 
-with your <code>repo_token</code> in it; or,
-you must provide a <code>COVERALLS_REPO_TOKEN</code> environment-variable on
-the command-line.
-
-<P>
-<PRE>
-[~/sinatra/sinatra-coverall(master)]$ cat .coveralls.yml.bak 
-service_name: travis-ci
-repo_token: HHhhhhhhh9saXXXXZZZ4444444444xdWh
-</PRE>
-
-<P>
-or
-<PRE>
- export COVERALLS_REPO_TOKEN=HHhhhhhhh9saXXXXZZZ4444444444xdWh
-</PRE>
-
-<P>
-You can get the token in your coveralls repo page on the right side in the
-section <code>REPO TOKEN</code>.
-
-<P>
-
-<H4><A NAME="SECTION021370030000000000000">
-Donde</A>
-</H4>
-  
-
-<P>
-
-<UL>
-<LI><PRE>
-[~/sinatra/sinatra-coverall(master)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/sinatra-coverall
-</PRE>
-</LI>
-<LI><A NAME="tex2html675"
-  HREF="https://github.com/crguezl/sample-ruby-project">crguezl/sample-ruby-project</A>
-</LI>
-</UL>
-
-<P>
-
-<H4><A NAME="SECTION021370040000000000000">
-See</A>
-</H4>
-  
-
-<P>
-
-<UL>
-<LI><A NAME="tex2html676"
-  HREF="https://coveralls.io/">https://coveralls.io/</A>
-</LI>
-<LI><A NAME="tex2html677"
-  HREF="https://coveralls.zendesk.com/hc/en-us">CoverAlls documentation</A>
-</LI>
-<LI><A NAME="tex2html678"
-  HREF="http://okamuuu.hatenablog.com/entry/2014/08/28/094936">Ejemplo: Ruby, Heroku and Groonga tutorial 2014</A>
-</LI>
-<LI><A NAME="tex2html679"
-  HREF="https://github.com/crguezl/sample-ruby-project">crguezl/sample-ruby-project</A>
-</LI>
-</UL>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html8387"
-  HREF="node314.html#SECTION021370010000000000000">coveralls en la Línea de Comandos</A>
-<LI><A NAME="tex2html8388"
-  HREF="node314.html#SECTION021370020000000000000">Running locally: COVERALLS_REPO_TOKEN</A>
-<LI><A NAME="tex2html8389"
-  HREF="node314.html#SECTION021370030000000000000">Donde</A>
-<LI><A NAME="tex2html8390"
-  HREF="node314.html#SECTION021370040000000000000">See</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8385"
+<A NAME="tex2html8416"
   HREF="node315.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8379"
-  HREF="node307.html">
+<A NAME="tex2html8410"
+  HREF="node310.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8375"
+<A NAME="tex2html8404"
   HREF="node313.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8381"
-  HREF="node823.html">
+<A NAME="tex2html8412"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8383"
-  HREF="node826.html">
+<A NAME="tex2html8414"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -356,20 +182,20 @@ See</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8386"
-  HREF="node315.html">Guard</A>
-<B> Subir:</B> <A NAME="tex2html8380"
-  HREF="node307.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html8376"
-  HREF="node313.html">Travis en la Línea</A>
- &nbsp; <B>  <A NAME="tex2html8382"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8384"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8417"
+  HREF="node315.html">Databases and other services</A>
+<B> Subir:</B> <A NAME="tex2html8411"
+  HREF="node310.html">Integración Contínua: Travis</A>
+<B> Anterior:</B> <A NAME="tex2html8405"
+  HREF="node313.html">Notificaciones/Notifications</A>
+ &nbsp; <B>  <A NAME="tex2html8413"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8415"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

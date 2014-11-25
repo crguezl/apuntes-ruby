@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Constantes</TITLE>
-<META NAME="description" CONTENT="Constantes">
+<TITLE>Un Punto Mutable</TITLE>
+<META NAME="description" CONTENT="Un Punto Mutable">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node189.html">
 <LINK REL="previous" HREF="node187.html">
-<LINK REL="up" HREF="node171.html">
+<LINK REL="up" HREF="node174.html">
 <LINK REL="next" HREF="node189.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6343"
+<A NAME="tex2html6377"
   HREF="node189.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6337"
-  HREF="node171.html">
+<A NAME="tex2html6371"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6331"
+<A NAME="tex2html6365"
   HREF="node187.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6339"
-  HREF="node823.html">
+<A NAME="tex2html6373"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6341"
-  HREF="node826.html">
+<A NAME="tex2html6375"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,173 +92,74 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6344"
-  HREF="node189.html">Variables de Clase. Atributos</A>
-<B> Subir:</B> <A NAME="tex2html6338"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6332"
-  HREF="node187.html">Un Método de Clase</A>
- &nbsp; <B>  <A NAME="tex2html6340"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6342"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6378"
+  HREF="node189.html">Creando Clases con Struct</A>
+<B> Subir:</B> <A NAME="tex2html6372"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6366"
+  HREF="node187.html">Ordenando Puntos</A>
+ &nbsp; <B>  <A NAME="tex2html6374"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6376"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027117000000000000000"></A>
-<A NAME="strangeerror:introconstantes"></A>
-<BR>
-Constantes
+<H2><A NAME="SECTION027114000000000000000">
+Un Punto Mutable</A>
 </H2>
 
 <P>
 <PRE>
- 1 class Point
-  2   attr_reader :x, :y   # Define accessor methods for our instance variables
-  3 
-  4   include Comparable
-  5   include Enumerable
-  6 
-  7   def initialize(x,y)
-  8     @x,@y = x, y
-  9   end    
- 10   
- 11   ORIGIN = Point.new(0, 0)
- 12   E_1    = Point.new(1, 0)
- 13   E_2    = Point.new(0, 1)
+[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ cat -n mutable_point.rb 
+     1  #encoding : utf-8
+     2  class MutablePoint
+     3    def initialize(ñ,y)
+     4     @ñ, @y = ñ, y 
+     5    end
+     6  
+     7    def ñ; @ñ; end       # The getter method for @ñ
+     8    def y; @y; end       # The getter method for @y
+     9  
+    10     def ñ=(value)        # The setter method for @ñ
+    11       @ñ = value
+    12     end
+    13  
+    14    def y=(value)        # The setter method for @y
+    15      @y = value
+    16    end
+    17  
+    18     def add!(p)          # Add p to self, return modified self
+    19       @ñ += p.ñ
+    20       @y += p.y
+    21       self
+    22     end
+    23  #  ---------------------------
+    24    def add(p)           # A nonmutating version of add!
+    25      q = self.dup       # Make a copy of self
+    26      q.add!(p)          # Invoke the mutating method on the copy
+    27    end
+    28  
+    29  end
+    30  
+    31  if __FILE__ == $0
+    32    z = MutablePoint.new(1,2)
+    33    p z
+    34    t = MutablePoint.new(2,1)
+    35    p t 
+    36    t.ñ = 4
+    37    p t 
+    38    z.add!(t)
+    39    p z
+    40  end
 </PRE>
 
 <P>
-Inside the class definition, these constants can be referred to by
-their unqualified names. Outside the definition, they must be
-prefixed by the name of the class:
-
-<P>
-<PRE>
-&gt;&gt; load "Point2.rb"
-=&gt; true
-&gt;&gt; Point::E_1
-=&gt; #&lt;Point:0x100589f20 @y=0, @x=1&gt;
-&gt;&gt; Point::E_1.x
-=&gt; 1
-&gt;&gt; E_1
-NameError: uninitialized constant E_1
-  from (irb):4
-&gt;&gt;
-</PRE>
-
-<P>
-Puesto que las constantes crean instancias de la clase, no podemos definirlas antes 
-de tener definida la versión correcta 
-del método <code>initialize</code>:
-<PRE>
-[~/rubytesting]$ cat constant_before_initialize.rb 
-class Tutu
-
-  C = Tutu.new(5)
-
-  def initialize(x)
-   @x = x 
-  end
-end
-</PRE>
-Al ejecutar produce un error:
-<PRE>
-[~/rubytesting]$ ruby constant_before_initialize.rb 
-constant_before_initialize.rb:3:in `initialize': wrong number of arguments(1 for 0) (ArgumentError)
-  from constant_before_initialize.rb:3:in `new'
-  from constant_before_initialize.rb:3:in `&lt;class:Tutu&gt;'
-  from constant_before_initialize.rb:1:in `&lt;main&gt;'
-</PRE>
-Es posible definir constantes de una clase desde fuera de la misma:
-<PRE>
-&gt;&gt; Point::E_3 = Point.new 1, 1
-=&gt; #&lt;Point:0x100565df0 @y=1, @x=1&gt;
-</PRE>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html6343"
-  HREF="node189.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6337"
-  HREF="node171.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6331"
-  HREF="node187.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6339"
-  HREF="node823.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6341"
-  HREF="node826.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html6344"
-  HREF="node189.html">Variables de Clase. Atributos</A>
-<B> Subir:</B> <A NAME="tex2html6338"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6332"
-  HREF="node187.html">Un Método de Clase</A>
- &nbsp; <B>  <A NAME="tex2html6340"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6342"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

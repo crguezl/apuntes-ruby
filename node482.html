@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Deferred or streaming response bodies</TITLE>
-<META NAME="description" CONTENT="Deferred or streaming response bodies">
+<TITLE>Práctica: Chat con TicTacToe</TITLE>
+<META NAME="description" CONTENT="Práctica: Chat con TicTacToe">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node483.html">
 <LINK REL="previous" HREF="node481.html">
-<LINK REL="up" HREF="node481.html">
+<LINK REL="up" HREF="node468.html">
 <LINK REL="next" HREF="node483.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11467"
+<A NAME="tex2html11509"
   HREF="node483.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11461"
-  HREF="node481.html">
+<A NAME="tex2html11503"
+  HREF="node468.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11457"
+<A NAME="tex2html11497"
   HREF="node481.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11463"
-  HREF="node823.html">
+<A NAME="tex2html11505"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11465"
-  HREF="node826.html">
+<A NAME="tex2html11507"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,109 +92,70 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11468"
-  HREF="node483.html">Código en sinatra/base.rb: la</A>
-<B> Subir:</B> <A NAME="tex2html11462"
-  HREF="node481.html">Asynchronous responses in Rack</A>
-<B> Anterior:</B> <A NAME="tex2html11458"
-  HREF="node481.html">Asynchronous responses in Rack</A>
- &nbsp; <B>  <A NAME="tex2html11464"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11466"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11510"
+  HREF="node483.html">Embedding Sinatra within EventMachine</A>
+<B> Subir:</B> <A NAME="tex2html11504"
+  HREF="node468.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11498"
+  HREF="node481.html">Práctica: Chat con Estilo</A>
+ &nbsp; <B>  <A NAME="tex2html11506"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11508"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION038151000000000000000">
-Deferred or streaming response bodies</A>
-</H2>
+<H1><A NAME="SECTION038120000000000000000"></A>
+   <A NAME="20647"></A>
+<BR>
+Práctica: Chat con TicTacToe
+</H1>
+  
+Modifique la práctica anterior añadiendo un nuevo contenedor en la vista 
+con el tablero del tictactoe.
 
 <P>
-The example shows a one-shot request, wait, response cycle. But it
-is possible to have multiple wait, response segments to allow the
-headers to be sent to the client immediately, or the body to trickle
-in slowly without blocking the worker process. 
+
+<OL>
+<LI>Los usuarios tiene dos estados <code>jugando</code> (en rojo)
+o libres (en <code>verde</code>).
 
 <P>
-Async Rack servers,
-when <code>env['async.callback']</code> is called, send the status and headers
-to the client and then begin iterating through each part of the
-body with <code>#each</code>. 
+</LI>
+<LI>Al cliquear en un usuario libre elegimos jugar con él. 
+Se le mostrará a este la opción de aceptar o rechazar
+la oferta. 
 
 <P>
-After the last body part the server must decide
-if the connection to the client should be closed (entire body has
-been provided) or if it should remain open (body parts will be
-provided later). The details of this decision are implementation-specific.
-For now, assume the connection is not closed. To send additional
-body parts, <code>env['async.callback']</code> may not be called a second time
-since the status code and headers have already been sent to the
-client and can not be changed. The app takes advantage of the
-server's iteration through the body with <code>#each:</code> 
+</LI>
+<LI>Si acepta se comenzará con el juego a dos del tictactoe
+actualizando el estado de estos usuarios.
 
 <P>
-the server calls
-<code>body.each(&amp;block)</code>, 
-and the trick is to save <code>&amp;block</code> for later use.
-This turns the iteration inside-out: rather than the sever iterating
-through a body, the app takes control to send each part of the body
-itself.
-<PRE>
-class DeferredBody
-  def each(&amp;block)
-    # normally we'd yield each part of the body, but since
-    # it isn't available yet, we save &amp;block for later
-    @server_block = block
-  end
-
-  def send(data)
-    # calling the saved &amp;block has the same effect as
-    # if we had yielded to it
-    @server_block.call data
-  end
-end
-
-class AsyncApp
-  def call(env)
-    Thread.new do
-      sleep 5  # simulate waiting for some event
-      body = DeferredBody.new
-      response = [200, {'Content-Type' =&gt; 'text/plain'}, body]
-      env['async.callback'].call response
-
-      # at this point, the server may send the status and headers,
-      # but the body was empty
-      
-      body.send 'Hello, '
-      sleep 5
-      body.send 'World'
-    end
-    
-    [-1, {}, []]  # or throw :async
-  end
-end
-</PRE>
-Note that the above won't quite work because we haven't signaled to the server that the body will be deferred and streamed in part by part.
+</LI>
+<LI>Al finalizar la partida los jugadores pasan al estado de libres
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11467"
+<A NAME="tex2html11509"
   HREF="node483.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11461"
-  HREF="node481.html">
+<A NAME="tex2html11503"
+  HREF="node468.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11457"
+<A NAME="tex2html11497"
   HREF="node481.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11463"
-  HREF="node823.html">
+<A NAME="tex2html11505"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11465"
-  HREF="node826.html">
+<A NAME="tex2html11507"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -244,20 +206,20 @@ Note that the above won't quite work because we haven't signaled to the server t
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11468"
-  HREF="node483.html">Código en sinatra/base.rb: la</A>
-<B> Subir:</B> <A NAME="tex2html11462"
-  HREF="node481.html">Asynchronous responses in Rack</A>
-<B> Anterior:</B> <A NAME="tex2html11458"
-  HREF="node481.html">Asynchronous responses in Rack</A>
- &nbsp; <B>  <A NAME="tex2html11464"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11466"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11510"
+  HREF="node483.html">Embedding Sinatra within EventMachine</A>
+<B> Subir:</B> <A NAME="tex2html11504"
+  HREF="node468.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11498"
+  HREF="node481.html">Práctica: Chat con Estilo</A>
+ &nbsp; <B>  <A NAME="tex2html11506"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11508"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

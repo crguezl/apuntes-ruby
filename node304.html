@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Resumen y Enlaces</TITLE>
-<META NAME="description" CONTENT="Resumen y Enlaces">
+<TITLE>6: Green</TITLE>
+<META NAME="description" CONTENT="6: Green">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node305.html">
 <LINK REL="previous" HREF="node303.html">
-<LINK REL="up" HREF="node293.html">
+<LINK REL="up" HREF="node297.html">
 <LINK REL="next" HREF="node305.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8189"
+<A NAME="tex2html8229"
   HREF="node305.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8183"
-  HREF="node293.html">
+<A NAME="tex2html8223"
+  HREF="node297.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8179"
+<A NAME="tex2html8217"
   HREF="node303.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8185"
-  HREF="node823.html">
+<A NAME="tex2html8225"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8187"
-  HREF="node826.html">
+<A NAME="tex2html8227"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,280 +92,116 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8190"
-  HREF="node305.html">Pruebas. Capybara</A>
-<B> Subir:</B> <A NAME="tex2html8184"
-  HREF="node293.html">Pruebas. Test Driven Development</A>
-<B> Anterior:</B> <A NAME="tex2html8180"
-  HREF="node303.html">rspec opciones</A>
- &nbsp; <B>  <A NAME="tex2html8186"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8188"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8230"
+  HREF="node305.html">7: un poco mas</A>
+<B> Subir:</B> <A NAME="tex2html8224"
+  HREF="node297.html">Introducción</A>
+<B> Anterior:</B> <A NAME="tex2html8218"
+  HREF="node303.html">5: Red: should and</A>
+ &nbsp; <B>  <A NAME="tex2html8226"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8228"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021030000000000000000">
-Resumen y Enlaces</A>
-</H1>
+<H2><A NAME="SECTION021017000000000000000">
+6: Green</A>
+</H2>
 
 <P>
-En resumen:
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat lib/math/rpcalc.rb
+module Math
+  class RPCalc
+    attr_accessor :stack
+
+    def initialize()
+      @stack = []
+    end
+
+    def calc(expr)
+      @stack = []
+      expr.split(/\s+/).each do |x|
+      case x
+        when '+', '*', '-', '/' 
+          op2 = @stack.pop
+          op1 = @stack.pop
+          @stack.push eval "(#{op1} #{x} #{op2})"
+        when /^-?\s*\d+(\.\d+)?([eE][+-]?\d+)?\s*$/
+          @stack.push x
+        else
+          raise SyntaxError, "Error. found '#{x}'. Expected number or operator"       
+        end
+      end
+      @stack.pop
+    end
+
+  end  # class RPCalc
+end    # Math
+</PRE>
 
 <P>
-<OL>
-<LI><B>Think:</B> Figure out what test will best move your code towards
-completion. 
-(Take as much time as you need. This is the hardest
-step for beginners.)
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ cat spec/math/rpcalc_spec.rb 
+#require File.join(File.dirname(__FILE__), "/../spec_helper")
+require "spec_helper"
+module Math
+  describe RPCalc do
+    before :each do
+      @c = Math::RPCalc.new
+    end
+
+    context "When an erroneous input is given" do
+      before :each do
+        @e = proc { @c.calc('a') }
+      end
+      it "must raise an exception" do
+        expect { @e[] }.to raise_error(SyntaxError)
+        expect { @e[] }.to raise_error("Error. found 'a'. Expected number or operator")
+      end
+    end
+
+    context "When a correct input is given" do
+      it "must give the correct answer for integer expressions" do
+        r = @c.calc('2 3 + 4 *')
+        r.should eq 20
+        @c.stack.should eq []
+      end
+
+      it "must give the correct answer for float expressions" do
+        r = @c.calc('4 3 + 2.5 3.5 +')
+        r.should be_within(0.01).of(6.0)
+        @c.stack.should eq [ 7 ]
+      end
+    end
+
+  end    # RPCalc
+end      # Math
+</PRE>
 
 <P>
-</LI>
-<LI><B>Red:</B> Write a very small amount of test code. Only a few lines...
-usually no more than five. Run the tests and watch the new test
-fail: the test bar should turn red. (This should only take about
-30 seconds.)
+<PRE>
+[~/local/src/ruby/LPP/rspec_examples/rpcalculator(master)]$ rake spec
+rspec -Ilib -Ispec spec/math/rpcalc_spec.rb
 
-<P>
-</LI>
-<LI><B>Green:</B> Write a very small amount of production code. Again, usually
-no more than five lines of code. Don't worry about design purity
-or conceptual elegance. 
+Math::RPCalc
+  When an erroneous input is given
+    must raise an exception
+  When a correct input is given
+    must give the correct answer for integer expressions
+    must give the correct answer for float expressions
 
-<P>
-Sometimes you can just hardcode the answer.
-This is okay because you'll be refactoring in a moment. 
-
-<P>
-Run the
-tests and watch them pass: the test bar will turn green. (This
-should only take about 30 seconds, too.)
-
-<P>
-</LI>
-<LI><B>Refactor:</B> Now that your tests are passing, you can make changes
-without worrying about breaking anything. 
-
-<P>
-
-<OL>
-<LI>Pause for a moment. 
-  Take
-  a deep breath if you need to. 
-</LI>
-<LI>Then look at the code you've written,
-  and ask yourself if you can improve it. 
-</LI>
-<LI>Look for duplication and
-  other "code smells." 
-</LI>
-<LI>If you see something that doesn't look right,
-  but you're not sure how to fix it, that's okay. 
-</LI>
-<LI>Take a look at it
-  again after you've gone through the cycle a few more times. 
-  (Take
-  as much time as you need on this step.) 
-</LI>
-<LI>After each little refactoring,
-  run the tests and make sure they still pass.
-  
-</LI>
-</OL>
-
-<P>
-</LI>
-<LI><B>Repeat:</B> Do it again. You'll repeat this cycle dozens of times in
-an hour. Typically, you'll run through several cycles (three to
-five) very quickly, then find yourself slowing down and spending
-more time on refactoring. Than you'll speed up again. 20-40 cycles
-in an hour is not unreasonable.
-
-<P>
-</LI>
-</OL>
-<P>
-<BLOCKQUOTE>
-<DIV ALIGN="RIGHT">James Shore, The Art of Agile Programming
-
-</BLOCKQUOTE>
-
-<P>
-
-<H4><A NAME="SECTION021030010000000000000">
-Véase</A>
-</H4>
-  
-
-<P>
-
-<UL>
-<LI>Puede encontrar el código de esta sección en Github:
-<A NAME="tex2html611"
-  HREF="https://github.com/crguezl/rspec-rpcalc">https://github.com/crguezl/rspec-rpcalc</A>
-<P>
-</LI>
-<LI><A NAME="tex2html612"
-  HREF="http://rubydoc.info/gems/rspec-expectations/2.4.0/RSpec/Matchers"><TT>RSpec::Matchers</TT></A>
-</LI>
-<LI><A NAME="tex2html613"
-  HREF="https://www.ibm.com/developerworks/web/library/wa-rspec/">Behavior-driven testing with RSpec. A comprehensive approach to test-driven development
-Bruce Tate (bruce@rapidred.com), CTO, WellGood LLC</A>
-IBM developerWorks 
-
-<P>
-</LI>
-<LI><A NAME="tex2html614"
-  HREF="http://rubydoc.info/gems/ageweke-rspec/frames">RSpec documentation</A>
-</LI>
-<LI><A NAME="tex2html615"
-  HREF="http://rspec.rubyforge.org/rspec/1.3.0/classes/Spec/Matchers.html">Rspec Matchers</A>
-<P>
-</LI>
-<LI><A NAME="tex2html616"
-  HREF="http://www.youtube.com/watch?v=JZo12G0RBDQ&amp;list=PL4749554774386AE5&amp;index=2&amp;feature=plpp_video">RSpec Matchers by Charles Max Wood</A>
-<P>
-</LI>
-<LI><A NAME="tex2html617"
-  HREF="http://maxwoghiren.com/blog/?p=117">An Introduction to Rspec</A>
-<P>
-</LI>
-<LI><A NAME="tex2html618"
-  HREF="http://www.slideshare.net/jasonjnoble/rspec-101">Rspec 101 by Jason Noble</A>
-<P>
-</LI>
-<LI><A NAME="tex2html619"
-  HREF="http://net.tutsplus.com/tutorials/ruby/ruby-for-newbies-testing-with-rspec/">Ruby for Newbies: Testing with Rspec (screencast)</A>
-<P>
-</LI>
-<LI><A NAME="tex2html620"
-  HREF="http://blog.jmbeas.es/2011/03/05/empezando-con-rspec/">Empezando con RSpec</A>
-por jmbeas
-
-<P>
-</LI>
-<LI><A NAME="tex2html621"
-  HREF="http://blog.teamtreehouse.com/an-introduction-to-rspec">An Introduction To RSpec</A>
-treehouse blog
-</LI>
-<LI><A NAME="tex2html622"
-  HREF="http://www.slideshare.net/AlanHecht/rspec-and-rails">http://www.slideshare.net/AlanHecht/rspec-and-rails</A>
-<P>
-</LI>
-<LI><A NAME="tex2html623"
-  HREF="http://www.slideshare.net/cdechauri/my-journeythroughrspec-5622309">My Journey through Rspec</A>
-by Carmen
-</LI>
-<LI>Testing Tuesday Series
-    
-<UL>
-<LI><A NAME="tex2html624"
-  HREF="http://blog.codeship.io/2013/04/16/tests-make-software.html">Testing Tuesday: Tests Make Software</A>
-</LI>
-<LI><A NAME="tex2html625"
-  HREF="http://blog.codeship.io/2013/04/22/from-tdd-to-bdd.html">Testing Tuesday #2: From Test-Driven Development to Behavior-Driven Development</A>
-</LI>
-<LI><A NAME="tex2html626"
-  HREF="http://blog.codeship.io/2013/06/04/testing-tuesday-8-behavior-driven-integration-and-unit-testing.html">Testing Tuesday #8: Behavior-Driven Integration and Unit Testing</A>
-</LI>
-</UL>
-</LI>
-</UL>
+Finished in 0.00457 seconds
+3 examples, 0 failures
+</PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html8191"
-  HREF="node304.html#SECTION021030010000000000000">Véase</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html8189"
-  HREF="node305.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8183"
-  HREF="node293.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8179"
-  HREF="node303.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8185"
-  HREF="node823.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8187"
-  HREF="node826.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html8190"
-  HREF="node305.html">Pruebas. Capybara</A>
-<B> Subir:</B> <A NAME="tex2html8184"
-  HREF="node293.html">Pruebas. Test Driven Development</A>
-<B> Anterior:</B> <A NAME="tex2html8180"
-  HREF="node303.html">rspec opciones</A>
- &nbsp; <B>  <A NAME="tex2html8186"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8188"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

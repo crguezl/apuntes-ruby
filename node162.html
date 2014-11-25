@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Composición de Funciones</TITLE>
-<META NAME="description" CONTENT="Composición de Funciones">
+<TITLE>Objetos Method no Ligados (Unbound Method Objects)</TITLE>
+<META NAME="description" CONTENT="Objetos Method no Ligados (Unbound Method Objects)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node163.html">
 <LINK REL="previous" HREF="node161.html">
-<LINK REL="up" HREF="node160.html">
+<LINK REL="up" HREF="node161.html">
 <LINK REL="next" HREF="node163.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5843"
+<A NAME="tex2html5868"
   HREF="node163.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5837"
-  HREF="node160.html">
+<A NAME="tex2html5862"
+  HREF="node161.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5831"
+<A NAME="tex2html5858"
   HREF="node161.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5839"
-  HREF="node823.html">
+<A NAME="tex2html5864"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5841"
-  HREF="node826.html">
+<A NAME="tex2html5866"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,81 +91,220 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5844"
-  HREF="node163.html">Aplicación Parcial de Funciones</A>
-<B> Subir:</B> <A NAME="tex2html5838"
-  HREF="node160.html">Programación Funcional</A>
-<B> Anterior:</B> <A NAME="tex2html5832"
-  HREF="node161.html">Aplicando una Función a</A>
- &nbsp; <B>  <A NAME="tex2html5840"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5842"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5869"
+  HREF="node163.html">Programación Funcional</A>
+<B> Subir:</B> <A NAME="tex2html5863"
+  HREF="node161.html">Objetos Method</A>
+<B> Anterior:</B> <A NAME="tex2html5859"
+  HREF="node161.html">Objetos Method</A>
+ &nbsp; <B>  <A NAME="tex2html5865"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5867"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02692000000000000000">
-Composición de Funciones</A>
+<H2><A NAME="SECTION02681000000000000000">
+Objetos </A><A NAME="tex2html326"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html"><TT>Method</TT></A> no Ligados (Unbound Method Objects)
 </H2>
+Ruby soporta métodos <I>unbound</I>. Métodos que no están asociados con un objeto particular.
+Cuando se usa <code>instance_method</code> se obtiene un método <code>unbound</code>.
+Los métodos unbound sólo pueden ser llamados después que son ligados a algún objeto.
 
 <P>
-En esta sección ampliamos el módulo <code>Functional</code> con el operador
-<code>*</code> para denotar la composición de procs, lambdas y methods.
-De esta forma, el anterior ejemplo puede reescribirse de este modo:
+Los objetos de la clase <A NAME="tex2html327"
+  HREF="http://ruby-doc.org/core-2.0.0/UnboundMethod.html"><TT>UnboundMethod</TT></A> 
+representan métodos pero sin el objeto <A NAME="tex2html328"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A>
+que define su entorno de ejecución.
 
 <P>
 <PRE>
-if __FILE__ == $0
-  def polar(x,y)
-    [Math.hypot(y,x), Math.atan2(y,x)]
-  end
-  def cartesian(magnitude, angle)
-    [magnitude*Math.cos(angle), magnitude*Math.sin(angle)]
-  end
+ruby-1.9.2-head :001 &gt; unbound_plus = Fixnum.instance_method("+")
+ =&gt; #&lt;UnboundMethod: Fixnum#+&gt; 
+ruby-1.9.2-head :002 &gt; plus_5 = unbound_plus.bind(5)
+ =&gt; #&lt;Method: Fixnum#+&gt; 
+ruby-1.9.2-head :003 &gt; plus_5[4]
+ =&gt; 9 
+ruby-1.9.2-head :004 &gt; plus_5.class
+ =&gt; Method
+</PRE>
 
-  f = lambda {|x| x*x }
-  g = lambda {|x| x+1 }
-  puts (f*g)[2]   # =&gt; 9
-  puts (g*f)[2]   # =&gt; 5
-  
-  p,c = method(:polar), method(:cartesian)
-  puts (c*p)[3,4]  # =&gt; [3,4]
-  
-  a = (1..5).to_a
-  sum = lambda {|x,y| x+y }        # A function to add two numbers
-  mean = (sum&lt;=a)/a.size           # Or sum.reduce(a) or a.inject(&amp;sum)
-  deviation = lambda {|x| x-mean } # Function to compute difference from mean
-  square = lambda {|x| x*x }       # Function to square a number
-  puts sum&lt;=square*deviation|a     # 10 = 4 + 1 + 4 + 1
-  standardDeviation = Math.sqrt((sum&lt;=square*deviation|a)/(a.size-1).to_f)
-  puts standardDeviation           # sqrt(10/4) = 1.5811388300841898
-end
+<P>
+También es posible construir objetos <A NAME="tex2html329"
+  HREF="http://ruby-doc.org/core-2.0.0/UnboundMethod.html"><TT>UnboundMethod</TT></A>
+usando el método <A NAME="6579"></A><A NAME="tex2html330"
+  HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-unbind"><TT>unbind</TT></A>:
+<PRE>
+ruby-1.9.2-head :014 &gt; x = 4.method('+')
+ =&gt; #&lt;Method: Fixnum#+&gt; 
+ruby-1.9.2-head :015 &gt; u = x.unbind
+ =&gt; #&lt;UnboundMethod: Fixnum#+&gt; 
+ruby-1.9.2-head :016 &gt; w = u.bind(3)
+ =&gt; #&lt;Method: Fixnum#+&gt; 
+ruby-1.9.2-head :017 &gt; w[5]
+ =&gt; 8
 </PRE>
 
 <P>
 <PRE>
-~/TheRubyProgrammingLanguage/Chapter6MethodsProcsLambdasAndClosures]$ cat functional_compose.rb 
-require './functional'
+~/rubytesting$ cat -n instance_method.rb 
+     1  class Interpreter
+     2    def do_a() print "there, "; end
+     3    def do_d() print "Hello ";  end
+     4    def do_e() print "!\n";     end
+     5    def do_v() print "Dave";    end
+     6    Dispatcher = {
+     7     ?a =&gt; instance_method(:do_a),
+     8     ?d =&gt; instance_method(:do_d),
+     9     ?e =&gt; instance_method(:do_e),
+    10     ?v =&gt; instance_method(:do_v)
+    11    }
+    12    def interpret(string)
+    13      string.each_byte {|b| Dispatcher[b].bind(self).call }
+    14    end
+    15  end
+    16  
+    17  interpreter = Interpreter.new
+    18  interpreter.interpret('dave')
+</PRE>
+Al ejecutar, se obtiene:
 
-module Functional
-  def compose(f)
-    if self.respond_to?(:arity) &amp;&amp; self.arity == 1
-      lambda {|*args| self[f[*args]] }
-    else
-      lambda {|*args| self[*f[*args]] }
-    end
-  end
-
-  alias * compose
-end
+<P>
+<PRE>
+~/rubytesting$ ruby instance_method.rb 
+Hello there, Dave!
 </PRE>
 
 <P>
-<BR><HR>
+El operador de interrogación nos dá el código de un carácter:
+<PRE>
+&gt;&gt; ?a
+=&gt; 97
+&gt;&gt; 'a'[0]
+=&gt; 97
+&gt;&gt; 97.chr
+=&gt; "a"
+</PRE>
+
+<P>
+Veamos otro ejemplo:
+<PRE>
+MacBook-Air-de-casiano:rubytesting casiano$ ruby -r debug unbound_method.rb 
+unbound_method.rb:1:class Square
+(rdb:1) l 1,100
+[1, 100] in unbound_method.rb
+=&gt; 1  class Square
+   2    def area
+   3      @side * @side
+   4    end
+   5    def initialize(side)
+   6      @side = side
+   7    end
+   8  end
+   9  
+   10  area_un = Square.instance_method(:area)
+   11  
+   12  s = Square.new(12)
+   13  area = area_un.bind(s)
+   14  area.call   #=&gt; 144
+</PRE>
+
+<P>
+<PRE>
+(rdb:1) b 14
+Set breakpoint 1 at unbound_method.rb:14
+(rdb:1) c
+Breakpoint 1, toplevel at unbound_method.rb:14
+unbound_method.rb:14:area.call   #=&gt; 144
+(rdb:1) area.call
+144
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html5868"
+  HREF="node163.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5862"
+  HREF="node161.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5858"
+  HREF="node161.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html5864"
+  HREF="node832.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html5866"
+  HREF="node835.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html5869"
+  HREF="node163.html">Programación Funcional</A>
+<B> Subir:</B> <A NAME="tex2html5863"
+  HREF="node161.html">Objetos Method</A>
+<B> Anterior:</B> <A NAME="tex2html5859"
+  HREF="node161.html">Objetos Method</A>
+ &nbsp; <B>  <A NAME="tex2html5865"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5867"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

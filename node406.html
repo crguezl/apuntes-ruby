@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Véase También</TITLE>
-<META NAME="description" CONTENT="Véase También">
+<TITLE>Despliegue de una Aplicación Web en la ETSII</TITLE>
+<META NAME="description" CONTENT="Despliegue de una Aplicación Web en la ETSII">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node407.html">
 <LINK REL="previous" HREF="node405.html">
-<LINK REL="up" HREF="node356.html">
+<LINK REL="up" HREF="node359.html">
 <LINK REL="next" HREF="node407.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10167"
+<A NAME="tex2html10207"
   HREF="node407.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10161"
-  HREF="node356.html">
+<A NAME="tex2html10201"
+  HREF="node359.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10157"
+<A NAME="tex2html10195"
   HREF="node405.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10163"
-  HREF="node823.html">
+<A NAME="tex2html10203"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10165"
-  HREF="node826.html">
+<A NAME="tex2html10205"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,95 +92,105 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10168"
-  HREF="node407.html">Primeros Pasos</A>
-<B> Subir:</B> <A NAME="tex2html10162"
-  HREF="node356.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10158"
-  HREF="node405.html">Faking Sinatra with Rack</A>
- &nbsp; <B>  <A NAME="tex2html10164"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10166"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10208"
+  HREF="node407.html">Práctica: Despliegue en Heroku</A>
+<B> Subir:</B> <A NAME="tex2html10202"
+  HREF="node359.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10196"
+  HREF="node405.html">Prácticas: Centro de Cálculo</A>
+ &nbsp; <B>  <A NAME="tex2html10204"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10206"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031330000000000000000">
-Véase También</A>
+<H1><A NAME="SECTION031300000000000000000">
+Despliegue de una Aplicación Web en la ETSII</A>
 </H1>
+Para desplegar una aplicación web usaremos <code>exthost2</code> (en 2013).
+
+<P>
+Veamos que puertos están libres usando  <TT>netstat</TT> :
+<PRE>
+casiano@exthost2:~$ netstat -an | less
+</PRE>
+o bien usamos  <TT>lsof</TT> : 
+<PRE>
+lsof -i | less
+</PRE>
+y después - si es necesario - terminamos el proceso que ya estuviera escuchando en el puerto
+<PRE>
+kill -9 PID
+</PRE>
+
+<P>
+Veamos una simple aplicación usando <code>rack</code>:
+<PRE>
+casiano@exthost2:~/src/ruby/simplewebapp$ cat hello.rb 
+require 'rack'
+
+app = lambda { |env| [200, {"Content-Type" =&gt; "text/plain"}, ["Hello. The time is #{Time.now}"]] }
+Rack::Handler::WEBrick.run app,:Port =&gt; 4567
+</PRE>
+La ejecutamos:
+<PRE>
+casiano@exthost2:~/src/ruby/simplewebapp$ ruby hello.rb 
+[2013-10-28 09:58:54] INFO  WEBrick 1.3.1
+[2013-10-28 09:58:54] INFO  ruby 1.9.3 (2011-10-30) [i686-linux]
+[2013-10-28 09:58:54] WARN  TCPServer Error: Address already in use - bind(2)
+[2013-10-28 09:58:54] INFO  WEBrick::HTTPServer#start: pid=16597 port=4567
+</PRE>
+Ya tenemos disponible la página en <code>exthost2</code> en el puerto correspondiente.
+
+<P>
+El acceso al servidor está limitado a
+la red de la ULL.
 
 <P>
 
-<UL>
-<LI><A NAME="tex2html977"
-  HREF="http://rubylearning.com/blog/a-quick-introduction-to-rack/">A Quick Introduction to Rack</A>
+<H4><A NAME="SECTION031300010000000000000">
+Véase también</A>
+</H4>
+  
+
+<OL>
+<LI><I>Gemas instaladas en local</I> <A HREF="node775.html#section:gemasinstaladasenlocal">98.3</A>
 </LI>
-<LI><A NAME="tex2html978"
-  HREF="http://rubylearning.com/blog/2010/09/21/writing-modular-web-applications-with-rack/">Writing modular web applications with Rack</A>
-</LI>
-<LI><A NAME="tex2html979"
-  HREF="https://github.com/rack/rack/wiki">Rackup Wiki</A>
-</LI>
-<LI><A NAME="tex2html980"
-  HREF="http://hawkins.io/2012/07/rack_from_the_beginning/">Rack from the Beginning</A>
-por Adam Hawkins 
-(github: 
-<A NAME="tex2html981"
-  HREF="https://github.com/crguezl/rack-from-the-beginning">https://github.com/crguezl/rack-from-the-beginning</A>)
-</LI>
-<LI><A NAME="tex2html982"
-  HREF="https://vimeo.com/46906591">Understanding Rack de Tekpub Productions</A>
-(Vimeo)
-</LI>
-<LI><A NAME="tex2html983"
-  HREF="http://youtu.be/MxfZNe3LLM4">Media Test: Rack Middleware on Any Framework por Noah Gibbs</A>
-(YouTube)
-</LI>
-<LI><A NAME="tex2html984"
-  HREF="http://youtu.be/EGGjQrgdg1s">Rails Online Conf: Rack in Rails 3</A>
-por Ryan Tomayko (Youtube)
-</LI>
-<LI><A NAME="tex2html985"
-  HREF="http://jasonseifer.com/2009/04/08/32-rack-resources-to-get-you-started">32 Rack Resources to Get You Started</A>
-por Jason Seifer
-</LI>
-<LI><A NAME="tex2html986"
-  HREF="http://gallery.mailchimp.com/e49655551a5bb47498310c7de/files/RackIntro.pdf">The Little Rack Book</A>
-</LI>
-<LI><A NAME="tex2html987"
-  HREF="http://www.zepho.com/download/RackDevelopersNotebook_v1.pdf">Rack Developer's Notebook</A>
-</LI>
-<LI><A NAME="tex2html988"
-  HREF="http://youtu.be/TslkdT3PfKc">Rails Conf 2013 You've got a Sinatra on your Rails by José Valim</A>
-</LI>
-<LI>The 
-<A NAME="tex2html989"
-  HREF="http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface">Web Server Gateway Interface </A>
-is a simple and universal interface
-between web servers and web applications or frameworks for the
-Python programming language. Rack is inspired in WSGI
-</LI>
-</UL>
+</OL>
 
 <P>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html10209"
+  HREF="node406.html#SECTION031300010000000000000">Véase también</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10167"
+<A NAME="tex2html10207"
   HREF="node407.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10161"
-  HREF="node356.html">
+<A NAME="tex2html10201"
+  HREF="node359.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10157"
+<A NAME="tex2html10195"
   HREF="node405.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10163"
-  HREF="node823.html">
+<A NAME="tex2html10203"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10165"
-  HREF="node826.html">
+<A NAME="tex2html10205"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -230,20 +241,20 @@ Python programming language. Rack is inspired in WSGI
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10168"
-  HREF="node407.html">Primeros Pasos</A>
-<B> Subir:</B> <A NAME="tex2html10162"
-  HREF="node356.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10158"
-  HREF="node405.html">Faking Sinatra with Rack</A>
- &nbsp; <B>  <A NAME="tex2html10164"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10166"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10208"
+  HREF="node407.html">Práctica: Despliegue en Heroku</A>
+<B> Subir:</B> <A NAME="tex2html10202"
+  HREF="node359.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10196"
+  HREF="node405.html">Prácticas: Centro de Cálculo</A>
+ &nbsp; <B>  <A NAME="tex2html10204"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10206"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

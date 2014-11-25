@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ganchos/Hooks: Sustituyendo (y delegando en) un método existente</TITLE>
-<META NAME="description" CONTENT="Ganchos/Hooks: Sustituyendo (y delegando en) un método existente">
+<TITLE>Hooks (Ganchos)</TITLE>
+<META NAME="description" CONTENT="Hooks (Ganchos)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node259.html">
-<LINK REL="previous" HREF="node257.html">
-<LINK REL="up" HREF="node255.html">
+<LINK REL="next" HREF="node263.html">
+<LINK REL="previous" HREF="node251.html">
+<LINK REL="up" HREF="node241.html">
 <LINK REL="next" HREF="node259.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7481"
+<A NAME="tex2html7503"
   HREF="node259.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7475"
-  HREF="node255.html">
+<A NAME="tex2html7497"
+  HREF="node241.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7469"
+<A NAME="tex2html7491"
   HREF="node257.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7477"
-  HREF="node823.html">
+<A NAME="tex2html7499"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7479"
-  HREF="node826.html">
+<A NAME="tex2html7501"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,55 +92,70 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7482"
-  HREF="node259.html">Ganchos/Hooks: Interviniendo en el</A>
-<B> Subir:</B> <A NAME="tex2html7476"
-  HREF="node255.html">Hooks (Ganchos)</A>
-<B> Anterior:</B> <A NAME="tex2html7470"
-  HREF="node257.html">El Hook included</A>
- &nbsp; <B>  <A NAME="tex2html7478"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7480"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7504"
+  HREF="node259.html">El Hook inherited</A>
+<B> Subir:</B> <A NAME="tex2html7498"
+  HREF="node241.html">Reflexión y Metaprogramación</A>
+<B> Anterior:</B> <A NAME="tex2html7492"
+  HREF="node257.html">Ejercicios</A>
+ &nbsp; <B>  <A NAME="tex2html7500"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7502"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02853000000000000000"></A>
-<A NAME="subsection:hooks"></A>
-<BR>
-Ganchos/Hooks: Sustituyendo (y delegando en) un método existente
-</H2>
-El ejemplo muestra como sustituir el método <code>system</code> del módulo <A NAME="11042"></A><A NAME="tex2html546"
-  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A>:
-<PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ cat -n ex0678.rb 
-     1  module Kernel
-     2    alias_method :old_system, :system
-     3    def system(*args)
-     4      result = old_system(*args)
-     5      puts "system(#{args.join(', ')}) returned #{result}"
-     6      result
-     7    end
-     8  end
-     9  
-    10  system("date")
-    11  system("kangaroo", "-hop 10", "skippy")
-</PRE>
+<H1><A NAME="SECTION02850000000000000000">
+Hooks (Ganchos)</A>
+</H1>
 
 <P>
-<PRE>
-~/rubytesting/programmingRuby/src_of_programming_ruby_by_dave_thomas$ ruby ex0678.rb 
-domingo, 20 de noviembre de 2011, 11:21:19 GMT
-system(date) returned true
-system(kangaroo, -hop 10, skippy) returned false
-</PRE>
+<A NAME="tex2html542"
+  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>, <A NAME="tex2html543"
+  HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>
+y
+<A NAME="tex2html544"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
+proveen varios métodos callback o <A NAME="11129"></A><SPAN  CLASS="textbf">hooks</SPAN>.
+Por defecto estos métodos no están definidos, pero si los 
+definimos serán invocados cuando ocurra un cierto evento.
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html7505"
+  HREF="node259.html">El Hook <TT>inherited</TT></A>
+<LI><A NAME="tex2html7506"
+  HREF="node260.html">El Hook <TT>included</TT></A>
+<UL>
+<LI><A NAME="tex2html7507"
+  HREF="node260.html#SECTION02852010000000000000">Creando declaraciones de métodos abstractos</A>
+<LI><A NAME="tex2html7508"
+  HREF="node260.html#SECTION02852100000000000000">Incluyendo Métodos de Instancia y de Clase de un Módulo</A>
+<UL>
+<LI><A NAME="tex2html7509"
+  HREF="node260.html#SECTION02852110000000000000">El Problema</A>
+<LI><A NAME="tex2html7510"
+  HREF="node260.html#SECTION02852120000000000000">Primeras Solución</A>
+<LI><A NAME="tex2html7511"
+  HREF="node260.html#SECTION02852130000000000000">Segunda Solución: Usando el Gancho <TT>included</TT></A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html7512"
+  HREF="node261.html">Ganchos/Hooks: Sustituyendo (y delegando en) un método existente</A>
+<LI><A NAME="tex2html7513"
+  HREF="node262.html">Ganchos/Hooks: Interviniendo en el Momento en que un Objeto es Creado</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

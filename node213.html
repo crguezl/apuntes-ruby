@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Módulos</TITLE>
-<META NAME="description" CONTENT="Módulos">
+<TITLE>Limitando el Número de Instancias de una Clase</TITLE>
+<META NAME="description" CONTENT="Limitando el Número de Instancias de una Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node218.html">
 <LINK REL="previous" HREF="node212.html">
-<LINK REL="up" HREF="node170.html">
+<LINK REL="up" HREF="node209.html">
 <LINK REL="next" HREF="node214.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6719"
+<A NAME="tex2html6755"
   HREF="node214.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6713"
-  HREF="node170.html">
+<A NAME="tex2html6749"
+  HREF="node209.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6707"
+<A NAME="tex2html6745"
   HREF="node212.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6715"
-  HREF="node823.html">
+<A NAME="tex2html6751"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6717"
-  HREF="node826.html">
+<A NAME="tex2html6753"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,100 +91,106 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6720"
-  HREF="node214.html">Los Módulos como Espacios</A>
-<B> Subir:</B> <A NAME="tex2html6714"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6708"
-  HREF="node212.html">Práctica: Conjuntos</A>
- &nbsp; <B>  <A NAME="tex2html6716"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6718"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6756"
+  HREF="node214.html">Métodos y Clases: Construyendo</A>
+<B> Subir:</B> <A NAME="tex2html6750"
+  HREF="node209.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6746"
+  HREF="node212.html">dup, clone e initialize_copy</A>
+ &nbsp; <B>  <A NAME="tex2html6752"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6754"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02770000000000000000"></A>
-<A NAME="section:modulos"></A>
+<H2><A NAME="SECTION02744000000000000000"></A>
+<A NAME="subsection:limitandoelnumerodeinstancias"></A>
 <BR>
-Módulos
-</H1>
+Limitando el Número de Instancias de una Clase
+</H2>
+Some classes, such as those that define enumerated types, may want to
+strictly limit the number of instances that exist. 
 
 <P>
-Modules are a way of grouping together methods, classes, and constants. 
+Classes like these
+need to make their new method private and also probably want
+to prevent copies from being made. 
 
 <P>
-
-<UL>
-<LI>Al igual que una clase, un <A NAME="8676"></A><SPAN  CLASS="textbf">módulo</SPAN> es una colección de métodos, constantes y variables de clase.
-</LI>
-<LI>A diferencia de una clase, un módulo no puede ser instanciado y no puede ser heredado (aunque puede ser incluído),
-</LI>
-<LI>Los módulos pueden agrupar varias clases.
-</LI>
-<LI>Los módulos tienen dos usos: como espacios de nombres y como <A NAME="tex2html421"
-  HREF="http://en.wikipedia.org/wiki/Mixin">mixins</A>
-</LI>
-<LI>Los módulos son objetos de la clase <code>Module</code>
-</LI>
-<LI><code>Class</code> es una subclase de <code>Module</code>
-</LI>
-</UL>
+The following code demonstrates one way to do that:
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n LimitingTheNumberOfInstances.rb 
+     1  class Season
+     2    NAMES = %w{ Spring Summer Autumn Winter }
+     3    INSTANCES = []
+     4  
+     5    def initialize(n)
+     6      @n = n
+     7    end
+     8  
+     9    def to_s
+    10      NAMES[@n]
+    11    end
+    12  
+    13    NAMES.each_with_index { |n,i|
+    14      season = new(i)
+    15      INSTANCES[i] = season
+    16      const_set n, season
+    17    }
+    18  
+    19    private_class_method :allocate, :new
+    20    private :dup, :clone
+    21  end
+    22  
+    23  if __FILE__ == $0
+    24    puts Season::Spring 
+    25    puts Season::Summer
+    26    puts Season::Autumn
+    27    puts Season::Winter
+    28  end
+</PRE>
+El método <A NAME="tex2html420"
+  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html#method-i-const_set">const_set</A>
+de la clase <A NAME="tex2html421"
+  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html">Module</A>
+establece el valor asociado con el nombre pasado como primer argumento al objeto dado como segundo argumento:
+<PRE>
+&gt;&gt; Math.const_set("HIGH_SCHOOL_PI", 22.0/7.0)
+=&gt; 3.14285714285714
+&gt;&gt; Math::HIGH_SCHOOL_PI
+=&gt; 3.14285714285714
+</PRE>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+Cuando se ejecuta el programa anterior produce esta salida:
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby LimitingTheNumberOfInstances.rb 
+Spring
+Summer
+Autumn
+Winter
+</PRE>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6721"
-  HREF="node214.html">Los Módulos como Espacios de Nombres</A>
-<UL>
-<LI><A NAME="tex2html6722"
-  HREF="node214.html#SECTION02771100000000000000">Ejemplo Simple</A>
-<LI><A NAME="tex2html6723"
-  HREF="node214.html#SECTION02771200000000000000">Ejemplo: Codificar y Decodificar Datos Usando Base64</A>
-<LI><A NAME="tex2html6724"
-  HREF="node214.html#SECTION02771300000000000000">Espacios de Nombres Anidados</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6725"
-  HREF="node215.html">Los Módulos como Mixins</A>
-<UL>
-<LI><A NAME="tex2html6726"
-  HREF="node215.html#SECTION02772100000000000000">Variables de Instancia en Mixins</A>
-<LI><A NAME="tex2html6727"
-  HREF="node215.html#SECTION02772200000000000000">Colisiones</A>
-<LI><A NAME="tex2html6728"
-  HREF="node215.html#SECTION02772300000000000000">Composición frente a Herencia/Composition versus Inheritance</A>
-<LI><A NAME="tex2html6729"
-  HREF="node215.html#SECTION02772400000000000000">extend</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html6730"
-  HREF="node216.html">Ejemplo</A>
-<LI><A NAME="tex2html6731"
-  HREF="node217.html">Módulos Espacio de Nombres Incluíbles</A>
-</UL>
-<!--End of Table of Child-Links-->
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6719"
+<A NAME="tex2html6755"
   HREF="node214.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6713"
-  HREF="node170.html">
+<A NAME="tex2html6749"
+  HREF="node209.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6707"
+<A NAME="tex2html6745"
   HREF="node212.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6715"
-  HREF="node823.html">
+<A NAME="tex2html6751"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6717"
-  HREF="node826.html">
+<A NAME="tex2html6753"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -236,20 +241,20 @@ Modules are a way of grouping together methods, classes, and constants.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6720"
-  HREF="node214.html">Los Módulos como Espacios</A>
-<B> Subir:</B> <A NAME="tex2html6714"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6708"
-  HREF="node212.html">Práctica: Conjuntos</A>
- &nbsp; <B>  <A NAME="tex2html6716"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6718"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6756"
+  HREF="node214.html">Métodos y Clases: Construyendo</A>
+<B> Subir:</B> <A NAME="tex2html6750"
+  HREF="node209.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6746"
+  HREF="node212.html">dup, clone e initialize_copy</A>
+ &nbsp; <B>  <A NAME="tex2html6752"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6754"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

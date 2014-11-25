@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Conjuntos</TITLE>
-<META NAME="description" CONTENT="Práctica: Conjuntos">
+<TITLE>dup, clone e initialize_copy</TITLE>
+<META NAME="description" CONTENT="dup, clone e initialize_copy">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node213.html">
 <LINK REL="previous" HREF="node211.html">
-<LINK REL="up" HREF="node170.html">
+<LINK REL="up" HREF="node209.html">
 <LINK REL="next" HREF="node213.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6705"
+<A NAME="tex2html6740"
   HREF="node213.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6699"
-  HREF="node170.html">
+<A NAME="tex2html6734"
+  HREF="node209.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6693"
+<A NAME="tex2html6728"
   HREF="node211.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6701"
-  HREF="node823.html">
+<A NAME="tex2html6736"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6703"
-  HREF="node826.html">
+<A NAME="tex2html6738"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,109 +92,260 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6706"
-  HREF="node213.html">Módulos</A>
-<B> Subir:</B> <A NAME="tex2html6700"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6694"
-  HREF="node211.html">Métodos y Clases: Construyendo</A>
- &nbsp; <B>  <A NAME="tex2html6702"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6704"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6741"
+  HREF="node213.html">Limitando el Número de</A>
+<B> Subir:</B> <A NAME="tex2html6735"
+  HREF="node209.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6729"
+  HREF="node211.html">Métodos Factoría</A>
+ &nbsp; <B>  <A NAME="tex2html6737"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6739"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H1><A NAME="SECTION02760000000000000000"></A>
-   <A NAME="8675"></A>
-  
-<A NAME="practica:conjuntos"></A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html6742"
+  HREF="node212.html#SECTION02743010000000000000">Métodos Singleton</A>
+<LI><A NAME="tex2html6743"
+  HREF="node212.html#SECTION02743020000000000000">Copia Superficial</A>
+<LI><A NAME="tex2html6744"
+  HREF="node212.html#SECTION02743030000000000000"><TT>initialize_copy</TT></A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02743000000000000000"></A>
+<A NAME="subsection:dupclone"></A>
 <BR>
-Práctica: Conjuntos
-</H1>
+dup, clone e initialize_copy
+</H2>
 
 <P>
-Defina una clase Conjunto
-que disponga de métodos para:
-  
-<UL>
-<LI>Calcular el cardinal de un conjunto
-</LI>
-<LI>Determinar las relaciones pertenencia de un elemento y subconjunto
-</LI>
-<LI>La operaci&#243;n de uni&#243;n:
-</LI>
-<LI>La operaci&#243;n de intersecci&#243;n
-</LI>
-<LI>Diferencia de conjuntos
-</LI>
-<LI>Convertir un conjunto en una cadena
-  
-</LI>
-</UL>
-Debe funcionar  de manera similar a la clase <A NAME="tex2html420"
-  HREF="http://www.ruby-doc.org/stdlib/libdoc/set/rdoc/classes/Set.html">Set</A>
-proveída con Ruby:
+Otra forma de construir objetos es via los métodos
+<code>dup</code> y <code>clone</code>. 
+Estos métodos crean un objeto que es una copia del del objeto que recibe el mensaje:
+<PRE>
+&gt;&gt; a = "hello"
+=&gt; "hello"
+&gt;&gt; b = a.dup
+=&gt; "hello"
+&gt;&gt; c = a.clone
+=&gt; "hello"
+&gt;&gt; [a.__id__, b.__id__, c.__id__]
+=&gt; [2150357800, 2150329860, 2150304120]
+</PRE>
+
+<P>
+<code>clone</code> hace una copia mas parecida que <code>dup</code>. Por ejemplo,
+conserva el estatus de <code>freeze</code> del original, cosa que no hace <code>dup</code>:
 
 <P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ irb
-&gt;&gt; require 'set'
-=&gt; true
-&gt;&gt; s1 = Set.new [1, 2]
-=&gt; #&lt;Set: {1, 2}&gt;
-&gt;&gt; s2 = Set.new [2, 4]
-=&gt; #&lt;Set: {2, 4}&gt;
-&gt;&gt; s1+s2
-=&gt; #&lt;Set: {1, 2, 4}&gt;
-&gt;&gt; s1^s2
-=&gt; #&lt;Set: {1, 4}&gt;
-&gt;&gt; s2-s1
-=&gt; #&lt;Set: {4}&gt;
-&gt;&gt; s1.include? 1
-=&gt; true
-&gt;&gt; s1.include? 6
-=&gt; false
+&gt;&gt; a = "hello"
+=&gt; "hello"
+&gt;&gt; a.freeze
+=&gt; "hello"
+&gt;&gt; a &lt;&lt; " world"
+TypeError: can't modify frozen string
+&gt;&gt; b = a.clone
+=&gt; "hello"
+&gt;&gt; b &lt;&lt; " world"
+TypeError: can't modify frozen string
+&gt;&gt; c = a.dup
+=&gt; "hello"
+&gt;&gt; c &lt;&lt; " world"
+=&gt; "hello world"
 </PRE>
-Puede usar <code>Array</code>s para implementar los conjuntos.
-Asuma que los elementos del conjunto universal admiten un orden total.
-Esta sesión con <code>irb</code> sugiere una posible implementación:
-<PRE>
-&gt;&gt; a = [6, 4, 3, 4, 2, 1].uniq.sort
-=&gt; [1, 2, 3, 4, 6]
-&gt;&gt; b = [2, 3, 2, 4, 5].uniq.sort
-=&gt; [2, 3, 4, 5]
-&gt;&gt; (a | b).uniq.sort
-=&gt; [1, 2, 3, 4, 5, 6]
-&gt;&gt; (a &amp; b).uniq.sort
-=&gt; [2, 3, 4]
-</PRE>
-Esto es, puede guardar el conjunto como un <code>Array</code> ordenado
-en el que se han suprimido los elementos repetidos.
 
 <P>
-La relación de orden entre conjuntos es parcial: dados dos conjuntos <code>A</code> y <code>B</code>
-no necesariamente ocurre que <code>A &lt; B</code> o aque <code>B &lt; A</code>. 
+<code>clone</code> incluso preserva los <I>singleton methods</I>, esto es, preserva los métodos individuales
+del objeto. Sin embargo, <code>dup</code> no lo hace.
+
+<P>
+
+<H4><A NAME="SECTION02743010000000000000">
+Métodos Singleton</A>
+</H4>
+  
+
+<A NAME="parrafo:metodosingleton"></A>
+<P>
+Un <A NAME="8799"></A><SPAN  CLASS="textbf">singleton method</SPAN> es un método <code>x</code> que se añade a un objeto <code>obj</code>
+específico. A partir del momento en el que se añade, ese objeto <code>obj</code>
+responde el mensaje <code>x</code>, cosa que no hacen los otros métodos de su clase.
+Sigue un ejemplo:
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n singletonmethandclone.rb 
+     1  obj = "some object"
+     2  def obj.printme
+     3    puts "***&lt;#{self}&gt;***"
+     4  end
+     5  
+     6  obj.printme
+     7  
+     8  b = obj.dup
+     9  c = obj.clone
+    10  
+    11  c.printme
+    12  b.printme
+</PRE>
+En la línea 2 añadimos el método <code>printtime</code> únicamente al objeto <code>obj</code>. El objeto clonado
+<code>c</code> también puede hacer <code>printtime</code>. No así la copia <code>b</code> obtenida por duplicación:
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby singletonmethandclone.rb 
+***&lt;some object&gt;***
+***&lt;some object&gt;***
+singletonmethandclone.rb:12: undefined method `printme' for "some object":String (NoMethodError)
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION02743020000000000000">
+Copia Superficial</A>
+</H4>
+  
+
+Cuando <code>clone</code> y <code>dup</code> copian las variables de instancia / atributos del objeto original al objeto final
+<SPAN  CLASS="textbf">sólo copian las referencias a los valores de esas variables no copian los valores reales: sólo hacen una copia superficial</SPAN>.
+El siguiente ejemplo ilustra este punto:
+
+<P>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n dupclone1.rb 
+     1  class Point
+     2    attr_accessor :coords
+     3    def initialize(* coords)
+     4      @coords = coords
+     5    end
+     6  end
+     7  
+     8  if __FILE__ == $0
+     9    puts "dup"
+    10    p = Point.new(1, 2, 3)
+    11    q = p.dup
+    12    puts p.inspect
+    13    puts q.inspect
+    14  
+    15    q.coords[1] = 4
+    16    puts p.inspect
+    17    puts q.inspect
+    18  
+    19    puts "clone"
+    20    p = Point.new(1, 2, 3)
+    21    q = p.clone
+    22    puts p.inspect
+    23    puts q.inspect
+    24  
+    25    q.coords[1] = 4
+    26    puts p.inspect
+    27    puts q.inspect
+    28  end
+</PRE>
+La ejecución nos muestra que la copia es superficial:
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby dupclone1.rb 
+dup
+#&lt;Point:0x100169008 @coords=[1, 2, 3]&gt;
+#&lt;Point:0x100168fe0 @coords=[1, 2, 3]&gt;
+#&lt;Point:0x100169008 @coords=[1, 4, 3]&gt;
+#&lt;Point:0x100168fe0 @coords=[1, 4, 3]&gt;
+clone
+#&lt;Point:0x100168c20 @coords=[1, 2, 3]&gt;
+#&lt;Point:0x100168bf8 @coords=[1, 2, 3]&gt;
+#&lt;Point:0x100168c20 @coords=[1, 4, 3]&gt;
+#&lt;Point:0x100168bf8 @coords=[1, 4, 3]&gt;
+</PRE>
+Lo que se necesita es una copia profunda.
+
+<P>
+
+<H4><A NAME="SECTION02743030000000000000">
+<TT>initialize_copy</TT></A>
+</H4>
+  
+
+Si una clase define un método <code>initialize_copy</code>,
+los métodos <code>clone</code> y <code>dup</code> lo invocarán en el <I>objeto copia</I>.
+Al método <code>initialize_copy</code> se le pasa el objeto original como argumento.
+El valor retornado por <code>initialize_copy</code> es ignorado:
+
+<P>
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n dupclone2.rb 
+     1  class Point
+     2    attr_accessor :coords
+     3    def initialize(* coords)
+     4      @coords = coords
+     5    end
+     6  
+     7    def initialize_copy(orig)
+     8      @coords = orig.coords.dup 
+     9      # or better
+    10      # @coords = @coords.dup 
+    11    end
+    12  end
+    13  
+    14  if __FILE__ == $0
+    15    puts "dup"
+    16    p = Point.new(1, 2, 3)
+    17    q = p.dup
+    18    puts p.inspect
+    19    puts "q = p.dup = "+q.inspect
+    20  
+    21    q.coords[1] = 4
+    22    puts "Changed q[1] to 4 and p has "+p.inspect
+    23    puts "Changed q[1] to 4 and q has "+q.inspect
+    24  
+    25    puts "clone"
+    26    p = Point.new(1, 2, 3)
+    27    q = p.clone
+    28    puts p.inspect
+    29    puts "q = p.clone = "+q.inspect
+    30  
+    31    q.coords[1] = 4
+    32    puts "Changed q[1] to 4 and p has "+p.inspect
+    33    puts "Changed q[1] to 4 and q has "+q.inspect
+    34  end
+</PRE>
+La ejecución produce la siguiente salida:
+<PRE>
+~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby dupclone2.rb 
+dup
+#&lt;Point:0x100168900 @coords=[1, 2, 3]&gt;
+q = p.dup = #&lt;Point:0x1001688d8 @coords=[1, 2, 3]&gt;
+Changed q[1] to 4 and p has #&lt;Point:0x100168900 @coords=[1, 2, 3]&gt;
+Changed q[1] to 4 and q has #&lt;Point:0x1001688d8 @coords=[1, 4, 3]&gt;
+clone
+#&lt;Point:0x1001683d8 @coords=[1, 2, 3]&gt;
+q = p.clone = #&lt;Point:0x1001683b0 @coords=[1, 2, 3]&gt;
+Changed q[1] to 4 and p has #&lt;Point:0x1001683d8 @coords=[1, 2, 3]&gt;
+Changed q[1] to 4 and q has #&lt;Point:0x1001683b0 @coords=[1, 4, 3]&gt;
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6705"
+<A NAME="tex2html6740"
   HREF="node213.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6699"
-  HREF="node170.html">
+<A NAME="tex2html6734"
+  HREF="node209.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6693"
+<A NAME="tex2html6728"
   HREF="node211.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6701"
-  HREF="node823.html">
+<A NAME="tex2html6736"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6703"
-  HREF="node826.html">
+<A NAME="tex2html6738"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -245,20 +396,20 @@ no necesariamente ocurre que <code>A &lt; B</code> o aque <code>B &lt; A</code>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6706"
-  HREF="node213.html">Módulos</A>
-<B> Subir:</B> <A NAME="tex2html6700"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6694"
-  HREF="node211.html">Métodos y Clases: Construyendo</A>
- &nbsp; <B>  <A NAME="tex2html6702"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6704"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6741"
+  HREF="node213.html">Limitando el Número de</A>
+<B> Subir:</B> <A NAME="tex2html6735"
+  HREF="node209.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6729"
+  HREF="node211.html">Métodos Factoría</A>
+ &nbsp; <B>  <A NAME="tex2html6737"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6739"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

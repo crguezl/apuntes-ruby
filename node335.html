@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Exclusión Mutua y la Clase Mutex</TITLE>
-<META NAME="description" CONTENT="Exclusión Mutua y la Clase Mutex">
+<TITLE>Threads</TITLE>
+<META NAME="description" CONTENT="Threads">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node336.html">
-<LINK REL="previous" HREF="node334.html">
-<LINK REL="up" HREF="node332.html">
+<LINK REL="next" HREF="node342.html">
+<LINK REL="previous" HREF="node330.html">
+<LINK REL="up" HREF="node25.html">
 <LINK REL="next" HREF="node336.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8731"
+<A NAME="tex2html8746"
   HREF="node336.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8725"
-  HREF="node332.html">
+<A NAME="tex2html8740"
+  HREF="node25.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8719"
+<A NAME="tex2html8734"
   HREF="node334.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8727"
-  HREF="node823.html">
+<A NAME="tex2html8742"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8729"
-  HREF="node826.html">
+<A NAME="tex2html8744"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,346 +92,88 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8732"
-  HREF="node336.html">Un Servidor Multithreaded (and</A>
-<B> Subir:</B> <A NAME="tex2html8726"
-  HREF="node332.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html8720"
-  HREF="node334.html">Creación de Threads</A>
- &nbsp; <B>  <A NAME="tex2html8728"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8730"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8747"
+  HREF="node336.html">Enlaces /Véase</A>
+<B> Subir:</B> <A NAME="tex2html8741"
+  HREF="node25.html">EL LENGUAJE DE PROGRAMACIÓN</A>
+<B> Anterior:</B> <A NAME="tex2html8735"
+  HREF="node334.html">Véase</A>
+ &nbsp; <B>  <A NAME="tex2html8743"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8745"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021830000000000000000">
-Exclusión Mutua y la Clase </A><A NAME="tex2html754"
-  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>
+<H1><A NAME="SECTION021800000000000000000"></A>
+<A NAME="chapter:threads"></A>
+<BR>
+Threads
 </H1>
-
-<P>
-
-<H4><A NAME="SECTION021830010000000000000">
-Race Condition: definición</A>
-</H4>
-  
-
-<P>
-De la Wikipedia sobre <A NAME="tex2html755"
-  HREF="http://en.wikipedia.org/wiki/:">Race_condition</A>
-<BLOCKQUOTE>
-A race condition or race hazard is the behavior of an electronic
-or software system where the output is dependent on the sequence
-or timing of other uncontrollable events. 
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>It becomes a bug when
-events do not happen in the order the programmer intended. 
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>The term
-originates with the idea of two signals racing each other to influence
-the output first.
-
-</BLOCKQUOTE>
-
-<P>
-
-<H4><A NAME="SECTION021830020000000000000">
-Ejemplo de Race Condition</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/threads(master)]$ cat race_condition.rb 
-def inc(n) 
-  n+1
-end
-sum = 0
-threads = (1..10).map do
-  Thread.new do 
-    10_000.times do
-      sum = inc(sum)
-    end
-  end 
-end
-threads.each(&amp;:join)
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021830030000000000000">
-Ventajas de Usar JRuby Cuando se Usan Threads</A>
-</H4>
-  
-
-JRuby is built upon the JVM. One can make use of "true" native threads which are able to run concurrently with your parent thread (See
-<A NAME="tex2html756"
-  HREF="http://www.igvita.com/2008/11/13/concurrency-is-a-myth-in-ruby/">Parallelism is a Myth in Ruby by Ilya Grigorik on November 13, 2008</A>).
-
-<P>
-A  <A NAME="14176"></A><SPAN  CLASS="textbf">Global Interpreter Lock</SPAN> (<A NAME="14178"></A><SPAN  CLASS="textbf">GIL</SPAN>) is a mutual exclusion lock held by
-a programming language interpreter thread to avoid sharing code
-that is not <A NAME="14180"></A><SPAN  CLASS="textbf">thread-safe</SPAN> with other threads.
-
-<P>
-Some language implementations that implement a Global Interpreter Lock are CPython, the most widely used implementation of Python, and Ruby MRI, the reference implementation of Ruby.
-
-<P>
-JVM-based equivalents of these languages (Jython and JRuby) do not use 
-Global Interpreter Locks. 
-JRuby is a Ruby implementation 
-allowing us to natively scale our Ruby code across multiple cores. 
-IronPython and IronRuby are implemented
-on top of Microsoft's Dynamic Language Runtime and also avoid using
-a GIL.
-
-<P>
-
-<img src="xruby-gil.webp" />
-
-<P>
-Also, Rubinius implements native operating system threads for
-concurrency and has no global interpreter lock (GIL).
-
-<P>
-
-<H4><A NAME="SECTION021830040000000000000">
-Ejecución con JRuby</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/threads(master)]$ rvm list
-
-rvm rubies
-
-   jruby-1.7.3 [ x86_64 ]
-=* ruby-2.0.0-p247 [ x86_64 ]
-   ruby-2.1.0-preview1 [ x86_64 ]
-
-# =&gt; - current
-# =* - current &amp;&amp; default
-#  * - default
-
-[~/ruby/threads(master)]$ rvm use jruby-1.7.3
-Using /Users/casiano/.rvm/gems/jruby-1.7.3
-[~/ruby/threads(master)]$ ruby -v
-jruby 1.7.3 (1.9.3p385) 2013-04-17 fffffff on Java HotSpot(TM) 64-Bit Server VM 1.7.0_25-b15 [darwin-x86_64]
-[~/ruby/threads(master)]$ ruby race_condition.rb 
-28375
-[~/ruby/threads(master)]$ ruby race_condition.rb 
-25464
-[~/ruby/threads(master)]$ ruby race_condition.rb 
-23442
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021830050000000000000">
-Ejecucion con ruby MRI</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/threads(master)]$  rvm use 2.1.0-preview1
-Using /Users/casiano/.rvm/gems/ruby-2.1.0-preview1
-[~/ruby/threads(master)]$ ruby race_condition.rb 
-100000
-[~/ruby/threads(master)]$ ruby race_condition.rb 
-100000
-[~/ruby/threads(master)]$
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021830060000000000000">
-Mutex</A>
-</H4>
-  
-
-<P>
-We can use the built-in class <A NAME="tex2html757"
-  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A> to create synchronized regions—areas
-of code that only one thread may enter at a time.
-
-<P>
-We resolve problems like these by using a cooperative locking
-mechanism:
-
-<OL>
-<LI>Each thread that wants to access shared data must first
-<code>lock</code> that data
-</LI>
-<LI>The <code>lock</code> is represented by a <A NAME="tex2html758"
-  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>
-(short for "mutual exclusion") object
-</LI>
-<LI>To <code>lock</code> a <A NAME="tex2html759"
-  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>,
-you call its <code>lock</code> method
-</LI>
-<LI>When you’re done reading or altering
-the shared data, you call the <code>unlock</code> method of the <A NAME="tex2html760"
-  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>
-</LI>
-<LI><P>
-The <code>lock</code> method blocks when called on a <A NAME="tex2html761"
-  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A> that’s
-already locked, and it does not return until the caller has
-successfully obtained a <code>lock</code>
-</LI>
-<LI>If each thread that accesses
-the shared data locks and <code>unlock</code>s the <A NAME="tex2html762"
-  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A> correctly,
-no thread will see the data in an inconsistent state and we won’t
-have problems like those we’ve described
-</LI>
-<LI>Instead of using the <code>lock</code> and <code>unlock</code> methods explicitly, it is more common to use the <code>synchronize</code> method and associate a block with it
-</LI>
-<LI><code>synchronize</code> locks the <A NAME="tex2html763"
-  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>, runs the code in the block, and then <code>unlock</code>s the <A NAME="tex2html764"
-  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A> in an <code>ensure</code> clause so that exceptions are properly handled
-</LI>
-</OL>
-
-<P>
-<PRE>
-[~/ruby/threads(master)]$ cat mutex_synchronize.rb 
-# Wait for all threads (other than the current thread and
-# main thread) to stop running.
-# Assumes that no new threads are started while waiting.
-def join_all
-  main = Thread.main        # The main thread
-  current = Thread.current  # The current thread
-  all = Thread.list         # All threads still running
-  # Now call join on each thread
-  all.each {|t| t.join unless t == current or t == main }
-end
-
-def inc(n) 
-  n+1
-end
-sum = 0
-mutex = Mutex.new
-threads = (1..10).map do
-  Thread.new do 
-    10_000.times do
-      mutex.synchronize do
-        sum = inc(sum)
-      end
-    end
-  end 
-end
-join_all
-p sum
-</PRE>
-
-<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html8733"
-  HREF="node335.html#SECTION021830010000000000000">Race Condition: definición</A>
-<LI><A NAME="tex2html8734"
-  HREF="node335.html#SECTION021830020000000000000">Ejemplo de Race Condition</A>
-<LI><A NAME="tex2html8735"
-  HREF="node335.html#SECTION021830030000000000000">Ventajas de Usar JRuby Cuando se Usan Threads</A>
-<LI><A NAME="tex2html8736"
-  HREF="node335.html#SECTION021830040000000000000">Ejecución con JRuby</A>
-<LI><A NAME="tex2html8737"
-  HREF="node335.html#SECTION021830050000000000000">Ejecucion con ruby MRI</A>
-<LI><A NAME="tex2html8738"
-  HREF="node335.html#SECTION021830060000000000000">Mutex</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html8731"
-  HREF="node336.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8725"
-  HREF="node332.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8719"
-  HREF="node334.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8727"
-  HREF="node823.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8729"
-  HREF="node826.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
+<LI><A NAME="tex2html8748"
+  HREF="node336.html">Enlaces /Véase</A>
+<LI><A NAME="tex2html8749"
+  HREF="node337.html">Creación de Threads</A>
+<UL>
+<LI><A NAME="tex2html8750"
+  HREF="node337.html#SECTION021820010000000000000">new</A>
+<LI><A NAME="tex2html8751"
+  HREF="node337.html#SECTION021820020000000000000">join</A>
+<LI><A NAME="tex2html8752"
+  HREF="node337.html#SECTION021820030000000000000">Localidad y Privacidad</A>
+</UL>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8732"
-  HREF="node336.html">Un Servidor Multithreaded (and</A>
-<B> Subir:</B> <A NAME="tex2html8726"
-  HREF="node332.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html8720"
-  HREF="node334.html">Creación de Threads</A>
- &nbsp; <B>  <A NAME="tex2html8728"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8730"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<LI><A NAME="tex2html8753"
+  HREF="node338.html">Exclusión Mutua y la Clase <TT>Mutex</TT></A>
+<UL>
+<LI><A NAME="tex2html8754"
+  HREF="node338.html#SECTION021830010000000000000">Race Condition: definición</A>
+<LI><A NAME="tex2html8755"
+  HREF="node338.html#SECTION021830020000000000000">Ejemplo de Race Condition</A>
+<LI><A NAME="tex2html8756"
+  HREF="node338.html#SECTION021830030000000000000">Ventajas de Usar JRuby Cuando se Usan Threads</A>
+<LI><A NAME="tex2html8757"
+  HREF="node338.html#SECTION021830040000000000000">Ejecución con JRuby</A>
+<LI><A NAME="tex2html8758"
+  HREF="node338.html#SECTION021830050000000000000">Ejecucion con ruby MRI</A>
+<LI><A NAME="tex2html8759"
+  HREF="node338.html#SECTION021830060000000000000">Mutex</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html8760"
+  HREF="node339.html">Un Servidor Multithreaded (and a Client)</A>
+<UL>
+<LI><A NAME="tex2html8761"
+  HREF="node339.html#SECTION021840010000000000000">El Cliente</A>
+<LI><A NAME="tex2html8762"
+  HREF="node339.html#SECTION021840020000000000000">ejecución del Servidor</A>
+<LI><A NAME="tex2html8763"
+  HREF="node339.html#SECTION021840030000000000000">Ejecución del Cliente</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html8764"
+  HREF="node340.html">Colas</A>
+<UL>
+<LI><A NAME="tex2html8765"
+  HREF="node340.html#SECTION021850010000000000000">Las Clases <TT>Queue</TT>y <TT>SizedQueue</TT></A>
+<LI><A NAME="tex2html8766"
+  HREF="node340.html#SECTION021850020000000000000">Example: A Threaded Map-Reduce</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html8767"
+  HREF="node341.html">El Problema de los Filósosofos Comensales / The Dining Philosophers Problem</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

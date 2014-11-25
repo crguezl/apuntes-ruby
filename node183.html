@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Igualdad de Puntos</TITLE>
-<META NAME="description" CONTENT="Igualdad de Puntos">
+<TITLE>Coerción</TITLE>
+<META NAME="description" CONTENT="Coerción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node184.html">
 <LINK REL="previous" HREF="node182.html">
-<LINK REL="up" HREF="node171.html">
+<LINK REL="up" HREF="node174.html">
 <LINK REL="next" HREF="node184.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6270"
+<A NAME="tex2html6305"
   HREF="node184.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6264"
-  HREF="node171.html">
+<A NAME="tex2html6299"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6258"
+<A NAME="tex2html6293"
   HREF="node182.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6266"
-  HREF="node823.html">
+<A NAME="tex2html6301"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6268"
-  HREF="node826.html">
+<A NAME="tex2html6303"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,142 +92,150 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6271"
-  HREF="node184.html">Ordenando Puntos</A>
-<B> Subir:</B> <A NAME="tex2html6265"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6259"
-  HREF="node182.html">Enumeración de Coordenadas</A>
- &nbsp; <B>  <A NAME="tex2html6267"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6269"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6306"
+  HREF="node184.html">Acceso a Arrays y</A>
+<B> Subir:</B> <A NAME="tex2html6300"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6294"
+  HREF="node182.html">Polimorfismo, Comprobación de Tipos</A>
+ &nbsp; <B>  <A NAME="tex2html6302"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6304"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6272"
-  HREF="node183.html#SECTION027112100000000000000"><TT>eql?</TT> y las Claves de un hash</A>
-</UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION027112000000000000000"></A>
-<A NAME="subsection:igualdaddepuntos"></A>
+<H2><A NAME="SECTION02719000000000000000"></A>
+<A NAME="subsectioncoercion"></A>
 <BR>
-Igualdad de Puntos
+Coerción
 </H2>
 
 <P>
-Repáse la sección 
-<I>Igualdad de Objetos</I>
-<A HREF="node76.html#subsection:igualdad">10.8.5</A>
+Numeric types define a conversion method named <code>coerce</code>. 
+
+<P>
+Numeric operators are written so that if they don’t know the type of
+the righthand operand, they invoke the <code>coerce</code> method of the righthand
+operand, passing the lefthand operand as an argument.
+
+<P>
+Consideremos este código:
 
 <P>
 <PRE>
-def ==(o)               # Is self == o?
-  if o.is_a? Point      # If o is a Point object
-    @x==o.x &amp;&amp; @y==o.y  # then compare the fields.
-  elsif                 # If o is not a Point
-    false               # then, by definition, self != o.
-  end
-end
+$ cat coerce.rb 
+require 'point'
+
+p = Point.new(2,3)
+q = 2*p
+puts q
 </PRE>
 
 <P>
+Puesto que <code>Fixnum</code> no sabe como multiplicarse por un <code>Point</code>,
+invoca al método <code>coerce</code> de su argumento 
+(véase el código de <code>point.rb</code> en la sección
+<A HREF="node180.html#subsection:definiendooperadores">14.1.6</A>).
+
+<P>
 <PRE>
-def ==(o)                  # Is self == o?
-  @x == o.x &amp;&amp; @y == o.y   # Assume o has proper x and y methods
-rescue                     # If that assumption fails
-  false                    # Then self != o
-end
+    33	  def coerce(other)
+    34	    [self, other]
+    35	  end
+    36
+</PRE>
+<PRE>
+    28	  def *(scalar)        # Define * to perform scalar multiplication
+    29	    return Point.new(@x*scalar,   @y*scalar) if scalar.is_a? Numeric
+    30	    return Point.new(@x*scalar.x, @y*scalar.y) if scalar.is_a? Point
+    31	  end
+</PRE>
+Transformando la llamada <code>2*p = 2.*(p)</code>
+en <code>p*2 = p.*(2)</code>.
+
+<P>
+Veamos una sesión paso a paso con el depurador:
+
+<P>
+<PRE>
+[09:01]$ ruby -rdebug -I. coerce.rb 
+coerce.rb:1:require 'point'
+(rdb:1) n
+coerce.rb:3:p = Point.new(2,3)
+(rdb:1) 
+n
+coerce.rb:4:q = 2*p
+(rdb:1) p p
+(2,3)
+</PRE>
+En vez de saltar  sobre la llamada <code>n</code>(ext) 
+entremos en el método usando <code>s</code>(tep):
+<PRE>
+(rdb:1) s
+point.rb:34:    [self, other]
+</PRE>
+¡Aja! estamos en el código de <code>coerce</code>:
+<PRE>
+(rdb:1) where
+--&gt; #1 point.rb:34:in `coerce'
+    #2 coerce.rb:4
+(rdb:1) self
+(2,3)
+(rdb:1) other
+2
+(rdb:1) s
+point.rb:29:  return Point.new(@x*scalar,   @y*scalar) if scalar.is_a? Numeric
+(rdb:1) n
+coerce.rb:5:puts q
+(rdb:1) 
+n
+(4,6)
 </PRE>
 
 <P>
-<PRE>
-class Point
-  alias eql? ==
-end
-</PRE>
+The intent of
+the <code>coerce</code> method is to convert the argument to the same type as
+the object on which the method is invoked, or to convert both objects to
+some more general compatible type.
 
 <P>
 <PRE>
-def eql?(o)             
-  if o.instance_of? Point      
-    @x.eql?(o.x) &amp;&amp; @y.eql?(o.y)
-  elsif
-    false
-  end
-end
-</PRE>
-
-<P>
-
-<H3><A NAME="SECTION027112100000000000000">
-<TT>eql?</TT> y las Claves de un hash</A>
-</H3>
-
-<P>
-El predicado <code>eql?</code>
-es usado por Ruby para comparar las claves de un hash.
-Por ello, si redefinimos <code>eql?</code> en nuestra clase,
-es conveniente que también definamos el método
-<code>hash</code> que es usado por Ruby para calcular el <I>hashcode</I>
-del objeto. 
-
-<P>
-Se debe cumplir siempre 
-que si dos objetos son iguales según <code>eql?</code> entonces sus hashcodes
-deben ser iguales.
-
-<P>
-No parece que sea una buena idea usar objetos mutables como índices de 
-hashes. Si es el caso, es mejor congelar el objeto
-(véase la sección <A HREF="node83.html#subsection:freezing">10.8.12</A>).
-
-<P>
-Véase  el código en 
-<A HREF="node177.html#subsection:definiendooperadores">14.1.6</A>
-
-<P>
-<PRE>
-def hash
-  @x.hash + @y.hash
-end
-</PRE>
-
-<P>
-<PRE>
-def hash
-  code = 17
-  code = 37*code + @x.hash
-  code = 37*code + @y.hash
-  # Add lines like this for each significant instance variable
-  code  # Return the resulting code
-end
+[13] pry(main)&gt; 2.coerce(1.1)
+=&gt; [1.1, 2.0]
+[14] pry(main)&gt; 2+1.1
+=&gt; 3.1
+[8] pry(main)&gt; require 'rational'
+=&gt; true
+[19] pry(main)&gt; z = Rational(1,3)
+=&gt; (1/3)
+[20] pry(main)&gt; 2.coerce(z)
+=&gt; [0.3333333333333333, 2.0]
+[21] pry(main)&gt; z.coerce(2)
+=&gt; [(2/1), (1/3)]
+[22] pry(main)&gt; 2+z
+=&gt; (7/3)
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6270"
+<A NAME="tex2html6305"
   HREF="node184.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6264"
-  HREF="node171.html">
+<A NAME="tex2html6299"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6258"
+<A NAME="tex2html6293"
   HREF="node182.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6266"
-  HREF="node823.html">
+<A NAME="tex2html6301"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6268"
-  HREF="node826.html">
+<A NAME="tex2html6303"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -278,20 +286,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6271"
-  HREF="node184.html">Ordenando Puntos</A>
-<B> Subir:</B> <A NAME="tex2html6265"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6259"
-  HREF="node182.html">Enumeración de Coordenadas</A>
- &nbsp; <B>  <A NAME="tex2html6267"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6269"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6306"
+  HREF="node184.html">Acceso a Arrays y</A>
+<B> Subir:</B> <A NAME="tex2html6300"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6294"
+  HREF="node182.html">Polimorfismo, Comprobación de Tipos</A>
+ &nbsp; <B>  <A NAME="tex2html6302"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6304"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

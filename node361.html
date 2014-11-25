@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Detectando el Proceso que está Usando un Puerto</TITLE>
-<META NAME="description" CONTENT="Detectando el Proceso que está Usando un Puerto">
+<TITLE>Analizando env con pry-debugger</TITLE>
+<META NAME="description" CONTENT="Analizando env con pry-debugger">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node362.html">
-<LINK REL="previous" HREF="node358.html">
-<LINK REL="up" HREF="node356.html">
+<LINK REL="next" HREF="node364.html">
+<LINK REL="previous" HREF="node360.html">
+<LINK REL="up" HREF="node359.html">
 <LINK REL="next" HREF="node362.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9456"
+<A NAME="tex2html9495"
   HREF="node362.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9450"
-  HREF="node356.html">
+<A NAME="tex2html9489"
+  HREF="node359.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9444"
+<A NAME="tex2html9483"
   HREF="node360.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9452"
-  HREF="node823.html">
+<A NAME="tex2html9491"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9454"
-  HREF="node826.html">
+<A NAME="tex2html9493"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,162 +92,40 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9457"
-  HREF="node362.html">Usando PATH_INFO y erubis</A>
-<B> Subir:</B> <A NAME="tex2html9451"
-  HREF="node356.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9445"
-  HREF="node360.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
- &nbsp; <B>  <A NAME="tex2html9453"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9455"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9496"
+  HREF="node362.html">Introducción</A>
+<B> Subir:</B> <A NAME="tex2html9490"
+  HREF="node359.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9484"
+  HREF="node360.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html9492"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9494"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03130000000000000000">
-Detectando el Proceso que está Usando un Puerto</A>
+<H1><A NAME="SECTION03120000000000000000">
+Analizando <TT>env</TT> con <TT>pry-debugger</TT></A>
 </H1>
 
 <P>
-Si intentamos ejecutar una segunda instancia del servidor mientras otra instancia esta ejecutandose 
-obtenemos un error que indica que el puerto está en uso:
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ rackup
-Thin web server (v1.6.1 codename Death Proof)
-Maximum connections set to 1024
-Listening on 0.0.0.0:9292, CTRL+C to stop
-/Users/casiano/.rvm/gems/ruby-2.0.0-p247/gems/eventmachine-1.0.3/lib/eventmachine.rb:526:
-  in `start_tcp_server': no acceptor 
-  (port is in use or requires root privileges) (RuntimeError)
-  from /Users/casiano/.rvm/gems/ruby-2.0.0-p247/gems/eventmachine-1.0.3/lib/eventmachine.rb:526:
-    in `start_server'
-...
-</PRE>
-Si sabemos en que puerto esta corriendo - como es el caso - podemos hacer algo así
-para saber el PID del proceso que lo ocupa:
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ lsof -i :9292
-COMMAND   PID    USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
-ruby    52870 casiano    9u  IPv4 0x9f3ffc595152af29      0t0  TCP *:armtechdaemon (LISTEN)
-</PRE>
-Si no lo sabemos podemos hacer:
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ ps -fA | egrep ruby
-  501 52870   565   0 11:16AM ttys003    0:00.61 ruby /Users/casiano/.rvm/gems/ruby-2.0.0-p247/bin/rackup
-  501 53230 52950   0 11:35AM ttys006    0:00.00 egrep ruby
-</PRE>
-Si tenemos privilegios suficientes podemos ahora eliminar el proceso:
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ kill -9 52870
-</PRE>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-<PRE>
-[~/sinatra/sinatra-simple(master)]$ rackup
-Thin web server (v1.6.1 codename Death Proof)
-Maximum connections set to 1024
-Listening on 0.0.0.0:9292, CTRL+C to stop
-Killed: 9
-</PRE>
-
-<P>
-El comando 
-<PRE>
-$ lsof -i | egrep -i 'tcp.*(\d+.)+'
-</PRE>
-Nos da una lista bastante completa de como están nuestras conexiones.
-
-<OL>
-<LI><code>-i [i]</code>   selects  the  listing  of  files  any of whose Internet address matches the address
-                specified in i.  If no address is specified, this option selects the listing of all
-                Internet and x.25 (HP-UX) network files.
-</LI>
-</OL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html9456"
-  HREF="node362.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9450"
-  HREF="node356.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9444"
-  HREF="node360.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9452"
-  HREF="node823.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9454"
-  HREF="node826.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html9457"
-  HREF="node362.html">Usando PATH_INFO y erubis</A>
-<B> Subir:</B> <A NAME="tex2html9451"
-  HREF="node356.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9445"
-  HREF="node360.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
- &nbsp; <B>  <A NAME="tex2html9453"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9455"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html9497"
+  HREF="node362.html">Introducción</A>
+<LI><A NAME="tex2html9498"
+  HREF="node363.html">REQUEST_METHOD, QUERY_STRING y PATH_INFO</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

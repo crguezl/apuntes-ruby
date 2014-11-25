@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Openid y Sinatra</TITLE>
-<META NAME="description" CONTENT="Openid y Sinatra">
+<TITLE>Ruby y WebSockets: TCP for the Browser</TITLE>
+<META NAME="description" CONTENT="Ruby y WebSockets: TCP for the Browser">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node495.html">
-<LINK REL="previous" HREF="node484.html">
-<LINK REL="up" HREF="node355.html">
+<LINK REL="next" HREF="node494.html">
+<LINK REL="previous" HREF="node492.html">
+<LINK REL="up" HREF="node488.html">
 <LINK REL="next" HREF="node494.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11639"
+<A NAME="tex2html11681"
   HREF="node494.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11633"
-  HREF="node355.html">
+<A NAME="tex2html11675"
+  HREF="node488.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11627"
+<A NAME="tex2html11669"
   HREF="node492.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11635"
-  HREF="node823.html">
+<A NAME="tex2html11677"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11637"
-  HREF="node826.html">
+<A NAME="tex2html11679"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,47 +92,192 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11640"
-  HREF="node494.html">Referencias. Véase Tambien</A>
-<B> Subir:</B> <A NAME="tex2html11634"
-  HREF="node355.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html11628"
-  HREF="node492.html">Using WebSockets on Heroku</A>
- &nbsp; <B>  <A NAME="tex2html11636"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11638"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11682"
+  HREF="node494.html">Una Aplicación Usando Websockets</A>
+<B> Subir:</B> <A NAME="tex2html11676"
+  HREF="node488.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html11670"
+  HREF="node492.html">websocket/rack</A>
+ &nbsp; <B>  <A NAME="tex2html11678"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11680"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031000000000000000000">
-Openid y Sinatra</A>
+<H1><A NAME="SECTION03930000000000000000">
+Ruby y WebSockets: TCP for the Browser</A>
 </H1>
 
 <P>
-OpenID provides sites and services with a decentralized protocol for
-authenticating users through a wide variety of providers. What this means
-is that a site integrating OpenID can allow its users to log in using,
-for example, their Yahoo!, Google, or AOL accounts. Not only can the
-consuming site avoid having to create a login system itself, but it
-can also take advantage of the accounts that its users already have,
-thereby in- creasing user registration and login rates.
+Esta sección está sacada del blog de 
+<A NAME="tex2html1179"
+  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ilya Grigorik </A>.
 
 <P>
-In addition to simple authentication, OpenID also offers a series of
-extensions through which an OpenID provider can allow sites to obtain
-a user’s profile information or integrate additional layers
-of security for the login procedure.
+WebSockets in HTML5 were designed from
+the ground up to be data agnostic (binary or text) with support for
+full-duplex communication. 
 
 <P>
-What makes OpenID so intriguing is the fact that it offers a standard
-that is fully decentralized from the providers and consumers. This
-aspect is what allows a single consuming site to allow its
-users to log in via Yahoo! and Google, while another site may want to
-allow logins via Blogger or WordPress. Ultimately, it is up to the OpenID
-consumer (your site or service) to choose what login
-methods it would like to offer its user base.
+WebSockets are TCP for the web-browser.
+They require only a single connection,
+which translates into much better resource utilization for both the
+server and the client. 
+
+<P>
+Likewise, WebSockets are proxy and firewall
+aware, can operate over SSL and leverage the HTTP channel to
+accomplish all of the above - your existing load balancers, proxies
+and routers will work just fine.
+
+<P>
+
+<H4><A NAME="SECTION03930010000000000000">
+The Server</A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat server.rb
+require 'em-websocket'
+
+EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
+  ws.onopen    { ws.send "Hello Client!"}
+  ws.onmessage { |msg| ws.send "Pong: #{msg}" }
+  ws.onclose   { puts "WebSocket closed" }
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03930020000000000000">
+The Client</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat index.html 
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'&gt;&lt;/script&gt;
+    &lt;script&gt;
+      $(document).ready(function(){
+        function debug(str){ 
+          $("#debug").append("&lt;p&gt;"+str+"&lt;/p&gt;"); 
+        };
+
+        ws = new WebSocket("ws://www.example.com:8080/websocket");
+        ws.onmessage = function(evt) { 
+          $("#msg").append("&lt;p&gt;"+evt.data+"&lt;/p&gt;"); 
+        };
+        ws.onclose = function() { 
+          debug("socket closed"); 
+        };
+        ws.onopen = function() {
+          debug("connected...");
+          ws.send("hello server");
+        };
+      });
+    &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="debug"&gt;&lt;/div&gt;
+    &lt;div id="msg"&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+You open up a WebSocket connection simply by calling the WebSocket constructor:
+
+<P>
+<PRE>
+var connection = new WebSocket('ws://html5rocks.websocket.org/echo', ['soap', 'xmpp']);
+</PRE>
+Notice the <code>ws:</code>. This is the new URL schema for WebSocket connections.
+There is also <code>wss</code>: for secure WebSocket connection the same way
+https: is used for secure HTTP connections.
+
+<P>
+Attaching some event handlers immediately to the connection allows
+you to know when the connection is opened, received incoming messages,
+or there is an error.
+
+<P>
+The second argument accepts optional subprotocols. It can be a
+string or an array of strings. Each string should represent a
+subprotocol name and server accepts only one of passed subprotocols
+in the array. Accepted subprotocol can be determined by accessing
+protocol property of WebSocket object.
+
+<P>
+<PRE>
+// When the connection is open, send some data to the server
+connection.onopen = function () {
+  connection.send('Ping'); // Send the message 'Ping' to the server
+};
+
+// Log errors
+connection.onerror = function (error) {
+  console.log('WebSocket Error ' + error);
+};
+
+// Log messages from the server
+connection.onmessage = function (e) {
+  console.log('Server: ' + e.data);
+};
+</PRE>
+As soon as we have a connection to the server (when the open event
+is fired) we can start sending data to the server using the send('your
+message') method on the connection object. It used to support only
+strings, but in the latest spec it now can send binary messages
+too. To send binary data, you can use either <code>Blob</code> or <code>ArrayBuffer</code>
+bject.
+
+<P>
+The server might send us messages at any time. Whenever this happens
+the <code>onmessage</code> callback fires. The callback receives an <code>event</code> object
+and the actual message is accessible via the <code>data</code> property.
+parrafoEjecución
+
+<P>
+<PRE>
+[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ ruby server.rb
+</PRE>
+
+<P>
+Cuando abrimos <code>index.html</code> con el navegador obtenemos una página como esta:
+<PRE>
+connected...
+
+Hello Client!
+
+Pong: hello server
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03930030000000000000">
+Véase</A>
+</H4>
+  
+
+<OL>
+<LI><A NAME="tex2html1180"
+  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ruby and WebSockets: TCP for the Browser</A>
+</LI>
+<LI><A NAME="tex2html1181"
+  HREF="http://www.html5rocks.com/en/tutorials/websockets/basics/">Introducing WebSockets: Bringing Sockets to the Web by Malte Ubl
+and Eiji Kitamura</A>
+2010
+</LI>
+<LI><A NAME="tex2html1182"
+  HREF="http://youtu.be/XVtEyilJD8M">Clean, simple websockets on Sinatra example
+by Austen Conrad Austen Conrad</A>
+YouTube
+</LI>
+</OL>
 
 <P>
 <BR><HR>
@@ -140,27 +285,33 @@ methods it would like to offer its user base.
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html11641"
-  HREF="node494.html">Referencias. Véase Tambien</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html11683"
+  HREF="node493.html#SECTION03930010000000000000">The Server</A>
+<LI><A NAME="tex2html11684"
+  HREF="node493.html#SECTION03930020000000000000">The Client</A>
+<LI><A NAME="tex2html11685"
+  HREF="node493.html#SECTION03930030000000000000">Véase</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11639"
+<A NAME="tex2html11681"
   HREF="node494.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11633"
-  HREF="node355.html">
+<A NAME="tex2html11675"
+  HREF="node488.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11627"
+<A NAME="tex2html11669"
   HREF="node492.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11635"
-  HREF="node823.html">
+<A NAME="tex2html11677"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11637"
-  HREF="node826.html">
+<A NAME="tex2html11679"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -211,20 +362,20 @@ methods it would like to offer its user base.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11640"
-  HREF="node494.html">Referencias. Véase Tambien</A>
-<B> Subir:</B> <A NAME="tex2html11634"
-  HREF="node355.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html11628"
-  HREF="node492.html">Using WebSockets on Heroku</A>
- &nbsp; <B>  <A NAME="tex2html11636"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11638"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11682"
+  HREF="node494.html">Una Aplicación Usando Websockets</A>
+<B> Subir:</B> <A NAME="tex2html11676"
+  HREF="node488.html">Web Sockets</A>
+<B> Anterior:</B> <A NAME="tex2html11670"
+  HREF="node492.html">websocket/rack</A>
+ &nbsp; <B>  <A NAME="tex2html11678"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11680"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

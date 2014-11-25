@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Introducción al uso de Git con GitHub en GitHub</TITLE>
-<META NAME="description" CONTENT="Introducción al uso de Git con GitHub en GitHub">
+<TITLE>Transferencia de ficheros por sftp</TITLE>
+<META NAME="description" CONTENT="Transferencia de ficheros por sftp">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node666.html">
 <LINK REL="previous" HREF="node664.html">
-<LINK REL="up" HREF="node663.html">
+<LINK REL="up" HREF="node664.html">
 <LINK REL="next" HREF="node666.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14725"
+<A NAME="tex2html14755"
   HREF="node666.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14719"
-  HREF="node663.html">
+<A NAME="tex2html14749"
+  HREF="node664.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14713"
+<A NAME="tex2html14743"
   HREF="node664.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14721"
-  HREF="node823.html">
+<A NAME="tex2html14751"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14723"
-  HREF="node826.html">
+<A NAME="tex2html14753"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,56 +92,148 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14726"
-  HREF="node666.html">Un poco de SSH</A>
-<B> Subir:</B> <A NAME="tex2html14720"
-  HREF="node663.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html14714"
-  HREF="node664.html">Instalar Git</A>
- &nbsp; <B>  <A NAME="tex2html14722"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14724"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14756"
+  HREF="node666.html">Copias de Seguridad con</A>
+<B> Subir:</B> <A NAME="tex2html14750"
+  HREF="node664.html">Copia Segura de un</A>
+<B> Anterior:</B> <A NAME="tex2html14744"
+  HREF="node664.html">Copia Segura de un</A>
+ &nbsp; <B>  <A NAME="tex2html14752"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14754"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06620000000000000000"></A>
-<A NAME="section:githubtutorial"></A>
+<H2><A NAME="SECTION065121000000000000000">
+Transferencia de ficheros por <TT>sftp</TT></A>
+</H2>
+
+<P>
+El protocolo <A NAME="27083"></A><SPAN  CLASS="textbf">SFTP</SPAN> no es el resultado de
+ejecutar <A NAME="27085"></A><SPAN  CLASS="textbf">FTP</SPAN> sobre SSH. Se trata de un nuevo protocolo
+para la transferencia segura de ficheros.
+
+<P>
+Si se establece autentificación no interactiva con una máquina que provee
+un servicio SFTP es posible usar
+ <TT>sftp</TT>  en modo batch:
+
+<P>
+<PRE>
+pp2@mymachine:~/Lbook$ ssh-copy-id -i ~/.ssh/id_dsa.pub casiano@ftp.someplace.ull.es
+25
+Now try logging into the machine, with "ssh 'casiano@ftp.someplace.ull.es'", and check in:
+
+  .ssh/authorized_keys
+
+  to make sure we haven't added extra keys that you weren't expecting.
+</PRE>
+
+<P>
+Ahora escribimos un guión para el cliente <A NAME="tex2html1577"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sftp"><TT>sftp</TT></A>:
+
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ cat -n instituto.sftp
+     1  cd asignas/asignas/PRGPAR2/perlexamples
+     2  lcd /home/pp2/public_html/perlexamples/
+     3  put *
+</PRE>
+
+<P>
+La opción <code>-b</code> de <code>sftp</code> nos permite hacer la transferencia
+de forma automática:
+
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ sftp -b instituto.sftp casiano@ftp.instituto.ull.es &gt;/dev/null
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html14755"
+  HREF="node666.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html14749"
+  HREF="node664.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html14743"
+  HREF="node664.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html14751"
+  HREF="node832.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html14753"
+  HREF="node835.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-Introducción al uso de Git con GitHub en GitHub
-</H1>
-
-<P>
-
-<UL>
-<LI><A NAME="tex2html1576"
-  HREF="https://github.com/">GitHub</A>
-</LI>
-<LI><A NAME="tex2html1577"
-  HREF="http://help.github.com/">http://help.github.com/</A>
-<OL>
-<LI><A NAME="tex2html1578"
-  HREF="http://help.github.com/articles/set-up-git">Set Up Git</A>
-</LI>
-<LI><A NAME="tex2html1579"
-  HREF="http://help.github.com/articles/create-a-repo">Create a Repo</A>
-</LI>
-<LI><A NAME="tex2html1580"
-  HREF="http://help.github.com/articles/fork-a-repo">Fork a Repo</A>
-</LI>
-<LI><A NAME="tex2html1581"
-  HREF="http://help.github.com/articles/be-social">Be Social</A>
-</LI>
-</OL>
-</LI>
-</UL>
-
-<P>
-<BR><HR>
+<B> Siguiente:</B> <A NAME="tex2html14756"
+  HREF="node666.html">Copias de Seguridad con</A>
+<B> Subir:</B> <A NAME="tex2html14750"
+  HREF="node664.html">Copia Segura de un</A>
+<B> Anterior:</B> <A NAME="tex2html14744"
+  HREF="node664.html">Copia Segura de un</A>
+ &nbsp; <B>  <A NAME="tex2html14752"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14754"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

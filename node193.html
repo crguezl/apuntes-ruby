@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo de Visibilidad de Métodos Protegidos</TITLE>
-<META NAME="description" CONTENT="Ejemplo de Visibilidad de Métodos Protegidos">
+<TITLE>Variables de Instancia de Clase</TITLE>
+<META NAME="description" CONTENT="Variables de Instancia de Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node194.html">
 <LINK REL="previous" HREF="node192.html">
-<LINK REL="up" HREF="node192.html">
+<LINK REL="up" HREF="node174.html">
 <LINK REL="next" HREF="node194.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6413"
+<A NAME="tex2html6449"
   HREF="node194.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6407"
-  HREF="node192.html">
+<A NAME="tex2html6443"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6401"
+<A NAME="tex2html6437"
   HREF="node192.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6409"
-  HREF="node823.html">
+<A NAME="tex2html6445"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6411"
-  HREF="node826.html">
+<A NAME="tex2html6447"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,123 +92,144 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6414"
-  HREF="node194.html">Ejemplo de Visibilidad</A>
-<B> Subir:</B> <A NAME="tex2html6408"
-  HREF="node192.html">Visibilidad de los métodos:</A>
-<B> Anterior:</B> <A NAME="tex2html6402"
-  HREF="node192.html">Visibilidad de los métodos:</A>
- &nbsp; <B>  <A NAME="tex2html6410"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6412"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6450"
+  HREF="node194.html">Práctica: La Clase Punto</A>
+<B> Subir:</B> <A NAME="tex2html6444"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6438"
+  HREF="node192.html">Variables de Clase. Atributos</A>
+ &nbsp; <B>  <A NAME="tex2html6446"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6448"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02721000000000000000">
-Ejemplo de Visibilidad de Métodos Protegidos</A>
+<H2><A NAME="SECTION027119000000000000000"></A>
+<A NAME="subsection:variablesdeinstnciadeclase"></A>
+<BR>
+Variables de Instancia de Clase
 </H2>
+
+<OL>
+<LI>Classes are objects and can have instance variables just as other objects can
+</LI>
+<LI>The instance variables of a class—often called class instance variables—are not the same as class variables
+</LI>
+<LI>They are similar enough that they can often be used instead of class variables
+</LI>
+</OL>
+
+<P>
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n SubClass.rb 
-     1  class Point
+class Point
+  # Initialize our class instance variables in the class definition itself
+  @n = 0              # How many points have been created
+  @totalX = 0         # The sum of all X coordinates
+  @totalY = 0         # The sum of all Y coordinates
+
+  def initialize(x,y) # Initialize method 
+    @x,@y = x, y      # Sets initial values for instance variables
+  end
+
+  def self.new(x,y)   # Class method to create new Point objects
+    # Use the class instance variables in this class method to collect data
+    @n += 1           # Keep track of how many Points have been created
+    @totalX += x      # Add these coordinates to the totals
+    @totalY += y
+
+    super             # Invoke the real definition of new to create a Point
+                      # More about super later in the chapter
+  end
+
+  # A class method to report the data we collected
+  def self.report
+    # Here we use the class instance variables in a class method
+    puts "Number of points created: #@n"
+    puts "Average X coordinate: #{@totalX.to_f/@n}"
+    puts "Average Y coordinate: #{@totalY.to_f/@n}"
+  end
+end
+</PRE>
+
+<P>
+
+<OL>
+<LI>Because class instance variables are just instance variables of class objects, we can use <code>attr</code>, <code>attr_reader</code>, and <code>attr_accessor</code> to create accessor methods for them
+</LI>
+<LI>The trick, however, is to invoke these metaprogramming methods in the right context
+</LI>
+<LI>Recall that one way to define class methods uses the syntax <code>class &lt;&lt; self</code>
+</LI>
+<LI>This same syntax allows us to define attribute accessor methods for class instance variables:
+</LI>
+</OL>
+
+<P>
+<PRE>
+class &lt;&lt; self
+  attr_accessor :n, :totalX, :totalY
+end
+</PRE>
+
+<P>
+El siguiente ejemplo muestra como crear accessors a las variables de instancia
+de clase:
+
+<P>
+<PRE>
+$ cat -n creating_class_accessors.rb 
+     1  class Tutu
      2  
-     3    def chuchu
-     4      "Point: chuchu"
+     3    class &lt;&lt; self
+     4        attr_accessor :n
      5    end
      6  
-     7    def chachi
-     8      "Point: chachi"
-     9    end
-    10  
-    11    private   :chuchu
-    12    protected :chachi
-    13  end
-    14  
-    15  class SubClass &lt; Point
-    16  
-    17    def titi1 
-    18      chuchu
-    19    end
-    20  
-    21    def titi2 
-    22      self.chuchu
-    23    end
-    24  
-    25    def titi3
-    26      chachi 
-    27    end
-    28  
-    29    def titi4
-    30      self.chachi 
-    31    end
-    32  end
-    33  
-    34  if __FILE__ == $0
-    35    x = SubClass.new
-    36    puts x.titi1
-    37    begin
-    38      puts x.titi2
-    39      rescue 
-    40        puts "Can't call private meth. via 'self'. Exception type: &lt;#{$!.class}&gt; message: &lt;#{$!}&gt;"
-    41    end
-    42  
-    43    puts x.titi3
-    44  
-    45    puts x.titi4
-    46  
-    47    begin
-    48      puts x.chachi
-    49      rescue
-    50        puts "Can't call protected meth. from outside. Exception type: &lt;#{$!.class}&gt; message: &lt;#{$!}&gt;"
-    51    end
-    52  end
+     7  end
+     8  
+     9  Tutu.n = 4
+    10  p Tutu.n
+    11  
+    12  
+[~/point]$ ruby creating_class_accessors.rb 
+4
 </PRE>
 
 <P>
-La ejecución del programa produce la salida:
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby SubClass.rb 
-Point: chuchu
-Can't call private meth. via 'self'. Exception type: &lt;NoMethodError&gt; message: &lt;private method `chuchu' called for #&lt;SubClass:0x1001685b8&gt;&gt;
-Point: chachi
-Point: chachi
-Can't call protected meth. from outside. Exception type: &lt;NoMethodError&gt; message: &lt;protected method `chachi' called for #&lt;SubClass:0x1001685b8&gt;&gt;
-</PRE>
 
-<P>
-The rule about when a <code>protected</code> method can be invoked can be 
-described as follows: 
-
-<P>
-A protected method defined by a class <code>V</code> (<code>Visbility</code>) 
-may be invoked on an object <code>c</code> 
-by a method in an object <code>m</code> (<code>main</code> en el ejemplo)
-if and only 
-<FONT COLOR="#0000ff"> if the classes of</FONT> <code>c</code> and
-<code>m</code>
-
-<FONT COLOR="#0000ff"> are both subclasses of the class</FONT> 
-<code>V</code>.
+<OL>
+<LI>Una desventaja de las variables de instancia de clase
+es que no pueden ser utilizadas 
+<FONT COLOR="#0000ff"> directamente</FONT> 
+dentro de los métodos de instancia,
+mientras que las variables de clase si son accesibles.
+</LI>
+<LI>Otra desventaja es el riesgo potencial de confundirlas con variables de
+instancia ordinarias
+</LI>
+<LI>Aún así su uso es mas recomendable que el de las variables de clase
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6413"
+<A NAME="tex2html6449"
   HREF="node194.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6407"
-  HREF="node192.html">
+<A NAME="tex2html6443"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6401"
+<A NAME="tex2html6437"
   HREF="node192.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6409"
-  HREF="node823.html">
+<A NAME="tex2html6445"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6411"
-  HREF="node826.html">
+<A NAME="tex2html6447"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -259,20 +280,20 @@ if and only
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6414"
-  HREF="node194.html">Ejemplo de Visibilidad</A>
-<B> Subir:</B> <A NAME="tex2html6408"
-  HREF="node192.html">Visibilidad de los métodos:</A>
-<B> Anterior:</B> <A NAME="tex2html6402"
-  HREF="node192.html">Visibilidad de los métodos:</A>
- &nbsp; <B>  <A NAME="tex2html6410"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6412"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6450"
+  HREF="node194.html">Práctica: La Clase Punto</A>
+<B> Subir:</B> <A NAME="tex2html6444"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6438"
+  HREF="node192.html">Variables de Clase. Atributos</A>
+ &nbsp; <B>  <A NAME="tex2html6446"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6448"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

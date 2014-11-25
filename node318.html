@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Building our own I/O Event Loop</TITLE>
-<META NAME="description" CONTENT="Building our own I/O Event Loop">
+<TITLE>Guard</TITLE>
+<META NAME="description" CONTENT="Guard">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node319.html">
-<LINK REL="previous" HREF="node317.html">
-<LINK REL="up" HREF="node316.html">
+<LINK REL="previous" HREF="node310.html">
+<LINK REL="up" HREF="node25.html">
 <LINK REL="next" HREF="node319.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8460"
+<A NAME="tex2html8483"
   HREF="node319.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8454"
-  HREF="node316.html">
+<A NAME="tex2html8477"
+  HREF="node25.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8448"
+<A NAME="tex2html8471"
   HREF="node317.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8456"
-  HREF="node823.html">
+<A NAME="tex2html8479"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8458"
-  HREF="node826.html">
+<A NAME="tex2html8481"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,39 +92,446 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8461"
-  HREF="node319.html">EventMachine</A>
-<B> Subir:</B> <A NAME="tex2html8455"
-  HREF="node316.html">Programación Orientada a Eventos</A>
-<B> Anterior:</B> <A NAME="tex2html8449"
-  HREF="node317.html">Introducción a Programación Orientada</A>
- &nbsp; <B>  <A NAME="tex2html8457"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8459"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8484"
+  HREF="node319.html">Programación Orientada a Eventos</A>
+<B> Subir:</B> <A NAME="tex2html8478"
+  HREF="node25.html">EL LENGUAJE DE PROGRAMACIÓN</A>
+<B> Anterior:</B> <A NAME="tex2html8472"
+  HREF="node317.html">Coveralls: Análisis de Cubrimiento</A>
+ &nbsp; <B>  <A NAME="tex2html8480"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8482"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021520000000000000000">
-Building our own I/O Event Loop</A>
+<H1><A NAME="SECTION021400000000000000000"></A>
+<A NAME="section:guard"></A>
+<BR>
+Guard
 </H1>
-In this article in 
-<A NAME="tex2html708"
-  HREF="https://practicingruby.com">https://practicingruby.com</A>
-the authors implement  an I/O event loop. They capture the core part of EventMachine/Node.js/Twisted in about 150 lines of Ruby. 
+<A NAME="tex2html688"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> is a gem that allows you to observe your project's files for
+change and perform actions based on that change. The first thing you
+will need to do is add <A NAME="tex2html689"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> (and its helpers for <A NAME="tex2html690"
+  HREF="http://bundler.io//"><TT>Bundler</TT></A> and <A NAME="tex2html691"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A>)
+to the end of your <code>Gemfile</code>:
+
+<P>
+<PRE>
+[~/srcLPPclases/question-simple_choice(master)]$ vi Guardfile 
+
+source 'https://rubygems.org'
+
+# Specify your gem's dependencies in question-simple_choice.gemspec
+
+group :development, :test do
+  gem 'rspec'
+  gem 'pry'
+  gem 'guard'
+  # do not call require when you start Bundler
+  gem 'guard-rspec', require: false
+end
+</PRE>
+You should now run <code>bundle install</code> in your project root to install <A NAME="tex2html692"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> if it
+isn't already.
+<PRE>
+[~/srcLPPclases/question-simple_choice(master)]$ guard --version
+Guard version 2.8.0
+</PRE>
+
+<P>
+<PRE>
+[~/srcLPPclases/question-simple_choice(master)]$ guard help
+Commands:
+  guard help [COMMAND]  # Describe available commands or one specific command
+  guard init [GUARDS]   # Generates a Guardfile at the current directory (if it i...
+  guard list            # Lists Guard plugins that can be used with init
+  guard notifiers       # Lists notifiers and its options
+  guard show            # Show all defined Guard plugins and their options
+  guard start           # Starts Guard
+  guard version         # Show the Guard version
+</PRE>
+
+<P>
+Now we need to initialize <A NAME="tex2html693"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> and configure it for our project. Luckily,
+<A NAME="tex2html694"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> comes with its own command line helpers:
+<PRE>
+[~/srcLPPclases/question-simple_choice(master)]$ guard help init
+Usage:
+  guard init [GUARDS]
+
+Options:
+  -b, [--bare=Generate a bare Guardfile without 
+          adding any installed plugin into it], [--no-bare]  
+
+Generates a Guardfile at the current directory (if it is not already
+there) and adds all installed Guard plugins or the given GUARDS into it
+</PRE>
+
+<P>
+Si solo queremos generar código para vigilar el <code>Gemfile</code> usando <code>guard-bundler</code>:
+<PRE>
+[~/srcLPPclases/question-simple_choice(master)]$ guard init rspec
+16:18:14 - INFO - Writing new Guardfile to 
+   /Users/casiano/local/src/ruby/LPP/clases/question-simple_choice/Guardfile
+16:18:14 - INFO - rspec guard added to Guardfile, 
+                  feel free to edit it
+</PRE>
+
+<P>
+<PRE>
+[~/srcLPPclases/question-simple_choice(master)]$ cat Guardfile 
+# A sample Guardfile
+# More info at https://github.com/guard/guard#readme
+
+# Note: The cmd option is now required due to the increasing number of ways
+#       rspec may be run, below are examples of the most common uses.
+#  * bundler: 'bundle exec rspec'
+#  * bundler binstubs: 'bin/rspec'
+#  * spring: 'bin/rsspec' (This will use spring if running and you have
+#                          installed the spring binstubs per the docs)
+#  * zeus: 'zeus rspec' (requires the server to be started separetly)
+#  * 'just' rspec: 'rspec'
+guard :rspec, cmd: 'bundle exec rspec' do
+  watch(%r{^spec/.+_spec\.rb$})
+  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
+  watch('spec/spec_helper.rb')  { "spec" }
+
+  # Rails example
+  watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
+  watch(%r{^app/(.*)(\.erb|\.haml|\.slim)$})          { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
+  watch(%r{^app/controllers/(.+)_(controller)\.rb$})  { |m| ["spec/routing/#{m[1]}_routing_spec.rb", "spec/#{m[2]}s/#{m[1]}_#{m[2]}_spec.rb", "spec/acceptance/#{m[1]}_spec.rb"] }
+  watch(%r{^spec/support/(.+)\.rb$})                  { "spec" }
+  watch('config/routes.rb')                           { "spec/routing" }
+  watch('app/controllers/application_controller.rb')  { "spec/controllers" }
+  watch('spec/rails_helper.rb')                       { "spec" }
+
+  # Capybara features specs
+  watch(%r{^app/views/(.+)/.*\.(erb|haml|slim)$})     { |m| "spec/features/#{m[1]}_spec.rb" }
+
+  # Turnip features and steps
+  watch(%r{^spec/acceptance/(.+)\.feature$})
+  watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$})   { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance' }
+end
+</PRE>
+Si solo queremos generar código para vigilar las pruebas 
+usando <code>guard-rspec</code>:
+<PRE>
+guard init rspec
+</PRE>
+
+<P>
 
 <OL>
+<LI><A NAME="tex2html695"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> works similarly to <A NAME="tex2html696"
+  HREF="http://bundler.io//"><TT>Bundler</TT></A> and Rake by creating a Guardfile in
+your project's root directory. 
+
+<P>
+</LI>
+<LI>These commands automatically add example
+configuration for each guard type to the Guardfile (after guard init
+creates the file to begin with). 
+
+<P>
+</LI>
+<LI>While I'm going to tell you explicitly
+what to put in your Guardfile, the <code>init</code> commands can really help jog
+your memory if you're trying to do it from scratch. 
+</LI>
+</OL>
+
+<P>
+Let's modify our
+Guardfile to look like this:
+
+<P>
+<PRE>
+guard 'bundler' do
+  watch('Gemfile')
+end
+
+guard 'rspec', :version =&gt; 2 do
+  watch(%r{^spec/.+_spec\.rb$})
+  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }
+  watch('spec/spec_helper.rb')  { "spec" }
+end
+</PRE>
+<SPAN  CLASS="textbf"><A NAME="tex2html687"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> works by watching certain files in your project and then performing
+actions when those files change</SPAN>. 
+
+<P>
+
+<OL>
+<LI>The first guard 
+<PRE>
+guard 'bundler' do
+  watch('Gemfile')
+end
+</PRE>
+tells us to watch for
+the <code>Gemfile</code> to change, and run <code>bundle install</code>
+when that happens. 
+
+<P>
+</LI>
+<LI>The second guard tells us to watch all of our <A NAME="tex2html697"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A>
+test files, our <code>spec_helper</code>, and the corresponding library files for
+each of our <A NAME="tex2html698"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A> tests. 
+
+<P>
+</LI>
+<LI>This means that when you change a file, <A NAME="tex2html699"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A>
+can automatically re-run the tests for that specific file only.
+
+<P>
+</LI>
+<LI>Now that your Guardfile is properly configured, you can just run 
+<code>bundle exec guard start</code> from your project's root directory. 
+
+<P>
+<PRE>
+[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard help start
+Usage:
+  guard start
+
+Options:
+  -c, [--clear=Auto clear shell before each action]                            
+  -n, [--notify=Notifications feature]                                         
+  -d, [--debug=Show debug information]                                         
+  -g, [--group=Run only the passed groups]                                     
+  -P, [--plugin=Run only the passed plugins]                                   
+  -w, [--watchdir=Specify the directories to watch]                            
+  -G, [--guardfile=Specify a Guardfile]                                        
+  -i, [--no-interactions=Turn off completely any Guard terminal interactions]  
+  -B, [--no-bundler-warning=Turn off warning when Bundler is not present]      
+      [--show-deprecations=Turn on deprecation warnings]                       
+  -l, [--latency=Overwrite Listen's default latency]                           
+  -p, [--force-polling=Force usage of the Listen polling listener]             
+
+Starts Guard
+</PRE>
+</LI>
+<LI>When excuting <code>guard</code>, it shows a <code>pry</code> console,
+with some Guard specific <code>pry</code> commands:
+<PRE>
+[~/srcLPPruby/building_gems/bleigh_tutorial_to_building_gems/my-gem(master)]$ guard
+17:41:40 - INFO - Guard here! It looks like your project has a Gemfile, yet you are running
+&gt; [#] `guard` outside of Bundler. If this is your intent, feel free to ignore this
+&gt; [#] message. Otherwise, consider using `bundle exec guard` to ensure your
+&gt; [#] dependencies are loaded correctly.
+&gt; [#] (You can run `guard` with --no-bundler-warning to get rid of this message.)
+17:41:40 - WARN - Guard::RSpec DEPRECATION WARNING: The :version option is deprecated. Only RSpec ~&gt; 2.14 is now supported.
+17:41:40 - INFO - Guard is using TerminalTitle to send notifications.
+17:41:40 - INFO - Bundle already up-to-date
+17:41:40 - INFO - Guard::RSpec is running
+17:41:40 - INFO - Guard is now watching at '/Users/casiano/local/src/ruby/building_gems/bleigh_tutorial_to_building_gems/my-gem'
+[1] guard(main)&gt;
+</PRE>
+</LI>
+</OL>
+This will get <A NAME="tex2html700"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> up
+and running and you will now automatically run tests and re-bundle as
+you build your application. 
+
+<P>
+Si ahora en una terminal modificamos uno de los ficheros vigilados:
+<PRE>
+$ touch spec/spec_helper.rb
+</PRE>
+Guard dispara la correspondiente acción, que en este caso es ejecutar <A NAME="tex2html701"
+  HREF="http://rspec.info/"><TT>RSpec</TT></A>:
+<PRE>
+17:50:28 - INFO - Running: spec
+Run options: include {:focus=&gt;true}
+
+All examples were filtered out; ignoring {:focus=&gt;true}
+*
+
+Pending:
+  MyGem requires additional testing
+    # Not yet implemented
+    # ./spec/my_gem_spec.rb:5
+
+Finished in 0.00062 seconds
+1 example, 0 failures, 1 pending
+
+
+Randomized with seed 46343
+
+[1] guard(main)&gt;
+</PRE>
+
+<P>
+Running <A NAME="tex2html702"
+  HREF="https://github.com/guard/guard"><TT>Guard</TT></A> makes the development feedback loop
+as tight and automatic as possible.
+
+<P>
+
+<H4><A NAME="SECTION021400010000000000000">
+Enlaces Relacionados</A>
+</H4>
+  
+
+<P>
+Gemas
+
+<OL>
+<LI><A NAME="tex2html703"
+  HREF="https://github.com/crguezl/bleigh-tutorial-to-building-gems">crguezl / bleigh-tutorial-to-building-gems</A>
+en GitHub
+</LI>
+</OL>
+
+<P>
+Testing
+
+<OL>
+<LI><A NAME="tex2html704"
+  HREF="http://www.intridea.com/blog/2012/3/23/polishing-rubies-part-iii">Polishing Rubies (Part 3): Tools for Testing</A>
+</LI>
+</OL>
+
+<P>
+Guard
+
+<OL>
+<LI><A NAME="tex2html705"
+  HREF="https://github.com/guard">Guard en GitHub</A>
+</LI>
+<LI><A NAME="tex2html706"
+  HREF="https://github.com/guard/guard/wiki">Guard Wiki</A>
+</LI>
+<LI><A NAME="tex2html707"
+  HREF="http://www.intridea.com/blog/2011/8/25/hire-a-guard-for-your-project">Hire a Guard for Your Project</A>
+</LI>
+<LI><A NAME="tex2html708"
+  HREF="http://michaelvanrooijen.com/articles/2011/06/19-automate-your-applications-development-environment-with-guard/">Automate your application's development environment with Guard</A>
+by Michael van Rooijen
+</LI>
 <LI><A NAME="tex2html709"
-  HREF="https://practicingruby.com/articles/event-loops-demystified?u=dc2ab0f9bb">Event loops demystified</A>
+  HREF="https://github.com/guard/guard-rspec">Guard Rspec</A>
+</LI>
+<LI><A NAME="tex2html710"
+  HREF="https://github.com/hatone/guard-gitpusher">guard-gitpusher</A>
+</LI>
+<LI><A NAME="tex2html711"
+  HREF="https://github.com/johnbintz/rack-livereload">Guard and Rack-livereload With Sinatra</A>
+</LI>
+<LI><A NAME="tex2html712"
+  HREF="http://net.tutsplus.com/tutorials/tools-and-tips/guard-is-your-best-friend/">Guard is Your Best Friend</A>
+Jeffrey Way  NetTuts Screencast
 </LI>
 </OL>
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html8485"
+  HREF="node318.html#SECTION021400010000000000000">Enlaces Relacionados</A>
+</UL></UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html8483"
+  HREF="node319.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html8477"
+  HREF="node25.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html8471"
+  HREF="node317.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html8479"
+  HREF="node832.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html8481"
+  HREF="node835.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html8484"
+  HREF="node319.html">Programación Orientada a Eventos</A>
+<B> Subir:</B> <A NAME="tex2html8478"
+  HREF="node25.html">EL LENGUAJE DE PROGRAMACIÓN</A>
+<B> Anterior:</B> <A NAME="tex2html8472"
+  HREF="node317.html">Coveralls: Análisis de Cubrimiento</A>
+ &nbsp; <B>  <A NAME="tex2html8480"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8482"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

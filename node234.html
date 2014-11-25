@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Clase Player: Un Ejemplo de Strategy Pattern</TITLE>
-<META NAME="description" CONTENT="La Clase Player: Un Ejemplo de Strategy Pattern">
+<TITLE>Ejemplo de Partida</TITLE>
+<META NAME="description" CONTENT="Ejemplo de Partida">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node235.html">
 <LINK REL="previous" HREF="node233.html">
-<LINK REL="up" HREF="node230.html">
+<LINK REL="up" HREF="node233.html">
 <LINK REL="next" HREF="node235.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7038"
+<A NAME="tex2html7074"
   HREF="node235.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7032"
-  HREF="node230.html">
+<A NAME="tex2html7068"
+  HREF="node233.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7026"
+<A NAME="tex2html7062"
   HREF="node233.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7034"
-  HREF="node823.html">
+<A NAME="tex2html7070"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7036"
-  HREF="node826.html">
+<A NAME="tex2html7072"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,208 +92,90 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7039"
-  HREF="node235.html">La Clase Board</A>
-<B> Subir:</B> <A NAME="tex2html7033"
-  HREF="node230.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html7027"
-  HREF="node233.html">La Clase Game</A>
- &nbsp; <B>  <A NAME="tex2html7035"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7037"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7075"
+  HREF="node235.html">Programa Principal</A>
+<B> Subir:</B> <A NAME="tex2html7069"
+  HREF="node233.html">Jugador de TicTacToe (Tres</A>
+<B> Anterior:</B> <A NAME="tex2html7063"
+  HREF="node233.html">Jugador de TicTacToe (Tres</A>
+ &nbsp; <B>  <A NAME="tex2html7071"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7073"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION027174000000000000000">
-La Clase Player: Un Ejemplo de <SPAN  CLASS="textbf">Strategy Pattern</SPAN></A>
+<H2><A NAME="SECTION027171000000000000000">
+Ejemplo de Partida</A>
 </H2>
+Comencemos viendo un ejemplo de partida:
+<PRE>
+[~/srcLPP/tictactoe(master)]$ ruby lpp_solution.rb 
+
+  +---+---+---+
+a |   |   |   |
+  +---+---+---+
+b |   | X |   |
+  +---+---+---+
+c |   |   |   |
+  +---+---+---+
+    1   2   3
+
+Your move?  (format: b3)  c1
+
+  +---+---+---+
+a |   |   | X |
+  +---+---+---+
+b |   | X |   |
+  +---+---+---+
+c | O |   |   |
+  +---+---+---+
+    1   2   3
+
+Your move?  (format: b3)  a1
+
+  +---+---+---+
+a | O |   | X |
+  +---+---+---+
+b | X | X |   |
+  +---+---+---+
+c | O |   |   |
+  +---+---+---+
+    1   2   3
+
+Your move?  (format: b3)  b3
+
+  +---+---+---+
+a | O |   | X |
+  +---+---+---+
+b | X | X | O |
+  +---+---+---+
+c | O |   | X |
+  +---+---+---+
+    1   2   3
+
+Your move?  (format: b3)  a2
+
+  +---+---+---+
+a | O | O | X |
+  +---+---+---+
+b | X | X | O |
+  +---+---+---+
+c | O | X | X |
+  +---+---+---+
+    1   2   3
+
+Tie game.
+
+[~/srcLPP/tictactoe(master)]$
+</PRE>
 
 <P>
-El concepto de jugador es definido mediante una clase abstracta:
-
-<P>
-<PRE>
-module TicTacToe
-  class Player
-    def initialize( mark )
-      @mark = mark # "X" or "O" or " "
-    end
-····
-    attr_reader :mark
-····
-    def move( board )
-      raise NotImplementedError, "Player subclasses must define move()."
-    end
-····
-    def finish( final_board )··
-    end
-  end
-end
-</PRE>
-de la que heredan los jugadores concretos.
-
-<P>
-Cada jugador es una clase. Por ejemplo, el jugador humano:
-<PRE>
-module TicTacToe
-  class HumanPlayer &lt; Player
-    def move( board )
-      print board
-      ....
-    end
-    
-    def finish( final_board )
-      ....
-    end
-  end
-end
-</PRE>
-Un par de jugadores mas, uno tonto y otro listo:
-<PRE>
-module TicTacToe
-  class DumbPlayer &lt; Player
-    def move( board )
-      moves = board.moves
-      moves[rand(moves.size)]
-    end
-  end
-
-  class SmartPlayer &lt; Player
-    def move( board )
-      ....
-    end
-  end
-end
-</PRE>
-La Banda de los Cuatro (<A NAME="8807"></A><SPAN  CLASS="textbf">The Gang of Four</SPAN> o <A NAME="8809"></A><SPAN  CLASS="textbf">GoF</SPAN>) 
-llama a esta idea de <SPAN  CLASS="textbf">implanta el algoritmo en clases separadas</SPAN> el 
-<A NAME="8811"></A><SPAN  CLASS="textbf">strategy pattern</SPAN> o <A NAME="8813"></A><SPAN  CLASS="textbf">patrón estrategia</SPAN> [<A
- HREF="node827.html#DPR">5</A>], [<A
- HREF="node827.html#GO4">6</A>].
-Esta estrategia puede aplicarse cuando ocurre que en medio de nuestra aplicación
-tenemos una parte que varía (el tipo de jugador). 
-A veces en esa parte queremos  hacer una cosa (usar el jugador <code>SmartPlayer</code>) y a veces
-otra (el jugador <code>HumanPlayer</code>). Es mas, es seguro que en el futuro se querrá
-otra cosa (¿que tal un jugador <code>MiniMaxPlayer</code>?).
-
-<OL>
-<LI>La idea clave es definir una familia de clases, las <A NAME="8815"></A><SPAN  CLASS="textbf">strategy</SPAN>
-o <A NAME="8817"></A><SPAN  CLASS="textbf">estrategias</SPAN> que hacen de distintas formas la misma cosa:
-en nuestro ejemplo son los distintos tipos de <code>Player</code> que lo
-que hacen es decidir la próxima jugada mediante  <code>move</code>.
-</LI>
-<LI>No sólo realizan la misma tarea sino que comparten la misma interfaz definida por la
-clase <code>Player</code>.
-</LI>
-<LI>Dado que todos los objetos <A NAME="8819"></A><SPAN  CLASS="textbf">strategy</SPAN>
-tiene la misma pinta vistos desde fuera, pueden ser usados
-por el usuario de la estrategia - Al que la GoF denomina <A NAME="8821"></A><SPAN  CLASS="textbf">context</SPAN>
-o <A NAME="8823"></A><SPAN  CLASS="textbf">contexto</SPAN> - como partes intercambiables. En nuestro caso el context
-es la clase 
-<code>Game</code>, que usa los <code>Player</code>s como objetos intercambiables
-</LI>
-<LI>Al separar la clase cliente <code>Game</code> - el contexto -
-de las clases estrategia <code>Player</code>s es necesario habilitar un mecanismo 
-de comunicación entre el contexto y la estrategia. En este ejemplo se ha optado por 
-pasar  esa información - el tablero - como argumento:
-<PRE>
-  @board[@x_player.move(@board)] = @x_player.mark # dentro del método play de la clase Game
-</PRE>
-La estrategia - el jugador <code>@x_player</code> - recibe el tablero <code>@board</code> 
-y retorna su decisión - la jugada <code>@x_player.move(@board)</code> (algo como <code>"b2"</code>)
-</LI>
-<LI>Un ejemplo de uso práctico del patrón Strategy puede verse en el código de <code>rdoc</code>, 
-la herramienta que se usa en Ruby para extraer documentación
-de los programas: por un lado hay una variación en los parsers que soporta: C, Ruby y FORTRAN.
-Por otro lado la salida puede hacerse en diversos formatos: XML, distintas versiones de HTML, CHM, <code>ri</code>, etc.
-En <code>rdoc</code> cada uno de los formatos de salida es manejado mediante una estrategia.
-</LI>
-</OL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html7038"
-  HREF="node235.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7032"
-  HREF="node230.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7026"
-  HREF="node233.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7034"
-  HREF="node823.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7036"
-  HREF="node826.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html7039"
-  HREF="node235.html">La Clase Board</A>
-<B> Subir:</B> <A NAME="tex2html7033"
-  HREF="node230.html">Jugador de TicTacToe (Tres</A>
-<B> Anterior:</B> <A NAME="tex2html7027"
-  HREF="node233.html">La Clase Game</A>
- &nbsp; <B>  <A NAME="tex2html7035"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7037"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

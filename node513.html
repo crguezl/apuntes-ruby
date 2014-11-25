@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</TITLE>
-<META NAME="description" CONTENT="Configurando la Base de Datos en Heroku con DataMapper. Despliegue">
+<TITLE>Introducción al Patrón DataMapper</TITLE>
+<META NAME="description" CONTENT="Introducción al Patrón DataMapper">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node514.html">
 <LINK REL="previous" HREF="node512.html">
-<LINK REL="up" HREF="node507.html">
+<LINK REL="up" HREF="node511.html">
 <LINK REL="next" HREF="node514.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12041"
+<A NAME="tex2html12060"
   HREF="node514.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12035"
-  HREF="node507.html">
+<A NAME="tex2html12054"
+  HREF="node511.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12029"
+<A NAME="tex2html12048"
   HREF="node512.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12037"
-  HREF="node823.html">
+<A NAME="tex2html12056"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12039"
-  HREF="node826.html">
+<A NAME="tex2html12058"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,248 +92,109 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12042"
-  HREF="node514.html">Asociaciones Simples</A>
-<B> Subir:</B> <A NAME="tex2html12036"
-  HREF="node507.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12030"
-  HREF="node512.html">Ejemplo de uso de</A>
- &nbsp; <B>  <A NAME="tex2html12038"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12040"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12061"
+  HREF="node514.html">Ejemplo Simple de uso</A>
+<B> Subir:</B> <A NAME="tex2html12055"
+  HREF="node511.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12049"
+  HREF="node512.html">Introducción a Los Object</A>
+ &nbsp; <B>  <A NAME="tex2html12057"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12059"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031660000000000000000"></A>
-<A NAME="section:herokupostgres"></A>
-<BR>
-Configurando la Base de Datos en Heroku con DataMapper. Despliegue
+<H1><A NAME="SECTION031620000000000000000">
+Introducción al Patrón DataMapper</A>
 </H1>
+Martin Fowler 
+(<A NAME="tex2html1251"
+  HREF="http://martinfowler.com/eaaCatalog/index.html">Catalog of Patterns of Enterprise Application Architecture</A>):
 
 <P>
-<A NAME="tex2html1265"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A> utiliza la base de datos PostgreSQL y una URL en una variable 
-de entorno <code>ENV['DATABASE_URL']</code>.
-
-<P>
-<PRE>
-configure :development, :test do
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
-end
-
-configure :production do
-  DataMapper.setup(:default, ENV['DATABASE_URL'])
-end
-</PRE>
-
-<P>
-Estas líneas especifican que se usa SQLite en desarrollo y testing y
-PostgreSQL en producción.
-Obsérvese que el <code>Gemfile</code> debe estar coherente:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ cat Gemfile
-source 'https://rubygems.org'
-gem "sinatra"
-gem "slim"
-gem "sass"
-gem "dm-core"
-gem "dm-migrations"
-gem "thin"
-gem "pg", :group =&gt; :production
-gem "dm-postgres-adapter", :group =&gt; :production
-gem "dm-sqlite-adapter", :group =&gt; [:development, :test]
-</PRE>
-o mejor:
-<PRE>
-group :production do
-    gem "pg"
-    gem "dm-postgres-adapter"
-end
-
-group :development, :test do
-  gem "dm-sqlite-adapter"
-end
-</PRE>
+<OL>
+<LI>Objects and relational databases have different mechanisms for structuring
+data. 
+</LI>
+<LI>Many parts of an object, such as collections and inheritance,
+aren't present in relational databases. 
+</LI>
+<LI>When you build an
+object model with a lot of business logic it's valuable to use these
+mechanisms (creo que se refiere a la herencia, etc.) 
+to better organize the data and the behavior that goes with
+it. 
+</LI>
+<LI>Doing so leads to variant schemas; that is, the object
+schema and the relational schema don't match up.
+</LI>
+<LI>You still need to transfer data between the two schemas, and this data
+transfer becomes a complexity in its own right. 
+</LI>
+<LI>If the in-memory objects
+know about the relational database structure, changes in
+one tend to ripple to the other.
+</LI>
+<LI>The <A NAME="22489"></A><SPAN  CLASS="textbf">Data Mapper</SPAN> is a layer of software that separates the in-memory
+objects from the database. 
+</LI>
+<LI><SPAN  CLASS="textbf">Its responsibility is to transfer data between
+the two and also to isolate them from each other</SPAN>
+</LI>
+<LI>With
+Data Mapper the in-memory objects needn't know even that there's a
+database present; they need no SQL interface code, and certainly no
+knowledge of the database schema. 
+</LI>
+<LI>(The database schema is always
+ignorant of the objects that use it.) 
+</LI>
+</OL>
 
 <P>
 
-<H4><A NAME="SECTION031660010000000000000">
-Bundle: installing groups. General considerations</A>
-</H4>
-  
+<UL>
+<LI><A NAME="tex2html1252"
+  HREF="http://en.wikipedia.org/wiki/Data_mapper_pattern">DataMapper en la Wikipedia</A>
+</LI>
+<LI><A NAME="tex2html1253"
+  HREF="http://martinfowler.com/eaaCatalog/dataMapper.html">Martin Fowler: DataMapper</A>
+</LI>
+<LI><A NAME="tex2html1254"
+  HREF="https://github.com/crguezl/sinatra-datamapper-sample">Proyecto sinatra-datamapper-sample</A>
+en GitHub
+</LI>
+<LI>Documentación de <A NAME="tex2html1255"
+  HREF="http://datamapper.org/docs/">DataMapper</A>
+</LI>
+<LI><A NAME="tex2html1256"
+  HREF="http://recipes.sinatrarb.com/p/models/data_mapper">Sinatra Recipes: DataMapper</A>
+</LI>
+<LI><A NAME="tex2html1257"
+  HREF="http://sinatra-book.gittr.com/#datamapper">Sinatra Book: DataMapper</A>
+</LI>
+</UL>
 
 <P>
-By  default, bundle install will install all gems in all groups in your
-Gemfile, except those declared for a different 
-<code>platform</code><A NAME="tex2html1266"
-  HREF="footnode.html#foot22301"><SUP><SPAN CLASS="arabic">45</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
-
-<P>
-However, you can explicitly tell bundler  to  skip  installing  certain
-groups  with  the <code>--without option</code>. 
-This option takes a space-separated list of groups.
-
-<P>
-While the <code>--without</code> option will skip installing the gems in the  specified  groups, 
-<FONT COLOR="#0000ff"> it will still download those gems and use them to resolve the dependencies of every gem in your Gemfile</FONT>.
-
-<P>
-This is so that installing a different set of groups on another machine (such  as  a  production  server) will not change the gems and versions that you have already developed and tested against.
-
-<P>
-Bundler guarantees that the third-party code you are running in development and testing is also the third-party code you are running in production. You can choose to exclude some of that  code  in different  environments,  but  you  will never be caught flat-footed by 
-different versions of third-party code being used in different environments.
-
-<P>
-For a simple illustration, consider the following <code>Gemfile</code>:
-
-<P>
-<PRE>
-           source "https://rubygems.org"
-
-           gem "sinatra"
-
-           group :production do
-             gem "rack-perftools-profiler"
-           end
-</PRE>
-
-<P>
-In  this  case,  <code>sinatra</code>  
-depends on any version of <code>Rack (&gt;= 1.0)</code>,
- while <code>rack-perftools-profiler</code> depends on <code>1.x (~&gt; 1.0)</code>.
-
-<P>
-When you run <code>bundle install --without  production</code>  
-in  <code>development</code>,  we
-look  at the dependencies of 
-<code>rack-perftools-profiler</code> as well. 
-
-<P>
-That way,
-you do not spend all your time developing against <code>Rack 2.0</code>,  
-using  new
-APIs  unavailable  in <code>Rack 1.x</code>, 
-only to have bundler switch to <code>Rack 1.2</code>
-when the <code>production</code> group is used.
-
-<P>
-This should not cause any problems  in  practice,  because  bundle  
-does  not
-attempt  to  install the gems in the excluded groups, and only 
-evaluates them
-as part of the dependency resolution process.
-
-<P>
-This also means that 
-
-<FONT COLOR="#0000ff"> you cannot include different versions of the  same
-gem  in  different  groups</FONT>,  
-because doing so would result in different
-sets of dependencies used in development and production. 
-
-<P>
-Because of the
-vagaries  of  the  dependency  resolution process, this usually affects
-more than just the gems you list in your <code>Gemfile</code>, 
-and can  (surprisingly) radically change the gems you are using.
-
-<P>
-
-<H4><A NAME="SECTION031660020000000000000">
-Recordando los pasos para el despliegue en Heroku</A>
-</H4>
-  
-
-<PRE>
-heroku create ...
-</PRE>
-
-<P>
-<PRE>
-git push heroku master
-</PRE>
-
-<P>
-<PRE>
-heroku open
-</PRE>
-
-<P>
-<PRE>
-heroku logs --source app
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031660030000000000000">
-Creando/Modificando la base de datos en Heroku con heroku run console</A>
-</H4>
-  
-
-<P>
-Ahora ejecutamos la consola de heroku:
-
-<P>
-<PRE>
-heroku run console
-</PRE>
-lo que nos abre una sesión <code>irb</code>.
-
-<P>
-Ahora creamos la base de datos en <A NAME="tex2html1267"
-  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>:
-<PRE>
-[~/sinatra/sinatra-datamapper-jump-start(master)]$ heroku run console
-Running `console` attached to terminal... up, run.8011
-irb(main):001:0&gt; require './main'
-=&gt; true
-irb(main):002:0&gt; DataMapper.auto_migrate!
-=&gt; #&lt;DataMapper::DescendantSet:0x007fb89c878230 @descendants=#&lt;DataMapper::SubjectSet:0x007fb89c8781b8 @entries=#&lt;DataMapper::OrderedSet:0x007fb89c878190 @cache=#&lt;DataMapper::SubjectSet::NameCache:0x007fb89c878168 @cache={"Song"=&gt;0}&gt;, @entries=[Song]&gt;&gt;&gt;
-irb(main):003:0&gt;
-</PRE>
-Véase también 
-la práctica TicTacToe
-<A HREF="node449.html#practica:ticatactoe">32.29</A>
-y
-el capítulo <I>Despliegue en Heroku</I> 
-<A HREF="node527.html#chapter:despliegueenheroku">51</A>.
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html12043"
-  HREF="node513.html#SECTION031660010000000000000">Bundle: installing groups. General considerations</A>
-<LI><A NAME="tex2html12044"
-  HREF="node513.html#SECTION031660020000000000000">Recordando los pasos para el despliegue en Heroku</A>
-<LI><A NAME="tex2html12045"
-  HREF="node513.html#SECTION031660030000000000000">Creando/Modificando la base de datos en Heroku con heroku run console</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12041"
+<A NAME="tex2html12060"
   HREF="node514.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12035"
-  HREF="node507.html">
+<A NAME="tex2html12054"
+  HREF="node511.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12029"
+<A NAME="tex2html12048"
   HREF="node512.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12037"
-  HREF="node823.html">
+<A NAME="tex2html12056"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12039"
-  HREF="node826.html">
+<A NAME="tex2html12058"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -384,20 +245,20 @@ el capítulo <I>Despliegue en Heroku</I>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12042"
-  HREF="node514.html">Asociaciones Simples</A>
-<B> Subir:</B> <A NAME="tex2html12036"
-  HREF="node507.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12030"
-  HREF="node512.html">Ejemplo de uso de</A>
- &nbsp; <B>  <A NAME="tex2html12038"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12040"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12061"
+  HREF="node514.html">Ejemplo Simple de uso</A>
+<B> Subir:</B> <A NAME="tex2html12055"
+  HREF="node511.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12049"
+  HREF="node512.html">Introducción a Los Object</A>
+ &nbsp; <B>  <A NAME="tex2html12057"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12059"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

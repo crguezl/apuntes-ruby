@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Limitando el Número de Instancias de una Clase</TITLE>
-<META NAME="description" CONTENT="Limitando el Número de Instancias de una Clase">
+<TITLE>new, allocate e initialize</TITLE>
+<META NAME="description" CONTENT="new, allocate e initialize">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node211.html">
 <LINK REL="previous" HREF="node209.html">
-<LINK REL="up" HREF="node206.html">
+<LINK REL="up" HREF="node209.html">
 <LINK REL="next" HREF="node211.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6677"
+<A NAME="tex2html6712"
   HREF="node211.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6671"
-  HREF="node206.html">
+<A NAME="tex2html6706"
+  HREF="node209.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6667"
+<A NAME="tex2html6700"
   HREF="node209.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6673"
-  HREF="node823.html">
+<A NAME="tex2html6708"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6675"
-  HREF="node826.html">
+<A NAME="tex2html6710"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,106 +92,101 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6678"
-  HREF="node211.html">Métodos y Clases: Construyendo</A>
-<B> Subir:</B> <A NAME="tex2html6672"
-  HREF="node206.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html6668"
-  HREF="node209.html">dup, clone e initialize_copy</A>
- &nbsp; <B>  <A NAME="tex2html6674"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6676"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6713"
+  HREF="node211.html">Métodos Factoría</A>
+<B> Subir:</B> <A NAME="tex2html6707"
+  HREF="node209.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6701"
+  HREF="node209.html">Creación e Inicialización de</A>
+ &nbsp; <B>  <A NAME="tex2html6709"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6711"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02744000000000000000"></A>
-<A NAME="subsection:limitandoelnumerodeinstancias"></A>
-<BR>
-Limitando el Número de Instancias de una Clase
+<H2><A NAME="SECTION02741000000000000000">
+new, allocate e initialize</A>
 </H2>
-Some classes, such as those that define enumerated types, may want to
-strictly limit the number of instances that exist. 
+Todas las clases heredan el método de clase <code>new</code>.
+Este método tiene dos tareas: 
 
 <P>
-Classes like these
-need to make their new method private and also probably want
-to prevent copies from being made. 
 
-<P>
-The following code demonstrates one way to do that:
+<OL>
+<LI>debe alojar al objeto y 
+</LI>
+<LI>debe inicializarlo.
+</LI>
+</OL>
+Para estas tareas, delega en los métodos.
+Este es el seudocódigo de <code>new</code>: 
+<code>allocate</code> e <code>initialize</code>:
 <PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ cat -n LimitingTheNumberOfInstances.rb 
-     1  class Season
-     2    NAMES = %w{ Spring Summer Autumn Winter }
-     3    INSTANCES = []
-     4  
-     5    def initialize(n)
-     6      @n = n
-     7    end
-     8  
-     9    def to_s
-    10      NAMES[@n]
-    11    end
-    12  
-    13    NAMES.each_with_index { |n,i|
-    14      season = new(i)
-    15      INSTANCES[i] = season
-    16      const_set n, season
-    17    }
-    18  
-    19    private_class_method :allocate, :new
-    20    private :dup, :clone
-    21  end
-    22  
-    23  if __FILE__ == $0
-    24    puts Season::Spring 
-    25    puts Season::Summer
-    26    puts Season::Autumn
-    27    puts Season::Winter
-    28  end
-</PRE>
-El método <A NAME="tex2html414"
-  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html#method-i-const_set">const_set</A>
-de la clase <A NAME="tex2html415"
-  HREF="http://www.ruby-doc.org/core-1.8.7/Module.html">Module</A>
-establece el valor asociado con el nombre pasado como primer argumento al objeto dado como segundo argumento:
-<PRE>
-&gt;&gt; Math.const_set("HIGH_SCHOOL_PI", 22.0/7.0)
-=&gt; 3.14285714285714
-&gt;&gt; Math::HIGH_SCHOOL_PI
-=&gt; 3.14285714285714
+def new(* args)
+  o = self.allocate       # crear el objeto
+  o.initialize(* args)    # inicializarlo
+  o                       # retornar el objeto
+end
 </PRE>
 
 <P>
-Cuando se ejecuta el programa anterior produce esta salida:
-<PRE>
-~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules$ ruby LimitingTheNumberOfInstances.rb 
-Spring
-Summer
-Autumn
-Winter
-</PRE>
+
+<UL>
+<LI>El método <code>allocate</code> es un método de instancia de la clase <code>Class</code>.
+</LI>
+<LI>Es heredado por todos los objetos clase. 
+</LI>
+<LI>Ruby invoca al
+método directamente.
+No puede ser sobreescrito. 
+</LI>
+</UL>
+
+<P>
+
+<UL>
+<LI><code>initialize</code> es un método de instancia y privado
+</LI>
+<LI>La mayor parte de las clases deberían usar <code>super</code>
+para encadenar con el <code>initialize</code> de la superclase.
+</LI>
+<LI>La tarea habitual de <code>initialize</code> es crear e inicializar
+las variables de instancia del objeto, cuyos valores normalmente 
+se derivan de los argumentos pasados a <code>new</code>.
+</LI>
+<LI>El valor retornado por <code>initialize</code> es ignorado.
+</LI>
+<LI>En realidad, <code>Class</code> define dos métodos con nombre <code>new</code>:
+
+<UL>
+<LI>Uno <code>Class#new</code> es el método de instancia descrito aquí.
+</LI>
+<LI>El otro <code>Class::new</code> es un método de clase y se usa para crear nuevas clases.
+</LI>
+</UL>
+</LI>
+</UL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6677"
+<A NAME="tex2html6712"
   HREF="node211.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6671"
-  HREF="node206.html">
+<A NAME="tex2html6706"
+  HREF="node209.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6667"
+<A NAME="tex2html6700"
   HREF="node209.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6673"
-  HREF="node823.html">
+<A NAME="tex2html6708"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6675"
-  HREF="node826.html">
+<A NAME="tex2html6710"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -241,20 +237,20 @@ Winter
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6678"
-  HREF="node211.html">Métodos y Clases: Construyendo</A>
-<B> Subir:</B> <A NAME="tex2html6672"
-  HREF="node206.html">Creación e Inicialización de</A>
-<B> Anterior:</B> <A NAME="tex2html6668"
-  HREF="node209.html">dup, clone e initialize_copy</A>
- &nbsp; <B>  <A NAME="tex2html6674"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6676"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6713"
+  HREF="node211.html">Métodos Factoría</A>
+<B> Subir:</B> <A NAME="tex2html6707"
+  HREF="node209.html">Creación e Inicialización de</A>
+<B> Anterior:</B> <A NAME="tex2html6701"
+  HREF="node209.html">Creación e Inicialización de</A>
+ &nbsp; <B>  <A NAME="tex2html6709"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6711"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

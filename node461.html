@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Mini MiniTest Tutorial</TITLE>
-<META NAME="description" CONTENT="Mini MiniTest Tutorial">
+<TITLE>Aplicaciones Modulares</TITLE>
+<META NAME="description" CONTENT="Aplicaciones Modulares">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node462.html">
-<LINK REL="previous" HREF="node460.html">
-<LINK REL="up" HREF="node458.html">
+<LINK REL="previous" HREF="node456.html">
+<LINK REL="up" HREF="node358.html">
 <LINK REL="next" HREF="node462.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11097"
+<A NAME="tex2html11117"
   HREF="node462.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11091"
-  HREF="node458.html">
+<A NAME="tex2html11111"
+  HREF="node358.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11085"
+<A NAME="tex2html11105"
   HREF="node460.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11093"
-  HREF="node823.html">
+<A NAME="tex2html11113"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11095"
-  HREF="node826.html">
+<A NAME="tex2html11115"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,82 +92,88 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11098"
-  HREF="node462.html">Sample app with Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html11092"
-  HREF="node458.html">Testing en Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11086"
-  HREF="node460.html">Build a Sinatra API</A>
- &nbsp; <B>  <A NAME="tex2html11094"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11096"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11118"
+  HREF="node462.html">Testing en Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html11112"
+  HREF="node358.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html11106"
+  HREF="node460.html">Petición y Respuesta</A>
+ &nbsp; <B>  <A NAME="tex2html11114"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11116"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03603000000000000000">
-Mini MiniTest Tutorial</A>
-</H2>
+<H1><A NAME="SECTION03500000000000000000"></A>
+<A NAME="chapter:aplicacionesmodularessinatra"></A>
+<BR>
+Aplicaciones Modulares
+</H1>
 
 <P>
-See <A NAME="tex2html1073"
-  HREF="http://www.millwoodonline.co.uk/blog/mini-minitest-tutorial?utm_content=buffer1e8e1&amp;utm_medium=social&amp;utm_source=twitter.com&amp;utm_campaign=buffer">Mini MiniTest Tutorial by Tim
-Millwood</A>.
+Las aplicaciones normales Sinatra se denominan <A NAME="19642"></A><SPAN  CLASS="textbf">aplicaciones clásicas sinatra</SPAN>
+y viven en <A NAME="tex2html1063"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Application</A>,
+que es una subclase de <A NAME="tex2html1064"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Base</A>.
 
 <P>
-We'll use MiniTest::Spec, which is a functionally complete spec engine, to create a spec for a Hello World! Sinatra application. Firstly we create a folder 'spec' within the application directory. Within this, two files.
+En las aplicaciones clásicas Sinatra extiende la clase <code>Object</code> en el momento 
+de cargarse lo que, en cierto modo, contamina el espacio de nombres global. Eso dificulta que nuestra aplicación 
+pueda ser distribuída como una gema y que se puedan tener varias aplicaciones clásicas 
+en un único proceso.
+
+<P>
+Una aplicación Sinatra se dice una <A NAME="19648"></A><SPAN  CLASS="textbf">aplicación modular sinatra</SPAN>
+si no hace uso de <A NAME="tex2html1065"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Application</A>,
+renunciando al DSL de alto nivel proveído por Sinatra,
+sino que hereda de <A NAME="tex2html1066"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb">Sinatra::Base</A>.
+
+<P>
+Podemos combinar una aplicación clásica  con una modular, pero sólo puede haber una aplicación clásica por proceso.
 
 <P>
 <PRE>
-ENV['RACK_ENV'] = 'test'
+[~/sinatra/sinatra-simple(master)]$ cat app.rb 
+require 'sinatra/base'
 
-require 'minitest/autorun'
-require 'rack/test'
-require_relative '../app'
-
-include Rack::Test::Methods
-
-def app
-  Sinatra::Application
-end
-</PRE>
-
-<P>
-The above code is to go into the file <code>spec_helper.rb</code>. It sets up the initial setting for the test. We set the <code>RACK_ENV</code> environment variable to 'test' then require '<code>minitest/autorun</code>' for MiniTest, 'rack/test' because we are testing a rack based application and our application, in this case app.rb. The Rack::Test::Methods module is included to add a number of helper methods to allow the testing of rack applications. Finally we define the application as a Sinatra Application.
-The next file <code>app_spec.rb</code> will be our spec.
-<PRE>
-require_relative 'spec_helper'
-
-describe 'Hello World' do
-
-  it 'should have hello world' do
-    get '/'
-    last_response.must_be :ok?
-    last_response.body.must_include "Hello world!"
+class App &lt; Sinatra::Base
+  get '/' do
+    "hello get!"
   end
 end
 </PRE>
-Firstly the <code>spec_helper</code> file is required, we then create a describe block to describe the 'Hello World' application. Within this a single behaviour. We run a get method against the root route and check the response is ok, and that the page includes the text 'Hello World!'.
+
+<P>
+<PRE>
+[~/sinatra/sinatra-simple(master)]$ cat config.ru 
+require './app'
+
+run App
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11097"
+<A NAME="tex2html11117"
   HREF="node462.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11091"
-  HREF="node458.html">
+<A NAME="tex2html11111"
+  HREF="node358.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11085"
+<A NAME="tex2html11105"
   HREF="node460.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11093"
-  HREF="node823.html">
+<A NAME="tex2html11113"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11095"
-  HREF="node826.html">
+<A NAME="tex2html11115"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -218,20 +224,20 @@ Firstly the <code>spec_helper</code> file is required, we then create a describe
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11098"
-  HREF="node462.html">Sample app with Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html11092"
-  HREF="node458.html">Testing en Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html11086"
-  HREF="node460.html">Build a Sinatra API</A>
- &nbsp; <B>  <A NAME="tex2html11094"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11096"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11118"
+  HREF="node462.html">Testing en Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html11112"
+  HREF="node358.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html11106"
+  HREF="node460.html">Petición y Respuesta</A>
+ &nbsp; <B>  <A NAME="tex2html11114"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11116"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

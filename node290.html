@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Setup y Teardown</TITLE>
-<META NAME="description" CONTENT="Setup y Teardown">
+<TITLE>Ejemplo Sencillo de uso de test/unit</TITLE>
+<META NAME="description" CONTENT="Ejemplo Sencillo de uso de test/unit">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node291.html">
 <LINK REL="previous" HREF="node289.html">
-<LINK REL="up" HREF="node286.html">
+<LINK REL="up" HREF="node289.html">
 <LINK REL="next" HREF="node291.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7977"
+<A NAME="tex2html8010"
   HREF="node291.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7971"
-  HREF="node286.html">
+<A NAME="tex2html8004"
+  HREF="node289.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7965"
+<A NAME="tex2html7998"
   HREF="node289.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7973"
-  HREF="node823.html">
+<A NAME="tex2html8006"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7975"
-  HREF="node826.html">
+<A NAME="tex2html8008"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,55 +92,75 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7978"
-  HREF="node291.html">Veáse</A>
-<B> Subir:</B> <A NAME="tex2html7972"
-  HREF="node286.html">Test/Unit</A>
-<B> Anterior:</B> <A NAME="tex2html7966"
-  HREF="node289.html">Organizando las pruebas</A>
- &nbsp; <B>  <A NAME="tex2html7974"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7976"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8011"
+  HREF="node291.html">Cuando una assertion falla</A>
+<B> Subir:</B> <A NAME="tex2html8005"
+  HREF="node289.html">Test/Unit</A>
+<B> Anterior:</B> <A NAME="tex2html7999"
+  HREF="node289.html">Test/Unit</A>
+ &nbsp; <B>  <A NAME="tex2html8007"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8009"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02914000000000000000"></A>
-<A NAME="subsection:setupteardown"></A>
-<BR>
-Setup y Teardown
+<H2><A NAME="SECTION02911000000000000000">
+Ejemplo Sencillo de uso de <TT>test/unit</TT></A>
 </H2>
-There are many cases where a small bit of code needs to be run
-before and/or after each test. <A NAME="tex2html597"
-  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A> provides the  <TT>setup</TT>  and
- <TT>teardown</TT>  <A NAME="12102"></A><SPAN  CLASS="textbf">member functions</SPAN>, which are run before and after every
-test (member function).
 
 <P>
 <PRE>
-[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat test/tc_simple_number3.rb 
-# File:  tc_simple_number3.rb
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ tree
+.
+|-- Rakefile
+|-- lib
+|   `--- simple_number.rb
+`--- test
+    `--- tc_simple_number.rb
+
+2 directories, 3 files
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat lib/simple_number.rb 
+# File:  simple_number.rb
+ 
+class SimpleNumber
+ 
+  def initialize(num)
+    raise unless num.is_a?(Numeric)
+    @x = num
+  end
+ 
+  def add(y)
+    @x + y
+  end
+ 
+  def multiply(y)
+    @x * y
+  end
+ 
+end
+</PRE>
+
+<P>
+Véase la documentación en <A NAME="tex2html598"
+  HREF="http://www.ruby-doc.org/stdlib-2.0.0/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test/Unit</TT></A>
+<PRE>
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ cat test/tc_simple_number.rb 
+# File:  tc_simple_number.rb
  
 require "simple_number"
 require "test/unit"
  
 class TestSimpleNumber &lt; Test::Unit::TestCase
  
-  def setup
-    @num = SimpleNumber.new(2)
-  end
- 
-  def teardown
-    ## Nothing really
-  end
- 
   def test_simple
-    assert_equal(4, @num.add(2) )
-  end
- 
-  def test_simple2
-    assert_equal(4, @num.multiply(2) )
+    assert_equal(4, SimpleNumber.new(2).add(2) )
+    assert_equal(6, SimpleNumber.new(2).multiply(3) )
   end
  
 end
@@ -153,38 +173,33 @@ desc "Test class SimpleNumber"
 task :test do
   sh "ruby -Ilib -Itest test/tc_simple_number.rb"
 end
-
-desc "Test with test/tc_simple_number2.rb. Expect failures"
-task :test2 do
-  sh "ruby -Ilib -Itest test/tc_simple_number2.rb"
-end
-
-desc "Test with test/tc_simple_number3.rb. setup adn teardown"
-task :test3 do
-  sh "ruby -Ilib -Itest test/tc_simple_number3.rb"
-end
 </PRE>
 
 <P>
 <PRE>
-[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ rake test3
-ruby -Ilib -Itest test/tc_simple_number3.rb
+[~/local/src/ruby/LPP/unit_testing/simple_example(master)]$ rake test
+ruby -Ilib -Itest test/tc_simple_number.rb
 Run options: 
 
 # Running tests:
 
-..
+.
 
-Finished tests in 0.000988s, 2024.2915 tests/s, 2024.2915 assertions/s.
+Finished tests in 0.000530s, 1886.7925 tests/s, 3773.5849 assertions/s.
 
-2 tests, 2 assertions, 0 failures, 0 errors, 0 skips
+1 tests, 2 assertions, 0 failures, 0 errors, 0 skips
 </PRE>
+
+<P>
+Failures are when your test cases fail - i.e. your assertions are
+incorrect. Errors are unexpected errors that occur while trying to
+actually run the test - exceptions, etc.
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

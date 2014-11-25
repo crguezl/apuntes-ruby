@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Definiendo Operadores (La Clase Point)</TITLE>
-<META NAME="description" CONTENT="Definiendo Operadores (La Clase Point)">
+<TITLE>Inicializando un Punto</TITLE>
+<META NAME="description" CONTENT="Inicializando un Punto">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node178.html">
 <LINK REL="previous" HREF="node176.html">
-<LINK REL="up" HREF="node171.html">
+<LINK REL="up" HREF="node174.html">
 <LINK REL="next" HREF="node178.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6184"
+<A NAME="tex2html6217"
   HREF="node178.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6178"
-  HREF="node171.html">
+<A NAME="tex2html6211"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6172"
+<A NAME="tex2html6205"
   HREF="node176.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6180"
-  HREF="node823.html">
+<A NAME="tex2html6213"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6182"
-  HREF="node826.html">
+<A NAME="tex2html6215"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,204 +92,130 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6185"
-  HREF="node178.html">Tabla de Operadores en</A>
-<B> Subir:</B> <A NAME="tex2html6179"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6173"
-  HREF="node176.html">Acceso a los Atributos</A>
- &nbsp; <B>  <A NAME="tex2html6181"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6183"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6218"
+  HREF="node178.html">Definiendo un método to_s</A>
+<B> Subir:</B> <A NAME="tex2html6212"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6206"
+  HREF="node176.html">Instanciando un Punto</A>
+ &nbsp; <B>  <A NAME="tex2html6214"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6216"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html6186"
-  HREF="node177.html#SECTION02716010000000000000">Enlaces Relacionados</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION02716000000000000000"></A>
-<A NAME="subsection:definiendooperadores"></A>
+<H2><A NAME="SECTION02713000000000000000"></A>
+<A NAME="subsection:initialize"></A>
 <BR>
-Definiendo Operadores (La Clase Point)
+Inicializando un Punto
 </H2>
-
-<P>
-
-<OL>
-<LI>We’d like the <code>+</code> operator to perform vector addition of two
-Point objects, 
-</LI>
-<LI>the <code>*</code> operator to multiply a Point by a scalar,
-</LI>
-<LI>and the unary <code>–</code> operator to do the equivalent of multiplying by
-–1. 
-</LI>
-</OL>
-Method-based operators such as <code>+</code> are simply methods with
-punctuation for names. 
-
-<P>
-Because there are unary and binary forms of
-the <code>–</code> operator, Ruby uses the method name <code>–@</code> for unary minus. 
-
-<P>
-Here
-is a version of the Point class with mathematical operators defined:
+El método <code>initialize</code> es privado:
 
 <P>
 <PRE>
-[~/rubytesting/TheRubyProgrammingLanguage/Chapter7ClassesAndModules/point]$ cat -n point.rb 
-     1	class Point
-     2	  attr_reader :x, :y   # Define accessor methods for our instance variables
-     3	
-     4	  include Comparable
-     5	  include Enumerable
-     6	
-     7	  def initialize(x,y)
-     8	    @x,@y = x, y
-     9	  end
-    10	
-    11	  def to_s        # Return a String that represents this point
-    12	    "(#@x,#@y)"   # Just interpolate the instance variables into a string
-    13	  end
-    14	
-    15	  def chuchu
-    16	    "Point: chuchu"
-    17	  end
-    18	  private :chuchu
-    19	
-    20	  def +(other)         # Define + to do vector addition
-    21	    Point.new(@x + other.x, @y + other.y)
-    22	  end
-    23	
-    24	  def -@               # Define unary minus to negate both coordinates
-    25	    Point.new(-@x, -@y)
-    26	  end
-    27	
-    28	  def *(scalar)        # Define * to perform scalar multiplication
-    29	    return Point.new(@x*scalar,   @y*scalar) if scalar.is_a? Numeric
-    30	    return Point.new(@x*scalar.x, @y*scalar.y) if scalar.is_a? Point
-    31	  end
-    32	
-    33	  def coerce(other)
-    34	    [self, other]
-    35	  end
-    36	
-    37	  def [](index)
-    38	    case index
-    39	    when 0, -2 then @x         # Index 0 (or -2) is the X coordinate
-    40	    when 1, -1 then @y         # Index 1 (or -1) is the Y coordinate
-    41	
-    42	    when :x, "x" then @x       # Hash keys as symbol or string for X
-    43	    when :y, "y" then @y       # Hash keys as symbol or string for Y
-    44	    else nil               # Arrays and hashes just return nil on bad indexes
-    45	    end
-    46	  end
-    47	
-    48	  def hash
-    49	    code = 17
-    50	    code = 37*code + @x.hash
-    51	    code = 37*code + @y.hash
-    52	    code
-    53	  end
-    54	
-    55	  def eql?(o)
-    56	    return @x.eql?(o.x) &amp;&amp; @y.eql?(o.y) if o.instance_of? Point
-    57	    false
-    58	  end
-    59	
-    60	  def ==(o)
-    61	    return @x == o.x &amp;&amp; @y  == o.y if o.instance_of? Point
-    62	    false
-    63	  end
-    64	
-    65	  def &lt;=&gt;(o)
-    66	    return nil unless o.instance_of? Point
-    67	    @x*@x+@y*@y &lt;=&gt; o.x*o.x+o.y*o.y
-    68	  end
-    69	
-    70	end
-    71	
-    72	if __FILE__ == $0
-    73	  p = Point.new(1,2)
-    74	  q = Point.new(1,1)
-    75	  puts p
-    76	  puts -p
-    77	  puts p+q
-    78	  puts p*q
-    79	  puts p*2
-    80	  puts 2*p
-    81	
-    82	  puts "#{p[0]}, #{p[1]}"
-    83	  puts "#{p[-2]}, #{p[-1]}"
-    84	  puts "#{p[:x]}, #{p[:y]}"
-    85	  puts "#{p['x']}, #{p['y']}"
-    86	
-    87	  m = { p =&gt; 1, q =&gt; 2 }
-    88	  puts m[p]
-    89	  puts m[q]
-    90	
-    91	
-    92	  # It is not a total order relation
-    93	  r = Point.new(2, 1)
-    94	  puts p &gt; r
-    95	  puts r &gt; p
-    96	  puts r == p
-    97	  puts q &lt; p
-    98	  puts "#{[p, q, r].sort}"
-    99	  puts [p, q, r].min
-   100	  puts [p, q, r, Point.new(4,3)].max
-   101	
-   102	
-   103	end
+$ cat -n calling_initialize.rb 
+     1  class Tutu
+     2    def initialize(a,b)
+     3      @a, @b = a,b
+     4    end
+     5  
+     6    def titi
+     7      initialize(2,3)
+     8    end
+     9  end
+    10  if __FILE__ == $0
+    11    x = Tutu.new(4,5)
+    12    z = x.titi()
+    13    puts z.class
+    14    puts z
+    15    x.initialize(4,2)
+    16  end
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION02716010000000000000">
-Enlaces Relacionados</A>
-</H4>
-  
+<PRE>
+casiano@exthost:~/LPPsrc/151012$ ruby calling_initialize.rb 
+Array
+2
+3
+calling_initialize.rb:15:in `&lt;main&gt;': private method `initialize' called for #&lt;Tutu:0x8bb576c @a=2, @b=3&gt; (NoMethodError)
+casiano@exthost:~/LPPsrc/151012$
+</PRE>
 
 <P>
+<BLOCKQUOTE>
+The instance variables of an object can only be accessed by the
+instance methods of that object. Code that is not inside an instance
+method cannot read or set the value of an instance variable 
 
+</BLOCKQUOTE>
+
+<P>
+Aviso a los programadores Java:
+<PRE>
+casiano@exthost:~/LPPsrc/151012$ cat -n instance_variables_of_a_class.rb 
+     1  class Tutu
+     2    @x = 4
+     3    @y = 9
+     4  
+     5    def initialize(x,y)
+     6      @x, @y = x, y
+     7    end
+     8    def self.x
+     9      @x
+    10    end
+    11  
+    12    def self.y
+    13      @y
+    14    end
+    15  
+    16    def x
+    17      @x
+    18    end
+    19  
+    20    def y
+    21      @y
+    22    end
+    23  end
+    24  
+    25  if __FILE__ == $0
+    26    puts Tutu.x        # 4
+    27    puts Tutu.y        # 9
+    28    z = Tutu.new(5,7)
+    29    puts z.x           # 5
+    30    puts z.y           # 7
+    31  end
+</PRE>
+
+<P>
+<PRE>
+casiano@exthost:~/LPPsrc/151012$ ruby instance_variables_of_a_class.rb 
+4
+9
+5
+7
+</PRE>
+
+<P>
 <OL>
-<LI><A NAME="tex2html376"
-  HREF="http://ruby-doc.org/core-2.0.0/Comparable.html"><TT>Comparable</TT></A>
+<LI>This code does not do at all what a Java programmer expects. Instance
+variables are always resolved in the context of <code>self</code>.
 </LI>
-<LI><A NAME="tex2html377"
-  HREF="http://ruby-doc.org/core-2.0.0/Enumerable.html"><TT>Enumerable</TT></A>
+<LI>When the
+<code>initialize</code> method is invoked, <code>self</code> holds an instance of the <code>Tutu</code>
+class.
 </LI>
-<LI><A NAME="tex2html378"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Instance_Variables">Variables de Instancia</A>
+<LI>But the code outside of that method is executed as part of
+the definition of the <code>Tutu</code> class. 
 </LI>
-<LI><A NAME="tex2html379"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Accessor_Methods">Métodos de Acceso</A>
+<LI>When those first two assignments
+are executed, <code>self</code> refers to the <code>Tutu</code> class it<code>self</code>, not to an
+instance of the class. 
 </LI>
-<LI><A NAME="tex2html380"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Class_Variables">Variables de Clase</A>
-</LI>
-<LI><A NAME="tex2html381"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Class_Methods">Métodos de Clase</A>
-</LI>
-<LI><A NAME="tex2html382"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Declaring_Visibility">Visibilidad de los métodos</A>
-</LI>
-<LI>Los métodos <A NAME="8538"></A><SPAN  CLASS="textbf">private</SPAN>, <A NAME="8540"></A><SPAN  CLASS="textbf">public</SPAN> y <A NAME="8542"></A><SPAN  CLASS="textbf">protected</SPAN> son métodos de instancia privados de 
-</LI>
-<LI><A NAME="tex2html383"
-  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Classes#Class_Instance_Variables">Variables de Instancia de Clase</A>
-<A NAME="tex2html384"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>
+<LI>The <code>@x</code> and <code>@y</code> variables inside the <code>initialize</code>
+method are completely different from those outside it.
 </LI>
 </OL>
 
@@ -297,20 +223,20 @@ Enlaces Relacionados</A>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6184"
+<A NAME="tex2html6217"
   HREF="node178.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6178"
-  HREF="node171.html">
+<A NAME="tex2html6211"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6172"
+<A NAME="tex2html6205"
   HREF="node176.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6180"
-  HREF="node823.html">
+<A NAME="tex2html6213"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6182"
-  HREF="node826.html">
+<A NAME="tex2html6215"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -361,20 +287,20 @@ Enlaces Relacionados</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6185"
-  HREF="node178.html">Tabla de Operadores en</A>
-<B> Subir:</B> <A NAME="tex2html6179"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6173"
-  HREF="node176.html">Acceso a los Atributos</A>
- &nbsp; <B>  <A NAME="tex2html6181"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6183"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6218"
+  HREF="node178.html">Definiendo un método to_s</A>
+<B> Subir:</B> <A NAME="tex2html6212"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6206"
+  HREF="node176.html">Instanciando un Punto</A>
+ &nbsp; <B>  <A NAME="tex2html6214"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6216"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

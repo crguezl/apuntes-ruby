@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Construyendo Nuestro Propio Rack::Builder</TITLE>
-<META NAME="description" CONTENT="Construyendo Nuestro Propio Rack::Builder">
+<TITLE>Práctica: Añada Hojas de Estilo a Piedra Papel Tijeras</TITLE>
+<META NAME="description" CONTENT="Práctica: Añada Hojas de Estilo a Piedra Papel Tijeras">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node392.html">
 <LINK REL="previous" HREF="node390.html">
-<LINK REL="up" HREF="node356.html">
+<LINK REL="up" HREF="node388.html">
 <LINK REL="next" HREF="node392.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9939"
+<A NAME="tex2html9973"
   HREF="node392.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9933"
-  HREF="node356.html">
+<A NAME="tex2html9967"
+  HREF="node388.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9927"
+<A NAME="tex2html9963"
   HREF="node390.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9935"
-  HREF="node823.html">
+<A NAME="tex2html9969"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9937"
-  HREF="node826.html">
+<A NAME="tex2html9971"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,144 +91,240 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9940"
-  HREF="node392.html">Código de Rack::Builder</A>
-<B> Subir:</B> <A NAME="tex2html9934"
-  HREF="node356.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9928"
-  HREF="node390.html">Ejemplo de Middleware: Rack::ETag</A>
- &nbsp; <B>  <A NAME="tex2html9936"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9938"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9974"
+  HREF="node392.html">Middleware y la Clase</A>
+<B> Subir:</B> <A NAME="tex2html9968"
+  HREF="node388.html">Un Ejemplo Simple: Piedra,</A>
+<B> Anterior:</B> <A NAME="tex2html9964"
+  HREF="node390.html">Práctica: Añadir Template Haml</A>
+ &nbsp; <B>  <A NAME="tex2html9970"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9972"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031200000000000000000">
-Construyendo Nuestro Propio Rack::Builder</A>
-</H1>
+<H2><A NAME="SECTION031173000000000000000"></A>
+   <A NAME="16938"></A>
+  
+<A NAME="practica:rpscss"></A>
+<BR>
+Práctica: Añada Hojas de Estilo a Piedra Papel Tijeras
+</H2>
 
 <P>
-Véase:
+Añada hojas de estilo a la práctica anterior (sección <A HREF="node390.html#practica:rackandhaml">30.17.2</A>).
+
+<P>
 
 <OL>
-<LI><A NAME="tex2html935"
-  HREF="https://github.com/crguezl/rack-mybuilder">https://github.com/crguezl/rack-mybuilder</A>
+<LI>Mostramos una posible estructura de ficheros  en la que se incluyen
+hojas de estilo usando <A NAME="tex2html922"
+  HREF="http://getbootstrap.com/getting-started/"><TT>bootstrap</TT> </A>:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-rock-paper-scissors(bootstrap)]$ tree
+.
+|--- Gemfile
+|--- Gemfile.lock
+|--- README
+|--- Rakefile
+|--- TODO
+|--- config.ru
+|--- lib
+|   `--- rps.rb
+|--- public
+|   |--- css
+|   |   |--- bootstrap-responsive.css
+|   |   |--- bootstrap-responsive.min.css
+|   |   |--- bootstrap.css
+|   |   `-- bootstrap.min.css
+|   |--- img
+|   |   |--- glyphicons-halflings-white.png
+|   |   |--- glyphicons-halflings.png
+|   |   `-- programming-languages.jpg
+|   `-- js
+|       |--- bootstrap.js
+|       `--- bootstrap.min.js
+|--- rps.rb
+`-- views
+    `--- index.haml
+
+6 directories, 18 files
+</PRE>
+</LI>
+<LI>El middleware <A NAME="tex2html923"
+  HREF="http://rack.rubyforge.org/doc/Rack/Static.html">Rack::Static</A> intercepta las peticiones por ficheros
+estáticos (javascript, imágenes, hojas de estilo, etc.) 
+basandose en los prefijos de las urls pasadas en las opciones y
+los sirve utilizando un objeto <A NAME="tex2html924"
+  HREF="http://rack.rubyforge.org/doc/Rack/File.html">Rack::File</A>.
+Ejemplos:
+
+<P>
+<PRE>
+    use Rack::Static, :urls =&gt; ["/public"]
+</PRE>
+Servirá todas las peticiones que 
+comiencen por <code>/public</code> desde la carpeta <code>public</code>
+localizada en el directorio actual (esto
+es <code>public/*</code>).
+
+<P>
+En nuestro jerarquía pondremos en el programa <code>rps.rb</code>:
+<PRE>
+builder = Rack::Builder.new do
+  use Rack::Static, :urls =&gt; ['/public']
+  use Rack::ShowExceptions
+  use Rack::Lint
+
+  run RockPaperScissors::App.new
+end
+
+Rack::Handler::Thin.run builder
+</PRE>
+
+<P>
+y dentro del template <A NAME="tex2html925"
+  HREF="http://haml.info/docs.html"><TT>haml</TT> </A> nos referiremos por ejemplo al fichero javascript como
+
+<P>
+<PRE>
+      %script{:src =&gt; "/public/js/bootstrap.js"}
+</PRE>
+Otro ejemplo:
+<PRE>
+    use Rack::Static, :urls =&gt; ["/css", "/images"], :root =&gt; "public"
+</PRE>
+servirá las peticiones comenzando con <code>/css</code> o <code>/images</code>
+desde la carpeta <code>public</code> en el directorio actual
+(esto es 
+<code>public/css/*</code> y <code>public/images/*</code>)
+
+<P>
+</LI>
+<LI><A NAME="tex2html926"
+  HREF="https://github.com/rack/rack/blob/master/lib/rack/static.rb">Véase el código en GitHub</A>
+de 
+<A NAME="tex2html927"
+  HREF="http://rack.rubyforge.org/doc/Rack/Static.html">Rack::Static</A> 
+</LI>
+<LI>En el template <code>views/index.haml</code> deberá enlazar a las hojas de estilo:
+<PRE>
+!!!
+%html{:lang =&gt; "en"}
+  %head
+    %meta{:charset =&gt; "utf-8"}/
+    %title RPS 
+    %link{:href =&gt; "/public/css/bootstrap.css", :rel =&gt; "stylesheet"}
+     %link{:href =&gt; "/public/css/bootstrap.css", :rel =&gt; "stylesheet"}
+</PRE>
+y las imágenes como:
+<PRE>
+%img(src="/public/img/programming-languages.jpg" width="40%")
+</PRE>
+</LI>
+<LI><A NAME="tex2html928"
+  HREF="http://rack.rubyforge.org/doc/Rack/File.html">Rack::File</A> es un middleware que sirve los ficheros debajo del directorio
+dado, de acuerdo con el <code>path info</code> de la petición <A NAME="tex2html929"
+  HREF="http://rack.rubyforge.org/doc/">Rack</A>.
+por ejemplo, cuando  se usa
+<code>Rack::File.new("/etc")</code>
+podremos acceder al fichero <code>passwd</code> como
+<code>localhost:9292/passwd</code>.
+</LI>
+<LI><A NAME="tex2html930"
+  HREF="https://github.com/rack/rack/blob/master/lib/rack/file.rb">Vease el código en github</A>
+de <A NAME="tex2html931"
+  HREF="http://rack.rubyforge.org/doc/Rack/File.html">Rack::File</A>
+</LI>
+<LI>Para saber mas de Bootstrap véase la sección
+<A HREF="node499.html#chapter:bootstrap">40</A>
 </LI>
 </OL>
 
 <P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ cat mybuilder.rb 
-module Rack
-  class MyBuilder
 
-    def initialize(&amp;block)
-      @use = []
-      instance_eval(&amp;block) if block_given?
-    end
-
-    def use(middleware, *args, &amp;block)
-      @use &lt;&lt; proc { |app| middleware.new(app, *args, &amp;block) }
-    end
-
-    def run(app)
-      @run = app
-    end
-
-    def to_app
-      @use.reverse.inject(@run) { |app, middleware| middleware[app] }
-    end
-
-    def call(env)
-      to_app.call(env)
-    end
-
-  end
-end
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ cat decorator.rb 
-class Decorator
-
-  def initialize(app, *options, &amp;block)
-    @app = app
-    @options = (options[0] || {})
-  end
-
-  def call(env)
-    status, headers, body = @app.call(env)
-
-    new_body = ""
-    new_body &lt;&lt; (@options[:header] || "----Header----&lt;br/&gt;")
-    body.each {|str| new_body &lt;&lt; str}
-    new_body &lt;&lt; (@options[:footer] || "&lt;br/&gt;----Footer----")
-
-    [status, headers, [new_body]]
-  end
-end
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ cat app.rb 
-require 'rack'
-require 'thin'
-
-require 'mybuilder'
-require 'decorator'
-
-app = Rack::MyBuilder.new do
-  use Decorator, :header =&gt; "&lt;strong&gt;*********** header **********&lt;/strong&gt;&lt;br/&gt;"
-
-  cheer = ARGV.shift || "&lt;h1&gt;Hello world!&lt;/h1&gt;"
-  run lambda { |env| [200, { 'Content-Type' =&gt; 'text/html' }, [ "&lt;h1&gt;#{cheer}&lt;/h1&gt;" ]]}
-end
-
-Rack::Handler::Thin.run app, :Port =&gt; 3333, :Host =&gt; 'localhost'
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ cat Rakefile 
-desc "run app server"
-task :default =&gt; :server
-
-desc "run app server"
-task :server, :greet  do |t, args|
-  cheer = args[:greet] || 'bye, bye!'
-  sh "ruby -I. app.rb #{cheer}"
-end
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ rake -T
-rake default        # run app server
-rake server[greet]  # run app server
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-builder/own(master)]$ rake server[tachaaaAAAAAANNN]
-ruby -I. app.rb tachaaaAAAAAANNN
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on localhost:3333, CTRL+C to stop
-</PRE>
-
-<P>
-
-<img src="myrackbuilder.png" />
-
-<P>
-<BR><HR>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9973"
+  HREF="node392.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9967"
+  HREF="node388.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9963"
+  HREF="node390.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html9969"
+  HREF="node832.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html9971"
+  HREF="node835.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html9974"
+  HREF="node392.html">Middleware y la Clase</A>
+<B> Subir:</B> <A NAME="tex2html9968"
+  HREF="node388.html">Un Ejemplo Simple: Piedra,</A>
+<B> Anterior:</B> <A NAME="tex2html9964"
+  HREF="node390.html">Práctica: Añadir Template Haml</A>
+ &nbsp; <B>  <A NAME="tex2html9970"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9972"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

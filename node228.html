@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Búsqueda de Constantes</TITLE>
-<META NAME="description" CONTENT="La Búsqueda de Constantes">
+<TITLE>Los Métodos Singleton y la Singleton Class o Eigenclass</TITLE>
+<META NAME="description" CONTENT="Los Métodos Singleton y la Singleton Class o Eigenclass">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node229.html">
 <LINK REL="previous" HREF="node227.html">
-<LINK REL="up" HREF="node170.html">
+<LINK REL="up" HREF="node173.html">
 <LINK REL="next" HREF="node229.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6949"
+<A NAME="tex2html6985"
   HREF="node229.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6943"
-  HREF="node170.html">
+<A NAME="tex2html6979"
+  HREF="node173.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6937"
+<A NAME="tex2html6973"
   HREF="node227.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6945"
-  HREF="node823.html">
+<A NAME="tex2html6981"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6947"
-  HREF="node826.html">
+<A NAME="tex2html6983"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,121 +92,127 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6950"
-  HREF="node229.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html6944"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6938"
-  HREF="node227.html">Búsqueda de Métodos de</A>
- &nbsp; <B>  <A NAME="tex2html6946"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6948"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6986"
+  HREF="node229.html">La Búsqueda por Métodos</A>
+<B> Subir:</B> <A NAME="tex2html6980"
+  HREF="node173.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6974"
+  HREF="node227.html">Práctica: Matrices Dispersas</A>
+ &nbsp; <B>  <A NAME="tex2html6982"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6984"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION027150000000000000000"></A>
-<A NAME="section:busqueda_de_constantes"></A>
+<H1><A NAME="SECTION027120000000000000000"></A>
+<A NAME="section:singleton_y_eigenclass"></A>
 <BR>
-La Búsqueda de Constantes
+Los Métodos Singleton y la Singleton Class o Eigenclass
 </H1>
-Cuando se referencia una constante sin cualificar su espacio de nombres el intérprete 
-Ruby busca por la definición apropiada de la constante.
 
 <P>
-
-<OL>
-<LI>Intenta resolver la constante en el ámbito local en el que ocurre la referencia
-</LI>
-<LI>Si no, busca en el siguiente módulo o clase que anida en su ámbito
-la referencia a la constante
-</LI>
-<LI>Esto continúa hasta que no hay mas clases o módulos que encierren a la referencia
-</LI>
-<LI>Si no se encuentra la constante se pasa a buscar en la jerarquía de herencia
-</LI>
-<LI>Si no se encuentra se buscan en las constantes globales
-</LI>
-<LI>Si no se encuentra se llama al método <code>const_missing</code>
-</LI>
-</OL>
-
-<P>
-
-<OL>
-<LI>El método de clase <A NAME="tex2html443"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A><code>.nesting</code> retorna la lista de clases y módulos que serán buscados
-en el orden de búsqueda
-</LI>
-<LI>El método <code>ancestors</code> (definido en la clase <A NAME="tex2html444"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>) de una clase o módulo retorna la lista de clases y módulos
-que serán buscados después que la búsqueda por ámbito fracase
-</LI>
-</OL>
+Vimos en la sección <A HREF="node135.html#subsection:metodos_singleton">13.1.4</A>
+que es posible definir <SPAN  CLASS="textbf">métodos singleton, métodos
+que están definidos para un único objeto mas que para toda una clase 
+de objetos</SPAN>.
 
 <P>
 <PRE>
-module Kernel
-  # Constants defined in Kernel
-  A = B = C = D = E = F = "defined in kernel"
-end
-
-# Top-level or "global" constants defined in Object
-A = B = C = D = E = "defined at toplevel"
-
-class Super
-  # Constants defined in a superclass
-  A = B = C = D = "defined in superclass"
-end
-
-module Included
-  # Constants defined in an included module
-  A = B = C = "defined in included module"
-end
-
-module Enclosing
-  # Constants defined in an enclosing module
-  A = B = "defined in enclosing module"
-
-  class Local &lt; Super
-    include Included
-
-    # Locally defined constant
-    A = "defined locally"
-
-    # The list of modules searched, in the order searched
-    # [Enclosing::Local, Enclosing, Included, Super, Object, Kernel]
-    search = (Module.nesting + self.ancestors + Object.ancestors).uniq
-
-    puts A  # Prints "defined locally"
-    puts B  # Prints "defined in enclosing module"
-    puts C  # Prints "defined in included module"
-    puts D  # Prints "defined in superclass"
-    puts E  # Prints "defined at toplevel"
-    puts F  # Prints "defined in kernel"
-  end
+def Point.sum
+  # Method body goes here
 end
 </PRE>
+
+<P>
+<SPAN  CLASS="textbf">Los métodos de clase de una clase no son mas que métodos singleton de la
+instancia de la clase <TT>Class</TT> que representa a la clase</SPAN>:
 
 <P>
 
 <UL>
-<LI>Las constantes del nivel mas alto, definidas fuera de cualquier clase o módulo
-son definidas implícitamente en <A NAME="tex2html445"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>. Cuando una constante del 
-nivel mas alto es referenciada dentro de una clase, es resuelta durante el paso de
-búsqueda en la jerarquía de herencia
+<LI>Los métodos singleton de un objeto no estan definidos en la clase del objeto
 </LI>
-<LI>El módulo <code>Kernel</code> es un ancestor de <A NAME="tex2html446"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>:
+<LI>Dichos métodos son métodos de una clase anónima asociada con el objeto.
+Dicha clase se conoce como <A NAME="8856"></A><SPAN  CLASS="textbf">Eigenclass</SPAN>, <A NAME="8858"></A><SPAN  CLASS="textbf">Singleton Class</SPAN> o <A NAME="8860"></A><SPAN  CLASS="textbf">Metaclass</SPAN>
+</LI>
+<LI>Ruby define una sintáxis alternativa para abrir la <A NAME="8862"></A><SPAN  CLASS="textbf">singleton class</SPAN> o <A NAME="8864"></A><SPAN  CLASS="textbf">eigenclass</SPAN> de un objeto y añadirle
+métodos. Para abrir la singleton class o eigenclass del objeto <code>obj</code> usamos <code>class &lt;&lt; obj</code>. Por
+ejemplo:
 <PRE>
-[11] pry(main)&gt; Object.ancestors
-=&gt; [Object, PP::ObjectMixin, Kernel, BasicObject]
+class &lt;&lt; Point
+  def class_method1      # This is an instance method of the eigenclass.
+  end                    # It is also a class method of Point.
+
+  def class_method2
+  end
+end
 </PRE>
-Las constantes definidas en  <code>Kernel</code> pueden ser sobreescritas 
-por constantes al nivel mas alto, ya que estan se definen implícitamente en <A NAME="tex2html447"
+</LI>
+<LI>Si abrimos la singleton class o 
+eigenclass de un objeto clase dentro de la definición de la misma clase
+podemos usar <code>self</code> en vez del nombre de la clase:
+<PRE>
+class Point
+  # instance methods go here
+
+  class &lt;&lt; self
+    # class methods go here as instance methods of the eigenclass
+  end
+end
+</PRE>
+</LI>
+<LI>Obsérvese las diferencias entre estas 3 líneas:
+<PRE>
+class Point            # Create or open the class Point
+class Point3D &lt; Point  # Create a subclass of Point
+class &lt;&lt; Point         # Open the eigenclass of the object Point
+</PRE>
+
+<P>
+</LI>
+<LI>Una forma de obtener la singleton class o eigenclass es:
+<PRE>
+eigenclass = class &lt;&lt; o; self; end
+</PRE>
+</LI>
+<LI>Pero es mas fácil llamar al método <code>singleton_class</code> definido en la clase
+<A NAME="tex2html435"
   HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
+<PRE>
+[13] pry(main)&gt; w = String.singleton_class
+=&gt; #&lt;Class:String&gt;
+[14] pry(main)&gt; r = class &lt;&lt; String; self; end
+=&gt; #&lt;Class:String&gt;
+[15] pry(main)&gt; r == w
+=&gt; true
+</PRE>
+</LI>
+<LI>El método <code>singleton_methods</code> definido en la clase <A NAME="tex2html436"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A> 
+devuelve un <A NAME="tex2html437"
+  HREF="http://ruby-doc.org/core-2.0.0/Array.html"><TT>Array</TT></A>
+con la lista de métodos singleton del objeto:
+<PRE>
+[1] pry(main)&gt; z = [1,2,3]
+=&gt; [1, 2, 3]
+[2] pry(main)&gt; z.singleton_class
+=&gt; #&lt;Class:#&lt;Array:0x007ff93a647a90&gt;&gt;
+[3] pry(main)&gt; z.singleton_methods
+=&gt; []
+[4] pry(main)&gt; def z.tutu
+[4] pry(main)*   puts "one two three"
+[4] pry(main)* end  
+=&gt; nil
+[5] pry(main)&gt; z.singleton_methods
+=&gt; [:tutu]
+[6] pry(main)&gt; z.tutu
+one two three
+=&gt; nil
+</PRE>
+
+<P>
 </LI>
 </UL>
 
@@ -214,20 +220,20 @@ por constantes al nivel mas alto, ya que estan se definen implícitamente en <A 
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6949"
+<A NAME="tex2html6985"
   HREF="node229.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6943"
-  HREF="node170.html">
+<A NAME="tex2html6979"
+  HREF="node173.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6937"
+<A NAME="tex2html6973"
   HREF="node227.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6945"
-  HREF="node823.html">
+<A NAME="tex2html6981"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6947"
-  HREF="node826.html">
+<A NAME="tex2html6983"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -278,20 +284,20 @@ por constantes al nivel mas alto, ya que estan se definen implícitamente en <A 
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6950"
-  HREF="node229.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html6944"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6938"
-  HREF="node227.html">Búsqueda de Métodos de</A>
- &nbsp; <B>  <A NAME="tex2html6946"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6948"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6986"
+  HREF="node229.html">La Búsqueda por Métodos</A>
+<B> Subir:</B> <A NAME="tex2html6980"
+  HREF="node173.html">Clases y Módulos</A>
+<B> Anterior:</B> <A NAME="tex2html6974"
+  HREF="node227.html">Práctica: Matrices Dispersas</A>
+ &nbsp; <B>  <A NAME="tex2html6982"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6984"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

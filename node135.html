@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Borrando (Undefining) Métodos</TITLE>
-<META NAME="description" CONTENT="Borrando (Undefining) Métodos">
+<TITLE>Definiendo Métodos Singleton</TITLE>
+<META NAME="description" CONTENT="Definiendo Métodos Singleton">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node136.html">
 <LINK REL="previous" HREF="node134.html">
-<LINK REL="up" HREF="node130.html">
+<LINK REL="up" HREF="node131.html">
 <LINK REL="next" HREF="node136.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5393"
+<A NAME="tex2html5427"
   HREF="node136.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5387"
-  HREF="node130.html">
+<A NAME="tex2html5421"
+  HREF="node131.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5383"
+<A NAME="tex2html5415"
   HREF="node134.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5389"
-  HREF="node823.html">
+<A NAME="tex2html5423"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5391"
-  HREF="node826.html">
+<A NAME="tex2html5425"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,65 +92,75 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5394"
-  HREF="node136.html">Nombres de Métodos</A>
-<B> Subir:</B> <A NAME="tex2html5388"
-  HREF="node130.html">Definiendo Métodos Simples</A>
-<B> Anterior:</B> <A NAME="tex2html5384"
-  HREF="node134.html">Definiendo Métodos Singleton</A>
- &nbsp; <B>  <A NAME="tex2html5390"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5392"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html5428"
+  HREF="node136.html">Borrando (Undefining) Métodos</A>
+<B> Subir:</B> <A NAME="tex2html5422"
+  HREF="node131.html">Definiendo Métodos Simples</A>
+<B> Anterior:</B> <A NAME="tex2html5416"
+  HREF="node134.html">Invocando un Método en</A>
+ &nbsp; <B>  <A NAME="tex2html5424"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5426"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION02615000000000000000"></A>
-<A NAME="subsection:borrandometodos"></A>
+<H2><A NAME="SECTION02614000000000000000"></A>
+<A NAME="subsection:metodos_singleton"></A>
 <BR>
-Borrando (Undefining) Métodos
+Definiendo Métodos Singleton
 </H2>
-Methods are defined with the def statement and may be undefined with the undef statement:
+
+<P>
+Si <code>def</code> va seguido de una expresión que determina un objeto, seguida de <code>.nombre_de_metodo</code>
+el método definido es sólo para el objeto específicado.
 
 <P>
 <PRE>
-def sum(x,y); x+y; end      # Define a method
-puts sum(1,2)               # Use it
-undef sum                   # And undefine it
+o = "message"    # A string is an object
+def o.printme    # Define a singleton method for this object
+  puts self
+end
+o.printme        # Invoke the singleton
 </PRE>
+A un método de este tipo se le denomina <A NAME="6190"></A><SPAN  CLASS="textit">método singleton</SPAN>.
 
 <P>
-In this code, the <code>def</code> statement defines a global method, and <code>undef</code> undefines it. <code>undef</code> also works within classes to undefine the instance methods of the class. Interestingly, <code>undef</code> can be used to undefine inherited methods, without affecting the definition of the method in the class from which it is inherited. Suppose class <code>A</code> defines a method <code>m</code>, and class <code>B</code> is a subclass of <code>A</code> and therefore inherits <code>m</code>.  If you don't want to allow instances of class <code>B</code> to be able to invoke <code>m</code>, you can use <code>undef</code> <code>m</code> within the body of the subclass.
+Los métodos de clase como <code>Socket.tcp</code> y <code>File.delete</code> son, de hecho, 
+métodos singleton.
 
 <P>
-<code>undef</code> is not a commonly used statement. In practice, it is much more common to redefine a method with a new <code>def</code> statement than it is to undefine or delete the method.
+Ruby implementations typically treat <A NAME="tex2html234"
+  HREF="http://ruby-doc.org/core-2.0.0/Fixnum.html"><TT>Fixnum</TT></A> and <A NAME="tex2html235"
+  HREF="http://ruby-doc.org/core-2.0.0/Symbol.html"><TT>Symbol</TT></A> values as <A NAME="6198"></A><SPAN  CLASS="textit">immediate values</SPAN> 
+rather than as true object references. 
 
 <P>
-Note that the <code>undef</code> statement must be followed by a single identifier that specifies the method name. It cannot be used to undefine a singleton method in the way that <code>def</code> can be used to define such a method.
+Debido a ello
+los objetos <code>Fixnum</code> y <code>Symbol</code> no pueden tener métodos singleton.
 
 <P>
-Within a class or module, you can also use <code>undef_method</code> (a private method of <A NAME="tex2html234"
-  HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>) to undefine methods. Pass a symbol representing the name of the method to be undefined.
+For consistency, singletons are also prohibited on other Numeric objects.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html5393"
+<A NAME="tex2html5427"
   HREF="node136.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5387"
-  HREF="node130.html">
+<A NAME="tex2html5421"
+  HREF="node131.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5383"
+<A NAME="tex2html5415"
   HREF="node134.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5389"
-  HREF="node823.html">
+<A NAME="tex2html5423"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5391"
-  HREF="node826.html">
+<A NAME="tex2html5425"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -200,20 +211,20 @@ Within a class or module, you can also use <code>undef_method</code> (a private 
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5394"
-  HREF="node136.html">Nombres de Métodos</A>
-<B> Subir:</B> <A NAME="tex2html5388"
-  HREF="node130.html">Definiendo Métodos Simples</A>
-<B> Anterior:</B> <A NAME="tex2html5384"
-  HREF="node134.html">Definiendo Métodos Singleton</A>
- &nbsp; <B>  <A NAME="tex2html5390"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5392"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html5428"
+  HREF="node136.html">Borrando (Undefining) Métodos</A>
+<B> Subir:</B> <A NAME="tex2html5422"
+  HREF="node131.html">Definiendo Métodos Simples</A>
+<B> Anterior:</B> <A NAME="tex2html5416"
+  HREF="node134.html">Invocando un Método en</A>
+ &nbsp; <B>  <A NAME="tex2html5424"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5426"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

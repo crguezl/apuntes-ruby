@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Variables de Clase. Atributos de la Clase</TITLE>
-<META NAME="description" CONTENT="Variables de Clase. Atributos de la Clase">
+<TITLE>Creando Clases con Struct</TITLE>
+<META NAME="description" CONTENT="Creando Clases con Struct">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node190.html">
 <LINK REL="previous" HREF="node188.html">
-<LINK REL="up" HREF="node171.html">
+<LINK REL="up" HREF="node174.html">
 <LINK REL="next" HREF="node190.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6357"
+<A NAME="tex2html6391"
   HREF="node190.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6351"
-  HREF="node171.html">
+<A NAME="tex2html6385"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6345"
+<A NAME="tex2html6379"
   HREF="node188.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6353"
-  HREF="node823.html">
+<A NAME="tex2html6387"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6355"
-  HREF="node826.html">
+<A NAME="tex2html6389"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,85 +92,164 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6358"
-  HREF="node190.html">Variables de Instancia de</A>
-<B> Subir:</B> <A NAME="tex2html6352"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6346"
-  HREF="node188.html">Constantes</A>
- &nbsp; <B>  <A NAME="tex2html6354"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6356"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6392"
+  HREF="node190.html">Un Método de Clase</A>
+<B> Subir:</B> <A NAME="tex2html6386"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6380"
+  HREF="node188.html">Un Punto Mutable</A>
+ &nbsp; <B>  <A NAME="tex2html6388"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6390"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION027118000000000000000"></A>
-<A NAME="subsection:variablesdeclase"></A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html6393"
+  HREF="node189.html#SECTION027115010000000000000">Extendiendo clases creadas con Struct</A>
+<LI><A NAME="tex2html6394"
+  HREF="node189.html#SECTION027115020000000000000">haciendo Inmutable una clase creada con Struct</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION027115000000000000000"></A>
+<A NAME="subsection:clasesmutables"></A>
 <BR>
-Variables de Clase. Atributos de la Clase
+Creando Clases con <TT>Struct</TT>
 </H2>
-
-<OL>
-<LI>Class variables are visible to, and shared by, the class methods
-and the instance methods of a class, and also by the class definition
-itself. 
-</LI>
-<LI>Like instance variables, class variables are encapsulated;
-they can be used by the implementation of a class, but they are not
-visible to the users of a class. 
-</LI>
-<LI>Class variables have names that
-begin with <code>@@</code>.
-</LI>
-</OL>
 
 <P>
 <PRE>
-class Point
-  # Initialize our class variables in the class definition itself
-  @@n = 0              # How many points have been created
-  @@totalX = 0         # The sum of all X coordinates
-  @@totalY = 0         # The sum of all Y coordinates
+$ cat -n struct_point.rb 
+     1  Point = Struct.new(:x, :y)   # Creates new class, assigns to Point
+     2  
+     3  p = Point.new(1,2)   # =&gt; #&lt;struct Point x=1, y=2&gt;
+     4  p p.x                  # =&gt; 1·
+     5  p p.y                  # =&gt; 2
+     6  p.x = 3                # =&gt; 3
+     7  p p.x                  # =&gt; 3
+     8  #---------------------------
+     9  p[:x] = 7         
+    10  p p[:x]              # =&gt; 7: same as p.x
+    11  p p[1]               # =&gt; 2: same as p.y
+    12  p.each {|c| print c}  # prints "72"
+    13  puts
+    14  p.each_pair {|n,c| print n,c; puts } 
+    15  puts
+    16  #---------------------------
+    17  p = Point.new(4,2)
+    18  q = Point.new(4,2)
+    19  p q == p        # =&gt; true
+    20  h = {q =&gt; 1}  # Create a hash using q as a key
+    21  p h[p]          # =&gt; 1: extract value using p as key
+    22  p q.to_s        # =&gt; "#&lt;struct Point x=4, y=2&gt;"
+    23  
+    24  require 'extending_struct_point'
+    25  
+    26  puts "sorting!"
+    27  puts [p, q].sort
+</PRE>
 
-  def initialize(x,y)  # Initialize method
-    @x,@y = x, y       # Sets initial values for instance variables
+<P>
 
-    # Use the class variables in this instance method to collect data
-    @@n += 1           # Keep track of how many Points have been created
-    @@totalX += x      # Add these coordinates to the totals
-    @@totalY += y
-  end
+<H4><A NAME="SECTION027115010000000000000">
+Extendiendo clases creadas con Struct</A>
+</H4>
+  
 
-  # A class method to report the data we collected
-  def self.report
-    # Here we use the class variables in a class method
-    puts "Number of points created: #@@n"
-    puts "Average X coordinate: #{@@totalX.to_f/@@n}"
-    puts "Average Y coordinate: #{@@totalY.to_f/@@n}"
-  end
-end
+Por supuesto podemos abrir la clase creada con <A NAME="tex2html397"
+  HREF="http://ruby-doc.org/core-2.0.0/Struct.html"><TT>Struct</TT></A> y extenderla:
+<PRE>
+$ cat -n extending_struct_point.rb 
+     1  class Point                  # Open Point class for new methods
+     2    def add!(other)            # Define an add! method
+     3      self.x += other.x
+     4      self.y += other.y
+     5      self
+     6    end
+     7  
+     8    include Comparable         # Include a module for the class
+     9    def &lt;=&gt;(other)             # Define the &lt;=&gt; operator
+    10      return nil unless other.instance_of? Point
+    11      self.x**2 + self.y**2 &lt;=&gt; other.x**2 + other.y**2
+    12    end
+    13  end
+</PRE>
+
+<P>
+<PRE>
+$ ruby -I. struct_point.rb 
+1
+2
+3
+7
+2
+72
+x7
+y2
+
+false
+nil
+"#&lt;struct Point x=4, y=2&gt;"
+sorting!
+#&lt;struct Point x=4, y=2&gt;
+#&lt;struct Point x=7, y=2&gt;
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION027115020000000000000">
+haciendo Inmutable una clase creada con Struct</A>
+</H4>
+  
+
+<P>
+Las clases creadas por <A NAME="tex2html398"
+  HREF="http://ruby-doc.org/core-2.0.0/Struct.html"><TT>Struct</TT></A> son mutables. Si la queremos hacer inmutable
+usamos <code>undef</code>:
+<PRE>
+$ cat -n making_struct_inmutable.rb 
+     1  Point = Struct.new(:x, :y)  # Define mutable class
+     2  class Point                 # Open the class
+     3    undef x=,y=,[]=           # Undefine mutator methods
+     4  end
+     5  
+     6  z = Point.new(2,3)
+     7  
+     8  z.x = 4
+</PRE>
+
+<P>
+<PRE>
+[~/point]$ ruby making_struct_inmutable.rb 
+making_struct_inmutable.rb:8:in `&lt;main&gt;': 
+  undefined method `x=' for #&lt;struct Point x=2, y=3&gt; (NoMethodError)
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6357"
+<A NAME="tex2html6391"
   HREF="node190.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6351"
-  HREF="node171.html">
+<A NAME="tex2html6385"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6345"
+<A NAME="tex2html6379"
   HREF="node188.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6353"
-  HREF="node823.html">
+<A NAME="tex2html6387"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6355"
-  HREF="node826.html">
+<A NAME="tex2html6389"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -221,20 +300,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6358"
-  HREF="node190.html">Variables de Instancia de</A>
-<B> Subir:</B> <A NAME="tex2html6352"
-  HREF="node171.html">Definición de una Clase</A>
-<B> Anterior:</B> <A NAME="tex2html6346"
-  HREF="node188.html">Constantes</A>
- &nbsp; <B>  <A NAME="tex2html6354"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6356"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6392"
+  HREF="node190.html">Un Método de Clase</A>
+<B> Subir:</B> <A NAME="tex2html6386"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6380"
+  HREF="node188.html">Un Punto Mutable</A>
+ &nbsp; <B>  <A NAME="tex2html6388"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6390"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

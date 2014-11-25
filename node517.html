@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Estadísticas de Visitas al Acortador de URLs</TITLE>
-<META NAME="description" CONTENT="Práctica: Estadísticas de Visitas al Acortador de URLs">
+<TITLE>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</TITLE>
+<META NAME="description" CONTENT="Configurando la Base de Datos en Heroku con DataMapper. Despliegue">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node518.html">
 <LINK REL="previous" HREF="node516.html">
-<LINK REL="up" HREF="node507.html">
+<LINK REL="up" HREF="node511.html">
 <LINK REL="next" HREF="node518.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12100"
+<A NAME="tex2html12142"
   HREF="node518.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12094"
-  HREF="node507.html">
+<A NAME="tex2html12136"
+  HREF="node511.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12090"
+<A NAME="tex2html12130"
   HREF="node516.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12096"
-  HREF="node823.html">
+<A NAME="tex2html12138"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12098"
-  HREF="node826.html">
+<A NAME="tex2html12140"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,262 +92,214 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12101"
-  HREF="node518.html">Sequel y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12095"
-  HREF="node507.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12091"
-  HREF="node516.html">Práctica: Acortador de URLs</A>
- &nbsp; <B>  <A NAME="tex2html12097"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12099"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12143"
+  HREF="node518.html">Asociaciones Simples</A>
+<B> Subir:</B> <A NAME="tex2html12137"
+  HREF="node511.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12131"
+  HREF="node516.html">Ejemplo de uso de</A>
+ &nbsp; <B>  <A NAME="tex2html12139"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12141"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0316100000000000000000"></A>
-   <A NAME="22476"></A>
-  
-<A NAME="practica:estadisticaasvisitas"></A>
+<H1><A NAME="SECTION031660000000000000000"></A>
+<A NAME="section:herokupostgres"></A>
 <BR>
-Práctica: Estadísticas de Visitas al Acortador de URLs
+Configurando la Base de Datos en Heroku con DataMapper. Despliegue
 </H1>
 
 <P>
-En esta práctica extendemos la anterior 
-<A HREF="node516.html#practica:acortadordeurls">45.9</A>
-con información estadística acerca
-de las visitas. Se pide que se presenten gráficos
-estadísticos (barras, etc.)
-del número de visitas por día, por país, etc.
+<A NAME="tex2html1273"
+  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A> utiliza la base de datos PostgreSQL y una URL en una variable 
+de entorno <code>ENV['DATABASE_URL']</code>.
 
 <P>
-La información de las visitas
-se guardará en una tabla <code>Visit</code>.
-
-<P>
-Cada objeto <code>Visit</code> representará una visita
-a la URL corta y contendrá información acerca de la visita: 
-
-<UL>
-<LI>la fecha de la visita y
-</LI>
-<LI>la procedencia de la misma.
-</LI>
-</UL>
-
-<P>
-
-<H4><A NAME="SECTION0316100010000000000000">
-La Tabla Principal</A>
-</H4>
-  
-
-Un objeto de la tabla principal tiene asociados varios objetos <code>Visit</code>.
 <PRE>
-class ShortenedUrl
-  include DataMapper::Resource
+configure :development, :test do
+  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
+end
 
-  property :id, Serial
-  property :short, Text
-  property :url, Text
+configure :production do
+  DataMapper.setup(:default, ENV['DATABASE_URL'])
+end
+</PRE>
 
-  has n, :visits
+<P>
+Estas líneas especifican que se usa SQLite en desarrollo y testing y
+PostgreSQL en producción.
+Obsérvese que el <code>Gemfile</code> debe estar coherente:
+<PRE>
+[~/sinatra/sinatra-datamapper-jump-start(master)]$ cat Gemfile
+source 'https://rubygems.org'
+gem "sinatra"
+gem "slim"
+gem "sass"
+gem "dm-core"
+gem "dm-migrations"
+gem "thin"
+gem "pg", :group =&gt; :production
+gem "dm-postgres-adapter", :group =&gt; :production
+gem "dm-sqlite-adapter", :group =&gt; [:development, :test]
+</PRE>
+o mejor:
+<PRE>
+group :production do
+    gem "pg"
+    gem "dm-postgres-adapter"
+end
+
+group :development, :test do
+  gem "dm-sqlite-adapter"
 end
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION0316100020000000000000">
-Obteniendo el País para una IP dada</A>
+<H4><A NAME="SECTION031660010000000000000">
+Bundle: installing groups. General considerations</A>
 </H4>
   
 
-Queremos encontrar el país desde el que viene cada vistante.
-Cada vez que se crea un objeto <code>Visit</code> y que se le asocia con el 
-objeto de la tabla principal intentaremos obtener la dirección IP
-y a partir de ella la información sobre el país.
+<P>
+By  default, bundle install will install all gems in all groups in your
+Gemfile, except those declared for a different 
+<code>platform</code><A NAME="tex2html1274"
+  HREF="footnode.html#foot22488"><SUP><SPAN CLASS="arabic">45</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
 
 <P>
-Veamos una sesión con Pry para obtener el país asociado con una IP:
+However, you can explicitly tell bundler  to  skip  installing  certain
+groups  with  the <code>--without option</code>. 
+This option takes a space-separated list of groups.
+
+<P>
+While the <code>--without</code> option will skip installing the gems in the  specified  groups, 
+<FONT COLOR="#0000ff"> it will still download those gems and use them to resolve the dependencies of every gem in your Gemfile</FONT>.
+
+<P>
+This is so that installing a different set of groups on another machine (such  as  a  production  server) will not change the gems and versions that you have already developed and tested against.
+
+<P>
+Bundler guarantees that the third-party code you are running in development and testing is also the third-party code you are running in production. You can choose to exclude some of that  code  in different  environments,  but  you  will never be caught flat-footed by 
+different versions of third-party code being used in different environments.
+
+<P>
+For a simple illustration, consider the following <code>Gemfile</code>:
+
+<P>
 <PRE>
-[1] pry(main)&gt; require 'restclient'
+           source "https://rubygems.org"
+
+           gem "sinatra"
+
+           group :production do
+             gem "rack-perftools-profiler"
+           end
+</PRE>
+
+<P>
+In  this  case,  <code>sinatra</code>  
+depends on any version of <code>Rack (&gt;= 1.0)</code>,
+ while <code>rack-perftools-profiler</code> depends on <code>1.x (~&gt; 1.0)</code>.
+
+<P>
+When you run <code>bundle install --without  production</code>  
+in  <code>development</code>,  we
+look  at the dependencies of 
+<code>rack-perftools-profiler</code> as well. 
+
+<P>
+That way,
+you do not spend all your time developing against <code>Rack 2.0</code>,  
+using  new
+APIs  unavailable  in <code>Rack 1.x</code>, 
+only to have bundler switch to <code>Rack 1.2</code>
+when the <code>production</code> group is used.
+
+<P>
+This should not cause any problems  in  practice,  because  bundle  
+does  not
+attempt  to  install the gems in the excluded groups, and only 
+evaluates them
+as part of the dependency resolution process.
+
+<P>
+This also means that 
+
+<FONT COLOR="#0000ff"> you cannot include different versions of the  same
+gem  in  different  groups</FONT>,  
+because doing so would result in different
+sets of dependencies used in development and production. 
+
+<P>
+Because of the
+vagaries  of  the  dependency  resolution process, this usually affects
+more than just the gems you list in your <code>Gemfile</code>, 
+and can  (surprisingly) radically change the gems you are using.
+
+<P>
+
+<H4><A NAME="SECTION031660020000000000000">
+Recordando los pasos para el despliegue en Heroku</A>
+</H4>
+  
+
+<PRE>
+heroku create ...
+</PRE>
+
+<P>
+<PRE>
+git push heroku master
+</PRE>
+
+<P>
+<PRE>
+heroku open
+</PRE>
+
+<P>
+<PRE>
+heroku logs --source app
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031660030000000000000">
+Creando/Modificando la base de datos en Heroku con heroku run console</A>
+</H4>
+  
+
+<P>
+Ahora ejecutamos la consola de heroku:
+
+<P>
+<PRE>
+heroku run console
+</PRE>
+lo que nos abre una sesión <code>irb</code>.
+
+<P>
+Ahora creamos la base de datos en <A NAME="tex2html1275"
+  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>:
+<PRE>
+[~/sinatra/sinatra-datamapper-jump-start(master)]$ heroku run console
+Running `console` attached to terminal... up, run.8011
+irb(main):001:0&gt; require './main'
 =&gt; true
-[2] pry(main)&gt; require 'xmlsimple'
-=&gt; true
+irb(main):002:0&gt; DataMapper.auto_migrate!
+=&gt; #&lt;DataMapper::DescendantSet:0x007fb89c878230 @descendants=#&lt;DataMapper::SubjectSet:0x007fb89c8781b8 @entries=#&lt;DataMapper::OrderedSet:0x007fb89c878190 @cache=#&lt;DataMapper::SubjectSet::NameCache:0x007fb89c878168 @cache={"Song"=&gt;0}&gt;, @entries=[Song]&gt;&gt;&gt;
+irb(main):003:0&gt;
 </PRE>
-
-<P>
-<PRE>
-[3] pry(main)&gt; xml = RestClient.get "http://api.hostip.info/get_xml.php?ip=193.145.124.21";
-[4] pry(main)&gt; puts xml
-&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
-&lt;HostipLookupResultSet version="1.0.1" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.hostip.info/api/hostip-1.0.1.xsd"&gt;
- &lt;gml:description&gt;This is the Hostip Lookup Service&lt;/gml:description&gt;
- &lt;gml:name&gt;hostip&lt;/gml:name&gt;
- &lt;gml:boundedBy&gt;
-  &lt;gml:Null&gt;inapplicable&lt;/gml:Null&gt;
- &lt;/gml:boundedBy&gt;
- &lt;gml:featureMember&gt;
-  &lt;Hostip&gt;
-   &lt;ip&gt;193.145.124.21&lt;/ip&gt;
-   &lt;gml:name&gt;(Unknown city)&lt;/gml:name&gt;
-   &lt;countryName&gt;SPAIN&lt;/countryName&gt;
-   &lt;countryAbbrev&gt;ES&lt;/countryAbbrev&gt;
-   &lt;!-- Co-ordinates are unavailable --&gt;
-  &lt;/Hostip&gt;
- &lt;/gml:featureMember&gt;
-&lt;/HostipLookupResultSet&gt;
-=&gt; nil
-[5] pry(main)&gt; xml.class
-=&gt; String
-</PRE>
-
-<P>
-<PRE>
-[10] pry(main)&gt; cc = XmlSimple.xml_in(xml.to_s)
-=&gt; {"version"=&gt;"1.0.1",
- "xmlns:gml"=&gt;"http://www.opengis.net/gml",
- "xmlns:xsi"=&gt;"http://www.w3.org/2001/XMLSchema-instance",
- "xsi:noNamespaceSchemaLocation"=&gt;
-  "http://www.hostip.info/api/hostip-1.0.1.xsd",
- "description"=&gt;["This is the Hostip Lookup Service"],
- "name"=&gt;["hostip"],
- "boundedBy"=&gt;[{"Null"=&gt;["inapplicable"]}],
- "featureMember"=&gt;
-  [{"Hostip"=&gt;
-     [{"ip"=&gt;["193.145.124.21"],
-       "name"=&gt;["(Unknown city)"],
-       "countryName"=&gt;["SPAIN"],
-       "countryAbbrev"=&gt;["ES"]}]}]}
-[11] pry(main)&gt; cc["featureMember"][0]['Hostip'][0]['countryAbbrev']
-=&gt; ["ES"]
-</PRE>
-
-<P>
-To implement this, we use the <code>after</code> callback mechanism 
-in the <code>Visit</code> object, where we call a method <code>after</code> 
-the object is created.
-<PRE>
-   after :create, :set_country
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION0316100030000000000000">
-La Tabla Visit</A>
-</H4>
-  
-
-<P>
-Para lograr que cada vez que se crea un objeto <code>Visit</code> se guarde el país
-en la tabla <code>Visit</code> la clase será algo parecido a esto:
-
-<P>
-<PRE>
-class Visit
-  include DataMapper::Resource
-
-  property  :id,          Serial
-  property  :created_at,  DateTime
-  property  :ip,          IPAddress
-  property  :country,     String
-  belongs_to  :link
-
-  after :create, :set_country
-
-  def set_country
-    xml = RestClient.get "http://api.hostip.info/get_xml.php?ip=#{ip}"··
-    self.country = XmlSimple.xml_in(xml.to_s, ...
-    self.save
-  end
-  ...
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION0316100040000000000000">
-Averiguar la IP</A>
-</H4>
-  
-
-<P>
-Este método ilustra múltiples formas de obtener la IP
-de la visita:
-
-<P>
-<PRE>
-def get_remote_ip(env)
-  puts "request.url = #{request.url}"
-  puts "request.ip = #{request.ip}"
-  if addr = env['HTTP_X_FORWARDED_FOR']
-    puts "env['HTTP_X_FORWARDED_FOR'] = #{addr}"
-    addr.split(',').first.strip
-  else
-    puts "env['REMOTE_ADDR'] = #{env['REMOTE_ADDR']}"
-    env['REMOTE_ADDR']
-  end
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION0316100050000000000000">
-Gráficos con chartkick</A>
-</H4>
-  
-
-<P>
-Este ejemplo 
-<A NAME="tex2html1279"
-  HREF="https://github.com/crguezl/sinatra-chartkick-example">crguezl/sinatra-chartkick-example</A>:
-<PRE>
-~/sinatra/sinatra-chartkik(master)]$ git remote -v
-origin  git@github.com:crguezl/sinatra-chartkick-example.git (fetch)
-origin  git@github.com:crguezl/sinatra-chartkick-example.git (push)
-[~/sinatra/sinatra-chartkik(master)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/sinatra-chartkik
-</PRE>
-muestra como usar 
-<A NAME="tex2html1280"
-  HREF="https://github.com/ankane/chartkick">chartkick</A>
-para generar gráficos:
-<PRE>
-[~/sinatra/sinatra-chartkik(master)]$ cat sinchart2.rb 
-require 'sinatra'
-require 'sinatra/reloader' if development?
-require 'chartkick'
-
-template :layout do
-  &lt;&lt;LAYOUT
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;script src="http://www.google.com/jsapi"&gt;&lt;/script&gt;
-    &lt;script src="chartkick.js"&gt;&lt;/script&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;%= yield %&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-LAYOUT
-end
-
-template :index do
-  &lt;&lt;INDEX
-    &lt;%= pie_chart({"Football" =&gt; 10, "Basketball" =&gt; 5}) %&gt;
-INDEX
-end
-
-get '/' do
-  erb :index
-end
-</PRE>
-
-<P>
-
-<img src="chartkick.png">
+Véase también 
+la práctica TicTacToe
+<A HREF="node453.html#practica:ticatactoe">32.28</A>
+y
+el capítulo <I>Despliegue en Heroku</I> 
+<A HREF="node531.html#chapter:despliegueenheroku">51</A>.
 
 <P>
 <BR><HR>
@@ -356,35 +309,31 @@ end
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html12102"
-  HREF="node517.html#SECTION0316100010000000000000">La Tabla Principal</A>
-<LI><A NAME="tex2html12103"
-  HREF="node517.html#SECTION0316100020000000000000">Obteniendo el País para una IP dada</A>
-<LI><A NAME="tex2html12104"
-  HREF="node517.html#SECTION0316100030000000000000">La Tabla Visit</A>
-<LI><A NAME="tex2html12105"
-  HREF="node517.html#SECTION0316100040000000000000">Averiguar la IP</A>
-<LI><A NAME="tex2html12106"
-  HREF="node517.html#SECTION0316100050000000000000">Gráficos con chartkick</A>
+<LI><A NAME="tex2html12144"
+  HREF="node517.html#SECTION031660010000000000000">Bundle: installing groups. General considerations</A>
+<LI><A NAME="tex2html12145"
+  HREF="node517.html#SECTION031660020000000000000">Recordando los pasos para el despliegue en Heroku</A>
+<LI><A NAME="tex2html12146"
+  HREF="node517.html#SECTION031660030000000000000">Creando/Modificando la base de datos en Heroku con heroku run console</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12100"
+<A NAME="tex2html12142"
   HREF="node518.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12094"
-  HREF="node507.html">
+<A NAME="tex2html12136"
+  HREF="node511.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12090"
+<A NAME="tex2html12130"
   HREF="node516.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12096"
-  HREF="node823.html">
+<A NAME="tex2html12138"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12098"
-  HREF="node826.html">
+<A NAME="tex2html12140"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -435,20 +384,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12101"
-  HREF="node518.html">Sequel y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12095"
-  HREF="node507.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12091"
-  HREF="node516.html">Práctica: Acortador de URLs</A>
- &nbsp; <B>  <A NAME="tex2html12097"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12099"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12143"
+  HREF="node518.html">Asociaciones Simples</A>
+<B> Subir:</B> <A NAME="tex2html12137"
+  HREF="node511.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12131"
+  HREF="node516.html">Ejemplo de uso de</A>
+ &nbsp; <B>  <A NAME="tex2html12139"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12141"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

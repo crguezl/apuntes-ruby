@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Visibilidad de los métodos: Público, Privado, Protegido</TITLE>
-<META NAME="description" CONTENT="Visibilidad de los métodos: Público, Privado, Protegido">
+<TITLE>Variables de Clase. Atributos de la Clase</TITLE>
+<META NAME="description" CONTENT="Variables de Clase. Atributos de la Clase">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node195.html">
-<LINK REL="previous" HREF="node171.html">
-<LINK REL="up" HREF="node170.html">
+<LINK REL="next" HREF="node193.html">
+<LINK REL="previous" HREF="node191.html">
+<LINK REL="up" HREF="node174.html">
 <LINK REL="next" HREF="node193.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html6397"
+<A NAME="tex2html6435"
   HREF="node193.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6391"
-  HREF="node170.html">
+<A NAME="tex2html6429"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6385"
+<A NAME="tex2html6423"
   HREF="node191.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6393"
-  HREF="node823.html">
+<A NAME="tex2html6431"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6395"
-  HREF="node826.html">
+<A NAME="tex2html6433"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,287 +92,85 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6398"
-  HREF="node193.html">Ejemplo de Visibilidad de</A>
-<B> Subir:</B> <A NAME="tex2html6392"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6386"
-  HREF="node191.html">Práctica: La Clase Punto</A>
- &nbsp; <B>  <A NAME="tex2html6394"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6396"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html6436"
+  HREF="node193.html">Variables de Instancia de</A>
+<B> Subir:</B> <A NAME="tex2html6430"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6424"
+  HREF="node191.html">Constantes</A>
+ &nbsp; <B>  <A NAME="tex2html6432"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6434"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION02720000000000000000"></A>
-<A NAME="section:visibilidaddelosmetodos"></A>
+<H2><A NAME="SECTION027118000000000000000"></A>
+<A NAME="subsection:variablesdeclase"></A>
 <BR>
-Visibilidad de los métodos: Público, Privado, Protegido
-</H1>
-
-<P>
-
-<UL>
-<LI><A NAME="8583"></A><SPAN  CLASS="textbf">Encapsulation</SPAN> means that the internal representation of an object is generally hidden from view outside of the object's definition. Typically, only the object's own methods can directly inspect or manipulate its fields. Smalltalk and Ruby only allow access via object methods,
-</LI>
-<LI><A NAME="8585"></A><SPAN  CLASS="textbf">The Uniform Access Principle</SPAN> was put forth by <A NAME="tex2html398"
-  HREF="http://en.wikipedia.org/wiki/Bertrand_Meyer">Bertrand Meyer</A>. It states 
-<I>All services offered by a module should be available through a uniform notation, which does not betray whether they are implemented through storage or through computation</I>.
-
-<P>
-This principle applies generally to the syntax of object-oriented programming languages. 
-In simpler form, it states that there should be no difference between working with an attribute, precomputed property, or method/query:
+Variables de Clase. Atributos de la Clase
+</H2>
 
 <OL>
-<LI><PRE>
-[~/srcDaveThomasProgrammingRuby]$ cat virtual_attributes.rb 
-class BookInStock
-  attr_reader :isbn 
-  attr_accessor :price
-  def initialize(isbn, price)
-    @isbn = isbn
-    @price = Float(price) 
-  end
-  def price_in_cents 
-   Integer(price*100 + 0.5)
-  end
-  # ... 
-end
-book = BookInStock.new("isbn1", 33.80)
-puts "Price = #{book.price}"
-puts "Price in cents = #{book.price_in_cents}"
-</PRE>
-Here we’ve used attribute methods to create a virtual instance
-variable. To the outside world, <code>price_in_cents</code> seems to be an
-attribute like any other. Internally, though, it has no corresponding instance variable.
+<LI>Class variables are visible to, and shared by, the class methods
+and the instance methods of a class, and also by the class definition
+itself. 
 </LI>
-<LI><PRE>
-[~/srcDaveThomasProgrammingRuby]$ ruby  virtual_attributes.rb 
-Price = 33.8
-Price in cents = 3380
-</PRE>
+<LI>Like instance variables, class variables are encapsulated;
+they can be used by the implementation of a class, but they are not
+visible to the users of a class. 
+</LI>
+<LI>Class variables have names that
+begin with <code>@@</code>.
 </LI>
 </OL>
-</LI>
-<LI>Los métodos son normalmente <code>public</code> a menos que sean explícitamente declarados como <code>private</code> o <code>protected</code>. 
-</LI>
-<LI>Una excepción es <code>initialize</code> que es implícitamente privado.
-</LI>
-<LI>Otra excepción son los métodos declarados fuera de cualquier definición de clase: son declarados como métodos de instancia privados de la clase <A NAME="tex2html399"
-  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>
-<PRE>
-[~/rubytesting]$ cat privado_main2.rb 
-require 'pry'
-
-def tutu
-  "tut "
-end
-
-class Titi
-  def toto
-    tutu()
-  end
-end
-
-binding.pry()
-</PRE>
 
 <P>
-<PRE>
-[~/rubytesting]$ ruby privado_main2.rb 
-From: /Users/casiano/local/src/ruby/rubytesting/privado_main2.rb @ line 15 :
-    10:   end
-    11: end
-    12: 
-    13: binding.pry()
-    14: 
- =&gt; 15: z = Titi.new
-    16: puts z.toto()
-
-[1] pry(main)&gt; self
-=&gt; main
-[2] pry(main)&gt; self.class
-=&gt; Object
-[4] pry(main)&gt; self.private_methods(false).select {|x| x =~ /tut/ }
-=&gt; [:tutu]
-[5] pry(main)&gt; self.tutu
-NoMethodError: private method `tutu' called for main:Object
-from (pry):5:in `&lt;main&gt;'
-[6] pry(main)&gt; tutu
-=&gt; "tut "
-[7] pry(main)&gt; Titi.new.tutu
-NoMethodError: private method `tutu' called for #&lt;Titi:0x007ff03612e700&gt;
-from (pry):7:in `&lt;main&gt;'
-[8] pry(main)&gt; Titi.new.toto
-=&gt; "tut "
-[9] pry(main)&gt;
-</PRE>
-</LI>
-</UL>
-
-<P>
-
-<UL>
-<LI>Un método público puede ser llamado desde cualquier lugar
-</LI>
-<LI>Si <code>m</code> es un método privado, deberá ser invocado implícitamente en <code>self</code>,
-esto es, como <I>función, <code>m()</code></I>,
-y no con receptor explícito: (<code>obj.m</code> o bien <code>self.m</code>).
-</LI>
-<LI>Esto es, un método privado es siempre invocado implícitamente en <code>self</code>
-y no debe ser invocado explícitamente en un objeto
-</LI>
-<LI>Las subclases pueden invocar y sobreescribir los métodos <code>private</code>
-
-<P>
-</LI>
-<LI>Al igual que los métodos privados, los métodos <code>protected</code>
-pueden ser invocados desde  la clase  o sus subclases
-</LI>
-<LI>A diferencia de los métodos privados, los métodos <code>protected</code>
-pueden ser invocados en cualquier objeto de la clase
-y no requieren la invocación implícita via <code>self</code>
-</LI>
-<LI>La visibilidad de los métodos se declara mediante tres <SPAN  CLASS="textbf">métodos</SPAN>:
-<code>public</code>, <code>private</code> y <code>protected</code>. 
-
-<P>
-</LI>
-<LI>Estos tres métodos son métodos 
-de instancia de la clase <code>Module</code>.
-
-<P>
-</LI>
-<LI>Como todas las clases son módulos y dentro de una definición de clase
-(pero fuera de las definiciones de métodos) <code>self</code> se refiere a la clase, podemos usar 
-estos métodos <code>public</code>, <code>private</code> y <code>protected</code> como si de palabras reservadas se tratara.
-
-<P>
-</LI>
-<LI>Una clase puede usarlos así:
 <PRE>
 class Point
-  # public methods go here
+  # Initialize our class variables in the class definition itself
+  @@n = 0              # How many points have been created
+  @@totalX = 0         # The sum of all X coordinates
+  @@totalY = 0         # The sum of all Y coordinates
 
-  # The following methods are protected
-  protected
+  def initialize(x,y)  # Initialize method
+    @x,@y = x, y       # Sets initial values for instance variables
 
-  # protected methods go here
+    # Use the class variables in this instance method to collect data
+    @@n += 1           # Keep track of how many Points have been created
+    @@totalX += x      # Add these coordinates to the totals
+    @@totalY += y
+  end
 
-  # The following methods are private
-  private
-
-  # private methods go here
+  # A class method to report the data we collected
+  def self.report
+    # Here we use the class variables in a class method
+    puts "Number of points created: #@@n"
+    puts "Average X coordinate: #{@@totalX.to_f/@@n}"
+    puts "Average Y coordinate: #{@@totalY.to_f/@@n}"
+  end
 end
 </PRE>
-</LI>
-<LI>También pueden ser invocados con los nombres de uno o mas métodos (como símbolos o como
-cadenas). En tal caso la declaración de visibilidad viene después de la definición del método
-y altera la visibilidad del método con ese nombre.
 
 <P>
-</LI>
-<LI>Una práctica es declarar todos los métodos protegidos y privados de golpe,
-al final de la clase
-
-<P>
-</LI>
-<LI>Otra práctica es declarar la visbilidad justo después de la definición del método:
-<PRE>
-class Widget
-  def x                       # Accessor method for @x
-    @x
-  end
-  protected :x                # Make it protected
-
-  def utility_method          # Define a method
-    nil
-  end
-  private :utility_method     # And make it private
-end
-</PRE>
-</LI>
-<LI>Si se desea declarar un método de clase como privado se usa el <SPAN  CLASS="textbf">método</SPAN>
-<code>private_class_method</code>:
-<PRE>
-        private_class_method :new
-</PRE>
-</LI>
-<LI>Si se desea hacer público de nuevo un método de clase privado se usa el 
-método <code>public_class_method</code>
-</LI>
-<LI>Las capacidades de metaprogramación de Ruby hacen posible
-invocar métodos privados y protegidos e incluso el acceso a variables 
-encapsuladas:
-<PRE>
-$ cat -n accesing_private_method.rb 
-     1  class Widget
-     2    def initialize()
-     3      @x = 4
-     4    end
-     5  
-     6    def x
-     7      @x
-     8    end
-     9    protected :x                # Make it protected
-    10  
-    11    def utility_method          # Define a method
-    12      puts "Inside utility_method"
-    13    end
-    14    private :utility_method     # And make it private
-    15  end
-    16  
-    17  w = Widget.new                      # Create a Widget
-    18  w.send :utility_method              # Invoke private method!
-    19  w.instance_eval { utility_method }  # Another way to invoke it
-    20  
-    21  w.instance_eval { puts @x }              # Read instance variable of w
-</PRE>
-Cuando ejecutamos, obtenemos:
-<PRE>
-[~/point]$ ruby accesing_private_method.rb 
-Inside utility_method
-Inside utility_method
-4
-</PRE>
-
-<P>
-Utilice <code>public_send</code> en vez de <code>send</code> si no se quiere que, 
-por error, se llame inadvertidamente a un método privado.
-</LI>
-</UL>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html6399"
-  HREF="node193.html">Ejemplo de Visibilidad de Métodos Protegidos</A>
-<LI><A NAME="tex2html6400"
-  HREF="node194.html">Ejemplo de Visibilidad</A>
-</UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html6397"
+<A NAME="tex2html6435"
   HREF="node193.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html6391"
-  HREF="node170.html">
+<A NAME="tex2html6429"
+  HREF="node174.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html6385"
+<A NAME="tex2html6423"
   HREF="node191.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html6393"
-  HREF="node823.html">
+<A NAME="tex2html6431"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html6395"
-  HREF="node826.html">
+<A NAME="tex2html6433"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -423,20 +221,20 @@ por error, se llame inadvertidamente a un método privado.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html6398"
-  HREF="node193.html">Ejemplo de Visibilidad de</A>
-<B> Subir:</B> <A NAME="tex2html6392"
-  HREF="node170.html">Clases y Módulos</A>
-<B> Anterior:</B> <A NAME="tex2html6386"
-  HREF="node191.html">Práctica: La Clase Punto</A>
- &nbsp; <B>  <A NAME="tex2html6394"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html6396"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html6436"
+  HREF="node193.html">Variables de Instancia de</A>
+<B> Subir:</B> <A NAME="tex2html6430"
+  HREF="node174.html">Definición de una Clase</A>
+<B> Anterior:</B> <A NAME="tex2html6424"
+  HREF="node191.html">Constantes</A>
+ &nbsp; <B>  <A NAME="tex2html6432"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html6434"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

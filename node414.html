@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Verbos HTTP en Sinatra/Base</TITLE>
-<META NAME="description" CONTENT="Verbos HTTP en Sinatra/Base">
+<TITLE>Fundamentos</TITLE>
+<META NAME="description" CONTENT="Fundamentos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="previous" HREF="node413.html">
-<LINK REL="up" HREF="node413.html">
+<LINK REL="next" HREF="node456.html">
+<LINK REL="previous" HREF="node410.html">
+<LINK REL="up" HREF="node358.html">
 <LINK REL="next" HREF="node415.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10372"
+<A NAME="tex2html10319"
   HREF="node415.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10366"
-  HREF="node413.html">
+<A NAME="tex2html10313"
+  HREF="node358.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10362"
+<A NAME="tex2html10307"
   HREF="node413.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10368"
-  HREF="node823.html">
+<A NAME="tex2html10315"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10370"
-  HREF="node826.html">
+<A NAME="tex2html10317"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,69 +92,248 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10373"
-  HREF="node415.html">Ficheros Estáticos</A>
-<B> Subir:</B> <A NAME="tex2html10367"
-  HREF="node413.html">Rutas/Routes</A>
-<B> Anterior:</B> <A NAME="tex2html10363"
-  HREF="node413.html">Rutas/Routes</A>
- &nbsp; <B>  <A NAME="tex2html10369"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10371"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10320"
+  HREF="node415.html">Ejemplo Simple de uso</A>
+<B> Subir:</B> <A NAME="tex2html10314"
+  HREF="node358.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html10308"
+  HREF="node413.html">Ejercicio: Instale la Documentación</A>
+ &nbsp; <B>  <A NAME="tex2html10316"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10318"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03321000000000000000">
-Verbos HTTP en Sinatra/Base</A>
-</H2>
+<H1><A NAME="SECTION03300000000000000000">
+Fundamentos</A>
+</H1>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-<A NAME="tex2html1000"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L1351">Método <TT>get</TT></A>
-<PRE>
-      def get(path, opts = {}, &amp;block)
-        conditions = @conditions.dup
-        route('GET', path, opts, &amp;block)
-
-        @conditions = conditions
-        route('HEAD', path, opts, &amp;block)
-      end
-</PRE>
-
-<P>
-<PRE>
-      def put(path, opts = {}, &amp;bk)     route 'PUT',     path, opts, &amp;bk end
-      def post(path, opts = {}, &amp;bk)    route 'POST',    path, opts, &amp;bk end
-      def delete(path, opts = {}, &amp;bk)  route 'DELETE',  path, opts, &amp;bk end
-      def head(path, opts = {}, &amp;bk)    route 'HEAD',    path, opts, &amp;bk end
-      def options(path, opts = {}, &amp;bk) route 'OPTIONS', path, opts, &amp;bk end
-      def patch(path, opts = {}, &amp;bk)   route 'PATCH',   path, opts, &amp;bk end
-      def link(path, opts = {}, &amp;bk)    route 'LINK',    path, opts, &amp;bk end
-      def unlink(path, opts = {}, &amp;bk)  route 'UNLINK',  path, opts, &amp;bk end
-</PRE>
-
-<P>
-<A NAME="tex2html1001"
-  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L1563">Método <TT>route</TT></A>
-<PRE>
-      def route(verb, path, options = {}, &amp;block)
-        # Because of self.options.host
-        host_name(options.delete(:host)) if options.key?(:host)
-        enable :empty_path_info if path == "" and empty_path_info.nil?
-        signature = compile!(verb, path, block, options)
-        (@routes[verb] ||= []) &lt;&lt; signature
-        invoke_hook(:route_added, verb, path, block)
-        signature
-      end
-</PRE>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html10321"
+  HREF="node415.html">Ejemplo Simple de uso de Sinatra</A>
+<UL>
+<LI><A NAME="tex2html10322"
+  HREF="node415.html#SECTION03310010000000000000">Donde</A>
+<LI><A NAME="tex2html10323"
+  HREF="node415.html#SECTION03310020000000000000">Código</A>
+<LI><A NAME="tex2html10324"
+  HREF="node415.html#SECTION03310030000000000000">Opciones de Ejecución</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10325"
+  HREF="node416.html">Rutas/Routes</A>
+<UL>
+<LI><A NAME="tex2html10326"
+  HREF="node416.html#SECTION03320010000000000000">Aplicacion</A>
+<LI><A NAME="tex2html10327"
+  HREF="node416.html#SECTION03320020000000000000">config.ru</A>
+<LI><A NAME="tex2html10328"
+  HREF="node416.html#SECTION03320030000000000000">Rakefile</A>
+<LI><A NAME="tex2html10329"
+  HREF="node416.html#SECTION03320040000000000000">Ejecución del servidor</A>
+<LI><A NAME="tex2html10330"
+  HREF="node416.html#SECTION03320050000000000000">Ejecución de los clientes</A>
+<LI><A NAME="tex2html10331"
+  HREF="node417.html">Verbos HTTP en Sinatra/Base</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10332"
+  HREF="node418.html">Ficheros Estáticos</A>
+<LI><A NAME="tex2html10333"
+  HREF="node419.html">Vistas</A>
+<UL>
+<LI><A NAME="tex2html10334"
+  HREF="node420.html">Templates Inline</A>
+<LI><A NAME="tex2html10335"
+  HREF="node421.html">Named Templates</A>
+<LI><A NAME="tex2html10336"
+  HREF="node422.html">Templates Externos</A>
+<LI><A NAME="tex2html10337"
+  HREF="node423.html">Templates Externos en Subcarpetas</A>
+<LI><A NAME="tex2html10338"
+  HREF="node424.html">Variables en las Vistas</A>
+<UL>
+<LI><A NAME="tex2html10339"
+  HREF="node424.html#SECTION03345010000000000000">Comunicación vía variables de instancia</A>
+</UL>
+<LI><A NAME="tex2html10340"
+  HREF="node425.html">Pasando variables a la vista explícitamente via un hash</A>
+<LI><A NAME="tex2html10341"
+  HREF="node426.html">Opciones pasadas a los Métodos de los Templates</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10342"
+  HREF="node427.html">Filtros</A>
+<UL>
+<LI><A NAME="tex2html10343"
+  HREF="node427.html#SECTION03350010000000000000">Before Filters</A>
+<LI><A NAME="tex2html10344"
+  HREF="node427.html#SECTION03350020000000000000">After Filters</A>
+<LI><A NAME="tex2html10345"
+  HREF="node427.html#SECTION03350030000000000000">Filters can take a Pattern</A>
+<LI><A NAME="tex2html10346"
+  HREF="node427.html#SECTION03350040000000000000">Filters can take a Condition</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10347"
+  HREF="node428.html">Manejo de Errores</A>
+<UL>
+<LI><A NAME="tex2html10348"
+  HREF="node428.html#SECTION03360010000000000000">not_found</A>
+<LI><A NAME="tex2html10349"
+  HREF="node428.html#SECTION03360020000000000000">error</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10350"
+  HREF="node429.html">The methods body, status and headers</A>
+<LI><A NAME="tex2html10351"
+  HREF="node430.html">Acceso al Objeto Request</A>
+<LI><A NAME="tex2html10352"
+  HREF="node431.html">Caching / Caches</A>
+<LI><A NAME="tex2html10353"
+  HREF="node432.html">Sesiones y Cookies en Sinatra</A>
+<UL>
+<LI><A NAME="tex2html10354"
+  HREF="node432.html#SECTION033100010000000000000">Introducción</A>
+<LI><A NAME="tex2html10355"
+  HREF="node432.html#SECTION033100020000000000000">Cookies</A>
+<LI><A NAME="tex2html10356"
+  HREF="node432.html#SECTION033100030000000000000">Ejemplo con Sesiones</A>
+<LI><A NAME="tex2html10357"
+  HREF="node432.html#SECTION033100040000000000000">Ejemplo con Cookies</A>
+<LI><A NAME="tex2html10358"
+  HREF="node432.html#SECTION033100050000000000000">Problemas</A>
+<LI><A NAME="tex2html10359"
+  HREF="node432.html#SECTION033100060000000000000">Véanse</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10360"
+  HREF="node433.html">Downloads / Descargas / Attachments</A>
+<UL>
+<LI><A NAME="tex2html10361"
+  HREF="node433.html#SECTION033110010000000000000">Usando attachment</A>
+<LI><A NAME="tex2html10362"
+  HREF="node433.html#SECTION033110020000000000000">Usando send_file</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10363"
+  HREF="node434.html">Uploads. Subida de Ficheros en Sinatra</A>
+<UL>
+<LI><A NAME="tex2html10364"
+  HREF="node434.html#SECTION033120010000000000000">Véase</A>
+<LI><A NAME="tex2html10365"
+  HREF="node434.html#SECTION033120020000000000000">Jerarquía de ficheros</A>
+<LI><A NAME="tex2html10366"
+  HREF="node434.html#SECTION033120030000000000000">upload.haml</A>
+<LI><A NAME="tex2html10367"
+  HREF="node434.html#SECTION033120040000000000000">app.rb</A>
+<LI><A NAME="tex2html10368"
+  HREF="node434.html#SECTION033120050000000000000">BEWARE!</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10369"
+  HREF="node435.html">halt</A>
+<LI><A NAME="tex2html10370"
+  HREF="node436.html">Passing a Request</A>
+<LI><A NAME="tex2html10371"
+  HREF="node437.html">Triggering Another Route: calling <TT>call</TT></A>
+<LI><A NAME="tex2html10372"
+  HREF="node438.html">Logging</A>
+<UL>
+<LI><A NAME="tex2html10373"
+  HREF="node438.html#SECTION033160010000000000000">Logging a stdout y a un fichero</A>
+<LI><A NAME="tex2html10374"
+  HREF="node438.html#SECTION033160020000000000000">Ejecución</A>
+<LI><A NAME="tex2html10375"
+  HREF="node438.html#SECTION033160030000000000000">Véase</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10376"
+  HREF="node439.html">Generating URLs</A>
+<LI><A NAME="tex2html10377"
+  HREF="node440.html">Redireccionamientos/Browser Redirect</A>
+<LI><A NAME="tex2html10378"
+  HREF="node441.html">Configuration / Configuración</A>
+<LI><A NAME="tex2html10379"
+  HREF="node442.html">Configuring attack protection</A>
+<LI><A NAME="tex2html10380"
+  HREF="node443.html">Settings disponibles/Available Settings</A>
+<LI><A NAME="tex2html10381"
+  HREF="node444.html">Environments</A>
+<LI><A NAME="tex2html10382"
+  HREF="node445.html">Correo</A>
+<LI><A NAME="tex2html10383"
+  HREF="node446.html">Ambito</A>
+<UL>
+<LI><A NAME="tex2html10384"
+  HREF="node446.html#SECTION033240010000000000000">Ámbito de Clase/Class Scope</A>
+<LI><A NAME="tex2html10385"
+  HREF="node446.html#SECTION033240020000000000000">Ámbito de Instancia/Instance Scope</A>
+<LI><A NAME="tex2html10386"
+  HREF="node446.html#SECTION033240030000000000000">Ejecución en el servidor</A>
+<LI><A NAME="tex2html10387"
+  HREF="node446.html#SECTION033240040000000000000">Ejecución en el cliente. Ruta: /define_route/juan</A>
+<LI><A NAME="tex2html10388"
+  HREF="node446.html#SECTION033240050000000000000">Ejecución en el cliente. Ruta: /juan</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10389"
+  HREF="node447.html">Sinatra Authentication</A>
+<UL>
+<LI><A NAME="tex2html10390"
+  HREF="node448.html">Autentificación Básica en Sinatra con Rack::Auth::Basic</A>
+<LI><A NAME="tex2html10391"
+  HREF="node449.html">Ejemplo con Warden</A>
+<UL>
+<LI><A NAME="tex2html10392"
+  HREF="node449.html#SECTION033252010000000000000">Donde</A>
+</UL>
+<LI><A NAME="tex2html10393"
+  HREF="node450.html">Referencias</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10394"
+  HREF="node451.html">Sinatra como Middleware</A>
+<LI><A NAME="tex2html10395"
+  HREF="node452.html">Práctica: Aplicación Web con Sinatra: Contar la Popularidad de Nuestros Amigos en Twitter</A>
+<LI><A NAME="tex2html10396"
+  HREF="node453.html">Práctica: TicTacToe</A>
+<UL>
+<LI><A NAME="tex2html10397"
+  HREF="node453.html#SECTION033280010000000000000">Referencias</A>
+<LI><A NAME="tex2html10398"
+  HREF="node453.html#SECTION033280020000000000000">Estructura</A>
+<LI><A NAME="tex2html10399"
+  HREF="node453.html#SECTION033280030000000000000">Rakefile</A>
+<LI><A NAME="tex2html10400"
+  HREF="node453.html#SECTION033280040000000000000">HAML</A>
+<LI><A NAME="tex2html10401"
+  HREF="node453.html#SECTION033280050000000000000">HTML generado</A>
+<LI><A NAME="tex2html10402"
+  HREF="node453.html#SECTION033280060000000000000">SASS</A>
+<LI><A NAME="tex2html10403"
+  HREF="node453.html#SECTION033280070000000000000">Procfile</A>
+<LI><A NAME="tex2html10404"
+  HREF="node453.html#SECTION033280080000000000000">Gemfile</A>
+<LI><A NAME="tex2html10405"
+  HREF="node453.html#SECTION033280090000000000000">La Aplicación</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html10406"
+  HREF="node454.html">Práctica: TicTacToe usando DataMapper</A>
+<LI><A NAME="tex2html10407"
+  HREF="node455.html">Práctica: Servicio de Syntax Highlighting</A>
+</UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Creando Métodos Dinámicamente</TITLE>
-<META NAME="description" CONTENT="Creando Métodos Dinámicamente">
+<TITLE>Creando una Palabra Clave</TITLE>
+<META NAME="description" CONTENT="Creando una Palabra Clave">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node271.html">
-<LINK REL="previous" HREF="node266.html">
-<LINK REL="up" HREF="node238.html">
+<LINK REL="previous" HREF="node267.html">
+<LINK REL="up" HREF="node267.html">
 <LINK REL="next" HREF="node269.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html7617"
+<A NAME="tex2html7654"
   HREF="node269.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html7611"
-  HREF="node238.html">
+<A NAME="tex2html7648"
+  HREF="node267.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html7605"
+<A NAME="tex2html7644"
   HREF="node267.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html7613"
-  HREF="node823.html">
+<A NAME="tex2html7650"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html7615"
-  HREF="node826.html">
+<A NAME="tex2html7652"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,40 +91,378 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html7618"
-  HREF="node269.html">Definiendo Métodos con class_eval</A>
-<B> Subir:</B> <A NAME="tex2html7612"
-  HREF="node238.html">Reflexión y Metaprogramación</A>
-<B> Anterior:</B> <A NAME="tex2html7606"
-  HREF="node267.html">Creando Dinámicamente los Métodos</A>
- &nbsp; <B>  <A NAME="tex2html7614"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html7616"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html7655"
+  HREF="node269.html">Métodos Missing y Constantes</A>
+<B> Subir:</B> <A NAME="tex2html7649"
+  HREF="node267.html">Estructuras de Control a</A>
+<B> Anterior:</B> <A NAME="tex2html7645"
+  HREF="node267.html">Estructuras de Control a</A>
+ &nbsp; <B>  <A NAME="tex2html7651"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7653"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION028100000000000000000">
-Creando Métodos Dinámicamente</A>
-</H1>
+<H2><A NAME="SECTION02881000000000000000">
+Creando una <I>Palabra Clave</I></A>
+</H2>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+Supongamos que estamos escribiendo 
+un programa <code>C# </code> que conecta con un servidor remoto
+y que tenemos un objeto que representa dicha conexión:
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html7619"
-  HREF="node269.html">Definiendo Métodos con <TT>class_eval</TT></A>
-<LI><A NAME="tex2html7620"
-  HREF="node270.html">Definiendo Métodos con <TT>define_methods</TT></A>
+<P>
+<PRE>
+RemoteConnection conn = new RemoteConnection("my_server"); 
+String stuff = conn.readStuff(); 
+conn.dispose(); // close the connection to avoid a leak
+</PRE>
+
+<P>
+Este código libera los recursos asociados a la conexión después de usarla.
+Sin embargo, no considera la presencia de excepciones.
+Si <code>readStuff( )</code> lanza una excepción, <code>conn.dispose()</code> no
+se ejecutará.
+<code>C#</code> proporciona una palabra clave  <code>using</code> 
+que simplifica el manejo de la liberación de recursos:
+
+<P>
+<PRE>
+RemoteConnection conn = new RemoteConnection("some_remote_server"); 
+using (conn) {
+  conn.readSomeData(); 
+  doSomeMoreStuff();
+}
+</PRE>
+La palabra <code>using</code> espera que el objeto  <code>conn</code> tenga un método con nombre <code>dispose()</code>. 
+Este método es llamado automáticamente después del código entre llaves, 
+tanto si se genera una excepción como si no.
+
+<P>
+Supongamos que se nos pide como ejercicio que extendamos Ruby con una <I>palabra clave</I> <code>using</code>
+que funcione de manera similar al <code>using</code> de <code>C#</code>.
+
+<P>
+Para comprobar que lo hagamos correctamente se nos da el siguiente
+programa de test (véase <A NAME="tex2html558"
+  HREF="http://en.wikipedia.org/wiki/Unit_testing">Unit Testing</A>
+en la wikipedia 
+y la documentación de la librería 
+<A NAME="tex2html559"
+  HREF="http://ruby-doc.org/stdlib-1.9.3/libdoc/test/unit/rdoc/Test/Unit.html"><TT>Test::Unit</TT></A>
+<A NAME="tex2html560"
+  HREF="http://ruby-doc.org/stdlib-1.9.3/libdoc/test/unit/rdoc/Test/Unit/Assertions.html"><TT>Test::Unit::Assertions</TT></A>
+):
+
+<P>
+<PRE>
+~/rubytesting$ cat -n using_test.rb 
+   1  require 'test/unit'
+   2  
+   3  class TestUsing &lt; Test::Unit::TestCase
+   4    class Resource
+   5      def dispose
+   6        @disposed = true
+   7      end
+   8  
+   9      def disposed?
+  10        @disposed
+  11      end
+  12    end
+  13  
+  14    def test_disposes_of_resources
+  15      r = Resource.new
+  16      using(r) {}
+  17      assert r.disposed?
+  18    end
+  19    
+  20    def test_disposes_of_resources_in_case_of_exception
+  21      r = Resource.new
+  22      assert_raises(Exception) {
+  23        using(r) {
+  24          raise Exception
+  25        }
+  26      }
+  27      assert r.disposed?
+  28    end
+  29  end
+</PRE>
+
+<P>
+Las clases que representan tests deben ser subclases de 
+<code>Test::Unit::TestCase</code>. 
+Los métodos que contienen <code>assertions</code> deben empezar por la palabra <code>test</code>.
+<code>Test::Unit</code> utiliza introspección para decidir para encontrar que métodos debe ejecutar.
+
+<P>
+Por supuesto, si se ejecutan ahora, nuestras pruebas fallan:
+<PRE>
+~/rubytesting$ ruby  using_test.rb 
+Loaded suite using_test
+Started
+EF
+Finished in 0.005613 seconds.
+
+  1) Error:
+test_disposes_of_resources(TestUsing):
+NoMethodError: undefined method `using' for #&lt;TestUsing:0x100348608&gt;
+    using_test.rb:16:in `test_disposes_of_resources'
+
+  2) Failure:
+test_disposes_of_resources_in_case_of_exception(TestUsing) [using_test.rb:22]:
+&lt;Exception&gt; exception expected but was
+Class: &lt;NoMethodError&gt;
+Message: &lt;"undefined method `using' for #&lt;TestUsing:0x1003485e0&gt;"&gt;
+---Backtrace---
+using_test.rb:23:in `test_disposes_of_resources_in_case_of_exception'
+using_test.rb:22:in `test_disposes_of_resources_in_case_of_exception'
+---------------
+
+2 tests, 1 assertions, 1 failures, 1 errors
+</PRE>
+Idea: No podemos definir <code>using</code> como una palabra clave, por supuesto, pero podemos 
+producir un efecto parecido definiendo <code>using</code> como un método de <code>Kernel</code>:
+<PRE>
+~/rubytesting$ cat -n using1.rb 
+   1  module Kernel
+   2    def using(resource)       # resource: el recurso a liberar con dispose
+   3      begin                   # llamamos al bloque 
+   4        yield
+   5        resource.dispose      # liberamos
+   6      end
+   7    end
+   8  end
+</PRE>
+
+<P>
+Sin embargo, esta versión no está a prueba de excepciones. Cuando ejecutamos las pruebas 
+obtenemos:
+<PRE>
+~/rubytesting$ ruby -rusing1 using_test.rb 
+Loaded suite using_test
+Started
+.F
+Finished in 0.005043 seconds.
+
+  1) Failure:
+test_disposes_of_resources_in_case_of_exception(TestUsing) [using_test.rb:27]:
+&lt;nil&gt; is not true.
+
+2 tests, 3 assertions, 1 failures, 0 errors
+</PRE>
+El mensaje nos indica la causa del fallo:
+<PRE>
+test_disposes_of_resources_in_case_of_exception(TestUsing) [using_test.rb:27]: &lt;nil&gt; is not true.
+</PRE>
+Es posible también ejecutar un test específico:
+<PRE>
+~/rubytesting$  ruby -rusing1 -w using_test.rb --name test_disposes_of_resources
+Loaded suite using_test
+Started
+.
+Finished in 0.000196 seconds.
+
+1 tests, 1 assertions, 0 failures, 0 errors
+~/rubytesting$
+</PRE>
+(Para saber mas sobre Unit Testing en Ruby vea 
+<A NAME="tex2html561"
+  HREF="http://en.wikibooks.org/wiki/Ruby_Programming/Unit_testing#A_Simple_Introduction">Ruby Programming/Unit testing en Wikibooks</A>).
+
+<P>
+Volviendo a nuestro fallo, recordemos que
+la cláusula <code>rescue</code> es usada cuando queremos que un código se ejecute si se produce una excepción:
+<PRE>
+begin
+  file = open("/tmp/some_file", "w")
+  # ... write to the file ...
+  file.close
+rescue
+  file.close
+  fail # raise an exception
+end
+</PRE>
+Pero en este caso es mejor usar la cláusula <code>ensure</code>.
+El código bajo un <code>ensure</code> se ejecuta, tanto si se ha producido excepción como si no:
+
+<P>
+<PRE>
+begin
+  file = open("/tmp/some_file", "w")
+  # ... write to the file ...
+rescue
+  # ... handle the exceptions ...
+ensure
+  file.close   # ... and this always happens.
+end
+</PRE>
+Es posible utilizar <code>ensure</code> sin la cláusula <code>rescue</code>, y viceversa,
+pero si aparecen ambas en el mismo bloque <code>begin...end</code>
+entonces <code>rescue</code> debe preceder a <code>ensure</code>.
+
+<P>
+Reescribimos nuestro <code>using</code> usando <code>ensure</code>:
+<PRE>
+~/rubytesting$ cat -n using.rb 
+     1  module Kernel
+     2    def using(resource)
+     3      begin
+     4        yield
+     5      ensure
+     6        resource.dispose
+     7      end
+     8    end
+     9  end
+</PRE>
+Ahora los dos tests tienen éxito:
+<PRE>
+~/rubytesting$ ruby -rusing using_test.rb 
+Loaded suite using_test
+Started
+..
+Finished in 0.000346 seconds.
+
+2 tests, 3 assertions, 0 failures, 0 errors
+</PRE>
+
+<P>
+Lo normal durante el desarrollo es guardar las pruebas en una carpeta con nombtre <code>test</code> o <code>t</code>:
+
+<P>
+<PRE>
+project
+  |
+  `-lib/
+  |   |
+  |   `-using.rb
+  |   |
+  |   `-otros ficheros ...
+  `-test/ 
+      |
+      `-using_test
+      |
+      `-otros tests ..
+</PRE>
+El problema con esta estructura es que hay que decirle a Ruby donde debe encontrar la librería
+cuando se ejecutan las pruebas.
+
+<UL>
+<LI>Añadir el camino en el que están las librerías a <code>$LOAD_PATH</code>
+</LI>
+<LI>Ejecutar los tests siempre desde el directorio raíz e incluir en los tests una línea como esta:
+
+<P>
+<PRE>
+  $:.unshift File.join(File.dirname(__FILE__), "..", "lib") 
+  require ...
+</PRE>
+La variable <code>$:</code> es una array conteniendo el PATH de búsqueda de librerías.
+</LI>
 </UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+
+<P>
+Lo habitual, cuando un proyecto crece
+es que los tests se acumulen. Lo normal es clasificarlos 
+por afinidades en diferentes ficheros. 
+Los podemos agrupar en suites. Para ello creamos 
+un fichero con una lista de <code>require</code>s
+
+<P>
+<PRE>
+require 'test/unit' 
+require 'tc_smoke' 
+require 'tc_client_requirements' 
+require 'tc_extreme'
+</PRE>
+
+<P>
+Ahora, simplemente ejecutando este fichero ejecutaremos todos los casos en la suite.
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html7654"
+  HREF="node269.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html7648"
+  HREF="node267.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html7644"
+  HREF="node267.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html7650"
+  HREF="node832.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html7652"
+  HREF="node835.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html7655"
+  HREF="node269.html">Métodos Missing y Constantes</A>
+<B> Subir:</B> <A NAME="tex2html7649"
+  HREF="node267.html">Estructuras de Control a</A>
+<B> Anterior:</B> <A NAME="tex2html7645"
+  HREF="node267.html">Estructuras de Control a</A>
+ &nbsp; <B>  <A NAME="tex2html7651"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html7653"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

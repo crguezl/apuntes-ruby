@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita</TITLE>
-<META NAME="description" CONTENT="Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita">
+<TITLE>Práctica: Estadísticas de Visitas al Acortador de URLs</TITLE>
+<META NAME="description" CONTENT="Práctica: Estadísticas de Visitas al Acortador de URLs">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,27 +20,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="previous" HREF="node520.html">
-<LINK REL="up" HREF="node519.html">
+<LINK REL="up" HREF="node511.html">
 <LINK REL="next" HREF="node522.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12163"
+<A NAME="tex2html12201"
   HREF="node522.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12157"
-  HREF="node519.html">
+<A NAME="tex2html12195"
+  HREF="node511.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12153"
+<A NAME="tex2html12191"
   HREF="node520.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12159"
-  HREF="node823.html">
+<A NAME="tex2html12197"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12161"
-  HREF="node826.html">
+<A NAME="tex2html12199"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,80 +91,300 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12164"
-  HREF="node522.html">Google Plus y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12158"
-  HREF="node519.html">ActiveRecord y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12154"
-  HREF="node520.html">Práctica: Servicio para Abreviar</A>
- &nbsp; <B>  <A NAME="tex2html12160"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12162"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12202"
+  HREF="node522.html">Sequel y Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html12196"
+  HREF="node511.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12192"
+  HREF="node520.html">Práctica: Acortador de URLs</A>
+ &nbsp; <B>  <A NAME="tex2html12198"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12200"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031820000000000000000"></A>
-   <A NAME="22975"></A>
+<H1><A NAME="SECTION0316100000000000000000"></A>
+   <A NAME="22663"></A>
+  
+<A NAME="practica:estadisticaasvisitas"></A>
 <BR>
-Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita
+Práctica: Estadísticas de Visitas al Acortador de URLs
 </H1>
 
 <P>
-Añádale a la práctica 
-<A HREF="node520.html#sectionpractica:abreviarurl">47.1</A>
-la funcionalidad de mostrar el número de visitas y el número de visitas por país.
+En esta práctica extendemos la anterior 
+<A HREF="node520.html#practica:acortadordeurls">45.9</A>
+con información estadística acerca
+de las visitas. Se pide que se presenten gráficos
+estadísticos (barras, etc.)
+del número de visitas por día, por país, etc.
 
 <P>
-Puede usar para ello la API de <A NAME="tex2html1292"
-  HREF="http://www.hostip.info/">http://www.hostip.info/</A>:
+La información de las visitas
+se guardará en una tabla <code>Visit</code>.
 
 <P>
-<PRE>
-  after :create, :set_country
-  
-  def set_country
-    xml = RestClient.get "http://api.hostip.info/get_xml.php?ip=#{ip}"  
-    self.country = XmlSimple.xml_in(xml.to_s, { 'ForceArray' =&gt; false })['featureMember']['Hostip']['countryAbbrev']
-    self.save
-  end
-</PRE>
-
-<P>
+Cada objeto <code>Visit</code> representará una visita
+a la URL corta y contendrá información acerca de la visita: 
 
 <UL>
-<LI>XMLSimple le puede ayudar a parsear el XML:
-<A NAME="tex2html1293"
-  HREF="http://xml-simple.rubyforge.org/">http://xml-simple.rubyforge.org/</A>
+<LI>la fecha de la visita y
 </LI>
-<LI><A NAME="tex2html1294"
-  HREF="https://github.com/sausheong/tinyclone">https://github.com/sausheong/tinyclone</A>
-</LI>
-<LI>Véase la API de 
-<A NAME="tex2html1295"
-  HREF="http://www.hostip.info/">http://www.hostip.info/</A>
+<LI>la procedencia de la misma.
 </LI>
 </UL>
 
 <P>
 
+<H4><A NAME="SECTION0316100010000000000000">
+La Tabla Principal</A>
+</H4>
+  
+
+Un objeto de la tabla principal tiene asociados varios objetos <code>Visit</code>.
+<PRE>
+class ShortenedUrl
+  include DataMapper::Resource
+
+  property :id, Serial
+  property :short, Text
+  property :url, Text
+
+  has n, :visits
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION0316100020000000000000">
+Obteniendo el País para una IP dada</A>
+</H4>
+  
+
+Queremos encontrar el país desde el que viene cada vistante.
+Cada vez que se crea un objeto <code>Visit</code> y que se le asocia con el 
+objeto de la tabla principal intentaremos obtener la dirección IP
+y a partir de ella la información sobre el país.
+
+<P>
+Veamos una sesión con Pry para obtener el país asociado con una IP:
+<PRE>
+[1] pry(main)&gt; require 'restclient'
+=&gt; true
+[2] pry(main)&gt; require 'xmlsimple'
+=&gt; true
+</PRE>
+
+<P>
+<PRE>
+[3] pry(main)&gt; xml = RestClient.get "http://api.hostip.info/get_xml.php?ip=193.145.124.21";
+[4] pry(main)&gt; puts xml
+&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;
+&lt;HostipLookupResultSet version="1.0.1" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.hostip.info/api/hostip-1.0.1.xsd"&gt;
+ &lt;gml:description&gt;This is the Hostip Lookup Service&lt;/gml:description&gt;
+ &lt;gml:name&gt;hostip&lt;/gml:name&gt;
+ &lt;gml:boundedBy&gt;
+  &lt;gml:Null&gt;inapplicable&lt;/gml:Null&gt;
+ &lt;/gml:boundedBy&gt;
+ &lt;gml:featureMember&gt;
+  &lt;Hostip&gt;
+   &lt;ip&gt;193.145.124.21&lt;/ip&gt;
+   &lt;gml:name&gt;(Unknown city)&lt;/gml:name&gt;
+   &lt;countryName&gt;SPAIN&lt;/countryName&gt;
+   &lt;countryAbbrev&gt;ES&lt;/countryAbbrev&gt;
+   &lt;!-- Co-ordinates are unavailable --&gt;
+  &lt;/Hostip&gt;
+ &lt;/gml:featureMember&gt;
+&lt;/HostipLookupResultSet&gt;
+=&gt; nil
+[5] pry(main)&gt; xml.class
+=&gt; String
+</PRE>
+
+<P>
+<PRE>
+[10] pry(main)&gt; cc = XmlSimple.xml_in(xml.to_s)
+=&gt; {"version"=&gt;"1.0.1",
+ "xmlns:gml"=&gt;"http://www.opengis.net/gml",
+ "xmlns:xsi"=&gt;"http://www.w3.org/2001/XMLSchema-instance",
+ "xsi:noNamespaceSchemaLocation"=&gt;
+  "http://www.hostip.info/api/hostip-1.0.1.xsd",
+ "description"=&gt;["This is the Hostip Lookup Service"],
+ "name"=&gt;["hostip"],
+ "boundedBy"=&gt;[{"Null"=&gt;["inapplicable"]}],
+ "featureMember"=&gt;
+  [{"Hostip"=&gt;
+     [{"ip"=&gt;["193.145.124.21"],
+       "name"=&gt;["(Unknown city)"],
+       "countryName"=&gt;["SPAIN"],
+       "countryAbbrev"=&gt;["ES"]}]}]}
+[11] pry(main)&gt; cc["featureMember"][0]['Hostip'][0]['countryAbbrev']
+=&gt; ["ES"]
+</PRE>
+
+<P>
+To implement this, we use the <code>after</code> callback mechanism 
+in the <code>Visit</code> object, where we call a method <code>after</code> 
+the object is created.
+<PRE>
+   after :create, :set_country
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION0316100030000000000000">
+La Tabla Visit</A>
+</H4>
+  
+
+<P>
+Para lograr que cada vez que se crea un objeto <code>Visit</code> se guarde el país
+en la tabla <code>Visit</code> la clase será algo parecido a esto:
+
+<P>
+<PRE>
+class Visit
+  include DataMapper::Resource
+
+  property  :id,          Serial
+  property  :created_at,  DateTime
+  property  :ip,          IPAddress
+  property  :country,     String
+  belongs_to  :link
+
+  after :create, :set_country
+
+  def set_country
+    xml = RestClient.get "http://api.hostip.info/get_xml.php?ip=#{ip}"··
+    self.country = XmlSimple.xml_in(xml.to_s, ...
+    self.save
+  end
+  ...
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION0316100040000000000000">
+Averiguar la IP</A>
+</H4>
+  
+
+<P>
+Este método ilustra múltiples formas de obtener la IP
+de la visita:
+
+<P>
+<PRE>
+def get_remote_ip(env)
+  puts "request.url = #{request.url}"
+  puts "request.ip = #{request.ip}"
+  if addr = env['HTTP_X_FORWARDED_FOR']
+    puts "env['HTTP_X_FORWARDED_FOR'] = #{addr}"
+    addr.split(',').first.strip
+  else
+    puts "env['REMOTE_ADDR'] = #{env['REMOTE_ADDR']}"
+    env['REMOTE_ADDR']
+  end
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION0316100050000000000000">
+Gráficos con chartkick</A>
+</H4>
+  
+
+<P>
+Este ejemplo 
+<A NAME="tex2html1287"
+  HREF="https://github.com/crguezl/sinatra-chartkick-example">crguezl/sinatra-chartkick-example</A>:
+<PRE>
+~/sinatra/sinatra-chartkik(master)]$ git remote -v
+origin  git@github.com:crguezl/sinatra-chartkick-example.git (fetch)
+origin  git@github.com:crguezl/sinatra-chartkick-example.git (push)
+[~/sinatra/sinatra-chartkik(master)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/sinatra-chartkik
+</PRE>
+muestra como usar 
+<A NAME="tex2html1288"
+  HREF="https://github.com/ankane/chartkick">chartkick</A>
+para generar gráficos:
+<PRE>
+[~/sinatra/sinatra-chartkik(master)]$ cat sinchart2.rb 
+require 'sinatra'
+require 'sinatra/reloader' if development?
+require 'chartkick'
+
+template :layout do
+  &lt;&lt;LAYOUT
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;script src="http://www.google.com/jsapi"&gt;&lt;/script&gt;
+    &lt;script src="chartkick.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;%= yield %&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+LAYOUT
+end
+
+template :index do
+  &lt;&lt;INDEX
+    &lt;%= pie_chart({"Football" =&gt; 10, "Basketball" =&gt; 5}) %&gt;
+INDEX
+end
+
+get '/' do
+  erb :index
+end
+</PRE>
+
+<P>
+
+<img src="chartkick.png">
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html12203"
+  HREF="node521.html#SECTION0316100010000000000000">La Tabla Principal</A>
+<LI><A NAME="tex2html12204"
+  HREF="node521.html#SECTION0316100020000000000000">Obteniendo el País para una IP dada</A>
+<LI><A NAME="tex2html12205"
+  HREF="node521.html#SECTION0316100030000000000000">La Tabla Visit</A>
+<LI><A NAME="tex2html12206"
+  HREF="node521.html#SECTION0316100040000000000000">Averiguar la IP</A>
+<LI><A NAME="tex2html12207"
+  HREF="node521.html#SECTION0316100050000000000000">Gráficos con chartkick</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12163"
+<A NAME="tex2html12201"
   HREF="node522.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12157"
-  HREF="node519.html">
+<A NAME="tex2html12195"
+  HREF="node511.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12153"
+<A NAME="tex2html12191"
   HREF="node520.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12159"
-  HREF="node823.html">
+<A NAME="tex2html12197"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12161"
-  HREF="node826.html">
+<A NAME="tex2html12199"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -215,20 +435,20 @@ Puede usar para ello la API de <A NAME="tex2html1292"
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12164"
-  HREF="node522.html">Google Plus y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12158"
-  HREF="node519.html">ActiveRecord y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12154"
-  HREF="node520.html">Práctica: Servicio para Abreviar</A>
- &nbsp; <B>  <A NAME="tex2html12160"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12162"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12202"
+  HREF="node522.html">Sequel y Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html12196"
+  HREF="node511.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12192"
+  HREF="node520.html">Práctica: Acortador de URLs</A>
+ &nbsp; <B>  <A NAME="tex2html12198"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12200"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>

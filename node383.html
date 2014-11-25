@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>rackup</TITLE>
-<META NAME="description" CONTENT="rackup">
+<TITLE>Ejemplo: Basic Authentication con Rack::Auth::Basic</TITLE>
+<META NAME="description" CONTENT="Ejemplo: Basic Authentication con Rack::Auth::Basic">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node384.html">
 <LINK REL="previous" HREF="node382.html">
-<LINK REL="up" HREF="node356.html">
+<LINK REL="up" HREF="node359.html">
 <LINK REL="next" HREF="node384.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9808"
+<A NAME="tex2html9839"
   HREF="node384.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9802"
-  HREF="node356.html">
+<A NAME="tex2html9833"
+  HREF="node359.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9796"
+<A NAME="tex2html9827"
   HREF="node382.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9804"
-  HREF="node823.html">
+<A NAME="tex2html9835"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9806"
-  HREF="node826.html">
+<A NAME="tex2html9837"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,314 +92,365 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9809"
-  HREF="node384.html">Rack::Static</A>
-<B> Subir:</B> <A NAME="tex2html9803"
-  HREF="node356.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9797"
-  HREF="node382.html">La Estructura de una</A>
- &nbsp; <B>  <A NAME="tex2html9805"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9807"
-  HREF="node826.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9840"
+  HREF="node384.html">Redirección</A>
+<B> Subir:</B> <A NAME="tex2html9834"
+  HREF="node359.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9828"
+  HREF="node382.html">Práctica: Accediendo a Twitter</A>
+ &nbsp; <B>  <A NAME="tex2html9836"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9838"
+  HREF="node835.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031150000000000000000">
-rackup</A>
+<H1><A NAME="SECTION031120000000000000000">
+Ejemplo: Basic Authentication con Rack::Auth::Basic</A>
 </H1>
 
 <P>
+<A NAME="tex2html882"
+  HREF="http://rack.rubyforge.org/doc/Rack/Auth/Basic.html">Rack::Auth::Basic</A> implements 
+<A NAME="tex2html883"
+  HREF="http://en.wikipedia.org/wiki/Basic_access_authentication">HTTP Basic Authentication</A>, as per RFC 2617.
 
-<H4><A NAME="SECTION031150010000000000000">
+<P>
+
+<H4><A NAME="SECTION031120010000000000000">
 Introducción</A>
 </H4>
   
 
-<OL>
-<LI>The <A NAME="tex2html884"
-  HREF="http://rack.rubyforge.org/doc/">Rack</A> gem gives you a 
-rackup command which lets you start your app on
-any supported application server. 
-
 <P>
-</LI>
-<LI>rackup is a useful tool for
-running Rack applications, which uses the <A NAME="tex2html885"
-  HREF="http://rack.rubyforge.org/doc/Rack/Builder.html">Rack::Builder</A> DSL to
-configure middleware and build up applications easily. 
-
-<P>
-</LI>
-<LI>rackup
-automatically figures out the environment it is run in, and runs
-your application as FastCGI, CGI, or standalone with Mongrel or
-WEBrick, all from the same configuration.
-</LI>
-</OL>
-
-<P>
-De hecho este es todo el código del ejecutable 
-<A NAME="tex2html886"
-  HREF="https://github.com/rack/rack/blob/master/bin/rackup">rackup</A>
-<PRE>
-#!/usr/bin/env ruby
-
-require "rack"
-Rack::Server.start
-</PRE>
-
-<P>
-El método  <TT>start</TT> 
-starts a new rack server (like running rackup). This will parse <code>ARGV</code> and
-provide standard <code>ARGV</code> rackup options, defaulting to load <code>config.ru</code>.
-
-<P>
-Providing an option hash will prevent <code>ARGV</code> parsing and will not include
-any default options.
-
-<P>
-This method can be used to very easily launch a CGI application, for
-example:
-
-<P>
-<PRE>
-  Rack::Server.start(
-    :app =&gt; lambda do |e|
-      [200, {'Content-Type' =&gt; 'text/html'}, ['hello world']]
-    end,
-    :server =&gt; 'cgi'
-  )
-</PRE>
-
-<P>
-Further options available here are documented on <A NAME="tex2html887"
-  HREF="http://rack.rubyforge.org/doc/Rack/Server.html">Rack::Server</A><code>#initialize</code>
-(véase el código en 
-<A NAME="tex2html888"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/server.rb">Rack::Server</A>
-):
-<PRE>
-    def self.start(options = nil)
-      new(options).start
-    end
-</PRE>
-
-<P>
-como se ve, el código 
-de
-
-<A NAME="tex2html889"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/server.rb">Rack::Server</A>
-
-está en
-Github.
-
-<P>
-The Options of <code>start</code> and <code>new</code>  may include:
 
 <OL>
-<LI><code>:app</code>
-    a rack application to run (overrides :config)
+<LI>In the context of an HTTP transaction, basic access authentication
+is a method for an HTTP user agent to provide a user name and
+password when making a request.
+
+<P>
 </LI>
-<LI><code>:config</code>
-    a rackup configuration file path to load (.ru)
+<LI><A NAME="16775"></A><SPAN  CLASS="textbf">HTTP Basic authentication</SPAN> (<A NAME="16777"></A><SPAN  CLASS="textbf">BA</SPAN>) implementation is the simplest
+technique for enforcing access controls to web resources because
+it doesn't require cookies, session identifier and login pages.
+Rather, HTTP Basic authentication uses static, standard HTTP headers
+which means that no handshakes have to be done in anticipation.
+
+<P>
 </LI>
-<LI><code>:environment</code>
-    this selects the middleware that will be wrapped around
-    your application. Default options available are:
-    
-<OL>
-<LI>development: CommonLogger, ShowExceptions, and Lint
+<LI>The BA mechanism provides no confidentiality protection for the
+transmitted credentials. They are merely encoded with <A NAME="tex2html884"
+  HREF="http://en.wikipedia.org/wiki/BASE64">BASE64</A>
+in
+transit, but not encrypted or hashed in any way. Basic Authentication
+is, therefore, typically used over HTTPS.
+
+<P>
 </LI>
-<LI>deployment: CommonLogger
+<LI>Because BA header has to be sent with each HTTP request, the web
+browser needs to cache the credentials for a reasonable period to
+avoid constant prompting user for the username and password. Caching
+policy differs between browsers. 
+
+<P>
 </LI>
-<LI>none: no extra middleware
-    
-</LI>
-</OL>
-    note: when the server is a cgi server, CommonLogger is not included.
-</LI>
-<LI><code>:server</code>
-    choose a specific Rack::Handler, e.g. cgi, fcgi, webrick
-</LI>
-<LI><code>:daemonize</code>
-    if true, the server will daemonize itself (fork, detach, etc)
-</LI>
-<LI><code>:pid</code>
-    path to write a pid file after daemonize
-</LI>
-<LI><code>:Host</code>
-    the host address to bind to (used by supporting Rack::Handler)
-</LI>
-<LI><code>:Port</code>
-    the port to bind to (used by supporting Rack::Handler)
-</LI>
-<LI><code>:AccessLog</code>
-    webrick acess log options (or supporting Rack::Handler)
-</LI>
-<LI><code>:debug</code>
-    turn on debug output <code>($DEBUG = true)</code>
-</LI>
-<LI><code>:warn</code>
-    turn on warnings (<code>$-w = true</code>)
-</LI>
-<LI><code>:include</code>
-    add given paths to <code>$LOAD_PATH</code>
-</LI>
-<LI><code>:require</code>
-    require the given libraries
+<LI>While HTTP does not provide a method for web server to instruct the
+browser to "log out" the user (forget cached credentials), there
+are a number of workarounds using specific features in various
+browsers. One of them is redirecting the user to an URL on the same
+domain containing credentials that are intentionally incorrect
 </LI>
 </OL>
 
 <P>
 
-<H4><A NAME="SECTION031150020000000000000">
-Ejemplo de uso</A>
+<H4><A NAME="SECTION031120020000000000000">
+Protocolo</A>
 </H4>
   
 
 <P>
-Si no se especifica, <code>rackup</code> busca un fichero con nombre <code>config.ru</code>.
+
+<OL>
+<LI>When the server wants the user agent to authenticate itself towards
+the server, it can send a request for authentication.
+</LI>
+<LI>This request should be sent using the HTTP 401 Not Authorized
+response code containing a WWW-Authenticate HTTP header.
+</LI>
+<LI>The WWW-Authenticate header for basic authentication (used most
+often) is constructed as following:
 <PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ cat config.ru 
-require './myapp'
-run MyApp.new
+WWW-Authenticate: Basic realm="insert realm"
+</PRE>
+</LI>
+<LI>When the user agent wants to send the server authentication credentials
+it may use the Authorization header.
+</LI>
+<LI>The Authorization header is constructed as follows:
+  
+<OL>
+<LI>Username and password are combined into a string <code>username:password</code>
+</LI>
+<LI>The resulting string literal is then encoded using Base64
+</LI>
+<LI>The authorization method and a space i.e. <code>Basic </code> is then put
+  before the encoded string.
+</LI>
+<LI>For example, if the user agent uses 
+  <code>Aladdin</code> as the username and
+  <code>open sesame</code> as the password then the header is formed as
+  follows:.
+  <PRE>
+  Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+</PRE>
+</LI>
+</OL>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION031120030000000000000">
+Ejemplo de BA en Rack</A>
+</H4>
+  
+
+<P>
+Initialize with the Rack application that you want protecting, and
+a block that checks if a username and password pair are valid.
+
+<P>
+Puede encontrar el fuente en <A NAME="tex2html885"
+  HREF="https://github.com/crguezl/rack-lobster/blob/master/protectedlobster.rb">GitHub</A>
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ cat protectedlobster.rb
+require 'rack'
+require './lobster'
+require 'yaml'
+
+lobster = Rack::Lobster.new
+
+passwd = YAML.load(File.open('etc/passwd.yml').read)
+
+protected_lobster = Rack::Auth::Basic.new(lobster) do |username, password|
+  passwd[username] == password
+end
+
+protected_lobster.realm = 'Lobster 2.0'
+pretty_protected_lobster = Rack::ShowStatus.new(Rack::ShowExceptions.new(protected_lobster))
+
+Rack::Server.start :app =&gt; pretty_protected_lobster, :Port =&gt; 9292
 </PRE>
 
 <P>
-Esta es la aplicación:
+
+<H4><A NAME="SECTION031120040000000000000"></A>
+<BR>
+<A NAME="tex2html886"
+  HREF="https://github.com/crguezl/rack-lobster/blob/master/lobster.rb">lobster.rb</A>
+</H4>
+  
+
 <PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ cat myapp.rb 
-class MyApp
-  def call env
-    [200, {"Content-Type" =&gt; "text/html"}, ["Hello Rack Participants"]] 
+[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ cat lobster.rb 
+require 'rack/request'
+require 'rack/response'
+
+module Rack
+  class Lobster
+    LobsterString = "a lobster"
+
+    def call(env)
+      req = Request.new(env)
+
+      req.env.keys.sort.each { |x| puts "#{x} =&gt; #{req.env[x]}" }
+
+      if req.GET["flip"] == "left"
+        lobster = LobsterString.reverse
+        href = "?flip=right"
+      elsif req.GET["flip"] == "crash"
+        raise "Lobster crashed"
+      else
+        lobster = LobsterString
+        href = "?flip=left"
+      end
+
+      res = Response.new
+      res.write &lt;&lt;-"EOS"
+      &lt;title&gt;Lobstericious!&lt;/title&gt;
+      &lt;pre&gt;
+      #{lobster}
+      &lt;/pre&gt;
+      &lt;p&gt;&lt;a href='#{href}'&gt;flip!&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;a href='?flip=crash'&gt;crash!&lt;/a&gt;&lt;/p&gt;
+      EOS
+      res.finish
+    end
   end
 end
+
+if $0 == __FILE__
+  require 'rack'
+  require 'rack/showexceptions'
+  Rack::Server.start(
+    :app =&gt; Rack::ShowExceptions.new(
+              Rack::Lint.new(
+                Rack::Lobster.new)), 
+    :Port =&gt; 9292,
+    :server =&gt; 'thin'
+  )
+end
 </PRE>
+
+<P>
+
+<H4><A NAME="SECTION031120050000000000000">
+etc/passwd.yml</A>
+</H4>
+  
 
 <P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ cat Rakefile 
-task :default =&gt; :server
+[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ cat etc/passwd.yml 
+--- # Indented Block
+   casiano: tutu
+   ana: titi
+</PRE>
 
-desc "run server"
-task :server do
-  sh "rackup"
+<P>
+
+<H4><A NAME="SECTION031120060000000000000">
+Rakefile</A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ cat Rakefile
+...
+
+desc "run the server for protectedlobster"
+task :protected do
+  sh "ruby protectedlobster.rb"
 end
 
-desc "run client via curl"
-task :client do
-  sh "curl -v localhost:9292"
+desc "run the client with user and password flip left"
+task :protectedleft do
+  sh %q{curl -v --basic -u casiano:tutu 'http://localhost:9292?flip=left'}
+end
+
+...
+
+task :crash do
+  sh %q{curl -v 'http://localhost:9292/?flip=crash'}
 end
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION031150030000000000000">
+<H4><A NAME="SECTION031120070000000000000">
 Ejecución</A>
 </H4>
   
 
 <P>
+
+<OL>
+<LI>Servidor:
 <PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ rackup
+[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ rake protected
+ruby protectedlobster.rb
 &gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
 &gt;&gt; Maximum connections set to 1024
 &gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
 </PRE>
-
-<P>
+</LI>
+<LI>Cliente:
 <PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ curl -v localhost:9292
+[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ rake protectedleft
+curl -v --basic -u casiano:tutu 'http://localhost:9292?flip=left'
 * About to connect() to localhost port 9292 (#0)
 *   Trying ::1... Connection refused
 *   Trying 127.0.0.1... connected
 * Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET / HTTP/1.1
+* Server auth using Basic with user 'casiano'
+&gt; GET /?flip=left HTTP/1.1
+&gt; Authorization: Basic Y2FzaWFubzpzZWNyZXRv
 &gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
 &gt; Host: localhost:9292
 &gt; Accept: */*
 &gt; 
 &lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html
-&lt; Transfer-Encoding: chunked
-&lt; Connection: close
+&lt; Content-Length: 168
+&lt; Connection: keep-alive
 &lt; Server: thin 1.5.1 codename Straight Razor
 &lt; 
+      &lt;title&gt;Lobstericious!&lt;/title&gt;
+      &lt;pre&gt;
+      retsbol a
+      &lt;/pre&gt;
+      &lt;p&gt;&lt;a href='?flip=right'&gt;flip!&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;a href='?flip=crash'&gt;crash!&lt;/a&gt;&lt;/p&gt;
+* Connection #0 to host localhost left intact
 * Closing connection #0
-Hello Rack Participants
 </PRE>
-
-<P>
-
-<H4><A NAME="SECTION031150040000000000000">
-Opciones del ejecutable <TT>rackup</TT></A>
-</H4>
-  
-
-<OL>
-<LI>Véase <A NAME="tex2html890"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=rackup"><TT>rackup</TT></A>.
+</LI>
+<LI>Servidor después de la petición:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ rake protected
+ruby protectedlobster.rb
+&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+...
+HTTP_AUTHORIZATION =&gt; Basic Y2FzaWFubzp0dXR1
+REMOTE_USER =&gt; casiano
+...
+</PRE>
 </LI>
 </OL>
 
 <P>
-<PRE>
-[~]$ rackup --help
-Usage: rackup [ruby options] [rack options] [rackup config]
 
-Ruby options:
-  -e, --eval LINE          evaluate a LINE of code
-  -d, --debug              set debugging flags (set $DEBUG to true)
-  -w, --warn               turn warnings on for your script
-  -I, --include PATH       specify $LOAD_PATH (may be used more than once)
-  -r, --require LIBRARY    require the library, before executing your script
-
-Rack options:
-  -s, --server SERVER      serve using SERVER (webrick/mongrel)
-  -o, --host HOST          listen on HOST (default: 0.0.0.0)
-  -p, --port PORT          use PORT (default: 9292)
-  -O NAME[=VALUE],         pass VALUE to the server as option NAME. 
-                           If no VALUE, sets it to true. 
-                           Run 
-                           'rackup -s SERVER -h' 
-                           to get a list of options for SERVER
-      --option
-  -E, --env ENVIRONMENT    use ENVIRONMENT for defaults (default: development)
-  -D, --daemonize          run daemonized in the background
-  -P, --pid FILE           file to store PID (default: rack.pid)
-
-Common options:
-  -h, -?, --help           Show this message
-      --version            Show version
-</PRE>
+<img src="protectedlobster.png" />
+<p>
+Autentificación Básica: vista en el navegador
 
 <P>
 
-<H4><A NAME="SECTION031150050000000000000">
-Especificación de Opciones en la primera línea</A>
+<p>
+Si pulsamos "cancel" obtenemos:<p>
+<p>
+<img src="protectedlobstershowstatus.png" />
+
+<P>
+
+<H4><A NAME="SECTION031120080000000000000">
+Véase</A>
 </H4>
   
 
-Si la primera línea de un fichero <code>config.ru</code> empieza por <code>\#</code> es tratada 
-como una línea de opciones permitiendo así que los argumentos de  <TT>rackup</TT> 
-se especifiquen en el fichero de configuración:
-
 <P>
-<PRE>
-#\-w -p 8765
 
-use Rack::Reloader, 0
-use Rack::ContentLength
-
-app = proc do |env|
-  [200, {'content-Type' =&gt; 'text/plain' }, ['a']]
-end
-
-run app
-</PRE>
+<OL>
+<LI>Código de <A NAME="tex2html887"
+  HREF="https://github.com/crguezl/rack-lobster">rack-lobster</A>
+en GitHub
+</LI>
+<LI>Código fuente de <A NAME="tex2html888"
+  HREF="https://github.com/rack/rack/blob/master/lib/rack/auth/basic.rb">Rack::Auth::Basic</A>
+</LI>
+<LI>Documentación en <A NAME="tex2html889"
+  HREF="http://rack.rubyforge.org/doc/Rack/Auth/Basic.html">Rack::Auth::Basic</A>
+</LI>
+<LI>La Wikipedia <A NAME="tex2html890"
+  HREF="http://en.wikipedia.org/wiki/Basic_access_authentication">Basic Access Authentication</A>
+</LI>
+</OL>
 
 <P>
 <BR><HR>
@@ -409,35 +460,41 @@ run app
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html9810"
-  HREF="node383.html#SECTION031150010000000000000">Introducción</A>
-<LI><A NAME="tex2html9811"
-  HREF="node383.html#SECTION031150020000000000000">Ejemplo de uso</A>
-<LI><A NAME="tex2html9812"
-  HREF="node383.html#SECTION031150030000000000000">Ejecución</A>
-<LI><A NAME="tex2html9813"
-  HREF="node383.html#SECTION031150040000000000000">Opciones del ejecutable <TT>rackup</TT></A>
-<LI><A NAME="tex2html9814"
-  HREF="node383.html#SECTION031150050000000000000">Especificación de Opciones en la primera línea</A>
+<LI><A NAME="tex2html9841"
+  HREF="node383.html#SECTION031120010000000000000">Introducción</A>
+<LI><A NAME="tex2html9842"
+  HREF="node383.html#SECTION031120020000000000000">Protocolo</A>
+<LI><A NAME="tex2html9843"
+  HREF="node383.html#SECTION031120030000000000000">Ejemplo de BA en Rack</A>
+<LI><A NAME="tex2html9844"
+  HREF="node383.html#SECTION031120040000000000000">lobster.rb</A>
+<LI><A NAME="tex2html9845"
+  HREF="node383.html#SECTION031120050000000000000">etc/passwd.yml</A>
+<LI><A NAME="tex2html9846"
+  HREF="node383.html#SECTION031120060000000000000">Rakefile</A>
+<LI><A NAME="tex2html9847"
+  HREF="node383.html#SECTION031120070000000000000">Ejecución</A>
+<LI><A NAME="tex2html9848"
+  HREF="node383.html#SECTION031120080000000000000">Véase</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9808"
+<A NAME="tex2html9839"
   HREF="node384.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9802"
-  HREF="node356.html">
+<A NAME="tex2html9833"
+  HREF="node359.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9796"
+<A NAME="tex2html9827"
   HREF="node382.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9804"
-  HREF="node823.html">
+<A NAME="tex2html9835"
+  HREF="node832.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9806"
-  HREF="node826.html">
+<A NAME="tex2html9837"
+  HREF="node835.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -488,20 +545,20 @@ run app
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9809"
-  HREF="node384.html">Rack::Static</A>
-<B> Subir:</B> <A NAME="tex2html9803"
-  HREF="node356.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9797"
-  HREF="node382.html">La Estructura de una</A>
- &nbsp; <B>  <A NAME="tex2html9805"
-  HREF="node823.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9807"
-  HREF="node826.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9840"
+  HREF="node384.html">Redirección</A>
+<B> Subir:</B> <A NAME="tex2html9834"
+  HREF="node359.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9828"
+  HREF="node382.html">Práctica: Accediendo a Twitter</A>
+ &nbsp; <B>  <A NAME="tex2html9836"
+  HREF="node832.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9838"
+  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-20
+2014-11-25
 </ADDRESS>
 </BODY>
 </HTML>
