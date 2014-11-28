@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Deferred or streaming response bodies</TITLE>
-<META NAME="description" CONTENT="Deferred or streaming response bodies">
+<TITLE>Asynchronous responses in Rack</TITLE>
+<META NAME="description" CONTENT="Asynchronous responses in Rack">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node496.html">
 <LINK REL="previous" HREF="node493.html">
-<LINK REL="up" HREF="node493.html">
+<LINK REL="up" HREF="node477.html">
 <LINK REL="next" HREF="node495.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11785"
+<A NAME="tex2html11789"
   HREF="node495.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11779"
-  HREF="node493.html">
+<A NAME="tex2html11783"
+  HREF="node477.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11775"
+<A NAME="tex2html11777"
   HREF="node493.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11781"
-  HREF="node840.html">
+<A NAME="tex2html11785"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11783"
-  HREF="node843.html">
+<A NAME="tex2html11787"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,109 +92,111 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11786"
-  HREF="node495.html">Código en sinatra/base.rb: la</A>
-<B> Subir:</B> <A NAME="tex2html11780"
-  HREF="node493.html">Asynchronous responses in Rack</A>
-<B> Anterior:</B> <A NAME="tex2html11776"
-  HREF="node493.html">Asynchronous responses in Rack</A>
- &nbsp; <B>  <A NAME="tex2html11782"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11784"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11790"
+  HREF="node495.html">Deferred or streaming response</A>
+<B> Subir:</B> <A NAME="tex2html11784"
+  HREF="node477.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11778"
+  HREF="node493.html">Ejemplo de Server Sent</A>
+ &nbsp; <B>  <A NAME="tex2html11786"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11788"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION038151000000000000000">
-Deferred or streaming response bodies</A>
-</H2>
+<H1><A NAME="SECTION038150000000000000000">
+Asynchronous responses in Rack</A>
+</H1>
 
 <P>
-The example shows a one-shot request, wait, response cycle. But it
-is possible to have multiple wait, response segments to allow the
-headers to be sent to the client immediately, or the body to trickle
-in slowly without blocking the worker process. 
+<A NAME="tex2html1208"
+  HREF="http://polycrystal.org/2012/04/15/asynchronous_responses_in_rack.html">Asynchronous responses in Rack</A>
+<P>
+With the Rack  synchronous interface protocol, the entire body must
+be prepared immediately, or be otherwise quickly available, for
+example by reading from file. A response that must be waited upon
+will tie up the process or thread executing the HTTP request. In a
+multi-process Rack server such as Unicorn, this will block the
+entire worker process, making in unavailable to server other requests.
 
 <P>
-Async Rack servers,
-when <code>env['async.callback']</code> is called, send the status and headers
-to the client and then begin iterating through each part of the
-body with <code>#each</code>. 
+Some Rack servers provide an alternate interface that allows the
+request to be suspended, unblocking the worker. At some later time,
+the request may be resumed, and the response sent to the client.
 
 <P>
-After the last body part the server must decide
-if the connection to the client should be closed (entire body has
-been provided) or if it should remain open (body parts will be
-provided later). The details of this decision are implementation-specific.
-For now, assume the connection is not closed. To send additional
-body parts, <code>env['async.callback']</code> may not be called a second time
-since the status code and headers have already been sent to the
-client and can not be changed. The app takes advantage of the
-server's iteration through the body with <code>#each:</code> 
+While there is not yet an async interface in the Rack specification,
+several Rack servers have implemented 
+<A NAME="tex2html1209"
+  HREF="https://github.com/raggi/thin/blob/async_for_rack/example/async_app.ru">James Tucker's async scheme.</A>
+<P>
+Rather than returning <code>[status, headers, body]</code>, the app returns a
+status of <code>-1</code>, or throws the symbol <code>:async</code>. 
 
 <P>
-the server calls
-<code>body.each(&amp;block)</code>, 
-and the trick is to save <code>&amp;block</code> for later use.
-This turns the iteration inside-out: rather than the sever iterating
-through a body, the app takes control to send each part of the body
-itself.
+The server provides
+<code>env['async.callback']</code> 
+which the app saves and later calls with the
+usual <code>[status, headers, body]</code> 
+to send the response.
+
+<P>
+Note: returning a status of <code>-1</code> is illegal as far as <code>Rack::Lint</code> is
+concerned. <code>throw :async</code> is not flagged as an <code>error</code>.
 <PRE>
-class DeferredBody
-  def each(&amp;block)
-    # normally we'd yield each part of the body, but since
-    # it isn't available yet, we save &amp;block for later
-    @server_block = block
-  end
-
-  def send(data)
-    # calling the saved &amp;block has the same effect as
-    # if we had yielded to it
-    @server_block.call data
-  end
-end
-
 class AsyncApp
   def call(env)
     Thread.new do
       sleep 5  # simulate waiting for some event
-      body = DeferredBody.new
-      response = [200, {'Content-Type' =&gt; 'text/plain'}, body]
+      response = [200, {'Content-Type' =&gt; 'text/plain'}, ['Hello, World!']]
       env['async.callback'].call response
-
-      # at this point, the server may send the status and headers,
-      # but the body was empty
-      
-      body.send 'Hello, '
-      sleep 5
-      body.send 'World'
     end
     
     [-1, {}, []]  # or throw :async
   end
 end
 </PRE>
-Note that the above won't quite work because we haven't signaled to the server that the body will be deferred and streamed in part by part.
 
 <P>
+In the example above, the request is suspended, nothing is sent
+back to the client, the connection remains open, and the client
+waits for a response. 
+
+<P>
+The app returns the special status, and the
+worker process is able to handle more HTTP requests (i.e. it is not
+blocked). Later, inside the thread, the full response is prepared
+and sent to the client.
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html11791"
+  HREF="node495.html">Deferred or streaming response bodies</A>
+</UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11785"
+<A NAME="tex2html11789"
   HREF="node495.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11779"
-  HREF="node493.html">
+<A NAME="tex2html11783"
+  HREF="node477.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11775"
+<A NAME="tex2html11777"
   HREF="node493.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11781"
-  HREF="node840.html">
+<A NAME="tex2html11785"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11783"
-  HREF="node843.html">
+<A NAME="tex2html11787"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -244,16 +247,16 @@ Note that the above won't quite work because we haven't signaled to the server t
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11786"
-  HREF="node495.html">Código en sinatra/base.rb: la</A>
-<B> Subir:</B> <A NAME="tex2html11780"
-  HREF="node493.html">Asynchronous responses in Rack</A>
-<B> Anterior:</B> <A NAME="tex2html11776"
-  HREF="node493.html">Asynchronous responses in Rack</A>
- &nbsp; <B>  <A NAME="tex2html11782"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11784"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11790"
+  HREF="node495.html">Deferred or streaming response</A>
+<B> Subir:</B> <A NAME="tex2html11784"
+  HREF="node477.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11778"
+  HREF="node493.html">Ejemplo de Server Sent</A>
+ &nbsp; <B>  <A NAME="tex2html11786"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11788"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

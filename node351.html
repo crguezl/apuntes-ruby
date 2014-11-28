@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Random bouncy particles using ruby Gosu games library</TITLE>
-<META NAME="description" CONTENT="Random bouncy particles using ruby Gosu games library">
+<TITLE>Starfighter</TITLE>
+<META NAME="description" CONTENT="Starfighter">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node352.html">
 <LINK REL="previous" HREF="node350.html">
-<LINK REL="up" HREF="node347.html">
+<LINK REL="up" HREF="node348.html">
 <LINK REL="next" HREF="node352.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9107"
+<A NAME="tex2html9112"
   HREF="node352.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9101"
-  HREF="node347.html">
+<A NAME="tex2html9106"
+  HREF="node348.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9097"
+<A NAME="tex2html9100"
   HREF="node350.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9103"
-  HREF="node840.html">
+<A NAME="tex2html9108"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9105"
-  HREF="node843.html">
+<A NAME="tex2html9110"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,89 +92,159 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9108"
-  HREF="node352.html">Shoes</A>
-<B> Subir:</B> <A NAME="tex2html9102"
-  HREF="node347.html">Juegos con Gosu</A>
-<B> Anterior:</B> <A NAME="tex2html9098"
-  HREF="node350.html">Starfighter</A>
- &nbsp; <B>  <A NAME="tex2html9104"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9106"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9113"
+  HREF="node352.html">Random bouncy particles using</A>
+<B> Subir:</B> <A NAME="tex2html9107"
+  HREF="node348.html">Juegos con Gosu</A>
+<B> Anterior:</B> <A NAME="tex2html9101"
+  HREF="node350.html">El Juego de la</A>
+ &nbsp; <B>  <A NAME="tex2html9109"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9111"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021940000000000000000">
-Random bouncy particles using ruby Gosu games library</A>
+<H1><A NAME="SECTION021930000000000000000">
+Starfighter</A>
 </H1>
-<A NAME="tex2html841"
-  HREF="https://gist.github.com/blazeeboy/9463030">Random bouncy particles using ruby Gosu games library</A>
-<P>
-
-<H4><A NAME="SECTION021940010000000000000">
-Donde</A>
-</H4>
-  
-
-<PRE>
-[~/src/ruby/rubytesting/gosu]$ pwd -P
-/Users/casiano/local/src/ruby/rubytesting/gosu
-</PRE>
+Para entender este código véase el tutorial 
+en 
+<A NAME="tex2html839"
+  HREF="https://github.com/jlnr/gosu/wiki/Ruby-Tutorial">Gosu Ruby Tutorial</A>.
+Las imágenes pueden encontrarse en el directorio <A NAME="tex2html840"
+  HREF="https://github.com/jlnr/gosu/tree/master/examples/media">examples/media</A>
+de Gosu.
 
 <P>
-
-<H4><A NAME="SECTION021940020000000000000">
-Código</A>
-</H4>
-  
-
 <PRE>
-[~/src/ruby/rubytesting/gosu]$ cat bouncing.rb 
+require 'rubygems'
 require 'gosu'
-$width, $height = 200, 200
-$number_of_particles = 200
 
-class Quad
-  def initialize
-    @pos = {x:rand($width), y:rand($width)}
-    @vel = { x:(rand(5)+1)*[1,-1].sample, y:(rand(5)+1)*[1,-1].sample }
-    @size = rand(4)*[1,-1].sample
-    @color = [  Gosu::Color::GRAY, Gosu::Color::WHITE,
-                Gosu::Color::AQUA, Gosu::Color::RED,
-                Gosu::Color::GREEN, Gosu::Color::BLUE,
-                Gosu::Color::YELLOW, Gosu::Color::FUCHSIA,
-                Gosu::Color::CYAN ].sample
+module ZOrder
+  Background, Stars, Player, UI = *0..3
+end
+
+class Player
+  attr_reader :score
+
+  def initialize(window)
+    @image = Gosu::Image.new(window, "media/Starfighter.bmp", false)
+    @beep = Gosu::Sample.new(window, "media/Beep.wav")
+    @x = @y = @vel_x = @vel_y = @angle = 0.0
+    @score = 0
   end
-  def update
-    @vel[:x] = @vel[:x] * -1 if @pos[:x] &lt;= 0 or @pos[:x] &gt;= $width
-    @vel[:y] = @vel[:y] * -1 if @pos[:y] &lt;= 0 or @pos[:y] &gt;= $height
-    @pos[:x] += @vel[:x]
-    @pos[:y] += @vel[:y] 
+
+  def warp(x, y)
+    @x, @y = x, y
   end
-  def draw win
-    win.draw_quad @pos[:x]-@size, @pos[:y]-@size, @color,
-                  @pos[:x]+@size, @pos[:y]-@size, @color,
-                  @pos[:x]+@size, @pos[:y]+@size, @color,
-                  @pos[:x]-@size, @pos[:y]+@size, @color
+  
+  def turn_left
+    @angle -= 4.5
+  end
+  
+  def turn_right
+    @angle += 4.5
+  end
+  
+  def accelerate
+    @vel_x += Gosu::offset_x(@angle, 0.5)
+    @vel_y += Gosu::offset_y(@angle, 0.5)
+  end
+  
+  def move
+    @x += @vel_x
+    @y += @vel_y
+    @x %= 640
+    @y %= 480
+    
+    @vel_x *= 0.95
+    @vel_y *= 0.95
+  end
+
+  def draw
+    @image.draw_rot(@x, @y, ZOrder::Player, @angle)
+  end
+  
+  def collect_stars(stars)
+    stars.reject! do |star|
+      if Gosu::distance(@x, @y, star.x, star.y) &lt; 35 then
+        @score += 10
+        @beep.play
+        true
+      else
+        false
+      end
+    end
+  end
+end
+
+class Star
+  attr_reader :x, :y
+  
+  def initialize(animation)
+    @animation = animation
+    @color = Gosu::Color.new(0xff000000)
+    @color.red = rand(256 - 40) + 40
+    @color.green = rand(256 - 40) + 40
+    @color.blue = rand(256 - 40) + 40
+    @x = rand * 640
+    @y = rand * 480
+  end
+
+  def draw  
+    img = @animation[Gosu::milliseconds / 100 % @animation.size]
+    img.draw(@x - img.width / 2.0, @y - img.height / 2.0,
+        ZOrder::Stars, 1, 1, @color, :add)
   end
 end
 
 class GameWindow &lt; Gosu::Window
   def initialize
-    super $width, $height, false
-    self.caption = "Quads"
-    @quads = []
-    $number_of_particles.times { @quads &lt;&lt; Quad.new }
+    super(640, 480, false)
+    self.caption = "Gosu Tutorial Game"
+    
+    @background_image = Gosu::Image.new(self, "media/Space.png", true)
+    
+    @player = Player.new(self)
+    @player.warp(320, 240)
+
+    @star_anim = Gosu::Image::load_tiles(self, "media/Star.png", 25, 25, false)
+    @stars = Array.new
+    
+    @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
   end
+
   def update
-    @quads.each {|q| q.update }
+    if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft then
+      @player.turn_left
+    end
+    if button_down? Gosu::KbRight or button_down? Gosu::GpRight then
+      @player.turn_right
+    end
+    if button_down? Gosu::KbUp or button_down? Gosu::GpButton0 then
+      @player.accelerate
+    end
+    @player.move
+    @player.collect_stars(@stars)
+    
+    if rand(100) &lt; 4 and @stars.size &lt; 25 then
+      @stars.push(Star.new(@star_anim))
+    end
   end
+
   def draw
-    color = Gosu::Color::WHITE
-    draw_quad 0, 0, color, $width, 0, color, $width, $height, color, 0, $height, color
-    @quads.each { |q| q.draw self }
+    @background_image.draw(0, 0, ZOrder::Background)
+    @player.draw
+    @stars.each { |star| star.draw }
+    @font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xffffff00)
+  end
+
+  def button_down(id)
+    if id == Gosu::KbEscape then
+      close
+    end
   end
 end
 
@@ -182,19 +253,6 @@ window.show
 </PRE>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html9109"
-  HREF="node351.html#SECTION021940010000000000000">Donde</A>
-<LI><A NAME="tex2html9110"
-  HREF="node351.html#SECTION021940020000000000000">Código</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León

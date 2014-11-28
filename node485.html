@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Enlaces Relacionados</TITLE>
-<META NAME="description" CONTENT="Enlaces Relacionados">
+<TITLE>Chat Utilizando Streaming y Server Sent Events (SSE)</TITLE>
+<META NAME="description" CONTENT="Chat Utilizando Streaming y Server Sent Events (SSE)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node486.html">
+<LINK REL="next" HREF="node488.html">
 <LINK REL="previous" HREF="node484.html">
-<LINK REL="up" HREF="node484.html">
+<LINK REL="up" HREF="node477.html">
 <LINK REL="next" HREF="node486.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11656"
+<A NAME="tex2html11657"
   HREF="node486.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11650"
-  HREF="node484.html">
+<A NAME="tex2html11651"
+  HREF="node477.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11644"
+<A NAME="tex2html11645"
   HREF="node484.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11652"
-  HREF="node840.html">
+<A NAME="tex2html11653"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11654"
-  HREF="node843.html">
+<A NAME="tex2html11655"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,97 +92,504 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11657"
-  HREF="node486.html">Código Completo del Chat</A>
-<B> Subir:</B> <A NAME="tex2html11651"
-  HREF="node484.html">Chat Utilizando Streaming y</A>
-<B> Anterior:</B> <A NAME="tex2html11645"
-  HREF="node484.html">Chat Utilizando Streaming y</A>
- &nbsp; <B>  <A NAME="tex2html11653"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11655"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11658"
+  HREF="node486.html">Enlaces Relacionados</A>
+<B> Subir:</B> <A NAME="tex2html11652"
+  HREF="node477.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11646"
+  HREF="node484.html">Comet</A>
+ &nbsp; <B>  <A NAME="tex2html11654"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11656"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03881000000000000000">
-Enlaces Relacionados</A>
-</H2>
+<H1><A NAME="SECTION03880000000000000000"></A>
+<A NAME="section:chatutilizandostreaming"></A>
+<BR>
+Chat Utilizando Streaming y Server Sent Events (SSE)
+</H1>
 
 <P>
+Los fuentes de este ejemplo se encuentran en la rama <code>original</code> del repositorio
+<A NAME="tex2html1157"
+  HREF="https://github.com/crguezl/sinatra-streaming-example-chat/tree/original">sinatra-streaming-example-chat</A>.
+La rama <code>simple</code> en
+<A NAME="tex2html1158"
+  HREF="https://github.com/crguezl/sinatra-streaming-example-chat/tree/simple">https://github.com/crguezl/sinatra-streaming-example-chat/tree/simple</A>
+contiene una versión equivalente pero con los templates separados.
+
+<P>
+<PRE>
+[~/srcSTW/streaming/chat_with_streaming(master)]$ cat -n chat.rb 
+ 1  # coding: utf-8
+ 2  require 'sinatra'
+ 3  set server: 'thin', connections: []
+ 4  
+ 5  get '/' do
+ 6    halt erb(:login) unless params[:user]
+ 7    erb :chat, locals: { user: params[:user].gsub(/\W/, '') }
+ 8  end
+</PRE>
+Cuando se visita la raíz la primera vez <code>params[:user]</code> es <code>nil</code>
+y se muestra el formulario definido en <code>login.erb</code> que obtiene un alias
+para el usuario:
+<PRE>
+[~/sinatra/sinatra-streaming/chat_with_streaming(simple)]$ cat views/login.erb 
+&lt;form action='/' method='GET'&gt;
+  &lt;label for='user'&gt;User Name:&lt;/label&gt;
+  &lt;input name='user' value='' autofocus/&gt;
+  &lt;input type='submit' value="GO!" /&gt;
+&lt;/form&gt;
+</PRE>
+El atributo <code>for='user'</code> de <code>label</code> indica que esta etiqueta está asociada
+con el campo <code>input</code> cuyo atributo <code>name</code> es <code>user</code>.
+
+<P>
+Una vez que el <code>&lt;input name='user'&gt;</code> es rellenado el formulario es procesado por la misma
+ruta <code>/</code> que ahora muestra el resultado de la plantilla <code>chat</code>. 
+<PRE>
+10  get '/stream', provides: 'text/event-stream' do
+11    stream :keep_open do |out|
+12      settings.connections &lt;&lt; out
+13      out.callback { settings.connections.delete(out) }
+14    end
+15  end
+</PRE>
+Routes may include a variety of matching conditions, such as the user <code>agent:</code>,
+<code>:host_name</code> and <code>:provides</code>:
+<PRE>
+get '/', :provides =&gt; ['rss', 'atom', 'xml'] do
+  builder :feed
+end
+</PRE>
+Sending an event stream from the source is a matter of constructing
+a plaintext response, served with a <code>text/event-stream</code> Content-Type,
+that follows the Server Sent Event (SSE) format. 
+
+<P>
+Sigamos:
+<PRE>
+16  
+17  post '/' do
+18    settings.connections.each { |out| out &lt;&lt; "data: #{params[:msg]}\n\n" }
+19    204 # response without entity body
+20  end
+</PRE>
+
+<P>
+<B>204 No Content</B>
+
+<P>
+The server has fulfilled the request but does not need to return
+an entity-body, and might want to return updated metainformation.
+
+<P>
+If the client is a user agent, it SHOULD NOT change its document
+view from that which caused the request to be sent. This response
+is primarily intended to allow input for actions to take place
+without causing a change to the user agent's active document view,
+although any new or updated metainformation SHOULD be applied to
+the document currently in the user agent's active view.
+
+<P>
+The 204 response MUST NOT include a message-body, and thus is always
+terminated by the first empty line after the header fields.
+<PRE>
+21  
+22  __END__
+23  
+24  @@ layout
+25  &lt;html&gt;
+26    &lt;head&gt; 
+27      &lt;title&gt;Super Simple Chat with Sinatra&lt;/title&gt; 
+28      &lt;meta charset="utf-8" /&gt;
+29      &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"&gt;&lt;/script&gt; 
+30    &lt;/head&gt; 
+31    &lt;body&gt;&lt;%= yield %&gt;&lt;/body&gt;
+32  &lt;/html&gt;
+</PRE>
+
+<P>
+The <code>&lt;script&gt;</code> tag is used to define a client-side script, such as a JavaScript.
+
+<P>
+The <code>&lt;script&gt;</code> element either contains scripting statements, or it points to an external script file through the <code>src</code> attribute.
+
+<P>
+Common uses for JavaScript are image manipulation, form validation, and dynamic changes of content.
+
+<P>
+The <A NAME="tex2html1159"
+  HREF="https://developers.google.com/speed/libraries/devguide">Google Hosted Libraries</A>
+is a content distribution network for
+the most popular, open-source JavaScript libraries. To add a library
+to your site, simply use <code>&lt;script&gt;</code> tags to include the library.
+See <A NAME="tex2html1160"
+  HREF="https://developers.google.com/speed/libraries/devguide#jquery">https://developers.google.com/speed/libraries/devguide</A>:
+<PRE>
+jQuery
+snippet: &lt;script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"&gt;&lt;/script&gt;
+site: http://jquery.com/
+versions: 1.8.3, 1.8.2, 1.8.1, 1.8.0, ...
+note: 1.2.5 and 1.2.4 are not hosted due to their short and unstable lives in the wild.
+</PRE>
+
+<P>
+<A NAME="tex2html1161"
+  HREF="http://docs.jquery.com/">jQuery</A>
+is a fast and concise JavaScript Library that simplifies
+HTML document traversing, event handling, animating, and Ajax
+interactions for rapid web development.
+
+<P>
+<code>jquery.min.js</code> is a minified version of the <A NAME="tex2html1162"
+  HREF="http://docs.jquery.com/">JQuery JavaScript library</A>,
+which provides a number of basic functions for websites. 
+
+<P>
+<PRE>
+34  @@ login
+35  &lt;form action='/'&gt;
+36    &lt;label for='user'&gt;User Name:&lt;/label&gt;
+37    &lt;input name='user' value='' /&gt;
+38    &lt;input type='submit' value="GO!" /&gt;
+39  &lt;/form&gt;
+40  
+41  @@ chat
+42  &lt;pre id='chat'&gt;&lt;/pre&gt;
+43  
+44  &lt;script&gt;
+45    // reading
+46    var es = new EventSource('/stream');
+47    es.onmessage = function(e) { $('#chat').append(e.data + "\n") };
+48  
+49    // writing
+50    $("form").live("submit", function(e) {
+51      $.post('/', {msg: "&lt;%= user %&gt;: " + $('#msg').val()});
+52      $('#msg').val(''); $('#msg').focus();
+53      e.preventDefault();
+54    });
+55  &lt;/script&gt;
+56  
+57  &lt;form&gt;
+58    &lt;input id='msg' placeholder='type message here...' /&gt;
+59  &lt;/form&gt;
+</PRE>
 
 <UL>
-<LI><A NAME="tex2html1168"
-  HREF="http://confreaks.com/videos/727-rockymtnruby2011-real-time-rack">Real Time Rack por Konstantin Haase</A>
-en 
-<A NAME="tex2html1169"
-  HREF="http://confreaks.com/">http://confreaks.com/</A>
+<LI><A NAME="21372"></A><SPAN  CLASS="textbf">Server-Sent Events (SSE)</SPAN> are a standard describing how servers can
+initiate data transmission towards clients once an initial client
+connection has been established. 
 </LI>
-<LI><A NAME="tex2html1170"
-  HREF="https://github.com/rkh/presentations/tree/realtime-rack">Slides for "Real Time Rack"</A>. Contains the example used in the presentations.
-It is also of how to use Scott Chacon 
-<A NAME="tex2html1171"
-  HREF="https://github.com/schacon/showoff">showoff</A>
-presentation software
+<LI>They are commonly used to send
+message updates or continuous data streams to a browser client and
+designed to enhance native, cross-browser streaming through a
+JavaScript API called <A NAME="tex2html1163"
+  HREF="https://developer.mozilla.org/en/Server-sent_events/EventSource">EventSource</A>, 
+through which a client requests
+a particular URL in order to receive an event stream.
 </LI>
-<LI>El blog de 
-<A NAME="tex2html1172"
-  HREF="http://rkh.im/">Konstantin Haase</A>
-desarrollador al cargo de Sinatra
+<LI>The idea behind <A NAME="21374"></A><SPAN  CLASS="textbf">SSE</SPAN>s is natural: a web app "subscribes" to a
+stream of updates generated by a server and, whenever a new event
+occurs, a notification is sent to the client. 
 </LI>
-<LI><A NAME="tex2html1173"
-  HREF="https://github.com/rkh?tab=repositories">Konstantin Haase en GitHub</A>
+<LI>When communicating using SSEs, a server can push data to your app
+whenever it wants, without the need to make an initial request. In
+other words, updates can be streamed from server to client as they
+happen. 
 </LI>
-<LI><A NAME="tex2html1174"
-  HREF="https://gist.github.com/1476463">Simple Chat Application using the Sinatra Streaming API</A>
+<LI>SSEs open a <SPAN  CLASS="textbf">single unidirectional channel</SPAN> between server
+and client.
 </LI>
-<LI><A NAME="tex2html1175"
-  HREF="http://www.html5rocks.com/en/tutorials/eventsource/basics/">Stream Updates With Server-Sent Events</A>
+<LI>A Ruby/EventMachine based server implementation for WebSocket and Server-Sent Events is
+provided by <A NAME="tex2html1164"
+  HREF="http://cramp.in/documentation">Cramp</A>.
 </LI>
-<LI><A NAME="tex2html1176"
-  HREF="https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events">Using server-sent events</A>
-</LI>
-<LI><A NAME="tex2html1177"
-  HREF="https://developer.mozilla.org/en-US/docs/Server-sent_events/EventSource">EventSource</A>
-</LI>
-<LI><A NAME="tex2html1178"
-  HREF="http://aaltowebapps.com/websocketsChatSSE.html">Chat Server with server-sent Events</A>
-</LI>
-<LI><A NAME="tex2html1179"
-  HREF="http://aaltowebapps.com/websocketsDrawEM.html">A shared canvas where multiple clients can draw lines using</A>
-<A NAME="tex2html1180"
-  HREF="https://github.com/igrigorik/em-websocket">EM-Websocket</A>
-</LI>
-<LI><A NAME="tex2html1181"
-  HREF="http://docs.jquery.com/">JQuery documentation</A>
-</LI>
-<LI><A NAME="tex2html1182"
-  HREF="http://www.w3.org/TR/DOM-Level-2-Core/introduction.html">What is the Document Object Model?</A>
-</LI>
-<LI><A NAME="tex2html1183"
-  HREF="http://www.w3schools.com/jsref/default.asp">JavaScript and HTML DOM Reference</A>
+<LI>The <A NAME="21376"></A><SPAN  CLASS="textbf">EventSource</SPAN> interface is used to manage <A NAME="21378"></A><SPAN  CLASS="textbf">server-sent events</SPAN>. 
+The server-sent event API is contained in the
+<A NAME="tex2html1165"
+  HREF="https://developer.mozilla.org/en/Server-sent_events/EventSource">EventSource</A>
+interface.
 </LI>
 </UL>
 
 <P>
 
+<UL>
+<LI>To open a connection to the server to begin receiving events from
+it, you create a new <code>EventSource</code> object, specifying the URI of a
+script that generates the events:
+<PRE>
+      var es = new EventSource('/stream')
+</PRE>
+
+<P>
+</LI>
+<LI>Next, we set up a handler for the message event.
+
+<P>
+When updates are pushed from the server, the <code>onmessage</code> handler fires
+and new data is available in its <code>e.data</code> property:
+
+<P>
+<PRE>
+47    es.onmessage = function(e) { $('#chat').append(e.data + "\n") };
+</PRE>
+</LI>
+<LI>The magical
+part is that whenever the connection is closed, the browser will
+automatically reconnect to the source after <code>~3</code> seconds. Your server
+implementation can even have control over this reconnection timeout.
+
+<P>
+</LI>
+<LI>You can
+also call <code>addEventListener()</code> to listen for events just like any
+other event source:
+
+<P>
+<PRE>
+source.addEventListener('message', function(e) {
+  console.log(e.data);
+}, false);
+
+source.addEventListener('open', function(e) {
+  // Connection was opened.
+}, false);
+
+source.addEventListener('error', function(e) {
+  if (e.readyState == EventSource.CLOSED) {
+    // Connection was closed.
+  }
+}, false);
+</PRE>
+
+<P>
+</LI>
+<LI>Código HTML generado:
+<PRE>
+&lt;html&gt;
+  &lt;head&gt; 
+    &lt;title&gt;Super Simple Chat with Sinatra&lt;/title&gt; 
+    &lt;meta charset="utf-8" /&gt;
+    &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"&gt;&lt;/script&gt; 
+  &lt;/head&gt; 
+  &lt;body&gt;&lt;pre id='chat'&gt;&lt;/pre&gt;
+
+&lt;script&gt;
+  // reading
+  var es = new EventSource('/stream');
+  es.onmessage = function(e) { $('#chat').append(e.data + "\n") };
+
+  // writing
+  $("form").live("submit", function(e) {
+    $.post('/', {msg: "casiano: " + $('#msg').val()});
+    $('#msg').val(''); $('#msg').focus();
+    e.preventDefault();
+  });
+&lt;/script&gt;
+
+&lt;form&gt;
+  &lt;input id='msg' placeholder='type message here...' /&gt;
+&lt;/form&gt;&lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+</LI>
+</UL>
+
+<P>
+
+<UL>
+<LI>We start with the dollar sign and parentheses:
+<code>$("form")</code> to specify a selector. 
+The dollar sign ( <code>$</code> ) is simply shorthand for jQuery.
+With <code>$("form")</code> we select all the elements with tag name <code>form</code>
+
+<P>
+</LI>
+<LI><PRE>
+.append( content [, content] )
+</PRE>
+  
+<UL>
+<LI><code>content</code>: <A NAME="tex2html1166"
+  HREF="http://en.wikipedia.org/wiki/Document_Object_Model">DOM</A>
+element, HTML string, or jQuery object to insert
+  at the end of each element in the set of matched elements.
+
+<P>
+</LI>
+<LI><code>content</code>: One or more additional <A NAME="21382"></A><SPAN  CLASS="textbf">DOM</SPAN> elements, arrays of
+  elements, HTML strings, or jQuery objects to insert at the end of
+  each element in the set of matched elements.
+  
+</LI>
+</UL>
+
+<P>
+</LI>
+<LI><PRE>
+.live( events, handler(eventObject) ) Returns: jQuery
+</PRE>
+Description: Attach an event handler for all elements which match the current selector, now and in the future.
+
+<P>
+
+<UL>
+<LI><code>events</code>: A string containing a <A NAME="tex2html1167"
+  HREF="http://www.w3schools.com/js/js_htmldom_events.asp">JavaScript event type</A>, such as <code>click</code> or <code>keydown.</code> 
+  As of jQuery 1.4 the string can contain multiple, space-separated event types or custom event names.
+</LI>
+<LI><code>handler(eventObject)</code>: A function to execute at the time the event is triggered.
+
+<P>
+</LI>
+<LI>As of jQuery 1.7, the <code>.live()</code> method is deprecated. 
+    Use <code>.on()</code> to attach event handlers. 
+
+<P>
+These are equivalent templates:
+
+<P>
+<PRE>
+    $( selector ).live( events, data, handler );                // jQuery 1.3+
+    $( document ).on( events, selector, data, handler );        // jQuery 1.7+
+</PRE>
+    The <code>events</code> argument can either be a space-separated list of event
+    type names and optional namespaces, or an object of event name
+    strings and handlers. The <code>data</code> argument is optional and can be
+    omitted.
+  
+</LI>
+</UL>
+</LI>
+<LI><PRE>
+jQuery.post( url [, data] [, success(data, textStatus, jqXHR)] [, dataType] )
+</PRE>
+  
+<UL>
+<LI><code>url</code>: A string containing the URL to which the request is sent.
+</LI>
+<LI><code>data</code>: A map or string that is sent to the server with the request.
+</LI>
+<LI><code>success(data, textStatus, jqXHR)</code>: A callback function that is executed if the request succeeds.
+</LI>
+<LI><code>dataType</code>: The type of data expected from the server. Default: Intelligent Guess (xml, json, script, text, html).
+  
+</LI>
+</UL>
+
+<P>
+This is an easy way to send a simple <code>POST</code> request to a server.
+It allows a single callback function to be specified that will be executed when the
+request is complete (and only if the response has a successful
+response code).
+
+<P>
+<code>$.post()</code> returns the <code>XMLHttpRequest</code> that it creates. In most cases
+you won't need that object to manipulate directly, but it is available
+if you need to abort the request manually.
+
+<P>
+</LI>
+<LI><PRE>
+.val
+</PRE>
+
+<P>
+Get the input value of the first matched element.
+
+<P>
+A value is returned for all input elements, including selects and textareas. 
+For multiple selects an array of values is returned.
+
+<P>
+For example:
+
+<P>
+<PRE>
+$('select.foo option:selected').val();    // get the value from a dropdown select
+$('select.foo').val();                    // get the value from a dropdown select even easier
+$('input:checkbox:checked').val();        // get the value from a checked checkbox
+$('input:radio[name=bar]:checked').val(); // get the value from a set of radio buttons
+</PRE>
+
+<P>
+</LI>
+<LI><PRE>
+.focus( handler(eventObject) )
+.focus( [eventData], handler(eventObject) )
+.focus()
+</PRE>
+<code>handler(eventObject)</code>: A function to execute each time the event is triggered.
+<code>eventData</code>: A map of data that will be passed to the event handler.
+
+<P>
+This method is a shortcut for <code>.trigger('focus')</code>.
+The focus event is sent to an element when it gains focus. 
+This event is implicitly applicable to a limited set of elements, such as form elements 
+(<code>&lt;input&gt;</code>, <code>&lt;select&gt;</code>, etc.) and links (<code>&lt;a href&gt;</code>). In recent browser
+versions, the event can be extended to include all element types
+by explicitly setting the element's tabindex property. An element
+can gain focus via keyboard commands, such as the Tab key, or by
+mouse clicks on the element.
+Elements with focus are usually highlighted in some way by the
+browser, for example with a dotted line surrounding the element.
+The focus is used to determine which element is the first to receive
+keyboard-related events.
+
+<P>
+</LI>
+<LI><PRE>
+event.preventDefault() Returns: undefined
+</PRE>
+Description: If this method is called, the default action of the
+event will not be triggered.
+
+<P>
+For example, clicked anchors will not take the browser to a new
+URL. We can use <code>event.isDefaultPrevented()</code> to determine if this
+method has been called by an event handler that was triggered by
+this event.
+</LI>
+</UL>
+
+<P>
+
+<img src="sinatra_chat.png">
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html11659"
+  HREF="node486.html">Enlaces Relacionados</A>
+<LI><A NAME="tex2html11660"
+  HREF="node487.html">Código Completo del Chat</A>
+</UL>
+<!--End of Table of Child-Links-->
+
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11656"
+<A NAME="tex2html11657"
   HREF="node486.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11650"
-  HREF="node484.html">
+<A NAME="tex2html11651"
+  HREF="node477.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11644"
+<A NAME="tex2html11645"
   HREF="node484.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11652"
-  HREF="node840.html">
+<A NAME="tex2html11653"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11654"
-  HREF="node843.html">
+<A NAME="tex2html11655"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -233,16 +640,16 @@ desarrollador al cargo de Sinatra
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11657"
-  HREF="node486.html">Código Completo del Chat</A>
-<B> Subir:</B> <A NAME="tex2html11651"
-  HREF="node484.html">Chat Utilizando Streaming y</A>
-<B> Anterior:</B> <A NAME="tex2html11645"
-  HREF="node484.html">Chat Utilizando Streaming y</A>
- &nbsp; <B>  <A NAME="tex2html11653"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11655"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11658"
+  HREF="node486.html">Enlaces Relacionados</A>
+<B> Subir:</B> <A NAME="tex2html11652"
+  HREF="node477.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11646"
+  HREF="node484.html">Comet</A>
+ &nbsp; <B>  <A NAME="tex2html11654"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11656"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

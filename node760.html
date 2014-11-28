@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Using OAuth 2.0 to Access Google APIs</TITLE>
-<META NAME="description" CONTENT="Using OAuth 2.0 to Access Google APIs">
+<TITLE>Práctica: Usando OAuth con omniauth</TITLE>
+<META NAME="description" CONTENT="Práctica: Usando OAuth con omniauth">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node761.html">
 <LINK REL="previous" HREF="node759.html">
-<LINK REL="up" HREF="node749.html">
+<LINK REL="up" HREF="node750.html">
 <LINK REL="next" HREF="node761.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16378"
+<A NAME="tex2html16381"
   HREF="node761.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16372"
-  HREF="node749.html">
+<A NAME="tex2html16375"
+  HREF="node750.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16366"
+<A NAME="tex2html16369"
   HREF="node759.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16374"
-  HREF="node840.html">
+<A NAME="tex2html16377"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16376"
-  HREF="node843.html">
+<A NAME="tex2html16379"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,157 +92,42 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16379"
-  HREF="node761.html">Google OAuth 2.0 Playground</A>
-<B> Subir:</B> <A NAME="tex2html16373"
-  HREF="node749.html">OAuth</A>
-<B> Anterior:</B> <A NAME="tex2html16367"
-  HREF="node759.html">Práctica: Usando OAuth con</A>
- &nbsp; <B>  <A NAME="tex2html16375"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16377"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16382"
+  HREF="node761.html">Using OAuth 2.0 to</A>
+<B> Subir:</B> <A NAME="tex2html16376"
+  HREF="node750.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html16370"
+  HREF="node759.html">Ejemplos de uso de</A>
+ &nbsp; <B>  <A NAME="tex2html16378"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16380"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061480000000000000000">
-Using OAuth 2.0 to Access Google APIs</A>
-</H1>
-<P>
-<I>Véase 
-<A NAME="tex2html1803"
-  HREF="https://developers.google.com/accounts/docs/OAuth2">Using OAuth 2.0 to Access Google APIs</A>.
-</I>
-<P>
-<I>Google APIs use the  <A NAME="tex2html1804"
-  HREF="http://oauth.net/">OAuth</A>
- 2.0 protocol for authentication and
-authorization. Google supports common  <A NAME="tex2html1805"
-  HREF="http://oauth.net/">OAuth</A>
- 2.0 scenarios such as those
-for web server, installed, and client-side applications.
-</I>
-<P>
-<OL>
-<LI><A NAME="tex2html1806"
-  HREF="http://oauth.net/">OAuth</A>
- 2.0 is a relatively simple protocol. To begin, you obtain  <A NAME="tex2html1807"
-  HREF="http://oauth.net/">OAuth</A>
-
-2.0 credentials from the 
-<A NAME="tex2html1808"
-  HREF="https://cloud.google.com/console">Google Developers Console</A>. 
-</LI>
-<LI>See the Video in YouTube 
-<A NAME="tex2html1809"
-  HREF="http://youtu.be/Im69kzhpR3I">Obtaining a developer key for the YouTube Data API v3 and the Analytics API</A>
-</LI>
-<LI>Then your client
-application requests an 
-<FONT COLOR="#0000ff"> access token</FONT> from the 
-
-<FONT COLOR="#0000ff"> Google Authorization Server</FONT>,
-extracts a token from the response, and sends the token to the 
-
-<FONT COLOR="#0000ff"> Google API</FONT> 
-that you want to access.
-</LI>
-</OL>
-<P>
-<I>To get access keys, go to the Google APIs Console and specify your
-<A NAME="tex2html1810"
-  HREF="https://cloud.google.com/console">Google Developers Console</A>. 
-application's name and the Google APIs it will access. For simple access,
-Google generates an API key that uniquely identifies your application
-in its transactions with the Google Auth server.
-</I>
-<P>
-<I>For authorized access, you must also tell Google your website's protocol
-and domain. In return, Google generates a client ID. Your application
-submits this to the Google Auth server to get an  <A NAME="tex2html1811"
-  HREF="http://oauth.net/">OAuth</A>
- 2.0 access
-token.
-</I>
-<P>
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html16378"
-  HREF="node761.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16372"
-  HREF="node749.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16366"
-  HREF="node759.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16374"
-  HREF="node840.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16376"
-  HREF="node843.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
+<H1><A NAME="SECTION061470000000000000000"></A>
+   <A NAME="31220"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16379"
-  HREF="node761.html">Google OAuth 2.0 Playground</A>
-<B> Subir:</B> <A NAME="tex2html16373"
-  HREF="node749.html">OAuth</A>
-<B> Anterior:</B> <A NAME="tex2html16367"
-  HREF="node759.html">Práctica: Usando OAuth con</A>
- &nbsp; <B>  <A NAME="tex2html16375"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16377"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+Práctica: Usando OAuth con omniauth
+</H1><I>
+  
+Configure su propia versión del ejemplo de uso de OmniAuth en
+<A NAME="tex2html1801"
+  HREF="https://github.com/crguezl/omniauth-google-oauth2-sample">https://github.com/crguezl/omniauth-google-oauth2-sample</A>.
+</I>
+<P>
+<I>Cree para ello una nueva aplicación en
+<A NAME="tex2html1802"
+  HREF="https://console.developers.google.com">Google's Console</A>
+con su ID de cliente y su secreto de cliente.
+Habilite las APIs de Google que vaya a usar.
+</I>
+<P>
+<I>Despliegue la aplicación en Heroku.
+</I>
+<P>
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
 2014-11-28

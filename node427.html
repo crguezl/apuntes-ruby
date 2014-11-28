@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Vistas</TITLE>
-<META NAME="description" CONTENT="Vistas">
+<TITLE>Ficheros Estáticos</TITLE>
+<META NAME="description" CONTENT="Ficheros Estáticos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node435.html">
-<LINK REL="previous" HREF="node426.html">
-<LINK REL="up" HREF="node422.html">
+<LINK REL="next" HREF="node428.html">
+<LINK REL="previous" HREF="node425.html">
+<LINK REL="up" HREF="node423.html">
 <LINK REL="next" HREF="node428.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10700"
+<A NAME="tex2html10703"
   HREF="node428.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10694"
-  HREF="node422.html">
+<A NAME="tex2html10697"
+  HREF="node423.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10688"
+<A NAME="tex2html10691"
   HREF="node426.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10696"
-  HREF="node840.html">
+<A NAME="tex2html10699"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10698"
-  HREF="node843.html">
+<A NAME="tex2html10701"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,116 +92,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10701"
-  HREF="node428.html">Templates Inline</A>
-<B> Subir:</B> <A NAME="tex2html10695"
-  HREF="node422.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10689"
-  HREF="node426.html">Ficheros Estáticos</A>
- &nbsp; <B>  <A NAME="tex2html10697"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10699"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10704"
+  HREF="node428.html">Vistas</A>
+<B> Subir:</B> <A NAME="tex2html10698"
+  HREF="node423.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10692"
+  HREF="node426.html">Verbos HTTP en Sinatra/Base</A>
+ &nbsp; <B>  <A NAME="tex2html10700"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10702"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03340000000000000000">
-Vistas</A>
+<H1><A NAME="SECTION03330000000000000000">
+Ficheros Estáticos</A>
 </H1>
 
-<P>
-<BLOCKQUOTE>
-Writing a program that spits out HTML is often more difficult than
-you might imagine. Although programming languages are better at
-creating text than they used to be (some of us remember character
-handling in Fortran and standard Pascal), creating and concatenating
-string constructs is still painful. If there isn't much to do, it
-isn't too bad, but a whole HTML page is a lot of text manipulation.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>With static HTML pages - those that don't change from request to
-request - you can use nice WYSIWG editors. Even those of us who
-like raw text editors find it easier to just type in the text and
-tags rather than fiddle with string concatenation in a programming
-language.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>Of course the issue is with dynamic Web pages - those that take the
-results of something like database queries and embed them into the
-HTML. The page looks different with each result, and as a result
-regular HTML editors aren't up to the job.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>The best way to work is to compose the dynamic Web page as you do
-a static page but put in markers that can be resolved into calls
-to gather dynamic information. Since the static part of the page
-acts as a template for the particular response, I call this a
-<A NAME="18948"></A><SPAN  CLASS="textbf">Template View</SPAN>.
-</BLOCKQUOTE>
-<P>
-<BLOCKQUOTE>
-<DIV ALIGN="RIGHT">Martin Fowler
-</BLOCKQUOTE>
-<P>
+<OL>
+<LI>Static files are served from the <code>./public</code> directory. 
+</LI>
+<LI>You can specify a different location by setting the <code>:public_folder</code> option:
+<PRE>
+set :public_folder, File.dirname(__FILE__) + '/static'
+</PRE>
+Put this code in a <code>configure</code> block
+</LI>
+<LI>Note that the public directory name is not included in the URL. 
+</LI>
+<LI>A file <code>./public/css/style.css</code> is made available as <code>http://example.com/css/style.css</code>.
+</LI>
+<LI>Use the <code>:static_cache_control</code> setting to add Cache-Control header info.
+Use an explicit array when setting multiple values:
+<PRE>
+ set :static_cache_control, [:public, :max_age =&gt; 300]
+</PRE>
+</LI>
+<LI>What would be delivered in the event that a defined route conflicts with the name of the static resource?.
+The answer is the static resource.
+</LI>
+</OL>
 
 <P>
-Views in Sinatra  are <A NAME="18950"></A><SPAN  CLASS="textbf">HTML templates</SPAN> that can optionally contain data
-passed from the application.
-
-<P>
-There are two ways to work with views in Sinatra: <A NAME="18952"></A><SPAN  CLASS="textbf">inline templates</SPAN> and
-<A NAME="18954"></A><SPAN  CLASS="textbf">external templates</SPAN>.
-
-<P>
-Véase en GitHub 
-<A NAME="tex2html1041"
-  HREF="https://github.com/crguezl/sinatra-up-and-running/tree/master/chapter2/views">sinatra-up-and-running/tree/master/chapter2/views</A>.
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html10702"
-  HREF="node428.html">Templates Inline</A>
-<LI><A NAME="tex2html10703"
-  HREF="node429.html">Named Templates</A>
-<LI><A NAME="tex2html10704"
-  HREF="node430.html">Templates Externos</A>
-<LI><A NAME="tex2html10705"
-  HREF="node431.html">Templates Externos en Subcarpetas</A>
-<LI><A NAME="tex2html10706"
-  HREF="node432.html">Variables en las Vistas</A>
-<UL>
-<LI><A NAME="tex2html10707"
-  HREF="node432.html#SECTION03345010000000000000">Comunicación vía variables de instancia</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10708"
-  HREF="node433.html">Pasando variables a la vista explícitamente via un hash</A>
-<LI><A NAME="tex2html10709"
-  HREF="node434.html">Opciones pasadas a los Métodos de los Templates</A>
-</UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10700"
+<A NAME="tex2html10703"
   HREF="node428.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10694"
-  HREF="node422.html">
+<A NAME="tex2html10697"
+  HREF="node423.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10688"
+<A NAME="tex2html10691"
   HREF="node426.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10696"
-  HREF="node840.html">
+<A NAME="tex2html10699"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10698"
-  HREF="node843.html">
+<A NAME="tex2html10701"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -252,16 +202,16 @@ Véase en GitHub
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10701"
-  HREF="node428.html">Templates Inline</A>
-<B> Subir:</B> <A NAME="tex2html10695"
-  HREF="node422.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10689"
-  HREF="node426.html">Ficheros Estáticos</A>
- &nbsp; <B>  <A NAME="tex2html10697"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10699"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10704"
+  HREF="node428.html">Vistas</A>
+<B> Subir:</B> <A NAME="tex2html10698"
+  HREF="node423.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html10692"
+  HREF="node426.html">Verbos HTTP en Sinatra/Base</A>
+ &nbsp; <B>  <A NAME="tex2html10700"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10702"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

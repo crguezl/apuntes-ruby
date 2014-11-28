@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Templates Externos</TITLE>
-<META NAME="description" CONTENT="Templates Externos">
+<TITLE>Named Templates</TITLE>
+<META NAME="description" CONTENT="Named Templates">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node431.html">
 <LINK REL="previous" HREF="node429.html">
-<LINK REL="up" HREF="node427.html">
+<LINK REL="up" HREF="node428.html">
 <LINK REL="next" HREF="node431.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10750"
+<A NAME="tex2html10753"
   HREF="node431.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10744"
-  HREF="node427.html">
+<A NAME="tex2html10747"
+  HREF="node428.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10738"
+<A NAME="tex2html10741"
   HREF="node429.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10746"
-  HREF="node840.html">
+<A NAME="tex2html10749"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10748"
-  HREF="node843.html">
+<A NAME="tex2html10751"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,133 +92,49 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10751"
-  HREF="node431.html">Templates Externos en Subcarpetas</A>
-<B> Subir:</B> <A NAME="tex2html10745"
-  HREF="node427.html">Vistas</A>
-<B> Anterior:</B> <A NAME="tex2html10739"
-  HREF="node429.html">Named Templates</A>
- &nbsp; <B>  <A NAME="tex2html10747"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10749"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10754"
+  HREF="node431.html">Templates Externos</A>
+<B> Subir:</B> <A NAME="tex2html10748"
+  HREF="node428.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html10742"
+  HREF="node429.html">Templates Inline</A>
+ &nbsp; <B>  <A NAME="tex2html10750"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10752"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03343000000000000000">
-Templates Externos</A>
+<H2><A NAME="SECTION03342000000000000000">
+Named Templates</A>
 </H2>
+Templates may also be defined using the top-level <code>template</code> method:
 
 <P>
 <PRE>
-$ ls
-Rakefile               example2-16.rb         views
-config.ru
-</PRE>
-
-<P>
-<PRE>
-$ cat example2-16.rb 
-require 'sinatra/base'
-
-class App &lt; Sinatra::Base
-  get '/index' do 
-    puts "Visiting #{request.url}"
-    erb :index
-  end
-end
-</PRE>
-
-<P>
-<PRE>
-$ cat views/index.erb 
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Inline template&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Worked!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
-</PRE>
-
-<P>
-<PRE>
-$ cat config.ru 
-require './example2-16'
-
-run App
-</PRE>
-
-<P>
-<PRE>
-$ cat Rakefile 
-task :default =&gt; :server
-
-desc "run server"
-task :server do
-  sh "rackup"
+template :layout do
+  "%html\n  =yield\n"
 end
 
-desc "make a get / request via curl"
-task :root do
-  sh "curl -v localhost:9292"
+template :index do
+  '%div.title Hello World!'
 end
 
-desc "make a get /index request via curl"
-task :index do 
-  sh "curl -v localhost:9292/index"
+get '/' do
+  haml :index
 end
 </PRE>
+If a template named <code>layout</code> exists, it will be used each time a template is rendered. 
+
+<P>
+You can individually disable layouts by passing <code>:layout =&gt; false</code> or disable them by default via <code>set :haml, :layout =&gt; false</code>:
 
 <P>
 <PRE>
-$ rake server
-rackup
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-Visiting http://localhost:9292/index
-127.0.0.1 - - [03/Jul/2013 22:30:16] "GET /index HTTP/1.1" 200 157 0.0774
-</PRE>
-
-<P>
-<PRE>
-$ rake index
-curl -v localhost:9292/index
-* About to connect() to localhost port 9292 (#0)
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET /index HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8x zlib/1.2.5
-&gt; Host: localhost:9292
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html;charset=utf-8
-&lt; Content-Length: 157
-&lt; X-XSS-Protection: 1; mode=block
-&lt; X-Content-Type-Options: nosniff
-&lt; X-Frame-Options: SAMEORIGIN
-&lt; Connection: keep-alive
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-&lt;!DOCTYPE html&gt;
-&lt;html&gt; 
-  &lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Inline template&lt;/title&gt; 
-  &lt;/head&gt;
-  &lt;body&gt; 
-    &lt;h1&gt;Worked!&lt;/h1&gt;
-  &lt;/body&gt; 
-&lt;/html&gt;
-
-* Connection #0 to host localhost left intact
-* Closing connection #0
+get '/' do
+  haml :index, :layout =&gt; !request.xhr?
+end
 </PRE>
 
 <P>

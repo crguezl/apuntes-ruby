@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Named Templates</TITLE>
-<META NAME="description" CONTENT="Named Templates">
+<TITLE>Templates Inline</TITLE>
+<META NAME="description" CONTENT="Templates Inline">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node430.html">
 <LINK REL="previous" HREF="node428.html">
-<LINK REL="up" HREF="node427.html">
+<LINK REL="up" HREF="node428.html">
 <LINK REL="next" HREF="node430.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10736"
+<A NAME="tex2html10739"
   HREF="node430.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10730"
-  HREF="node427.html">
+<A NAME="tex2html10733"
+  HREF="node428.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10724"
+<A NAME="tex2html10727"
   HREF="node428.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10732"
-  HREF="node840.html">
+<A NAME="tex2html10735"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10734"
-  HREF="node843.html">
+<A NAME="tex2html10737"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,49 +92,135 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10737"
-  HREF="node430.html">Templates Externos</A>
-<B> Subir:</B> <A NAME="tex2html10731"
-  HREF="node427.html">Vistas</A>
-<B> Anterior:</B> <A NAME="tex2html10725"
-  HREF="node428.html">Templates Inline</A>
- &nbsp; <B>  <A NAME="tex2html10733"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10735"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10740"
+  HREF="node430.html">Named Templates</A>
+<B> Subir:</B> <A NAME="tex2html10734"
+  HREF="node428.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html10728"
+  HREF="node428.html">Vistas</A>
+ &nbsp; <B>  <A NAME="tex2html10736"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10738"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03342000000000000000">
-Named Templates</A>
+<H2><A NAME="SECTION03341000000000000000">
+Templates Inline</A>
 </H2>
-Templates may also be defined using the top-level <code>template</code> method:
+
+<P>
+Templates may be defined at the end of the source file.
+En este ejemplo trabajamos con varios templates inline en diferentes ficheros:
+<PRE>
+[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat example2-14.rb 
+require 'sinatra/base'
+
+class App &lt; Sinatra::Base
+  enable :inline_templates
+  get '/index' do 
+    puts "Visiting #{request.url}"
+    erb :index
+  end
+end
+
+require './another'
+__END__
+@@index
+&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Inline template&lt;/title&gt; 
+  &lt;/head&gt;
+  &lt;body&gt; 
+    &lt;h1&gt;Worked!&lt;/h1&gt;
+  &lt;/body&gt; 
+&lt;/html&gt;
+</PRE>
+
+<P>
+En este fichero tenemos un segundo template inline:
+<PRE>
+[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat another.rb 
+class App 
+  enable :inline_templates
+  get '/' do
+    erb :another
+  end
+end
+
+__END__
+@@another
+&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Separated file&lt;/title&gt; 
+  &lt;/head&gt;
+  &lt;body&gt; 
+    &lt;h1&gt;Inside another!&lt;/h1&gt;
+  &lt;/body&gt; 
+&lt;/html&gt;
+</PRE>
+
+<P>
+Este es nuestro config.ru:
 
 <P>
 <PRE>
-template :layout do
-  "%html\n  =yield\n"
+[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat config.ru 
+require './example2-14'
+
+run App
+</PRE>
+Para simplificar las cosas hemos hecho un <code>Rakefile</code>:
+<PRE>
+[~/sinatra/sinatraupandrunning/chapter2/views(master)]$ cat Rakefile 
+task :default =&gt; :server
+
+desc "run server"
+task :server do
+  sh "rackup"
 end
 
-template :index do
-  '%div.title Hello World!'
+desc "make a get / request via curl"
+task :root do
+  sh "curl -v localhost:9292"
 end
 
-get '/' do
-  haml :index
+desc "make a get /index request via curl"
+task :index do 
+  sh "curl -v localhost:9292/index"
 end
 </PRE>
-If a template named <code>layout</code> exists, it will be used each time a template is rendered. 
 
 <P>
-You can individually disable layouts by passing <code>:layout =&gt; false</code> or disable them by default via <code>set :haml, :layout =&gt; false</code>:
-
-<P>
+El resultado de la ejecución es:
 <PRE>
-get '/' do
-  haml :index, :layout =&gt; !request.xhr?
-end
+[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/index
+&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Inline template&lt;/title&gt; 
+  &lt;/head&gt;
+  &lt;body&gt; 
+    &lt;h1&gt;Worked!&lt;/h1&gt;
+  &lt;/body&gt; 
+&lt;/html&gt;
+[~/sinatra/sinatra-up-and-running/chapter2/views/inline_templates(master)]$ curl http://localhost:9292/
+&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Separated file&lt;/title&gt; 
+  &lt;/head&gt;
+  &lt;body&gt; 
+    &lt;h1&gt;Inside another!&lt;/h1&gt;
+  &lt;/body&gt; 
+&lt;/html&gt;
 </PRE>
 
 <P>

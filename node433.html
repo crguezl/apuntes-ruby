@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Pasando variables a la vista explícitamente via un hash</TITLE>
-<META NAME="description" CONTENT="Pasando variables a la vista explícitamente via un hash">
+<TITLE>Variables en las Vistas</TITLE>
+<META NAME="description" CONTENT="Variables en las Vistas">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node434.html">
 <LINK REL="previous" HREF="node432.html">
-<LINK REL="up" HREF="node427.html">
+<LINK REL="up" HREF="node428.html">
 <LINK REL="next" HREF="node434.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10793"
+<A NAME="tex2html10795"
   HREF="node434.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10787"
-  HREF="node427.html">
+<A NAME="tex2html10789"
+  HREF="node428.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10781"
+<A NAME="tex2html10783"
   HREF="node432.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10789"
-  HREF="node840.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
 <A NAME="tex2html10791"
-  HREF="node843.html">
+  HREF="node841.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html10793"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,92 +92,96 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10794"
-  HREF="node434.html">Opciones pasadas a los</A>
-<B> Subir:</B> <A NAME="tex2html10788"
-  HREF="node427.html">Vistas</A>
-<B> Anterior:</B> <A NAME="tex2html10782"
-  HREF="node432.html">Variables en las Vistas</A>
- &nbsp; <B>  <A NAME="tex2html10790"
-  HREF="node840.html">&#205;ndice General</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10796"
+  HREF="node434.html">Pasando variables a la</A>
+<B> Subir:</B> <A NAME="tex2html10790"
+  HREF="node428.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html10784"
+  HREF="node432.html">Templates Externos en Subcarpetas</A>
  &nbsp; <B>  <A NAME="tex2html10792"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10794"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION03346000000000000000">
-Pasando variables a la vista explícitamente via un hash</A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html10797"
+  HREF="node433.html#SECTION03345010000000000000">Comunicación vía variables de instancia</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION03345000000000000000">
+Variables en las Vistas</A>
 </H2>
 
 <P>
-También es posible pasar en la llamada un hash especificando 
-las variables locales:
+
+<H4><A NAME="SECTION03345010000000000000">
+Comunicación vía variables de instancia</A>
+</H4>
+  
+
+Los templates se evaluan en el mismo contexto que los manejadores de las rutas.
+Las variables de instancia son accesibles directamente en los templates.
+
+<P>
 <PRE>
 get '/:id' do
-  foo = Foo.find(params[:id])
-  haml '%h1= bar.name', :locals =&gt; { :bar =&gt; foo }
+  @foo = Foo.find(params[:id])
+  haml '%h1= @foo.name'
 end
 </PRE>
-This is typically used when rendering templates as partials from within other templates.
-
-<P>
-Veamos un ejemplo:
+Veamos un ejemplo de comunicación via variables de instancia entre el manejador de la ruta
+y el template:
 
 <P>
 <PRE>
-$ ls
-Rakefile    config.ru   via_hash.rb views
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ ls
+Rakefile        config.ru       via_instance.rb
 </PRE>
 
 <P>
 <PRE>
-$ cat via_hash.rb
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ cat via_instance.rb 
 require 'sinatra/base'
+
 
 class App &lt; Sinatra::Base
   get '/*' do |name|
     def some_template
-       &lt;&lt;-'ERBTEMP'
-&lt;ul&gt;&lt;% name.each do |item| %&gt;
-      &lt;li&gt; &lt;i&gt; &lt;%= item %&gt; &lt;/i&gt; &lt;/li&gt;
-    &lt;% end %&gt;
-&lt;/ul&gt;
-ERBTEMP
-    end # method some_template
+       &lt;&lt;-'HAMLTEMP'
+%ol
+  - @foo.each do |item|
+    %li 
+      %i #{item}
+HAMLTEMP
+    end
 
     puts "*---***#{name}*---****"
-    erb some_template, :locals =&gt; { :name =&gt; name.split('/')}
+    @foo = name.split('/')
+    haml some_template
   end
 end
 </PRE>
 
 <P>
 <PRE>
-$ cat views/layout.erb 
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-        &lt;title&gt;Sinatra&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Accesing variables in templates via a parameter hash&lt;/h1&gt;
-    &lt;%= yield %&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</PRE>
-
-<P>
-<PRE>
-$ cat config.ru 
-require './via_hash'
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ cat config.ru 
+require './via_instance'
 
 run App
 </PRE>
 
 <P>
 <PRE>
-$ cat Rakefile task :default =&gt; :server
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ cat Rakefile 
+task :default =&gt; :server
 
 desc "run server"
 task :server do
@@ -192,17 +196,18 @@ end
 
 <P>
 <PRE>
-$ rake serverrackup
+[~/sinatra/sinatraupandrunning/chapter2/views/passing_data_into_views(master)]$ rake server
+rackup
 &gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
 &gt;&gt; Maximum connections set to 1024
 &gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
 *---***juan/leon/hernandez*---****
-127.0.0.1 - - [05/Jul/2013 17:50:20] "GET /juan/leon/hernandez HTTP/1.1" 200 290 0.0352
+127.0.0.1 - - [05/Jul/2013 17:06:05] "GET /juan/leon/hernandez HTTP/1.1" 200 109 0.3502
 </PRE>
 
 <P>
 <PRE>
-$ rake client
+[~/sinatra/sinatra-views/passing_data_into_views(master)]$ rake client
 curl -v localhost:9292/juan/leon/hernandez
 * About to connect() to localhost port 9292 (#0)
 *   Trying 127.0.0.1... connected
@@ -214,37 +219,107 @@ curl -v localhost:9292/juan/leon/hernandez
 &gt; 
 &lt; HTTP/1.1 200 OK
 &lt; Content-Type: text/html;charset=utf-8
-&lt; Content-Length: 290
+&lt; Content-Length: 109
 &lt; X-XSS-Protection: 1; mode=block
 &lt; X-Content-Type-Options: nosniff
 &lt; X-Frame-Options: SAMEORIGIN
 &lt; Connection: keep-alive
 &lt; Server: thin 1.5.1 codename Straight Razor
 &lt; 
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-        &lt;title&gt;Sinatra&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Accesing variables in templates via a parameter hash&lt;/h1&gt;
-    &lt;ul&gt;
-      &lt;li&gt; &lt;i&gt; juan &lt;/i&gt; &lt;/li&gt;
-    
-      &lt;li&gt; &lt;i&gt; leon &lt;/i&gt; &lt;/li&gt;
-    
-      &lt;li&gt; &lt;i&gt; hernandez &lt;/i&gt; &lt;/li&gt;
-    
-&lt;/ul&gt;
-
-  &lt;/body&gt;
-&lt;/html&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;i&gt;juan&lt;/i&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;i&gt;leon&lt;/i&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;i&gt;hernandez&lt;/i&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
 * Connection #0 to host localhost left intact
 * Closing connection #0
 </PRE>
 
 <P>
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10795"
+  HREF="node434.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10789"
+  HREF="node428.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10783"
+  HREF="node432.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html10791"
+  HREF="node841.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html10793"
+  HREF="node844.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html10796"
+  HREF="node434.html">Pasando variables a la</A>
+<B> Subir:</B> <A NAME="tex2html10790"
+  HREF="node428.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html10784"
+  HREF="node432.html">Templates Externos en Subcarpetas</A>
+ &nbsp; <B>  <A NAME="tex2html10792"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10794"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
 2014-11-28

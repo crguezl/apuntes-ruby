@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Asociaciones Simples</TITLE>
-<META NAME="description" CONTENT="Asociaciones Simples">
+<TITLE>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</TITLE>
+<META NAME="description" CONTENT="Configurando la Base de Datos en Heroku con DataMapper. Despliegue">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,7 +21,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node527.html">
 <LINK REL="previous" HREF="node525.html">
-<LINK REL="up" HREF="node519.html">
+<LINK REL="up" HREF="node520.html">
 <LINK REL="next" HREF="node527.html">
 </HEAD>
 
@@ -32,16 +32,16 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   HREF="node527.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
 <A NAME="tex2html12370"
-  HREF="node519.html">
+  HREF="node520.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
 <A NAME="tex2html12364"
   HREF="node525.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
 <A NAME="tex2html12372"
-  HREF="node840.html">
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
 <A NAME="tex2html12374"
-  HREF="node843.html">
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -93,262 +93,230 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
 <B> Siguiente:</B> <A NAME="tex2html12377"
-  HREF="node527.html">Asociaciones Through</A>
+  HREF="node527.html">Asociaciones Simples</A>
 <B> Subir:</B> <A NAME="tex2html12371"
-  HREF="node519.html">DataMapper y Sinatra</A>
+  HREF="node520.html">DataMapper y Sinatra</A>
 <B> Anterior:</B> <A NAME="tex2html12365"
-  HREF="node525.html">Configurando la Base de</A>
+  HREF="node525.html">Ejemplo de uso de</A>
  &nbsp; <B>  <A NAME="tex2html12373"
-  HREF="node840.html">&#205;ndice General</A></B> 
+  HREF="node841.html">&#205;ndice General</A></B> 
  &nbsp; <B>  <A NAME="tex2html12375"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031670000000000000000"></A>
-<A NAME="section:datamapperasociaciones"></A>
+<H1><A NAME="SECTION031660000000000000000"></A>
+<A NAME="section:herokupostgres"></A>
 <BR>
-Asociaciones Simples
+Configurando la Base de Datos en Heroku con DataMapper. Despliegue
 </H1>
 
 <P>
-
-<UL>
-<LI>Associations are a way of declaring relationships between models,
-for example a blog <code>Post "has many" Comments</code>, or a 
-<code>Comment belongs to</code> a <code>Post</code>. 
-
-<P>
-</LI>
-<LI>Associations add a series of methods to your models which allow you to
-create relationships and retrieve related models along with a few other
-useful features. 
-
-<P>
-</LI>
-<LI>Which records are related to which are determined by
-their <A NAME="23268"></A><SPAN  CLASS="textbf">foreign keys</SPAN> (<A NAME="23270"></A><SPAN  CLASS="textbf">cláves foráneas</SPAN>).
-</LI>
-</UL>
-
-<P>
-The types of associations currently in <A NAME="tex2html1309"
-  HREF="http://datamapper.org/docs/"><TT>DataMapper</TT></A> are:
+<A NAME="tex2html1306"
+  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A> utiliza la base de datos PostgreSQL y una URL en una variable 
+de entorno <code>ENV['DATABASE_URL']</code>.
 
 <P>
 <PRE>
-has n  
-has 1 
-belongs_to 
-has n, :things, :through =&gt; Resource   
-has n, :things, :through =&gt; :model
-</PRE>
-
-<P>
-Este código se encuentra en:
-<A NAME="tex2html1310"
-  HREF="https://gist.github.com/crguezl/5c0c088790418690763d">app.rb</A>
-<P>
-<PRE>
-[~/rubytesting/database/datamapper/two(master)]$ cat app.rb 
-require 'data_mapper'
-
-DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/example.db")
-
-class Post
-  include DataMapper::Resource
-
-  property :id, Serial
-  property :text, Text
-
-  has n, :comments
+configure :development, :test do
+  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
 end
 
-class Comment
-  include DataMapper::Resource
+configure :production do
+  DataMapper.setup(:default, ENV['DATABASE_URL'])
+end
+</PRE>
 
-  property :id,     Serial
-  property :text, Text
-
-  belongs_to :post  # defaults to :required =&gt; true
-
+<P>
+Estas líneas especifican que se usa SQLite en desarrollo y testing y
+PostgreSQL en producción.
+Obsérvese que el <code>Gemfile</code> debe estar coherente:
+<PRE>
+[~/sinatra/sinatra-datamapper-jump-start(master)]$ cat Gemfile
+source 'https://rubygems.org'
+gem "sinatra"
+gem "slim"
+gem "sass"
+gem "dm-core"
+gem "dm-migrations"
+gem "thin"
+gem "pg", :group =&gt; :production
+gem "dm-postgres-adapter", :group =&gt; :production
+gem "dm-sqlite-adapter", :group =&gt; [:development, :test]
+</PRE>
+o mejor:
+<PRE>
+group :production do
+    gem "pg"
+    gem "dm-postgres-adapter"
 end
 
-DataMapper.finalize
-
-require  'dm-migrations'
-
-#DataMapper.auto_migrate!
-DataMapper.auto_upgrade!
+group :development, :test do
+  gem "dm-sqlite-adapter"
+end
 </PRE>
-The <code>belongs_to</code> method accepts a few options.
 
 <P>
 
-<UL>
-<LI><code>belongs_to</code> relationships will be <code>required</code> by default 
+<H4><A NAME="SECTION031660010000000000000">
+Bundle: installing groups. General considerations</A>
+</H4>
+  
 
 <P>
-You can make the parent resource optional by passing 
- <code>:required =&gt; false</code>
- as an option to <code>belongs_to</code>.
+By  default, bundle install will install all gems in all groups in your
+Gemfile, except those declared for a different 
+<code>platform</code><A NAME="tex2html1307"
+  HREF="footnode.html#foot23240"><SUP><SPAN CLASS="arabic">46</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>.
 
 <P>
-</LI>
-<LI>If the relationship makes up (part of) the key of a model, you can tell
-<A NAME="tex2html1311"
-  HREF="http://datamapper.org/docs/"><TT>DataMapper</TT></A> to include it as part of the primary key by adding 
-the <code>:key =&gt; true</code> option.
-</LI>
-</UL>
+However, you can explicitly tell bundler  to  skip  installing  certain
+groups  with  the <code>--without option</code>. 
+This option takes a space-separated list of groups.
 
 <P>
-Arrancamos <A NAME="tex2html1312"
-  HREF="http://pryrepl.org/"><TT>Pry</TT></A>  
+While the <code>--without</code> option will skip installing the gems in the  specified  groups, 
+<FONT COLOR="#0000ff"> it will still download those gems and use them to resolve the dependencies of every gem in your Gemfile</FONT>.
+
+<P>
+This is so that installing a different set of groups on another machine (such  as  a  production  server) will not change the gems and versions that you have already developed and tested against.
+
+<P>
+Bundler guarantees that the third-party code you are running in development and testing is also the third-party code you are running in production. You can choose to exclude some of that  code  in different  environments,  but  you  will never be caught flat-footed by 
+different versions of third-party code being used in different environments.
+
+<P>
+For a simple illustration, consider the following <code>Gemfile</code>:
+
+<P>
 <PRE>
-[~/rubytesting/database/datamapper/two]$ pry
+           source "https://rubygems.org"
+
+           gem "sinatra"
+
+           group :production do
+             gem "rack-perftools-profiler"
+           end
 </PRE>
-y cargamos <code>./app.rb</code>
+
+<P>
+In  this  case,  <code>sinatra</code>  
+depends on any version of <code>Rack (&gt;= 1.0)</code>,
+ while <code>rack-perftools-profiler</code> depends on <code>1.x (~&gt; 1.0)</code>.
+
+<P>
+When you run <code>bundle install --without  production</code>  
+in  <code>development</code>,  we
+look  at the dependencies of 
+<code>rack-perftools-profiler</code> as well. 
+
+<P>
+That way,
+you do not spend all your time developing against <code>Rack 2.0</code>,  
+using  new
+APIs  unavailable  in <code>Rack 1.x</code>, 
+only to have bundler switch to <code>Rack 1.2</code>
+when the <code>production</code> group is used.
+
+<P>
+This should not cause any problems  in  practice,  because  bundle  
+does  not
+attempt  to  install the gems in the excluded groups, and only 
+evaluates them
+as part of the dependency resolution process.
+
+<P>
+This also means that 
+
+<FONT COLOR="#0000ff"> you cannot include different versions of the  same
+gem  in  different  groups</FONT>,  
+because doing so would result in different
+sets of dependencies used in development and production. 
+
+<P>
+Because of the
+vagaries  of  the  dependency  resolution process, this usually affects
+more than just the gems you list in your <code>Gemfile</code>, 
+and can  (surprisingly) radically change the gems you are using.
+
+<P>
+
+<H4><A NAME="SECTION031660020000000000000">
+Recordando los pasos para el despliegue en Heroku</A>
+</H4>
+  
+
 <PRE>
-[1] pry(main)&gt; load './app.rb'
- ~ (0.000397) PRAGMA table_info("posts")
- ~ (0.000019) SELECT sqlite_version(*)
- ~ (0.001237) CREATE TABLE "posts" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "text" TEXT)
- ~ (0.000011) PRAGMA table_info("comments")
- ~ (0.000986) CREATE TABLE "comments" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "text" TEXT, "post_id" INTEGER NOT NULL)
- ~ (0.000964) CREATE INDEX "index_comments_post" ON "comments" ("post_id")
+heroku create ...
+</PRE>
+
+<P>
+<PRE>
+git push heroku master
+</PRE>
+
+<P>
+<PRE>
+heroku open
+</PRE>
+
+<P>
+<PRE>
+heroku logs --source app
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031660030000000000000">
+Creando/Modificando la base de datos en Heroku con heroku run console</A>
+</H4>
+  
+
+<P>
+Ahora ejecutamos la consola de heroku:
+
+<P>
+<PRE>
+heroku run console
+</PRE>
+lo que nos abre una sesión <code>irb</code>.
+
+<P>
+Ahora creamos la base de datos en <A NAME="tex2html1308"
+  HREF="https://devcenter.heroku.com/articles/quickstart">Heroku</A>:
+<PRE>
+[~/sinatra/sinatra-datamapper-jump-start(master)]$ heroku run console
+Running `console` attached to terminal... up, run.8011
+irb(main):001:0&gt; require './main'
 =&gt; true
+irb(main):002:0&gt; DataMapper.auto_migrate!
+=&gt; #&lt;DataMapper::DescendantSet:0x007fb89c878230 @descendants=#&lt;DataMapper::SubjectSet:0x007fb89c8781b8 @entries=#&lt;DataMapper::OrderedSet:0x007fb89c878190 @cache=#&lt;DataMapper::SubjectSet::NameCache:0x007fb89c878168 @cache={"Song"=&gt;0}&gt;, @entries=[Song]&gt;&gt;&gt;
+irb(main):003:0&gt;
 </PRE>
-Este es el esquema de la base de datos creada a partir de las clases
-<code>Post</code> y <code>Comment</code>:
-<PRE>
-[~/rubytesting/database/datamapper/two(master)]$ sqlite3 example.db 
-SQLite version 3.7.11 2012-03-20 11:35:50
-Enter ".help" for instructions
-Enter SQL statements terminated with a ";"
-sqlite&gt; .schema
-CREATE TABLE "comments" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-                         "text" TEXT, 
-                         "post_id" INTEGER NOT NULL);
-CREATE TABLE "posts" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-                      "text" TEXT);
-CREATE INDEX "index_comments_post" ON "comments" ("post_id");
-</PRE>
+Véase también 
+la práctica TicTacToe
+<A HREF="node462.html#practica:ticatactoe">33.28</A>
+y
+el capítulo <I>Despliegue en Heroku</I> 
+<A HREF="node540.html#chapter:despliegueenheroku">52</A>.
 
 <P>
-Ahora podemos crear  un objeto <code>Post</code>:
-<PRE>
-[2] pry(main)&gt; pp = Post.create(:text =&gt; 'hello world!')
- ~ (0.000888) INSERT INTO "posts" ("text") VALUES ('hello world!')
-=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-</PRE>
-Sus <code>comments</code> están vacíos:
-<PRE>
-[3] pry(main)&gt; pp.comments
- ~ (0.000051) SELECT "id", "post_id" FROM "comments" WHERE "post_id" = 1 ORDER BY "id"
-=&gt; []
-</PRE>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-Adding resources to a relationship, can
-be done in different ways. 
-
-<UL>
-<LI><PRE>
-[2] pry(main)&gt; co = Comment.new(:text =&gt; "Nice greeting!")
-=&gt; #&lt;Comment @id=nil @text="Nice greeting!" @post_id=nil&gt;
-[3] pry(main)&gt; pp = Post.create(:text =&gt; 'hello world!')
- ~ (0.001294) INSERT INTO "posts" ("text") VALUES ('hello world!')
- =&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[4] pry(main)&gt; co.post=pp
- =&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[5] pry(main)&gt; co.save
-~ (0.002974) INSERT INTO "comments" ("text", "post_id") VALUES ('Nice greeting!', 1)
-=&gt; true
-[7] pry(main)&gt; pp.comments
-~ (0.000074) SELECT "id", "post_id" FROM "comments" WHERE "post_id" = 1 ORDER BY "id"
-=&gt; [#&lt;Comment @id=1 @text=&lt;not loaded&gt; @post_id=1&gt;]
-[8] pry(main)&gt; pp.comments[0].text
- ~ (0.000193) SELECT "id", "text" FROM "comments" WHERE "id" = 1 ORDER BY "id"
- =&gt; "Nice greeting!"
-</PRE>
-</LI>
-<LI><code>belongs_to</code> relationships will be <code>required</code> by default 
-
-<P>
-We can make the parent resource optional by passing 
- <code>:required =&gt; false</code>
- as an option to <code>belongs_to</code>.
-
-<P>
-<PRE>
-[12] pry(main)&gt; c2 = Comment.create(:text =&gt; 'silly comment')
-=&gt; #&lt;Comment @id=nil @text="silly comment" @post_id=nil&gt;
-[13] pry(main)&gt; c2.save
-=&gt; false
-[14] pry(main)&gt; c2.post = pp
-=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[15] pry(main)&gt; c2.save
- ~ (0.001910) INSERT INTO "comments" ("text", "post_id") VALUES ('silly comment', 1)
- =&gt; true
-</PRE>
-</LI>
-<LI><PRE>
-[6] pry(main)&gt; pp.comments.push(Comment.create(:text =&gt; "Nice greeting!"))
-=&gt; [#&lt;Comment @id=nil @text="Nice greeting!" @post_id=1&gt;]
-[4] pry(main)&gt; pp
-=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[5] pry(main)&gt; pp.comments
-=&gt; [#&lt;Comment @id=nil @text="Nice greeting!" @post_id=1&gt;]
-</PRE>
-Esto no ha guardado <code>pp</code> en la base de datos. Ha sido modificado en memoria.
-Tampoco se ha guardado en la base de datos el objeto comentario.
-<PRE>
-[7] pry(main)&gt; pp.save
- ~ (0.002523) INSERT INTO "comments" ("text", "post_id") VALUES ('Nice greeting!', 1)
-=&gt; true
-</PRE>
-Ahora las tablas contienen:
-<PRE>
-sqlite&gt; select * from posts;
-1|hello world!
-sqlite&gt; select * from comments;
-1|Nice greeting!|1
-</PRE>
-</LI>
-<LI><PRE>
-[8] pry(main)&gt; c2 = Comment.create(:text =&gt; "Do we know each other?")
-=&gt; #&lt;Comment @id=nil @text="Do we know each other?" @post_id=nil&gt;
-[9] pry(main)&gt; c2.post= pp
-=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[10] pry(main)&gt; c2
-=&gt; #&lt;Comment @id=nil @text="Do we know each other?" @post_id=1&gt;
-[11] pry(main)&gt; c2.save
- ~ (0.007430) INSERT INTO "comments" ("text", "post_id") VALUES ('Do we know each other?', 1)
-=&gt; true
-[12] pry(main)&gt; pp.comments
-=&gt; [#&lt;Comment @id=1 @text="Nice greeting!" @post_id=1&gt;]
-</PRE>
-
-<P>
-<PRE>
-[16] pry(main)&gt; aa = Post.all
- ~ (0.000065) SELECT "id" FROM "posts" ORDER BY "id"
-=&gt; [#&lt;Post @id=1 @text=&lt;not loaded&gt;&gt;]
-[17] pry(main)&gt; aa[0].text
- ~ (0.000052) SELECT "id", "text" FROM "posts" WHERE "id" = 1 ORDER BY "id"
-=&gt; "hello world!"
-[20] pry(main)&gt; aa[0].comments
- ~ (0.000052) SELECT "id", "post_id" FROM "comments" WHERE "post_id" = 1 ORDER BY "id"
-=&gt; [#&lt;Comment @id=1 @text=&lt;not loaded&gt; @post_id=1&gt;, 
-    #&lt;Comment @id=2 @text=&lt;not loaded&gt; @post_id=1&gt;]
-</PRE>
-</LI>
-</UL>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html12378"
+  HREF="node526.html#SECTION031660010000000000000">Bundle: installing groups. General considerations</A>
+<LI><A NAME="tex2html12379"
+  HREF="node526.html#SECTION031660020000000000000">Recordando los pasos para el despliegue en Heroku</A>
+<LI><A NAME="tex2html12380"
+  HREF="node526.html#SECTION031660030000000000000">Creando/Modificando la base de datos en Heroku con heroku run console</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
@@ -356,16 +324,16 @@ sqlite&gt; select * from comments;
   HREF="node527.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
 <A NAME="tex2html12370"
-  HREF="node519.html">
+  HREF="node520.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
 <A NAME="tex2html12364"
   HREF="node525.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
 <A NAME="tex2html12372"
-  HREF="node840.html">
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
 <A NAME="tex2html12374"
-  HREF="node843.html">
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -417,15 +385,15 @@ sqlite&gt; select * from comments;
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
 <B> Siguiente:</B> <A NAME="tex2html12377"
-  HREF="node527.html">Asociaciones Through</A>
+  HREF="node527.html">Asociaciones Simples</A>
 <B> Subir:</B> <A NAME="tex2html12371"
-  HREF="node519.html">DataMapper y Sinatra</A>
+  HREF="node520.html">DataMapper y Sinatra</A>
 <B> Anterior:</B> <A NAME="tex2html12365"
-  HREF="node525.html">Configurando la Base de</A>
+  HREF="node525.html">Ejemplo de uso de</A>
  &nbsp; <B>  <A NAME="tex2html12373"
-  HREF="node840.html">&#205;ndice General</A></B> 
+  HREF="node841.html">&#205;ndice General</A></B> 
  &nbsp; <B>  <A NAME="tex2html12375"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>HTML5 Custom Data Attributes</TITLE>
-<META NAME="description" CONTENT="HTML5 Custom Data Attributes">
+<TITLE>Filters</TITLE>
+<META NAME="description" CONTENT="Filters">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node776.html">
 <LINK REL="previous" HREF="node774.html">
-<LINK REL="up" HREF="node773.html">
+<LINK REL="up" HREF="node774.html">
 <LINK REL="next" HREF="node776.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16594"
+<A NAME="tex2html16599"
   HREF="node776.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16588"
-  HREF="node773.html">
+<A NAME="tex2html16593"
+  HREF="node774.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16584"
+<A NAME="tex2html16587"
   HREF="node774.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16590"
-  HREF="node840.html">
+<A NAME="tex2html16595"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16592"
-  HREF="node843.html">
+<A NAME="tex2html16597"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,74 +92,192 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16595"
-  HREF="node776.html">Selenium</A>
-<B> Subir:</B> <A NAME="tex2html16589"
-  HREF="node773.html">Haml</A>
-<B> Anterior:</B> <A NAME="tex2html16585"
-  HREF="node774.html">Filters</A>
- &nbsp; <B>  <A NAME="tex2html16591"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16593"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16600"
+  HREF="node776.html">HTML5 Custom Data Attributes</A>
+<B> Subir:</B> <A NAME="tex2html16594"
+  HREF="node774.html">Haml</A>
+<B> Anterior:</B> <A NAME="tex2html16588"
+  HREF="node774.html">Haml</A>
+ &nbsp; <B>  <A NAME="tex2html16596"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16598"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061820000000000000000">
-HTML5 Custom Data Attributes</A>
+<H1><A NAME="SECTION061810000000000000000">
+Filters</A>
 </H1>
 <P>
+<I>The colon character designates a filter. 
+This allows you to pass an indented block of text as input to another filtering program and add the result to the output of Haml. 
+The syntax is simply a colon followed by the name of the filter. 
+For example:
+</I>
+<P><PRE>
+%p
+  :markdown
+    # Greetings
+
+    Hello, *World*
+</PRE><I>
+is compiled to:
+</I>
+<P><PRE>
+&lt;p&gt;
+  &lt;h1&gt;Greetings&lt;/h1&gt;
+
+  &lt;p&gt;Hello, &lt;em&gt;World&lt;/em&gt;&lt;/p&gt;
+&lt;/p&gt;
+</PRE><I>
+Filters can have Ruby code interpolated with <code>#{}</code>. For example:
+</I>
+<P><PRE>
+- flavor = "raspberry"
+#content
+  :textile
+    I *really* prefer _#{flavor}_ jam.
+</PRE><I>
+is compiled to
+</I>
+<P><PRE>
+&lt;div id='content'&gt;
+  &lt;p&gt;I &lt;strong&gt;really&lt;/strong&gt; prefer &lt;em&gt;raspberry&lt;/em&gt; jam.&lt;/p&gt;
+&lt;/div&gt;
+</PRE>
+<P>
+<I>Haml comes with the following filters defined:
+</I>
+<P>
 <OL>
-<LI>HTML5 allows for adding custom non-visible data attributes to
-elements using attribute names beginning with <code>data-</code>. 
-</LI>
-<LI>Custom data
-attributes can be used in Haml by using the key <code>:data</code> with a Hash
-value in an attribute hash. 
-</LI>
-<LI>Each of the key/value pairs in the Hash
-will be transformed into a custom data attribute. 
-</LI>
-<LI>For example:
-<PRE>
-%a{:href=&gt;"/posts", :data =&gt; {:author_id =&gt; 123}} Posts By Author
-</PRE>
-will render as:
+<LI><code>:cdata</code>
 
 <P>
-<PRE>
-&lt;a data-author-id='123' href='/posts'&gt;Posts By Author&lt;/a&gt;
-</PRE>
-</LI>
-<LI>Notice that the underscore in <code>author_id</code> was replaced by a hyphen. 
-</LI>
-<LI>If you wish to suppress this behavior, you can set Haml’s 
-<code>:hyphenate_data_attrs</code> option to false, and the output will be rendered as:
+Surrounds the filtered text with CDATA tags.
 
 <P>
-<PRE>
-&lt;a data-author_id='123' href='/posts'&gt;Posts By Author&lt;/a&gt;
-</PRE>
+</LI>
+<LI><code>:coffee</code>
+
+<P>
+Compiles the filtered text to Javascript using Cofeescript. You can also reference this filter as :coffeescript. This filter is implemented using Tilt.
+
+<P>
+</LI>
+<LI><code>:css</code>
+
+<P>
+Surrounds the filtered text with &lt;style&gt; and (optionally) CDATA tags. Useful for including inline CSS. Use the :cdata option to control when CDATA tags are added.
+
+<P>
+</LI>
+<LI><code>:erb</code>
+
+<P>
+Parses the filtered text with ERb, like an RHTML template. Not available if the <code>:suppress_eval</code> option is set to true. Embedded Ruby code is evaluated in the same context as the Haml template. This filter is implemented using Tilt.
+
+<P>
+</LI>
+<LI><code>:escaped</code>
+
+<P>
+Works the same as plain, but HTML-escapes the text before placing it in the document.
+
+<P>
+</LI>
+<LI><code>:javascript</code>
+
+<P>
+Surrounds the filtered text with &lt;script&gt; and (optionally) CDATA tags. Useful for including inline Javascript. Use the :cdata option to control when CDATA tags are added.
+
+<P>
+</LI>
+<LI><code>:less</code>
+
+<P>
+Parses the filtered text with Less to produce CSS output. This filter is implemented using Tilt.
+
+<P>
+</LI>
+<LI><code>:markdown</code>
+
+<P>
+Parses the filtered text with Markdown. This filter is implemented using Tilt.
+
+<P>
+</LI>
+<LI><code>:maruku</code>
+
+<P>
+Parses the filtered text with Maruku, which has some non-standard extensions to Markdown.
+
+<P>
+As of Haml 4.0, this filter is defined in Haml contrib but is loaded automatically for historical reasons. In future versions of Haml it will likely not be loaded by default. This filter is implemented using Tilt.
+
+<P>
+</LI>
+<LI><code>:plain</code>
+
+<P>
+Does not parse the filtered text. This is useful for large blocks of text without HTML tags, when you don’t want lines starting with . or - to be parsed.
+
+<P>
+</LI>
+<LI><code>:preserve</code>
+
+<P>
+Inserts the filtered text into the template with whitespace preserved. preserved blocks of text aren’t indented, and newlines are replaced with the HTML escape code for newlines, to preserve nice-looking output. See also Whitespace Preservation.
+
+<P>
+</LI>
+<LI><code>:ruby</code>
+
+<P>
+Parses the filtered text with the normal Ruby interpreter. Creates an IO object named <code>haml_io</code>, anything written to it is output into the Haml document. Not available if the <code>:suppress_eval</code> option is set to true. The Ruby code is evaluated in the same context as the Haml template.
+
+<P>
+</LI>
+<LI><code>:sass</code>
+
+<P>
+Parses the filtered text with Sass to produce CSS output. This filter is implemented using Tilt.
+
+<P>
+</LI>
+<LI><code>:scss</code>
+
+<P>
+Parses the filtered text with Sass like the :sass filter, but uses the newer SCSS syntax to produce CSS output. This filter is implemented using Tilt.
+
+<P>
+</LI>
+<LI><code>:textile</code>
+
+<P>
+Parses the filtered text with Textile. Only works if RedCloth is installed.
+
+<P>
+As of Haml 4.0, this filter is defined in Haml contrib but is loaded automatically for historical reasons. In future versions of Haml it will likely not be loaded by default. This filter is implemented using Tilt.
 </LI>
 </OL>
 <P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html16594"
+<A NAME="tex2html16599"
   HREF="node776.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16588"
-  HREF="node773.html">
+<A NAME="tex2html16593"
+  HREF="node774.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16584"
+<A NAME="tex2html16587"
   HREF="node774.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16590"
-  HREF="node840.html">
+<A NAME="tex2html16595"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16592"
-  HREF="node843.html">
+<A NAME="tex2html16597"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -209,16 +328,16 @@ will render as:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16595"
-  HREF="node776.html">Selenium</A>
-<B> Subir:</B> <A NAME="tex2html16589"
-  HREF="node773.html">Haml</A>
-<B> Anterior:</B> <A NAME="tex2html16585"
-  HREF="node774.html">Filters</A>
- &nbsp; <B>  <A NAME="tex2html16591"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16593"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html16600"
+  HREF="node776.html">HTML5 Custom Data Attributes</A>
+<B> Subir:</B> <A NAME="tex2html16594"
+  HREF="node774.html">Haml</A>
+<B> Anterior:</B> <A NAME="tex2html16588"
+  HREF="node774.html">Haml</A>
+ &nbsp; <B>  <A NAME="tex2html16596"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16598"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

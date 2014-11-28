@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Chat con Ajax y JQuery</TITLE>
-<META NAME="description" CONTENT="Un Chat con Ajax y JQuery">
+<TITLE>Ajax, Sinatra y RightJS</TITLE>
+<META NAME="description" CONTENT="Ajax, Sinatra y RightJS">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node514.html">
 <LINK REL="previous" HREF="node512.html">
-<LINK REL="up" HREF="node509.html">
+<LINK REL="up" HREF="node510.html">
 <LINK REL="next" HREF="node514.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12113"
+<A NAME="tex2html12116"
   HREF="node514.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12107"
-  HREF="node509.html">
+<A NAME="tex2html12110"
+  HREF="node510.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12101"
+<A NAME="tex2html12104"
   HREF="node512.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12109"
-  HREF="node840.html">
+<A NAME="tex2html12112"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12111"
-  HREF="node843.html">
+<A NAME="tex2html12114"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,311 +92,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12114"
-  HREF="node514.html">Práctica: Chat Usando Ajax</A>
-<B> Subir:</B> <A NAME="tex2html12108"
-  HREF="node509.html">Ajax in Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12102"
-  HREF="node512.html">Ajax, Sinatra y RightJS</A>
- &nbsp; <B>  <A NAME="tex2html12110"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12112"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12117"
+  HREF="node514.html">Un Chat con Ajax</A>
+<B> Subir:</B> <A NAME="tex2html12111"
+  HREF="node510.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12105"
+  HREF="node512.html">Un Ejemplo Simple</A>
+ &nbsp; <B>  <A NAME="tex2html12113"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12115"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031240000000000000000"></A>
-<A NAME="section:jquerychat"></A>
-<BR>
-Un Chat con Ajax y JQuery
+<H1><A NAME="SECTION031230000000000000000">
+Ajax, Sinatra y RightJS</A>
 </H1>
+Ajax has been around for a while now but that doesn’t mean it is any
+less fun. The nice thing about Sinatra is you are left to do as much or
+little JavaScript as you like and you can do it in any way
+that you want as well. 
+
+<P>
+In this 
+<A NAME="tex2html1255"
+  HREF="http://ididitmyway.herokuapp.com/past/2011/2/27/ajax_in_sinatra/">ditty </A>
+I hope to show that it’s easy
+to add some Ajax magic to a Sinatra app (with a little help from a
+JavaScript framework).
 
 <P>
 
-<H4><A NAME="SECTION031240010000000000000">
-Donde</A>
-</H4>
-  
-
-<UL>
-<LI><PRE>
-[~/sinatra/sinatra-streaming/blazeeboychat(master)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/sinatra-streaming/blazeeboychat
-</PRE>
+<OL>
+<LI><A NAME="tex2html1256"
+  HREF="https://gist.github.com/mr-rock/205948">An example of Sinatra working with Ajaxified JQuery based on some pieces of code published by Rafael George on the Sinatra Google Group</A>
 </LI>
-<LI><A NAME="tex2html1258"
-  HREF="https://github.com/crguezl/chat-blazee">Código en GitHub</A>
+<LI><A NAME="tex2html1257"
+  HREF="http://ididitmyway.herokuapp.com/past/2011/2/27/ajax_in_sinatra/">Ajax, Sinatra y RightJS</A>
+Darren Jones
 </LI>
-</UL>
+</OL>
 
 <P>
-
-<H4><A NAME="SECTION031240020000000000000">
-chat.rb</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/blazeeboychat(master)]$ cat chat.rb
-require 'sinatra' 
-require 'sinatra/reloader' if development?
-#set :port, 3000
-#set :environment, :production
-
-chat = ['welcome..']
-
-get('/') { erb :index }
-
-get '/send' do
-  return [404, {}, "Not an ajax request"] unless request.xhr?
-  chat &lt;&lt; "#{request.ip} : #{params['text']}"
-  nil
-end
-
-get '/update' do
-  return [404, {}, "Not an ajax request"] unless request.xhr?
-  @updates = chat[params['last'].to_i..-1] || []
-
-  @last = chat.size
-  erb &lt;&lt;-'HTML', :layout =&gt; false
-      &lt;% @updates.each do |phrase| %&gt;
-        &lt;%= phrase %&gt; &lt;br /&gt;
-      &lt;% end %&gt;
-      &lt;span data-last="&lt;%= @last %&gt;"&gt;&lt;/span&gt;
-  HTML
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031240030000000000000">
-views/index.erb</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/blazeeboychat(master)]$ cat views/layout.erb 
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;link rel="stylesheet" type="text/css" href="simple.css"&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;%= yield %&gt;
-
-    &lt;script src="https://code.jquery.com/jquery-2.1.1.min.js"&gt;&lt;/script&gt;
-    &lt;script src= "chat.js"&gt;&lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</PRE>
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/blazeeboychat(master)]$ cat views/index.erb 
-&lt;input id="text" placeholder="Write then press Enter." autofocus /&gt;
-&lt;div id="chat"&gt;&lt;/div&gt;
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031240040000000000000">
-chat.js</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/blazeeboychat(master)]$ cat public/chat.js 
-$('#text').keypress(
-  function(e){
-    if( e.keyCode==13 ){
-      $.get('/send',{text:$('#text').val()});
-      $('#text').val('');
-    } 
-  }
-);
-
-(function() {
-  var last = 0;
-  setInterval(
-    function(){
-      $.get('/update',{last: last},
-        function(response){
-          last = $('&lt;p&gt;').html(response).find('span').data('last');
-          $('#chat').append(response);
-        }
-      );
-    },
-  1000);
-})();
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031240050000000000000">
-El método <TT>get</TT> de jQuery</A>
-</H4>
-  
-
-<P>
-<PRE>
-jQuery.get( url [, data ] [, success ] [, dataType ] )  Returns: jqXHR
-</PRE>
-
-<UL>
-<LI>Description: Load data from the server using a HTTP GET request.
-
-<P>
-</LI>
-<LI><code>url</code>: 
-Type: <code>String</code>
-A string containing the URL to which the request is sent.
-</LI>
-<LI><code>data</code>:
-Type: PlainObject or <code>String</code>
-
-<P>
-A plain object or string that is sent to the server with the request.
-</LI>
-<LI><code>success</code>:
-<PRE>
-Type: Function( PlainObject data, String textStatus, jqXHR jqXHR )
-</PRE>
-A callback function that is executed if the request succeeds.
-</LI>
-<LI><code>dataType</code>
-Type: <code>String</code>:
-The type of data expected from the server. Default: Intelligent Guess (xml, json, script, or html).
-</LI>
-</UL>
-
-<P>
-This is a shorthand Ajax function, which is equivalent to:
-
-<P>
-<PRE>
-$.ajax({
-  url: url,
-  data: data,
-  success: success,
-  dataType: dataType
-});
-</PRE>
-The <code>success</code> callback function is passed the returned data, which will
-be an XML root element, text string, JavaScript file, or JSON object,
-depending on the MIME type of the response. 
-
-<P>
-It is also passed the text
-status of the response.
-
-<P>
-
-<H4><A NAME="SECTION031240060000000000000">
-Rakefile</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-streaming/blazeeboychat(master)]$ cat Rakefile 
-task :default =&gt; :server
-
-desc "run the chat server"
-task :server do
-  sh "bundle exec ruby chat.rb"
-end
-
-desc "make a non Ajax request via curl"
-task :noajax do
-  sh "curl -v http://localhost:4567/update"
-end
-
-desc "make an Ajax request via curl"
-task :ajax do
-  sh %q{curl -v -H "X-Requested-With: XMLHttpRequest" localhost:4567/update}
-end
-
-desc "Visit the GitHub repo page"
-task :open do
-  sh "open https://github.com/crguezl/chat-blazee"
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031240070000000000000">
-Gemfile</A>
-</H4>
-  
-
-<PRE>
-~/sinatra/sinatra-streaming/blazeeboychat(master)]$ cat Gemfile
-source 'https://rubygems.org'
-
-gem 'thin'
-
-group :development do
-  gem 'sinatra-contrib'
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031240080000000000000">
-public/simple.css</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-streaming/blazeeboychat(master)]$ cat public/simple.css 
-#text {width:100%; font-size: 15px; padding: 5px; display: block;}
-</PRE>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html12115"
-  HREF="node513.html#SECTION031240010000000000000">Donde</A>
-<LI><A NAME="tex2html12116"
-  HREF="node513.html#SECTION031240020000000000000">chat.rb</A>
-<LI><A NAME="tex2html12117"
-  HREF="node513.html#SECTION031240030000000000000">views/index.erb</A>
-<LI><A NAME="tex2html12118"
-  HREF="node513.html#SECTION031240040000000000000">chat.js</A>
-<LI><A NAME="tex2html12119"
-  HREF="node513.html#SECTION031240050000000000000">El método <TT>get</TT> de jQuery</A>
-<LI><A NAME="tex2html12120"
-  HREF="node513.html#SECTION031240060000000000000">Rakefile</A>
-<LI><A NAME="tex2html12121"
-  HREF="node513.html#SECTION031240070000000000000">Gemfile</A>
-<LI><A NAME="tex2html12122"
-  HREF="node513.html#SECTION031240080000000000000">public/simple.css</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12113"
+<A NAME="tex2html12116"
   HREF="node514.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12107"
-  HREF="node509.html">
+<A NAME="tex2html12110"
+  HREF="node510.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12101"
+<A NAME="tex2html12104"
   HREF="node512.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12109"
-  HREF="node840.html">
+<A NAME="tex2html12112"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12111"
-  HREF="node843.html">
+<A NAME="tex2html12114"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -447,16 +202,16 @@ public/simple.css</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12114"
-  HREF="node514.html">Práctica: Chat Usando Ajax</A>
-<B> Subir:</B> <A NAME="tex2html12108"
-  HREF="node509.html">Ajax in Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12102"
-  HREF="node512.html">Ajax, Sinatra y RightJS</A>
- &nbsp; <B>  <A NAME="tex2html12110"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12112"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12117"
+  HREF="node514.html">Un Chat con Ajax</A>
+<B> Subir:</B> <A NAME="tex2html12111"
+  HREF="node510.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12105"
+  HREF="node512.html">Un Ejemplo Simple</A>
+ &nbsp; <B>  <A NAME="tex2html12113"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12115"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

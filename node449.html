@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configuration / Configuración</TITLE>
-<META NAME="description" CONTENT="Configuration / Configuración">
+<TITLE>Redireccionamientos/Browser Redirect</TITLE>
+<META NAME="description" CONTENT="Redireccionamientos/Browser Redirect">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node450.html">
 <LINK REL="previous" HREF="node448.html">
-<LINK REL="up" HREF="node422.html">
+<LINK REL="up" HREF="node423.html">
 <LINK REL="next" HREF="node450.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11037"
+<A NAME="tex2html11040"
   HREF="node450.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11031"
-  HREF="node422.html">
+<A NAME="tex2html11034"
+  HREF="node423.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11025"
+<A NAME="tex2html11028"
   HREF="node448.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11033"
-  HREF="node840.html">
+<A NAME="tex2html11036"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11035"
-  HREF="node843.html">
+<A NAME="tex2html11038"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,73 +92,72 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11038"
-  HREF="node450.html">Configuring attack protection</A>
-<B> Subir:</B> <A NAME="tex2html11032"
-  HREF="node422.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11026"
-  HREF="node448.html">Redireccionamientos/Browser Redirect</A>
- &nbsp; <B>  <A NAME="tex2html11034"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11036"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11041"
+  HREF="node450.html">Configuration / Configuración</A>
+<B> Subir:</B> <A NAME="tex2html11035"
+  HREF="node423.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11029"
+  HREF="node448.html">Generating URLs</A>
+ &nbsp; <B>  <A NAME="tex2html11037"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11039"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033190000000000000000">
-Configuration / Configuración</A>
+<H1><A NAME="SECTION033180000000000000000">
+Redireccionamientos/Browser Redirect</A>
 </H1>
-Run once, at startup, in any environment:
+
+<P>
+You can trigger a browser redirect with the <code>redirect</code> helper method:
 
 <P>
 <PRE>
-configure do
-  # setting one option
-  set :option, 'value'
-
-  # setting multiple options
-  set :a =&gt; 1, :b =&gt; 2
-
-  # same as `set :option, true`
-  enable :option
-
-  # same as `set :option, false`
-  disable :option
-
-  # you can also have dynamic settings with blocks
-  set(:css_dir) { File.join(views, 'css') }
+get '/foo' do
+  redirect to('/bar')
 end
 </PRE>
-Run only when the environment (<code>RACK_ENV</code>
- environment variable) is set to :<code>production</code>:
+Any additional parameters are handled like arguments passed to <code>halt</code>:
 
 <P>
 <PRE>
-configure :production do
-  ...
+redirect to('/bar'), 303
+redirect 'http://google.com', 'wrong place, buddy'
+</PRE>
+You can also easily <code>redirect</code> back to the page the user came from with <code>redirect back</code>:
+
+<P>
+<PRE>
+get '/foo' do
+  "&lt;a href='/bar'&gt;do something&lt;/a&gt;"
+end
+
+get '/bar' do
+  do_something
+  redirect back
 end
 </PRE>
-Run when the environment is set to either <code>:production</code> or <code>:test</code>:
+To pass arguments with a <code>redirect</code>, either add them to the query:
 
 <P>
 <PRE>
-configure :production, :test do
-  ...
-end
+redirect to('/bar?sum=42')
 </PRE>
-You can access those options via settings:
+Or use a session:
 
 <P>
 <PRE>
-configure do
-  set :foo, 'bar'
+enable :sessions
+
+get '/foo' do
+  session[:secret] = 'foo'
+  redirect to('/bar')
 end
 
-get '/' do
-  settings.foo? # =&gt; true
-  settings.foo  # =&gt; 'bar'
-  ...
+get '/bar' do
+  session[:secret]
 end
 </PRE>
 

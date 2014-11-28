@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Añada Hojas de Estilo a Piedra Papel Tijeras</TITLE>
-<META NAME="description" CONTENT="Práctica: Añada Hojas de Estilo a Piedra Papel Tijeras">
+<TITLE>Práctica: Añadir Template Haml a Rock, Paper, Scissors</TITLE>
+<META NAME="description" CONTENT="Práctica: Añadir Template Haml a Rock, Paper, Scissors">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node400.html">
 <LINK REL="previous" HREF="node398.html">
-<LINK REL="up" HREF="node396.html">
+<LINK REL="up" HREF="node397.html">
 <LINK REL="next" HREF="node400.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10190"
+<A NAME="tex2html10195"
   HREF="node400.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10184"
-  HREF="node396.html">
+<A NAME="tex2html10189"
+  HREF="node397.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10180"
+<A NAME="tex2html10183"
   HREF="node398.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10186"
-  HREF="node840.html">
+<A NAME="tex2html10191"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10188"
-  HREF="node843.html">
+<A NAME="tex2html10193"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,155 +92,182 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10191"
-  HREF="node400.html">Middleware y la Clase</A>
-<B> Subir:</B> <A NAME="tex2html10185"
-  HREF="node396.html">Un Ejemplo Simple: Piedra,</A>
-<B> Anterior:</B> <A NAME="tex2html10181"
-  HREF="node398.html">Práctica: Añadir Template Haml</A>
- &nbsp; <B>  <A NAME="tex2html10187"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10189"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10196"
+  HREF="node400.html">Práctica: Añada Hojas de</A>
+<B> Subir:</B> <A NAME="tex2html10190"
+  HREF="node397.html">Un Ejemplo Simple: Piedra,</A>
+<B> Anterior:</B> <A NAME="tex2html10184"
+  HREF="node398.html">Práctica: Rock, Paper, Scissors:</A>
+ &nbsp; <B>  <A NAME="tex2html10192"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10194"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION031173000000000000000"></A>
-   <A NAME="17565"></A>
+<H2><A NAME="SECTION031172000000000000000"></A>
+   <A NAME="17662"></A>
   
-<A NAME="practica:rpscss"></A>
+<A NAME="practica:rackandhaml"></A>
 <BR>
-Práctica: Añada Hojas de Estilo a Piedra Papel Tijeras
+Práctica: Añadir Template Haml a Rock, Paper, Scissors
 </H2>
 
 <P>
-Añada hojas de estilo a la práctica anterior (sección <A HREF="node398.html#practica:rackandhaml">31.17.2</A>).
+Use 
+<A NAME="tex2html944"
+  HREF="http://haml.info/">Haml</A>
+para crear un template <code>index.haml</code> en un directorio <code>views</code>.
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-rock-paper-scissors(template)]$ tree
+.
+|--- README
+|--- Rakefile
+|--- rps.rb
+`--- views
+    `--- index.haml
+</PRE>
+El template puede ser usado así:
+<PRE>
+require 'rack/request'
+require 'rack/response'
+require 'haml'
+
+module RockPaperScissors
+  class App 
+     ...
+
+    def call(env)
+      ...
+      engine = Haml::Engine.new File.open("views/index.haml").read
+      res = Rack::Response.new 
+      res.write engine.render({}, 
+        :answer =&gt; answer, 
+        :choose =&gt; @choose,
+        :throws =&gt; @throws)
+      res.finish
+    end # call
+  end   # App
+end     # RockPaperScissors
+</PRE>
+
+<P>
+Véase:
 
 <P>
 
 <OL>
-<LI>Mostramos una posible estructura de ficheros  en la que se incluyen
-hojas de estilo usando <A NAME="tex2html954"
-  HREF="http://getbootstrap.com/getting-started/"><TT>bootstrap</TT> </A>:
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-rock-paper-scissors(bootstrap)]$ tree
-.
-|--- Gemfile
-|--- Gemfile.lock
-|--- README
-|--- Rakefile
-|--- TODO
-|--- config.ru
-|--- lib
-|   `--- rps.rb
-|--- public
-|   |--- css
-|   |   |--- bootstrap-responsive.css
-|   |   |--- bootstrap-responsive.min.css
-|   |   |--- bootstrap.css
-|   |   `-- bootstrap.min.css
-|   |--- img
-|   |   |--- glyphicons-halflings-white.png
-|   |   |--- glyphicons-halflings.png
-|   |   `-- programming-languages.jpg
-|   `-- js
-|       |--- bootstrap.js
-|       `--- bootstrap.min.js
-|--- rps.rb
-`-- views
-    `--- index.haml
-
-6 directories, 18 files
-</PRE>
+<LI><A NAME="tex2html945"
+  HREF="http://haml.info/docs/yardoc/Haml/Engine.html">Haml::Engine</A>
 </LI>
-<LI>El middleware <A NAME="tex2html955"
-  HREF="http://rack.rubyforge.org/doc/Rack/Static.html">Rack::Static</A> intercepta las peticiones por ficheros
-estáticos (javascript, imágenes, hojas de estilo, etc.) 
-basandose en los prefijos de las urls pasadas en las opciones y
-los sirve utilizando un objeto <A NAME="tex2html956"
-  HREF="http://rack.rubyforge.org/doc/Rack/File.html">Rack::File</A>.
-Ejemplos:
+</OL>
+
+<P>
+La sintáxis del método <code>render</code> es:
+<PRE>
+  (String) render(scope = Object.new, locals = {})
+</PRE>
+También se puede usar como <code>to_html</code>.
+Procesa el template y retorna el resultado como una cadena.
+
+<P>
+El parámetro <code>scope</code> es el contexto en el cual se evalúa el template.
+
+<P>
+Si es un objeto <A NAME="tex2html946"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> <A NAME="tex2html947"
+  HREF="http://haml.info/docs.html"><TT>haml</TT> </A> lo usa como segundo 
+argumento de 
+<code>Kernel#eval</code> (Véase la sección <I>Bindings (encarpetados) y eval</I> en 
+<A HREF="node246.html#subsection:bindings">15.2.1</A>)
+en otro caso, <A NAME="tex2html948"
+  HREF="http://haml.info/docs.html"><TT>haml</TT> </A> utiliza 
+<code>#instance_eval</code>.
+
+<P>
+Nótese que Haml modifica el contexto de la evaluación (bien el objeto ámbito 
+o el objeto <code>self</code> del ámbito del binding).
+Se extiende <A NAME="tex2html949"
+  HREF="http://haml.info/docs/yardoc/Haml/Helpers.html"><TT>Haml::Helpers</TT> </A> y se establecen diversas variables de instancia
+(todas ellas prefijadas con <code>haml_</code>).
+
+<P>
+Por ejemplo:
 
 <P>
 <PRE>
-    use Rack::Static, :urls =&gt; ["/public"]
+s = "foobar"
+Haml::Engine.new("%p= upcase").render(s)
 </PRE>
-Servirá todas las peticiones que 
-comiencen por <code>/public</code> desde la carpeta <code>public</code>
-localizada en el directorio actual (esto
-es <code>public/*</code>).
-
-<P>
-En nuestro jerarquía pondremos en el programa <code>rps.rb</code>:
+produce:
 <PRE>
-builder = Rack::Builder.new do
-  use Rack::Static, :urls =&gt; ['/public']
-  use Rack::ShowExceptions
-  use Rack::Lint
-
-  run RockPaperScissors::App.new
-end
-
-Rack::Handler::Thin.run builder
+"&lt;p&gt;FOOBAR&lt;/p&gt;"
 </PRE>
 
 <P>
-y dentro del template <A NAME="tex2html957"
-  HREF="http://haml.info/docs.html"><TT>haml</TT> </A> nos referiremos por ejemplo al fichero javascript como
+Ahora <code>s</code> extiende <A NAME="tex2html950"
+  HREF="http://haml.info/docs/yardoc/Haml/Helpers.html"><TT>Haml::Helpers</TT> </A>:
+<PRE>
+s.respond_to?(:html_attrs) #=&gt; true
+</PRE>
+
+<P>
+<A NAME="tex2html951"
+  HREF="http://haml.info/docs/yardoc/Haml/Helpers.html"><TT>Haml::Helpers</TT> </A> contiene un conjunto de métodos/utilidades
+para facilitar distintas tareas.
+La idea de que estén disponibles en el contexto es para ayudarnos
+dentro del template.
+Por ejemplo el método
+<PRE>
+- (String) escape_once(text)
+</PRE>
+Escapa las entidades HTML 
+en el texto.
+
+<P>
+<code>locals</code> es un hash de variables locales que se deja disponible dentro 
+del template. Por ejemplo:
 
 <P>
 <PRE>
-      %script{:src =&gt; "/public/js/bootstrap.js"}
+Haml::Engine.new("%p= foo").render(Object.new, :foo =&gt; "Hello, world!") 
 </PRE>
-Otro ejemplo:
+producirá:
 <PRE>
-    use Rack::Static, :urls =&gt; ["/css", "/images"], :root =&gt; "public"
+"&lt;p&gt;Hello, world!&lt;/p&gt;"
 </PRE>
-servirá las peticiones comenzando con <code>/css</code> o <code>/images</code>
-desde la carpeta <code>public</code> en el directorio actual
-(esto es 
-<code>public/css/*</code> y <code>public/images/*</code>)
+
+<P>
+Si se pasa un bloque a <code>render</code> el bloque será ejecutado
+en aquellos puntos en los que se llama a <code>yield</code> desde el
+template.
+
+<P>
+Debido a algunas peculiaridades de Ruby, si el ámbito es un
+<A NAME="tex2html952"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> y se proporciona también un bloque, el contexto de la evaluación
+puede no ser el que el usuario espera.
+
+<P>
+Parametros:
+
+<OL>
+<LI><code>scope (Binding, Proc, Object)</code> (por defecto: <code>Object.new</code>).
+El contexto en el que se evalúa el template
 
 <P>
 </LI>
-<LI><A NAME="tex2html958"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/static.rb">Véase el código en GitHub</A>
-de 
-<A NAME="tex2html959"
-  HREF="http://rack.rubyforge.org/doc/Rack/Static.html">Rack::Static</A> 
+<LI><code>locals ({Symbol =&gt; Object})</code> (por defecto: <code>{}</code>).
+Variables locales que se dejan disponibles en el  template
 </LI>
-<LI>En el template <code>views/index.haml</code> deberá enlazar a las hojas de estilo:
-<PRE>
-!!!
-%html{:lang =&gt; "en"}
-  %head
-    %meta{:charset =&gt; "utf-8"}/
-    %title RPS 
-    %link{:href =&gt; "/public/css/bootstrap.css", :rel =&gt; "stylesheet"}
-     %link{:href =&gt; "/public/css/bootstrap.css", :rel =&gt; "stylesheet"}
-</PRE>
-y las imágenes como:
-<PRE>
-%img(src="/public/img/programming-languages.jpg" width="40%")
-</PRE>
+<LI><code>block (#to_proc)</code> 
+Un bloque que será llamado desde el template.
+
+<P>
 </LI>
-<LI><A NAME="tex2html960"
-  HREF="http://rack.rubyforge.org/doc/Rack/File.html">Rack::File</A> es un middleware que sirve los ficheros debajo del directorio
-dado, de acuerdo con el <code>path info</code> de la petición <A NAME="tex2html961"
-  HREF="http://rack.rubyforge.org/doc/">Rack</A>.
-por ejemplo, cuando  se usa
-<code>Rack::File.new("/etc")</code>
-podremos acceder al fichero <code>passwd</code> como
-<code>localhost:9292/passwd</code>.
-</LI>
-<LI><A NAME="tex2html962"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/file.rb">Vease el código en github</A>
-de <A NAME="tex2html963"
-  HREF="http://rack.rubyforge.org/doc/Rack/File.html">Rack::File</A>
-</LI>
-<LI>Para saber mas de Bootstrap véase la sección
-<A HREF="node507.html#chapter:bootstrap">41</A>
+<LI>Retorna una <A NAME="tex2html953"
+  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A> con el template renderizado
 </LI>
 </OL>
 
@@ -247,20 +275,20 @@ de <A NAME="tex2html963"
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10190"
+<A NAME="tex2html10195"
   HREF="node400.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10184"
-  HREF="node396.html">
+<A NAME="tex2html10189"
+  HREF="node397.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10180"
+<A NAME="tex2html10183"
   HREF="node398.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10186"
-  HREF="node840.html">
+<A NAME="tex2html10191"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10188"
-  HREF="node843.html">
+<A NAME="tex2html10193"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -311,16 +339,16 @@ de <A NAME="tex2html963"
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10191"
-  HREF="node400.html">Middleware y la Clase</A>
-<B> Subir:</B> <A NAME="tex2html10185"
-  HREF="node396.html">Un Ejemplo Simple: Piedra,</A>
-<B> Anterior:</B> <A NAME="tex2html10181"
-  HREF="node398.html">Práctica: Añadir Template Haml</A>
- &nbsp; <B>  <A NAME="tex2html10187"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10189"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10196"
+  HREF="node400.html">Práctica: Añada Hojas de</A>
+<B> Subir:</B> <A NAME="tex2html10190"
+  HREF="node397.html">Un Ejemplo Simple: Piedra,</A>
+<B> Anterior:</B> <A NAME="tex2html10184"
+  HREF="node398.html">Práctica: Rock, Paper, Scissors:</A>
+ &nbsp; <B>  <A NAME="tex2html10192"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10194"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

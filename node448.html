@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Redireccionamientos/Browser Redirect</TITLE>
-<META NAME="description" CONTENT="Redireccionamientos/Browser Redirect">
+<TITLE>Generating URLs</TITLE>
+<META NAME="description" CONTENT="Generating URLs">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node449.html">
 <LINK REL="previous" HREF="node447.html">
-<LINK REL="up" HREF="node422.html">
+<LINK REL="up" HREF="node423.html">
 <LINK REL="next" HREF="node449.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11023"
+<A NAME="tex2html11026"
   HREF="node449.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11017"
-  HREF="node422.html">
+<A NAME="tex2html11020"
+  HREF="node423.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11011"
+<A NAME="tex2html11014"
   HREF="node447.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11019"
-  HREF="node840.html">
+<A NAME="tex2html11022"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11021"
-  HREF="node843.html">
+<A NAME="tex2html11024"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,74 +92,34 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11024"
-  HREF="node449.html">Configuration / Configuración</A>
-<B> Subir:</B> <A NAME="tex2html11018"
-  HREF="node422.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11012"
-  HREF="node447.html">Generating URLs</A>
- &nbsp; <B>  <A NAME="tex2html11020"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11022"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11027"
+  HREF="node449.html">Redireccionamientos/Browser Redirect</A>
+<B> Subir:</B> <A NAME="tex2html11021"
+  HREF="node423.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11015"
+  HREF="node447.html">Logging</A>
+ &nbsp; <B>  <A NAME="tex2html11023"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11025"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033180000000000000000">
-Redireccionamientos/Browser Redirect</A>
+<H1><A NAME="SECTION033170000000000000000">
+Generating URLs</A>
 </H1>
-
-<P>
-You can trigger a browser redirect with the <code>redirect</code> helper method:
-
-<P>
-<PRE>
-get '/foo' do
-  redirect to('/bar')
-end
-</PRE>
-Any additional parameters are handled like arguments passed to <code>halt</code>:
+For generating URLs you should use the <code>url</code>
+helper method, for instance, in Haml:
 
 <P>
 <PRE>
-redirect to('/bar'), 303
-redirect 'http://google.com', 'wrong place, buddy'
+%a{:href =&gt; url('/foo')} foo
 </PRE>
-You can also easily <code>redirect</code> back to the page the user came from with <code>redirect back</code>:
+It takes reverse proxies and Rack routers into account, if present.
 
 <P>
-<PRE>
-get '/foo' do
-  "&lt;a href='/bar'&gt;do something&lt;/a&gt;"
-end
-
-get '/bar' do
-  do_something
-  redirect back
-end
-</PRE>
-To pass arguments with a <code>redirect</code>, either add them to the query:
-
-<P>
-<PRE>
-redirect to('/bar?sum=42')
-</PRE>
-Or use a session:
-
-<P>
-<PRE>
-enable :sessions
-
-get '/foo' do
-  session[:secret] = 'foo'
-  redirect to('/bar')
-end
-
-get '/bar' do
-  session[:secret]
-end
-</PRE>
+This method is also aliased to <code>to</code>.
 
 <P>
 <BR><HR>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>La Estructura de una Aplicación Rack: Ejemplo de Middleware</TITLE>
-<META NAME="description" CONTENT="La Estructura de una Aplicación Rack: Ejemplo de Middleware">
+<TITLE>Redirección</TITLE>
+<META NAME="description" CONTENT="Redirección">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node394.html">
 <LINK REL="previous" HREF="node392.html">
-<LINK REL="up" HREF="node367.html">
+<LINK REL="up" HREF="node368.html">
 <LINK REL="next" HREF="node394.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10092"
+<A NAME="tex2html10095"
   HREF="node394.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10086"
-  HREF="node367.html">
+<A NAME="tex2html10089"
+  HREF="node368.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10080"
+<A NAME="tex2html10083"
   HREF="node392.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10088"
-  HREF="node840.html">
+<A NAME="tex2html10091"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10090"
-  HREF="node843.html">
+<A NAME="tex2html10093"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,66 +92,47 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10093"
-  HREF="node394.html">rackup</A>
-<B> Subir:</B> <A NAME="tex2html10087"
-  HREF="node367.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10081"
-  HREF="node392.html">Redirección</A>
- &nbsp; <B>  <A NAME="tex2html10089"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10091"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10096"
+  HREF="node394.html">La Estructura de una</A>
+<B> Subir:</B> <A NAME="tex2html10090"
+  HREF="node368.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10084"
+  HREF="node392.html">Ejemplo: Basic Authentication con</A>
+ &nbsp; <B>  <A NAME="tex2html10092"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10094"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031140000000000000000">
-La Estructura de una Aplicación Rack: Ejemplo de Middleware</A>
+<H1><A NAME="SECTION031130000000000000000">
+Redirección</A>
 </H1>
 
 <P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat middlefoo.rb 
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat redirect.rb 
 require 'rack'
+require 'thin'
 
-class MiddleFoo
-  
-  def initialize(app)
-    @app = app
+app = lambda do |env|
+  req = Rack::Request.new env
+  res = Rack::Response.new
+
+  if req.path_info == '/redirect'
+    res.redirect('https://plus.google.com/u/0/')
+  else
+    res.write "You did not get redirected"
   end
-
-  def call env
-    # Podemos modificar el request (env) aqui
-    env['chuchu'] = 'SYTW'
-    status, headers, body = @app.call(env)
-    # Podemos modificar la respuesta aqui
-    newbody = body.map(&amp;:upcase)
-    [status, headers, newbody]
-  end
-end
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat hello_middle.rb 
-require 'rack'
-require './middlefoo'
-
-class HelloWorld
-  def call env
-    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world\nchuchu=#{env['chuchu']}\n"]]
-  end
+  res.finish
 end
 
-Rack::Handler::WEBrick::run MiddleFoo.new(HelloWorld.new)
-</PRE>
-
-<P>
-Cuando ejecutamos el programa produce la salida:
-<PRE>
-HELLO WORLD
-CHUCHU=SYTW
+Rack::Server.start(
+ :app =&gt; app,
+ :Port =&gt; 9292,
+ :server =&gt; 'thin'
+)
 </PRE>
 
 <P>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Filtros</TITLE>
-<META NAME="description" CONTENT="Filtros">
+<TITLE>Opciones pasadas a los Métodos de los Templates</TITLE>
+<META NAME="description" CONTENT="Opciones pasadas a los Métodos de los Templates">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node436.html">
-<LINK REL="previous" HREF="node427.html">
-<LINK REL="up" HREF="node422.html">
+<LINK REL="previous" HREF="node434.html">
+<LINK REL="up" HREF="node428.html">
 <LINK REL="next" HREF="node436.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10819"
+<A NAME="tex2html10822"
   HREF="node436.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10813"
-  HREF="node422.html">
+<A NAME="tex2html10816"
+  HREF="node428.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10807"
+<A NAME="tex2html10812"
   HREF="node434.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10815"
-  HREF="node840.html">
+<A NAME="tex2html10818"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10817"
-  HREF="node843.html">
+<A NAME="tex2html10820"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,149 +91,164 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10820"
-  HREF="node436.html">Manejo de Errores</A>
-<B> Subir:</B> <A NAME="tex2html10814"
-  HREF="node422.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10808"
-  HREF="node434.html">Opciones pasadas a los</A>
- &nbsp; <B>  <A NAME="tex2html10816"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10818"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10823"
+  HREF="node436.html">Filtros</A>
+<B> Subir:</B> <A NAME="tex2html10817"
+  HREF="node428.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html10813"
+  HREF="node434.html">Pasando variables a la</A>
+ &nbsp; <B>  <A NAME="tex2html10819"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10821"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03350000000000000000">
-Filtros</A>
-</H1>
+<H2><A NAME="SECTION03347000000000000000">
+Opciones pasadas a los Métodos de los Templates</A>
+</H2>
+
+<P>
+Options passed to the render method override options set via <code>set</code>.
+
+<P>
+Available Options:
 
 <P>
 
-<H4><A NAME="SECTION03350010000000000000">
-Before Filters</A>
-</H4>
-  
-
-<A NAME="18964"></A><SPAN  CLASS="textbf">Before filters</SPAN> are evaluated before each request within the
-same context as the routes will be and can modify the request and
-response. 
+<OL>
+<LI><code>locals</code>
 
 <P>
-Instance variables set in filters are accessible by routes
-and templates:
-
-<P>
+List of locals passed to the document. Handy with partials. Example: 
 <PRE>
-before do
-  @note = 'Hi!'
-  request.path_info = '/foo/bar/baz'
-end
+erb "&lt;%= foo %&gt;", :locals =&gt; {:foo =&gt; "bar"}
+</PRE>
+</LI>
+<LI><code>default_encoding</code>
 
-get '/foo/*' do
-  @note #=&gt; 'Hi!'
-  params[:splat] #=&gt; 'bar/baz'
-end
+<P>
+String encoding to use if uncertain. Defaults to 
+<PRE>
+settings.default_encoding.
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION03350020000000000000">
-After Filters</A>
-</H4>
-  
-
-<A NAME="18970"></A><SPAN  CLASS="textbf">After filters</SPAN> are evaluated after each request within the same
-context and can also modify the request and response. 
+</LI>
+<LI><code>views</code>
 
 <P>
-Instance
-variables set in before filters and routes are accessible by after
-filters:
+Views folder to load templates from. Defaults to <code>settings.views</code>.
 
 <P>
+</LI>
+<LI><code>layout</code>
+
+<P>
+Whether to use a layout (true or false), if it's a Symbol, specifies what template to use. Example: 
 <PRE>
-after do
-  puts response.status
-end
-</PRE>
-Note: Unless you use the <code>body</code> method rather than just returning a
-String from the routes, the body will not yet be available in the
-after filter, since it is generated later on.
-
-<P>
-
-<H4><A NAME="SECTION03350030000000000000">
-Filters can take a Pattern</A>
-</H4>
-  
-
-Filters optionally take a pattern, causing them to be evaluated
-only if the request path matches that pattern:
-<PRE>
-before '/protected/*' do
-  authenticate!
-end
-
-after '/create/:slug' do |slug|
-  session[:last_slug] = slug
-end
+erb :index, :layout =&gt; !request.xhr?
 </PRE>
 
 <P>
+</LI>
+<LI><code>content_type</code>
 
-<H4><A NAME="SECTION03350040000000000000">
-Filters can take a Condition</A>
-</H4>
-  
+<P>
+Content-Type the template produces, default depends on template language.
 
-Like routes, filters also take conditions:
+<P>
+</LI>
+<LI><code>scope</code>
+
+<P>
+Scope to render template under. 
+
+<P>
+Defaults to the application instance. 
+
+<P>
+If you change this, instance variables and helper methods will not be available.
+
+<P>
+</LI>
+<LI><code>layout_engine</code>
+
+<P>
+Template engine to use for rendering the layout. 
+
+<P>
+Useful for languages
+that do not support layouts otherwise. 
+
+<P>
+Defaults to the engine used
+for the template. Example: 
+
+<P>
 <PRE>
-before :agent =&gt; /Songbird/ do
-  # ...
-end
-
-after '/blog/*', :host_name =&gt; 'example.com' do
-  # ...
-end
+set :rdoc, :layout_engine =&gt; :erb
 </PRE>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+</LI>
+<LI><code>layout_options</code>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html10821"
-  HREF="node435.html#SECTION03350010000000000000">Before Filters</A>
-<LI><A NAME="tex2html10822"
-  HREF="node435.html#SECTION03350020000000000000">After Filters</A>
-<LI><A NAME="tex2html10823"
-  HREF="node435.html#SECTION03350030000000000000">Filters can take a Pattern</A>
-<LI><A NAME="tex2html10824"
-  HREF="node435.html#SECTION03350040000000000000">Filters can take a Condition</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
+<P>
+Special options only used for rendering the layout. Example: 
+
+<P>
+<PRE>
+set :rdoc, :layout_options =&gt; { :views =&gt; 'views/layouts' }
+</PRE>
+
+<P>
+</LI>
+<LI>Templates are assumed to be located directly under the <code>./views</code> directory. 
+
+<P>
+To use a different views directory: 
+
+<P>
+<PRE>
+set :views, settings.root + '/templates'
+</PRE>
+
+<P>
+</LI>
+<LI>One important thing to remember is that you always have to reference
+templates with symbols, even if they’re in a subdirectory (in this
+case, use: 
+<code>:'subdir/template'</code> 
+or 
+<code>'subdir/template'.to_sym</code>). 
+
+<P>
+You
+must use a symbol because otherwise rendering methods will render
+any strings passed to them directly.
+</LI>
+</OL>
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10819"
+<A NAME="tex2html10822"
   HREF="node436.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10813"
-  HREF="node422.html">
+<A NAME="tex2html10816"
+  HREF="node428.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10807"
+<A NAME="tex2html10812"
   HREF="node434.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10815"
-  HREF="node840.html">
+<A NAME="tex2html10818"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10817"
-  HREF="node843.html">
+<A NAME="tex2html10820"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -285,16 +299,16 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10820"
-  HREF="node436.html">Manejo de Errores</A>
-<B> Subir:</B> <A NAME="tex2html10814"
-  HREF="node422.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html10808"
-  HREF="node434.html">Opciones pasadas a los</A>
- &nbsp; <B>  <A NAME="tex2html10816"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10818"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10823"
+  HREF="node436.html">Filtros</A>
+<B> Subir:</B> <A NAME="tex2html10817"
+  HREF="node428.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html10813"
+  HREF="node434.html">Pasando variables a la</A>
+ &nbsp; <B>  <A NAME="tex2html10819"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10821"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

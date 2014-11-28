@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Los Ficheros de Configuración</TITLE>
-<META NAME="description" CONTENT="Los Ficheros de Configuración">
+<TITLE>Depuración/Debugging</TITLE>
+<META NAME="description" CONTENT="Depuración/Debugging">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node672.html">
 <LINK REL="previous" HREF="node670.html">
-<LINK REL="up" HREF="node660.html">
+<LINK REL="up" HREF="node661.html">
 <LINK REL="next" HREF="node672.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14929"
+<A NAME="tex2html14930"
   HREF="node672.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14923"
-  HREF="node660.html">
+<A NAME="tex2html14924"
+  HREF="node661.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14917"
+<A NAME="tex2html14918"
   HREF="node670.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14925"
-  HREF="node840.html">
+<A NAME="tex2html14926"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14927"
-  HREF="node843.html">
+<A NAME="tex2html14928"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,322 +92,158 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14930"
-  HREF="node672.html">Copia Segura de un</A>
-<B> Subir:</B> <A NAME="tex2html14924"
-  HREF="node660.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14918"
-  HREF="node670.html">Depuración/Debugging</A>
- &nbsp; <B>  <A NAME="tex2html14926"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14928"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14931"
+  HREF="node672.html">Los Ficheros de Configuración</A>
+<B> Subir:</B> <A NAME="tex2html14925"
+  HREF="node661.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14919"
+  HREF="node670.html">Consideraciones sobre la Seguridad</A>
+ &nbsp; <B>  <A NAME="tex2html14927"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14929"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION065110000000000000000">
-Los Ficheros de Configuración</A>
+<H1><A NAME="SECTION065100000000000000000">
+Depuración/Debugging</A>
 </H1>
 
 <P>
-En vez de llenar nuestra llamada a <code>ssh</code> de parámetros lo aconsejable
-es configurar la llamada en uno de los ficheros de configuración (<code>man ssh_config</code>).
-SSH consulta las opciones en el siguiente orden:
+La opción <code>-v</code> hace que los clientes <code>scp</code> y <code>ssh</code> proporcionen
+información de depuración. Observemos la siguiente copia remota:
+
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ scp procesos.tex orion:
+procesos.tex                         100%  250KB 249.5KB/s   00:01
+</PRE>
+La opción <code>-v</code> nos informa de la existencia de un problema:
+
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ scp -v procesos.tex orion:
+Executing: program /usr/bin/ssh host orion, user (unspecified), command scp -v -t .
+OpenSSH_4.3p2 Debian-9, OpenSSL 0.9.8c 05 Sep 2006
+debug1: Reading configuration data /home/pp2/.ssh/config
+debug1: Applying options for orion
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Applying options for *
+debug1: Connecting to orion [193.145.105.17] port 22.
+debug1: Connection established.
+debug1: identity file /home/pp2/.ssh/identity type -1
+debug1: identity file /home/pp2/.ssh/id_rsa type 1
+debug1: identity file /home/pp2/.ssh/id_dsa type 2
+debug1: Remote protocol version 2.0, remote software version OpenSSH_4.3p2 Debian-9
+debug1: match: OpenSSH_4.3p2 Debian-9 pat OpenSSH*
+debug1: Enabling compatibility mode for protocol 2.0
+debug1: Local version string SSH-2.0-OpenSSH_4.3p2 Debian-9
+debug1: An invalid name was supplied
+Configuration file does not specify default realm
+
+debug1: An invalid name was supplied
+A parameter was malformed
+Validation error
+
+debug1: An invalid name was supplied
+Configuration file does not specify default realm
+
+debug1: An invalid name was supplied
+A parameter was malformed
+Validation error
+
+debug1: SSH2_MSG_KEXINIT sent
+....................................................
+debug1: Transferred: stdin 0, stdout 0, stderr 0 bytes in 0.3 seconds
+debug1: Bytes per second: stdin 0.0, stdout 0.0, stderr 0.0
+debug1: Exit status 0
+</PRE>
+
+<P>
+Después de buscar en <code>Google</code> vemos
+cual es la causa del problema:
+
+<P>
+<BLOCKQUOTE>
+<I>What happens is that SSH will hang for a long period of time before
+providing a password prompt or performing key authentication. In either
+case the problem is the GSSAPI that is now being used by clients and
+not by most servers.
+</I>
+
+</BLOCKQUOTE>
+
+<P>
+La solución recomendada es desactivar <code>GSSAPIAuthentication</code>:
+<PRE>
+pp2@nereida:~/Lbook$ vi ~/.ssh/config
+pp2@nereida:~/Lbook$ grep -i gss ~/.ssh/config
+GSSAPIAuthentication no
+</PRE>
+Ejecutamos con <code>-v</code> de nuevo. El error ha desaparecido. La velocidad de transferencia
+a aumentado ligeramente:
+<PRE>
+pp2@nereida:~/Lbook$ scp procesos.tex orion:
+procesos.tex                              100%  253KB 252.9KB/s   00:00
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION065100010000000000000">
+Lista de Comprobaciones en Caso de Error</A>
+</H4>
+  
 
 <P>
 
 <OL>
-<LI>Línea de comandos
+<LI>Añada la opción <code>-v</code>  el número de veces que sea necesario
 </LI>
-<LI>Fichero de configuración del usuario <code>~/.ssh/config</code>
-	     Este fichero debe tener permisos de lectura/escritura para el usuario
-       y no ser accesible al resto. 
+<LI>Añada la opción de depuración al servidor; <code>/usr/sbin/sshd -d -p 2222</code>. 
+El número <code>2222</code> se refiere aquí al puerto.
 </LI>
-<LI>Fichero de configuración global <code>/etc/ssh/ssh_config</code>
+<LI>Observe el fichero de log del servicio SSH usando <A NAME="tex2html1603"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?tail"><TT>tail</TT></A>
+<code>-f</code>: 
+<code>tail -f /var/log/auth.log</code> ( en el servidor)
+</LI>
+<LI>Asegúrese que el agente se está ejecutando: <code>ps aux|grep ssh-agent</code>.  
+Si se está usando <code>keychain</code> asegúrese de que el agente, el PID y el socket
+están correctamente actualizados
+</LI>
+<LI>Asegúrese que su clave ha sido añadida al agente SSH.
+Use <code>ssh-add -l</code> para comprobarlo.  
+</LI>
+<LI>Compruebe los permisos en sus directorios <code>HOME</code>, <code>~/.ssh</code>
+y en el fichero <code>authorized_keys</code>. El servidor 
+rechazará el uso de claves públicas si 
+esta en modo <code>StrictModes on</code> si los permisos no son
+suficientemente restrictivos.
 </LI>
 </OL>
 
 <P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Establezca una conexión SSH:
+¿Que protocolo se esta usando en la conexión?
+¿Que identidad se esta usando?</I></DIV><P></P>
 
-<H4><A NAME="SECTION065110010000000000000">
-Estructura de un Fichero de Configuración</A>
+<P>
+
+<H4><A NAME="SECTION065100020000000000000">
+Véase también</A>
 </H4>
   
-
-<P>
-Para cada parámetro el primer valor encontrado será el utilizado. 
-Los ficheros de configuración contienen secciones. Cada sección comienza con una
-especificación de <code>Host</code>. Las especificaciones en esa sección sólo 
-se aplican a los máquinas (tal y como se especifico en la línea de comandos)
-que casen con el patrón especificado en  <TT>Host</TT> . Por ejemplo, si escribo en la
-línea de comandos:
-
-<P>
-<PRE>
-pp2@nereida:~/Lbook$ ssh rbeo
-</PRE>
-
-<P>
-Se buscará en mi fichero de configuración <code>~/.ssh/config</code> por una especificación
-<code>Host rbeo</code>. En efecto, en mi fichero existe una:
-
-<P>
-<PRE>
-...
-
-Host rbeo
-user otheruser
-Hostname localhost
-Port 2048
-IdentityFile /home/pp2/.ssh/ursu
-
-...
-</PRE>
-
-<P>
-La sección dice que opciones deben aplicarse cuando nos conectamos a <code>rbeo</code>:
-
-<UL>
-<LI>La opción  <TT>user</TT>  indica que debo proporcionar como usuario <code>otheruser</code>
-</LI>
-<LI>La opción  <TT>Hostname</TT>  dice que el nombre auténtico de la máquina es <code>localhost</code>
-</LI>
-<LI>La opción  <TT>Port</TT>  indica que nos debemos conectar via el puerto 2048
-</LI>
-<LI>La opción  <TT>IdentityFile</TT>  nos dice que debemos usar autentificación automática
-con fichero de identidad (que fué previamente generado con <code>ssh-keygen</code>)
-<code>/home/pp2/.ssh/ursu</code>
-</LI>
-</UL>
-
-<P>
-Las líneas que comienzan por el carácter <code>#</code> son tratadas como comentarios.
-Es posible añadir líneas en blanco para aumentar la legibilidad.
-
-<P>
-El resto de las líneas deben seguir el patrón 
-
-<P>
-<PRE>
-PALABRACLAVE argumentos
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION065110020000000000000">
-Palabras Clave</A>
-</H4>
-  
-
-<P>
-Algunas palabras clave importantes son:
 
 <P>
 
 <UL>
-<LI><TT>Host</TT>  Se pueden usar patrones como <code>*</code> y <code>?</code>. 
-     Define la sección. Si el nombre proveído en la línea de comandos 
-     casa con él las reglas de la sección serán aplicadas.
-
-<P>
-</LI>
-<LI><TT>BatchMode</TT> 
-Se desactivará la petición de <code>passphrase/password</code>.
-
-<P>
-Además las opciones  <TT>ServerAliveInterval</TT> <A NAME="tex2html1605"
-  HREF="footnode.html#foot27268"><SUP><SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> 
-y  <TT>SetupTimeOut</TT> <A NAME="tex2html1606"
-  HREF="footnode.html#foot27269"><SUP><SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> 
-se establecen a 300 segundos. Esta opción es útil cuando se usan 
-procesos por lotes o programas - por ejemplo cuando se usa <A NAME="tex2html1608"
-  HREF="http://search.cpan.org/perldoc?GRID::Machine"><TT>GRID::Machine</TT></A>
--
-en los que no hay un usuario presente para proporcionar
-una clave y es necesario detectar la caída de la red. El argumento 
-debe ser <code>yes</code> o <code>no</code>. El valor por defecto es <code>no</code>
-
-<P>
-</LI>
-<LI><TT>BindAddress</TT> 
-Se usa para especificar la dirección de la máquina local. Sólo es útil
-si la máquina dispone de mas de una dirección. Esta opción no funciona
-si  <TT>UsePrivilegedPort</TT> <A NAME="tex2html1607"
-  HREF="footnode.html#foot27270"><SUP><SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>se pone a <code>yes</code>.
-
-<P>
-</LI>
-<LI><TT>Compression</TT>  y  <TT>CompressionLevel</TT> 
-
-<P>
-Si se establece la opción
-<TT>Compression</TT> se compactarán los datos según diga  <TT>CompressionLevel</TT>  (de 1 a 9)
-
-<P>
-</LI>
-<LI><TT>ConnectionAttempts</TT> 
-Especifica el número de intentos antes de abandonar. El argumento debe ser un número 
-(por defecto 1). Puede ser útil cuando se esta usando un
-procesado por lotes y la conexión falla a menudo.
-
-<P>
-</LI>
-<LI><TT>ConnectTimeout</TT> 
-Especifica el límite de tiempo (segundos) antes de abandonar
-cuando se conecta a un servidor <code>ssh</code>
-
-<P>
-</LI>
-<LI><TT>HostName</TT> 
-El nombre real del <code>host</code> al que entramos. Esto nos permite
-tener apodos y abreviaciones. El valor usado por defecto es el
-proveído en la línea de comandos. Se permite poner direciones IP
-numéricas.
-
-<P>
-</LI>
-<LI><TT>IdentityFile</TT> 
-Especifica el fichero conteniendo la identidad de autentificación (RSA o DSA)
-a ser usado. Por defecto toma el valor <code>~/.ssh/identity</code> para la versión 1
-del protocolo y <code>~/.ssh/id_rsa</code> y <code>~/.ssh/id_dsa</code> para la versión
-2. Si hay un agente cargado el agente intentará también las otras identidades.
-Es posible especificar múltiples identidades, las cuales serán intentadas
-en secuencia.
-
-<P>
-</LI>
-<LI><TT>NoHostAuthenticationForLocalhost</TT> 
-
-<P>
-Esta opción es conveniente cuando el directorio <code>home</code> 
-es compartido entre un conjunto de máquinas (via NFS por ejemplo).
-En ese caso  <TT>localhost</TT>  refiere a una máquina distinta
-en cada una de las máquinas del conjunto.
-En tal caso, las conexiones a <code>localhost</code>
-dan lugar a un buen número de warnings indicando
-que la clave ha cambiado. 
-
-<P>
-</LI>
-<LI><TT>Port</TT>  Especifica el número de puerto.
-
-<P>
-</LI>
-<LI><TT>ServerAliveInterval</TT> 
-Si después del intervalo especificado en segundos no 
-se obtiene respuesta alguna del servidor, se envía un mensaje
-al servidor para solicitar una respuesta del mismo.
-Por defecto es 0, indicando que estos mensajes no deben ser emitidos.
-
-<P>
-Es útil probar con esta opción si la conexión se desconecta después de un corto periodo
-de inactividad.
-Ciertos administradores configuran sus servidores
-de manera que responden muy tardíamente.
-Sigue un fragmento de mi configuración desde fuera de la Universidad:
-
-<P>
-<PRE>
-Host cardon
-user pepito
-Hostname cardon.ull.es
-ForwardX11 yes
-ServerAliveInterval=30
-</PRE>
-
-<P>
-</LI>
-<LI><TT>ServerAliveCountMax</TT> 
-
-<P>
-Establece el número de mensajes <SPAN  CLASS="textbf">alive</SPAN> que
-pueden ser enviados por el cliente <code>ssh</code> sin que este reciba 
-respuesta desde el servidor. Si se supera este umbral el
-cliente abandona, finalizando la sesión. El valor por
-defecto es 3. (Sólo para el protocolo 2).
-
-<P>
-</LI>
-<LI><TT>TCPKeepAlive</TT> 
-
-<P>
-Especifica si se deben enviar mensajes TCP  <TT>keepalive</TT> 
-al otro lado. Si se envían se podrán detectar los fallos
-en las máquinas remotas. El valor por defecto es <code>yes</code>,
-de modo que el cliente se percate de la caída del remoto.
-
-<P>
-</LI>
-<LI><TT>User</TT>  El usuario
-
-<P>
-</LI>
-<LI><TT>UserKnownHostsFile</TT>  especifica un fichero alternativo
-a <code>~/.ssh/known_hosts</code> para las claves de máquinas
-
-<P>
+<LI><A NAME="tex2html1604"
+  HREF="http://blog.codefront.net/2007/02/28/debugging-ssh-public-key-authentication-problems/">Debugging SSH public key authentication problems</A>
 </LI>
 </UL>
-
-<P>
-
-<H4><A NAME="SECTION065110030000000000000">
-Ejemplo</A>
-</H4>
-  
-
-<P>
-Sigue un ejemplo de fichero de configuración de usuario:
-
-<P>
-<PRE>
-pp2@nereida:~/.ssh$ cat -n config
- 1  # man  ssh_config
- 2
- 3  GSSAPIAuthentication no
- 4
- 5  Host somemachine
- 6  user myname
- 7  Hostname somemachine.pcg.ull.es
- 8  #ForwardX11 yes
- 9
-10  Host ursu
-11  user otheruser
-12  Hostname somemachine.pcg.ull.es
-13  IdentityFile /home/pp2/.ssh/ursu
-14  #ForwardX11 yes
-15
-16  Host chazam chazam.pcg.ull.es chazam.deioc.ull.es chum
-17  user myname
-18  # The real name of the machine
-19  Hostname chazam.pcg.ull.es
-20
-21  # Example to be used when connecting via reverse tunneling
-22  # myname@somemachine:~$ ssh -R2048:localhost:22 pp2@nereida
-23  # Logic name for the machine
-24  Host rbeo
-25  # user in the remote machine
-26  user otheruser
-27  # The 'real name' of the machine after the tunnel
-28  Hostname localhost
-29  # Port to connect to
-30  Port 2048
-31  IdentityFile /home/pp2/.ssh/ursu
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION065110040000000000000">
-El fichero <TT>rc</TT></A>
-</H4>
-  
-
-<P>
-Cada vez que ocurre una conexión SSH el servidor ejecuta el script
-en <code>/etc/sshrc</code>. Si existe un fichero <code>~/.ssh/rc</code> (SSH1, OpenSSH) o <code>~/.ssh2/rc</code> (SSH2),
-será invocado. Su presencia inhibe la ejecución de <code>/etc/sshrc</code>.
-Se ejecuta tanto si la sesión es interactiva como si es un comando.
 
 <P>
 <BR><HR>
@@ -417,33 +253,29 @@ Se ejecuta tanto si la sesión es interactiva como si es un comando.
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html14931"
-  HREF="node671.html#SECTION065110010000000000000">Estructura de un Fichero de Configuración</A>
 <LI><A NAME="tex2html14932"
-  HREF="node671.html#SECTION065110020000000000000">Palabras Clave</A>
+  HREF="node671.html#SECTION065100010000000000000">Lista de Comprobaciones en Caso de Error</A>
 <LI><A NAME="tex2html14933"
-  HREF="node671.html#SECTION065110030000000000000">Ejemplo</A>
-<LI><A NAME="tex2html14934"
-  HREF="node671.html#SECTION065110040000000000000">El fichero <TT>rc</TT></A>
+  HREF="node671.html#SECTION065100020000000000000">Véase también</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14929"
+<A NAME="tex2html14930"
   HREF="node672.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14923"
-  HREF="node660.html">
+<A NAME="tex2html14924"
+  HREF="node661.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14917"
+<A NAME="tex2html14918"
   HREF="node670.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14925"
-  HREF="node840.html">
+<A NAME="tex2html14926"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14927"
-  HREF="node843.html">
+<A NAME="tex2html14928"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -494,16 +326,16 @@ Se ejecuta tanto si la sesión es interactiva como si es un comando.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14930"
-  HREF="node672.html">Copia Segura de un</A>
-<B> Subir:</B> <A NAME="tex2html14924"
-  HREF="node660.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14918"
-  HREF="node670.html">Depuración/Debugging</A>
- &nbsp; <B>  <A NAME="tex2html14926"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14928"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14931"
+  HREF="node672.html">Los Ficheros de Configuración</A>
+<B> Subir:</B> <A NAME="tex2html14925"
+  HREF="node661.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14919"
+  HREF="node670.html">Consideraciones sobre la Seguridad</A>
+ &nbsp; <B>  <A NAME="tex2html14927"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14929"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

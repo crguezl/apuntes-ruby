@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Código en sinatra/base.rb: la clase Stream</TITLE>
-<META NAME="description" CONTENT="Código en sinatra/base.rb: la clase Stream">
+<TITLE>Deferred or streaming response bodies</TITLE>
+<META NAME="description" CONTENT="Deferred or streaming response bodies">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="previous" HREF="node493.html">
-<LINK REL="up" HREF="node476.html">
+<LINK REL="previous" HREF="node494.html">
+<LINK REL="up" HREF="node494.html">
 <LINK REL="next" HREF="node496.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11797"
+<A NAME="tex2html11802"
   HREF="node496.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11791"
-  HREF="node476.html">
+<A NAME="tex2html11796"
+  HREF="node494.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11787"
+<A NAME="tex2html11792"
   HREF="node494.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11793"
-  HREF="node840.html">
+<A NAME="tex2html11798"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11795"
-  HREF="node843.html">
+<A NAME="tex2html11800"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,151 +91,109 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11798"
-  HREF="node496.html">Web Sockets</A>
-<B> Subir:</B> <A NAME="tex2html11792"
-  HREF="node476.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11788"
-  HREF="node494.html">Deferred or streaming response</A>
- &nbsp; <B>  <A NAME="tex2html11794"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11796"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11803"
+  HREF="node496.html">Código en sinatra/base.rb: la</A>
+<B> Subir:</B> <A NAME="tex2html11797"
+  HREF="node494.html">Asynchronous responses in Rack</A>
+<B> Anterior:</B> <A NAME="tex2html11793"
+  HREF="node494.html">Asynchronous responses in Rack</A>
+ &nbsp; <B>  <A NAME="tex2html11799"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11801"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION038160000000000000000"></A>
-<A NAME="section:sinatrabasestream"></A>
-<BR>
-Código en <TT>sinatra/base.rb</TT>: la clase <TT>Stream</TT>
-</H1>
+<H2><A NAME="SECTION038151000000000000000">
+Deferred or streaming response bodies</A>
+</H2>
 
 <P>
-The close parameter specifies whether <code>Stream#close</code> should be called
-after the block has been executed. This is only relevant for evented
-servers like <code>Thin</code> or Rainbows.
+The example shows a one-shot request, wait, response cycle. But it
+is possible to have multiple wait, response segments to allow the
+headers to be sent to the client immediately, or the body to trickle
+in slowly without blocking the worker process. 
 
 <P>
-
-<H4><A NAME="SECTION038160010000000000000">
-método stream</A>
-</H4>
-  
+Async Rack servers,
+when <code>env['async.callback']</code> is called, send the status and headers
+to the client and then begin iterating through each part of the
+body with <code>#each</code>. 
 
 <P>
-Fichero <code>sinatra/base.rb</code>:
+After the last body part the server must decide
+if the connection to the client should be closed (entire body has
+been provided) or if it should remain open (body parts will be
+provided later). The details of this decision are implementation-specific.
+For now, assume the connection is not closed. To send additional
+body parts, <code>env['async.callback']</code> may not be called a second time
+since the status code and headers have already been sent to the
+client and can not be changed. The app takes advantage of the
+server's iteration through the body with <code>#each:</code> 
+
+<P>
+the server calls
+<code>body.each(&amp;block)</code>, 
+and the trick is to save <code>&amp;block</code> for later use.
+This turns the iteration inside-out: rather than the sever iterating
+through a body, the app takes control to send each part of the body
+itself.
 <PRE>
-  class Stream
-    ...
-    def stream(keep_open = false)
-      # Soporta el servidor callbacks asincronas? (webrick no, thin si)
-      scheduler = env['async.callback'] ? EventMachine : Stream
-      current   = @params.dup
-      body Stream.new(scheduler, keep_open) { |out| 
-        with_params(current) { yield(out) } # llamamos al bloque 
-      }
-    end
-    ...
+class DeferredBody
+  def each(&amp;block)
+    # normally we'd yield each part of the body, but since
+    # it isn't available yet, we save &amp;block for later
+    @server_block = block
   end
-</PRE>
-Si <code>keep_open</code> es <code>true</code> el navegador se queda esperando datos y no
-ciera la conexión.
 
-<P>
-The <code>body</code> method set or retrieve the response body. 
+  def send(data)
+    # calling the saved &amp;block has the same effect as
+    # if we had yielded to it
+    @server_block.call data
+  end
+end
 
-<P>
-When a block is given,
-evaluation is deferred until the body is read with <code>each</code>.
+class AsyncApp
+  def call(env)
+    Thread.new do
+      sleep 5  # simulate waiting for some event
+      body = DeferredBody.new
+      response = [200, {'Content-Type' =&gt; 'text/plain'}, body]
+      env['async.callback'].call response
 
-<P>
-<PRE>
-    def body(value = nil, &amp;block)
-      if block_given?
-        def block.each; yield(call) end
-        response.body = block
-      elsif value
-        headers.delete 'Content-Length' unless request.head? || value.is_a?(Rack::File) || value.is_a?(Stream)
-        response.body = value
-      else
-        response.body
-      end
+      # at this point, the server may send the status and headers,
+      # but the body was empty
+      
+      body.send 'Hello, '
+      sleep 5
+      body.send 'World'
     end
-</PRE>
-<H4><A NAME="SECTION038160020000000000000">
-initialize</A>
-</H4>
-  
-
-<P>
-<PRE>
-class Stream
-      def self.schedule(*) yield end
-      def self.defer(*)    yield end
-
-      def initialize(scheduler = self.class, keep_open = false, &amp;back)
-        @back, @scheduler, @keep_open = 
-         back.to_proc, scheduler, keep_open
-        @callbacks, @closed = [], false
-      end
-  ...
+    
+    [-1, {}, []]  # or throw :async
+  end
 end
 </PRE>
+Note that the above won't quite work because we haven't signaled to the server that the body will be deferred and streamed in part by part.
 
 <P>
-
-<H4><A NAME="SECTION038160030000000000000">
-with_params</A>
-</H4>
-  
-
-<P>
-<PRE>
-  class Stream 
-    ...
-    def with_params(temp_params)
-      original, @params = @params, temp_params # save params
-      yield   # call the block
-    ensure
-      @params = original if original # recover params
-    end
-  end
-</PRE>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html11799"
-  HREF="node495.html#SECTION038160010000000000000">método stream</A>
-<LI><A NAME="tex2html11800"
-  HREF="node495.html#SECTION038160020000000000000">initialize</A>
-<LI><A NAME="tex2html11801"
-  HREF="node495.html#SECTION038160030000000000000">with_params</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11797"
+<A NAME="tex2html11802"
   HREF="node496.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11791"
-  HREF="node476.html">
+<A NAME="tex2html11796"
+  HREF="node494.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11787"
+<A NAME="tex2html11792"
   HREF="node494.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11793"
-  HREF="node840.html">
+<A NAME="tex2html11798"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11795"
-  HREF="node843.html">
+<A NAME="tex2html11800"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -286,16 +244,16 @@ with_params</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11798"
-  HREF="node496.html">Web Sockets</A>
-<B> Subir:</B> <A NAME="tex2html11792"
-  HREF="node476.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11788"
-  HREF="node494.html">Deferred or streaming response</A>
- &nbsp; <B>  <A NAME="tex2html11794"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11796"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11803"
+  HREF="node496.html">Código en sinatra/base.rb: la</A>
+<B> Subir:</B> <A NAME="tex2html11797"
+  HREF="node494.html">Asynchronous responses in Rack</A>
+<B> Anterior:</B> <A NAME="tex2html11793"
+  HREF="node494.html">Asynchronous responses in Rack</A>
+ &nbsp; <B>  <A NAME="tex2html11799"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11801"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León

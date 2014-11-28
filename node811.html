@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Perl</TITLE>
-<META NAME="description" CONTENT="Perl">
+<TITLE>PHP</TITLE>
+<META NAME="description" CONTENT="PHP">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node812.html">
 <LINK REL="previous" HREF="node810.html">
-<LINK REL="up" HREF="node808.html">
+<LINK REL="up" HREF="node809.html">
 <LINK REL="next" HREF="node812.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html17133"
+<A NAME="tex2html17136"
   HREF="node812.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html17127"
-  HREF="node808.html">
+<A NAME="tex2html17130"
+  HREF="node809.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html17121"
+<A NAME="tex2html17124"
   HREF="node810.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html17129"
-  HREF="node840.html">
+<A NAME="tex2html17132"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html17131"
-  HREF="node843.html">
+<A NAME="tex2html17134"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,146 +92,126 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html17134"
-  HREF="node812.html">MySQL</A>
-<B> Subir:</B> <A NAME="tex2html17128"
-  HREF="node808.html">Apache en Mac OS</A>
-<B> Anterior:</B> <A NAME="tex2html17122"
-  HREF="node810.html">PHP</A>
- &nbsp; <B>  <A NAME="tex2html17130"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html17132"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html17137"
+  HREF="node812.html">Perl</A>
+<B> Subir:</B> <A NAME="tex2html17131"
+  HREF="node809.html">Apache en Mac OS</A>
+<B> Anterior:</B> <A NAME="tex2html17125"
+  HREF="node810.html">Configuring Apache</A>
+ &nbsp; <B>  <A NAME="tex2html17133"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html17135"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION063013000000000000000">
-Perl</A>
+<H2><A NAME="SECTION063012000000000000000">
+PHP</A>
 </H2>
+<P>
+<I>PHP 5.4.17 is loaded in the latest preview of OSX 10.9 Mavericks
+and needs to be turned on by uncommenting a line in the httpd.conf
+file.
+</I>
 <P><PRE>
-MacBook-Air-de-casiano-2:apache2 root# pwd          
-/etc/apache2
-</PRE>
+sudo vi /etc/apache2/httpd.conf
+</PRE><I>
+Search for <code>php</code> this will land you on the right line then uncomment the line:
+</I>
 <P><PRE>
-MacBook-Air-de-casiano-2:apache2 root# tail httpd.conf
-
-Include /private/etc/apache2/other/*.conf
-</PRE>
+LoadModule php5_module libexec/apache2/libphp5.so
+</PRE><I>
+Reload apache to kick in
+</I>
 <P><PRE>
-MacBook-Air-de-casiano-2:apache2 root# cat other/perl.conf 
-LoadModule perl_module libexec/apache2/mod_perl.so
-Alias /perl /Library/WebServer/perl
-&lt;Location /perl&gt;
-    SetHandler perl-script
-    PerlResponseHandler ModPerl::Registry
-    Options ExecCGI
-    PerlSendHeader On
-    Order allow,deny
-    Allow from all
-&lt;/Location&gt;
-</PRE>
+sudo apachectl restart
+</PRE><I>
+To see and test PHP, create a file name it <code>phpinfo.php</code> and file
+it in your document root with the contents below, then view it in
+a browser.
+</I>
 <P><PRE>
-[/Library/WebServer/CGI-Executables]$ pwd
-/Library/WebServer/CGI-Executables
-[/Library/WebServer/CGI-Executables]$ cat hello.cgi 
-#!/usr/bin/perl
-use strict;
-use warnings;
-use CGI qw/:standard/;
-use Data::Dumper;
-print header, start_html, h1('it works'), end_html;
-</PRE>
-<P><PRE>
-# apachectl restart
-</PRE>
-<P><PRE>
-[/Library/WebServer/CGI-Executables]$ curl -v localhost/cgi-bin/hello.cgi
-* Adding handle: conn: 0x7fc47c008c00
-* Adding handle: send: 0
-* Adding handle: recv: 0
-* Curl_addHandleToPipeline: length: 1
-* - Conn 0 (0x7fc47c008c00) send_pipe: 1, recv_pipe: 0
-* About to connect() to localhost port 80 (#0)
-*   Trying ::1...
-* Connected to localhost (::1) port 80 (#0)
-&gt; GET /cgi-bin/hello.cgi HTTP/1.1
-&gt; User-Agent: curl/7.30.0
-&gt; Host: localhost
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Date: Sat, 09 Nov 2013 12:31:00 GMT
-* Server Apache/2.2.24 (Unix) PHP/5.4.17 DAV/2 mod_ssl/2.2.24 OpenSSL/0.9.8y mod_perl/2.0.7 Perl/v5.16.2 is not blacklisted
-&lt; Server: Apache/2.2.24 (Unix) PHP/5.4.17 DAV/2 mod_ssl/2.2.24 OpenSSL/0.9.8y mod_perl/2.0.7 Perl/v5.16.2
-&lt; Transfer-Encoding: chunked
-&lt; Content-Type: text/html; charset=ISO-8859-1
-&lt; 
-&lt;!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"&gt;
-&lt;head&gt;
-&lt;title&gt;Untitled Document&lt;/title&gt;
-&lt;meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;it works&lt;/h1&gt;
-&lt;/body&gt;
-* Connection #0 to host localhost left intact
-&lt;/html&gt;
-</PRE>
-<P><PRE>
--rwxr-xr-x  1 casiano  staff  132  9 nov 12:09 hello.pl
-[/Library/WebServer/perl]$ vi hello.pl 
-[/Library/WebServer/perl]$ pwd
-/Library/WebServer/perl
-[/Library/WebServer/perl]$ cat hello.pl 
-#!/usr/bin/perl
-use strict;
-use warnings;
-use CGI qw/:standard/;
-use Data::Dumper;
-print header, start_html, h1('with Perl-module works'), end_html;
-[/Library/WebServer/perl]$
-</PRE>
-<P><PRE>
-[/Library/WebServer/perl]$ curl -v 'http://localhost/perl/hello.pl'
-* Adding handle: conn: 0x7f7f99804000
-* Adding handle: send: 0
-* Adding handle: recv: 0
-* Curl_addHandleToPipeline: length: 1
-* - Conn 0 (0x7f7f99804000) send_pipe: 1, recv_pipe: 0
-* About to connect() to localhost port 80 (#0)
-*   Trying ::1...
-* Connected to localhost (::1) port 80 (#0)
-&gt; GET /perl/hello.pl HTTP/1.1
-&gt; User-Agent: curl/7.30.0
-&gt; Host: localhost
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Date: Sat, 09 Nov 2013 12:38:07 GMT
-* Server Apache/2.2.24 (Unix) PHP/5.4.17 DAV/2 mod_ssl/2.2.24 OpenSSL/0.9.8y mod_perl/2.0.7 Perl/v5.16.2 is not blacklisted
-&lt; Server: Apache/2.2.24 (Unix) PHP/5.4.17 DAV/2 mod_ssl/2.2.24 OpenSSL/0.9.8y mod_perl/2.0.7 Perl/v5.16.2
-&lt; Transfer-Encoding: chunked
-&lt; Content-Type: text/html; charset=ISO-8859-1
-&lt; 
-&lt;!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"&gt;
-&lt;head&gt;
-&lt;title&gt;Untitled Document&lt;/title&gt;
-&lt;meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;with Perl-module works&lt;/h1&gt;
-&lt;/body&gt;
-* Connection #0 to host localhost left intact
+ &lt;?php phpinfo(); ?&gt;
 </PRE>
 <P>
-<BR><HR>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html17136"
+  HREF="node812.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html17130"
+  HREF="node809.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html17124"
+  HREF="node810.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html17132"
+  HREF="node841.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html17134"
+  HREF="node844.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html17137"
+  HREF="node812.html">Perl</A>
+<B> Subir:</B> <A NAME="tex2html17131"
+  HREF="node809.html">Apache en Mac OS</A>
+<B> Anterior:</B> <A NAME="tex2html17125"
+  HREF="node810.html">Configuring Apache</A>
+ &nbsp; <B>  <A NAME="tex2html17133"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html17135"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
 2014-11-28

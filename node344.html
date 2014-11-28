@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Servidor Multithreaded (and a Client)</TITLE>
-<META NAME="description" CONTENT="Un Servidor Multithreaded (and a Client)">
+<TITLE>Exclusión Mutua y la Clase Mutex</TITLE>
+<META NAME="description" CONTENT="Exclusión Mutua y la Clase Mutex">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node345.html">
 <LINK REL="previous" HREF="node343.html">
-<LINK REL="up" HREF="node340.html">
+<LINK REL="up" HREF="node341.html">
 <LINK REL="next" HREF="node345.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9002"
+<A NAME="tex2html8999"
   HREF="node345.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8996"
-  HREF="node340.html">
+<A NAME="tex2html8993"
+  HREF="node341.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8990"
+<A NAME="tex2html8987"
   HREF="node343.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8998"
-  HREF="node840.html">
+<A NAME="tex2html8995"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9000"
-  HREF="node843.html">
+<A NAME="tex2html8997"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,193 +92,241 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9003"
-  HREF="node345.html">Colas</A>
-<B> Subir:</B> <A NAME="tex2html8997"
-  HREF="node340.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html8991"
-  HREF="node343.html">Exclusión Mutua y la</A>
- &nbsp; <B>  <A NAME="tex2html8999"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9001"
-  HREF="node843.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9000"
+  HREF="node345.html">Un Servidor Multithreaded (and</A>
+<B> Subir:</B> <A NAME="tex2html8994"
+  HREF="node341.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html8988"
+  HREF="node343.html">Creación de Threads</A>
+ &nbsp; <B>  <A NAME="tex2html8996"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8998"
+  HREF="node844.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021840000000000000000">
-Un Servidor Multithreaded (and a Client)</A>
+<H1><A NAME="SECTION021830000000000000000">
+Exclusión Mutua y la Clase </A><A NAME="tex2html784"
+  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>
 </H1>
 
 <P>
-An almost canonical use case for threads is for writing servers
-that can communicate with more than one client at a time.
+
+<H4><A NAME="SECTION021830010000000000000">
+Race Condition: definición</A>
+</H4>
+  
 
 <P>
+De la Wikipedia sobre <A NAME="tex2html785"
+  HREF="http://en.wikipedia.org/wiki/:">Race_condition</A>
+<BLOCKQUOTE>
+A race condition or race hazard is the behavior of an electronic
+or software system where the output is dependent on the sequence
+or timing of other uncontrollable events. 
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>It becomes a bug when
+events do not happen in the order the programmer intended. 
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>The term
+originates with the idea of two signals racing each other to influence
+the output first.
+
+</BLOCKQUOTE>
+
+<P>
+
+<H4><A NAME="SECTION021830020000000000000">
+Ejemplo de Race Condition</A>
+</H4>
+  
+
 <PRE>
-[~/ruby/threads(master)]$ cat simple_server.rb 
-require 'socket'
-
-# This method expects a socket connected to a client.
-# It reads lines from the client, reverses them and sends them back.
-# Multiple threads may run this method at the same time.
-def handle_client(c)
-  while true
-    input = c.gets.chop     # Read a line of input from the client
-    p "Received &lt;#{input}&gt;"
-    break if !input         # Exit if no more input
-    break if input=="quit"  # or if the client asks to.
-    yield c, input
-    c.flush                 # Force our output out
-  end
-  c.close                   # Close the client socket
+[~/ruby/threads(master)]$ cat race_condition.rb 
+def inc(n) 
+  n+1
 end
-
-port = ARGV.shift || 2000
-server = TCPServer.open(port) 
-p "listening in port #{port}"
-
-while true                    # Servers loop forever
-  client = server.accept      # Wait for a client to connect
-  p "new client: #{client}"
-  Thread.start(client) do |c| # Start a new thread 
-    handle_client(c) do |c, input|      # And handle the client on that thread
-      c.puts(input.reverse)   
+sum = 0
+threads = (1..10).map do
+  Thread.new do 
+    10_000.times do
+      sum = inc(sum)
     end
-  end
+  end 
 end
+threads.each(&amp;:join)
 </PRE>
 
 <P>
+
+<H4><A NAME="SECTION021830030000000000000">
+Ventajas de Usar JRuby Cuando se Usan Threads</A>
+</H4>
+  
+
+JRuby is built upon the JVM. One can make use of "true" native threads which are able to run concurrently with your parent thread (See
+<A NAME="tex2html786"
+  HREF="http://www.igvita.com/2008/11/13/concurrency-is-a-myth-in-ruby/">Parallelism is a Myth in Ruby by Ilya Grigorik on November 13, 2008</A>).
+
+<P>
+A  <A NAME="15015"></A><SPAN  CLASS="textbf">Global Interpreter Lock</SPAN> (<A NAME="15017"></A><SPAN  CLASS="textbf">GIL</SPAN>) is a mutual exclusion lock held by
+a programming language interpreter thread to avoid sharing code
+that is not <A NAME="15019"></A><SPAN  CLASS="textbf">thread-safe</SPAN> with other threads.
+
+<P>
+Some language implementations that implement a Global Interpreter Lock are CPython, the most widely used implementation of Python, and Ruby MRI, the reference implementation of Ruby.
+
+<P>
+JVM-based equivalents of these languages (Jython and JRuby) do not use 
+Global Interpreter Locks. 
+JRuby is a Ruby implementation 
+allowing us to natively scale our Ruby code across multiple cores. 
+IronPython and IronRuby are implemented
+on top of Microsoft's Dynamic Language Runtime and also avoid using
+a GIL.
+
+<P>
+
+<img src="xruby-gil.webp" />
+
+<P>
+Also, Rubinius implements native operating system threads for
+concurrency and has no global interpreter lock (GIL).
+
+<P>
+
+<H4><A NAME="SECTION021830040000000000000">
+Ejecución con JRuby</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/threads(master)]$ rvm list
+
+rvm rubies
+
+   jruby-1.7.3 [ x86_64 ]
+=* ruby-2.0.0-p247 [ x86_64 ]
+   ruby-2.1.0-preview1 [ x86_64 ]
+
+# =&gt; - current
+# =* - current &amp;&amp; default
+#  * - default
+
+[~/ruby/threads(master)]$ rvm use jruby-1.7.3
+Using /Users/casiano/.rvm/gems/jruby-1.7.3
+[~/ruby/threads(master)]$ ruby -v
+jruby 1.7.3 (1.9.3p385) 2013-04-17 fffffff on Java HotSpot(TM) 64-Bit Server VM 1.7.0_25-b15 [darwin-x86_64]
+[~/ruby/threads(master)]$ ruby race_condition.rb 
+28375
+[~/ruby/threads(master)]$ ruby race_condition.rb 
+25464
+[~/ruby/threads(master)]$ ruby race_condition.rb 
+23442
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021830050000000000000">
+Ejecucion con ruby MRI</A>
+</H4>
+  
+
+<PRE>
+[~/ruby/threads(master)]$  rvm use 2.1.0-preview1
+Using /Users/casiano/.rvm/gems/ruby-2.1.0-preview1
+[~/ruby/threads(master)]$ ruby race_condition.rb 
+100000
+[~/ruby/threads(master)]$ ruby race_condition.rb 
+100000
+[~/ruby/threads(master)]$
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021830060000000000000">
+Mutex</A>
+</H4>
+  
+
+<P>
+We can use the built-in class <A NAME="tex2html787"
+  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A> to create synchronized regions—areas
+of code that only one thread may enter at a time.
+
+<P>
+We resolve problems like these by using a cooperative locking
+mechanism:
 
 <OL>
-<LI>To write Internet servers, we use the <A NAME="tex2html795"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> class
+<LI>Each thread that wants to access shared data must first
+<code>lock</code> that data
 </LI>
-<LI>In essence,
-a <A NAME="tex2html796"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> object is a factory for <A NAME="tex2html797"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> objects
+<LI>The <code>lock</code> is represented by a <A NAME="tex2html788"
+  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>
+(short for "mutual exclusion") object
 </LI>
-<LI>Call <A NAME="tex2html798"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A><code>.open</code> to specify a port for your service and
-create a <A NAME="tex2html799"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> object
+<LI>To <code>lock</code> a <A NAME="tex2html789"
+  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>,
+you call its <code>lock</code> method
 </LI>
-<LI>Next, call the <code>accept</code> method of the returned <A NAME="tex2html800"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> object
+<LI>When you’re done reading or altering
+the shared data, you call the <code>unlock</code> method of the <A NAME="tex2html790"
+  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>
 </LI>
-<LI>This method waits until a
-client connects to the port you specified, and then returns a
-<A NAME="tex2html801"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> object that represents the connection to that client
+<LI><P>
+The <code>lock</code> method blocks when called on a <A NAME="tex2html791"
+  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A> that’s
+already locked, and it does not return until the caller has
+successfully obtained a <code>lock</code>
 </LI>
-<LI>The call
-<code>Thread.start(client)</code>
-is basically the same as a call to <code>Thread.new</code>.
+<LI>If each thread that accesses
+the shared data locks and <code>unlock</code>s the <A NAME="tex2html792"
+  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A> correctly,
+no thread will see the data in an inconsistent state and we won’t
+have problems like those we’ve described
 </LI>
-<LI>Inside the thread we call the <code>handle_client</code> method, passing the socket
-as argument 
+<LI>Instead of using the <code>lock</code> and <code>unlock</code> methods explicitly, it is more common to use the <code>synchronize</code> method and associate a block with it
 </LI>
-<LI>The block that follows the invokation of
-<code>handle_client</code> specifies the behavior 
-of the server. 
-</LI>
-<LI>Un <A NAME="tex2html802"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> es un objeto <A NAME="tex2html803"
-  HREF="http://ruby-doc.org/core-2.0.0/IO.html"><TT>IO</TT></A>:
-<PRE>
-&gt;&gt; TCPSocket.ancestors
-=&gt; [TCPSocket, IPSocket, BasicSocket, IO, 
-    File::Constants, Enumerable, Object,  Kernel, BasicObject]
-</PRE>
+<LI><code>synchronize</code> locks the <A NAME="tex2html793"
+  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A>, runs the code in the block, and then <code>unlock</code>s the <A NAME="tex2html794"
+  HREF="http://www.ruby-doc.org/core-2.0.0/Mutex.html"><TT>Mutex</TT></A> in an <code>ensure</code> clause so that exceptions are properly handled
 </LI>
 </OL>
 
 <P>
-
-<H4><A NAME="SECTION021840010000000000000">
-El Cliente</A>
-</H4>
-  
-
-<P>
-To obtain a <A NAME="tex2html804"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> instance use the <A NAME="tex2html805"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A><code>.open</code> class method, or with its synonym <A NAME="tex2html806"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A><code>.new</code>. 
-
-<P>
-Pass the name of the host to connect to as the first argument and the port as the second argument. 
-
-<P>
-The port should be an integer between 1 and 65535, specified as a <A NAME="tex2html807"
-  HREF="http://ruby-doc.org/core-2.0.0/Fixnum.html"><TT>Fixnum</TT></A> or <A NAME="tex2html808"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A> object. 
-
-<P>
-Different internet protocols use different ports. 
-
-<P>
-Web servers use port 80 by default, for example. 
-
-<P>
-You may also pass the name of an Internet service, such as <code>http</code>, as a string, in place of a port number, but this is not well documented and may be system dependent.
-
-<P>
 <PRE>
-[~/ruby/threads(master)]$ cat simple_client.rb 
-require 'socket'                # Sockets are in standard library
-
-host, port = 'localhost', '2000'
-
-s = TCPSocket.open(host, port)  # Open a socket to host and port
-words = ARGV
-words = [
-"amore, roma.", 
-"a man, a plan, a canal: panama.",
-"no 'x' in 'nixon.'",
-"dábale arroz a la zorra el abad"
-] unless words.length &gt; 0
-words.each do |x|
-  s.puts x 
-  line = s.gets             # Read lines from the socket
-  break if line.nil?
-  puts line.chop            # And print with platform line terminator
+[~/ruby/threads(master)]$ cat mutex_synchronize.rb 
+# Wait for all threads (other than the current thread and
+# main thread) to stop running.
+# Assumes that no new threads are started while waiting.
+def join_all
+  main = Thread.main        # The main thread
+  current = Thread.current  # The current thread
+  all = Thread.list         # All threads still running
+  # Now call join on each thread
+  all.each {|t| t.join unless t == current or t == main }
 end
-s.close                     # Close the socket when done
-</PRE>
 
-<P>
-
-<H4><A NAME="SECTION021840020000000000000">
-ejecución del Servidor</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/ruby/threads(master)]$ ruby simple_server.rb 
-"listening in port 2000"
-"new client: #&lt;TCPSocket:0x007fd8fb8aee50&gt;"
-"Received &lt;amore, roma.&gt;"
-"Received &lt;a man, a plan, a canal: panama.&gt;"
-"Received &lt;no 'x' in 'nixon.'&gt;"
-"Received &lt;d\xC3\xA1bale arroz a la zorra el abad&gt;"
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021840030000000000000">
-Ejecución del Cliente</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/threads(master)]$ ruby simple_client.rb 
-.amor ,eroma
-.amanap :lanac a ,nalp a ,nam a
-'.noxin' ni 'x' on
+def inc(n) 
+  n+1
+end
+sum = 0
+mutex = Mutex.new
+threads = (1..10).map do
+  Thread.new do 
+    10_000.times do
+      mutex.synchronize do
+        sum = inc(sum)
+      end
+    end
+  end 
+end
+join_all
+p sum
 </PRE>
 
 <P>
@@ -289,31 +337,37 @@ Ejecución del Cliente</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
+<LI><A NAME="tex2html9001"
+  HREF="node344.html#SECTION021830010000000000000">Race Condition: definición</A>
+<LI><A NAME="tex2html9002"
+  HREF="node344.html#SECTION021830020000000000000">Ejemplo de Race Condition</A>
+<LI><A NAME="tex2html9003"
+  HREF="node344.html#SECTION021830030000000000000">Ventajas de Usar JRuby Cuando se Usan Threads</A>
 <LI><A NAME="tex2html9004"
-  HREF="node344.html#SECTION021840010000000000000">El Cliente</A>
+  HREF="node344.html#SECTION021830040000000000000">Ejecución con JRuby</A>
 <LI><A NAME="tex2html9005"
-  HREF="node344.html#SECTION021840020000000000000">ejecución del Servidor</A>
+  HREF="node344.html#SECTION021830050000000000000">Ejecucion con ruby MRI</A>
 <LI><A NAME="tex2html9006"
-  HREF="node344.html#SECTION021840030000000000000">Ejecución del Cliente</A>
+  HREF="node344.html#SECTION021830060000000000000">Mutex</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9002"
+<A NAME="tex2html8999"
   HREF="node345.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8996"
-  HREF="node340.html">
+<A NAME="tex2html8993"
+  HREF="node341.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8990"
+<A NAME="tex2html8987"
   HREF="node343.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8998"
-  HREF="node840.html">
+<A NAME="tex2html8995"
+  HREF="node841.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9000"
-  HREF="node843.html">
+<A NAME="tex2html8997"
+  HREF="node844.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -364,16 +418,16 @@ Ejecución del Cliente</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9003"
-  HREF="node345.html">Colas</A>
-<B> Subir:</B> <A NAME="tex2html8997"
-  HREF="node340.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html8991"
-  HREF="node343.html">Exclusión Mutua y la</A>
- &nbsp; <B>  <A NAME="tex2html8999"
-  HREF="node840.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9001"
-  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9000"
+  HREF="node345.html">Un Servidor Multithreaded (and</A>
+<B> Subir:</B> <A NAME="tex2html8994"
+  HREF="node341.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html8988"
+  HREF="node343.html">Creación de Threads</A>
+ &nbsp; <B>  <A NAME="tex2html8996"
+  HREF="node841.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8998"
+  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
