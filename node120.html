@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Lazy Enumerables/Enumeradores Perezosos</TITLE>
-<META NAME="description" CONTENT="Lazy Enumerables/Enumeradores Perezosos">
+<TITLE>Enumeradores</TITLE>
+<META NAME="description" CONTENT="Enumeradores">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -27,20 +27,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html5128"
+<A NAME="tex2html5191"
   HREF="node121.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html5122"
+<A NAME="tex2html5185"
   HREF="node119.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html5118"
+<A NAME="tex2html5181"
   HREF="node119.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html5124"
-  HREF="node832.html">
+<A NAME="tex2html5187"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html5126"
-  HREF="node835.html">
+<A NAME="tex2html5189"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,29 +91,408 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html5129"
+<B> Siguiente:</B> <A NAME="tex2html5192"
   HREF="node121.html">Bloques</A>
-<B> Subir:</B> <A NAME="tex2html5123"
+<B> Subir:</B> <A NAME="tex2html5186"
   HREF="node119.html">Iteradores y Objetos Enumerables</A>
-<B> Anterior:</B> <A NAME="tex2html5119"
+<B> Anterior:</B> <A NAME="tex2html5182"
   HREF="node119.html">Iteradores y Objetos Enumerables</A>
- &nbsp; <B>  <A NAME="tex2html5125"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html5127"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5188"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5190"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H2><A NAME="SECTION02531000000000000000">
-Lazy Enumerables/Enumeradores Perezosos</A>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html5193"
+  HREF="node120.html#SECTION02531010000000000000">Iteradores Externos</A>
+<LI><A NAME="tex2html5194"
+  HREF="node120.html#SECTION02531020000000000000">with_index</A>
+<LI><A NAME="tex2html5195"
+  HREF="node120.html#SECTION02531030000000000000">Construcción de un Enumerador</A>
+<LI><A NAME="tex2html5196"
+  HREF="node120.html#SECTION02531040000000000000">Enumeradores Infinitos</A>
+<LI><A NAME="tex2html5197"
+  HREF="node120.html#SECTION02531050000000000000">Enumeradores Perezosos</A>
+<LI><A NAME="tex2html5198"
+  HREF="node120.html#SECTION02531060000000000000">Ejemplo: Números primos</A>
+<LI><A NAME="tex2html5199"
+  HREF="node120.html#SECTION02531070000000000000">Véase</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION02531000000000000000"></A>
+<A NAME="subsection:enumeradores"></A>
+<BR>
+Enumeradores
 </H2>
+
+<H4><A NAME="SECTION02531010000000000000">
+Iteradores Externos</A>
+</H4>
+  
+
+<P>
+La clase <A NAME="tex2html227"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A> permite la iteración tanto interna como externa.
+
+<P>
+
+<UL>
+<LI>When the iterator controls the iteration, the iterator is an <A NAME="5075"></A><SPAN  CLASS="textit">internal iterator</SPAN>. 
+</LI>
+<LI>Clients that use an <A NAME="5077"></A><SPAN  CLASS="textit">external iterator</SPAN> 
+must advance the traversal and request the <code>next</code> 
+element explicitly from the iterator.
+</LI>
+</UL>
+
+<P>
+Una manera de crear objetos <A NAME="tex2html228"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A> es mediante el método
+<code>to_enum</code> (en la clase <A NAME="tex2html229"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>):
 
 <P>
 <PRE>
-[6] pry(main)&gt; (1..Float::INFINITY).lazy.map { |x| x*x }. first(10)
-=&gt; [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+[1] pry(main)&gt; a = [1, 2, "cat" ]
+=&gt; [1, 2, "cat"]
+[3] pry(main)&gt; ea = a.to_enum
+=&gt; #&lt;Enumerator: ...&gt;
+[4] pry(main)&gt; ea.next
+=&gt; 1
+[5] pry(main)&gt; ea.next
+=&gt; 2
+[6] pry(main)&gt; ea.next
+=&gt; "cat"
+[7] pry(main)&gt; ea.next
+StopIteration: iteration reached an end
+from (pry):7:in `next'
+[8] pry(main)&gt; ea.rewind
+=&gt; #&lt;Enumerator: ...&gt;
+[9] pry(main)&gt; ea.next
+=&gt; 1
+[10] pry(main)&gt; ea.next
+=&gt; 2
+[11] pry(main)&gt; ea.peek
+=&gt; "cat"
 </PRE>
+
+<P>
+También puede usarse con hashes:
+<PRE>
+28] pry(main)&gt; h = { a: "hello", b: "world" }
+=&gt; {:a=&gt;"hello", :b=&gt;"world"}
+[29] pry(main)&gt; 
+[30] pry(main)&gt; eh = h.to_enum
+=&gt; #&lt;Enumerator: ...&gt;
+[31] pry(main)&gt; eh.size
+=&gt; nil
+[32] pry(main)&gt; eh.next
+=&gt; [:a, "hello"]
+[33] pry(main)&gt; eh.next_values
+=&gt; [[:b, "world"]]
+[34] pry(main)&gt; eh.rewind
+=&gt; #&lt;Enumerator: ...&gt;
+</PRE>
+El método <code>to_enum</code> está definido en la clase <A NAME="tex2html230"
+  HREF="http://ruby-doc.org/core-2.0.0/Object.html"><TT>Object</TT></A>.
+
+<P>
+The call <code>obj.to_enum(method = :each, *args)</code>
+creates a new <A NAME="tex2html231"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A> which will enumerate by calling method <code>:each</code>
+on <code>obj</code>, passing <code>args</code> 
+if any.
+<PRE>
+[2] pry(main)&gt; class Tutu
+[2] pry(main)*   def chuchu(x)
+[2] pry(main)*     if block_given?
+[2] pry(main)*       yield x+1
+[2] pry(main)*       yield x+2
+[2] pry(main)*       yield x+3
+[2] pry(main)*     else  
+[2] pry(main)*       to_enum(:chuchu, x) { 3 }
+[2] pry(main)*     end  
+[2] pry(main)*   end  
+[2] pry(main)* end  
+=&gt; :chuchu
+[3] pry(main)&gt; t = Tutu.new
+=&gt; #&lt;Tutu:0x007f9e6cb5af60&gt;
+[5] pry(main)&gt; t.chuchu(10) { |x| puts x }
+11
+12
+13
+=&gt; nil
+[6] pry(main)&gt; e = t.chuchu(10) 
+=&gt; #&lt;Enumerator: ...&gt;
+[7] pry(main)&gt; e.next
+=&gt; 11
+[8] pry(main)&gt; e.next
+=&gt; 12
+[9] pry(main)&gt; e.size
+=&gt; 3
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION02531020000000000000">
+with_index</A>
+</H4>
+  
+
+El método <code>with_index(offset = 0) {|(*args), idx| ... }</code> 
+(o bien <code>with_index(offset = 0)</code>)
+iterates the given block for each element with an index, which starts from offset. 
+If no block is given, returns a new <A NAME="tex2html232"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A> 
+that includes the index, starting from offset
+<PRE>
+[40] pry(main)&gt; h = { a: "hello", b: "world" } 
+=&gt; {:a=&gt;"hello", :b=&gt;"world"}
+[41] pry(main)&gt; eh = h.to_enum
+=&gt; #&lt;Enumerator: ...&gt;
+[42] pry(main)&gt; eh.with_index.next
+=&gt; [[:a, "hello"], 0]
+[44] pry(main)&gt; eh.with_index { |x, i| puts "#{x.inspect}, #{i}" }
+[:a, "hello"], 0
+[:b, "world"], 1
+=&gt; {:a=&gt;"hello", :b=&gt;"world"}
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION02531030000000000000">
+Construcción de un Enumerador</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>As well as creating <A NAME="tex2html234"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A>s from existing collections, you can create an explicit enumerator, passing it a block
+</LI>
+<LI>The code in the block will be used when the enumerator object needs to supply a fresh value to your program
+</LI>
+<LI>However, the block isn’t simply executed from top to bottom
+</LI>
+<LI>Instead, 
+<FONT COLOR="#ff0000"> the block is executed as a</FONT> <A NAME="5107"></A><SPAN  CLASS="textit">coroutine</SPAN><A NAME="tex2html233"
+  HREF="footnode.html#foot5024"><SUP><SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>with the rest of your program’s code
+</LI>
+<LI>Execution starts at the top and pauses when the block <code>yields</code> a value to your code
+</LI>
+<LI>When the code needs the <code>next</code> value, execution resumes at the statement following the <code>yields</code>
+</LI>
+<LI>This lets you write enumerators that generate <A NAME="5109"></A><SPAN  CLASS="textit">infinite sequences</SPAN>:
+</LI>
+</OL>
+
+<P>
+<PRE>
+[~/ruby/PROGRAMMINGRUBYDAVETHOMAS]$ cat fib_enum.rb 
+@fib = Enumerator.new do |y|
+  a, b = 0, 1
+  loop do
+    a, b = b, a + b
+    y.yield a
+  end
+end
+</PRE>
+
+<P>
+<code>Enumerator.new</code> recieves a block that is used to define the iteration.
+A 
+<FONT COLOR="#ff0000"> yielder</FONT> object <code>y</code> is given to the block as a parameter
+and  can be used to <code>yield</code> a value by calling the <code>yield</code> method 
+(aliased as <code>&lt;&lt;</code>).
+
+<P>
+<PRE>
+[~/ruby/PROGRAMMINGRUBYDAVETHOMAS]$ pry
+[1] pry(main)&gt; require './fib_enum'
+=&gt; true
+[2] pry(main)&gt; @fib.next
+=&gt; 1
+[3] pry(main)&gt; @fib.next
+=&gt; 1
+[4] pry(main)&gt; @fib.next
+=&gt; 2
+[6] pry(main)&gt; @fib.first
+=&gt; 1
+[7] pry(main)&gt; @fib.take(5)
+=&gt; [1, 1, 2, 3, 5]
+</PRE>
+
+<P>
+La clase <A NAME="tex2html235"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A> incluye el módulo <A NAME="tex2html236"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerable.html"><TT>Enumerable</TT></A> de donde toma,
+entre otros, los métodos <code>first</code> y <code>take</code>.
+
+<P>
+<PRE>
+[25] pry(main)&gt; Enumerator.ancestors
+=&gt; [Enumerator, Enumerable, Object, PP::ObjectMixin, Kernel, BasicObject]
+</PRE>
+<H4><A NAME="SECTION02531040000000000000">
+Enumeradores Infinitos</A>
+</H4>
+  
+
+<OL>
+<LI>You have to be slightly careful with <A NAME="tex2html237"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A>s that can generate
+infinite sequences
+</LI>
+<LI>Some of the regular <A NAME="tex2html238"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerable.html"><TT>Enumerable</TT></A> methods such as
+<code>count</code> and <code>select</code> will happily try to read the whole enumeration
+before returning a result
+</LI>
+<LI>If you want a version of <code>select</code> that
+works with infinite sequences, you’ll need to write it yourself
+</LI>
+<LI>Here’s a version that gets passed an <A NAME="tex2html239"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A> and a block and
+returns a new <A NAME="tex2html240"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator.html"><TT>Enumerator</TT></A> containing values from the original for
+which the block returns <code>true</code>
+<PRE>
+[1] pry(main)&gt; require './fib_enum'
+=&gt; true
+[2] pry(main)&gt; require './grep8'
+=&gt; true
+[3] pry(main)&gt; e = @fib.grep8 { |x| x % 3 == 0}
+=&gt; #&lt;Enumerator: ...&gt;
+[4] pry(main)&gt; e.next
+=&gt; 3
+[5] pry(main)&gt; e.next
+=&gt; 21
+[6] pry(main)&gt; e.next
+=&gt; 144
+[7] pry(main)&gt; e.first(5)
+=&gt; [3, 21, 144, 987, 6765]
+</PRE>
+</LI>
+</OL>
+
+<P>
+<PRE>
+[9] pry(main)&gt; .cat grep8.rb
+class Enumerator
+  def grep8(&amp;block) 
+    Enumerator.new do |y|
+      self.each do |x|
+        y.yield x if block[x]
+      end
+    end
+  end
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION02531050000000000000">
+Enumeradores Perezosos</A>
+</H4>
+  
+
+Otra forma de crear iteradores infinitos en Ruby 2.0 es mediante la clase
+<A NAME="tex2html241"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator/Lazy.html"><TT>Enumerator::Lazy</TT></A>:
+
+<P>
+<PRE>
+[16] pry(main)&gt; e = (1..Float::INFINITY).lazy.map { |x| x*x }
+=&gt; #&lt;Enumerator::Lazy: ...&gt;
+[17] pry(main)&gt; e.next
+=&gt; 1
+[18] pry(main)&gt; e.next
+=&gt; 4
+[19] pry(main)&gt; e.next
+=&gt; 9
+[20] pry(main)&gt; e.next
+=&gt; 16
+[21] pry(main)&gt; e.take(4).force
+=&gt; [1, 4, 9, 16]
+[22] pry(main)&gt; e.take(4)
+=&gt; #&lt;Enumerator::Lazy: ...&gt;
+[23] pry(main)&gt; e.first(4)
+=&gt; [1, 4, 9, 16]
+</PRE>
+
+<P>
+En este otro ejemplo 
+creamos un enumerador perezoso <code>filter_map</code> 
+que devuelve los elementos procesados por el bloque cuyo valor
+no es <code>nil</code>. Su funcionamiento sería así::
+<PRE>
+[1] pry(main)&gt; require './lazy_enum'
+=&gt; true
+[2] pry(main)&gt; [1,2,3].map {|x| x*x if x % 2 != 0 }
+=&gt; [1, nil, 9]
+[3] pry(main)&gt; [1,2,3].filter_map {|x| x*x if x % 2 != 0 }
+=&gt; [1, 9]         # se elimina el nil
+</PRE>
+Para usarlo con rangos infinitos:
+<PRE>
+[4] pry(main)&gt; (1..Float::INFINITY).lazy.filter_map{|i| i*i if i.even?}.first(5)
+=&gt; [4, 16, 36, 64, 100]
+</PRE>
+
+<P>
+El método <code>lazy</code> se encuentra en el módulo <A NAME="tex2html242"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerable.html"><TT>Enumerable</TT></A>
+y retorna un enumerador perezoso <A NAME="tex2html243"
+  HREF="http://ruby-doc.org/core-2.0.0/Enumerator/Lazy.html"><TT>Enumerator::Lazy</TT></A>
+que enumera/construye el valor cuando se
+necesita.
+
+<P>
+<PRE>
+[~/ruby/PROGRAMMINGRUBYDAVETHOMAS]$ cat lazy_enum.rb 
+module Enumerable
+  def filter_map(&amp;block) # Para explicar la semantica
+    map(&amp;block).compact
+  end
+end
+
+class Enumerator::Lazy
+  def filter_map
+    Lazy.new(self) do |yielder, *values|
+      result = yield *values
+      yielder &lt;&lt; result if result # &lt;&lt; es un alias de yield
+    end
+  end
+end
+</PRE>
+
+<P>
+The call <code>new(self) { |yielder, *values| ... }</code> 
+creates a new <code>Lazy</code> enumerator using <code>self</code> as the coupled enumerator. 
+
+<P>
+When the enumerator is actually enumerated (e.g. by calling <code>force</code> or
+<code>next</code>), 
+<code>self</code> will be enumerated and each value passed to the given block. 
+
+<P>
+The block then <code>yield</code> values back using <code>yielder.yield</code> or <code>yielder &lt;&lt; ... </code>.
+
+<P>
+
+<H4><A NAME="SECTION02531060000000000000">
+Ejemplo: Números primos</A>
+</H4>
+  
 
 <P>
 <PRE>
@@ -130,10 +509,105 @@ p primes.first(10)
 </PRE>
 
 <P>
-<BR><HR>
+
+<H4><A NAME="SECTION02531070000000000000">
+Véase</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html244"
+  HREF="http://patshaughnessy.net/2013/4/3/ruby-2-0-works-hard-so-you-can-be-lazy">Ruby 2.0 Works Hard So You Can Be Lazy</A>
+por Pat Shaughnessy. April 3rd 2013
+</LI>
+</OL>
+
+<P>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html5191"
+  HREF="node121.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html5185"
+  HREF="node119.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html5181"
+  HREF="node119.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html5187"
+  HREF="node840.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html5189"
+  HREF="node843.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html5192"
+  HREF="node121.html">Bloques</A>
+<B> Subir:</B> <A NAME="tex2html5186"
+  HREF="node119.html">Iteradores y Objetos Enumerables</A>
+<B> Anterior:</B> <A NAME="tex2html5182"
+  HREF="node119.html">Iteradores y Objetos Enumerables</A>
+ &nbsp; <B>  <A NAME="tex2html5188"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html5190"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

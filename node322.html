@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>EventMachine</TITLE>
-<META NAME="description" CONTENT="EventMachine">
+<TITLE>Coveralls: Análisis de Cubrimiento</TITLE>
+<META NAME="description" CONTENT="Coveralls: Análisis de Cubrimiento">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node326.html">
 <LINK REL="previous" HREF="node321.html">
-<LINK REL="up" HREF="node319.html">
+<LINK REL="up" HREF="node315.html">
 <LINK REL="next" HREF="node323.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8554"
+<A NAME="tex2html8636"
   HREF="node323.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8548"
-  HREF="node319.html">
+<A NAME="tex2html8630"
+  HREF="node315.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8542"
+<A NAME="tex2html8626"
   HREF="node321.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8550"
-  HREF="node832.html">
+<A NAME="tex2html8632"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8552"
-  HREF="node835.html">
+<A NAME="tex2html8634"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,340 +91,185 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8555"
-  HREF="node323.html">Un server</A>
-<B> Subir:</B> <A NAME="tex2html8549"
-  HREF="node319.html">Programación Orientada a Eventos</A>
-<B> Anterior:</B> <A NAME="tex2html8543"
-  HREF="node321.html">Building our own I/O</A>
- &nbsp; <B>  <A NAME="tex2html8551"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8553"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8637"
+  HREF="node323.html">Guard</A>
+<B> Subir:</B> <A NAME="tex2html8631"
+  HREF="node315.html">Integración Contínua: Travis</A>
+<B> Anterior:</B> <A NAME="tex2html8627"
+  HREF="node321.html">Travis en la Línea</A>
+ &nbsp; <B>  <A NAME="tex2html8633"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8635"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021530000000000000000">
-EventMachine</A>
+<H1><A NAME="SECTION021370000000000000000"></A>
+<A NAME="section:coveralls"></A>
+<BR>
+Coveralls: Análisis de Cubrimiento
 </H1>
 
 <P>
-<A NAME="tex2html717"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A> is an event-driven I/O and lightweight concurrency library for Ruby. It provides event-driven I/O using the <A NAME="13768"></A><SPAN  CLASS="textbf">Reactor pattern</SPAN>.
+Coveralls works with your continuous integration server to give you test coverage history and statistics. 
 
 <P>
-The reactor is the core of <A NAME="tex2html718"
-  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>. 
-All of EM's processing happens in the reactor. 
-Your application will create code that hooks into the reactor, using timers, socket connections or various other means. 
-Typically you'll wrap your entire application inside an <code>EM#run</code> block.
+When you log into 
+<A NAME="tex2html704"
+  HREF="https://coveralls.io/">Coveralls</A>
+for the first time, it will ask you to select
+repositories to monitor. 
+
+<P>
+It works like Travis CI, listing all of your
+repositories for you to enable and disable access. (You
+can also click a button to resynchronize the repository list, in case you’ve added a repository since last syncing).
+
+<img src="coverall.png" width="50%"/>
+
+<P>
+To set up Coveralls, we need to add a file that tells Coverall what to
+do. 
+
+<P>
+For our project, we need to add a file to the root directory named
+<code>.coveralls.yml</code>, in which we'll include a single line of
+configuration:
 
 <P>
 <PRE>
-EventMachine.run do
-  EventMachine.start_server ...
+service_name: travis-ci
+</PRE>
+This tells Coveralls that we're using Travis CI as our CI server. (If
+you've signed up for a Pro account, then use <code>travis-pro</code> 
+instead.)
+
+<P>
+We also need to add the <code>Coveralls</code> gem to our <code>Gemfile</code>
+<PRE>
+group :development, :test do
+  gem 'rspec'
+  gem 'rack-test'
+  gem 'coveralls', require: false
 end
+</PRE>
+Finally, we need to include <code>coveralls</code> code in our 
+<code>spec_helper.rb</code> file:
+<PRE>
+require 'coveralls'
+Coveralls.wear!
 </PRE>
 
 <P>
-This block won't complete until <code>EM#stop</code> is called. The
-reactor will loop infinitely.
+
+<FONT COLOR="#0000ff"> Notice that we have to load the code before the app code</FONT>. 
+
+<P>
+If you load Coveralls after the application’s code has loaded, then
+it wouldn’t be able to hook into the application properly.
 
 <P>
 
-<H4><A NAME="SECTION021530010000000000000">
-run y stop_event_loop</A>
+<H4><A NAME="SECTION021370010000000000000">
+coveralls en la Línea de Comandos</A>
 </H4>
   
 
 <PRE>
-[~/ruby/eventmachine/simple(master)]$ cat timer.rb 
-require 'rubygems'
-require 'eventmachine'
-puts "Start"
-EM.run do
- puts "Init"
- EM.add_timer(1) do
-   puts "Quitting"
-   EM.stop_event_loop
- end
-end
-puts "Done"
-</PRE>
-
-<P>
-<PRE>
-[~/ruby/eventmachine/simple(master)]$ ruby timer.rb 
-Start
-Init
-Quitting
-Done
+[~/sinatra/sinatra-selenium/capybara-selenium(master)]$ coveralls --help
+Commands:
+  coveralls help [COMMAND]  # Describe available commands or one specific command
+  coveralls last            # View the last build for this repository on Coveralls.
+  coveralls open            # View this repository on Coveralls.
+  coveralls push            # Runs your test suite and pushes the coverage results to Cover...
+  coveralls report          # Runs your test suite locally and displays coverage statistics.
+  coveralls service         # View this repository on your CI service's website.
+  coveralls version         # See version
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION021530020000000000000">
-reactor_running?</A>
+<H4><A NAME="SECTION021370020000000000000">
+Running locally: COVERALLS_REPO_TOKEN</A>
 </H4>
   
 
-<PRE>
-[~/ruby/eventmachine/simple(master)]$ cat reactor_running.rb 
-require 'rubygems'
-require 'eventmachine'
-puts EM.reactor_running?  # false
-EM.run do
- puts EM.reactor_running? # true
- EM.next_tick do
-   puts EM.reactor_running? # true
-   EM.stop
- end
-end
-puts EM.reactor_running?  # false
-</PRE>
-
 <P>
-
-<OL>
-<LI><code>reactor_running?</code>
-Tells you whether the EventMachine reactor loop is currently running.
-
-<P>
-Useful when writing libraries that want to run event-driven code,
-but may be running in programs that are already event-driven. 
-
-<P>
-In
-such cases, if <code>reactor_running?</code> returns <code>false</code>, 
-your code can invoke
-<code>run</code> and run your application code inside the block passed to that
-method. If this method returns true, just execute your event-aware
-code.
-
-<P>
-</LI>
-<LI><code>(Object) next_tick(pr = nil, &amp;block)</code>
-
-<P>
-Schedules a proc for execution immediately after the next "turn"
-through the reactor core. 
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION021530030000000000000">
-add_timer</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/eventmachine/simple(master)]$ cat add_timer_family.rb 
-require "eventmachine"
-EM.run do
- EM.add_periodic_timer(1) do
-   puts "Tick..."
- end
- EM.add_timer(5) do
-   puts "BOOM"
-   EM.stop_event_loop
- end
-end
-[~/ruby/eventmachine/simple(master)]$ ruby add_timer_family.rb 
-Tick...
-Tick...
-Tick...
-Tick...
-BOOM
-</PRE>
-
-<P>
-
-<OL>
-<LI><code>(Object) add_timer(*args, &amp;block)</code>
-
-<P>
-Adds a one-shot timer to the event loop. 
-Call it with one or two parameters. 
-The first parameters is a delay-time expressed in seconds (not milliseconds). 
-The second parameter, if present, must be an object that responds to <code>:call</code>. 
-If 2nd parameter is not given, then you can also simply pass a block to the method call.
-
-<P>
-This method may be called from the block passed to <code>run</code> or from any
-callback method. It schedules execution of the <code>proc</code> or block passed
-to it, after the passage of an interval of time equal to at least
-the number of seconds specified in the first parameter to the call.
-
-<P>
-<code>add_timer</code> is a non-blocking method. Callbacks can and will
-be called during the interval of time that the timer is in effect.
-There is no built-in limit to the number of timers that can be
-outstanding at any given time.
-
-<P>
-</LI>
-<LI><code>(Object) add_periodic_timer(*args, &amp;block)</code>
-
-<P>
-Adds a periodic timer to the event loop. It takes the same parameters
-as the one-shot timer method, <code>add_timer</code>. This method schedules
-execution of the given block repeatedly, at intervals of time at
-least as great as the number of seconds given in the first parameter
-to the call.
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION021530040000000000000">
-next_tick</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/eventmachine/simple(master)]$ cat next_tick.rb 
-require 'eventmachine'
-EM.run do
- EM.add_periodic_timer(1) do
-   puts "Hai"
- end
- EM.add_timer(5) do
-   EM.next_tick do
-     EM.stop_event_loop
-   end
- end
-end
-</PRE>
-<code>(Object) next_tick(pr = nil, &amp;block)</code>
-Schedules a proc for execution immediately after the next "turn" through the reactor core.
-
-<P>
-This can be useful for improving memory management and/or application responsiveness, especially when scheduling large amounts of data for writing to a network connection.
-
-<P>
-This method takes either a single argument (which must be a callable object) or a block.
-
-<P>
-Parameters:
-<PRE>
-pr (#call) (defaults to: nil) — A callable object to run
-</PRE>
+When you run the client you get:
 
 <P>
 <PRE>
-[~/ruby/eventmachine/simple(master)]$ ruby next_tick.rb 
-Hai
-Hai
-Hai
-Hai
+[~/sinatra/sinatra-coverall(master)]$ coveralls open
+No repo_token configured.
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION021530050000000000000">
-defer</A>
-</H4>
-  
-
-<code>EM.defer</code> is used to push a otherwise blocking operation on an EM internal queue whose jobs are then processed by a thread pool of 20 threads (by default). 
-
-<P>
-You can use <code>EM.defer</code> with operations which aren’t made to work asynchronously.
+If you're running locally, you must have a <code>.coveralls.yml</code> 
+with your <code>repo_token</code> in it; or,
+you must provide a <code>COVERALLS_REPO_TOKEN</code> environment-variable on
+the command-line.
 
 <P>
 <PRE>
-[~/ruby/eventmachine/simple(master)]$ cat defer.rb 
-require 'eventmachine'
-require 'thread'
-EM.run do
- EM.add_timer(2) do
-   puts "Main #{Thread.current}"
-   EM.stop_event_loop
- end
- EM.defer(proc do
-   puts "Defer #{Thread.current}"
- end)
-end
+[~/sinatra/sinatra-coverall(master)]$ cat .coveralls.yml.bak 
+service_name: travis-ci
+repo_token: HHhhhhhhh9saXXXXZZZ4444444444xdWh
 </PRE>
-<code>(Object) defer(op = nil, callback = nil, &amp;blk)</code>
 
 <P>
-
-<OL>
-<LI><A NAME="tex2html719"
-  HREF="ihttps://github.com/eventmachine/eventmachine">Event::Machine</A>.defer is used for integrating blocking operations
-into <A NAME="tex2html720"
-  HREF="ihttps://github.com/eventmachine/eventmachine">Event::Machine</A>'s control flow. 
-
-<P>
-</LI>
-<LI>The action of <A NAME="13796"></A><SPAN  CLASS="textbf">defer</SPAN> is to take
-the block specified in the first parameter (the "operation") and
-schedule it for asynchronous execution on an internal thread pool
-maintained by <A NAME="tex2html721"
-  HREF="ihttps://github.com/eventmachine/eventmachine">Event::Machine</A>. 
-
-<P>
-</LI>
-<LI>When the operation completes, it will
-pass the result computed by the block (if any) back to the <A NAME="tex2html722"
-  HREF="ihttps://github.com/eventmachine/eventmachine">Event::Machine</A>
-reactor. 
-
-<P>
-</LI>
-<LI>Then, <A NAME="tex2html723"
-  HREF="ihttps://github.com/eventmachine/eventmachine">Event::Machine</A> calls the block specified in the second
-parameter to defer (the "callback"), as part of its normal event
-handling loop. 
-
-<P>
-</LI>
-<LI>The result computed by the operation block is passed
-as a parameter to the callback. 
-
-<P>
-</LI>
-<LI>You may omit the callback parameter
-if you don't need to execute any code after the operation completes.
-</LI>
-</OL>
-
-<P>
+or
 <PRE>
-[~/ruby/eventmachine/simple(master)]$ ruby defer.rb 
-Defer #&lt;Thread:0x007fd9c3826960&gt;
-Main #&lt;Thread:0x007fd9c38bcd98&gt;
+ export COVERALLS_REPO_TOKEN=HHhhhhhhh9saXXXXZZZ4444444444xdWh
 </PRE>
 
 <P>
+You can get the token in your coveralls repo page on the right side in the
+section <code>REPO TOKEN</code>.
 
-<H4><A NAME="SECTION021530060000000000000">
-next_tick versus defer</A>
+<P>
+
+<H4><A NAME="SECTION021370030000000000000">
+Donde</A>
 </H4>
   
 
 <P>
 
-<OL>
-<LI>The loop runs on a single thread. 
+<UL>
+<LI><PRE>
+[~/sinatra/sinatra-coverall(master)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/sinatra-coverall
+</PRE>
 </LI>
-<LI>What this means is that apart from I/O - at any time, only one task/event is processed by the event loop. 
+<LI><A NAME="tex2html705"
+  HREF="https://github.com/crguezl/sample-ruby-project">crguezl/sample-ruby-project</A>
 </LI>
-<LI>You can imagine this event loop to be a queue of callbacks that are processed on every tick of the event loop. 
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION021370040000000000000">
+See</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html706"
+  HREF="https://coveralls.io/">https://coveralls.io/</A>
 </LI>
-<LI>So, even if you are running on a multi-core machine, you will not get any parallelism in terms of actual processing - all events will be processed only one at a time. 
+<LI><A NAME="tex2html707"
+  HREF="https://coveralls.zendesk.com/hc/en-us">CoverAlls documentation</A>
 </LI>
-<LI>For every I/O bound task, you can simply define a callback that will get added to the event queue. 
+<LI><A NAME="tex2html708"
+  HREF="http://okamuuu.hatenablog.com/entry/2014/08/28/094936">Ejemplo: Ruby, Heroku and Groonga tutorial 2014</A>
 </LI>
-<LI>The callback will fire when the I/O operation is done, and in the mean time, the application can continue to process other I/O bound requests.
+<LI><A NAME="tex2html709"
+  HREF="https://github.com/crguezl/sample-ruby-project">crguezl/sample-ruby-project</A>
 </LI>
-<LI>Given this model, what <code>process.nextTick()</code> 
-actually does is defer the execution of an action till the next pass around the event loop.
-</LI>
-</OL>
+</UL>
 
 <P>
 <BR><HR>
@@ -435,51 +279,33 @@ actually does is defer the execution of an action till the next pass around the 
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html8556"
-  HREF="node322.html#SECTION021530010000000000000">run y stop_event_loop</A>
-<LI><A NAME="tex2html8557"
-  HREF="node322.html#SECTION021530020000000000000">reactor_running?</A>
-<LI><A NAME="tex2html8558"
-  HREF="node322.html#SECTION021530030000000000000">add_timer</A>
-<LI><A NAME="tex2html8559"
-  HREF="node322.html#SECTION021530040000000000000">next_tick</A>
-<LI><A NAME="tex2html8560"
-  HREF="node322.html#SECTION021530050000000000000">defer</A>
-<LI><A NAME="tex2html8561"
-  HREF="node322.html#SECTION021530060000000000000">next_tick versus defer</A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html8562"
-  HREF="node323.html">Un server</A>
-<UL>
-<LI><A NAME="tex2html8563"
-  HREF="node323.html#SECTION021531010000000000000">callback y errback</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html8564"
-  HREF="node324.html">Deferrable</A>
-<LI><A NAME="tex2html8565"
-  HREF="node325.html">Véase</A>
-</UL>
+<LI><A NAME="tex2html8638"
+  HREF="node322.html#SECTION021370010000000000000">coveralls en la Línea de Comandos</A>
+<LI><A NAME="tex2html8639"
+  HREF="node322.html#SECTION021370020000000000000">Running locally: COVERALLS_REPO_TOKEN</A>
+<LI><A NAME="tex2html8640"
+  HREF="node322.html#SECTION021370030000000000000">Donde</A>
+<LI><A NAME="tex2html8641"
+  HREF="node322.html#SECTION021370040000000000000">See</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8554"
+<A NAME="tex2html8636"
   HREF="node323.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8548"
-  HREF="node319.html">
+<A NAME="tex2html8630"
+  HREF="node315.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8542"
+<A NAME="tex2html8626"
   HREF="node321.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8550"
-  HREF="node832.html">
+<A NAME="tex2html8632"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8552"
-  HREF="node835.html">
+<A NAME="tex2html8634"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -530,20 +356,20 @@ actually does is defer the execution of an action till the next pass around the 
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8555"
-  HREF="node323.html">Un server</A>
-<B> Subir:</B> <A NAME="tex2html8549"
-  HREF="node319.html">Programación Orientada a Eventos</A>
-<B> Anterior:</B> <A NAME="tex2html8543"
-  HREF="node321.html">Building our own I/O</A>
- &nbsp; <B>  <A NAME="tex2html8551"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8553"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8637"
+  HREF="node323.html">Guard</A>
+<B> Subir:</B> <A NAME="tex2html8631"
+  HREF="node315.html">Integración Contínua: Travis</A>
+<B> Anterior:</B> <A NAME="tex2html8627"
+  HREF="node321.html">Travis en la Línea</A>
+ &nbsp; <B>  <A NAME="tex2html8633"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8635"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

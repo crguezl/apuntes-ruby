@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Semantic Versioning</TITLE>
-<META NAME="description" CONTENT="Semantic Versioning">
+<TITLE>Dependencias de la Gema</TITLE>
+<META NAME="description" CONTENT="Dependencias de la Gema">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node718.html">
 <LINK REL="previous" HREF="node716.html">
-<LINK REL="up" HREF="node705.html">
+<LINK REL="up" HREF="node713.html">
 <LINK REL="next" HREF="node718.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15598"
+<A NAME="tex2html15691"
   HREF="node718.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15592"
-  HREF="node705.html">
+<A NAME="tex2html15685"
+  HREF="node713.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15586"
+<A NAME="tex2html15679"
   HREF="node716.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15594"
-  HREF="node832.html">
+<A NAME="tex2html15687"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15596"
-  HREF="node835.html">
+<A NAME="tex2html15689"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,169 +92,95 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15599"
-  HREF="node718.html">Declaring dependencies: Runtime vs.</A>
-<B> Subir:</B> <A NAME="tex2html15593"
-  HREF="node705.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15587"
-  HREF="node716.html">gem yank: Retirando una</A>
- &nbsp; <B>  <A NAME="tex2html15595"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15597"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15692"
+  HREF="node718.html">Jerarquía de Ficheros y</A>
+<B> Subir:</B> <A NAME="tex2html15686"
+  HREF="node713.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15680"
+  HREF="node716.html">Underscores and Dashes</A>
+ &nbsp; <B>  <A NAME="tex2html15688"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15690"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0611120000000000000000">
-Semantic Versioning</A>
-</H1>
-<P>
-<H4><A NAME="SECTION0611120010000000000000">
-Definición</A>
-</H4>
-<P>
-<I>A <A NAME="29320"></A><SPAN  CLASS="textbf">versioning policy</SPAN> is merely a set of simple rules governing how
-version numbers are allocated. 
+<H1><A NAME="SECTION061140000000000000000">
+Dependencias de la Gema</A>
+</H1><I>
+Nearly all gems are going to have dependencies upon other libraries that
+they require in order to function. These dependencies are explicitly
+declared in the gemspec so that when a gem is installed, all of the gems
+that are needed to run that gem can automatically be installed with it.
 </I>
 <P>
-<OL>
-<LI>It can be very simple (e.g. the
-version number is a single number starting with 1 and incremented
-for each successive version), 
-</LI>
-<LI>or it can be really strange (Knuth’s
-TeX project had version numbers: 3, 3.1, 3.14, 3.141, 3.1415; each
-successive version added another digit to PI).
-</LI>
-</OL>
-<P>
-<H4><A NAME="SECTION0611120020000000000000">
-Por que usar Semantic Versioning</A>
-</H4>
-<P>
-<I>The <A NAME="tex2html1682"
-  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> team urges gem developers to follow the <A NAME="29329"></A><SPAN  CLASS="textbf">Semantic Versioning standard</SPAN> 
-for their gem’s versions. 
+<I>There are two types of gem dependencies, <A NAME="29846"></A><SPAN  CLASS="textbf">runtime dependencies</SPAN> and
+<A NAME="29848"></A><SPAN  CLASS="textbf">development dependencies</SPAN>. 
 </I>
-<OL>
-<LI>The <A NAME="tex2html1683"
-  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> library itself does not enforce a strict versioning policy, but using an irrational policy will only be a disservice to those in the community who use your gems.
+<P>
+<UL>
+<LI>
+<FONT COLOR="#0000ff"> Runtime dependencies</FONT> are libraries that
+your gem needs in order to function. For example, if you built a Rails
+extension, you would need to add Rails to the runtime dependencies of
+your project. 
+
+<P>
 </LI>
-</OL>
-<P>
-<H4><A NAME="SECTION0611120030000000000000">
-Ejemplo</A>
-</H4>
-<P>
-<OL>
-<LI>Suppose you have a <code>stack</code> gem that holds a <code>Stack</code> class with both push and pop functionalty. 
+<LI>
+<FONT COLOR="#0000ff"> Development dependencies</FONT>, on the other hand, are gems
+that are only needed by people who are going to contribute to the
+code of the gem. 
 
 <P>
-Your CHANGELOG<A NAME="tex2html1684"
-  HREF="footnode.html#foot28887"><SUP><SPAN CLASS="arabic">89</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> might look like this if you use semantic versioning:
-
+</LI>
+<LI>Gems are, by default, installed only with the runtime
+dependencies. This avoids cluttering up an environment with development
+dependencies if they aren't needed.
+</LI>
+</UL>
 <P>
-<PRE>
-Version 0.0.1: The initial Stack class is released.
-Version 0.0.2: Switched to a linked list implementation because it is cooler.
-Version 0.1.0: Added a depth method.
-Version 1.0.0: Added top and made pop return nil (pop used to return the old top item).
-Version 1.1.0: push now returns the value pushed (it used to return nil).
-Version 1.1.1: Fixed a bug in the linked list implementation.
-Version 1.1.2: Fixed a bug introduced in the last fix.
+<I>Adding dependencies to your <code>gemspec</code> is extremely simple; all you need
+to do is add a line to the <code>gemspec</code> file for each dependency:
+</I>
+<P><PRE>
+# -*- encoding: utf-8 -*-
+require File.expand_path('../lib/my_gem/version', __FILE__)
+
+Gem::Specification.new do |gem|
+  # ...
+
+  gem.add_dependency 'rails'
+  gem.add_development_dependency 'rspec', '~&gt; 2.7'
+end
 </PRE>
-</LI>
-</OL>
 <P>
-<H4><A NAME="SECTION0611120040000000000000">
-Resumen</A>
-</H4>
+<I>In addition to specifying the gem name of a dependency, you can also
+specify a version of the gem to get even more specific. 
+Rubygems will default to the latest version if no specific version is required.
+</I>
+<P><PRE>
+git add . 
+git commit -m "Initial Import"
+</PRE>
 <P>
-<OL>
-<LI>Semantic versioning boils down to:
-
-<P>
-
-<OL>
-<LI><A NAME="29342"></A><SPAN  CLASS="textbf">PATCH level</SPAN> 0.0.x: changes for implementation level detail changes, such as <I>small bug fixes</I>
-</LI>
-<LI><A NAME="29344"></A><SPAN  CLASS="textbf">MINOR level</SPAN> 0.x.0 changes for any <I>backwards compatible API changes</I>, such as 
-<FONT COLOR="#0000ff"> new functionality/features</FONT>
-</LI>
-<LI><A NAME="29348"></A><SPAN  CLASS="textbf">MAJOR level</SPAN> x.0.0 changes for <I>backwards incompatible API changes</I>, such as changes that will break existing users code if they update
-</LI>
-</OL>
-</LI>
-</OL>
-<P>
-<H4><A NAME="SECTION0611120050000000000000">
-Ejercicio</A>
-</H4>
-<P><P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">89</SPAN>.<SPAN CLASS="arabic">12</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
-<I>¿Porqué el cambio en el pop produce un cambio en el MAJOR level y
-el cambio en el push sólo produce un cambio en el MINOR level 
-en este CHANGELOG?
-</I><PRE>
-Version 0.0.1: The initial Stack class is released.
-Version 0.0.2: Switched to a linked list implementation because it is cooler.
-Version 0.1.0: Added a depth method.
-Version 1.0.0: Added top and made pop return nil (pop used to return the old top item).
-Version 1.1.0: push now returns the value pushed (it used to return nil).
-Version 1.1.1: Fixed a bug in the linked list implementation.
-Version 1.1.2: Fixed a bug introduced in the last fix.
-</PRE></DIV><P></P>
-<P>
-<H4><A NAME="SECTION0611120060000000000000">
-Véase</A>
-</H4>
-<OL>
-<LI>Véase  en
-<A NAME="tex2html1685"
-  HREF="http://semver.org/">http://semver.org/</A>
-la definición completa del estandard
-</LI>
-</OL>
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html15600"
-  HREF="node717.html#SECTION0611120010000000000000">Definición</A>
-<LI><A NAME="tex2html15601"
-  HREF="node717.html#SECTION0611120020000000000000">Por que usar Semantic Versioning</A>
-<LI><A NAME="tex2html15602"
-  HREF="node717.html#SECTION0611120030000000000000">Ejemplo</A>
-<LI><A NAME="tex2html15603"
-  HREF="node717.html#SECTION0611120040000000000000">Resumen</A>
-<LI><A NAME="tex2html15604"
-  HREF="node717.html#SECTION0611120050000000000000">Ejercicio</A>
-<LI><A NAME="tex2html15605"
-  HREF="node717.html#SECTION0611120060000000000000">Véase</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15598"
+<A NAME="tex2html15691"
   HREF="node718.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15592"
-  HREF="node705.html">
+<A NAME="tex2html15685"
+  HREF="node713.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15586"
+<A NAME="tex2html15679"
   HREF="node716.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15594"
-  HREF="node832.html">
+<A NAME="tex2html15687"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15596"
-  HREF="node835.html">
+<A NAME="tex2html15689"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -305,20 +231,20 @@ la definición completa del estandard
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15599"
-  HREF="node718.html">Declaring dependencies: Runtime vs.</A>
-<B> Subir:</B> <A NAME="tex2html15593"
-  HREF="node705.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15587"
-  HREF="node716.html">gem yank: Retirando una</A>
- &nbsp; <B>  <A NAME="tex2html15595"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15597"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15692"
+  HREF="node718.html">Jerarquía de Ficheros y</A>
+<B> Subir:</B> <A NAME="tex2html15686"
+  HREF="node713.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15680"
+  HREF="node716.html">Underscores and Dashes</A>
+ &nbsp; <B>  <A NAME="tex2html15688"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15690"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

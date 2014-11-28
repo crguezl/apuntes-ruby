@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Argumentos en una Tarea</TITLE>
-<META NAME="description" CONTENT="Argumentos en una Tarea">
+<TITLE>Poner la rama en el prompt de la shell</TITLE>
+<META NAME="description" CONTENT="Poner la rama en el prompt de la shell">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node687.html">
 <LINK REL="previous" HREF="node685.html">
-<LINK REL="up" HREF="node685.html">
+<LINK REL="up" HREF="node683.html">
 <LINK REL="next" HREF="node687.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15073"
+<A NAME="tex2html15175"
   HREF="node687.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15067"
-  HREF="node685.html">
+<A NAME="tex2html15169"
+  HREF="node683.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15061"
+<A NAME="tex2html15165"
   HREF="node685.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15069"
-  HREF="node832.html">
+<A NAME="tex2html15171"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15071"
-  HREF="node835.html">
+<A NAME="tex2html15173"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,174 +91,36 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15074"
-  HREF="node687.html">Rake::TestTask</A>
-<B> Subir:</B> <A NAME="tex2html15068"
-  HREF="node685.html">Rake</A>
-<B> Anterior:</B> <A NAME="tex2html15062"
-  HREF="node685.html">Rake</A>
- &nbsp; <B>  <A NAME="tex2html15070"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15072"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15176"
+  HREF="node687.html">Hub</A>
+<B> Subir:</B> <A NAME="tex2html15170"
+  HREF="node683.html">Configuración y Algunos alias</A>
+<B> Anterior:</B> <A NAME="tex2html15166"
+  HREF="node685.html">Auto-completado</A>
+ &nbsp; <B>  <A NAME="tex2html15172"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15174"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06810000000000000000">
-Argumentos en una Tarea</A>
-</H1>
-Véase 
-<A NAME="tex2html1622"
-  HREF="http://stackoverflow.com/questions/825748/how-do-i-pass-command-line-arguments-to-a-rake-task">How do I pass command line arguments to a rake task?</A>
-en Stackoverflow.
-
-<P>
-You can specify formal arguments in rake by adding symbol arguments to the task call. For example:
+<H2><A NAME="SECTION06683000000000000000">
+Poner la rama en el prompt de la shell</A>
+</H2>
+En mi fichero de arranque bash tengo una línea como:
 <PRE>
-require 'rake'
-
-task :my_task, :arg1, :arg2 do |t, args|
-  puts "Args were: #{args}"
-end
-
-task :invoke_my_task do
-  Rake.application.invoke_task("my_task[1, 2]")
-end
-
-# or if you prefer this syntax...
-task :invoke_my_task_2 do
-  Rake::Task[:my_task].invoke(3, 4)
-end
-
-# a task with prerequisites passes its 
-# arguments to it prerequisites
-task :with_prerequisite, :arg1, :arg2, :needs =&gt; :my_task
-
-# equivalently...
-task :with_prerequisite_2, [:arg1, :arg2] =&gt; :my_task
-
-# to specify default values, 
-# we take advantage of args being a Rake::TaskArguments object
-task :with_defaults, :arg1, :arg2 do |t, args|
-  args.with_defaults(:arg1 =&gt; :default_1, :arg2 =&gt; :default_2)
-  puts "Args with defaults were: #{args}"
-end
+source ~/.git_prompt.sh
 </PRE>
-Then, from the command line:
-
+Esto permite ver la rama actual en el prompt.
+El fichero <code>.git-prompt.sh</code> es posible encontrarlo en la distribución de <code>git</code>:
+<A NAME="tex2html1638"
+  HREF="https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh">https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh</A>
 <P>
-<PRE>
-&gt; rake my_task[1,2]
-Args were: {:arg1=&gt;"1", :arg2=&gt;"2"}
-
-&gt; rake "my_task[1, 2]"
-Args were: {:arg1=&gt;"1", :arg2=&gt;"2"}
-
-&gt; rake invoke_my_task
-Args were: {:arg1=&gt;"1", :arg2=&gt;"2"}
-
-&gt; rake invoke_my_task_2
-Args were: {:arg1=&gt;3, :arg2=&gt;4}
-
-&gt; rake with_prerequisite[5,6]
-Args were: {:arg1=&gt;"5", :arg2=&gt;"6"}
-
-&gt; rake with_prerequisite_2[7,8]
-Args were: {:arg1=&gt;"7", :arg2=&gt;"8"}
-
-&gt; rake with_defaults
-Args with defaults were: {:arg1=&gt;:default_1, :arg2=&gt;:default_2}
-
-&gt; rake with_defaults['x','y']
-Args with defaults were: {:arg1=&gt;"x", :arg2=&gt;"y"}
-</PRE>
-As demonstrated in the second example, if you want to use spaces,
-the quotes around the target name are necessary to keep the shell
-from splitting up the arguments at the space.
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html15073"
-  HREF="node687.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15067"
-  HREF="node685.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15061"
-  HREF="node685.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15069"
-  HREF="node832.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15071"
-  HREF="node835.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html15074"
-  HREF="node687.html">Rake::TestTask</A>
-<B> Subir:</B> <A NAME="tex2html15068"
-  HREF="node685.html">Rake</A>
-<B> Anterior:</B> <A NAME="tex2html15062"
-  HREF="node685.html">Rake</A>
- &nbsp; <B>  <A NAME="tex2html15070"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15072"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

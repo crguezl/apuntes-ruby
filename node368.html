@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Sesiones HTTP</TITLE>
-<META NAME="description" CONTENT="Sesiones HTTP">
+<TITLE>Introducción</TITLE>
+<META NAME="description" CONTENT="Introducción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node369.html">
 <LINK REL="previous" HREF="node367.html">
-<LINK REL="up" HREF="node366.html">
+<LINK REL="up" HREF="node367.html">
 <LINK REL="next" HREF="node369.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9603"
+<A NAME="tex2html9694"
   HREF="node369.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9597"
-  HREF="node366.html">
+<A NAME="tex2html9688"
+  HREF="node367.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9591"
+<A NAME="tex2html9682"
   HREF="node367.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9599"
-  HREF="node832.html">
+<A NAME="tex2html9690"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9601"
-  HREF="node835.html">
+<A NAME="tex2html9692"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,119 +92,262 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9604"
-  HREF="node369.html">Métodos de Petición</A>
-<B> Subir:</B> <A NAME="tex2html9598"
-  HREF="node366.html">HTTP</A>
-<B> Anterior:</B> <A NAME="tex2html9592"
-  HREF="node367.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html9600"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9602"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9695"
+  HREF="node369.html">Analizando env con pry-debugger</A>
+<B> Subir:</B> <A NAME="tex2html9689"
+  HREF="node367.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9683"
+  HREF="node367.html">Rack, un Webserver Ruby</A>
+ &nbsp; <B>  <A NAME="tex2html9691"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9693"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03152000000000000000">
-Sesiones HTTP</A>
-</H2>
+<H1><A NAME="SECTION03110000000000000000">
+Introducción</A>
+</H1>
+
+<P>
+
+<H4><A NAME="SECTION03110010000000000000">
+Que es Rack</A>
+</H4>
+  
+
+<A NAME="tex2html885"
+  HREF="http://rack.github.io/">rack</A> provides an minimal interface between webservers supporting Ruby and Ruby frameworks.
+
+<P>
+Ruby on Rails, Ramaze, Sinatra and other Ruby frameworks use it by 
+default to talk to web servers, including Mongrel, Thin or Apache via Passenger.
+
+<P>
+Lo que hace Rack es que unifica la API de los diferentes web servers
+envolviendo las peticiones y respuestas HTTP en la forma mas simple posible.
+
+<P>
 
 <OL>
-<LI>Una sesión HTTP es una secuencia de transacciones de red de peticiones y respuestas
+<LI>Rack includes <A NAME="16211"></A><SPAN  CLASS="textbf">handlers</SPAN> that connect Rack to all these web application
+servers (WEBrick, Mongrel etc.).
 
 <P>
 </LI>
-<LI>Un cliente HTTP inicia una petición estableciendo una conexión TCP con un puerto 
-particular de un servidor (normalmente el puerto 80)
+<LI>Rack includes <A NAME="16213"></A><SPAN  CLASS="textbf">adapters</SPAN> that connect Rack to various web frameworks (Sinatra, Rails etc.).
+
+<P>
 </LI>
-<LI>Un servidor que esté escuchando en ese puerto espera por un mensaje
-de petición de un cliente.
-</LI>
-<LI>El servidor retorna la <A NAME="16587"></A><SPAN  CLASS="textbf">línea de estatus</SPAN>, por ejemplo <code>HTTP/1.1 200 OK</code>,
-y su propio mensaje. El cuerpo de este mensaje suele ser el recurso
-solicitado, aunque puede que se trate de un mensaje de error u otro tipo de información.
+<LI>Between the server and the framework, Rack can be customized to your
+applications needs using <A NAME="16215"></A><SPAN  CLASS="textbf">middleware</SPAN>. 
 </LI>
 </OL>
 
 <P>
-Veamos un ejemplo. Usemos este servidor:
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-debugging]$ cat hello1.rb 
-require 'rack'
+The fundamental idea behind 
+<A NAME="16217"></A><SPAN  CLASS="textbf">Rack middleware</SPAN> is – come between the calling client and the
+server, process the HTTP request before sending it to the server, and
+processing the HTTP response before returning it to the client.
 
-class HelloWorld
+<P>
+
+<img src="rack.jpeg">
+
+<P>
+
+<H4><A NAME="SECTION03110020000000000000">
+Que es una Aplicación Rack</A>
+</H4>
+  
+
+Una aplicación Rack es un objeto que 
+
+<P>
+
+<OL>
+<LI>Debe responder al método <code>call</code>.
+</LI>
+<LI>El método <code>call</code> será llamado por el servidor y se le pasa como
+argumento <code>env</code> que es un hash que contiene información sobre el entorno CGI.
+</LI>
+<LI>El método <code>call</code> debe retornar un array con tres elementos:
+  
+<OL>
+<LI><code>status</code>: un entero
+</LI>
+<LI><code>headers</code>: un hash
+</LI>
+<LI><code>body</code>: un objeto que responde al método <code>each</code> y que para cada llamada de
+  <code>each</code> retorna una <A NAME="tex2html886"
+  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A>.
+  
+</LI>
+</OL>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION03110030000000000000">
+Un Ejemplo Sencillo</A>
+</H4>
+  
+
+<P>
+<A NAME="16230"></A><SPAN  CLASS="textbf">Rack</SPAN> uses a 
+configuration file with extension 
+<code>.ru</code>, that instructs 
+<A NAME="tex2html887"
+  HREF="http://rack.rubyforge.org/doc/Rack/Builder.html">Rack::Builder</A>
+what middleware should it use and in which order. Let’s create one:
+
+<P>
+<PRE>
+[~/sinatra/rackup/simple(master)]$ cat myapp.rb 
+# my_app.rb
+#
+class MyApp
   def call env
-    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world"]]
+    [200, {"Content-Type" =&gt; "text/html"}, ["Hello Rack Participants"]] 
   end
 end
-
-Rack::Handler::WEBrick::run HelloWorld.new
 </PRE>
 
 <P>
+Esta es la aplicación Rack mas simple posible.
+
+<P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-debugging]$ ruby hello1.rb 
-[2013-09-23 15:16:58] INFO  WEBrick 1.3.1
-[2013-09-23 15:16:58] INFO  ruby 1.9.3 (2013-02-22) [x86_64-darwin11.4.2]
-[2013-09-23 15:16:58] INFO  WEBrick::HTTPServer#start: pid=12113 port=8080
+[~/sinatra/rackup/simple(master)]$ cat config.ru
+require './myapp'
+run MyApp.new
+</PRE>
+To start your newly created app, you need to use <code>rackup</code> command:
+
+<P>
+<PRE>
+$ rackup config.ru
+</PRE>
+The application will be available by default on port 9292, 
+so you have to visit <code>http://localhost:9292</code> to see it. 
+
+<P>
+Donde se encuentra este ejemplo:
+
+<UL>
+<LI><PRE>
+[~/sinatra/rack/rack-simple(env)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/rack/rackup/simple
+</PRE>
+</LI>
+<LI><PRE>
+[~/sinatra/rack/rack-simple(env)]$ git remote -v
+origin  git@github.com:crguezl/a-quick-introduction-to-rack.git (fetch)
+origin  git@github.com:crguezl/a-quick-introduction-to-rack.git (push)
+</PRE>
+</LI>
+<LI><A NAME="tex2html888"
+  HREF="https://github.com/crguezl/a-quick-introduction-to-rack">Repo: crguezl/a-quick-introduction-to-rack</A>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION03110040000000000000">
+Un Ejemplo con la Consola Interactiva de Ruby</A>
+</H4>
+  
+
+<P>
+Arranquemos la consola interactiva de Ruby. Cargamos <code>rack</code>:
+
+<P>
+<PRE>
+1] pry(main)&gt; require 'rack'
+=&gt; true
+</PRE>
+Comprobemos que handlers tenemos instalados:
+<PRE>
+[2] pry(main)&gt; Rack::Handler::constants
+=&gt; [:CGI,
+ :FastCGI,
+ :Mongrel,
+ :EventedMongrel,
+ :SwiftipliedMongrel,
+ :WEBrick,
+ :LSWS,
+ :SCGI,
+ :Thin]
 </PRE>
 
 <P>
-Arrancamos un cliente con telnet con la salida redirigida:
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-debugging]$ telnet localhost 8080 &gt; salida
-</PRE>
+Todos los handlers Rack tienen un método <code>run</code> por lo que podemos 
+llamar el método <code>run</code> en cualquiera de esos handlers instalados.
 
 <P>
-Escribimos esto en la entrada estandard:
+Un objeto que tiene un método <code>call</code> es cualquier objeto <A NAME="tex2html889"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> y por 
+tanto podemos usar una lambda que se atenga al protocolo de rack para nuestro ejemplo:
 <PRE>
-GET /index.html HTTP/1.1
-Host: localhost
-Connection: close
+[3] pry(main)&gt; Rack::Handler::WEBrick.run lambda 
+                  { |env| [200, 
+                           {"Content-Type" =&gt; "text/plain"}, 
+                          ["Hello. The time is #{Time.now}"]] }
+[2013-09-11 17:59:07] INFO  WEBrick 1.3.1
+[2013-09-11 17:59:07] INFO  ruby 1.9.3 (2013-02-22) [x86_64-darwin11.4.2]
+[2013-09-11 17:59:07] INFO  WEBrick::HTTPServer#start: pid=25123 port=8080
+localhost - - [11/Sep/2013:17:59:26 WEST] "GET / HTTP/1.1" 200 44
+- -&gt; /
+localhost - - [11/Sep/2013:17:59:26 WEST] "GET /favicon.ico HTTP/1.1" 200 44
+- -&gt; /favicon.ico
 </PRE>
-con una línea en blanco al final.
-Este texto es enviado al servidor.
+El primer argumento de <code>run</code> es nuestra aplicación Rack 
+<PRE>
+lambda { |env| [200, {"Content-Type" =&gt; "text/plain"}, ["Hello. The time is #{Time.now}"]] }
+</PRE>
+y el segundo es el conjunto de opciones para nuestro programa.
 
 <P>
-El cliente deja su salida en el fichero <code>salida</code>:
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-debugging]$ cat salida
-Trying ::1...
-Connected to localhost.
-Escape character is '^]'.
-HTTP/1.1 200 OK 
-Content-Type: text/plain
-Server: WEBrick/1.3.1 (Ruby/1.9.3/2013-02-22)
-Date: Mon, 23 Sep 2013 14:33:16 GMT
-Content-Length: 11
-Connection: close
-
-Hello world
-</PRE>
-El cliente escribe en la salida estandard:
-<PRE>
-Connection closed by foreign host.
-</PRE>
+ahora podemos visitar la aplicación con nuestro navegador
+en <code>http://localhost:8080</code>
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html9696"
+  HREF="node368.html#SECTION03110010000000000000">Que es Rack</A>
+<LI><A NAME="tex2html9697"
+  HREF="node368.html#SECTION03110020000000000000">Que es una Aplicación Rack</A>
+<LI><A NAME="tex2html9698"
+  HREF="node368.html#SECTION03110030000000000000">Un Ejemplo Sencillo</A>
+<LI><A NAME="tex2html9699"
+  HREF="node368.html#SECTION03110040000000000000">Un Ejemplo con la Consola Interactiva de Ruby</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9603"
+<A NAME="tex2html9694"
   HREF="node369.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9597"
-  HREF="node366.html">
+<A NAME="tex2html9688"
+  HREF="node367.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9591"
+<A NAME="tex2html9682"
   HREF="node367.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9599"
-  HREF="node832.html">
+<A NAME="tex2html9690"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9601"
-  HREF="node835.html">
+<A NAME="tex2html9692"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -255,20 +398,20 @@ Connection closed by foreign host.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9604"
-  HREF="node369.html">Métodos de Petición</A>
-<B> Subir:</B> <A NAME="tex2html9598"
-  HREF="node366.html">HTTP</A>
-<B> Anterior:</B> <A NAME="tex2html9592"
-  HREF="node367.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html9600"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9602"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9695"
+  HREF="node369.html">Analizando env con pry-debugger</A>
+<B> Subir:</B> <A NAME="tex2html9689"
+  HREF="node367.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html9683"
+  HREF="node367.html">Rack, un Webserver Ruby</A>
+ &nbsp; <B>  <A NAME="tex2html9691"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9693"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

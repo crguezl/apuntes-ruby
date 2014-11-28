@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>HTML5 Custom Data Attributes</TITLE>
-<META NAME="description" CONTENT="HTML5 Custom Data Attributes">
+<TITLE>MacOS homebrew Package Manager</TITLE>
+<META NAME="description" CONTENT="MacOS homebrew Package Manager">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="previous" HREF="node766.html">
-<LINK REL="up" HREF="node765.html">
+<LINK REL="next" HREF="node768.html">
+<LINK REL="previous" HREF="node749.html">
+<LINK REL="up" HREF="node637.html">
 <LINK REL="next" HREF="node768.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16377"
+<A NAME="tex2html16476"
   HREF="node768.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16371"
-  HREF="node765.html">
+<A NAME="tex2html16470"
+  HREF="node637.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16367"
+<A NAME="tex2html16464"
   HREF="node766.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16373"
-  HREF="node832.html">
+<A NAME="tex2html16472"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16375"
-  HREF="node835.html">
+<A NAME="tex2html16474"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,74 +92,200 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16378"
-  HREF="node768.html">Selenium</A>
-<B> Subir:</B> <A NAME="tex2html16372"
-  HREF="node765.html">Haml</A>
-<B> Anterior:</B> <A NAME="tex2html16368"
-  HREF="node766.html">Filters</A>
- &nbsp; <B>  <A NAME="tex2html16374"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16376"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16477"
+  HREF="node768.html">PostgreSQL</A>
+<B> Subir:</B> <A NAME="tex2html16471"
+  HREF="node637.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html16465"
+  HREF="node766.html">Authentication using the Google</A>
+ &nbsp; <B>  <A NAME="tex2html16473"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16475"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061820000000000000000">
-HTML5 Custom Data Attributes</A>
-</H1>
+<H1><A NAME="SECTION061500000000000000000">
+MacOS homebrew Package Manager</A>
+</H1><I>
+ 
+  </I>
+<H4><A NAME="SECTION061500010000000000000">
+Homebrew installs packages to their own directory</A>
+</H4>
+<P>
+<I>Homebrew installs the stuff you need that Apple didn’t.
+</I>
+<P><PRE>
+$ brew install wget
+</PRE><I>
+Homebrew installs packages to their own directory and then symlinks their files into <code>/usr/local</code>.
+</I>
+<P><PRE>
+$ cd /usr/local
+$ find Cellar
+Cellar/wget/1.12
+Cellar/wget/1.12/bin/wget
+Cellar/wget/1.12/share/man/man1/wget.1
+</PRE>
+<P><PRE>
+$ ls -l bin
+bin/wget -&gt; ../Cellar/wget/1.12/bin/wget
+</PRE>
+<P>
+<I>Homebrew won’t install files outside its prefix, and you can place
+a Homebrew installation wherever you like.
+</I>
+<P>
+<H4><A NAME="SECTION061500020000000000000">
+Create your own Homebrew packages</A>
+</H4>
+<P>
+<I>Trivially create your own Homebrew packages.
+</I>
+<P><PRE>
+$ brew create http://foo.com/bar-1.0.tgz
+Created /usr/local/Library/Formula/bar.rb
+</PRE><I>
+It's all git and ruby underneath, so hack away with the knowledge
+that you can easily revert your modifications and merge upstream
+updates.
+</I>
+<P><PRE>
+$ brew edit wget # opens in $EDITOR!
+</PRE><I>
+Homebrew formulae are simple Ruby scripts:
+</I>
+<P><PRE>
+require 'formula'
+
+class Wget &lt; Formula
+  homepage 'http://www.gnu.org/wget/'
+  url 'http://ftp.gnu.org/wget-1.12.tar.gz'
+  md5 '308a5476fc096a8a525d07279a6f6aa3'
+
+  def install
+    system "./configure --prefix=#{prefix}"
+    system 'make install'
+  end
+end
+</PRE><I>
+Homebrew complements OS X. Install your gems with gem, and their
+dependencies with brew.
+</I>
+<P>
+<H4><A NAME="SECTION061500030000000000000">
+Comandos</A>
+</H4>
+<P><PRE>
+[~/local/src/ruby/sinatra/jump-start-sinatra]$ brew --help
+Example usage:
+  brew [info | home | options ] [FORMULA...]
+  brew install FORMULA...
+  brew uninstall FORMULA...
+  brew search [foo]
+  brew list [FORMULA...]
+  brew update
+  brew upgrade [FORMULA...]
+
+Troubleshooting:
+  brew doctor
+  brew install -vd FORMULA
+  brew [--env | --config]
+
+Brewing:
+  brew create [URL [--no-fetch]]
+  brew edit [FORMULA...]
+  open https://github.com/mxcl/homebrew/wiki/Formula-Cookbook
+
+Further help:
+  man brew
+  brew home
+</PRE>
+<P>
+<H4><A NAME="SECTION061500040000000000000">
+HOMEBREW_GITHUB_API_TOKEN</A>
+</H4>
+<P>
+<I>A personal GitHub API Access token, which
+you can create at 
+<A NAME="tex2html1828"
+  HREF="https://github.com/settings/applications">https://github.com/settings/applications</A>.
+If set,
+GitHub will allow you a greater number of API requests. See
+<A NAME="tex2html1829"
+  HREF="http://developer.github.com/v3/#rate-limiting">http://developer.github.com/v3/#rate-limiting</A>
+for more information.
+</I>
+<P>
+<I>Homebrew uses the GitHub API for features such as <code>brew search</code>.
+</I>
+<P><PRE>
+$ brew search postgress
+Error: GitHub Server Error
+You may want to create an API token: https://github.com/settings/applications
+and then set HOMEBREW_GITHUB_API_TOKEN.
+</PRE><I>
+Vete a la página y crea el token.
+Luego añade una línea como esta en tu <code>.bashrc</code>:
+</I><PRE>
+$ export HOMEBREW_GITHUB_API_TOKEN fx0001111111111111111111111eeeeeeeeeeeee
+$ brew search postgress
+No formula found for "postgress". Searching open pull requests...
+</PRE>
+<P>
+<H4><A NAME="SECTION061500050000000000000">
+Véase</A>
+</H4>
 <P>
 <OL>
-<LI>HTML5 allows for adding custom non-visible data attributes to
-elements using attribute names beginning with <code>data-</code>. 
+<LI><A NAME="tex2html1830"
+  HREF="https://github.com/mxcl/homebrew/blob/master/Library/Contributions/manpages/brew.1.md">brew(1) - The missing package manager for OS X</A>
 </LI>
-<LI>Custom data
-attributes can be used in Haml by using the key <code>:data</code> with a Hash
-value in an attribute hash. 
+<LI><A NAME="tex2html1831"
+  HREF="http://mac.tutsplus.com/tutorials/terminal/homebrew-demystified-os-xs-ultimate-package-manager/">Homebrew Demystified: OS X’s Ultimate Package Manager</A>
 </LI>
-<LI>Each of the key/value pairs in the Hash
-will be transformed into a custom data attribute. 
-</LI>
-<LI>For example:
-<PRE>
-%a{:href=&gt;"/posts", :data =&gt; {:author_id =&gt; 123}} Posts By Author
-</PRE>
-will render as:
+</OL><I>
+</I>
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-<PRE>
-&lt;a data-author-id='123' href='/posts'&gt;Posts By Author&lt;/a&gt;
-</PRE>
-</LI>
-<LI>Notice that the underscore in <code>author_id</code> was replaced by a hyphen. 
-</LI>
-<LI>If you wish to suppress this behavior, you can set Haml’s 
-<code>:hyphenate_data_attrs</code> option to false, and the output will be rendered as:
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html16478"
+  HREF="node767.html#SECTION061500010000000000000">Homebrew installs packages to their own directory</A>
+<LI><A NAME="tex2html16479"
+  HREF="node767.html#SECTION061500020000000000000">Create your own Homebrew packages</A>
+<LI><A NAME="tex2html16480"
+  HREF="node767.html#SECTION061500030000000000000">Comandos</A>
+<LI><A NAME="tex2html16481"
+  HREF="node767.html#SECTION061500040000000000000">HOMEBREW_GITHUB_API_TOKEN</A>
+<LI><A NAME="tex2html16482"
+  HREF="node767.html#SECTION061500050000000000000">Véase</A>
+</UL></UL></UL></UL>
+<!--End of Table of Child-Links-->
 
-<P>
-<PRE>
-&lt;a data-author_id='123' href='/posts'&gt;Posts By Author&lt;/a&gt;
-</PRE>
-</LI>
-</OL>
-<P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html16377"
+<A NAME="tex2html16476"
   HREF="node768.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16371"
-  HREF="node765.html">
+<A NAME="tex2html16470"
+  HREF="node637.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16367"
+<A NAME="tex2html16464"
   HREF="node766.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16373"
-  HREF="node832.html">
+<A NAME="tex2html16472"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16375"
-  HREF="node835.html">
+<A NAME="tex2html16474"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -209,20 +336,20 @@ will render as:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16378"
-  HREF="node768.html">Selenium</A>
-<B> Subir:</B> <A NAME="tex2html16372"
-  HREF="node765.html">Haml</A>
-<B> Anterior:</B> <A NAME="tex2html16368"
-  HREF="node766.html">Filters</A>
- &nbsp; <B>  <A NAME="tex2html16374"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16376"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html16477"
+  HREF="node768.html">PostgreSQL</A>
+<B> Subir:</B> <A NAME="tex2html16471"
+  HREF="node637.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html16465"
+  HREF="node766.html">Authentication using the Google</A>
+ &nbsp; <B>  <A NAME="tex2html16473"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16475"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

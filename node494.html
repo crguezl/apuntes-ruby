@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</TITLE>
-<META NAME="description" CONTENT="Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo">
+<TITLE>Deferred or streaming response bodies</TITLE>
+<META NAME="description" CONTENT="Deferred or streaming response bodies">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node496.html">
 <LINK REL="previous" HREF="node493.html">
-<LINK REL="up" HREF="node488.html">
+<LINK REL="up" HREF="node493.html">
 <LINK REL="next" HREF="node495.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11698"
+<A NAME="tex2html11785"
   HREF="node495.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11692"
-  HREF="node488.html">
+<A NAME="tex2html11779"
+  HREF="node493.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11686"
+<A NAME="tex2html11775"
   HREF="node493.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11694"
-  HREF="node832.html">
+<A NAME="tex2html11781"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11696"
-  HREF="node835.html">
+<A NAME="tex2html11783"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,281 +91,109 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11699"
-  HREF="node495.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html11693"
-  HREF="node488.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html11687"
-  HREF="node493.html">Ruby y WebSockets: TCP</A>
- &nbsp; <B>  <A NAME="tex2html11695"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11697"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11786"
+  HREF="node495.html">Código en sinatra/base.rb: la</A>
+<B> Subir:</B> <A NAME="tex2html11780"
+  HREF="node493.html">Asynchronous responses in Rack</A>
+<B> Anterior:</B> <A NAME="tex2html11776"
+  HREF="node493.html">Asynchronous responses in Rack</A>
+ &nbsp; <B>  <A NAME="tex2html11782"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11784"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03940000000000000000">
-Una Aplicación Usando Websockets en la que Múltiples Clientes Dibujan en un Lienzo</A>
-</H1>
+<H2><A NAME="SECTION038151000000000000000">
+Deferred or streaming response bodies</A>
+</H2>
 
 <P>
-
-<H4><A NAME="SECTION03940010000000000000">
-server.rb</A>
-</H4>
-  
+The example shows a one-shot request, wait, response cycle. But it
+is possible to have multiple wait, response segments to allow the
+headers to be sent to the client immediately, or the body to trickle
+in slowly without blocking the worker process. 
 
 <P>
+Async Rack servers,
+when <code>env['async.callback']</code> is called, send the status and headers
+to the client and then begin iterating through each part of the
+body with <code>#each</code>. 
+
+<P>
+After the last body part the server must decide
+if the connection to the client should be closed (entire body has
+been provided) or if it should remain open (body parts will be
+provided later). The details of this decision are implementation-specific.
+For now, assume the connection is not closed. To send additional
+body parts, <code>env['async.callback']</code> may not be called a second time
+since the status code and headers have already been sent to the
+client and can not be changed. The app takes advantage of the
+server's iteration through the body with <code>#each:</code> 
+
+<P>
+the server calls
+<code>body.each(&amp;block)</code>, 
+and the trick is to save <code>&amp;block</code> for later use.
+This turns the iteration inside-out: rather than the sever iterating
+through a body, the app takes control to send each part of the body
+itself.
 <PRE>
-[19:36][~/srcSTW/streaming/websocketsDrawEM(master)]$ cat -n server.rb 
-     1  require 'em-websocket'
-     2  require 'json'
-     3  require 'sinatra/base'
-     4  
-     5  EventMachine.run {
-     6    @channel = EM::Channel.new
-     7    @users = {}
-     8    @messages = []
-     9  
-    10    EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
-    11        
-    12      ws.onopen {
-    13        #Subscribe the new user to the channel with the callback function for the push action
-    14        new_user = @channel.subscribe { |msg| ws.send msg }
-    15        
-    16        #Add the new user to the user list
-    17        @users[ws.object_id] = new_user
-    18        
-    19        #Push the last messages to the user
-    20        @messages.each do |message|
-    21          ws.send message
-    22        end
-    23     }
-    24  
-    25      ws.onmessage { |msg|
-    26        
-    27        #append the message at the end of the queue
-    28        @messages &lt;&lt; msg
-    29        @messages.shift if @messages.length &gt; 10
-    30  
-    31        #Broadcast the message to all users connected to the channel
-    32        @channel.push msg
-    33      }
-    34  
-    35      ws.onclose { 
-    36        @channel.unsubscribe(@users[ws.object_id])
-    37        @users.delete(ws.object_id)
-    38      }
-    39    end
-    40  
-    41    #Run a Sinatra server for serving index.html
-    42    class App &lt; Sinatra::Base
-    43      set :public_folder, settings.root
-    44      
-    45      get '/' do
-    46        send_file 'index.html'
-    47      end
-    48    end
-    49    App.run!
-    50  }
+class DeferredBody
+  def each(&amp;block)
+    # normally we'd yield each part of the body, but since
+    # it isn't available yet, we save &amp;block for later
+    @server_block = block
+  end
+
+  def send(data)
+    # calling the saved &amp;block has the same effect as
+    # if we had yielded to it
+    @server_block.call data
+  end
+end
+
+class AsyncApp
+  def call(env)
+    Thread.new do
+      sleep 5  # simulate waiting for some event
+      body = DeferredBody.new
+      response = [200, {'Content-Type' =&gt; 'text/plain'}, body]
+      env['async.callback'].call response
+
+      # at this point, the server may send the status and headers,
+      # but the body was empty
+      
+      body.send 'Hello, '
+      sleep 5
+      body.send 'World'
+    end
+    
+    [-1, {}, []]  # or throw :async
+  end
+end
 </PRE>
+Note that the above won't quite work because we haven't signaled to the server that the body will be deferred and streamed in part by part.
 
 <P>
-
-<H4><A NAME="SECTION03940020000000000000">
-index.html.haml</A>
-</H4>
-  
-
-<PRE>
-!!! 5
-%html
-  %head
-    %meta(charset="utf-8")
-    %meta(content="IE=edge,chrome=1" http-equiv="X-UA-Compatible")
-    %meta(name="viewport" content="width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;")  
-    %link(rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css")
-    %script(type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js")
-    %script(type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js")
-    %title
-      WebSockets Drawing
-  %body
-    :javascript
-      var WebSocket = window.WebSocket || window.MozWebSocket;
-
-      $(function() {
-
-        var socket = new WebSocket("ws://" + location.hostname + ":8080");
-       
-        var currentX = 0;
-        var currentY = 0;
-        var lastX;
-        var lastY;
-        var lastReceivedX;
-        var lastReceivedY;
-        
-        var ctx = $('#canvas')[0].getContext('2d');
-
-        $('#canvas').bind('vmousemove',function(ev){
-          ev = ev || window.event;
-          currentX = ev.pageX || ev.clientX;
-          currentY = ev.pageY || ev.clientY;
-        });
-        
-        socket.onopen = function(event) {
-          setInterval(function(){
-            if(currentX !== lastX || currentY !== lastY){
-              lastX = currentX;
-              lastY = currentY;
-              socket.send( JSON.stringify({x:currentX, y: currentY}) );
-            }
-          }, 30); // send every 300 milliseconds if position has changed
-        }
-        socket.onmessage = function(event) {
-          var msg = $.parseJSON(event.data);
-          
-          ctx.beginPath();
-          ctx.moveTo(lastReceivedX,lastReceivedY);
-          ctx.lineTo(msg.x,msg.y);
-          ctx.closePath();
-          ctx.stroke();
-          lastReceivedX = msg.x;
-          lastReceivedY = msg.y;
-        }
-      });
-
-    %div(data-role="page")
-      %canvas#canvas(width='1000' height='1000')
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03940030000000000000">
-index.html</A>
-</H4>
-  
-
-<PRE>
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;meta charset='utf-8' /&gt;
-    &lt;meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible' /&gt;
-    &lt;meta content='width=device-width, user-scalable=0, initial-scale=1.0, maximum-scale=1.0;' name='viewport' /&gt;
-    &lt;link href='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css' rel='stylesheet' /&gt;
-    &lt;script src='http://code.jquery.com/jquery-1.6.4.min.js' type='text/javascript'&gt;&lt;/script&gt;
-    &lt;script src='http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js' type='text/javascript'&gt;&lt;/script&gt;
-    &lt;title&gt;
-      WebSockets Drawing
-    &lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;script type='text/javascript'&gt;
-      //&lt;![CDATA[
-        var WebSocket = window.WebSocket || window.MozWebSocket;
-        
-        $(function() {
-        
-          var socket = new WebSocket("ws://" + location.hostname + ":8080");
-         
-          var currentX = 0;
-          var currentY = 0;
-          var lastX;
-          var lastY;
-          var lastReceivedX;
-          var lastReceivedY;
-          
-          var ctx = $('#canvas')[0].getContext('2d');
-        
-          $('#canvas').bind('vmousemove',function(ev){
-            ev = ev || window.event;
-            currentX = ev.pageX || ev.clientX;
-            currentY = ev.pageY || ev.clientY;
-          });
-          
-          socket.onopen = function(event) {
-            setInterval(function(){
-              if(currentX !== lastX || currentY !== lastY){
-                lastX = currentX;
-                lastY = currentY;
-                socket.send( JSON.stringify({x:currentX, y: currentY}) );
-              }
-            }, 30); // send every 300 milliseconds if position has changed
-          }
-          socket.onmessage = function(event) {
-            var msg = $.parseJSON(event.data);
-            
-            ctx.beginPath();
-            ctx.moveTo(lastReceivedX,lastReceivedY);
-            ctx.lineTo(msg.x,msg.y);
-            ctx.closePath();
-            ctx.stroke();
-            lastReceivedX = msg.x;
-            lastReceivedY = msg.y;
-          }
-        });
-      //]]&gt;
-    &lt;/script&gt;
-    &lt;div data-role='page'&gt;
-      &lt;canvas height='1000' id='canvas' width='1000'&gt;&lt;/canvas&gt;
-    &lt;/div&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</PRE>
-
-<P>
-
-<DIV ALIGN="CENTER"><A NAME="figure:websockets"></A><A NAME="21286"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
-Múltiples clientes pueden dibujar en el lienzo</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.7]sinatra/chapter2fundamentos/websockets.png
-
-</DIV></TD></TR>
-</TABLE>
-</DIV>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html11700"
-  HREF="node494.html#SECTION03940010000000000000">server.rb</A>
-<LI><A NAME="tex2html11701"
-  HREF="node494.html#SECTION03940020000000000000">index.html.haml</A>
-<LI><A NAME="tex2html11702"
-  HREF="node494.html#SECTION03940030000000000000">index.html</A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html11703"
-  HREF="node495.html">Enlaces Relacionados</A>
-</UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11698"
+<A NAME="tex2html11785"
   HREF="node495.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11692"
-  HREF="node488.html">
+<A NAME="tex2html11779"
+  HREF="node493.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11686"
+<A NAME="tex2html11775"
   HREF="node493.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11694"
-  HREF="node832.html">
+<A NAME="tex2html11781"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11696"
-  HREF="node835.html">
+<A NAME="tex2html11783"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -417,20 +244,20 @@ Múltiples clientes pueden dibujar en el lienzo</CAPTION>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11699"
-  HREF="node495.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html11693"
-  HREF="node488.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html11687"
-  HREF="node493.html">Ruby y WebSockets: TCP</A>
- &nbsp; <B>  <A NAME="tex2html11695"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11697"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11786"
+  HREF="node495.html">Código en sinatra/base.rb: la</A>
+<B> Subir:</B> <A NAME="tex2html11780"
+  HREF="node493.html">Asynchronous responses in Rack</A>
+<B> Anterior:</B> <A NAME="tex2html11776"
+  HREF="node493.html">Asynchronous responses in Rack</A>
+ &nbsp; <B>  <A NAME="tex2html11782"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11784"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

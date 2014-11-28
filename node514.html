@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo Simple de uso de DataMapper: Agenda</TITLE>
-<META NAME="description" CONTENT="Ejemplo Simple de uso de DataMapper: Agenda">
+<TITLE>Práctica: Chat Usando Ajax y jQuery</TITLE>
+<META NAME="description" CONTENT="Práctica: Chat Usando Ajax y jQuery">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node515.html">
 <LINK REL="previous" HREF="node513.html">
-<LINK REL="up" HREF="node511.html">
+<LINK REL="up" HREF="node509.html">
 <LINK REL="next" HREF="node515.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12074"
+<A NAME="tex2html12135"
   HREF="node515.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12068"
-  HREF="node511.html">
+<A NAME="tex2html12129"
+  HREF="node509.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12062"
+<A NAME="tex2html12123"
   HREF="node513.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12070"
-  HREF="node832.html">
+<A NAME="tex2html12131"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12072"
-  HREF="node835.html">
+<A NAME="tex2html12133"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,391 +92,123 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12075"
-  HREF="node515.html">Ejemplo de Uso de</A>
-<B> Subir:</B> <A NAME="tex2html12069"
-  HREF="node511.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12063"
-  HREF="node513.html">Introducción al Patrón DataMapper</A>
- &nbsp; <B>  <A NAME="tex2html12071"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12073"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12136"
+  HREF="node515.html">Práctica: TicTactoe Usando Ajax</A>
+<B> Subir:</B> <A NAME="tex2html12130"
+  HREF="node509.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12124"
+  HREF="node513.html">Un Chat con Ajax</A>
+ &nbsp; <B>  <A NAME="tex2html12132"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12134"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031630000000000000000">
-Ejemplo Simple de uso de DataMapper: Agenda</A>
+<H1><A NAME="SECTION031250000000000000000"></A>
+   <A NAME="22519"></A>
+<BR>
+Práctica: Chat Usando Ajax y jQuery
 </H1>
+  
+Modifique el chat visto en la sección 
+<I>Un Chat con Ajax y JQuery</I> <A HREF="node513.html#section:jquerychat">42.4</A>
+para que:
+
+<P>
 
 <UL>
-<LI><PRE>
-[~/sinatra/sinatra-datamapper/data_mapper_example_agenda(master)]$ pwd -P
-/Users/casiano/local/src/ruby/STW/data_mapper_example2
-[~/sinatra/sinatra-datamapper/data_mapper_example_agenda(master)]$ git remote -v
-origin  git@github.com:crguezl/datamapper_example.git (fetch)
-origin  git@github.com:crguezl/datamapper_example.git (push)
-</PRE>
+<LI>Deberán registrarse los usuarios
+
+<P>
+
+<img src="chatajaxwelcome.png" width="40%"/>
+
+<P>
 </LI>
-<LI><A NAME="tex2html1258"
-  HREF="https://github.com/crguezl/datamapper_example">Agenda en Sinatra usando DataMapper</A>
+<LI>Si el nombre del usuario esta tomado se señalara el error y se le pedirá que cambie de nombre
+
+<P>
+
+<img src="chatajaxnametaken.png" width="40%"/>
+</LI>
+<LI>Una vez en el chat:
+  
+<UL>
+<LI>En un contenedor aparecen los nombres de usuario
+</LI>
+<LI>En otro los mensajes
+</LI>
+<LI>En un tercero con un botón <code>send</code> la entrada para el siguiente mensaje
+  del usuario
+  
 </LI>
 </UL>
 
 <P>
 
-<H4><A NAME="SECTION031630010000000000000">
-DataMapper.setup</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-datamapper/data_mapper_example_agenda(master)]$ cat app.rb
-#!/usr/bin/env ruby
-require 'rubygems'
-require 'sinatra'
-require 'haml'
-require 'data_mapper'
-
-# full path!
-DataMapper.setup( :default, "sqlite3://#{Dir.pwd}/agenda.db" )
-</PRE>
+<img src="chatajax.png" width="40%"/>
 
 <P>
-We must specify our database connection.
+</LI>
+<LI>Escriba las pruebas. Use Selenium
+</LI>
+<LI>Despliegue las pruebas en Travis
+</LI>
+<LI>Haga un análisis de cubrimiento usando Coveralls
+Repase la sección <I>Coveralls: Análisis de Cubrimiento</I>
+<A HREF="node322.html#section:coveralls">20.7</A>
+</LI>
+<LI>Despliegue en Heroku
+</LI>
+</UL>
 
 <P>
-We need to make sure to do this before you use our models, 
-i.e. before we actually start accessing the database.
+Estos enlaces pueden ser de ayuda:
 
 <P>
-
-<H4><A NAME="SECTION031630020000000000000">
-Modelos</A>
-</H4>
-  
-
-<P>
-<PRE>
-# Define the model
-class Contact
-  include DataMapper::Resource
-
-  property :id, Serial
-  property :firstname, String
-  property :lastname, String
-  property :email, String
-end
-</PRE>
-
-<P>
-The <code>Contact</code> model is going to need to be persistent, so we'll
-<code>include DataMapper::Resource</code>. 
-
-<P>
-The convention with model names is to
-use the singular, not plural version.
-
-<P>
-<PRE>
-Module: DataMapper::Resource
-
-+ (Object) included(model) private
-</PRE>
-Makes sure a class gets all the methods when it includes Resource.
-
-<P>
-Inside your class, call the <code>property</code> method for each property
-you want to add. The only two required arguments are the <code>name</code>
-and <code>type</code>, everything else is optional.
-
-<P>
-<A NAME="22501"></A><SPAN  CLASS="textbf">Primary keys</SPAN> are not automatically created for you. 
-You MUST configure at least one key property on your
-data-store. 
-
-<P>
-More often than not, you'll want an <A NAME="22503"></A><SPAN  CLASS="textbf">auto-incrementing</SPAN> integer
-as a primary key, so DM has a shortcut:
-
-<P>
-<PRE>
-   property :id, Serial
-</PRE>
-
-<P>
-<PRE>
-(Property) property(name, type, options = {})
-</PRE>
-Defines a Property on the Resource
-
-<P>
-See the section
-<A NAME="tex2html1259"
-  HREF="http://datamapper.org/docs/properties.html">Properties</A>
-in datamapper.org.
-
-<P>
-<PRE>
-DataMapper.auto_upgrade!
-</PRE>
-
-<P>
-
+</I>
 <OL>
-<LI>This tries to make the schema match the model. 
+<LI><I>Un Chat con Ajax y JQuery</I> <A HREF="node513.html#section:jquerychat">42.4</A>
 </LI>
-<LI>It will <code>CREATE</code>
-new tables, and add columns to existing tables. 
+<LI><A NAME="tex2html1259"
+  HREF="https://github.com/crguezl/chat-blazee">Código del chat en GitHub</A>
 </LI>
-<LI>It won't change any
-existing columns though (say, to add a <code>NOT NULL</code> constraint)
-and it doesn't drop any columns. 
+<LI><I>BootStrap <A HREF="node632.html#section:bootstrap">76.1</A>
 </LI>
-<LI>Both these commands also can be
-used on an individual model (e.g. <code>Song.auto_migrate!</code>)
+<LI><I>Integración Contínua: Travis</I> <A HREF="node315.html#chapter:travis">20</A>
 </LI>
-</OL>
+<LI>Build a Sinatra API Using TDD, Heroku, and Continuous Integration with Travis <A HREF="node472.html#subsection:buildasinatraapiusingtddherokuandci">36.0.2</A>
+</LI>
+<LI><I>Sample app with Sinatra Rspec Capybara and Selenium</I> <A HREF="node474.html#subsection:sampleappwithsinatrarspeccapybaraandselenium">36.0.4</A>
+</LI>
+<LI><I>Capybara</I> <A HREF="node308.html#chapter:capybara">18</A>
+</LI>
+<LI><I>Coveralls: Análisis de Cubrimiento</I> <A HREF="node322.html#section:coveralls">20.7</A>
+</LI>
+<LI><I>Ajax</I> <A HREF="node579.html#chapter:ajax">64</A>
+</LI>
+</OL> 
 
 <P>
-
-<H4><A NAME="SECTION031630030000000000000">
-Rutas</A>
-</H4>
-  
-
-<PRE>
-# Show list of contacts
-%w{/ /contacts/?}.each do |r|
-  get r do
-    haml :list, :locals =&gt; { :cs =&gt; Contact.all }
-  end
-end
-
-# Show form to create new contact
-get '/contacts/new' do
-  haml :form, :locals =&gt; {
-    :c =&gt; Contact.new,
-    :action =&gt; '/contacts/create'
-  }
-end
-
-# Create new contact
-post '/contacts/create' do
-  c = Contact.new
-  c.attributes = params
-  c.save
-
-  redirect("/contacts/#{c.id}")
-end
-
-# Show form to edit contact
-get '/contacts/:id/edit' do|id|
-  c = Contact.get(id)
-  haml :form, :locals =&gt; {
-    :c =&gt; c,
-    :action =&gt; "/contacts/#{c.id}/update"
-  }
-end
-
-# Show form to find a contact by firstname
-get '/contacts/findform' do
-  haml :findform, :locals =&gt; {
-    :action =&gt; "/contacts/find"
-  }
-end
-
-post '/contacts/find' do
-  puts "params = #{params}"
-  s = params.select { |k,v| v != '' }
-  #s[:order] = [ :lastname.desc]
-  s[:order] = [ :lastname.asc]
-  puts "selected #{s}"
-  cs = Contact.all(s)
-  puts cs
-  haml :list, :locals =&gt; { :cs =&gt; cs }
-end
-#
-# Edit a contact
-post '/contacts/:id/update' do|id|
-  puts "en /contacts/:id/update: params = #{params} id = #{id}"
-  c = Contact.get(id)
-  puts c.inspect
-  
-  puts "Fail while recording #{c}" unless c.update(
-      :firstname =&gt; params[:firstname], 
-      :lastname  =&gt; params[:lastname], 
-      :email     =&gt; params[:email])
-
-  redirect "/contacts/#{id}"
-end
-
-# Delete a contact
-post '/contacts/:id/destroy' do|id|
-  c = Contact.get(id)
-  c.destroy
-
-  redirect "/contacts/"
-end
-
-# View a contact
-# TODO: Put at bottom?
-get '/contacts/:id' do|id|
-  c = Contact.get(id)
-  haml :show, :locals =&gt; { :c =&gt; c }
-end
-
-__END__
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031630040000000000000">
-Vistas</A>
-</H4>
-  
-
-<P>
-<PRE>
-__END__
-@@ layout
-%html
-  %head
-    %title Agenda
-  %body
-    = yield
-    %a(href="/contacts/") Contact List
-    %a(href="/contacts/findform") Find Contact
-
-@@form
-%h1 Create a new contact
-%form(action="#{action}" method="POST")
-  %label(for="firstname") First Name
-  %input(type="text" name="firstname" value="#{c.firstname}")
-  %br
-
-  %label(for="lastname") Last Name
-  %input(type="text" name="lastname" value="#{c.lastname}")
-  %br
-
-  %label(for="email") Email
-  %input(type="text" name="email" value="#{c.email}")
-  %br
-
-  %input(type="submit")
-  %input(type="reset")
-  %br
-
-- unless c.id == 0
-  %form(action="/contacts/#{c.id}/destroy" method="POST")
-    %input(type="submit" value="Destroy")
-  
-@@show
-%table
-  %tr
-    %td First Name
-    %td= c.firstname
-  %tr
-    %td Last Name
-    %td= c.lastname
-  %tr
-    %td Email
-    %td= c.email
-%a(href="/contacts/#{c.id}/edit") Edit Contact
-
-@@list
-%h1 Contacts
-%a(href="/contacts/new") New Contact
-%table
-  - cs.each do|c|
-    %tr
-      %td= c.firstname
-      %td= c.lastname
-      %td= c.email
-      %td
-        %a(href="/contacts/#{c.id}") Show
-      %td
-        %a(href="/contacts/#{c.id}/edit") Edit
-
-@@findform
-%h1 Find a contact for firstname
-%form(action="#{action}" method="POST")
-  %label(for="firstname") First Name
-  %input(type="text" name="firstname" value="")
-  %br
-
-  %label(for="lastname") Last Name
-  %input(type="text" name="lastname" value="")
-  %br
-
-  %label(for="email") Email
-  %input(type="text" name="email" value="")
-  %br
-
-  %input(type="submit")
-  %input(type="reset")
-  %br
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031630050000000000000">
-Enlaces</A>
-</H4>
-  
-
-<OL>
-<LI><A NAME="tex2html1260"
-  HREF="http://rubydoc.info/github/datamapper/dm-core/">Documentación del módulo DataMapper</A>
-en RubyDoc
-</LI>
-<LI><A NAME="tex2html1261"
-  HREF="https://github.com/crguezl/datamapper_example">https://github.com/crguezl/datamapper_example</A>
-</LI>
-<LI><A NAME="tex2html1262"
-  HREF="https://github.com/crguezl/datamapper-intro">https://github.com/crguezl/datamapper-intro</A>
-<P>
-</LI>
-</OL>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html12076"
-  HREF="node514.html#SECTION031630010000000000000">DataMapper.setup</A>
-<LI><A NAME="tex2html12077"
-  HREF="node514.html#SECTION031630020000000000000">Modelos</A>
-<LI><A NAME="tex2html12078"
-  HREF="node514.html#SECTION031630030000000000000">Rutas</A>
-<LI><A NAME="tex2html12079"
-  HREF="node514.html#SECTION031630040000000000000">Vistas</A>
-<LI><A NAME="tex2html12080"
-  HREF="node514.html#SECTION031630050000000000000">Enlaces</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12074"
+<A NAME="tex2html12135"
   HREF="node515.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12068"
-  HREF="node511.html">
+<A NAME="tex2html12129"
+  HREF="node509.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12062"
+<A NAME="tex2html12123"
   HREF="node513.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12070"
-  HREF="node832.html">
+<A NAME="tex2html12131"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12072"
-  HREF="node835.html">
+<A NAME="tex2html12133"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -527,20 +259,20 @@ en RubyDoc
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12075"
-  HREF="node515.html">Ejemplo de Uso de</A>
-<B> Subir:</B> <A NAME="tex2html12069"
-  HREF="node511.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12063"
-  HREF="node513.html">Introducción al Patrón DataMapper</A>
- &nbsp; <B>  <A NAME="tex2html12071"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12073"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12136"
+  HREF="node515.html">Práctica: TicTactoe Usando Ajax</A>
+<B> Subir:</B> <A NAME="tex2html12130"
+  HREF="node509.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12124"
+  HREF="node513.html">Un Chat con Ajax</A>
+ &nbsp; <B>  <A NAME="tex2html12132"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12134"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

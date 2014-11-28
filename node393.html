@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo de Middleware: Rack::ETag</TITLE>
-<META NAME="description" CONTENT="Ejemplo de Middleware: Rack::ETag">
+<TITLE>La Estructura de una Aplicación Rack: Ejemplo de Middleware</TITLE>
+<META NAME="description" CONTENT="La Estructura de una Aplicación Rack: Ejemplo de Middleware">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node394.html">
 <LINK REL="previous" HREF="node392.html">
-<LINK REL="up" HREF="node359.html">
+<LINK REL="up" HREF="node367.html">
 <LINK REL="next" HREF="node394.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10006"
+<A NAME="tex2html10092"
   HREF="node394.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10000"
-  HREF="node359.html">
+<A NAME="tex2html10086"
+  HREF="node367.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9994"
+<A NAME="tex2html10080"
   HREF="node392.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10002"
-  HREF="node832.html">
+<A NAME="tex2html10088"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10004"
-  HREF="node835.html">
+<A NAME="tex2html10090"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,206 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10007"
-  HREF="node394.html">Construyendo Nuestro Propio Rack::Builder</A>
-<B> Subir:</B> <A NAME="tex2html10001"
-  HREF="node359.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9995"
-  HREF="node392.html">Middleware y la Clase</A>
- &nbsp; <B>  <A NAME="tex2html10003"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10005"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10093"
+  HREF="node394.html">rackup</A>
+<B> Subir:</B> <A NAME="tex2html10087"
+  HREF="node367.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10081"
+  HREF="node392.html">Redirección</A>
+ &nbsp; <B>  <A NAME="tex2html10089"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10091"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031190000000000000000">
-Ejemplo de Middleware: Rack::ETag</A>
+<H1><A NAME="SECTION031140000000000000000">
+La Estructura de una Aplicación Rack: Ejemplo de Middleware</A>
 </H1>
 
 <P>
-An  <TT>ETag</TT>  or <A NAME="16996"></A><SPAN  CLASS="textbf">entity tag</SPAN>, is part of HTTP, the protocol for the World
-Wide Web. It is one of several mechanisms that HTTP provides for
-<A NAME="16998"></A><SPAN  CLASS="textbf">web cache validation</SPAN>, and which allows a client to make conditional
-requests. 
-
-<P>
-This allows caches to be more efficient, and saves
-bandwidth, as a web server does not need to send a full response
-if the content has not changed.
-
-<P>
-An ETag is an opaque identifier assigned by a web server to a
-specific version of a resource found at a URL. 
-
-<P>
-If the resource
-content at that URL ever changes, a new and different ETag is
-assigned. 
-
-<P>
-Used in this manner ETags are similar to fingerprints,
-and they can be quickly compared to determine if two versions of a
-resource are the same or not.
-
-<P>
-
-<OL>
-<LI><A NAME="tex2html940"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/etag.rb">Rack::ETag</A>
-en GitHub
-</LI>
-<LI>Documentación de <A NAME="tex2html941"
-  HREF="http://rack.rubyforge.org/doc/Rack/ETag.html">Rack::ETag</A>
-</LI>
-</OL>
-
-<P>
 <PRE>
-require 'digest/md5'
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat middlefoo.rb 
+require 'rack'
 
-module Rack
-  class ETag
-    DEFAULT_CACHE_CONTROL = "max-age=0, private, must-revalidate".freeze
+class MiddleFoo
+  
+  def initialize(app)
+    @app = app
+  end
 
-    def initialize(app, no_cache_control = nil, cache_control = DEFAULT_CACHE_CONTROL)
-      @app = app
-      @cache_control = cache_control
-      @no_cache_control = no_cache_control
-    end
-
-    def call(env)
-      status, headers, body = @app.call(env)
-
-      if etag_status?(status) &amp;&amp; etag_body?(body) &amp;&amp; !skip_caching?(headers)
-        digest, body = digest_body(body)
-        headers['ETag'] = %("#{digest}") if digest
-      end
-
-      unless headers['Cache-Control']
-        if digest
-          headers['Cache-Control'] = @cache_control if @cache_control
-        else
-          headers['Cache-Control'] = @no_cache_control if @no_cache_control
-        end
-      end
-
-      [status, headers, body]
-    end
-
-    private
-
-      def etag_status?(status)
-        status == 200 || status == 201
-      end
-
-      def etag_body?(body)
-        !body.respond_to?(:to_path)
-      end
-
-      def skip_caching?(headers)
-        (headers['Cache-Control'] &amp;&amp; headers['Cache-Control'].include?('no-cache')) ||
-          headers.key?('ETag') || headers.key?('Last-Modified')
-      end
-
-      def digest_body(body)
-        parts = []
-        digest = nil
-
-        body.each do |part|
-          parts &lt;&lt; part
-          (digest ||= Digest::MD5.new) &lt;&lt; part unless part.empty?
-        end
-
-        [digest &amp;&amp; digest.hexdigest, parts]
-      end
+  def call env
+    # Podemos modificar el request (env) aqui
+    env['chuchu'] = 'SYTW'
+    status, headers, body = @app.call(env)
+    # Podemos modificar la respuesta aqui
+    newbody = body.map(&amp;:upcase)
+    [status, headers, newbody]
   end
 end
 </PRE>
 
 <P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat hello_middle.rb 
+require 'rack'
+require './middlefoo'
 
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html10006"
-  HREF="node394.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10000"
-  HREF="node359.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9994"
-  HREF="node392.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10002"
-  HREF="node832.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10004"
-  HREF="node835.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html10007"
-  HREF="node394.html">Construyendo Nuestro Propio Rack::Builder</A>
-<B> Subir:</B> <A NAME="tex2html10001"
-  HREF="node359.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9995"
-  HREF="node392.html">Middleware y la Clase</A>
- &nbsp; <B>  <A NAME="tex2html10003"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10005"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+class HelloWorld
+  def call env
+    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world\nchuchu=#{env['chuchu']}\n"]]
+  end
+end
+
+Rack::Handler::WEBrick::run MiddleFoo.new(HelloWorld.new)
+</PRE>
+
+<P>
+Cuando ejecutamos el programa produce la salida:
+<PRE>
+HELLO WORLD
+CHUCHU=SYTW
+</PRE>
+
+<P>
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

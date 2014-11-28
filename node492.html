@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>websocket/rack</TITLE>
-<META NAME="description" CONTENT="websocket/rack">
+<TITLE>Ejemplo de Server Sent Events: irb en el navegador</TITLE>
+<META NAME="description" CONTENT="Ejemplo de Server Sent Events: irb en el navegador">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node493.html">
-<LINK REL="previous" HREF="node489.html">
-<LINK REL="up" HREF="node488.html">
+<LINK REL="previous" HREF="node491.html">
+<LINK REL="up" HREF="node476.html">
 <LINK REL="next" HREF="node493.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11667"
+<A NAME="tex2html11755"
   HREF="node493.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11661"
-  HREF="node488.html">
+<A NAME="tex2html11749"
+  HREF="node476.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11655"
+<A NAME="tex2html11743"
   HREF="node491.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11663"
-  HREF="node832.html">
+<A NAME="tex2html11751"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11665"
-  HREF="node835.html">
+<A NAME="tex2html11753"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,29 +92,1782 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11668"
-  HREF="node493.html">Ruby y WebSockets: TCP</A>
-<B> Subir:</B> <A NAME="tex2html11662"
-  HREF="node488.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html11656"
-  HREF="node491.html">Negociación del protocolo WebSocket</A>
- &nbsp; <B>  <A NAME="tex2html11664"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11666"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11756"
+  HREF="node493.html">Asynchronous responses in Rack</A>
+<B> Subir:</B> <A NAME="tex2html11750"
+  HREF="node476.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11744"
+  HREF="node491.html">Embedding Sinatra within EventMachine</A>
+ &nbsp; <B>  <A NAME="tex2html11752"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11754"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03920000000000000000">
-websocket/rack</A>
+<H1><A NAME="SECTION038140000000000000000">
+Ejemplo de Server Sent Events: irb en el navegador</A>
 </H1>
 
 <P>
+Véase 
+
+<OL>
+<LI><A NAME="tex2html1195"
+  HREF="https://github.com/rkh/presentations/tree/realtime-rack">Real Time Rack presentation by Konstantin Haase</A>
+en GitHub using 
+Scott Chacon <A NAME="tex2html1196"
+  HREF="https://github.com/schacon/showoff">showoff</A>
+</LI>
+<LI><A NAME="tex2html1197"
+  HREF="http://confreaks.com/videos/727-rockymtnruby2011-real-time-rack">The corresponding talk "Real Time Rack" by
+Konstantin Haase</A>
+2011. Confreaks videos.
+</LI>
+<LI>La sección <I>Showoff</I> <A HREF="node798.html#chapter:showoff">106</A> en estos apuntes
+</LI>
+</OL>
+
+<P>
+Este código se encuentra en:
+<A NAME="tex2html1198"
+  HREF="https://github.com/rkh/presentations/blob/realtime-rack/example.rb">https://github.com/rkh/presentations/blob/realtime-rack/example.rb</A>
+<P>
+El javascript y el server se activan desde las trasparencias. En concreto en esta trasparencia 
+que está en el fichero
+<code>slides/01_slides.md</code>:
+
+<P>
+<PRE>
+!SLIDE center
+
+# Demo! #
+
+&lt;iframe src="/events?" width="980" height="600"&gt;&lt;/iframe&gt;
+
+.notes Next: Rack
+</PRE>
+The <code>&lt;iframe&gt;</code> tag specifies an inline frame.
+An inline frame is used to embed another document within the current HTML document.
+
+<P>
+<code>src="/events?"</code> hace que se dispare el código correspondiente a la ruta
+<code>/events</code> descrita en el fichero <code>example.rb</code>.
+
+<P>
+La ruta <code>/events</code>
+está en el fichero <code>example.rb</code>:
+<PRE>
+  get('/events') { slim :html }
+</PRE>
+
+<P>
+El fichero <code>example.rb</code> es cargado desde el <code>config.ru</code>:
+<PRE>
+[~/local/src/ruby/sinatra/sinatra-streaming/konstantin_haase/presentations(realtime-rack)]$ cat config.ru 
+require 'showoff'
+require './example'
+
+use Example
+run ShowOff
+</PRE>
+Obsérvese que es cargado por <code>config.ru</code> mediante <code>use</code>.
+
+<P>
+El template <code>html</code> contiene:
+<PRE>
+@@ html
+html
+  head
+    title brirb
+    link href="/events.css" rel="stylesheet" type="text/css"
+    script src="/jquery.min.js" type="text/javascript"
+    script src="/events.js" type="text/javascript"
+  body
+    #log
+    form#form
+      | &amp;gt;&amp;gt;&amp;nbsp;
+      input#input type='text'
+</PRE>
+Como vemos tenemos identificadores <code>log</code>, <code>form</code> y <code>input</code> para hablar
+de los correspondientes elementos implicados.
+
+<P>
+La carga de <code>/events.js</code> es también manejado por una ruta:
+
+<P>
+<PRE>
+   get('/events.js') { coffee :script }
+</PRE>
+La gema 
+<A NAME="tex2html1199"
+  HREF="https://github.com/josh/ruby-coffee-script">coffee-script</A>
+provee el mecanismo para compilar el javascript y producir el correspondiente
+código JavaScript.
+
+<P>
+Este es el CoffeeScript contenido en 
+el template <code>script</code>:
+<PRE>
+$(document).ready -&gt;
+  input   = $("#input")
+  log     = $("#log")
+  history = []
+  count   = 0
+  output  = (str) -&gt;
+    log.append str
+    log.append "&lt;br&gt;"
+    input.attr scrollTop: input.attr("scrollHeight")
+
+  input.bind "keydown", (e) -&gt;
+    if e.keyCode == 38 or e.keyCode == 40
+      count += e.keyCode - 39
+      count = 0 if count &lt; 0
+      count = input.length + 1 if count &gt; input.length
+      input.val history[count]
+      false
+    else
+      true
+
+  $("#form").live "submit", (e) -&gt;
+    value = input.val()
+    history.push value
+    count++
+    $.post '/run', code: input.val()
+    output "&amp;gt;&amp;gt; #{value}"
+    input.val ""
+    input.focus()
+    e.preventDefault()
+
+  src = new EventSource('/events.es')
+  src.onmessage = (e) -&gt; output e.data
+</PRE>
+
+<OL>
+<LI>La llamada <code>output(str)</code> añade en el punto indicado por 
+<code>#log</code> el texto <code>str</code>. Además se encarga del scrolling:
+<PRE>
+  output  = (str) -&gt;
+    log.append str
+    log.append "&lt;br&gt;"
+    input.attr scrollTop: input.attr("scrollHeight")
+</PRE>
+</LI>
+<LI>El método JQuery
+<code>.bind( eventType [, eventData ], handler(eventObject) )</code>
+Attaches a handler to an event for the elements.
+En este caso <code>eventType</code> es <code>keydown</code>.
+</LI>
+<LI>La llamada:
+<PRE>
+  src = new EventSource('/events.es')
+</PRE>
+Hace que nos suscribamos a los mensajes generados por 
+<code>/events.es</code>
+</LI>
+<LI>Cada vez que llega un mensaje lo volcamos en la página mediante <code>output</code>:
+<PRE>
+  src.onmessage = (e) -&gt; output e.data
+</PRE>
+
+<P>
+</LI>
+<LI><A NAME="tex2html1200"
+  HREF="http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes">Javascript Char Codes (Key Codes)</A>
+</LI>
+<LI>Creo que el código de la flecha arriba es 38
+y el de abajo 40. Asi pues lo que se suma a <code>count</code> es 1 o -1.
+Parece que navegamos en el histórico de comandos de esta forma:
+<PRE>
+  input.bind "keydown", (e) -&gt;
+    if e.keyCode == 38 or e.keyCode == 40
+      count += e.keyCode - 39
+      count = 0 if count &lt; 0
+      count = input.length + 1 if count &gt; input.length
+      input.val history[count]
+      false
+    else
+      true
+</PRE>
+</LI>
+<LI>Cuando introducimos nuestra expresión en el formulario y pulsamos retorno
+de carro se ejecuta la correspondiente callback. Mediante <code>$.post '/run', code: input.val()</code> enviamos al servidor la petición de que evalúe la entrada: 
+<PRE>
+ $("#form").live "submit", (e) -&gt;
+    value = input.val()
+    history.push value
+    count++
+    $.post '/run', code: input.val()
+    output "&amp;gt;&amp;gt; #{value}"
+    input.val ""
+    input.focus()
+    e.preventDefault()
+</PRE>
+</LI>
+<LI>The
+<A NAME="tex2html1201"
+  HREF="http://api.jquery.com/live/"><TT>live </TT></A>
+method
+attaches an event handler for all elements which match the current selector, now and in the future.
+
+<P>
+La petición es recibida en la correspondiente
+ruta
+<PRE>
+  post '/run' do
+    begin
+      result = nil
+      stdout = capture_stdout do
+        result = eval("_ = (#{params[:code]})", settings.scope, "(irb)", settings.line)
+        settings.line += 1
+      end
+      stdout &lt;&lt; "=&gt; " &lt;&lt; result.inspect
+    rescue Exception =&gt; e
+      stdout = [e.to_s, *e.backtrace.map { |l| "\t#{l}" }].join("\n")
+    end
+    source = escape stdout
+    Scope.send source
+    ''
+  end
+</PRE>
+
+<OL>
+<LI>El método <code>eval</code> tiene estos argumentos:
+<PRE>
+eval(string [, binding [, filename [,lineno]]])
+</PRE>
+  
+<OL>
+<LI>Evaluates the Ruby expression(s) in string.  
+</LI>
+<LI><code>binding</code> is 
+  a <A NAME="tex2html1202"
+  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> object: the evaluation is performed in its
+  context. 
+</LI>
+<LI><code>filename</code> and <code>lineno</code>  are 
+  used when reporting syntax errors.
+  
+</LI>
+</OL>
+</LI>
+<LI>El método <code>capture_stdout</code> nos permite capturar la salida por <code>stdout</code> de 
+una evaluación:
+<PRE>
+[~/Chapter6MethodsProcsLambdasAndClosures]$ pry
+[1] pry(main)&gt; require 'capture_stdout'
+=&gt; true
+[2] pry(main)&gt; string = 'yeah'
+=&gt; "yeah"
+[3] pry(main)&gt; output = capture_stdout { print(string) }  
+=&gt; "yeah"
+</PRE>
+</LI>
+</OL>
+</LI>
+<LI>En el módulo <code>Scope</code> se define el método <code>Scope.send</code> el cual envía a todos los
+clientes el mensaje especificado:
+<PRE>
+module Scope
+  def self.send(*args)
+    Example.subscribers.each { |s| s.send(*args) }
+  end
+
+  def self.puts(*args)
+    args.each { |str| send str.to_s }
+    nil
+  end
+
+  def self.binding
+    Kernel.binding
+  end
+end
+</PRE>
+
+<OL>
+<LI>El método <code>send</code> recorre el array <code>subscribers</code>
+que es un array de objetos <code>EventSource</code> y delega en el método 
+<code>send</code> del subscriptor el envío de los datos en <code>*args</code>
+</LI>
+<LI>El método <code>binding</code> 
+delega en el correspondiente método del <A NAME="tex2html1203"
+  HREF="http://ruby-doc.org/core-2.0.0/Kernel.html"><TT>Kernel</TT></A>.
+El método es usado para guardar el binding 
+en la variable <code>:scope</code> en la clase <code>Example</code>:
+<PRE>
+class Example &lt; Sinatra::Base
+  enable :inline_templates, :logging, :static
+  set :public, File.expand_path('../public', __FILE__)
+  set :subscribers =&gt; [], :scope =&gt; Scope.binding, :line =&gt; 1
+</PRE>
+y es posteriormente usado cuando se evalúa la expresión:
+<PRE>
+   stdout = capture_stdout do
+     result = eval("_ = (#{params[:code]})", settings.scope, "(irb)", settings.line)
+     settings.line += 1                                            # número de línea
+   end
+</PRE>
+</LI>
+</OL>
+</LI>
+<LI><code>Example.suscribers</code> es un array que es inicializado al comienzo de la clase 
+<code>Examples</code>:
+<PRE>
+class Example &lt; Sinatra::Base
+  enable :inline_templates, :logging, :static
+  set :public_folder, File.expand_path('../public', __FILE__)
+  set :subscribers =&gt; [], :scope =&gt; Scope.binding, :line =&gt; 1
+  ...
+</PRE>
+</LI>
+<LI><code>subscribers</code> se actualiza en el código asociado con la ruta <code>events.es</code>
+que es visitada - desde el código CoffeeScript - cada vez que se carga una nueva página:
+<PRE>
+$(document).ready -&gt;
+  input   = $("#input")
+  ...
+  output  = (str) -&gt;
+    ...
+  input.bind "keydown", (e) -&gt;
+    ...
+  $("#form").live "submit", (e) -&gt;
+    ...
+
+  src = new EventSource('/events.es')
+  src.onmessage = (e) -&gt; output e.data
+</PRE>
+</LI>
+<LI>Este es el código de la ruta <code>events.es</code>:
+<PRE>
+  get '/events.es' do
+    content_type request.preferred_type("text/event-stream", "text/plain")
+    body EventSource.new
+    settings.subscribers &lt;&lt; body
+    EM.next_tick { env['async.callback'].call response.finish }
+    throw :async
+  end
+</PRE>
+
+<OL>
+<LI>Como se ha mencionado <A NAME="tex2html1204"
+  HREF="http://rack.github.io/">rack</A> espera que el cuerpo de la respuesta sea un objeto
+que disponga de un método <code>each</code>. Con la llamada <code>body EventSource.new</code>
+establecemos el cuerpo de la respuesta. La definición de la clase <code>EventSource</code> 
+aparece en el item <A HREF="#item:eventsource">13</A>
+</LI>
+<LI>El método 
+<PRE>
+ (Object) next_tick(pr = nil, &amp;block)
+</PRE>
+Schedules a <A NAME="tex2html1205"
+  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> for execution immediately after the next turn
+through the reactor core. 
+
+<P>
+An advanced technique, this can be useful
+for improving memory management and/or application responsiveness,
+especially when scheduling large amounts of data for writing to a
+network connection.
+
+<P>
+This method takes either a single argument (which must be a callable object) or a block.
+
+<P>
+Parameters:
+<PRE>
+pr (#call) (defaults to: nil) — A callable object to run
+</PRE>
+Raises:
+<PRE>
+(ArgumentError)
+</PRE>
+</LI>
+<LI>El siguiente texto esta tomado de
+<A NAME="tex2html1206"
+  HREF="http://polycrystal.org/2012/04/15/asynchronous_responses_in_rack.html">Asynchronous responses in Rack </A>
+por Patrick April 15, 2012.
+
+<P>
+<BLOCKQUOTE>
+While there is not yet an async interface in the Rack specification,
+several Rack servers have implemented 
+<A NAME="tex2html1194"
+  HREF="https://github.com/raggi/thin/blob/async_for_rack/example/async_app.ru">James Tucker's async scheme.</A>
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>Rather than returning <code>[status, headers, body]</code>, the app returns a
+status of <code>-1</code>, or throws the symbol <code>:async</code>. 
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>The server provides
+<code>env['async.callback']</code> 
+which the app saves and later calls with the
+usual <code>[status, headers, body]</code> 
+to send the response.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>Note: returning a status of <code>-1</code> is illegal as far as <code>Rack::Lint</code> is
+concerned. <code>throw :async</code> is not flagged as an <code>error</code>.
+</BLOCKQUOTE><PRE>
+class AsyncApp
+  def call(env)
+    Thread.new do
+      sleep 5  # simulate waiting for some event
+      response = [200, {'Content-Type' =&gt; 'text/plain'}, ['Hello, World!']]
+      env['async.callback'].call response
+    end
+    
+    [-1, {}, []]  # or throw :async
+  end
+end
+</PRE>
+<P>
+<BLOCKQUOTE>In the example above, the request is suspended, nothing is sent
+back to the client, the connection remains open, and the client
+waits for a response. 
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>The app returns the special status, and the
+worker process is able to handle more HTTP requests (i.e. it is not
+blocked). Later, inside the thread, the full response is prepared
+and sent to the client.
+
+</BLOCKQUOTE>
+
+<P>
+</LI>
+<LI>Véase en StakOverflow la pregunta:
+<A NAME="tex2html1207"
+  HREF="http://stackoverflow.com/questions/7061404/rack-concurrency-rack-multithread-async-callback-or-both">Rack concurrency - rack.multithread, async.callback, or both?</A>
+<P>
+<BLOCKQUOTE>
+There is another, more oft discussed means of achieving concurrency,
+involving EventMachine.defer and throw :async. Strictly speaking,
+requests are not handled using threads. They are dealt with serially,
+but pass their heavy lifting and a callback off to EventMachine,
+which uses async.callback to send a response at a later time. After
+request A has offloaded its work to EM.defer, request B is begun.
+Is this correct?
+
+</BLOCKQUOTE>
+
+<P>
+Respuesta de Konstantin:
+
+<P>
+<BLOCKQUOTE>
+Using <code>async.callback</code> in conjunction with EM.defer actually makes
+ not too much sense, as it would basically use the thread-pool,
+ too, ending up with a similar construct as described in Q1. 
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>Using
+<code> async.callback</code> makes sense when only using eventmachine libraries
+ for IO. Thin will send the response to the client once
+<code> env['async.callback']</code> is called with a normal Rack response as
+ argument.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>If the body is an <code>EM::Deferrable</code>, Thin will not close the
+connection until that deferrable succeeds. 
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>A rather well kept secret:
+If you want more than just long polling (i.e. keep the connection
+open after sending a partial response), you can also return an
+<code>EM::Deferrable</code> as body object directly without having to use throw
+<code>:async</code> or a status code of -1.
+
+</BLOCKQUOTE>
+
+<P>
+</LI>
+</OL>
+</LI>
+<LI>Un objeto <code>EventSource</code> tiene métodos <code>each</code> y <code>send</code>:
+<A NAME="item:eventsource"></A><PRE>
+class EventSource
+  include EventMachine::Deferrable
+
+  def send(data, id = nil)
+    data.each_line do |line|
+      line = "data: #{line.strip}\n"
+      @body_callback.call line
+    end
+    @body_callback.call "id: #{id}\n" if id
+    @body_callback.call "\n"
+  end
+
+  def each(&amp;blk)
+    @body_callback = blk
+  end
+end
+</PRE>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION038140010000000000000">
+example.rb</A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/sinatra/sinatra-streaming/konstantin_haase/presentations(realtime-rack)]$ cat example.rb 
+require 'sinatra/base'
+require 'capture_stdout'
+require 'escape_utils'
+require 'slim'
+require 'sass'
+require 'coffee-script'
+require 'eventmachine'
+
+class EventSource
+  include EventMachine::Deferrable
+
+  def send(data, id = nil)
+    data.each_line do |line|
+      line = "data: #{line.strip}\n"
+      @body_callback.call line
+    end
+    @body_callback.call "id: #{id}\n" if id
+    @body_callback.call "\n"
+  end
+
+  def each(&amp;blk)
+    @body_callback = blk
+  end
+end
+
+module Scope
+  def self.send(*args)
+    Example.subscribers.each { |s| s.send(*args) }
+  end
+
+  def self.puts(*args)
+    args.each { |str| send str.to_s }
+    nil
+  end
+
+  def self.binding
+    Kernel.binding
+  end
+end
+
+class Example &lt; Sinatra::Base
+  enable :inline_templates, :logging, :static
+  set :public_folder, File.expand_path('../public', __FILE__)
+  set :subscribers =&gt; [], :scope =&gt; Scope.binding, :line =&gt; 1
+
+  def escape(data)
+    EscapeUtils.escape_html(data).gsub("\n", "&lt;br&gt;").
+      gsub("\t", "    ").gsub(" ", "&amp;nbsp;")
+  end
+
+  get '/events.es' do
+    content_type request.preferred_type("text/event-stream", "text/plain")
+    body EventSource.new
+    settings.subscribers &lt;&lt; body
+    EM.next_tick { env['async.callback'].call response.finish }
+    throw :async
+  end
+
+  get('/events') { slim :html }
+  get('/events.js') { coffee :script }
+  get('/events.css') { sass :style }
+
+  post '/run' do
+    begin
+      result = nil
+      stdout = capture_stdout do
+        result = eval("_ = (#{params[:code]})", settings.scope, "(irb)", settings.line)
+        settings.line += 1
+      end
+      stdout &lt;&lt; "=&gt; " &lt;&lt; result.inspect
+    rescue Exception =&gt; e
+      stdout = [e.to_s, *e.backtrace.map { |l| "\t#{l}" }].join("\n")
+    end
+    source = escape stdout
+    Scope.send source
+    ''
+  end
+end
+
+__END__
+
+@@ script
+
+$(document).ready -&gt;
+  input   = $("#input")
+  log     = $("#log")
+  history = []
+  count   = 0
+  output  = (str) -&gt;
+    log.append str
+    log.append "&lt;br&gt;"
+    input.attr scrollTop: input.attr("scrollHeight")
+
+  input.bind "keydown", (e) -&gt;
+    if e.keyCode == 38 or e.keyCode == 40
+      count += e.keyCode - 39
+      count = 0 if count &lt; 0
+      count = input.length + 1 if count &gt; input.length
+      input.val history[count]
+      false
+    else
+      true
+
+  $("#form").live "submit", (e) -&gt;
+    value = input.val()
+    history.push value
+    count++
+    $.post '/run', code: input.val()
+    output "&amp;gt;&amp;gt; #{value}"
+    input.val ""
+    input.focus()
+    e.preventDefault()
+
+  src = new EventSource('/events.es')
+  src.onmessage = (e) -&gt; output e.data
+
+@@ html
+html
+  head
+    title brirb
+    link href="/events.css" rel="stylesheet" type="text/css"
+    script src="/jquery.min.js" type="text/javascript"
+    script src="/events.js" type="text/javascript"
+  body
+    #log
+    form#form
+      | &amp;gt;&amp;gt;&amp;nbsp;
+      input#input type='text'
+
+@@ style
+body
+  font:
+    size: 200%
+    family: monospace
+  input#input
+    font-size: 100%
+    font-family: monospace
+    border: none
+    padding: 0
+    margin: 0
+    width: 80%
+    &amp;:focus
+      border: none
+      outline: none
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION038140020000000000000">
+showoff.json</A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/sinatra-streaming/konstantin_haase/presentations(realtime-rack)]$ cat showoff.json 
+{
+  "name": "Real Time Rack",
+  "sections": [
+    { "section": "intro"  },
+    { "section": "slides" },
+    { "section": "outro"  }
+  ]
+}
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION038140030000000000000">
+slides/01_slides.md </A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/sinatra-streaming/konstantin_haase/presentations(realtime-rack)]$ cat slides/01_slides.md 
+!SLIDE bullets
+
+* ![breaking](breaking.png)
+
+.notes Next: Warning
+
+!SLIDE bullets incremental
+
+# Warning
+* There will be a lot of code ...
+* A lot!
+* Also, this is the *Special Extended Director's Cut*!
+
+.notes Next: good old web
+
+!SLIDE center
+![web](ie.png)
+
+.notes Next: ajax
+
+!SLIDE center
+![ajax](ajax.png)
+
+.notes Next: Comet
+
+!SLIDE center
+![comet](comet.png)
+
+.notes Next: Real Time
+
+!SLIDE bullets
+
+* ![real_time](real_time.jpg)
+
+.notes Next: come again?
+
+!SLIDE bullets incremental
+
+# Come again? #
+
+* streaming
+* server push
+
+.notes streaming, server push. --- Next: decide what to send while streaming, not upfront
+
+!SLIDE bullets
+
+* decide what to send while streaming, not upfront
+
+.notes Next: usage example
+
+!SLIDE bullets
+
+* Streaming APIs
+* Server-Sent Events
+* Websockets
+
+.notes Next: demo
+
+!SLIDE center
+
+# Demo! #
+
+&lt;iframe src="/events?" width="980" height="600"&gt;&lt;/iframe&gt;
+
+.notes Next: Rack
+
+!SLIDE bullets incremental
+
+# Rack #
+
+* Ruby to HTTP to Ruby bridge
+* Middleware API
+* Powers Rails, Sinatra, Ramaze, ...
+
+.notes HTTP bridge, middleware, frameworks. --- Next: rack stack
+
+!SLIDE center
+
+![rack](rack_stack.png)
+
+.notes Next: simple rack app
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    welcome_app = proc do |env|
+      [200, {'Content-Type' =&gt; 'text/html'},
+        ['Welcome!']]
+    end
+
+.notes Next: with any object
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    welcome_app = Object.new
+
+    def welcome_app.call(env)
+      [200, {'Content-Type' =&gt; 'text/html'},
+        ['Welcome!']]
+    end
+
+.notes Next: in sinatra
+
+!SLIDE
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    get('/') { 'Welcome!' }
+
+.notes Next: pseudo handler
+
+!SLIDE smallish
+
+![pseudo_code](pseudo_code.png)
+![stack](handler.png)
+
+    @@@ ruby
+    env = parse_http
+
+    status, headers, body =
+      welcome_app.call env
+
+    io.puts "HTTP/1.1 #{status}"
+    headers.each { |k,v| io.puts "#{k}: #{v}" }
+    io.puts ""
+
+    body.each { |str| io.puts str }
+
+    close_connection
+
+.notes Next: middleware
+
+!SLIDE smallish
+
+# Middleware #
+
+.notes Next: upcase example
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](middleware.png)
+
+    @@@ ruby
+    # foo =&gt; FOO
+    class UpperCase
+      def initialize(app)
+        @app = app
+      end
+
+      def call(env)
+        status, headers, body = @app.call(env)
+        upper = []
+        body.each { |s| upper &lt;&lt; s.upcase }
+        [status, headers, upper]
+      end
+    end
+
+.notes Next: config.ru
+
+!SLIDE large
+
+![working_code](working_code.png)
+![stack](something_else.png)
+
+    @@@ ruby
+    # set up middleware
+    use UpperCase
+
+    # set endpoint
+    run welcome_app
+
+.notes Next: call app (from before)
+
+!SLIDE
+
+![working_code](working_code.png)
+![stack](handler.png)
+
+    @@@ ruby
+    status, headers, body =
+      welcome_app.call(env)
+
+.notes Next: wrap in middleware
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](handler.png)
+
+    @@@ ruby
+    app = UpperCase.new(welcome_app)
+
+    status, headers, body = app.call(env)
+
+.notes Next: streaming with each
+
+!SLIDE
+# Streaming with #each #
+
+.notes Next: custom body object
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](handler.png)
+
+    @@@ ruby
+    my_body = Object.new
+    get('/') { my_body }
+
+    def my_body.each
+      20.times do
+        yield "&lt;p&gt;%s&lt;/p&gt;" % Time.now
+        sleep 1
+      end
+    end
+
+.notes Next: Let's build a messaging service!
+
+!SLIDE bullets
+
+* Let's build a messaging service!
+
+.notes Next: sinatra app
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    subscribers = []
+
+    get '/' do
+      body = Subscriber.new
+      subscribers &lt;&lt; body
+      body
+    end
+
+    post '/' do
+      subscribers.each do |s|
+        s.send params[:message]
+      end
+    end
+
+.notes Next: subscriber object
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    class Subscriber
+      def send(data)
+        @data = data
+        @thread.wakeup
+      end
+
+      def each
+        @thread = Thread.current
+        loop do
+          yield @data.to_s
+          sleep
+        end
+      end
+    end
+
+.notes Next: issues with this
+
+!SLIDE bullets incremental
+
+* blocks the current thread
+* does not work well with some middleware
+* does not work (well) on evented servers &lt;br&gt; (Thin, Goliath, Ebb, Rainbows!)
+
+.notes blocks, middleware, evented servers. --- Next: evented streaming
+
+!SLIDE
+
+# Evented streaming with async.callback #
+
+.notes Next: event loop graphics
+
+!SLIDE center
+![event loop](eventloop1.png)
+
+.notes Next: webscale
+
+!SLIDE center
+![event loop - webscale](eventloop2.png)
+
+.notes Next: without eventloop
+
+!SLIDE
+
+![working_code](working_code.png)
+![stack](something_else.png)
+
+    @@@ ruby
+    sleep 10
+    puts "10 seconds are over"
+    
+    puts Redis.new.get('foo')
+
+.notes Next: with eventloop
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](something_else.png)
+
+    @@@ ruby
+    require 'eventmachine'
+
+    EM.run do
+      EM.add_timer 10 do
+        puts "10 seconds are over"
+      end
+
+      redis = EM::Hiredis.connect
+      redis.get('foo').callback do |value|
+        puts value
+      end
+    end
+
+.notes Next: async.callback
+
+!SLIDE smallish
+
+![pseudo_code](pseudo_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    get '/' do
+      EM.add_timer(10) do
+        env['async.callback'].call [200,
+          {'Content-Type' =&gt; 'text/html'},
+          ['sorry you had to wait']]
+      end
+
+      "dear server, I don't have a  " \
+      "response yet, please wait 10 " \
+      "seconds, thank you!"
+    end
+
+.notes Next: throw
+
+!SLIDE smallish
+
+# With #throw #
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    get '/' do
+      EM.add_timer(10) do
+        env['async.callback'].call [200,
+          {'Content-Type' =&gt; 'text/html'},
+          ['sorry you had to wait']]
+      end
+
+      # will skip right to the handler
+      throw :async
+    end
+
+.notes Next: -1
+
+!SLIDE smallish
+
+# Status Code #
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    get '/' do
+      EM.add_timer(10) do
+        env['async.callback'].call [200,
+          {'Content-Type' =&gt; 'text/html'},
+          ['sorry you had to wait']]
+      end
+
+      # will go through middleware
+      [-1, {}, []]
+    end
+
+.notes Next: async-sinatra
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    # gem install async-sinatra
+    require 'sinatra/async'
+
+    aget '/' do
+      EM.add_timer(10) do
+        body 'sorry you had to wait'
+      end
+    end
+
+.notes Next: with redis
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    redis = EM::Hiredis.connect
+
+    aget '/' do
+      redis.get('foo').callback do |value|
+        body value
+      end
+    end
+
+.notes Next: pseudo handler with callback
+
+!SLIDE smallish
+
+![pseudo_code](pseudo_code.png)
+![stack](handler.png)
+
+    @@@ ruby
+    env = parse_http
+
+    cb = proc do |response|
+      send_headers(response)
+      response.last.each { |s| send_data(s) }
+      close_connection
+    end
+
+    catch(:async) do
+      env['async.callback'] = cb
+      response = app.call(env)
+      cb.call(response) unless response[0] == -1
+    end
+
+.notes Next: postponing, not streaming
+
+!SLIDE bullets incremental
+
+* that's postponing ...
+* ... not streaming
+
+.notes Next: EM::Deferrable
+
+!SLIDE
+
+# EM::Deferrable #
+
+.notes Next: Deferrable explained
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](something_else.png)
+
+    @@@ ruby
+    require 'eventmachine'
+
+    class Foo
+      include EM::Deferrable
+    end
+
+    EM.run do
+      f = Foo.new
+      f.callback { puts "success!" }
+      f.errback { puts "something went wrong" }
+      f.succeed
+    end
+
+.notes Next: pseudo handler - callback from before
+
+!SLIDE smallish
+
+![pseudo_code](pseudo_code.png)
+![stack](handler.png)
+
+    @@@ ruby
+    cb = proc do |response|
+      send_headers(response)
+      response.last.each { |s| send_data(s) }
+      close_connection
+    end
+
+.notes Next: pseudo handler - new callback
+
+!SLIDE smallish
+
+![pseudo_code](pseudo_code.png)
+![stack](handler.png)
+
+    @@@ ruby
+    cb = proc do |response|
+      send_headers(response)
+      body = response.last
+      body.each { |s| send_data(s) }
+
+      if body.respond_to? :callback
+        body.callback { close_connection }
+        body.errback { close_connection }
+      else
+        close_connect
+      end
+    end
+
+.notes Next: Evented Messaging System
+
+!SLIDE
+
+# Evented Messaging System #
+
+.notes Next: old messaging system
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    # THIS IS NOT EVENTED
+
+    subscribers = []
+
+    get '/' do
+      body = Subscriber.new
+      subscribers &lt;&lt; body
+      body
+    end
+
+    post '/' do
+      subscribers.each do |s|
+        s.send params[:message]
+      end
+    end
+
+.notes Next: new messaging system (sinatra app)
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    subscribers = []
+
+    aget '/' do
+      body Subscriber.new
+      subscribers &lt;&lt; body
+    end
+
+    post '/' do
+      subscribers.each do |s|
+        s.send params[:message]
+      end
+    end
+
+.notes Next: new subscriber class
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    class Subscriber
+      include EM::Deferrable
+
+      def send(data)
+        @body_callback.call(data)
+      end
+
+      def each(&amp;blk)
+        @body_callback = blk
+      end
+    end
+
+.notes Next: callback again
+
+!SLIDE smallish
+
+![pseudo_code](pseudo_code.png)
+![stack](handler.png)
+
+    @@@ ruby
+    cb = proc do |response|
+      send_headers(response)
+      body = response.last
+      body.each { |s| send_data(s) }
+
+      if body.respond_to? :callback
+        body.callback { close_connection }
+        body.errback { close_connection }
+      else
+        close_connect
+      end
+    end
+
+.notes Next: new subscriber class (again)
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    class Subscriber
+      include EM::Deferrable
+
+      def send(data)
+        @body_callback.call(data)
+      end
+
+      def each(&amp;blk)
+        @body_callback = blk
+      end
+    end
+
+.notes Next: delete subscribers
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    delete '/' do
+      subscribers.each do |s|
+        s.send "Bye bye!"
+        s.succeed
+      end
+      
+      subscribers.clear
+    end
+
+.notes Next: Server-Sent Events
+
+!SLIDE bullets
+
+# Server-Sent Events #
+
+* [dev.w3.org/html5/eventsource](http://dev.w3.org/html5/eventsource/)
+
+.notes Next: explained
+
+!SLIDE bullets incremental
+
+* Think one-way WebSockets
+* Simple
+* Resumable
+* Client can be implemented in JS
+* Degrade gracefully to polling
+
+.notes one-way WS, simple, resumable, client in JS, degrade --- Next: js code
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](client.png)
+
+    @@@ javascript
+    var source = new EventSource('/updates');
+    
+    source.onmessage = function (event) {
+      alert(event.data);
+    };
+
+.notes Next: HTTP headers
+
+!SLIDE
+
+    HTTP/1.1 200 OK
+    Content-Type: text/event-stream
+
+.notes Next: HTTP headers + 1
+
+!SLIDE
+
+    HTTP/1.1 200 OK
+    Content-Type: text/event-stream
+
+    data: This is the first message.
+
+.notes Next: HTTP headers + 2
+
+!SLIDE
+
+    HTTP/1.1 200 OK
+    Content-Type: text/event-stream
+
+    data: This is the first message.
+
+    data: This is the second message, it
+    data: has two lines.
+
+.notes Next: HTTP headers + 3
+
+!SLIDE
+
+    HTTP/1.1 200 OK
+    Content-Type: text/event-stream
+
+    data: This is the first message.
+
+    data: This is the second message, it
+    data: has two lines.
+
+    data: This is the third message.
+
+.notes Next: with IDs
+
+!SLIDE
+
+    HTTP/1.1 200 OK
+    Content-Type: text/event-stream
+    
+    data: the client
+    id: 1
+    
+    data: keeps track
+    id: 2
+    
+    data: of the last id
+    id: 3
+
+.notes Next: EventSource in Ruby
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    class EventSource
+      include EM::Deferrable
+
+      def send(data, id = nil)
+        data.each_line do |line|
+          line = "data: #{line.strip}\n"
+          @body_callback.call line
+        end
+        @body_callback.call "id: #{id}\n" if id
+        @body_callback.call "\n"
+      end
+
+      def each(&amp;blk)
+        @body_callback = blk
+      end
+    end
+
+.notes Next: WebSockets
+
+!SLIDE bullets
+
+# WebSockets #
+
+* Think two-way EventSource
+
+.notes Next: JS WebSockets
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](client.png)
+
+    @@@ javascript
+    var src = new WebSocket('ws://127.0.0.1/');
+    
+    src.onmessage = function (event) {
+      alert(event.data);
+    };
+
+.notes Next: JS EventSource
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](client.png)
+
+    @@@ javascript
+    var src = new EventSource('/updates');
+
+    src.onmessage = function (event) {
+      alert(event.data);
+    };
+
+.notes Next: JS WebSocket
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](client.png)
+
+    @@@ javascript
+    var src = new WebSocket('ws://127.0.0.1/');
+
+    src.onmessage = function (event) {
+      alert(event.data);
+    };
+
+.notes Next: JS WebSocket with send
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](client.png)
+
+    @@@ javascript
+    var src = new WebSocket('ws://127.0.0.1/');
+
+    src.onmessage = function (event) {
+      alert(event.data);
+    };
+
+    src.send("ok, let's go");
+
+.notes Next: Ruby WebSocket
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](something_else.png)
+
+    @@@ ruby
+    options = { host: '127.0.0.1', port: 8080 }
+    EM::WebSocket.start(options) do |ws|
+      ws.onmessage { |msg| ws.send msg }
+    end
+
+.notes Next: WebSockets are hard to use
+
+!SLIDE bullets incremental
+
+# WebSockets are hard to use #
+
+* Protocol upgrade (not vanilla HTTP)
+* Specification in flux
+* Client support incomplete
+* Proxies/Load Balancers have issues
+* Rack can't do it
+
+.notes Protocol upgrade, in flux, client support, proxies, rack --- Next: sinatra streaming
+
+!SLIDE bullets
+
+# Sinatra Streaming API #
+
+* introduced in Sinatra 1.3
+
+.notes Next: example
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    get '/' do
+      stream do |out|
+        out &lt;&lt; "It's gonna be legen -\n"
+        sleep 0.5
+        out &lt;&lt; " (wait for it) \n"
+        sleep 1
+        out &lt;&lt; "- dary!\n"
+      end
+    end
+
+.notes Next: keep open
+
+!SLIDE smallish
+
+![working_code](working_code.png)
+![stack](endpoint.png)
+
+    @@@ ruby
+    connections = []
+
+    get '/' do
+      # keep stream open
+      stream(:keep_open) do |out|
+        connections &lt;&lt; out
+      end
+    end
+
+    post '/' do
+      # write to all open streams
+      connections.each do |out|
+        out &lt;&lt; params[:message] &lt;&lt; "\n"
+      end
+      "message sent"
+    end
+
+.notes  Next: sinatra chat
+!SLIDE bullets
+
+* Let's build a Chat!
+* Code: [gist.github.com/1476463](https://gist.github.com/1476463)
+* Demo: [sharp-night-9421.herokuapp.com](http://sharp-night-9421.herokuapp.com/)
+
+.notes Next: go there now
+
+!SLIDE bullets
+
+* Yes, go there now!
+* Here's the link again:&lt;br&gt;[**sharp-night-9421.herokuapp.com**](http://sharp-night-9421.herokuapp.com/)
+* Yes, there is no CSS. Sorry.
+
+.notes Next: demo
+
+!SLIDE
+## [**sharp-night-9421.herokuapp.com**](http://sharp-night-9421.herokuapp.com/)
+&lt;iframe src="http://sharp-night-9421.herokuapp.com/?showoff=1" width="980" height="600"&gt;&lt;/iframe&gt;
+
+.notes Next: code
+
+!SLIDE small
+
+## Ruby Code
+
+    @@@ ruby
+    set server: 'thin', connections: []
+
+    get '/stream', provides: 'text/event-stream' do
+      stream :keep_open do |out|
+        settings.connections &lt;&lt; out
+        out.callback { settings.connections.delete(out) }
+      end
+    end
+
+    post '/' do
+      settings.connections.each { |out| out &lt;&lt; "data: #{params[:msg]}\n\n" }
+      204 # response without entity body
+    end
+
+## JavaScript Code
+
+    @@@ javascript
+    var es = new EventSource('/stream');
+    es.onmessage = function(e) { $('#chat').append(e.data) };
+
+    $("form").live("submit", function(e) {
+      $.post('/', {msg: "&lt;%= params[:user] %&gt;: " + $('#msg').val()});
+      e.preventDefault();
+    });
+    
+## HTML
+
+    @@@ html
+    &lt;pre id='chat'&gt;&lt;/pre&gt; &lt;form&gt;&lt;input id='msg' /&gt;&lt;/form&gt;
+
+Code: [**gist.github.com/1476463**](https://gist.github.com/1476463) -
+Demo: [**sharp-night-9421.herokuapp.com**](http://sharp-night-9421.herokuapp.com/)
+
+.notes Next: javascript
+
+!SLIDE small
+
+
+.notes Next: done
+</PRE>
+
+<P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html11757"
+  HREF="node492.html#SECTION038140010000000000000">example.rb</A>
+<LI><A NAME="tex2html11758"
+  HREF="node492.html#SECTION038140020000000000000">showoff.json</A>
+<LI><A NAME="tex2html11759"
+  HREF="node492.html#SECTION038140030000000000000">slides/01_slides.md </A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11755"
+  HREF="node493.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11749"
+  HREF="node476.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11743"
+  HREF="node491.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html11751"
+  HREF="node840.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html11753"
+  HREF="node843.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html11756"
+  HREF="node493.html">Asynchronous responses in Rack</A>
+<B> Subir:</B> <A NAME="tex2html11750"
+  HREF="node476.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11744"
+  HREF="node491.html">Embedding Sinatra within EventMachine</A>
+ &nbsp; <B>  <A NAME="tex2html11752"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11754"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

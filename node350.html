@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Expresiones Regulares</TITLE>
-<META NAME="description" CONTENT="Expresiones Regulares">
+<TITLE>Starfighter</TITLE>
+<META NAME="description" CONTENT="Starfighter">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node351.html">
 <LINK REL="previous" HREF="node349.html">
-<LINK REL="up" HREF="node348.html">
+<LINK REL="up" HREF="node347.html">
 <LINK REL="next" HREF="node351.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9018"
+<A NAME="tex2html9095"
   HREF="node351.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9012"
-  HREF="node348.html">
+<A NAME="tex2html9089"
+  HREF="node347.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9008"
+<A NAME="tex2html9083"
   HREF="node349.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9014"
-  HREF="node832.html">
+<A NAME="tex2html9091"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9016"
-  HREF="node835.html">
+<A NAME="tex2html9093"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,37 +92,171 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9019"
-  HREF="node351.html">El Entorno Ruby</A>
-<B> Subir:</B> <A NAME="tex2html9013"
-  HREF="node348.html">La Plataforma Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html9009"
-  HREF="node349.html">Unicode</A>
- &nbsp; <B>  <A NAME="tex2html9015"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9017"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9096"
+  HREF="node351.html">Random bouncy particles using</A>
+<B> Subir:</B> <A NAME="tex2html9090"
+  HREF="node347.html">Juegos con Gosu</A>
+<B> Anterior:</B> <A NAME="tex2html9084"
+  HREF="node349.html">El Juego de la</A>
+ &nbsp; <B>  <A NAME="tex2html9092"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9094"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION022120000000000000000">
-Expresiones Regulares</A>
+<H1><A NAME="SECTION021930000000000000000">
+Starfighter</A>
 </H1>
+Para entender este código véase el tutorial 
+en 
+<A NAME="tex2html839"
+  HREF="https://github.com/jlnr/gosu/wiki/Ruby-Tutorial">Gosu Ruby Tutorial</A>.
+Las imágenes pueden encontrarse en el directorio <A NAME="tex2html840"
+  HREF="https://github.com/jlnr/gosu/tree/master/examples/media">examples/media</A>
+de Gosu.
 
 <P>
+<PRE>
+require 'rubygems'
+require 'gosu'
 
-<UL>
-<LI><A NAME="tex2html851"
-  HREF="https://vimeo.com/31204910">Regular Expressions Are Your Friend by Aaron Kalin, Hashrocket</A>
-</LI>
-</UL>
+module ZOrder
+  Background, Stars, Player, UI = *0..3
+end
+
+class Player
+  attr_reader :score
+
+  def initialize(window)
+    @image = Gosu::Image.new(window, "media/Starfighter.bmp", false)
+    @beep = Gosu::Sample.new(window, "media/Beep.wav")
+    @x = @y = @vel_x = @vel_y = @angle = 0.0
+    @score = 0
+  end
+
+  def warp(x, y)
+    @x, @y = x, y
+  end
+  
+  def turn_left
+    @angle -= 4.5
+  end
+  
+  def turn_right
+    @angle += 4.5
+  end
+  
+  def accelerate
+    @vel_x += Gosu::offset_x(@angle, 0.5)
+    @vel_y += Gosu::offset_y(@angle, 0.5)
+  end
+  
+  def move
+    @x += @vel_x
+    @y += @vel_y
+    @x %= 640
+    @y %= 480
+    
+    @vel_x *= 0.95
+    @vel_y *= 0.95
+  end
+
+  def draw
+    @image.draw_rot(@x, @y, ZOrder::Player, @angle)
+  end
+  
+  def collect_stars(stars)
+    stars.reject! do |star|
+      if Gosu::distance(@x, @y, star.x, star.y) &lt; 35 then
+        @score += 10
+        @beep.play
+        true
+      else
+        false
+      end
+    end
+  end
+end
+
+class Star
+  attr_reader :x, :y
+  
+  def initialize(animation)
+    @animation = animation
+    @color = Gosu::Color.new(0xff000000)
+    @color.red = rand(256 - 40) + 40
+    @color.green = rand(256 - 40) + 40
+    @color.blue = rand(256 - 40) + 40
+    @x = rand * 640
+    @y = rand * 480
+  end
+
+  def draw  
+    img = @animation[Gosu::milliseconds / 100 % @animation.size]
+    img.draw(@x - img.width / 2.0, @y - img.height / 2.0,
+        ZOrder::Stars, 1, 1, @color, :add)
+  end
+end
+
+class GameWindow &lt; Gosu::Window
+  def initialize
+    super(640, 480, false)
+    self.caption = "Gosu Tutorial Game"
+    
+    @background_image = Gosu::Image.new(self, "media/Space.png", true)
+    
+    @player = Player.new(self)
+    @player.warp(320, 240)
+
+    @star_anim = Gosu::Image::load_tiles(self, "media/Star.png", 25, 25, false)
+    @stars = Array.new
+    
+    @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
+  end
+
+  def update
+    if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft then
+      @player.turn_left
+    end
+    if button_down? Gosu::KbRight or button_down? Gosu::GpRight then
+      @player.turn_right
+    end
+    if button_down? Gosu::KbUp or button_down? Gosu::GpButton0 then
+      @player.accelerate
+    end
+    @player.move
+    @player.collect_stars(@stars)
+    
+    if rand(100) &lt; 4 and @stars.size &lt; 25 then
+      @stars.push(Star.new(@star_anim))
+    end
+  end
+
+  def draw
+    @background_image.draw(0, 0, ZOrder::Background)
+    @player.draw
+    @stars.each { |star| star.draw }
+    @font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xffffff00)
+  end
+
+  def button_down(id)
+    if id == Gosu::KbEscape then
+      close
+    end
+  end
+end
+
+window = GameWindow.new
+window.show
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

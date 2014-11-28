@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Acortador de URLs</TITLE>
-<META NAME="description" CONTENT="Práctica: Acortador de URLs">
+<TITLE>Introducción a Los Object Relational Mappers (ORM)</TITLE>
+<META NAME="description" CONTENT="Introducción a Los Object Relational Mappers (ORM)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node521.html">
 <LINK REL="previous" HREF="node519.html">
-<LINK REL="up" HREF="node511.html">
+<LINK REL="up" HREF="node519.html">
 <LINK REL="next" HREF="node521.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12187"
+<A NAME="tex2html12263"
   HREF="node521.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12181"
-  HREF="node511.html">
+<A NAME="tex2html12257"
+  HREF="node519.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12175"
+<A NAME="tex2html12251"
   HREF="node519.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12183"
-  HREF="node832.html">
+<A NAME="tex2html12259"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12185"
-  HREF="node835.html">
+<A NAME="tex2html12261"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,191 +92,97 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12188"
-  HREF="node521.html">Práctica: Estadísticas de Visitas</A>
-<B> Subir:</B> <A NAME="tex2html12182"
-  HREF="node511.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12176"
-  HREF="node519.html">Asociaciones Through</A>
- &nbsp; <B>  <A NAME="tex2html12184"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12186"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12264"
+  HREF="node521.html">Introducción al Patrón DataMapper</A>
+<B> Subir:</B> <A NAME="tex2html12258"
+  HREF="node519.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12252"
+  HREF="node519.html">DataMapper y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12260"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12262"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031690000000000000000"></A>
-   <A NAME="22653"></A>
-  
-<A NAME="practica:acortadordeurls"></A>
-<BR>
-Práctica: Acortador de URLs
+<H1><A NAME="SECTION031610000000000000000">
+Introducción a Los Object Relational Mappers (ORM)</A>
 </H1>
-Expanda el ejemplo 
-<I>Acortador de URLs</I>
-presentado en la sección
-<A HREF="node516.html#section:abreviadorurls">45.5</A>
-para que admita además abreviaciones elegidas por el usuario.
 
 <P>
-La entrada sería similar a esta:
+What is a Object Relational Mapper?
 
 <P>
-
-<br/>
-<img src="urlshortener.png" />
-<br/>
-
-<P>
-
-<H4><A NAME="SECTION031690010000000000000">
-Otros Requisitos</A>
-</H4>
-  
+A simple answer is that you wrap your tables or stored procedures
+in classes in your programming language, so that instead of writing
+SQL statements to interact with your database, you use methods and
+properties of objects.
 
 <P>
-
-<UL>
-<LI>Despliegue en Heroku. Repase
-<I>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</I> en  <A HREF="node517.html#section:herokupostgres">45.6</A>
-y <A NAME="tex2html1280"
-  HREF="https://devcenter.heroku.com/articles/rack">Deploying Rack-based Apps</A>
-</LI>
-<LI>Si el usuario esta autenticado  
-se le ofrece una opción para ver la 
-lista de sus links. Si no esta autenticado no se visualiza ninguna lista
-pero si que puede acortar un link.
-
-<P>
-
-<UL>
-<LI>Use el (los) proveedor(es) de OAuth que prefiera: 
-Google o GitHub o Twitter, etc.
-<PRE>
-require 'omniauth-oauth2'
-require 'omniauth-google-oauth2'
-require 'omniauth-facebook'
-</PRE>
-</LI>
-<LI>Aisle la parte de autentificación en un fichero aparte <code>auth.rb</code>
-</LI>
-<LI>Utilice <code>session</code> para guardar al información sobre el usuario 
-cuando se nos de en la ruta de <code>callback</code>
-para utilizarla posteriormente:
+In other words, instead of something like this:
 
 <P>
 <PRE>
-get '/auth/:name/callback' do
-  session[:auth] = @auth = request.env['omniauth.auth']
-  session[:name] = @auth['info'].name
-  session[:image] = @auth['info'].image
-  session[:url] = @auth['info'].urls.values[0]
-  session[:email] = @auth['info'].email
-
-  flash[:notice] =
-    %Q{&lt;div class="chuchu"&gt;Autenticado como #{@a...uth['info'].name}.&lt;/div&gt;}
-
-  # Añadir a la base de datos directamente, siempre y cuando no exista
-  if !User.first(:username =&gt; session[:email])
-    u = User.create(:username =&gt; session[:email])
-    u.save
-  end
-
-  redirect '/'
-end
+  String sql = "SELECT ... FROM persons WHERE id = 10"
+  DbCommand cmd = new DbCommand(connection, sql);
+  Result res = cmd.Execute();
+  String name = res[0]["FIRST_NAME"];
 </PRE>
-</LI>
-<LI>Recuerde establecer la ruta por si falla la autenticación:
+you do something like this:
+
+<P>
 <PRE>
-get '/auth/failure' do
-  flash[:notice] =·
-    %Q{&lt;div class="error-auth"&gt;Error: #{params[:message]}.&lt;/div&gt;}
-  redirect '/'
-end
+  Person p = Person.Get(10);
 </PRE>
-</LI>
-<LI><A NAME="tex2html1281"
-  HREF="https://github.com/SFEley/sinatra-flash">SFEley/sinatra-flash</A>
-en GitHub
-</LI>
-</UL>
-</LI>
-<LI>Añada pruebas.
-Repase la sección <I>Testing en Sinatra</I> <A HREF="node462.html#chapter:sinatratesting">35</A>
-</LI>
-<LI>Escriba las vistas en Haml
 
-<UL>
-<LI>La sección <I>Haml</I> en <A HREF="node765.html#chapter:haml">96</A>
-</LI>
-<LI><A NAME="tex2html1282"
-  HREF="http://haml.info/tutorial.html">Haml tutorial</A>
-</LI>
-</UL>
-</LI>
-</UL>
+<P>
+or similar code (lots of variations here). 
+The framework is what makes this code possible.
+
+<P>
+Now, benefits:
 
 <P>
 
-<H4><A NAME="SECTION031690020000000000000">
-Véase</A>
-</H4>
-  
-
-<UL>
-<LI>Véase <A NAME="tex2html1283"
-  HREF="https://github.com/crguezl/url_shortener_with_datamapper">Acortador de URLs</A>.
+<OL>
+<LI>First of all, you hide the SQL away from your logic
+code
 </LI>
-<LI>La sección
-<I>Configurando la Base de Datos en Heroku con DataMapper. Despliegue</I> en  <A HREF="node517.html#section:herokupostgres">45.6</A>
+<LI>This has the benefit of allowing you to more easily support
+more database engines 
 </LI>
-<LI>La sección <I>Haml</I> en <A HREF="node765.html#chapter:haml">96</A>
+<LI>For instance, MS SQL Server and Oracle have
+different names on typical functions, and different ways to do
+calculations with dates.
+This difference can be put away from your
+logic code.
 </LI>
-<LI><A NAME="tex2html1284"
-  HREF="http://haml.info/tutorial.html">Haml tutorial</A>
+<LI>Additionally, you can focus on writing the logic, instead of getting all the SQL right.
 </LI>
-<LI><A NAME="tex2html1285"
-  HREF="https://devcenter.heroku.com/articles/rack">Deploying Rack-based Apps</A>
+<LI>The code will typically be more readable as well, since it doesn't
+contain all the plumbing necessary to talk to the database.
 </LI>
-<LI>Véase
-<A NAME="tex2html1286"
-  HREF="http://www.kabisa.nl/using-transactions-with-ruby-datamapper/">Using Transactions with Ruby DataMapper
-by Ludo van den Boom Geschreven 21-01-10</A>
-</LI>
-</UL>
+</OL>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html12189"
-  HREF="node520.html#SECTION031690010000000000000">Otros Requisitos</A>
-<LI><A NAME="tex2html12190"
-  HREF="node520.html#SECTION031690020000000000000">Véase</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12187"
+<A NAME="tex2html12263"
   HREF="node521.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12181"
-  HREF="node511.html">
+<A NAME="tex2html12257"
+  HREF="node519.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12175"
+<A NAME="tex2html12251"
   HREF="node519.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12183"
-  HREF="node832.html">
+<A NAME="tex2html12259"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12185"
-  HREF="node835.html">
+<A NAME="tex2html12261"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -327,20 +233,20 @@ by Ludo van den Boom Geschreven 21-01-10</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12188"
-  HREF="node521.html">Práctica: Estadísticas de Visitas</A>
-<B> Subir:</B> <A NAME="tex2html12182"
-  HREF="node511.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12176"
-  HREF="node519.html">Asociaciones Through</A>
- &nbsp; <B>  <A NAME="tex2html12184"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12186"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12264"
+  HREF="node521.html">Introducción al Patrón DataMapper</A>
+<B> Subir:</B> <A NAME="tex2html12258"
+  HREF="node519.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12252"
+  HREF="node519.html">DataMapper y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12260"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12262"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

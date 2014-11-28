@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Los Ficheros de Configuración</TITLE>
-<META NAME="description" CONTENT="Los Ficheros de Configuración">
+<TITLE>Claves Pública y Privada: Estableciendo Autentificación No Interactiva</TITLE>
+<META NAME="description" CONTENT="Claves Pública y Privada: Estableciendo Autentificación No Interactiva">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node664.html">
 <LINK REL="previous" HREF="node662.html">
-<LINK REL="up" HREF="node652.html">
+<LINK REL="up" HREF="node660.html">
 <LINK REL="next" HREF="node664.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14712"
+<A NAME="tex2html14789"
   HREF="node664.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14706"
-  HREF="node652.html">
+<A NAME="tex2html14783"
+  HREF="node660.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14700"
+<A NAME="tex2html14777"
   HREF="node662.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14708"
-  HREF="node832.html">
+<A NAME="tex2html14785"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14710"
-  HREF="node835.html">
+<A NAME="tex2html14787"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,322 +92,434 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14713"
-  HREF="node664.html">Copia Segura de un</A>
-<B> Subir:</B> <A NAME="tex2html14707"
-  HREF="node652.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14701"
-  HREF="node662.html">Depuración/Debugging</A>
- &nbsp; <B>  <A NAME="tex2html14709"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14711"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14790"
+  HREF="node664.html">El fichero authorized_keys</A>
+<B> Subir:</B> <A NAME="tex2html14784"
+  HREF="node660.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14778"
+  HREF="node662.html">Conexión SSH a Una</A>
+ &nbsp; <B>  <A NAME="tex2html14786"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14788"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION065110000000000000000">
-Los Ficheros de Configuración</A>
+<H1><A NAME="SECTION06530000000000000000"></A>
+<A NAME="subsection:automaticauthentication"></A>
+<BR>
+Claves Pública y Privada: Estableciendo Autentificación No Interactiva
 </H1>
 
 <P>
-En vez de llenar nuestra llamada a <code>ssh</code> de parámetros lo aconsejable
-es configurar la llamada en uno de los ficheros de configuración (<code>man ssh_config</code>).
-SSH consulta las opciones en el siguiente orden:
 
-<P>
-
-<OL>
-<LI>Línea de comandos
-</LI>
-<LI>Fichero de configuración del usuario <code>~/.ssh/config</code>
-	     Este fichero debe tener permisos de lectura/escritura para el usuario
-       y no ser accesible al resto. 
-</LI>
-<LI>Fichero de configuración global <code>/etc/ssh/ssh_config</code>
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION065110010000000000000">
-Estructura de un Fichero de Configuración</A>
+<H4><A NAME="SECTION06530010000000000000">
+ssh-keygen</A>
 </H4>
   
 
 <P>
-Para cada parámetro el primer valor encontrado será el utilizado. 
-Los ficheros de configuración contienen secciones. Cada sección comienza con una
-especificación de <code>Host</code>. Las especificaciones en esa sección sólo 
-se aplican a los máquinas (tal y como se especifico en la línea de comandos)
-que casen con el patrón especificado en  <TT>Host</TT> . Por ejemplo, si escribo en la
-línea de comandos:
+Recordemos como se establece una autentificación 
+por clave pública-privada.
+La generación de una pareja de claves pública-privada 
+se realiza ejecutando en el cliente <A NAME="tex2html1548"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-keygen"><TT>ssh-keygen</TT></A>:
 
 <P>
 <PRE>
-pp2@nereida:~/Lbook$ ssh rbeo
+$ ssh-keygen  -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/user/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/user/.ssh/id_rsa.
+Your public key has been saved in /home/user/.ssh/id_rsa.pub.
+The key fingerprint is:
+xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx user@machine
 </PRE>
 
 <P>
-Se buscará en mi fichero de configuración <code>~/.ssh/config</code> por una especificación
-<code>Host rbeo</code>. En efecto, en mi fichero existe una:
+En esta ocasión no indicamos passphrase. 
+
+<P>
+Las claves generadas por  <TT>ssh-keygen</TT>  
+se almacenan por defecto en <code>~/.ssh/</code>, 
+quedando el directorio así:
 
 <P>
 <PRE>
-...
-
-Host rbeo
-user otheruser
-Hostname localhost
-Port 2048
-IdentityFile /home/pp2/.ssh/ursu
-
-...
+$ ls -l
+total 12
+-rw-------  1 user user  883 2005-08-13 14:16 id_rsa
+-rw-r--r--  1 user user  223 2005-08-13 14:16 id_rsa.pub
+-rw-r--r--  1 user user 1344 2005-08-04 02:14 known_hosts
 </PRE>
 
 <P>
-La sección dice que opciones deben aplicarse cuando nos conectamos a <code>rbeo</code>:
+Los ficheros <code>id_rsa</code> e <code>id_rsa.pub</code> contienen respectivamente
+las claves privada y pública. El
+fichero <code>known_hosts</code> contiene
+la lista de las claves públicas de las máquinas
+reconocidas.
+
+<P>
+Estas son alguas de las opciones que admite <code>ssh-keygen</code>:
 
 <UL>
-<LI>La opción  <TT>user</TT>  indica que debo proporcionar como usuario <code>otheruser</code>
+<LI><code>-b 2048</code> establece el número de bits en la clave a 2048. Por defecto es 1024.
 </LI>
-<LI>La opción  <TT>Hostname</TT>  dice que el nombre auténtico de la máquina es <code>localhost</code>
+<LI><code>-f mykey</code> establece el nombre del fichero de clave: <code>mykey</code> y <code>mykey.pub</code>.
+Si se omite, pregunta
 </LI>
-<LI>La opción  <TT>Port</TT>  indica que nos debemos conectar via el puerto 2048
+<LI><code>-N passphrase</code> la passphrase a utilizar. Si se omite, pregunta
 </LI>
-<LI>La opción  <TT>IdentityFile</TT>  nos dice que debemos usar autentificación automática
-con fichero de identidad (que fué previamente generado con <code>ssh-keygen</code>)
-<code>/home/pp2/.ssh/ursu</code>
-</LI>
-</UL>
-
-<P>
-Las líneas que comienzan por el carácter <code>#</code> son tratadas como comentarios.
-Es posible añadir líneas en blanco para aumentar la legibilidad.
-
-<P>
-El resto de las líneas deben seguir el patrón 
-
-<P>
+<LI><code>-C comentario</code> el comentario a añadir en la correspondiente 
+línea de la clave pública. Si se omite es <code>username@host</code>:
 <PRE>
-PALABRACLAVE argumentos
+ssh-dss AAAAB3N... pepe@machinon
 </PRE>
-
-<P>
-
-<H4><A NAME="SECTION065110020000000000000">
-Palabras Clave</A>
-</H4>
-  
-
-<P>
-Algunas palabras clave importantes son:
-
-<P>
-
-<UL>
-<LI><TT>Host</TT>  Se pueden usar patrones como <code>*</code> y <code>?</code>. 
-     Define la sección. Si el nombre proveído en la línea de comandos 
-     casa con él las reglas de la sección serán aplicadas.
-
-<P>
 </LI>
-<LI><TT>BatchMode</TT> 
-Se desactivará la petición de <code>passphrase/password</code>.
-
-<P>
-Además las opciones  <TT>ServerAliveInterval</TT> <A NAME="tex2html1572"
-  HREF="footnode.html#foot26639"><SUP><SPAN CLASS="arabic">83</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> 
-y  <TT>SetupTimeOut</TT> <A NAME="tex2html1573"
-  HREF="footnode.html#foot26640"><SUP><SPAN CLASS="arabic">83</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> 
-se establecen a 300 segundos. Esta opción es útil cuando se usan 
-procesos por lotes o programas - por ejemplo cuando se usa <A NAME="tex2html1575"
-  HREF="http://search.cpan.org/perldoc?GRID::Machine"><TT>GRID::Machine</TT></A>
--
-en los que no hay un usuario presente para proporcionar
-una clave y es necesario detectar la caída de la red. El argumento 
-debe ser <code>yes</code> o <code>no</code>. El valor por defecto es <code>no</code>
-
-<P>
-</LI>
-<LI><TT>BindAddress</TT> 
-Se usa para especificar la dirección de la máquina local. Sólo es útil
-si la máquina dispone de mas de una dirección. Esta opción no funciona
-si  <TT>UsePrivilegedPort</TT> <A NAME="tex2html1574"
-  HREF="footnode.html#foot26641"><SUP><SPAN CLASS="arabic">83</SPAN>.<SPAN CLASS="arabic">3</SPAN></SUP></A>se pone a <code>yes</code>.
-
-<P>
-</LI>
-<LI><TT>Compression</TT>  y  <TT>CompressionLevel</TT> 
-
-<P>
-Si se establece la opción
-<TT>Compression</TT> se compactarán los datos según diga  <TT>CompressionLevel</TT>  (de 1 a 9)
-
-<P>
-</LI>
-<LI><TT>ConnectionAttempts</TT> 
-Especifica el número de intentos antes de abandonar. El argumento debe ser un número 
-(por defecto 1). Puede ser útil cuando se esta usando un
-procesado por lotes y la conexión falla a menudo.
-
-<P>
-</LI>
-<LI><TT>ConnectTimeout</TT> 
-Especifica el límite de tiempo (segundos) antes de abandonar
-cuando se conecta a un servidor <code>ssh</code>
-
-<P>
-</LI>
-<LI><TT>HostName</TT> 
-El nombre real del <code>host</code> al que entramos. Esto nos permite
-tener apodos y abreviaciones. El valor usado por defecto es el
-proveído en la línea de comandos. Se permite poner direciones IP
-numéricas.
-
-<P>
-</LI>
-<LI><TT>IdentityFile</TT> 
-Especifica el fichero conteniendo la identidad de autentificación (RSA o DSA)
-a ser usado. Por defecto toma el valor <code>~/.ssh/identity</code> para la versión 1
-del protocolo y <code>~/.ssh/id_rsa</code> y <code>~/.ssh/id_dsa</code> para la versión
-2. Si hay un agente cargado el agente intentará también las otras identidades.
-Es posible especificar múltiples identidades, las cuales serán intentadas
-en secuencia.
-
-<P>
-</LI>
-<LI><TT>NoHostAuthenticationForLocalhost</TT> 
-
-<P>
-Esta opción es conveniente cuando el directorio <code>home</code> 
-es compartido entre un conjunto de máquinas (via NFS por ejemplo).
-En ese caso  <TT>localhost</TT>  refiere a una máquina distinta
-en cada una de las máquinas del conjunto.
-En tal caso, las conexiones a <code>localhost</code>
-dan lugar a un buen número de warnings indicando
-que la clave ha cambiado. 
-
-<P>
-</LI>
-<LI><TT>Port</TT>  Especifica el número de puerto.
-
-<P>
-</LI>
-<LI><TT>ServerAliveInterval</TT> 
-Si después del intervalo especificado en segundos no 
-se obtiene respuesta alguna del servidor, se envía un mensaje
-al servidor para solicitar una respuesta del mismo.
-Por defecto es 0, indicando que estos mensajes no deben ser emitidos.
-
-<P>
-Es útil probar con esta opción si la conexión se desconecta después de un corto periodo
-de inactividad.
-Ciertos administradores configuran sus servidores
-de manera que responden muy tardíamente.
-Sigue un fragmento de mi configuración desde fuera de la Universidad:
+<LI>La opción <code>-p</code> puede ser usada para cambiar la passphrase de una determinada identidad:
+<PRE>
+pp2@europa:~/.ssh$ ssh-keygen -p -f id_dsa
+Key has comment 'id_dsa'
+Enter new passphrase (empty for no passphrase):
+</PRE>
+o bien:
 
 <P>
 <PRE>
-Host cardon
-user pepito
-Hostname cardon.ull.es
-ForwardX11 yes
-ServerAliveInterval=30
+ssh-keygen -p -f mykeyfile -P mysecretpassword -N mynewsecretpassword
 </PRE>
 
 <P>
 </LI>
-<LI><TT>ServerAliveCountMax</TT> 
-
-<P>
-Establece el número de mensajes <SPAN  CLASS="textbf">alive</SPAN> que
-pueden ser enviados por el cliente <code>ssh</code> sin que este reciba 
-respuesta desde el servidor. Si se supera este umbral el
-cliente abandona, finalizando la sesión. El valor por
-defecto es 3. (Sólo para el protocolo 2).
-
-<P>
-</LI>
-<LI><TT>TCPKeepAlive</TT> 
-
-<P>
-Especifica si se deben enviar mensajes TCP  <TT>keepalive</TT> 
-al otro lado. Si se envían se podrán detectar los fallos
-en las máquinas remotas. El valor por defecto es <code>yes</code>,
-de modo que el cliente se percate de la caída del remoto.
-
-<P>
-</LI>
-<LI><TT>User</TT>  El usuario
-
-<P>
-</LI>
-<LI><TT>UserKnownHostsFile</TT>  especifica un fichero alternativo
-a <code>~/.ssh/known_hosts</code> para las claves de máquinas
-
-<P>
+<LI>Es posible cambiar el comentario para una clave utilizando <code>-c</code>:
+<PRE>
+ssh-keygen -c -f mykeyfile -P mysecretpassword -C 'my new comment'
+</PRE>
 </LI>
 </UL>
 
 <P>
 
-<H4><A NAME="SECTION065110030000000000000">
-Ejemplo</A>
+<H4><A NAME="SECTION06530020000000000000">
+Computando la Huella de una Máquina</A>
 </H4>
   
 
 <P>
-Sigue un ejemplo de fichero de configuración de usuario:
+Es posible generar el  <TT>fingerprint</TT>  de una clave pública usando la opción <code>-l</code>:
+<PRE>
+$ ssh-keygen -l -f mykeyfile.pub
+</PRE>
+
+<P>
+Ya vimos que cuando nos conectabamos a un host por primera vez 
+via ssh obteníamos un mensaje como:
 
 <P>
 <PRE>
-pp2@nereida:~/.ssh$ cat -n config
- 1  # man  ssh_config
- 2
- 3  GSSAPIAuthentication no
- 4
- 5  Host somemachine
- 6  user myname
- 7  Hostname somemachine.pcg.ull.es
- 8  #ForwardX11 yes
- 9
-10  Host ursu
-11  user otheruser
-12  Hostname somemachine.pcg.ull.es
-13  IdentityFile /home/pp2/.ssh/ursu
-14  #ForwardX11 yes
-15
-16  Host chazam chazam.pcg.ull.es chazam.deioc.ull.es chum
-17  user myname
-18  # The real name of the machine
-19  Hostname chazam.pcg.ull.es
-20
-21  # Example to be used when connecting via reverse tunneling
-22  # myname@somemachine:~$ ssh -R2048:localhost:22 pp2@nereida
-23  # Logic name for the machine
-24  Host rbeo
-25  # user in the remote machine
-26  user otheruser
-27  # The 'real name' of the machine after the tunnel
-28  Hostname localhost
-29  # Port to connect to
-30  Port 2048
-31  IdentityFile /home/pp2/.ssh/ursu
+teide:~$ ssh teide
+The authenticity of host 'teide (134.2.14.48)' can't be established.
+RSA key fingerprint is 9e:1a:5e:27:16:4d:2a:13:90:2c:64:41:bd:25:fd:35.
+Are you sure you want to continue connecting (yes/no)?
+</PRE>
+
+<P>
+Normalmente respondemos <code>yes</code> y entramos nuestra clave.
+¿Cómo podemos comprobar que el fingerprint es auténtico?
+
+<P>
+¿Donde están los ficheros de claves del servidor?
+Normalmente en el directorio <code>/etc/ssh/</code>.
+
+<P>
+<PRE>
+teide:~$ ls /etc/ssh/*key*
+/etc/ssh/ssh_host_dsa_key      /etc/ssh/ssh_host_key.pub
+/etc/ssh/ssh_host_dsa_key.pub  /etc/ssh/ssh_host_rsa_key
+/etc/ssh/ssh_host_key          /etc/ssh/ssh_host_rsa_key.pub
+</PRE>
+
+<P>
+Este servidor tiene tres claves.
+Sólo el root puede leer las privadas, 
+pero las públicas tienen permisos de lectura.
+En el mensaje anterior, el cliente <code>ssh</code>
+muestra el fingerprint esperado.
+Podemos obtenerlo con:
+
+<P>
+<PRE>
+teide:~$ ssh-keygen -lf /etc/ssh/ssh_host_rsa_key.pub 
+2048 9e:1a:5e:27:16:4d:2a:13:90:2c:64:41:bd:25:fd:35 /etc/ssh/ssh_host_rsa_key.pub
+</PRE>
+
+<P>
+El primer número (2048) es la longitud en
+bits de la clave. El segundo <code>9e:1a:...:fd:35</code>
+es la huella, el último <code>/etc/ssh/ssh_host_rsa_key.pub</code> 
+es el nombre del fichero con la clave pública.
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Este método es inseguro. ¿Por qué?
+</I>
+<P>
+<I>El método seguro es contactar al administrador para obtener la huella
+(se supone que el administrador la guardó en lugar seguro) en vez de
+utilizar un canal que pueda estar comprometido.</I></DIV><P></P>
+
+<P>
+
+<H4><A NAME="SECTION06530030000000000000">
+ssh-copy-id</A>
+</H4>
+  
+
+<P>
+Ahora se debe copiar la clave pública al servidor, 
+al fichero <code>~/.ssh/authorized_keys</code>. 
+El fichero <A NAME="tex2html1549"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?authorized_keys"><TT>authorized_keys</TT></A>
+es el fichero que contiene las claves públicas utilizadas durante el proceso
+de autentificación pública.
+
+<P>
+Para la copia se utiliza el comando <A NAME="tex2html1550"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-copy-id"><TT>ssh-copy-id</TT></A>:
+
+<P>
+<PRE>
+$ssh-copy-id -i ~/.ssh/id_rsa.pub user@machine1
+$ssh-copy-id -i ~/.ssh/id_rsa.pub user@machine2
+</PRE>
+
+<P>
+ <TT>ssh-copy-id</TT>  es un script que se conecta a la máquina 
+y copia el archivo (indicado por la opción <code>-i</code>) en 
+<code>~/.ssh/authorized_keys</code>, y ajusta los permisos de forma adecuada:
+
+<UL>
+<LI>El home del usuario en la máquina remota
+</LI>
+<LI>El directorio <code>~/.ssh</code>
+</LI>
+<LI>El fichero <code>~/.ssh/authorized_keys</code>
+</LI>
+</UL>
+Una configuración de permisos inadecuada puede 
+prevenir que podamos acceder a la máquina,
+sobre todo si la configuración del servicio SSH tiene 
+activado <code>StrictModes</code> (que suele ser la opción por
+defecto):
+
+<P>
+<PRE>
+root@server:/etc/ssh# grep -i strictmode *
+sshd_config:StrictModes yes
+</PRE>
+
+<P>
+Si se desea publicar la clave en un cierto número de máquinas que comparten
+la misma clave es posible (pero no recomendable) hacerlo
+usando el programa <A NAME="tex2html1551"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=sshpass"><TT>sshpass</TT></A>
+con un comando como este:
+
+<P>
+<PRE>
+$ for i in host1 host2 ... hostN; do sshpass -pmipassword ssh-copy-id -i .ssh/identity $i; done
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION065110040000000000000">
-El fichero <TT>rc</TT></A>
+<H4><A NAME="SECTION06530040000000000000">
+Copia Manual</A>
 </H4>
   
 
 <P>
-Cada vez que ocurre una conexión SSH el servidor ejecuta el script
-en <code>/etc/sshrc</code>. Si existe un fichero <code>~/.ssh/rc</code> (SSH1, OpenSSH) o <code>~/.ssh2/rc</code> (SSH2),
-será invocado. Su presencia inhibe la ejecución de <code>/etc/sshrc</code>.
-Se ejecuta tanto si la sesión es interactiva como si es un comando.
+Si no se dispone del programa <code>ssh-copy-id</code> se puede realizar una
+copia manual a la máquina remota del fichero conteniendo la clave 
+pública (por ejemplo usando <A NAME="tex2html1552"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?scp"><TT>scp</TT></A>
+o <A NAME="tex2html1553"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sftp"><TT>sftp</TT></A>)
+y añadir su contenido al fichero <code>~/.ssh/authorized_keys</code>.
+
+<P>
+En la máquina servidor añadimos una línea en el fichero
+<code>~/.ssh/authorized_keys</code> que contiene exactamente la única 
+línea que estaba en el fichero en el que se guardó la clave pública
+(<code>id_rsa.pub</code> o <code>filename.pub</code> o como se llamara).
+Después de eso el fichero <code>.ssh/authorized_keys</code> tendría
+una línea parecida a esta:
+<PRE>
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAybmcqaU/Xos/GhYCzkV+kDsK8+A5OjaK
+5WgLMqmu38aPo56Od10RQ3EiB42DjRVY8trXS1NH4jbURQPERr2LHCCYq6tHJYfJNhUX
+/COwHs+ozNPE83CYDhK4AhabahnltFE5ZbefwXW4FoKOO+n8AdDfSXOazpPas8jXi5bE
+wNf7heZT++a/Qxbu9JHF1huThuDuxOtIWl07G+tKqzggFVknM5CoJCFxaik91lNGgu2O
+TKfY94c/ieETOXE5L+fVrbtOh7DTFMjIYAWNxy4tlMR/59UVw5dapAxH9J2lZglkj0w0
+LwFI+7hZu9XvNfMKMKg+ERAz9XHYH3608RL1RQ== Este comentario describe la
+clave
+</PRE>
+
+<P>
+excepto que he descompuesto la línea en varias líneas para hacerla
+mas legible. 
+
+<P>
+La forma usual de completar el proceso 
+requeriría de dos autentificaciones: 
+una para la copia con <code>scp</code>
+y otra para añadir la identidad
+en el fichero <code>.ssh/authorized_keys</code> y asegurarse de
+los permisos.
+
+<P>
+Una forma de realizar el proceso con una sola autentificación
+es la siguiente:
+<PRE>
+europa:~/.ssh$ cat prueba.pub | \
+  ssh nereida "umask u=rwx,g=,o=; test -d .ssh || mkdir .ssh ; cat &gt;&gt; .ssh/authorized_keys"
+</PRE>
+
+<P>
+La máscara por defecto <code>umask u=rwx,g=,o=</code>
+se ha establecido de manera que los ficheros
+creados tengan permisos <code>rw-------</code> y los
+nuevos directorios tengan permisos <code>rwx-----</code> (véase la entrada de <A NAME="tex2html1554"
+  HREF="http://en.wikipedia.org/wiki/Umask">umask</A>
+en la Wikipedia).
+
+<P>
+
+<H4><A NAME="SECTION06530050000000000000">
+Conexión sin Clave</A>
+</H4>
+  
+
+<P>
+Ahora la conexión debería funcionar sin necesidad de introducir la
+clave. 
+<PRE>
+   ssh -i ~/.ssh/filename remotehost
+</PRE>
+o bien:
+<PRE>
+   slogin -i ~/.ssh/filename remotehost
+</PRE>
+Una vez que se ha establecido un esquema de autentificación
+automática es trivial ejecutar un comando en la máquina 
+remota:
+
+<P>
+<PRE>
+pp2@nereida:/tmp$ ssh remotename@machine uname -a
+Linux machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06530060000000000000">
+Permisos en <TT>.ssh</TT></A>
+</H4>
+  
+
+<P>
+Si no funciona es posible que sea un problema de permisos
+en los ficheros. Los permisos correctos deben ser similares a estos:
+
+<P>
+<PRE>
+    $ chmod go-w $HOME $HOME/.ssh
+    $ chmod 600 $HOME/.ssh/authorized_keys
+</PRE>
+
+<P>
+Inténtelo de nuevo usando la opción <code>-v</code> de <code>ssh</code>:
+
+<P>
+<PRE>
+pp2@nereida:/tmp$ ssh -v -v remotename@machine uname -a
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06530070000000000000">
+Véase también</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1555"
+  HREF="http://www.openssh.com/faq.html">OpenSSH FAQ (Frequently asked questions)</A>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION06530080000000000000">
+Ejercicios</A>
+</H4>
+  
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">2</SPAN></B> &nbsp; 
+<I>Cree una identidad y transfierala manualmente.</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">3</SPAN></B> &nbsp; 
+<I>Cámbiele la passphrase a una identidad</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">4</SPAN></B> &nbsp; 
+<I>Cámbiele el comentario a una identidad</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">5</SPAN></B> &nbsp; 
+<I>Copie el fichero de clave privada de su cuenta de usuario <code>u1</code> 
+en <code>m1</code> a otra cuenta <code>u2</code> en la máquina <code>m1</code>.
+Intente ahora conectarse siendo el usuario <code>u2</code> de <code>m1</code>
+a la máquina <code>rm</code> en la que situó la clave pública como usuario <code>ru</code>:
+</I>
+<P><PRE>
+u2@m1:~/$ ssh ru@rm
+</PRE>
+<P>
+<I>¿Sigue funcionando la autentificación automática?</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">6</SPAN></B> &nbsp; 
+<I>Copie ahora el fichero de clave privada de su cuenta de usuario <code>u1</code> en <code>m1</code>
+a otra cuenta <code>w1</code> en una máquina distinta <code>mw</code>.
+Conéctese desde <code>mw</code> a <code>rm</code> en la que situó la clave pública como usuario <code>ru</code>:
+</I><PRE>
+mw@w1:~/$ ssh ru@rm
+</PRE><I>
+¿Funciona? ¿Como afectan los resultados a su percepción de la seguridad de las comunicaciones
+con <code>ssh</code>?</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">3</SPAN>.<SPAN CLASS="arabic">7</SPAN></B> &nbsp; 
+<I>Considere una intranet en la que su <code>HOME</code> de usuario esta en un sistema de archivos
+compartido. Genere (si no la ha echo ya) su pareja de claves privada y pública.
+Publique la clave usando <code>$ssh-copy-id</code> o bien - si <code>$ssh-copy-id</code> no está
+disponible - copiando la clave pública en
+el fichero <code>authorized_keys</code>. ¿Se obtiene autorización automática entre 
+dos máquinas cualesquiera de la red?</I></DIV><P></P>
 
 <P>
 <BR><HR>
@@ -417,33 +529,41 @@ Se ejecuta tanto si la sesión es interactiva como si es un comando.
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html14714"
-  HREF="node663.html#SECTION065110010000000000000">Estructura de un Fichero de Configuración</A>
-<LI><A NAME="tex2html14715"
-  HREF="node663.html#SECTION065110020000000000000">Palabras Clave</A>
-<LI><A NAME="tex2html14716"
-  HREF="node663.html#SECTION065110030000000000000">Ejemplo</A>
-<LI><A NAME="tex2html14717"
-  HREF="node663.html#SECTION065110040000000000000">El fichero <TT>rc</TT></A>
+<LI><A NAME="tex2html14791"
+  HREF="node663.html#SECTION06530010000000000000">ssh-keygen</A>
+<LI><A NAME="tex2html14792"
+  HREF="node663.html#SECTION06530020000000000000">Computando la Huella de una Máquina</A>
+<LI><A NAME="tex2html14793"
+  HREF="node663.html#SECTION06530030000000000000">ssh-copy-id</A>
+<LI><A NAME="tex2html14794"
+  HREF="node663.html#SECTION06530040000000000000">Copia Manual</A>
+<LI><A NAME="tex2html14795"
+  HREF="node663.html#SECTION06530050000000000000">Conexión sin Clave</A>
+<LI><A NAME="tex2html14796"
+  HREF="node663.html#SECTION06530060000000000000">Permisos en <TT>.ssh</TT></A>
+<LI><A NAME="tex2html14797"
+  HREF="node663.html#SECTION06530070000000000000">Véase también</A>
+<LI><A NAME="tex2html14798"
+  HREF="node663.html#SECTION06530080000000000000">Ejercicios</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14712"
+<A NAME="tex2html14789"
   HREF="node664.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14706"
-  HREF="node652.html">
+<A NAME="tex2html14783"
+  HREF="node660.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14700"
+<A NAME="tex2html14777"
   HREF="node662.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14708"
-  HREF="node832.html">
+<A NAME="tex2html14785"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14710"
-  HREF="node835.html">
+<A NAME="tex2html14787"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -494,20 +614,20 @@ Se ejecuta tanto si la sesión es interactiva como si es un comando.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14713"
-  HREF="node664.html">Copia Segura de un</A>
-<B> Subir:</B> <A NAME="tex2html14707"
-  HREF="node652.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html14701"
-  HREF="node662.html">Depuración/Debugging</A>
- &nbsp; <B>  <A NAME="tex2html14709"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14711"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14790"
+  HREF="node664.html">El fichero authorized_keys</A>
+<B> Subir:</B> <A NAME="tex2html14784"
+  HREF="node660.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14778"
+  HREF="node662.html">Conexión SSH a Una</A>
+ &nbsp; <B>  <A NAME="tex2html14786"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14788"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Primeros Pasos</TITLE>
-<META NAME="description" CONTENT="Primeros Pasos">
+<TITLE>Pruebas Unitarias</TITLE>
+<META NAME="description" CONTENT="Pruebas Unitarias">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node414.html">
-<LINK REL="previous" HREF="node359.html">
-<LINK REL="up" HREF="node358.html">
+<LINK REL="next" HREF="node411.html">
+<LINK REL="previous" HREF="node409.html">
+<LINK REL="up" HREF="node409.html">
 <LINK REL="next" HREF="node411.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10262"
+<A NAME="tex2html10362"
   HREF="node411.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10256"
-  HREF="node358.html">
+<A NAME="tex2html10356"
+  HREF="node409.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10250"
+<A NAME="tex2html10350"
   HREF="node409.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10258"
-  HREF="node832.html">
+<A NAME="tex2html10358"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10260"
-  HREF="node835.html">
+<A NAME="tex2html10360"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,41 +92,321 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10263"
-  HREF="node411.html">Introducción</A>
-<B> Subir:</B> <A NAME="tex2html10257"
-  HREF="node358.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html10251"
-  HREF="node409.html">Véase También</A>
- &nbsp; <B>  <A NAME="tex2html10259"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10261"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10363"
+  HREF="node411.html">Rspec con Rack</A>
+<B> Subir:</B> <A NAME="tex2html10357"
+  HREF="node409.html">Pruebas/Testing</A>
+<B> Anterior:</B> <A NAME="tex2html10351"
+  HREF="node409.html">Pruebas/Testing</A>
+ &nbsp; <B>  <A NAME="tex2html10359"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10361"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03200000000000000000">
-Primeros Pasos</A>
-</H1>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<H2><A NAME="SECTION031271000000000000000"></A>
+<A NAME="subsectionpruebasunitarias"></A>
+<BR>
+Pruebas Unitarias
+</H2>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html10264"
-  HREF="node411.html">Introducción</A>
-<UL>
-<LI><A NAME="tex2html10265"
-  HREF="node412.html">Referencias sobre Sinatra</A>
-<LI><A NAME="tex2html10266"
-  HREF="node413.html">Ejercicio: Instale la Documentación en sinatra.github.com</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+<P>
+
+<OL>
+<LI>Los fuentes de este ejemplo están en
+<A NAME="tex2html992"
+  HREF="https://github.com/crguezl/rack-unit-test">https://github.com/crguezl/rack-unit-test</A>
+</LI>
+<LI>Fuentes en GitHub de Rack::Test:
+<A NAME="tex2html993"
+  HREF="https://github.com/brynary/rack-test">https://github.com/brynary/rack-test</A>
+</LI>
+</OL>
+
+<P>
+<PRE>
+[~/rack/rack-unit-test(master)]$ cat rack_hello_world.rb 
+# my_app.rb
+#
+require 'rack'
+
+class MyApp
+  def call env
+    [200, {"Content-Type" =&gt; "text/html"}, ["Hello"]] 
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+[~/rack/rack-unit-test(master)]$ cat test_hello_world.rb 
+require "test/unit"
+require "rack/test"
+require './rack_hello_world'
+
+class AppTest &lt; Test::Unit::TestCase
+  include Rack::Test::Methods
+
+  def app
+    Rack::Builder.new do
+      run MyApp.new
+    end.to_app
+  end
+
+  def test_index
+    get "/"
+    #puts last_response.inspect
+    assert last_response.ok?
+  end
+
+  def test_body
+    get "/"
+    assert_equal last_response.body,  'Hello', "body must be hello"
+  end
+end
+</PRE>
+
+<OL>
+<LI>The 
+<A NAME="tex2html994"
+  HREF="http://rdoc.info/github/brynary/rack-test/master/Rack/Test/Methods">Rack::Test::Methods</A>
+module serves as the primary integration point for using
+<code>Rack::Test</code> in a testing environment. 
+
+<P>
+It depends on an <code>app</code> method
+being defined in the same context, 
+<PRE>
+  def app
+    Rack::Builder.new do
+      run MyApp.new
+    end.to_app
+  end
+</PRE>
+
+<P>
+and provides the <code>Rack::Test</code> API
+methods (see 
+<A NAME="tex2html995"
+  HREF="http://rubydoc.info/github/brynary/rack-test/Rack/Test/Session">Rack::Test::Session</A>
+for their documentation).
+</LI>
+<LI>The <code>get</code> method issue a <code>GET</code> request for the given URI.
+Stores the issues request object in <code>#last_request</code> and the app's response in 
+<code>#last_response</code> (whose class is 
+<A NAME="tex2html996"
+  HREF="http://rack.rubyforge.org/doc/Rack/MockResponse.html">Rack::MockResponse</A>) . 
+
+<P>
+Yield <code>#last_response</code> to a block if given.
+<PRE>
+  def test_index
+    get "/"
+    assert last_response.ok?
+  end
+</PRE>
+
+<P>
+</LI>
+<LI>Otros métodos que se pueden usar son:
+
+<OL>
+<LI><code>(Object) basic_authorize(username, password) (also: #authorize)</code>
+Set the username and password for <code>HTTP</code> Basic authorization, to be included in subsequent requests in the <code>HTTP_AUTHORIZATION</code> header.
+</LI>
+<LI><code>(Object) delete(uri, params = {}, env = {}, &amp;block)</code>
+Issue a <code>DELETE</code> request for the given URI.
+</LI>
+<LI><code>(Object) digest_authorize(username, password)</code>
+Set the username and password for <code>HTTP</code> Digest authorization, to be included in subsequent requests in the <code>HTTP_AUTHORIZATION</code> header.
+</LI>
+<LI><code>(Object) env(name, value)</code>
+Set an env var to be included on all subsequent requests through the session.
+</LI>
+<LI><code>(Object) follow_redirect!</code>
+Rack::Test will not follow any redirects automatically.
+</LI>
+<LI><code>(Object) get(uri, params = {}, env = {}, &amp;block)</code>
+Issue a <code>GET</code> request for the given <code>URI</code> with the given params and Rack environment.
+</LI>
+<LI><code>(Object) head(uri, params = {}, env = {}, &amp;block)</code>
+Issue a <code>HEAD</code> request for the given URI.
+</LI>
+<LI><code>(Object) header(name, value)</code>
+Set a header to be included on all subsequent requests through the session.
+</LI>
+<LI><code>(Session) initialize(mock_session) constructor</code>
+Creates a Rack::Test::Session for a given Rack app or Rack::MockSession.
+</LI>
+<LI><code>(Object) options(uri, params = {}, env = {}, &amp;block)</code>
+Issue an <code>OPTIONS</code> request for the given URI.
+</LI>
+<LI><code>(Object) patch(uri, params = {}, env = {}, &amp;block)</code>
+Issue a <code>PATCH</code> request for the given URI.
+</LI>
+<LI><code>(Object) post(uri, params = {}, env = {}, &amp;block)</code>
+Issue a <code>POST</code> request for the given URI.
+</LI>
+<LI><code>(Object) put(uri, params = {}, env = {}, &amp;block)</code>
+Issue a <code>PUT</code> request for the given URI.
+</LI>
+<LI><code>(Object) request(uri, env = {}, &amp;block)</code>
+Issue a request to the Rack app for the given <code>URI</code> and optional Rack environment.
+</LI>
+</OL>
+
+<P>
+</LI>
+<LI>The <code>#last_response</code> object has methods:
+<PRE>
+          =~(other) body() empty?() match(other)
+</PRE>
+and attributes:
+<PRE>
+errors          [RW]
+original_headers[R]
+Headers
+</PRE>
+</LI>
+<LI>Si se usan middleware adicionales es necesario especificarlo 
+en <code>app</code>:
+<PRE>
+  def app 
+    Rack::Builder.new do
+      use(Rack::Session::Cookie, {:key =&gt; 'rack session',·
+                                  #:domain =&gt; 'localhost',
+                                  #:path =&gt; '/', #:expire_after =&gt; 2592000,·
+                                  :secret =&gt; 'change_me'})
+      run RockPaperScissors::App.new
+    end.to_app
+  end
+</PRE>
+</LI>
+<LI>El método 
+<code>last_response.body</code>
+returns the last response received in the session. Raises an error
+if no requests have been sent yet.
+</LI>
+</OL>
+
+<P>
+<PRE>
+[~/rack/rack-unit-test(master)]$ cat Rakefile 
+task :default =&gt; :test
+desc "run the tests"
+task :test do
+  sh "ruby test_hello_world.rb"
+end
+</PRE>
+
+<P>
+<PRE>
+[~/rack/rack-unit-test(master)]$ cat Gemfile
+source 'https://rubygems.org'
+
+gem 'rack'
+gem 'rack-test'
+</PRE>
+
+<P>
+<PRE>
+[~/rack/rack-unit-test(master)]$ rake
+ruby test_hello_world.rb
+Run options: 
+
+# Running tests:
+
+..
+
+Finished tests in 0.015253s, 131.1217 tests/s, 131.1217 assertions/s.
+
+2 tests, 2 assertions, 0 failures, 0 errors, 0 skips
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10362"
+  HREF="node411.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10356"
+  HREF="node409.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10350"
+  HREF="node409.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html10358"
+  HREF="node840.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html10360"
+  HREF="node843.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html10363"
+  HREF="node411.html">Rspec con Rack</A>
+<B> Subir:</B> <A NAME="tex2html10357"
+  HREF="node409.html">Pruebas/Testing</A>
+<B> Anterior:</B> <A NAME="tex2html10351"
+  HREF="node409.html">Pruebas/Testing</A>
+ &nbsp; <B>  <A NAME="tex2html10359"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10361"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

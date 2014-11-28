@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Pasando variables a la vista explícitamente via un hash</TITLE>
-<META NAME="description" CONTENT="Pasando variables a la vista explícitamente via un hash">
+<TITLE>Verbos HTTP en Sinatra/Base</TITLE>
+<META NAME="description" CONTENT="Verbos HTTP en Sinatra/Base">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node426.html">
 <LINK REL="previous" HREF="node424.html">
-<LINK REL="up" HREF="node419.html">
+<LINK REL="up" HREF="node424.html">
 <LINK REL="next" HREF="node426.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10576"
+<A NAME="tex2html10672"
   HREF="node426.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10570"
-  HREF="node419.html">
+<A NAME="tex2html10666"
+  HREF="node424.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10564"
+<A NAME="tex2html10662"
   HREF="node424.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10572"
-  HREF="node832.html">
+<A NAME="tex2html10668"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10574"
-  HREF="node835.html">
+<A NAME="tex2html10670"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,162 +91,69 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10577"
-  HREF="node426.html">Opciones pasadas a los</A>
-<B> Subir:</B> <A NAME="tex2html10571"
-  HREF="node419.html">Vistas</A>
-<B> Anterior:</B> <A NAME="tex2html10565"
-  HREF="node424.html">Variables en las Vistas</A>
- &nbsp; <B>  <A NAME="tex2html10573"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10575"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10673"
+  HREF="node426.html">Ficheros Estáticos</A>
+<B> Subir:</B> <A NAME="tex2html10667"
+  HREF="node424.html">Rutas/Routes</A>
+<B> Anterior:</B> <A NAME="tex2html10663"
+  HREF="node424.html">Rutas/Routes</A>
+ &nbsp; <B>  <A NAME="tex2html10669"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10671"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03346000000000000000">
-Pasando variables a la vista explícitamente via un hash</A>
+<H2><A NAME="SECTION03321000000000000000">
+Verbos HTTP en Sinatra/Base</A>
 </H2>
 
 <P>
-También es posible pasar en la llamada un hash especificando 
-las variables locales:
+<A NAME="tex2html1039"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L1351">Método <TT>get</TT></A>
 <PRE>
-get '/:id' do
-  foo = Foo.find(params[:id])
-  haml '%h1= bar.name', :locals =&gt; { :bar =&gt; foo }
-end
-</PRE>
-This is typically used when rendering templates as partials from within other templates.
+      def get(path, opts = {}, &amp;block)
+        conditions = @conditions.dup
+        route('GET', path, opts, &amp;block)
 
-<P>
-Veamos un ejemplo:
-
-<P>
-<PRE>
-$ ls
-Rakefile    config.ru   via_hash.rb views
+        @conditions = conditions
+        route('HEAD', path, opts, &amp;block)
+      end
 </PRE>
 
 <P>
 <PRE>
-$ cat via_hash.rb
-require 'sinatra/base'
-
-class App &lt; Sinatra::Base
-  get '/*' do |name|
-    def some_template
-       &lt;&lt;-'ERBTEMP'
-&lt;ul&gt;&lt;% name.each do |item| %&gt;
-      &lt;li&gt; &lt;i&gt; &lt;%= item %&gt; &lt;/i&gt; &lt;/li&gt;
-    &lt;% end %&gt;
-&lt;/ul&gt;
-ERBTEMP
-    end # method some_template
-
-    puts "*---***#{name}*---****"
-    erb some_template, :locals =&gt; { :name =&gt; name.split('/')}
-  end
-end
+      def put(path, opts = {}, &amp;bk)     route 'PUT',     path, opts, &amp;bk end
+      def post(path, opts = {}, &amp;bk)    route 'POST',    path, opts, &amp;bk end
+      def delete(path, opts = {}, &amp;bk)  route 'DELETE',  path, opts, &amp;bk end
+      def head(path, opts = {}, &amp;bk)    route 'HEAD',    path, opts, &amp;bk end
+      def options(path, opts = {}, &amp;bk) route 'OPTIONS', path, opts, &amp;bk end
+      def patch(path, opts = {}, &amp;bk)   route 'PATCH',   path, opts, &amp;bk end
+      def link(path, opts = {}, &amp;bk)    route 'LINK',    path, opts, &amp;bk end
+      def unlink(path, opts = {}, &amp;bk)  route 'UNLINK',  path, opts, &amp;bk end
 </PRE>
 
 <P>
+<A NAME="tex2html1040"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L1563">Método <TT>route</TT></A>
 <PRE>
-$ cat views/layout.erb 
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-        &lt;title&gt;Sinatra&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Accesing variables in templates via a parameter hash&lt;/h1&gt;
-    &lt;%= yield %&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</PRE>
-
-<P>
-<PRE>
-$ cat config.ru 
-require './via_hash'
-
-run App
-</PRE>
-
-<P>
-<PRE>
-$ cat Rakefile task :default =&gt; :server
-
-desc "run server"
-task :server do
-  sh "rackup"
-end
-
-desc "make a get /juan/leon/hernandez request via curl"
-task :client do
-  sh "curl -v localhost:9292/juan/leon/hernandez"
-end
-</PRE>
-
-<P>
-<PRE>
-$ rake serverrackup
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-*---***juan/leon/hernandez*---****
-127.0.0.1 - - [05/Jul/2013 17:50:20] "GET /juan/leon/hernandez HTTP/1.1" 200 290 0.0352
-</PRE>
-
-<P>
-<PRE>
-$ rake client
-curl -v localhost:9292/juan/leon/hernandez
-* About to connect() to localhost port 9292 (#0)
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET /juan/leon/hernandez HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8x zlib/1.2.5
-&gt; Host: localhost:9292
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html;charset=utf-8
-&lt; Content-Length: 290
-&lt; X-XSS-Protection: 1; mode=block
-&lt; X-Content-Type-Options: nosniff
-&lt; X-Frame-Options: SAMEORIGIN
-&lt; Connection: keep-alive
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-        &lt;title&gt;Sinatra&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Accesing variables in templates via a parameter hash&lt;/h1&gt;
-    &lt;ul&gt;
-      &lt;li&gt; &lt;i&gt; juan &lt;/i&gt; &lt;/li&gt;
-    
-      &lt;li&gt; &lt;i&gt; leon &lt;/i&gt; &lt;/li&gt;
-    
-      &lt;li&gt; &lt;i&gt; hernandez &lt;/i&gt; &lt;/li&gt;
-    
-&lt;/ul&gt;
-
-  &lt;/body&gt;
-&lt;/html&gt;
-* Connection #0 to host localhost left intact
-* Closing connection #0
+      def route(verb, path, options = {}, &amp;block)
+        # Because of self.options.host
+        host_name(options.delete(:host)) if options.key?(:host)
+        enable :empty_path_info if path == "" and empty_path_info.nil?
+        signature = compile!(verb, path, block, options)
+        (@routes[verb] ||= []) &lt;&lt; signature
+        invoke_hook(:route_added, verb, path, block)
+        signature
+      end
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

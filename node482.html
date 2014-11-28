@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Chat con TicTacToe</TITLE>
-<META NAME="description" CONTENT="Práctica: Chat con TicTacToe">
+<TITLE>Streaming y EventSource</TITLE>
+<META NAME="description" CONTENT="Streaming y EventSource">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node483.html">
 <LINK REL="previous" HREF="node481.html">
-<LINK REL="up" HREF="node468.html">
+<LINK REL="up" HREF="node476.html">
 <LINK REL="next" HREF="node483.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11509"
+<A NAME="tex2html11606"
   HREF="node483.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11503"
-  HREF="node468.html">
+<A NAME="tex2html11600"
+  HREF="node476.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11497"
+<A NAME="tex2html11594"
   HREF="node481.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11505"
-  HREF="node832.html">
+<A NAME="tex2html11602"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11507"
-  HREF="node835.html">
+<A NAME="tex2html11604"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,70 +92,260 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11510"
-  HREF="node483.html">Embedding Sinatra within EventMachine</A>
-<B> Subir:</B> <A NAME="tex2html11504"
-  HREF="node468.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11498"
-  HREF="node481.html">Práctica: Chat con Estilo</A>
- &nbsp; <B>  <A NAME="tex2html11506"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11508"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11607"
+  HREF="node483.html">Comet</A>
+<B> Subir:</B> <A NAME="tex2html11601"
+  HREF="node476.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11595"
+  HREF="node481.html">A simple demonstration of</A>
+ &nbsp; <B>  <A NAME="tex2html11603"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11605"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION038120000000000000000"></A>
-   <A NAME="20647"></A>
-<BR>
-Práctica: Chat con TicTacToe
+<H1><A NAME="SECTION03860000000000000000">
+Streaming y EventSource</A>
 </H1>
+
+<P>
+
+<H4><A NAME="SECTION03860010000000000000">
+Server-Sent Events</A>
+</H4>
   
-Modifique la práctica anterior añadiendo un nuevo contenedor en la vista 
-con el tablero del tictactoe.
+
+<P>
+The 
+<A NAME="tex2html1152"
+  HREF="http://www.w3.org/TR/2009/WD-eventsource-20091029/">Server-Sent Events draft standard</A>
+defines an <code>EventSource</code> object
+that makes <A NAME="21205"></A><SPAN  CLASS="textbf">Comet applications</SPAN><A NAME="tex2html1151"
+  HREF="footnode.html#foot20760"><SUP><SPAN CLASS="arabic">38</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A> trivial to write. 
+
+<P>
+Simply pass a URL to
+the <code>EventSource()</code> 
+constructor and then listen for message events on the
+returned object:
+
+<P>
+<PRE>
+var ticker = new EventSource("/stockprices"); 
+ticker.onmessage = function(e) {
+  var type = e.type; 
+  var data = e.data;
+
+  // Now process the event type and event data strings. 
+}
+</PRE>
+
+<P>
+
+<UL>
+<LI>The event object associated with a message event has a <code>data</code> 
+property
+that holds whatever string the server sent as the payload for this
+event. 
+
+<P>
+</LI>
+<LI>The event object also has a <code>type</code> property like all event objects
+do. The default value is <code>message</code>, 
+but the event source can specify
+a different string for the property. 
+
+<P>
+</LI>
+<LI>A single <code>onmessage</code> event handler
+receives all events from a given server event source, and can dispatch
+them, if necessary, based on their <code>type</code> property.
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION03860020000000000000">
+The Server-Sent Event protocol</A>
+</H4>
+  
+
+<P>
+The <A NAME="21211"></A><SPAN  CLASS="textbf">Server-Sent Event</SPAN> protocol is straightforward:
 
 <P>
 
 <OL>
-<LI>Los usuarios tiene dos estados <code>jugando</code> (en rojo)
-o libres (en <code>verde</code>).
+<LI>The client initiates a connection to the server 
+(when it creates the <code>EventSource</code> object) 
+and the 
+<FONT COLOR="#0000ff"> server keeps this connection open</FONT>. 
 
 <P>
 </LI>
-<LI>Al cliquear en un usuario libre elegimos jugar con él. 
-Se le mostrará a este la opción de aceptar o rechazar
-la oferta. 
+<LI>When an event occurs, the server writes lines of text to the connection. 
 
 <P>
 </LI>
-<LI>Si acepta se comenzará con el juego a dos del tictactoe
-actualizando el estado de estos usuarios.
+<LI>An event going over the wire might look like this:
+<PRE>
+event: bid    # sets the type of the event object
+data: GOOG    # sets the data property
+data: 999     # appends a newline and more data
+              # a blank line triggers the message event
+</PRE>
 
 <P>
 </LI>
-<LI>Al finalizar la partida los jugadores pasan al estado de libres
+<LI>There are some additional details to the protocol that allow events to
+be given IDs and 
+<FONT COLOR="#0000ff"> allow a reconnecting client to tell the server what
+the ID of the last event it received was</FONT>, so that a server can resend
+any events it missed.
 </LI>
 </OL>
 
 <P>
 
+<H4><A NAME="SECTION03860030000000000000">
+Donde</A>
+</H4>
+  
+
+<UL>
+<LI><PRE>
+[~/local/src/ruby/sinatra/sinatra-streaming/jquery-streaming(master)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/sinatra-streaming/jquery-streaming
+</PRE>
+</LI>
+<LI><A NAME="tex2html1153"
+  HREF="https://github.com/crguezl/sinatra-eventsource-jquery">https://github.com/crguezl/sinatra-eventsource-jquery</A>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION03860040000000000000">
+app.rb</A>
+</H4>
+  
+
+<PRE>
+[~/local/src/ruby/sinatra/sinatra-streaming/jquery-streaming(master)]$ cat app.rb 
+require 'sinatra'
+require 'pp'
+
+set :server, :thin
+
+get '/' do
+  send_file "index.html"
+end
+
+get '/bottles' do
+  content_type "text/event-stream"
+  stream do |out|
+    0.upto(50) do |i|
+      out &lt;&lt; "id: #{i}\n"
+      out &lt;&lt; "data: #{i} bottle(s) on a wall...\n\n"
+      sleep 0.3
+    end
+    out &lt;&lt; "data: CLOSE\n\n"
+  end
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03860050000000000000">
+index.html</A>
+</H4>
+  
+
+<PRE>
+[~/local/src/ruby/sinatra/sinatra-streaming/jquery-streaming(master)]$ cat index.html 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Sinatra streaming example&lt;/title&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;script src="http://code.jquery.com/jquery-1.9.0.min.js"&gt;&lt;/script&gt;
+    &lt;style&gt;body {font-family: sans-serif;}&lt;/style&gt;
+ &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Welcome to this Sinatra Streaming example!&lt;/h1&gt;
+    &lt;input id="bottles-button" type="button" value="Bottles!"/&gt;
+    &lt;pre id="bottles-output"&gt;
+    &lt;/pre&gt;
+    &lt;script&gt;
+      $("#bottles-button").click(function() {
+        var src = new EventSource('/bottles?foo=bar');
+        src.onmessage = function(e) {
+          console.log(e)
+          $('#bottles-output').append("\n" + e.data)
+          if ( e.data == 'CLOSE' ) src.close()
+        };
+      });
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03860060000000000000">
+Véase</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1154"
+  HREF="http://www.eriwen.com/javascript/server-sent-events/">Pushing updates in real-time with Server-Sent Events</A>
+</LI>
+</UL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html11608"
+  HREF="node482.html#SECTION03860010000000000000">Server-Sent Events</A>
+<LI><A NAME="tex2html11609"
+  HREF="node482.html#SECTION03860020000000000000">The Server-Sent Event protocol</A>
+<LI><A NAME="tex2html11610"
+  HREF="node482.html#SECTION03860030000000000000">Donde</A>
+<LI><A NAME="tex2html11611"
+  HREF="node482.html#SECTION03860040000000000000">app.rb</A>
+<LI><A NAME="tex2html11612"
+  HREF="node482.html#SECTION03860050000000000000">index.html</A>
+<LI><A NAME="tex2html11613"
+  HREF="node482.html#SECTION03860060000000000000">Véase</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11509"
+<A NAME="tex2html11606"
   HREF="node483.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11503"
-  HREF="node468.html">
+<A NAME="tex2html11600"
+  HREF="node476.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11497"
+<A NAME="tex2html11594"
   HREF="node481.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11505"
-  HREF="node832.html">
+<A NAME="tex2html11602"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11507"
-  HREF="node835.html">
+<A NAME="tex2html11604"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -206,20 +396,20 @@ actualizando el estado de estos usuarios.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11510"
-  HREF="node483.html">Embedding Sinatra within EventMachine</A>
-<B> Subir:</B> <A NAME="tex2html11504"
-  HREF="node468.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11498"
-  HREF="node481.html">Práctica: Chat con Estilo</A>
- &nbsp; <B>  <A NAME="tex2html11506"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11508"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11607"
+  HREF="node483.html">Comet</A>
+<B> Subir:</B> <A NAME="tex2html11601"
+  HREF="node476.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11595"
+  HREF="node481.html">A simple demonstration of</A>
+ &nbsp; <B>  <A NAME="tex2html11603"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11605"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

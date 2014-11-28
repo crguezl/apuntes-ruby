@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Integración Contínua: Travis</TITLE>
-<META NAME="description" CONTENT="Integración Contínua: Travis">
+<TITLE>Capybara y Rack::Test</TITLE>
+<META NAME="description" CONTENT="Capybara y Rack::Test">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node318.html">
+<LINK REL="next" HREF="node313.html">
 <LINK REL="previous" HREF="node309.html">
-<LINK REL="up" HREF="node25.html">
+<LINK REL="up" HREF="node308.html">
 <LINK REL="next" HREF="node311.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8316"
+<A NAME="tex2html8402"
   HREF="node311.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8310"
-  HREF="node25.html">
+<A NAME="tex2html8396"
+  HREF="node308.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8304"
+<A NAME="tex2html8390"
   HREF="node309.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8312"
-  HREF="node832.html">
+<A NAME="tex2html8398"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8314"
-  HREF="node835.html">
+<A NAME="tex2html8400"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,71 +92,141 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8317"
-  HREF="node311.html">Uso de Travis</A>
-<B> Subir:</B> <A NAME="tex2html8311"
-  HREF="node25.html">EL LENGUAJE DE PROGRAMACIÓN</A>
-<B> Anterior:</B> <A NAME="tex2html8305"
-  HREF="node309.html">Pruebas. Other Testing tools</A>
- &nbsp; <B>  <A NAME="tex2html8313"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8315"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8403"
+  HREF="node311.html">Testeando una Aplicación Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html8397"
+  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
+<B> Anterior:</B> <A NAME="tex2html8391"
+  HREF="node309.html">Introduccion</A>
+ &nbsp; <B>  <A NAME="tex2html8399"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8401"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021300000000000000000"></A>
-<A NAME="chapter:travis"></A>
-<BR>
-Integración Contínua: Travis
+<H1><A NAME="SECTION021120000000000000000">
+Capybara y Rack::Test</A>
 </H1>
 
 <P>
-<A NAME="13079"></A><SPAN  CLASS="textbf">Continuous integration</SPAN> (<A NAME="13081"></A><SPAN  CLASS="textbf">CI</SPAN>) is the practice, in software engineering,
-of merging all developer workspaces with a shared mainline several
-times a day. It was first named and proposed as part of extreme
-programming (<A NAME="13083"></A><SPAN  CLASS="textbf">XP</SPAN>). 
+Rack::Test es una librería que implementa el protocolo Rack
+y que hace posible testear la pila completa de nuestra aplicación
+sin que tengamos que pagar la latencia de las comunicaciones HTTP
+ni el uso de navegadores reales.
 
 <P>
-Its main aim is to prevent integration problems,
-referred to as 
-<FONT COLOR="#0000ff"> integration hell</FONT>
-in early descriptions of XP. 
+Podemos usar su API para enviar una solicitud/request a nuestra aplicación.
 
 <P>
-CI
-can be seen as an intensification of practices of periodic integration
-advocated by earlier published methods of incremental and iterative
-software development. 
+Cuando nuestra aplicación responda, Rack::Test procesa la respuesta y nos permite
+cuestionarla.
 
 <P>
-
-<OL>
-<LI>CI was originally intended to be used in combination with automated
-unit tests written through the practices of test-driven development.
-</LI>
-<LI>Initially this was conceived of as running all unit tests and
-verifying they all passed before committing to the mainline. 
-</LI>
-<LI>Later
-elaborations of the concept introduced build servers, which
-automatically run the unit tests periodically or even after every
-commit and report the results to the developers. 
-</LI>
-<LI>In the same vein the practice of <A NAME="13087"></A><SPAN  CLASS="textbf">continuous delivery</SPAN> 
-further extends CI by 
-<FONT COLOR="#0000ff"> making sure the software checked in 
-on the mainline is always in a state that can be deployed 
-to users and makes the actual deployment process very rapid</FONT>.
-</LI>
-</OL>
+Puede hacerlo porque implementa el protocolo Rack.
+La forma en la que lo hace es construyendo el hash de request y pasandolo a la aplicación
+tal y como la haría un servidor web, interpretando el hash de respuesta y 
+dejandonoslo disponible via su API.
 
 <P>
-<SPAN  CLASS="textbf">The use of build
-servers (not necessarily running unit tests) had already been
-practised by some teams outside the XP community. Now, many
-organisations have adopted CI without adopting all of XP.</SPAN>
+Veamos un ejemplo de una aplicación que usa Rack::Test pero no Capybara para
+testear una sencilla aplicación Rack del tipo 
+
+<FONT COLOR="#0000ff"> Hello World</FONT> (Véase
+<A NAME="tex2html655"
+  HREF="https://github.com/crguezl/application_testing_with_capybara">https://github.com/crguezl/application_testing_with_capybara</A>):
+
+<P>
+<PRE>
+[~/application_testing_with_capybara/sinatra(master)]$ pwd -P
+/Users/casiano/local/src/ruby/testing_with_capybara/application_testing_with_capybara/sinatra
+[~/application_testing_with_capybara/sinatra(master)]$ cat test.rb 
+require 'bundler/setup'
+require 'rack'
+require "rack/test"
+require 'test/unit'
+
+class HelloWorld
+  def response
+    [200, {'Content-Length' =&gt; '11'}, ['Hello World']]
+  end
+end
+
+class HelloWorldApp
+  def self.call(env)
+    HelloWorld.new.response
+  end
+end
+
+
+class HelloWorldAppTest &lt; Test::Unit::TestCase
+  include Rack::Test::Methods
+
+  def app
+    HelloWorldApp
+  end
+
+  def test_redirect_logged_in_users_to_dashboard
+    get "/"
+
+    assert last_response.ok?
+    assert_equal last_response.body, 'Hello World'
+  end
+
+end
+</PRE>
+
+<P>
+Una vez instaladas las dependencias podemos ejecutar las pruebas:
+<PRE>
+[~/application_testing_with_capybara/sinatra(master)]$ ruby test.rb 
+Run options: 
+
+# Running tests:
+
+Finished tests in 0.028666s, 34.8845 tests/s, 69.7691 assertions/s.                
+1 tests, 2 assertions, 0 failures, 0 errors, 0 skips
+
+ruby -v: ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-darwin13.0]
+</PRE>
+
+<P>
+Aqui no ha habido ninguna comunicación externa, todo ocurre via software.
+
+<P>
+Rack::Test no tiene una  API para hacer click en los elementos,
+poner radio buttons, manejar forms, etc.
+
+<P>
+De lo que se ocupa es de relizar la transacción Rack imitando al servidor web.
+
+<P>
+Para que sirva de ejemplo, este es el 
+código del driver Capybara que traduce el evento
+click 
+(<A NAME="tex2html656"
+  HREF="https://github.com/jnicklas/capybara/blob/304e2fbfe1e54702eb65f2a3feda1c7b9b99ff36/lib/capybara/rack_test/node.rb">fichero capybara/rack_test/node.rb</A>)
+para que sea procesado por Rack::Test:
+
+<P>
+<PRE>
+  def click
+    if tag_name == 'a' &amp;&amp; !self[:href].nil?
+      method = self["data-method"] if driver.options[:respect_data_method]
+      method ||= :get
+      driver.follow(method, self[:href].to_s)
+    elsif (tag_name == 'input' and %w(submit image).include?(type)) or
+        ((tag_name == 'button') and type.nil? or type == "submit")
+      associated_form = form
+      Capybara::RackTest::Form.new(driver, associated_form).submit(self) if associated_form
+    end
+  end
+</PRE>
+
+<P>
+Capybara determina el tipo de elemento que esta siendo clickeado y después calcula
+si Rack::Test debe seguir el enlace o submitir el formulario.
 
 <P>
 <BR><HR>
@@ -164,96 +234,49 @@ organisations have adopted CI without adopting all of XP.</SPAN>
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html8318"
-  HREF="node311.html">Uso de Travis</A>
+<LI><A NAME="tex2html8404"
+  HREF="node311.html">Testeando una Aplicación Sinatra</A>
 <UL>
-<LI><A NAME="tex2html8319"
-  HREF="node311.html#SECTION021310010000000000000">Step one: Sign in</A>
-<LI><A NAME="tex2html8320"
-  HREF="node311.html#SECTION021310020000000000000">Step two: Activate GitHub Service Hook</A>
-<LI><A NAME="tex2html8321"
-  HREF="node311.html#SECTION021310030000000000000">Step three: Install the travis gem</A>
-<LI><A NAME="tex2html8322"
-  HREF="node311.html#SECTION021310040000000000000">Add <TT>.travis.yml</TT> file to your repository</A>
-<LI><A NAME="tex2html8323"
-  HREF="node311.html#SECTION021310050000000000000">Validate Your <TT>.travis.yml</TT></A>
-<LI><A NAME="tex2html8324"
-  HREF="node311.html#SECTION021310060000000000000">Step four: Trigger Your First Build With a Git Push</A>
-<LI><A NAME="tex2html8325"
-  HREF="node311.html#SECTION021310070000000000000">Default Test Script</A>
-<LI><A NAME="tex2html8326"
-  HREF="node311.html#SECTION021310080000000000000">Testing Against Multiple Versions of Gems</A>
-<LI><A NAME="tex2html8327"
-  HREF="node311.html#SECTION021310090000000000000">Custom Bundler arguments and Gemfile locations</A>
-<LI><A NAME="tex2html8328"
-  HREF="node311.html#SECTION0213100100000000000000">Rakefile</A>
-<LI><A NAME="tex2html8329"
-  HREF="node311.html#SECTION0213100110000000000000">Ejemplo de Jerarquía</A>
-<LI><A NAME="tex2html8330"
-  HREF="node311.html#SECTION0213100120000000000000">Página de Travis Mostrando los Resultados de unas Pruebas con Rspec</A>
+<LI><A NAME="tex2html8405"
+  HREF="node311.html#SECTION021121010000000000000">app.rb</A>
+<LI><A NAME="tex2html8406"
+  HREF="node311.html#SECTION021121020000000000000">Entrada</A>
+<LI><A NAME="tex2html8407"
+  HREF="node311.html#SECTION021121030000000000000">Plantilla para el Formulario. Template: form.erb</A>
+<LI><A NAME="tex2html8408"
+  HREF="node311.html#SECTION021121040000000000000">Plantilla/Template con los resultados: result.erb</A>
+<LI><A NAME="tex2html8409"
+  HREF="node311.html#SECTION021121050000000000000">Salida</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html8331"
-  HREF="node312.html">Enlaces</A>
-<LI><A NAME="tex2html8332"
-  HREF="node313.html">Notificaciones/Notifications</A>
-<LI><A NAME="tex2html8333"
-  HREF="node314.html">Limites de Timepo/Build Timeouts</A>
-<LI><A NAME="tex2html8334"
-  HREF="node315.html">Databases and other services</A>
-<LI><A NAME="tex2html8335"
-  HREF="node316.html">Travis en la Línea de Comandos</A>
+<LI><A NAME="tex2html8410"
+  HREF="node312.html">Testing con Rack::Test y Cucumber</A>
 <UL>
-<LI><A NAME="tex2html8336"
-  HREF="node316.html#SECTION021360010000000000000">The Travis Client</A>
-<LI><A NAME="tex2html8337"
-  HREF="node316.html#SECTION021360020000000000000">login</A>
-<LI><A NAME="tex2html8338"
-  HREF="node316.html#SECTION021360030000000000000">init</A>
-<LI><A NAME="tex2html8339"
-  HREF="node316.html#SECTION021360040000000000000">Ejecutando las pruebas en Travis</A>
-<LI><A NAME="tex2html8340"
-  HREF="node316.html#SECTION021360050000000000000">show</A>
-<LI><A NAME="tex2html8341"
-  HREF="node316.html#SECTION021360060000000000000">logs</A>
-<LI><A NAME="tex2html8342"
-  HREF="node316.html#SECTION021360070000000000000">open</A>
-<LI><A NAME="tex2html8343"
-  HREF="node316.html#SECTION021360080000000000000">Status Images</A>
-<LI><A NAME="tex2html8344"
-  HREF="node316.html#SECTION021360090000000000000">Travis console</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html8345"
-  HREF="node317.html">Coveralls: Análisis de Cubrimiento</A>
-<UL>
-<LI><A NAME="tex2html8346"
-  HREF="node317.html#SECTION021370010000000000000">coveralls en la Línea de Comandos</A>
-<LI><A NAME="tex2html8347"
-  HREF="node317.html#SECTION021370020000000000000">Running locally: COVERALLS_REPO_TOKEN</A>
-<LI><A NAME="tex2html8348"
-  HREF="node317.html#SECTION021370030000000000000">Donde</A>
-<LI><A NAME="tex2html8349"
-  HREF="node317.html#SECTION021370040000000000000">See</A>
+<LI><A NAME="tex2html8411"
+  HREF="node312.html#SECTION021122010000000000000">Rakefile</A>
+<LI><A NAME="tex2html8412"
+  HREF="node312.html#SECTION021122020000000000000">Ejecución de las Pruebas</A>
+<LI><A NAME="tex2html8413"
+  HREF="node312.html#SECTION021122030000000000000">Desventajas de usar Rack::Test</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8316"
+<A NAME="tex2html8402"
   HREF="node311.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8310"
-  HREF="node25.html">
+<A NAME="tex2html8396"
+  HREF="node308.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8304"
+<A NAME="tex2html8390"
   HREF="node309.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8312"
-  HREF="node832.html">
+<A NAME="tex2html8398"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8314"
-  HREF="node835.html">
+<A NAME="tex2html8400"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -304,20 +327,20 @@ organisations have adopted CI without adopting all of XP.</SPAN>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8317"
-  HREF="node311.html">Uso de Travis</A>
-<B> Subir:</B> <A NAME="tex2html8311"
-  HREF="node25.html">EL LENGUAJE DE PROGRAMACIÓN</A>
-<B> Anterior:</B> <A NAME="tex2html8305"
-  HREF="node309.html">Pruebas. Other Testing tools</A>
- &nbsp; <B>  <A NAME="tex2html8313"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8315"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8403"
+  HREF="node311.html">Testeando una Aplicación Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html8397"
+  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
+<B> Anterior:</B> <A NAME="tex2html8391"
+  HREF="node309.html">Introduccion</A>
+ &nbsp; <B>  <A NAME="tex2html8399"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8401"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

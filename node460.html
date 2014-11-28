@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Petición y Respuesta</TITLE>
-<META NAME="description" CONTENT="Petición y Respuesta">
+<TITLE>Práctica: Aplicación Web con Sinatra: Contar la Popularidad de Nuestros Amigos en Twitter</TITLE>
+<META NAME="description" CONTENT="Práctica: Aplicación Web con Sinatra: Contar la Popularidad de Nuestros Amigos en Twitter">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node461.html">
 <LINK REL="previous" HREF="node459.html">
-<LINK REL="up" HREF="node456.html">
+<LINK REL="up" HREF="node422.html">
 <LINK REL="next" HREF="node461.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11103"
+<A NAME="tex2html11199"
   HREF="node461.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11097"
-  HREF="node456.html">
+<A NAME="tex2html11193"
+  HREF="node422.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11093"
+<A NAME="tex2html11187"
   HREF="node459.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11099"
-  HREF="node832.html">
+<A NAME="tex2html11195"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11101"
-  HREF="node835.html">
+<A NAME="tex2html11197"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,29 +92,166 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11104"
-  HREF="node461.html">Aplicaciones Modulares</A>
-<B> Subir:</B> <A NAME="tex2html11098"
-  HREF="node456.html">Sinatra desde Dentro</A>
-<B> Anterior:</B> <A NAME="tex2html11094"
-  HREF="node459.html">Helpers y Extensiones</A>
- &nbsp; <B>  <A NAME="tex2html11100"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11102"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11200"
+  HREF="node461.html">Práctica: TicTacToe</A>
+<B> Subir:</B> <A NAME="tex2html11194"
+  HREF="node422.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11188"
+  HREF="node459.html">Sinatra como Middleware</A>
+ &nbsp; <B>  <A NAME="tex2html11196"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11198"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03440000000000000000">
-Petición y Respuesta</A>
+<H1><A NAME="SECTION033270000000000000000"></A>
+   <A NAME="20088"></A>
+  
+<A NAME="practica:twitterpopularity"></A>
+<BR>
+Práctica: Aplicación Web con Sinatra: Contar la Popularidad de Nuestros Amigos en Twitter
 </H1>
+Escriba una aplicación web en Sinatra 
+similar a la solicitada en la práctica 
+<A HREF="node49.html#practica:popularidadentwitter">8.16</A>
+y que una vez obtenido el nombre del usuario muestre la lista de los 
+<FONT COLOR="#0000ff"> amigos de ese usuario (esto es, a quienes sigue)</FONT>
+ordenada según su 
+<FONT COLOR="#0000ff"> popularidad (esto es, según el número de seguidores que tiene)</FONT>.
+Del mas popular al menos popular (no mas de 10 usuarios. Evite posibles cortes de Twitter por el uso del ancho de banda. Lea 
+<A NAME="tex2html1069"
+  HREF="https://dev.twitter.com/rest/public/rate-limiting">Tips to avoid being Rate Limited</A>).
+Puede usar la aplicación <code>rack-last-twits</code> (rama <code>sinatra</code>) en 
+<A NAME="tex2html1070"
+  HREF="https://github.com/crguezl/rack-last-twits/tree/sinatra">https://github.com/crguezl/rack-last-twits/tree/sinatra</A>
+como base para su código.
 
 <P>
-<BR><HR>
+
+<br/>
+<img src="lasttweets.png" width="50%">
+<br/>
+
+<P>
+La siguiente sesión <code>pry</code> muestra como obtener los seguidores de un usuario:
+<PRE>
+[1] pry(main)&gt; require 'twitter'
+=&gt; true
+[2] pry(main)&gt; require './configure'
+=&gt; true
+[3] pry(main)&gt; client = my_twitter_client()
+=&gt; #&lt;Twitter::REST::Client:0x007fe972075e78
+ @access_token="**********************",
+ @access_token_secret="**********************",
+ @consumer_key="**********************",
+ @consumer_secret="**********************"&gt;
+[5] pry(main)&gt; seguidores = client.friend_ids("crguezl").attrs[:ids].take(10)
+=&gt; [476049040, 249595722,
+ 582620116, 546228347, 39973845,
+ 150456846, 79024273, 2693104332,
+ 2471387516, 1635283039]
+[6] pry(main)&gt; amigos = {}
+[7] pry(main)&gt; seguidores.map { amigos[client.user(f).name] = client.user(f).followers_count }
+=&gt; [269, 269, 269, 269, 269, 269, 269, 269, 269, 269]
+[8] pry(main)&gt; amigos
+=&gt; {"@laculturaensc"=&gt;486, "Teatro Guimerá"=&gt;2738,
+ "TEA Tenerife"=&gt;5649, "Tenerife Ocio"=&gt;12925,
+ "lagenda tenerife"=&gt;7876, "El Chikiplan"=&gt;424,
+ "PateaTusMontes"=&gt;6038, "Mastering Vim"=&gt;1170,
+ "CocoaConf Podcast"=&gt;94, "Kido Tsubomi"=&gt;269}
+[9] pry(main)&gt; amigos.sort_by { |x, y| -y }
+=&gt; [["Tenerife Ocio", 12925],
+ ["lagenda tenerife", 7876], ["PateaTusMontes", 6038],
+ ["TEA Tenerife", 5649], ["Teatro Guimerá", 2738],
+ ["Mastering Vim", 1170], ["@laculturaensc", 486],
+ ["El Chikiplan", 424], ["Kido Tsubomi", 269],
+ ["CocoaConf Podcast", 94]]
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11199"
+  HREF="node461.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11193"
+  HREF="node422.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11187"
+  HREF="node459.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html11195"
+  HREF="node840.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html11197"
+  HREF="node843.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html11200"
+  HREF="node461.html">Práctica: TicTacToe</A>
+<B> Subir:</B> <A NAME="tex2html11194"
+  HREF="node422.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11188"
+  HREF="node459.html">Sinatra como Middleware</A>
+ &nbsp; <B>  <A NAME="tex2html11196"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11198"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

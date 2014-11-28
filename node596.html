@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>JQuery en Node.js</TITLE>
-<META NAME="description" CONTENT="JQuery en Node.js">
+<TITLE>Caching</TITLE>
+<META NAME="description" CONTENT="Caching">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node597.html">
-<LINK REL="previous" HREF="node591.html">
-<LINK REL="up" HREF="node574.html">
+<LINK REL="previous" HREF="node595.html">
+<LINK REL="up" HREF="node590.html">
 <LINK REL="next" HREF="node597.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13459"
+<A NAME="tex2html13559"
   HREF="node597.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13453"
-  HREF="node574.html">
+<A NAME="tex2html13553"
+  HREF="node590.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13447"
+<A NAME="tex2html13547"
   HREF="node595.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13455"
-  HREF="node832.html">
+<A NAME="tex2html13555"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13457"
-  HREF="node835.html">
+<A NAME="tex2html13557"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,65 +92,137 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13460"
-  HREF="node597.html">Mas sobre Node</A>
-<B> Subir:</B> <A NAME="tex2html13454"
-  HREF="node574.html">JavaScript en el Lado</A>
-<B> Anterior:</B> <A NAME="tex2html13448"
-  HREF="node595.html">Véase También</A>
- &nbsp; <B>  <A NAME="tex2html13456"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13458"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13560"
+  HREF="node597.html">El Objeto module y</A>
+<B> Subir:</B> <A NAME="tex2html13554"
+  HREF="node590.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13548"
+  HREF="node595.html">Las Carpetas Usadas Como</A>
+ &nbsp; <B>  <A NAME="tex2html13556"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13558"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION046100000000000000000">
-JQuery en Node.js</A>
-</H1>
-Es posible instalar 
-<A NAME="tex2html1399"
-  HREF="https://npmjs.org/package/jquery">JQuery en Node.js</A>.
-Tuve algún problema para instalar jquery con algunas versiones de Node pero funcionó
-con la 0.10.10:
-<PRE>
-~/sinatra/rockpaperscissors(master)]$ n
-  * 0.10.10 
-    0.11.2 
-    0.8.17
-</PRE>
-El programa
-<A NAME="tex2html1400"
-  HREF="https://github.com/visionmedia/n">n</A>
-es un gestor de versiones de Node.js. Otro gestor de versiones del intérprete es
-<A NAME="tex2html1401"
-  HREF="https://github.com/creationix/nvm">nvm</A>.
+<H2><A NAME="SECTION04686000000000000000">
+Caching</A>
+</H2>
 
 <P>
-Una vez instalado, podemos usarlo desde coffeescript via node.js:
-<PRE>
-coffee&gt; $ = require 'jquery'; null
-null
-coffee&gt; $("&lt;h1&gt;test passes&lt;/h1&gt;").appendTo "body" ; null
-null
-coffee&gt; console.log $("body").html() 
-&lt;h1&gt;test passes&lt;/h1&gt;
-undefined
-coffee&gt; 
-coffee&gt; $.each [4,3,2,1], (i,v)-&gt; console.log "index: #{i} -&gt; value: #{v}"
-index: 0 -&gt; value: 4
-index: 1 -&gt; value: 3
-index: 2 -&gt; value: 2
-index: 3 -&gt; value: 1
-[ 4, 3, 2, 1 ]
-</PRE>
+
+<OL>
+<LI>Modules are cached after the first time they are loaded. This means
+(among other things) that every call to <code>require('foo')</code> will get exactly
+the same object returned, if it would resolve to the same file.
 
 <P>
-<BR><HR>
+</LI>
+<LI>Multiple calls to <code>require('foo')</code> may not cause the module code
+to be executed multiple times. This is an important feature. With it,
+<A NAME="25571"></A><SPAN  CLASS="textbf">partially done</SPAN> objects can be returned, thus allowing transitive
+dependencies to be loaded even when they would cause cycles.
+
+<P>
+</LI>
+<LI>If you want to have a module execute code multiple times, then export
+a function, and call that function.
+
+<P>
+</LI>
+<LI>Modules are cached based on their <B>resolved filename</B>. Since modules may
+resolve to a different filename based on the location of the calling
+module (loading from <code>node_modules folders</code>), it is not a guarantee that
+<code>require('foo')</code> will always return the exact same object, if it would
+resolve to different files.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html13559"
+  HREF="node597.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html13553"
+  HREF="node590.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html13547"
+  HREF="node595.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html13555"
+  HREF="node840.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html13557"
+  HREF="node843.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html13560"
+  HREF="node597.html">El Objeto module y</A>
+<B> Subir:</B> <A NAME="tex2html13554"
+  HREF="node590.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13548"
+  HREF="node595.html">Las Carpetas Usadas Como</A>
+ &nbsp; <B>  <A NAME="tex2html13556"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13558"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

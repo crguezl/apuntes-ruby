@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Despliegue en Heroku</TITLE>
-<META NAME="description" CONTENT="Despliegue en Heroku">
+<TITLE>ActiveRecord y Sinatra</TITLE>
+<META NAME="description" CONTENT="ActiveRecord y Sinatra">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node540.html">
-<LINK REL="previous" HREF="node529.html">
-<LINK REL="up" HREF="node358.html">
+<LINK REL="next" HREF="node534.html">
+<LINK REL="previous" HREF="node530.html">
+<LINK REL="up" HREF="node366.html">
 <LINK REL="next" HREF="node532.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12346"
+<A NAME="tex2html12451"
   HREF="node532.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12340"
-  HREF="node358.html">
+<A NAME="tex2html12445"
+  HREF="node366.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12334"
+<A NAME="tex2html12439"
   HREF="node530.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12342"
-  HREF="node832.html">
+<A NAME="tex2html12447"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12344"
-  HREF="node835.html">
+<A NAME="tex2html12449"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,25 +92,67 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12347"
-  HREF="node532.html">Introducción</A>
-<B> Subir:</B> <A NAME="tex2html12341"
-  HREF="node358.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html12335"
-  HREF="node530.html">Depurando una Ejecución con</A>
- &nbsp; <B>  <A NAME="tex2html12343"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12345"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12452"
+  HREF="node532.html">Práctica: Servicio para Abreviar</A>
+<B> Subir:</B> <A NAME="tex2html12446"
+  HREF="node366.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html12440"
+  HREF="node530.html">Sequel y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12448"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12450"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION032200000000000000000"></A>
-<A NAME="chapter:despliegueenheroku"></A>
-<BR>
-Despliegue en Heroku
+<H1><A NAME="SECTION031800000000000000000">
+ActiveRecord y Sinatra</A>
 </H1>
+El siguiente texto esta tomado de la lista
+Sinatra Q&amp;A
+<A NAME="tex2html1323"
+  HREF="http://www.sinatrarb.com/faq.html#ar-migrations">How do I use ActiveRecord migrations?</A>
+<P>
+To use ActiveRecord’s migrations with Sinatra (or other non-Rails
+project), add the following to your Rakefile:
+<PRE>
+namespace :db do
+  desc "Migrate the database"
+  task(:migrate =&gt; :environment) do
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
+    ActiveRecord::Migration.verbose = true
+    ActiveRecord::Migrator.migrate("db/migrate")
+  end
+end
+</PRE>
+This assumes you have a task called <code>:environment</code> which loads your app’s
+environment (requires the right files, sets up the database connection,
+etc).
+
+<P>
+Now you can create a directory called <code>db/migrate</code> 
+and fill in your migrations. I usually call the first one 
+<code>001_init.rb</code>. (I prefer the old
+sequential method for numbering migrations vs. the datetime method used
+since Rails 2.1, but either will work.)
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1324"
+  HREF="http://blog.revathskumar.com/2013/01/activerecord-migration-for-cuba-and-sinatra.html">ActiveRecord Migration for cuba and sinatra</A>
+por Revath S. Kumar
+</LI>
+<LI><A NAME="tex2html1325"
+  HREF="http://exposinggotchas.blogspot.com.es/2011/02/activerecord-migrations-without-rails.html">ActiveRecord migrations without Rails</A>
+por Wes Bailey
+</LI>
+<LI><A NAME="tex2html1326"
+  HREF="http://bytesofpi.com/post/23663592388/up-and-running-with-sinatra-and-activerecord">Up and Running with Sinatra and ActiveRecord</A>
+por Matt GaidicA
+</LI>
+</UL>
 
 <P>
 <BR><HR>
@@ -118,102 +160,98 @@ Despliegue en Heroku
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html12348"
-  HREF="node532.html">Introducción</A>
+<LI><A NAME="tex2html12453"
+  HREF="node532.html">Práctica: Servicio para Abreviar URLs</A>
 <UL>
-<LI><A NAME="tex2html12349"
-  HREF="node532.html#SECTION032210010000000000000">Prerequisitos</A>
-<LI><A NAME="tex2html12350"
-  HREF="node532.html#SECTION032210020000000000000">Instala el Heroku Toolbelt</A>
-<LI><A NAME="tex2html12351"
-  HREF="node532.html#SECTION032210030000000000000">Actualizaciones</A>
-<LI><A NAME="tex2html12352"
-  HREF="node532.html#SECTION032210040000000000000">Ayuda</A>
-<LI><A NAME="tex2html12353"
-  HREF="node532.html#SECTION032210050000000000000">Specify Ruby Version and Declare dependencies with a Gemfile</A>
-<LI><A NAME="tex2html12354"
-  HREF="node532.html#SECTION032210060000000000000">Declare process types with <TT>Procfile</TT></A>
-<LI><A NAME="tex2html12355"
-  HREF="node532.html#SECTION032210070000000000000">Foreman</A>
-<LI><A NAME="tex2html12356"
-  HREF="node532.html#SECTION032210080000000000000">Setting local environment variables</A>
-<LI><A NAME="tex2html12357"
-  HREF="node532.html#SECTION032210090000000000000">Procfile y Despliegue</A>
-<LI><A NAME="tex2html12358"
-  HREF="node532.html#SECTION0322100100000000000000">Store your app in Git</A>
-<LI><A NAME="tex2html12359"
-  HREF="node532.html#SECTION0322100110000000000000">Deploy your application to Heroku</A>
-<LI><A NAME="tex2html12360"
-  HREF="node532.html#SECTION0322100120000000000000">Visit your application</A>
-<LI><A NAME="tex2html12361"
-  HREF="node532.html#SECTION0322100130000000000000">Dyno sleeping and scaling</A>
-<LI><A NAME="tex2html12362"
-  HREF="node532.html#SECTION0322100140000000000000">View the logs</A>
-<LI><A NAME="tex2html12363"
-  HREF="node532.html#SECTION0322100150000000000000">Console</A>
-<LI><A NAME="tex2html12364"
-  HREF="node532.html#SECTION0322100160000000000000">Rake</A>
-<LI><A NAME="tex2html12365"
-  HREF="node532.html#SECTION0322100170000000000000">Using a SQL database</A>
-<LI><A NAME="tex2html12366"
-  HREF="node532.html#SECTION0322100180000000000000">Webserver</A>
+<LI><A NAME="tex2html12454"
+  HREF="node532.html#SECTION031810010000000000000">Véase</A>
 </UL>
 <BR>
-<LI><A NAME="tex2html12367"
-  HREF="node533.html">Logging</A>
-<UL>
-<LI><A NAME="tex2html12368"
-  HREF="node533.html#SECTION032220010000000000000">Writing to your log</A>
-<LI><A NAME="tex2html12369"
-  HREF="node533.html#SECTION032220020000000000000">To fetch your logs</A>
-<LI><A NAME="tex2html12370"
-  HREF="node533.html#SECTION032220030000000000000">Log message ordering</A>
-<LI><A NAME="tex2html12371"
-  HREF="node533.html#SECTION032220040000000000000">Log history limits</A>
-<LI><A NAME="tex2html12372"
-  HREF="node533.html#SECTION032220050000000000000">Log format</A>
-<LI><A NAME="tex2html12373"
-  HREF="node533.html#SECTION032220060000000000000">Realtime tail</A>
-<LI><A NAME="tex2html12374"
-  HREF="node533.html#SECTION032220070000000000000">Filtering</A>
+<LI><A NAME="tex2html12455"
+  HREF="node533.html">Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita</A>
 </UL>
-<BR>
-<LI><A NAME="tex2html12375"
-  HREF="node534.html">Troubleshooting</A>
-<UL>
-<LI><A NAME="tex2html12376"
-  HREF="node534.html#SECTION032230010000000000000">Failed to require a sourcefile</A>
-<LI><A NAME="tex2html12377"
-  HREF="node534.html#SECTION032230020000000000000">Encoding error</A>
-<LI><A NAME="tex2html12378"
-  HREF="node534.html#SECTION032230030000000000000">Missing a gem</A>
-<LI><A NAME="tex2html12379"
-  HREF="node534.html#SECTION032230040000000000000">Runtime dependencies on development/test gems</A>
-<LI><A NAME="tex2html12380"
-  HREF="node534.html#SECTION032230050000000000000">Rack::Sendfile</A>
-<LI><A NAME="tex2html12381"
-  HREF="node534.html#SECTION032230060000000000000">Número máximo de aplicaciones</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html12382"
-  HREF="node535.html">Configuration</A>
-<LI><A NAME="tex2html12383"
-  HREF="node536.html">Make Heroku run non-master Git branch</A>
-<LI><A NAME="tex2html12384"
-  HREF="node537.html">Account Verification and add-ons</A>
-<LI><A NAME="tex2html12385"
-  HREF="node538.html">Véase</A>
-<LI><A NAME="tex2html12386"
-  HREF="node539.html">Práctica: Despliegue en Heroku</A>
-<UL>
-<LI><A NAME="tex2html12387"
-  HREF="node539.html#SECTION032280010000000000000">Donde encontrar Ejemplos</A>
-</UL></UL>
 <!--End of Table of Child-Links-->
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12451"
+  HREF="node532.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12445"
+  HREF="node366.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12439"
+  HREF="node530.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html12447"
+  HREF="node840.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html12449"
+  HREF="node843.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html12452"
+  HREF="node532.html">Práctica: Servicio para Abreviar</A>
+<B> Subir:</B> <A NAME="tex2html12446"
+  HREF="node366.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html12440"
+  HREF="node530.html">Sequel y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12448"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12450"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

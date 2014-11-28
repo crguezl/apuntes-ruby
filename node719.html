@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Optimistic and Pessimistic Version Constraint</TITLE>
-<META NAME="description" CONTENT="Optimistic and Pessimistic Version Constraint">
+<TITLE>Gemas con Un Gran Número de Utilidades Independientes</TITLE>
+<META NAME="description" CONTENT="Gemas con Un Gran Número de Utilidades Independientes">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node720.html">
 <LINK REL="previous" HREF="node718.html">
-<LINK REL="up" HREF="node705.html">
+<LINK REL="up" HREF="node713.html">
 <LINK REL="next" HREF="node720.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15636"
+<A NAME="tex2html15719"
   HREF="node720.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15630"
-  HREF="node705.html">
+<A NAME="tex2html15713"
+  HREF="node713.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15624"
+<A NAME="tex2html15707"
   HREF="node718.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15632"
-  HREF="node832.html">
+<A NAME="tex2html15715"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15634"
-  HREF="node835.html">
+<A NAME="tex2html15717"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,155 +92,100 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15637"
-  HREF="node720.html">Controlando nuestras dependencias: bundle</A>
-<B> Subir:</B> <A NAME="tex2html15631"
-  HREF="node705.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15625"
-  HREF="node718.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html15633"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15635"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15720"
+  HREF="node720.html">Sharing Source Code From</A>
+<B> Subir:</B> <A NAME="tex2html15714"
+  HREF="node713.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15708"
+  HREF="node718.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html15716"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15718"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0611140000000000000000">
-Optimistic and Pessimistic Version Constraint</A>
+<H1><A NAME="SECTION061160000000000000000">
+Gemas con Un Gran Número de Utilidades Independientes</A>
 </H1><I>
-If your gem properly follows <A NAME="29381"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
-scheme, then other Ruby developers can take advantage of this when
-choosing a version constraint to lock down your gem in their
-application.
+Some
+gems, however, may be made up of multiple parts that could be used
+independently of each other. <code>ActiveSupport</code>, for example, provides a
+large number of useful utilities that, while they function together,
+can also function separately.
 </I>
 <P>
-<I>Let’s say the following releases of a gem exist:
+<I>If I add require <code>active_support</code> to my code I load all of
+<code>ActiveSupport</code>. While this may be what I want in some cases (like inside
+a Rails application) in other cases I may just want a specific piece
+of <code>ActiveSupport</code>. Luckily, <code>ActiveSupport</code> is designed to handle this
+well. If I, for instance, add require <code>active_support/core_ext</code> I will
+only be loading the Ruby core extensions that are a part of <code>ActiveSupport</code>.
+</I>
+<P>
+<I>How can you make this work in your library? It's quite simple: your
+base file should, when required, require all the other parts of your
+library. However, each part of your library should, at its top, require
+any other parts or external dependencies so that it may be included
+without the user having previously required the base file. Let's take
+a look at an example:
 </I>
 <P><PRE>
-Version 2.1.0 — Baseline
-Version 2.2.0 — Introduced some new (backward compatible) features.
-Version 2.2.1 — Removed some bugs
-Version 2.2.2 — Streamlined your code
-Version 2.3.0 — More new features (but still backwards compatible).
-Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
+# in lib/my_gem.rb
+
+require 'my_gem/widget'
+require 'my_gem/widgets/foo_bar'
+require 'my_gem/widgets/baz'
+</PRE>
+<P><PRE>
+# in lib/my_gem/widget.rb
+
+require 'external_library'
+
+module MyGem
+  class Widget
+  end
+end
+</PRE>
+<P><PRE>
+# in lib/my_gem/widgets/foo_bar
+
+require 'my_gem/widget'
+
+module MyGem
+  module Widgets
+    class FooBar &lt; MyGem::Widget
+    end
+  end
+end
 </PRE><I>
-Someone who wants to use your gem has determined that 
+Each of the files in the above example can be required independently,
+giving developers the flexibility to use only a subset of your library's
+functionality if needed. 
 </I>
-<OL>
-<LI>version 2.2.0
-works with their software, 
-</LI>
-<LI>but version 2.1.0 doesn’t have a feature
-they need. 
-</LI>
-<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
-might look like:
-
 <P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '&gt;= 2.2.0'
-</PRE>
-or 
-<PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0'
-</PRE>
-This is an <A NAME="29383"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
-
-<P>
-It’s saying that all
-changes from <code>2.x</code> on will work with my software, 
-but for version
-<code>3.0.0</code> this may not be true.
-
-<P>
-</LI>
-<LI>The alternative here is to use <A NAME="29385"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
-
-<P>
-This explicitly excludes the version that might break your code.
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  ['&gt;= 2.2.0', '&lt; 3.0']
-</PRE>
-or
-
-<P>
-<PRE>
-# bundler
-gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
-</PRE>
-</LI>
-<LI><A NAME="tex2html1688"
-  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> provides a shortcut for this, commonly known as the <A NAME="29390"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library',
-  '~&gt; 2.2'
-</PRE>
-
-<P>
-<PRE>
-# bundler
-gem 'library', '~&gt; 2.2'
-</PRE>
-Notice that we dropped the <code>PATCH</code> level of the version number. 
-
-<P>
-</LI>
-<LI>Had
-we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
-<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
-
-<P>
-</LI>
-<LI>If you want to allow use of newer <A NAME="29392"></A><SPAN  CLASS="textbf">backwards-compatible versions</SPAN><A NAME="tex2html1687"
-  HREF="footnode.html#foot28951"><SUP><SPAN CLASS="arabic">89</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> but
-need a specific bug fix you can use a compound requirement:
-
-<P>
-<PRE>
-# gemspec
-spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
-</PRE>
-
-<P>
-<PRE>
-# bundler
-gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
-</PRE>
-</LI>
-<LI>The important note to take home here is to be aware others will be
-using your gems, so guard yourself from potential bugs/failures in
-future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
-if at all possible.
-</LI>
-</OL>
+<I>Remember that <code>require</code> statements will only
+load the code from a file once, so it is safe to <code>require</code> the same file
+multiple times.
+</I>
 <P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15636"
+<A NAME="tex2html15719"
   HREF="node720.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15630"
-  HREF="node705.html">
+<A NAME="tex2html15713"
+  HREF="node713.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15624"
+<A NAME="tex2html15707"
   HREF="node718.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15632"
-  HREF="node832.html">
+<A NAME="tex2html15715"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15634"
-  HREF="node835.html">
+<A NAME="tex2html15717"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -291,20 +236,20 @@ if at all possible.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15637"
-  HREF="node720.html">Controlando nuestras dependencias: bundle</A>
-<B> Subir:</B> <A NAME="tex2html15631"
-  HREF="node705.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15625"
-  HREF="node718.html">Declaring dependencies: Runtime vs.</A>
- &nbsp; <B>  <A NAME="tex2html15633"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15635"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15720"
+  HREF="node720.html">Sharing Source Code From</A>
+<B> Subir:</B> <A NAME="tex2html15714"
+  HREF="node713.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html15708"
+  HREF="node718.html">Jerarquía de Ficheros y</A>
+ &nbsp; <B>  <A NAME="tex2html15716"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15718"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>

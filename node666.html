@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Copias de Seguridad con rsync</TITLE>
-<META NAME="description" CONTENT="Copias de Seguridad con rsync">
+<TITLE>Agentes SSH</TITLE>
+<META NAME="description" CONTENT="Agentes SSH">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node667.html">
 <LINK REL="previous" HREF="node665.html">
-<LINK REL="up" HREF="node664.html">
+<LINK REL="up" HREF="node660.html">
 <LINK REL="next" HREF="node667.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html14767"
+<A NAME="tex2html14840"
   HREF="node667.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14761"
-  HREF="node664.html">
+<A NAME="tex2html14834"
+  HREF="node660.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14757"
+<A NAME="tex2html14828"
   HREF="node665.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14763"
-  HREF="node832.html">
+<A NAME="tex2html14836"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14765"
-  HREF="node835.html">
+<A NAME="tex2html14838"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,377 +92,311 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14768"
-  HREF="node667.html">Git</A>
-<B> Subir:</B> <A NAME="tex2html14762"
-  HREF="node664.html">Copia Segura de un</A>
-<B> Anterior:</B> <A NAME="tex2html14758"
-  HREF="node665.html">Transferencia de ficheros por</A>
- &nbsp; <B>  <A NAME="tex2html14764"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14766"
-  HREF="node835.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html14841"
+  HREF="node667.html">Mejor un Sólo Agente</A>
+<B> Subir:</B> <A NAME="tex2html14835"
+  HREF="node660.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14829"
+  HREF="node665.html">Deshabilitar la Asignación de</A>
+ &nbsp; <B>  <A NAME="tex2html14837"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14839"
+  HREF="node843.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION06560000000000000000">
+Agentes SSH</A>
+</H1>
+
+<P>
+Un agente SSH es un programa que guarda de forma segura 
+las frases-clave asociadas con las claves privadas y responde a consultas 
+autentificadas de los clientes SSH.
+El agente recuerda la passphrase de manera que el usuario 
+no tenga que teclearla cada vez que la clave es usada.
+
+<P>
+El agente crea un socket en un subdirectorio de <code>/tmp</code> 
+en el que escucha las peticiones de conexión SSH.
+Cualquiera que tenga acceso a dicho socket puede acceder al agente. Los permisos
+unix para el socket son suficientemente restrictivos.
+
+<P>
+Los programas que se usan son  <TT>ssh-agent</TT>  y  <TT>ssh-add</TT> . 
+Utilizamos <A NAME="tex2html1564"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
+para añadir claves privadas a la cache del agente
+ssh. A partir de ese momento el cliente ssh no nos importunará
+solicitando la passphrase, comúnicandose con el agente 
+para superar el proceso de autentificación.
+El agente <code>ssh-agent</code> actúa como un daemon que permanece dando el
+servicio de autentificación a los clientes SSH.
+
+<P>
+
+<H4><A NAME="SECTION06560010000000000000">
+ssh-add</A>
+</H4>
+  
+
+<P>
+El programa
+<code>ssh-add</code> permite añadir, listar y suprimir claves de la cache del agente:
+
+<P>
+<PRE>
+someone@localhost:~/.ssh$ ssh-add ~/.ssh/conpass
+Enter passphrase for /home/someone/.ssh/conpass: **********
+Identity added: /home/someone/.ssh/conpass (/home/someone/.ssh/conpass)
+someone@localhost:~/.ssh$ ssh-add -l
+2048 da:13:....:ee /home/someone/.ssh/conpass (RSA)
+</PRE>
+Una vez establecida la clave en el agente es posible conectarse sin necesidad
+de proporcionar la frase clave:
+
+<P>
+<PRE>
+someone@localhost:~/.kde/shutdown$ ssh remote.machine
+Linux remote.machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Tue Mar 11 14:03:59 2008 from localhost.deioc.ull.es
+user@remote.machine:~$
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560020000000000000">
+Arrancando un Agente SSH</A>
+</H4>
+  
+
+<P>
+Para arrancar el agente SSH se ejecuta el comando:
+<PRE>
+eval `ssh-agent`
+</PRE>
+Esto se hace asi porque el resultado retornado por <code>ssh-agent</code>
+es una cadena conteniendo un script <A NAME="tex2html1565"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?bash"><TT>bash</TT></A>. Este guión establece las variables de 
+entorno necesarias para que las futuras llamadas a clientes SSH 
+puedan encontrar al agente. Observe el resultado de una ejecución sin <code>eval</code> ni backticks:
+<PRE>
+$ ssh-agent
+SSH_AUTH_SOCK=/tmp/ssh-jaDVTd5583/agent.5583; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=5584; export SSH_AGENT_PID;
+echo Agent pid 5584;
+</PRE>
+
+<P>
+La variable <code>SSH_AUTH_SOCK</code> contiene el camino al socket de dominio UNIX que será 
+utilizado por los clientes <code>ssh</code>, <code>scp</code>, etc. para comunicarse 
+con el agente.
+
+<P>
+El pid proporcionado en <code>SSH_AGENT_PID</code> nos permite eliminar al agente mediante <code>kill</code>. 
+Sin embargo una llamada a <code>kill</code> no elimina 
+las variables de entorno establecidas.
+La forma correcta de terminar el agente es usando la opción <code>-k</code>
+de <code>ssh-agent</code>:
+<PRE>
+pp2@localhost:~/Lbook$ eval `ssh-agent`
+Agent pid 5606
+pp2@localhost:~/Lbook$ env | grep -i ssh
+SSH_AGENT_PID=5606
+SSH_AUTH_SOCK=/tmp/ssh-ALUJyJ5605/agent.5605
+CVS_RSH=/usr/bin/ssh
+pp2@localhost:~/Lbook$ eval `ssh-agent -k`
+Agent pid 5606 killed
+pp2@localhost:~/Lbook$ env | grep -i ssh
+CVS_RSH=/usr/bin/ssh
+pp2@localhost:~/Lbook$
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560030000000000000">
+El Protocolo</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>El usuario escribe el comando que da lugar a la conexión inicial y especifica el username asi como 
+la petición de usar una clave. El programa cliente envía el username y la petición de uso
+de  la clave.
+
+<P>
+</LI>
+<LI>El demonio de SSH mira en el fichero <code>authorized_keys</code> y
+construye un reto basado en esa clave y lo envía al cliente.
+
+<P>
+</LI>
+<LI>El cliente recibe el reto asociado con la clave y lo redirige al
+agente. Supongamos que la clave fué previamente cargada con <A NAME="tex2html1566"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
+<P>
+</LI>
+<LI>El agente construye la respuesta y la devuelve al proceso <A NAME="tex2html1567"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+el cual la envía al proceso <A NAME="tex2html1568"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+que escucha en el otro extremo.
+El cliente <A NAME="tex2html1569"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
+nunca ve la clave privada, lo que ve 
+es la respuesta. 
+
+<P>
+</LI>
+<LI>El servidor <A NAME="tex2html1570"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
+valida la respuesta. Si es correcta permite 
+el acceso al sistema.
+
+<P>
+</LI>
+</OL>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Establezca claves con passphrase, instale un agente ssh y compruebe su buen
+funcionamiento.</I></DIV><P></P>
+
+<P>
+
+<H4><A NAME="SECTION06560040000000000000">
+Bloqueando el acceso a un Agente</A>
+</H4>
+  
+
+<P>
+Es posible cerrar el acceso al agente usando la opción <code>-x</code> de <A NAME="tex2html1571"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
+<PRE>
+pp2@europa:~$ ssh-add -x
+Enter lock password:
+Again:
+Agent locked.
+pp2@europa:~$ ssh orion
+Enter passphrase for key '/home/pp2/.ssh/id_dsa': ********
+Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Mon Apr 27 13:29:32 2009 from europa.deioc.ull.es
+casiano@orion:~$
+</PRE>
+
+<P>
+Para abrir el acceso al agente usaremos la opción <code>-X</code> de <A NAME="tex2html1572"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
+<PRE>
+pp2@europa:~$ ssh-add -X
+Enter lock password: ****************
+Agent unlocked.
+pp2@europa:~$
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560050000000000000">
+Poniendo Fecha de Caducidad</A>
+</H4>
+  
+
+<P>
+La opción <code>-t lifetime</code> de <A NAME="tex2html1573"
+  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>
+puede ser utilizada para 
+limitar el tiempo de caducidad de las identidades en un agente. El tiempo
+se expresará en segundos o bien de la forma <code>time[qualifier]</code>, donde
+<code>time</code> es un entero positivo y <code>qualifier</code> es:
+
+<P>
+<PRE>
+           nada    segundos
+           s | S   segundos
+           m | M   minutos
+           h | H   horas
+           d | D   dias
+           w | W   semanas
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06560060000000000000">
+Véase también</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI>Wikipedia <A NAME="tex2html1574"
+  HREF="http://en.wikipedia.org/wiki/Ssh-agent">Ssh-agent</A>
+</LI>
+<LI><A NAME="tex2html1575"
+  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+</LI>
+<LI><A NAME="tex2html1576"
+  HREF="http://mah.everybody.org/docs/ssh">Using ssh-agent with ssh</A>
+</LI>
+</UL>
+
+<P>
+<BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
 <LI><UL>
-<LI><A NAME="tex2html14769"
-  HREF="node666.html#SECTION065122010000000000000">El Algoritmo</A>
-<LI><A NAME="tex2html14770"
-  HREF="node666.html#SECTION065122020000000000000">Mode de Uso</A>
-<LI><A NAME="tex2html14771"
-  HREF="node666.html#SECTION065122030000000000000">Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
-<LI><A NAME="tex2html14772"
-  HREF="node666.html#SECTION065122040000000000000">Backups con <TT>rsync</TT> en un Medio Externo</A>
-<LI><A NAME="tex2html14773"
-  HREF="node666.html#SECTION065122050000000000000">El fichero <TT>/etc/fstab</TT></A>
-<LI><A NAME="tex2html14774"
-  HREF="node666.html#SECTION065122060000000000000">El Programa de Copia</A>
-<LI><A NAME="tex2html14775"
-  HREF="node666.html#SECTION065122070000000000000">Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
-<LI><A NAME="tex2html14776"
-  HREF="node666.html#SECTION065122080000000000000">El fichero de <TT>cron</TT></A>
-<LI><A NAME="tex2html14777"
-  HREF="node666.html#SECTION065122090000000000000">Comprobación de la Copia</A>
-</UL></UL>
+<LI><UL>
+<LI><A NAME="tex2html14842"
+  HREF="node666.html#SECTION06560010000000000000">ssh-add</A>
+<LI><A NAME="tex2html14843"
+  HREF="node666.html#SECTION06560020000000000000">Arrancando un Agente SSH</A>
+<LI><A NAME="tex2html14844"
+  HREF="node666.html#SECTION06560030000000000000">El Protocolo</A>
+<LI><A NAME="tex2html14845"
+  HREF="node666.html#SECTION06560040000000000000">Bloqueando el acceso a un Agente</A>
+<LI><A NAME="tex2html14846"
+  HREF="node666.html#SECTION06560050000000000000">Poniendo Fecha de Caducidad</A>
+<LI><A NAME="tex2html14847"
+  HREF="node666.html#SECTION06560060000000000000">Véase también</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION065122000000000000000">
-Copias de Seguridad con <TT>rsync</TT></A>
-</H2>
-
-<P>
-
-<H4><A NAME="SECTION065122010000000000000">
-El Algoritmo</A>
-</H4>
-  
-
-<P>
-El programa  <TT>rsync</TT>  permite la sincronización de 
-ficheros y directorios
-entre dos máquinas minimizando el tamaño de la trasmisión
-mediante el cálculo de las diferencias entre las versiones
-existentes en las dos localizaciones implicadas.
-
-<P>
-<A NAME="tex2html1578"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=rsync"><TT>rsync</TT></A>
-opera e la siguiente forma (véase <A NAME="tex2html1579"
-  HREF="http://en.wikipedia.org/wiki/Rsync">Rsync</A>:
-
-<P>
-
-<OL>
-<LI>El usuario especifica las máquinas de origen y destino asi como los ficheros a 
-actualizar
-
-<P>
-</LI>
-<LI>La máquina de destino descompone el fichero objetivo en pequeños 
-bloques de tamaño fijo y genera checksums para cada bloque
-
-<P>
-</LI>
-<LI>La máquina destino transmite sus checksums a la máquina fuente
-
-<P>
-</LI>
-<LI>La máquina fuente busca el fichero y encuentra los bloques para los cuales
-los checksum casan con los suyos
-
-<P>
-</LI>
-<LI>La máquina fuente genera un conjunto de instrucciones que la máquina destino
-puede usar para actualizar el fichero
-
-<P>
-</LI>
-<LI>La máquina fuente envía a la máquina de destino las instrucciones
-asi como los datos de aquellas partes que no casan al destino
-
-<P>
-</LI>
-<LI>La máquina de destino utiliza las instrucciones y los nuevos datos para
-actualizar sus ficheros 
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION065122020000000000000">
-Mode de Uso</A>
-</H4>
-  
-
-<P>
-Normalmente se usara como en el ejemplo vía SSH:
-<PRE>
-rsync -aue ssh /home/user/public_html/ user@orion:/home/user/public_html/directory/
-</PRE>
-
-<P>
-La opción <code>-a</code> es equivalente a <code>-rlptgoD</code>.
-El significado de cada una de estas opciones es:
-
-<UL>
-<LI><code>-r, --recursive</code> Desciende recursivamente en los subdirectorios
-</LI>
-<LI><code>-l, --links</code> Copia enlaces
-</LI>
-<LI><code>-p, --perms</code> Preserva permisos
-</LI>
-<LI><code>-t, --times</code> Preserva los tiempos
-</LI>
-<LI><code>-g, --group</code> Preserva los grupos
-</LI>
-<LI><code>-o, --owner</code> Preserva el propietarios (solo si es el root)
-</LI>
-<LI><code>-D, --devices</code> Preserva los dispositivos (sólo si es el root)
-</LI>
-</UL>
-La opción <code>-u, --update</code> 
-permite saltarse aquellos ficheros que son mas recientes
-en el receptor.
-
-<P>
-La opción <code>-e</code> permite especificar que <code>ssh</code> será utilizada.
-
-<P>
-
-<H4><A NAME="SECTION065122030000000000000">
-Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
-</H4>
-  
-
-<P>
-El módulo <A NAME="tex2html1580"
-  HREF="http://search.cpan.org/perldoc?File::Rsync"><TT>File::Rsync</TT></A>
-ofrece una API de acceso a <code>rsync</code>:
-<PRE>
-pp2@nereida:~/LCALL$ perl -MFile::Rsync -wde 0
-main::(-e:1):   0
-  DB&lt;1&gt; $obj = File::Rsync-&gt;new( { archive =&gt; 1, rsh =&gt; '/usr/bin/ssh -l loginname', \
-                                  'rsync-path' =&gt; '/usr/bin/rsync' } )
-  DB&lt;2&gt; $obj-&gt;exec( { src =&gt; '/home/pp2/public_html/', dest =&gt; 'machine:/home/loginname/public_html/pp2/' } )
-  DB&lt;3&gt; q
-pp2@nereida:~/LCALL$ ssh loginname@machine 'ls -ltr | tail -3'
-drwxr-xr-x  38 loginname loginname        4096 2007-03-21 07:26 pp2
-drwxr-xr-x  60 loginname loginname        4096 2007-03-21 08:08 pl
-drwxr-xr-x   7 loginname loginname        4096 2007-03-21 12:20 public_html
-pp2@nereida:~/LCALL$ ssh loginname@machine date
-mié mar 21 12:26:37 WET 2007
-</PRE>
-Otro módulo es <A NAME="tex2html1581"
-  HREF="http://search.cpan.org/perldoc?File::RsyncP"><TT>File::RsyncP</TT></A>, enteramente escrito en Perl.
-
-<P>
-
-<H4><A NAME="SECTION065122040000000000000">
-Backups con <TT>rsync</TT> en un Medio Externo</A>
-</H4>
-  
-
-<P>
-Veamos como hacer una copia diaria de una máquina remota (<code>someserver</code>)
-a un disco USB externo en otra máquina <code>mylaptop</code>.
-
-<P>
-
-<H4><A NAME="SECTION065122050000000000000">
-El fichero <TT>/etc/fstab</TT></A>
-</H4>
-  
-
-<P>
-La última línea del fichero <code>/etc/fstab</code> muestra la información de montaje:
-<PRE>
-root@mylaptop:~# cat /etc/fstab
-# /etc/fstab: static file system information.
-#
-# &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;
-proc            /proc           proc    defaults        0       0
-# /dev/sda1
-UUID=45797091-2b2f-45b2-95c1-2bfaaea20253 /               ext3    relatime,errors=remount-ro 0       1
-# /dev/sda5
-UUID=83fce336-1f21-4690-9544-dc7dd988ea71 none            swap    sw              0       0
-/dev/scd0       /media/cdrom0   udf,iso9660 user,noauto,exec,utf8 0       0
-/dev/fd0        /media/floppy0  auto    rw,user,noauto,exec,utf8 0       0
-/dev/sdb1       /media/PORTABLE ext3    rw,nosuid,nodev,uhelper=hal,data=ordered
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION065122060000000000000">
-El Programa de Copia</A>
-</H4>
-  
-
-<P>
-<PRE>
-casiano@mylaptop:~/bin$ cat -n someserverbackuptoportabledisk.pl
- 1  #!/usr/bin/perl
- 2  use strict;
- 3  use Log::Log4perl qw{:easy};
- 4
- 5  my $ismounted = `mount 2&gt;&amp;1`;
- 6
- 7  # log file is in /home/casiano/backup.log
- 8  Log::Log4perl::init('/home/casiano/bin/logconfig');
- 9  my $log = Log::Log4perl-&gt;get_logger();
-10
-11  if ($ismounted =~ m{/media/PORTABLE}) {
-12
-13    my $agent = `keychain --eval --agents ssh 2&gt;&amp;1`;
-14    $log-&gt;logdie("Error executing keychain") if $?;
-15
-16    $agent =~ m{SSH_AUTH_SOCK=([^;]+);};
-17    $ENV{SSH_AUTH_SOCK} = $1;
-18
-19    $log-&gt;info("Executing ssh someserverbackup");
-20    my $backupinfo = `rsync -ae ssh someserverbackup:/root/ /media/PORTABLE/someserver/root/ 2&gt;&amp;1`;
-21    $log-&gt;info($backupinfo);
-22
-23    $backupinfo = `rsync -ae ssh someserverbackup:/home/ /media/PORTABLE/someserver/home/ 2&gt;&amp;1`;
-24    $log-&gt;info($backupinfo);
-25
-26    exit($?);
-27  }
-28  $log-&gt;logdie("/media/PORTABLE not mounted\n");
-</PRE>
-
-<P>
-La clave está protegida con una passphrase. Previamente se ha cargado un agente y se le ha dado
-la clave <code>/home/casiano/.ssh/someserverbackupidentity</code> que es la utilizada en las conexiones
-que efectúan las dos llamadas a <code>rsync</code>.
-
-<P>
-
-<H4><A NAME="SECTION065122070000000000000">
-Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
-</H4>
-  
-
-<P>
-Deberá existir una entrada como esta en el fichero <code>~/.ssh/config</code>:
-
-<P>
-<PRE>
-Host someserverbackup
-HostName someserver
-user root
-IdentityFile /home/casiano/.ssh/someserverbackupidentity
-BatchMode yes
-</PRE>
-la clave <code>/home/casiano/.ssh/someserverbackupidentity</code>
-ha sido publicada en <code>someserver</code>.
-
-<P>
-La máquina debe permitir el acceso al administrador vía SSH:
-
-<P>
-<PRE>
-root@mylaptop:/etc/ssh# grep -i permitroot sshd_config
-PermitRootLogin yes
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION065122080000000000000">
-El fichero de <TT>cron</TT></A>
-</H4>
-  
-
-<P>
-<PRE>
-casiano@mylaptop:~$ crontab -e
-</PRE>
-El fichero fué generado con <code>kcron</code>:
-
-<P>
-<PRE>
-   # backup de someserver a las 14 y a las 0 horas en disco portable
-   0 3,21 * * *    /home/casiano/bin/someserverbackuptoportabledisk.pl
-   # This file was written by KCron. Copyright (c) 1999, Gary Meyer
-   # Although KCron supports most crontab formats, use care when editing.
-   # Note: Lines beginning with "#\" indicates a disabled task.
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION065122090000000000000">
-Comprobación de la Copia</A>
-</H4>
-  
-
-<P>
-Es necesario comprobar que las copias se están haciendo correctamente.
-En mi agenda pongo una tarea que consiste en comprobar la copia.
-En mi home en cada una de máquinas hay un fichero
-<code>AUTOMATICBACKUPCHECKOUT</code> que contiene la fecha. Si 
-la copia de seguridad de dicho fichero contiene 
-la fecha del día anterior, es señal de que el proceso 
-copió el fichero.
-En el momento de comprobar la copia actualizo 
-manualmente la fecha almacenada en dicho fichero.
-Este proceso es facilitado por el siguiente 
-guión:
-
-<P>
-<PRE>
-casiano@mylaptop:~/bin$ cat -n checkbackup
- 1  #!/bin/bash
- 2  for f in /backup/someserver/home/casiano/AUTOMATICBACKUPCHECKOUT \
-             /media/PORTABLE/someserver/home/casiano/AUTOMATICBACKUPCHECKOUT;  do
- 3    echo "Observe the date of $f:";
- 4    ls -l $f;
- 5
- 6    echo "Contents of $f";
- 7    echo "***************************************************************";
- 8    cat $f;
- 9    echo "***************************************************************";
-10  done
-11
-12  echo "Now we are going to edit AUTOMATICBACKUPCHECKOUT and the backup log file,"
-13  echo "press any key to continue and fill the file with today's date"
-14
-15  # Wait for key to be pressed
-16  read -n 1
-17  # Edit both remote and local files
-18  vi -p scp://someserver/AUTOMATICBACKUPCHECKOUT /home/casiano/mylaptopbackup.log
-</PRE>
-
-<P>
-En el caso de errores puede ser útil revisar el fichero de logs:
-<PRE>
-casiano@mylaptop:~$ cat backup.log
-2009/05/06 15:53:42 INFO someserverbackuptoportabledisk.pl-19-main::: Executing ssh someserverbackup
-2009/05/06 15:57:12 INFO someserverbackuptoportabledisk.pl-19-main::: Executing ssh someserverbackup
-</PRE>
-
-<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html14767"
+<A NAME="tex2html14840"
   HREF="node667.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html14761"
-  HREF="node664.html">
+<A NAME="tex2html14834"
+  HREF="node660.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html14757"
+<A NAME="tex2html14828"
   HREF="node665.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html14763"
-  HREF="node832.html">
+<A NAME="tex2html14836"
+  HREF="node840.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html14765"
-  HREF="node835.html">
+<A NAME="tex2html14838"
+  HREF="node843.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -512,20 +447,20 @@ casiano@mylaptop:~$ cat backup.log
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html14768"
-  HREF="node667.html">Git</A>
-<B> Subir:</B> <A NAME="tex2html14762"
-  HREF="node664.html">Copia Segura de un</A>
-<B> Anterior:</B> <A NAME="tex2html14758"
-  HREF="node665.html">Transferencia de ficheros por</A>
- &nbsp; <B>  <A NAME="tex2html14764"
-  HREF="node832.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html14766"
-  HREF="node835.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html14841"
+  HREF="node667.html">Mejor un Sólo Agente</A>
+<B> Subir:</B> <A NAME="tex2html14835"
+  HREF="node660.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html14829"
+  HREF="node665.html">Deshabilitar la Asignación de</A>
+ &nbsp; <B>  <A NAME="tex2html14837"
+  HREF="node840.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html14839"
+  HREF="node843.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-25
+2014-11-28
 </ADDRESS>
 </BODY>
 </HTML>
