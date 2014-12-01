@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Revoking Access to an App</TITLE>
-<META NAME="description" CONTENT="Revoking Access to an App">
+<TITLE>Auth Hash Schema</TITLE>
+<META NAME="description" CONTENT="Auth Hash Schema">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node765.html">
 <LINK REL="previous" HREF="node763.html">
-<LINK REL="up" HREF="node750.html">
+<LINK REL="up" HREF="node763.html">
 <LINK REL="next" HREF="node765.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16437"
+<A NAME="tex2html16498"
   HREF="node765.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16431"
-  HREF="node750.html">
+<A NAME="tex2html16492"
+  HREF="node763.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16425"
+<A NAME="tex2html16488"
   HREF="node763.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16433"
-  HREF="node841.html">
+<A NAME="tex2html16494"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16435"
-  HREF="node844.html">
+<A NAME="tex2html16496"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,67 +91,178 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16438"
-  HREF="node765.html">Google + API for</A>
-<B> Subir:</B> <A NAME="tex2html16432"
-  HREF="node750.html">OAuth</A>
-<B> Anterior:</B> <A NAME="tex2html16426"
-  HREF="node763.html">Sign-in with Google +</A>
- &nbsp; <B>  <A NAME="tex2html16434"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16436"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16499"
+  HREF="node765.html">OmniAuth OAuth2 gem</A>
+<B> Subir:</B> <A NAME="tex2html16493"
+  HREF="node763.html">OmniAuth gem: Standardized Multi-Provider</A>
+<B> Anterior:</B> <A NAME="tex2html16489"
+  HREF="node763.html">OmniAuth gem: Standardized Multi-Provider</A>
+ &nbsp; <B>  <A NAME="tex2html16495"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16497"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H1><A NAME="SECTION0614110000000000000000">
-Revoking Access to an App</A>
-</H1>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html16500"
+  HREF="node764.html#SECTION061431010000000000000">Ejemplos</A>
+<LI><A NAME="tex2html16501"
+  HREF="node764.html#SECTION061431020000000000000">Documentación de la Gema</A>
+<LI><A NAME="tex2html16502"
+  HREF="node764.html#SECTION061431030000000000000">Véase</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION061431000000000000000">
+Auth Hash Schema</A>
+</H2>
 <P>
-<I>Go to
-<A NAME="tex2html1817"
-  HREF="https://security.google.com/settings/security/permissions?pli=1">https://security.google.com/settings/security/permissions</A>
+<I><A NAME="tex2html1793"
+  HREF="https://github.com/intridea/omniauth/wiki/Auth-Hash-Schema">OmniAuth is a flexible authentication system utilizing Rack middleware.</A>
 </I>
 <P>
-<I>Or to your configuration 
-<A NAME="tex2html1818"
-  HREF="https://www.google.com/settings/personalinfo">https://www.google.com/settings/personalinfo</A>
-and there to <B>security</B>. From there go to the section
-<B>Account permissions</B> (<I>Control which apps and websites have access
-to your account information</I>). Choose the link <B>View All</B>.
+<I>OmniAuth will always return a hash of information after authenticating
+with an external provider in the Rack environment under the key
+<code>omniauth.auth</code>. 
+</I>
+<P>
+<I>This information is meant to be as normalized as
+possible, so the schema below will be filled to the greatest degree
+available given the provider upon authentication. Fields marked required
+will always be present. 
 </I>
 <P>
 <UL>
-<LI>Remember to kill the session if you want to check that the permit
-has been effectively removed. 
+<LI><code>provider (required)</code> The provider with which the user
+authenticated (e.g. <code>twitter</code> or <code>facebook</code>)
+
+<P>
 </LI>
-<LI>Go to chrome and open a window in 
-<FONT COLOR="#ff0000"> incognito mode</FONT>
+<LI><code>uid (required)</code> An identifier unique to the given provider,
+such as a 
+<FONT COLOR="#ff0000"> Twitter user ID</FONT>. Should be stored as a string.
+
+<P>
 </LI>
-<LI>Attempt to access the URL that requires Google Authentication
-in your service
+<LI><code>info (required)</code> A hash containing information about the user
+  
+<UL>
+<LI><code>name (required)</code> The best display name known to the
+strategy. Usually a concatenation of first and last name, but may also
+be an arbitrary designator or nickname for some strategies
 </LI>
-<LI>It has to ask you for permits again
+<LI><code>email</code> The e-mail of the authenticating user. Should be provided if at all possible (but some sites such as Twitter do not provide this information)
+</LI>
+<LI><code>nickname</code> The username of an authenticating user (such
+    as your <code>@-name</code> from Twitter or GitHub account name)
+</LI>
+<LI><code>first_name</code>
+</LI>
+<LI><code>last_name</code>
+</LI>
+<LI><code>location</code> The general location of the user, usually a city and state.
+</LI>
+<LI><code>description</code> A short description of the authenticating user.
+</LI>
+<LI><code>image</code> A URL representing a profile image of the
+    authenticating user. Where possible, should be specified to a square,
+    roughly 50x50 pixel image.
+</LI>
+<LI><code>phone</code> The telephone number of the authenticating user (no formatting is enforced).
+</LI>
+<LI><code>urls</code> A hash containing key value pairs of an identifier
+    for the website and its URL. 
+
+<P>
+For instance, an entry could be 
+<PRE>
+"Blog" =&gt; "http://intridea.com/blog"
+</PRE>
+</LI>
+</UL>
+</LI>
+<LI><code>credentials</code> If the authenticating service provides some
+kind of access token or other credentials upon authentication, these
+are passed through here.
+</LI>
+<LI><code>token</code> Supplied by OAuth and OAuth 2.0 providers, the access token.
+</LI>
+<LI><code>secret</code> Supplied by OAuth providers, the access token secret.
+</LI>
+<LI><code>extra</code> Contains extra information returned from the
+authentication provider. May be in provider-specific formats.
+</LI>
+<LI><code>raw_info</code> A hash of all information gathered about a user
+in the format it was gathered. 
+
+<P>
+For example, for Twitter users this is
+a hash representing the JSON hash returned from the Twitter API.
+</LI>
+</UL>
+<P>
+<H4><A NAME="SECTION061431010000000000000">
+Ejemplos</A>
+</H4>
+<P>
+<UL>
+<LI><A NAME="tex2html1794"
+  HREF="https://github.com/intridea/omniauth/wiki/Sinatra-Example">Omniauth Sinatra Example (Twitter y OpenID)</A>
+</LI>
+<LI><A NAME="tex2html1795"
+  HREF="https://gist.github.com/crguezl/9857758">Omniauth Sinatra Gist Example: Facebook, Twitter, GitHub</A>
+</LI>
+</UL>
+<P>
+<H4><A NAME="SECTION061431020000000000000">
+Documentación de la Gema</A>
+</H4>
+<P>
+<UL>
+<LI><A NAME="tex2html1796"
+  HREF="http://rubydoc.info/github/intridea/omniauth/master/frames">API doc: OmniAuth: Standardized Multi-Provider Authentication</A>
+</LI>
+<LI><A NAME="tex2html1797"
+  HREF="http://rubydoc.info/github/intridea/omniauth/master/OmniAuth">Module: OmniAuth</A>
+</LI>
+<LI>Esta clase contiene información sobre el usuario.
+<A NAME="tex2html1798"
+  HREF="http://rubydoc.info/github/intridea/omniauth/master/OmniAuth/AuthHash/InfoHash">Class: OmniAuth::AuthHash::InfoHash</A>
+</LI>
+</UL>
+<P>
+<H4><A NAME="SECTION061431030000000000000">
+Véase</A>
+</H4>
+<UL>
+<LI><A NAME="tex2html1799"
+  HREF="https://plus.google.com/+RaymondCamden/posts/idUKfLscAuV">Blog Post: ColdFusion and OAuth part 3- Google authentication.</A>
+Raymond Camden
 </LI>
 </UL>
 <P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html16437"
+<A NAME="tex2html16498"
   HREF="node765.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16431"
-  HREF="node750.html">
+<A NAME="tex2html16492"
+  HREF="node763.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16425"
+<A NAME="tex2html16488"
   HREF="node763.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16433"
-  HREF="node841.html">
+<A NAME="tex2html16494"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16435"
-  HREF="node844.html">
+<A NAME="tex2html16496"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -203,20 +313,20 @@ in your service
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16438"
-  HREF="node765.html">Google + API for</A>
-<B> Subir:</B> <A NAME="tex2html16432"
-  HREF="node750.html">OAuth</A>
-<B> Anterior:</B> <A NAME="tex2html16426"
-  HREF="node763.html">Sign-in with Google +</A>
- &nbsp; <B>  <A NAME="tex2html16434"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16436"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html16499"
+  HREF="node765.html">OmniAuth OAuth2 gem</A>
+<B> Subir:</B> <A NAME="tex2html16493"
+  HREF="node763.html">OmniAuth gem: Standardized Multi-Provider</A>
+<B> Anterior:</B> <A NAME="tex2html16489"
+  HREF="node763.html">OmniAuth gem: Standardized Multi-Provider</A>
+ &nbsp; <B>  <A NAME="tex2html16495"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16497"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

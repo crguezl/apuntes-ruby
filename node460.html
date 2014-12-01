@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Sinatra como Middleware</TITLE>
-<META NAME="description" CONTENT="Sinatra como Middleware">
+<TITLE>Settings disponibles/Available Settings</TITLE>
+<META NAME="description" CONTENT="Settings disponibles/Available Settings">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node461.html">
-<LINK REL="previous" HREF="node456.html">
-<LINK REL="up" HREF="node423.html">
+<LINK REL="previous" HREF="node459.html">
+<LINK REL="up" HREF="node431.html">
 <LINK REL="next" HREF="node461.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11202"
+<A NAME="tex2html11261"
   HREF="node461.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11196"
-  HREF="node423.html">
+<A NAME="tex2html11255"
+  HREF="node431.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11190"
+<A NAME="tex2html11249"
   HREF="node459.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11198"
-  HREF="node841.html">
+<A NAME="tex2html11257"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11200"
-  HREF="node844.html">
+<A NAME="tex2html11259"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,153 +92,153 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11203"
-  HREF="node461.html">Práctica: Aplicación Web con</A>
-<B> Subir:</B> <A NAME="tex2html11197"
-  HREF="node423.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11191"
-  HREF="node459.html">Referencias</A>
- &nbsp; <B>  <A NAME="tex2html11199"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11201"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11262"
+  HREF="node461.html">Environments</A>
+<B> Subir:</B> <A NAME="tex2html11256"
+  HREF="node431.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11250"
+  HREF="node459.html">Configuring attack protection</A>
+ &nbsp; <B>  <A NAME="tex2html11258"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11260"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033260000000000000000">
-Sinatra como Middleware</A>
+<H1><A NAME="SECTION033210000000000000000">
+Settings disponibles/Available Settings</A>
 </H1>
 
-<P>
-Not only is Sinatra able to use other Rack middleware, any Sinatra
-application can in turn be added in front of any Rack endpoint as
-middleware itself. 
-
-<P>
-This endpoint could be another Sinatra application,
-or any other Rack-based application (Rails/Ramaze/Camping/…):
-
-<P>
-
 <OL>
-<LI>When a request comes in, all <code>before</code> filters are triggered
+<LI><code>absolute_redirects</code>
+If disabled, Sinatra will allow relative redirects, however, Sinatra will no longer conform with RFC 2616 (HTTP 1.1), which only allows absolute redirects.
+
+<P>
+Enable if your app is running behind a reverse proxy that has not been set up properly. Note that the <code>url</code> helper will still produce absolute URLs, unless you pass in <code>false</code> as the second parameter.
+Disabled by default.
+
+<P>
 </LI>
-<LI>Then, if a route matches, the corresponding block will be executed
+<LI><code>add_charsets</code>
+mime types the <code>content_type</code> helper will automatically add the charset info to. 
+
+<P>
+You should add to it rather than overriding this option: 
+<PRE>
+settings.add_charsets &lt;&lt; "application/foobar"
+</PRE>
 </LI>
-<LI>If no route matches, the request is handed off to the wrapped application
+<LI><code>app_file</code>
+Path to the main application file, used to detect project root, views and public folder and inline templates.
 </LI>
-<LI>The <code>after</code> filters are executed after we've got a response back from the
-route or  the wrapped app
+<LI><code>bind</code>
+IP address to bind to (default: 0.0.0.0 or localhost if your <code>environment</code> is set to 
+<code>development</code>). Only used for built-in server.
+</LI>
+<LI><code>default_encoding</code>
+encoding to assume if unknown (defaults to "utf-8").
+</LI>
+<LI><code>dump_errors</code>
+display errors in the log.
+</LI>
+<LI><code>environment</code>
+current environment, defaults to <code>ENV['RACK_ENV']</code>, 
+or <code>development</code> if not available.
+</LI>
+<LI><code>logging</code>
+use the logger.
+</LI>
+<LI><code>lock</code>
+Places a lock around every request, only running processing on request per Ruby process concurrently.
+Enabled if your app is not thread-safe. Disabled per default.
+</LI>
+<LI><code>method_override</code>
+use <code>_method magic</code> to allow put/delete forms in browsers that don't support it.
+</LI>
+<LI><code>port</code>
+Port to listen on. Only used for built-in server.
+</LI>
+<LI><code>prefixed_redirects</code>
+Whether or not to insert <code>request.script_name</code> into redirects if no absolute path is given. That way redirect '/foo' would behave like redirect to('/foo'). Disabled per default.
+</LI>
+<LI><code>protection</code>
+Whether or not to enable web attack protections. See protection section above.
+</LI>
+<LI><code>public_dir</code>
+Alias for <code>public_folder</code>. See below.
+</LI>
+<LI><code>public_folder</code>
+Path to the folder public files are served from. Only used if static file serving is enabled (see static setting below). Inferred from <code>app_file</code> setting if not set.
+</LI>
+<LI><code>reload_templates</code>
+Whether or not to reload templates between requests. Enabled in development mode.
+</LI>
+<LI><code>root</code>
+Path to project root folder. Inferred from <code>app_file</code> setting if not set.
+</LI>
+<LI><code>raise_errors</code>
+raise exceptions (will stop application). Enabled by default when environment is set to "test", disabled otherwise.
+</LI>
+<LI><code>run</code>
+if enabled, Sinatra will handle starting the web server, do not enable if using rackup or other means.
+</LI>
+<LI><code>running</code>
+is the built-in server running now? do not change this setting!
+</LI>
+<LI><code>server</code>
+Server or list of servers to use for built-in server. order indicates priority, default depends on Ruby implementation.
+</LI>
+<LI><code>sessions</code>
+Enable cookie-based sessions support using Rack::Session::Cookie. See 'Using Sessions' section for more information.
+</LI>
+<LI><code>show_exceptions</code>
+Show a stack trace in the browser when an exception happens. Enabled by default when environment is set to "development", disabled otherwise.
+Can also be set to <code>:after_handler</code> to trigger app-specified error handling before showing a stack trace in the browser.
+</LI>
+<LI><code>static</code>
+Whether Sinatra should handle serving static files.
+Disable when using a server able to do this on its own.
+Disabling will boost performance.
+Enabled per default in classic style, disabled for modular apps.
+</LI>
+<LI><code>static_cache_control</code>
+When Sinatra is serving static files, set this to add Cache-Control headers to the responses. 
+Uses the <code>cache_control</code> helper. Disabled by default.
+Use an explicit array when setting multiple values: 
+<PRE>
+set :static_cache_control, [:public, :max_age =&gt; 300]
+</PRE>
+</LI>
+<LI><code>threaded</code>
+If set to true, will tell Thin to use EventMachine.defer for processing the request.
+</LI>
+<LI><code>views</code>
+Path to the views folder. Inferred from <code>app_file</code> setting if not set.
+</LI>
+<LI><code>x_cascade</code>
+Whether or not to set the X-Cascade header if no route matches. Defaults to true.
 </LI>
 </OL>
-Thus, our Sinatra app is a middleware.
 
 <P>
-
-<DIV ALIGN="CENTER"><A NAME="figure:requestobject"></A><A NAME="19683"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura 33.2:</STRONG>
-La pila Rack</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.6]sinatra/rack_stack.png
-
-</DIV></TD></TR>
-</TABLE>
-</DIV>
-
-<P>
-<PRE>
-[~/sinatra/sinatra-as-middleware]$ cat app.rb
-require 'sinatra/base'
-require 'haml'
-require 'pp'
-
-class LoginScreen &lt; Sinatra::Base
-  enable :sessions
-  enable :inline_templates
-
-  get('/login') { haml :login }
-
-  post('/login') do
-    if params[:name] == 'admin' &amp;&amp; params[:password] == 'admin'
-      puts "params = "
-      pp params
-      session['user_name'] = params[:name]
-      redirect '/'
-    else
-      redirect '/login'
-    end
-  end
-end
-
-class MyApp &lt; Sinatra::Base
-  enable :inline_templates
-  # middleware will run before filters
-  use LoginScreen
-
-  before do
-    unless session['user_name']
-      halt haml :denied
-    end
-  end
-
-  get('/') do
-    haml :cheer, :locals =&gt; { :name =&gt; session['user_name'] }
-  end
-
-  run!
-end
-
-__END__
-
-@@ layout
-!!!
-%html
-  %head
-    %title Sinatra as Middleware
-  %body
-    %h1 Sinatra as Middleware
-    = yield
-
-@@ login
-%form{:action=&gt;'/login', :method=&gt;'post'}
-  %label{:for=&gt;'name'} Name
-  %input#name{:type=&gt;"text",     :name=&gt;"name", :autofocus =&gt; true }
-  %br
-  %label{:for=&gt;'password'} Password
-  %input#password{:type=&gt;"password", :name=&gt;"password"}
-  %br
-  %button#go{:type=&gt;"submit",  :name=&gt;"submit", :value=&gt;"submit"} Click me!
-
-@@ cheer
-%h1
-  Hello #{name}
-  %br
-
-@@ denied
-%h1 
-  Access denied, please 
-  %a{:href=&gt;'/login'}login.
-</PRE>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11202"
+<A NAME="tex2html11261"
   HREF="node461.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11196"
-  HREF="node423.html">
+<A NAME="tex2html11255"
+  HREF="node431.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11190"
+<A NAME="tex2html11249"
   HREF="node459.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11198"
-  HREF="node841.html">
+<A NAME="tex2html11257"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11200"
-  HREF="node844.html">
+<A NAME="tex2html11259"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -289,20 +289,20 @@ __END__
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11203"
-  HREF="node461.html">Práctica: Aplicación Web con</A>
-<B> Subir:</B> <A NAME="tex2html11197"
-  HREF="node423.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11191"
-  HREF="node459.html">Referencias</A>
- &nbsp; <B>  <A NAME="tex2html11199"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11201"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11262"
+  HREF="node461.html">Environments</A>
+<B> Subir:</B> <A NAME="tex2html11256"
+  HREF="node431.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11250"
+  HREF="node459.html">Configuring attack protection</A>
+ &nbsp; <B>  <A NAME="tex2html11258"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11260"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

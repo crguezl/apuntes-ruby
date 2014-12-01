@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ruby y WebSockets: TCP for the Browser</TITLE>
-<META NAME="description" CONTENT="Ruby y WebSockets: TCP for the Browser">
+<TITLE>Asynchronous responses in Rack</TITLE>
+<META NAME="description" CONTENT="Asynchronous responses in Rack">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node503.html">
+<LINK REL="next" HREF="node504.html">
 <LINK REL="previous" HREF="node501.html">
-<LINK REL="up" HREF="node497.html">
+<LINK REL="up" HREF="node485.html">
 <LINK REL="next" HREF="node503.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11915"
+<A NAME="tex2html11968"
   HREF="node503.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11909"
-  HREF="node497.html">
+<A NAME="tex2html11962"
+  HREF="node485.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11903"
+<A NAME="tex2html11956"
   HREF="node501.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11911"
-  HREF="node841.html">
+<A NAME="tex2html11964"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11913"
-  HREF="node844.html">
+<A NAME="tex2html11966"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,192 +92,83 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11916"
-  HREF="node503.html">Una Aplicación Usando Websockets</A>
-<B> Subir:</B> <A NAME="tex2html11910"
-  HREF="node497.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html11904"
-  HREF="node501.html">websocket/rack</A>
- &nbsp; <B>  <A NAME="tex2html11912"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11914"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11969"
+  HREF="node503.html">Deferred or streaming response</A>
+<B> Subir:</B> <A NAME="tex2html11963"
+  HREF="node485.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11957"
+  HREF="node501.html">Ejemplo de Server Sent</A>
+ &nbsp; <B>  <A NAME="tex2html11965"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11967"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03930000000000000000">
-Ruby y WebSockets: TCP for the Browser</A>
+<H1><A NAME="SECTION038150000000000000000">
+Asynchronous responses in Rack</A>
 </H1>
 
 <P>
-Esta sección está sacada del blog de 
-<A NAME="tex2html1212"
-  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ilya Grigorik </A>.
+<A NAME="tex2html1216"
+  HREF="http://polycrystal.org/2012/04/15/asynchronous_responses_in_rack.html">Asynchronous responses in Rack</A>
+<P>
+With the Rack  synchronous interface protocol, the entire body must
+be prepared immediately, or be otherwise quickly available, for
+example by reading from file. A response that must be waited upon
+will tie up the process or thread executing the HTTP request. In a
+multi-process Rack server such as Unicorn, this will block the
+entire worker process, making in unavailable to server other requests.
 
 <P>
-WebSockets in HTML5 were designed from
-the ground up to be data agnostic (binary or text) with support for
-full-duplex communication. 
+Some Rack servers provide an alternate interface that allows the
+request to be suspended, unblocking the worker. At some later time,
+the request may be resumed, and the response sent to the client.
 
 <P>
-WebSockets are TCP for the web-browser.
-They require only a single connection,
-which translates into much better resource utilization for both the
-server and the client. 
+While there is not yet an async interface in the Rack specification,
+several Rack servers have implemented 
+<A NAME="tex2html1217"
+  HREF="https://github.com/raggi/thin/blob/async_for_rack/example/async_app.ru">James Tucker's async scheme.</A>
+<P>
+Rather than returning <code>[status, headers, body]</code>, the app returns a
+status of <code>-1</code>, or throws the symbol <code>:async</code>. 
 
 <P>
-Likewise, WebSockets are proxy and firewall
-aware, can operate over SSL and leverage the HTTP channel to
-accomplish all of the above - your existing load balancers, proxies
-and routers will work just fine.
+The server provides
+<code>env['async.callback']</code> 
+which the app saves and later calls with the
+usual <code>[status, headers, body]</code> 
+to send the response.
 
 <P>
-
-<H4><A NAME="SECTION03930010000000000000">
-The Server</A>
-</H4>
-  
-
-<P>
+Note: returning a status of <code>-1</code> is illegal as far as <code>Rack::Lint</code> is
+concerned. <code>throw :async</code> is not flagged as an <code>error</code>.
 <PRE>
-[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat server.rb
-require 'em-websocket'
-
-EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
-  ws.onopen    { ws.send "Hello Client!"}
-  ws.onmessage { |msg| ws.send "Pong: #{msg}" }
-  ws.onclose   { puts "WebSocket closed" }
+class AsyncApp
+  def call(env)
+    Thread.new do
+      sleep 5  # simulate waiting for some event
+      response = [200, {'Content-Type' =&gt; 'text/plain'}, ['Hello, World!']]
+      env['async.callback'].call response
+    end
+    
+    [-1, {}, []]  # or throw :async
+  end
 end
 </PRE>
 
 <P>
-
-<H4><A NAME="SECTION03930020000000000000">
-The Client</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat index.html 
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;script src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'&gt;&lt;/script&gt;
-    &lt;script&gt;
-      $(document).ready(function(){
-        function debug(str){ 
-          $("#debug").append("&lt;p&gt;"+str+"&lt;/p&gt;"); 
-        };
-
-        ws = new WebSocket("ws://www.example.com:8080/websocket");
-        ws.onmessage = function(evt) { 
-          $("#msg").append("&lt;p&gt;"+evt.data+"&lt;/p&gt;"); 
-        };
-        ws.onclose = function() { 
-          debug("socket closed"); 
-        };
-        ws.onopen = function() {
-          debug("connected...");
-          ws.send("hello server");
-        };
-      });
-    &lt;/script&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;div id="debug"&gt;&lt;/div&gt;
-    &lt;div id="msg"&gt;&lt;/div&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</PRE>
-You open up a WebSocket connection simply by calling the WebSocket constructor:
+In the example above, the request is suspended, nothing is sent
+back to the client, the connection remains open, and the client
+waits for a response. 
 
 <P>
-<PRE>
-var connection = new WebSocket('ws://html5rocks.websocket.org/echo', ['soap', 'xmpp']);
-</PRE>
-Notice the <code>ws:</code>. This is the new URL schema for WebSocket connections.
-There is also <code>wss</code>: for secure WebSocket connection the same way
-https: is used for secure HTTP connections.
-
-<P>
-Attaching some event handlers immediately to the connection allows
-you to know when the connection is opened, received incoming messages,
-or there is an error.
-
-<P>
-The second argument accepts optional subprotocols. It can be a
-string or an array of strings. Each string should represent a
-subprotocol name and server accepts only one of passed subprotocols
-in the array. Accepted subprotocol can be determined by accessing
-protocol property of WebSocket object.
-
-<P>
-<PRE>
-// When the connection is open, send some data to the server
-connection.onopen = function () {
-  connection.send('Ping'); // Send the message 'Ping' to the server
-};
-
-// Log errors
-connection.onerror = function (error) {
-  console.log('WebSocket Error ' + error);
-};
-
-// Log messages from the server
-connection.onmessage = function (e) {
-  console.log('Server: ' + e.data);
-};
-</PRE>
-As soon as we have a connection to the server (when the open event
-is fired) we can start sending data to the server using the send('your
-message') method on the connection object. It used to support only
-strings, but in the latest spec it now can send binary messages
-too. To send binary data, you can use either <code>Blob</code> or <code>ArrayBuffer</code>
-bject.
-
-<P>
-The server might send us messages at any time. Whenever this happens
-the <code>onmessage</code> callback fires. The callback receives an <code>event</code> object
-and the actual message is accessible via the <code>data</code> property.
-parrafoEjecución
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ ruby server.rb
-</PRE>
-
-<P>
-Cuando abrimos <code>index.html</code> con el navegador obtenemos una página como esta:
-<PRE>
-connected...
-
-Hello Client!
-
-Pong: hello server
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03930030000000000000">
-Véase</A>
-</H4>
-  
-
-<OL>
-<LI><A NAME="tex2html1213"
-  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ruby and WebSockets: TCP for the Browser</A>
-</LI>
-<LI><A NAME="tex2html1214"
-  HREF="http://www.html5rocks.com/en/tutorials/websockets/basics/">Introducing WebSockets: Bringing Sockets to the Web by Malte Ubl
-and Eiji Kitamura</A>
-2010
-</LI>
-<LI><A NAME="tex2html1215"
-  HREF="http://youtu.be/XVtEyilJD8M">Clean, simple websockets on Sinatra example
-by Austen Conrad Austen Conrad</A>
-YouTube
-</LI>
-</OL>
+The app returns the special status, and the
+worker process is able to handle more HTTP requests (i.e. it is not
+blocked). Later, inside the thread, the full response is prepared
+and sent to the client.
 
 <P>
 <BR><HR>
@@ -285,33 +176,27 @@ YouTube
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html11917"
-  HREF="node502.html#SECTION03930010000000000000">The Server</A>
-<LI><A NAME="tex2html11918"
-  HREF="node502.html#SECTION03930020000000000000">The Client</A>
-<LI><A NAME="tex2html11919"
-  HREF="node502.html#SECTION03930030000000000000">Véase</A>
-</UL></UL></UL>
+<LI><A NAME="tex2html11970"
+  HREF="node503.html">Deferred or streaming response bodies</A>
+</UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11915"
+<A NAME="tex2html11968"
   HREF="node503.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11909"
-  HREF="node497.html">
+<A NAME="tex2html11962"
+  HREF="node485.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11903"
+<A NAME="tex2html11956"
   HREF="node501.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11911"
-  HREF="node841.html">
+<A NAME="tex2html11964"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11913"
-  HREF="node844.html">
+<A NAME="tex2html11966"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -362,20 +247,20 @@ YouTube
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11916"
-  HREF="node503.html">Una Aplicación Usando Websockets</A>
-<B> Subir:</B> <A NAME="tex2html11910"
-  HREF="node497.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html11904"
-  HREF="node501.html">websocket/rack</A>
- &nbsp; <B>  <A NAME="tex2html11912"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11914"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11969"
+  HREF="node503.html">Deferred or streaming response</A>
+<B> Subir:</B> <A NAME="tex2html11963"
+  HREF="node485.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11957"
+  HREF="node501.html">Ejemplo de Server Sent</A>
+ &nbsp; <B>  <A NAME="tex2html11965"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11967"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

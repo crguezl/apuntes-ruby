@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Chat Simple</TITLE>
-<META NAME="description" CONTENT="Chat Simple">
+<TITLE>Sinatra usando Streaming, Rack MiddleWare y map</TITLE>
+<META NAME="description" CONTENT="Sinatra usando Streaming, Rack MiddleWare y map">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node489.html">
-<LINK REL="previous" HREF="node485.html">
-<LINK REL="up" HREF="node477.html">
+<LINK REL="previous" HREF="node487.html">
+<LINK REL="up" HREF="node485.html">
 <LINK REL="next" HREF="node489.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11699"
+<A NAME="tex2html11753"
   HREF="node489.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11693"
-  HREF="node477.html">
+<A NAME="tex2html11747"
+  HREF="node485.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11687"
+<A NAME="tex2html11741"
   HREF="node487.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11695"
-  HREF="node841.html">
+<A NAME="tex2html11749"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11697"
-  HREF="node844.html">
+<A NAME="tex2html11751"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,122 +92,135 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11700"
-  HREF="node489.html">Práctica: Chat con Mensajes</A>
-<B> Subir:</B> <A NAME="tex2html11694"
-  HREF="node477.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11688"
-  HREF="node487.html">Código Completo del Chat</A>
- &nbsp; <B>  <A NAME="tex2html11696"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11698"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11754"
+  HREF="node489.html">Enlaces Relacionados</A>
+<B> Subir:</B> <A NAME="tex2html11748"
+  HREF="node485.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11742"
+  HREF="node487.html">Streaming y Valores de</A>
+ &nbsp; <B>  <A NAME="tex2html11750"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11752"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03890000000000000000">
-Chat Simple</A>
+<H1><A NAME="SECTION03830000000000000000">
+Sinatra usando Streaming, Rack MiddleWare y map</A>
 </H1>
 
 <P>
+Véase el código en 
+<A NAME="tex2html1143"
+  HREF="https://github.com/crguezl/sinatra_intro/blob/master/streaming/better_middleware_handling.rb">sinatra_intro/streaming/better_middleware_handling.rb</A>
+en GitHub.
 
-<H4><A NAME="SECTION03890010000000000000">
-Donde</A>
-</H4>
-  
+<P>
+Otro beneficio que obtenemos cuando usamos 
+<code>Sinatra::Streaming</code> (parte de
+<code>sinatra-contrib</code>) es que:
 
-<UL>
-<LI><PRE>
-[~/sinatra-streaming/blazeeboychat(master)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/sinatra-streaming/blazeeboychat
-[~/sinatra-streaming/blazeeboychat(master)]$ git remote -v
-origin  git@github.com:crguezl/chat-blazee.git (fetch)
-origin  git@github.com:crguezl/chat-blazee.git (push)
-</PRE>
-</LI>
-<LI><A NAME="tex2html1184"
-  HREF="https://github.com/crguezl/chat-blazee">https://github.com/crguezl/chat-blazee</A>
-</LI>
-<LI><A NAME="tex2html1185"
-  HREF="https://gist.github.com/blazeeboy/9289678">https://gist.github.com/blazeeboy/9289678</A>
-</LI>
-</UL>
+<P>
+Blocks passed to <code>#map!</code> or 
+<code>#map</code> will actually be applied when streaming takes place (véase 
+<A NAME="tex2html1144"
+  HREF="http://www.sinatrarb.com/contrib/streaming.html">http://www.sinatrarb.com/contrib/streaming.html</A>):
 
 <P>
 
-<H4><A NAME="SECTION03890020000000000000">
-Código</A>
-</H4>
-  
+<img src="rack.jpeg">
 
+<P>
 <PRE>
-[~/sinatra-streaming/blazeeboychat(master)]$ cat chat.rb 
-require 'sinatra' # gem install sinatra --no-rdoc --no-ri
-set :port, 3000
-set :environment, :production
- 
-html = &lt;&lt;-EOT
-&lt;html&gt;&lt;head&gt;&lt;style&gt;
-#text{width:100%; font-size: 15px; padding: 5px; display: block;}
-&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
-  &lt;input id="text" placeholder="Write then press Enter."/&gt;
-  &lt;div id="chat"&gt;&lt;/div&gt;
-  &lt;script src="http://code.jquery.com/jquery-1.11.0.min.js"&gt;&lt;/script&gt;
-  &lt;script&gt;
-  $('#text').keypress(function(e){
-    if( e.keyCode==13 ){
-      $.get('/send',{text:$('#text').val()});
-      $('#text').val('');
-    }
-  });
-  last = 0;
-  setInterval(function(){
-    $.get('/update',{last:last},
-      function(response){
-        last = $('&lt;p&gt;').html(response).find('span').data('last');
-        $('#chat').append(response);
-        });
-    },1000);
-  &lt;/script&gt;
-&lt;/body&gt;&lt;/html&gt;
-EOT
- 
-chat = ['welcome..']
-get('/') { html }
-get '/send' do
-  chat &lt;&lt; "#{request.ip} : #{params['text']}"
-  nil
+[~/sinatra/sinatra-streaming/intro-streaming(master)]$ cat better_middleware_handling.rb 
+# http://www.sinatrarb.com/contrib/streaming.html
+
+require 'sinatra'
+require 'sinatra/streaming'
+
+class StupidMiddleware
+  def initialize(app) 
+    @app = app 
+  end
+
+  def call(env)
+    status, headers, body = @app.call(env)
+    # Blocks passed to #map! or #map will actually be applied when streaming takes place
+    body.map! { |e| e.upcase }
+    [status, headers, body]
+  end
 end
-get '/update' do
-  updates = chat[params['last'].to_i..-1]
-  last = "&lt;span data-last=\"#{chat.size}\"&gt;&lt;/span&gt;"
-  if updates.size&gt;0
-  updates.join('&lt;/br&gt;') + "#{last}&lt;/br&gt;"
-  else
-    last
+
+use StupidMiddleware
+
+before do
+  content_type :html
+end
+
+song = %q{
+And now, the end is near 
+And so I face the final curtain 
+My friend, I'll say it clear 
+I'll state my case, of which I'm certain 
+I've lived a life that's full 
+I traveled each and ev'ry highway 
+And more, much more than this, I did it my way 
+
+Regrets, I've had a few 
+But then again, too few to mention 
+I did what I had to do , I saw it through without exemption 
+I planned each charted course, each careful step along the highway 
+And more, much more than this, I did it my way 
+
+Yes, there were times, I'm sure you knew 
+When I bit off more than I could chew 
+And through it all, when there was doubt 
+I ate it up and spit it out 
+I faced it all and I stood tall and did it my way 
+
+I've loved, I've laughed and cried 
+I've had my fill, my share of losing 
+And now, as tears subside, I find it all so amusing 
+To think I did all that 
+And may I say, not in a shy way, 
+"Oh, no, oh, no, not me, I did it my way" 
+
+For what is a man, what has he got? 
+If not himself, then he has naught 
+The right to say the things he feels and not the words of one who kneels 
+The record shows I took the blows and did it my way!
+}.split(/\n/)
+
+song.map! { |x| x.split(/\s+/) }
+
+set :song, song
+set :colors, ["red", "blue", "black", "green", "yellow", "blueviolet" ]
+
+get '/' do
+  color = 0
+  stream do |out|
+    out.puts '&lt;pre&gt;'
+    settings.song.each do |line|
+      line.each do |w|
+        out.print %Q{&lt;font color="#{settings.colors[color]}"&gt;#{w} &lt;/font&gt;}
+        color = (color+1) % settings.colors.size
+        sleep 0.02
+      end
+      out.puts "\n"
+      sleep 1
+   end
+   out.puts '&lt;/pre&gt;'
+   out.close
   end
 end
 </PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html11701"
-  HREF="node488.html#SECTION03890010000000000000">Donde</A>
-<LI><A NAME="tex2html11702"
-  HREF="node488.html#SECTION03890020000000000000">Código</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

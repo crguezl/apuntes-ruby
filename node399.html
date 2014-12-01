@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Añadir Template Haml a Rock, Paper, Scissors</TITLE>
-<META NAME="description" CONTENT="Práctica: Añadir Template Haml a Rock, Paper, Scissors">
+<TITLE>Práctica: Accediendo a Twitter y Mostrando los últimos twitts en una página</TITLE>
+<META NAME="description" CONTENT="Práctica: Accediendo a Twitter y Mostrando los últimos twitts en una página">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node400.html">
 <LINK REL="previous" HREF="node398.html">
-<LINK REL="up" HREF="node397.html">
+<LINK REL="up" HREF="node376.html">
 <LINK REL="next" HREF="node400.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10195"
+<A NAME="tex2html10238"
   HREF="node400.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10189"
-  HREF="node397.html">
+<A NAME="tex2html10232"
+  HREF="node376.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10183"
+<A NAME="tex2html10226"
   HREF="node398.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10191"
-  HREF="node841.html">
+<A NAME="tex2html10234"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10193"
-  HREF="node844.html">
+<A NAME="tex2html10236"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,203 +92,52 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10196"
-  HREF="node400.html">Práctica: Añada Hojas de</A>
-<B> Subir:</B> <A NAME="tex2html10190"
-  HREF="node397.html">Un Ejemplo Simple: Piedra,</A>
-<B> Anterior:</B> <A NAME="tex2html10184"
-  HREF="node398.html">Práctica: Rock, Paper, Scissors:</A>
- &nbsp; <B>  <A NAME="tex2html10192"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10194"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10239"
+  HREF="node400.html">Ejemplo: Basic Authentication con</A>
+<B> Subir:</B> <A NAME="tex2html10233"
+  HREF="node376.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10227"
+  HREF="node398.html">Ejemplo Simple Combinando Rack::Request,</A>
+ &nbsp; <B>  <A NAME="tex2html10235"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10237"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION031172000000000000000"></A>
-   <A NAME="17662"></A>
-  
-<A NAME="practica:rackandhaml"></A>
+<H1><A NAME="SECTION031110000000000000000"></A>
+   <A NAME="17802"></A>
 <BR>
-Práctica: Añadir Template Haml a Rock, Paper, Scissors
-</H2>
-
-<P>
-Use 
-<A NAME="tex2html944"
-  HREF="http://haml.info/">Haml</A>
-para crear un template <code>index.haml</code> en un directorio <code>views</code>.
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-rock-paper-scissors(template)]$ tree
-.
-|--- README
-|--- Rakefile
-|--- rps.rb
-`--- views
-    `--- index.haml
-</PRE>
-El template puede ser usado así:
-<PRE>
-require 'rack/request'
-require 'rack/response'
-require 'haml'
-
-module RockPaperScissors
-  class App 
-     ...
-
-    def call(env)
-      ...
-      engine = Haml::Engine.new File.open("views/index.haml").read
-      res = Rack::Response.new 
-      res.write engine.render({}, 
-        :answer =&gt; answer, 
-        :choose =&gt; @choose,
-        :throws =&gt; @throws)
-      res.finish
-    end # call
-  end   # App
-end     # RockPaperScissors
-</PRE>
-
-<P>
-Véase:
-
-<P>
-
-<OL>
-<LI><A NAME="tex2html945"
-  HREF="http://haml.info/docs/yardoc/Haml/Engine.html">Haml::Engine</A>
-</LI>
-</OL>
-
-<P>
-La sintáxis del método <code>render</code> es:
-<PRE>
-  (String) render(scope = Object.new, locals = {})
-</PRE>
-También se puede usar como <code>to_html</code>.
-Procesa el template y retorna el resultado como una cadena.
-
-<P>
-El parámetro <code>scope</code> es el contexto en el cual se evalúa el template.
-
-<P>
-Si es un objeto <A NAME="tex2html946"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> <A NAME="tex2html947"
-  HREF="http://haml.info/docs.html"><TT>haml</TT> </A> lo usa como segundo 
-argumento de 
-<code>Kernel#eval</code> (Véase la sección <I>Bindings (encarpetados) y eval</I> en 
-<A HREF="node246.html#subsection:bindings">15.2.1</A>)
-en otro caso, <A NAME="tex2html948"
-  HREF="http://haml.info/docs.html"><TT>haml</TT> </A> utiliza 
-<code>#instance_eval</code>.
-
-<P>
-Nótese que Haml modifica el contexto de la evaluación (bien el objeto ámbito 
-o el objeto <code>self</code> del ámbito del binding).
-Se extiende <A NAME="tex2html949"
-  HREF="http://haml.info/docs/yardoc/Haml/Helpers.html"><TT>Haml::Helpers</TT> </A> y se establecen diversas variables de instancia
-(todas ellas prefijadas con <code>haml_</code>).
-
-<P>
-Por ejemplo:
-
-<P>
-<PRE>
-s = "foobar"
-Haml::Engine.new("%p= upcase").render(s)
-</PRE>
-produce:
-<PRE>
-"&lt;p&gt;FOOBAR&lt;/p&gt;"
-</PRE>
-
-<P>
-Ahora <code>s</code> extiende <A NAME="tex2html950"
-  HREF="http://haml.info/docs/yardoc/Haml/Helpers.html"><TT>Haml::Helpers</TT> </A>:
-<PRE>
-s.respond_to?(:html_attrs) #=&gt; true
-</PRE>
-
-<P>
-<A NAME="tex2html951"
-  HREF="http://haml.info/docs/yardoc/Haml/Helpers.html"><TT>Haml::Helpers</TT> </A> contiene un conjunto de métodos/utilidades
-para facilitar distintas tareas.
-La idea de que estén disponibles en el contexto es para ayudarnos
-dentro del template.
-Por ejemplo el método
-<PRE>
-- (String) escape_once(text)
-</PRE>
-Escapa las entidades HTML 
-en el texto.
-
-<P>
-<code>locals</code> es un hash de variables locales que se deja disponible dentro 
-del template. Por ejemplo:
-
-<P>
-<PRE>
-Haml::Engine.new("%p= foo").render(Object.new, :foo =&gt; "Hello, world!") 
-</PRE>
-producirá:
-<PRE>
-"&lt;p&gt;Hello, world!&lt;/p&gt;"
-</PRE>
-
-<P>
-Si se pasa un bloque a <code>render</code> el bloque será ejecutado
-en aquellos puntos en los que se llama a <code>yield</code> desde el
-template.
-
-<P>
-Debido a algunas peculiaridades de Ruby, si el ámbito es un
-<A NAME="tex2html952"
-  HREF="http://ruby-doc.org/core-2.0.0/Binding.html"><TT>Binding</TT></A> y se proporciona también un bloque, el contexto de la evaluación
-puede no ser el que el usuario espera.
-
-<P>
-Parametros:
-
-<OL>
-<LI><code>scope (Binding, Proc, Object)</code> (por defecto: <code>Object.new</code>).
-El contexto en el que se evalúa el template
-
-<P>
-</LI>
-<LI><code>locals ({Symbol =&gt; Object})</code> (por defecto: <code>{}</code>).
-Variables locales que se dejan disponibles en el  template
-</LI>
-<LI><code>block (#to_proc)</code> 
-Un bloque que será llamado desde el template.
-
-<P>
-</LI>
-<LI>Retorna una <A NAME="tex2html953"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A> con el template renderizado
-</LI>
-</OL>
+Práctica: Accediendo a Twitter y Mostrando los últimos twitts en una página
+</H1>
+  
+Convierta el programa 
+de ejemplo usado en la sección
+<I>Ejemplo en Ruby: Accediendo a Twitter</I>
+<A HREF="node48.html#section:accediendoatwitter">8.15</A>
+en una aplicación Rack que muestre en su página 
+los últimos twitts de una lista de usuarios obtenidos 
+desde un formulario (puede modificar/diseñar la interfaz como crea conveniente)
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10195"
+<A NAME="tex2html10238"
   HREF="node400.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10189"
-  HREF="node397.html">
+<A NAME="tex2html10232"
+  HREF="node376.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10183"
+<A NAME="tex2html10226"
   HREF="node398.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10191"
-  HREF="node841.html">
+<A NAME="tex2html10234"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10193"
-  HREF="node844.html">
+<A NAME="tex2html10236"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -339,20 +188,20 @@ Un bloque que será llamado desde el template.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10196"
-  HREF="node400.html">Práctica: Añada Hojas de</A>
-<B> Subir:</B> <A NAME="tex2html10190"
-  HREF="node397.html">Un Ejemplo Simple: Piedra,</A>
-<B> Anterior:</B> <A NAME="tex2html10184"
-  HREF="node398.html">Práctica: Rock, Paper, Scissors:</A>
- &nbsp; <B>  <A NAME="tex2html10192"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10194"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10239"
+  HREF="node400.html">Ejemplo: Basic Authentication con</A>
+<B> Subir:</B> <A NAME="tex2html10233"
+  HREF="node376.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10227"
+  HREF="node398.html">Ejemplo Simple Combinando Rack::Request,</A>
+ &nbsp; <B>  <A NAME="tex2html10235"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10237"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

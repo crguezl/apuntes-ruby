@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Limites de Timepo/Build Timeouts</TITLE>
-<META NAME="description" CONTENT="Limites de Timepo/Build Timeouts">
+<TITLE>Clicks en Botones y Enlaces</TITLE>
+<META NAME="description" CONTENT="Clicks en Botones y Enlaces">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node321.html">
 <LINK REL="previous" HREF="node319.html">
-<LINK REL="up" HREF="node316.html">
+<LINK REL="up" HREF="node318.html">
 <LINK REL="next" HREF="node321.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8604"
+<A NAME="tex2html8628"
   HREF="node321.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8598"
-  HREF="node316.html">
+<A NAME="tex2html8622"
+  HREF="node318.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8592"
+<A NAME="tex2html8616"
   HREF="node319.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8600"
-  HREF="node841.html">
+<A NAME="tex2html8624"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8602"
-  HREF="node844.html">
+<A NAME="tex2html8626"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,46 +92,161 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8605"
-  HREF="node321.html">Databases and other services</A>
-<B> Subir:</B> <A NAME="tex2html8599"
-  HREF="node316.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html8593"
-  HREF="node319.html">Notificaciones/Notifications</A>
- &nbsp; <B>  <A NAME="tex2html8601"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8603"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8629"
+  HREF="node321.html">Envío de Formularios</A>
+<B> Subir:</B> <A NAME="tex2html8623"
+  HREF="node318.html">La API de Capybara</A>
+<B> Anterior:</B> <A NAME="tex2html8617"
+  HREF="node319.html">Búsqueda de Elementos HTML</A>
+ &nbsp; <B>  <A NAME="tex2html8625"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8627"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H1><A NAME="SECTION021340000000000000000">
-Limites de Timepo/Build Timeouts</A>
-</H1>
-Because it is very common to see test suites or before scripts to hang up, Travis CI has hard time limits. If a script or test suite takes longer to run, the build will be forcefully terminated and you will see a message about this in your build log.
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html8630"
+  HREF="node320.html#SECTION021152010000000000000">Ejemplo de Uso de <TT>click_link</TT></A>
+<LI><A NAME="tex2html8631"
+  HREF="node320.html#SECTION021152020000000000000">Algoritmo de Búsqueda de Capyabra para los Links y los Botones</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION021152000000000000000">
+Clicks en Botones y Enlaces</A>
+</H2>
 
 <P>
-With our current timeouts, a build will be terminated if it's still running after 50 minutes (respectively 70 on travis-ci.com), or if there hasn't been any log output in 10 minutes.
+Estos métodos permiten a la aplicación navegar usando links o botones:
+
+<UL>
+<LI><code>click_link_or_button</code>
+</LI>
+<LI><code>click_on</code>
+</LI>
+<LI><code>click_link</code>
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION021152010000000000000">
+Ejemplo de Uso de <TT>click_link</TT></A>
+</H4>
+  
+
+<P>
+Tenemos estos fichero HTML:
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat index.html 
+&lt;!DOCTYPE HTML&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="simple_link.html" id="example1"&gt;simple_link.html&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+
+<P>
+y este otro:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat simple_link.html 
+&lt;!DOCTYPE HTML&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+   &lt;div id="main"&gt;
+       &lt;div class="section"&gt; 
+         &lt;a id="myanchor" title="myanchortitle" href="#"&gt;Click this Anchor&lt;/a&gt;
+        &lt;/div&gt;
+   &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+El siguiente programa visita <code>index.html</code> clickea en el link y 
+visita la segunda página volcando sus resultados:
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat check_click.rb 
+require 'capybara'
+require 'capybara/poltergeist'
+
+Capybara.default_driver = :poltergeist
+
+session = Capybara::Session.new(:poltergeist)
+session.visit "http://crguezl.github.io/selenium-examples/index.html"
+
+session.click_link "example1"
+
+puts session.body # dump the contents of the page
+
+session.save_page('example1_download.html')
+</PRE>
+El funcionamiento sería el mismo si usaramos <code>click_on</code>
+o <code>click_link_or_button</code>.
+
+<P>
+
+<H4><A NAME="SECTION021152020000000000000">
+Algoritmo de Búsqueda de Capyabra para los Links y los Botones</A>
+</H4>
+  
+
+En el caso de los enlaces y los botones, 
+Capybara mira las siguientes propiedades de los elementos con vistas a 
+localizar donde clicar:
+
+<UL>
+<LI>The <code>id</code> attribute of the anchor, button, or input tag
+</LI>
+<LI>The <code>title</code> attribute of the anchor, button, or input tag
+</LI>
+<LI><code>Text</code> within the anchor, button, or input tag
+</LI>
+<LI>The <code>value</code> attribute of the input element where its type is one of 
+<code>button</code>, 
+<code>reset</code>, 
+<code>submit</code>, or 
+<code>image</code>
+</LI>
+<LI>The <code>alt</code> attribute where an image is used as an anchor or input
+</LI>
+</UL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8604"
+<A NAME="tex2html8628"
   HREF="node321.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8598"
-  HREF="node316.html">
+<A NAME="tex2html8622"
+  HREF="node318.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8592"
+<A NAME="tex2html8616"
   HREF="node319.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8600"
-  HREF="node841.html">
+<A NAME="tex2html8624"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8602"
-  HREF="node844.html">
+<A NAME="tex2html8626"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -182,20 +297,20 @@ With our current timeouts, a build will be terminated if it's still running afte
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8605"
-  HREF="node321.html">Databases and other services</A>
-<B> Subir:</B> <A NAME="tex2html8599"
-  HREF="node316.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html8593"
-  HREF="node319.html">Notificaciones/Notifications</A>
- &nbsp; <B>  <A NAME="tex2html8601"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8603"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8629"
+  HREF="node321.html">Envío de Formularios</A>
+<B> Subir:</B> <A NAME="tex2html8623"
+  HREF="node318.html">La API de Capybara</A>
+<B> Anterior:</B> <A NAME="tex2html8617"
+  HREF="node319.html">Búsqueda de Elementos HTML</A>
+ &nbsp; <B>  <A NAME="tex2html8625"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8627"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

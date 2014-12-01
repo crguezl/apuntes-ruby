@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Asociaciones Through</TITLE>
-<META NAME="description" CONTENT="Asociaciones Through">
+<TITLE>DataMapper y Sinatra</TITLE>
+<META NAME="description" CONTENT="DataMapper y Sinatra">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node529.html">
+<LINK REL="next" HREF="node539.html">
 <LINK REL="previous" HREF="node527.html">
-<LINK REL="up" HREF="node520.html">
+<LINK REL="up" HREF="node375.html">
 <LINK REL="next" HREF="node529.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12407"
+<A NAME="tex2html12399"
   HREF="node529.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12401"
-  HREF="node520.html">
+<A NAME="tex2html12393"
+  HREF="node375.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12395"
+<A NAME="tex2html12387"
   HREF="node527.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12403"
-  HREF="node841.html">
+<A NAME="tex2html12395"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12405"
-  HREF="node844.html">
+<A NAME="tex2html12397"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,142 +92,143 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12408"
-  HREF="node529.html">Práctica: Acortador de URLs</A>
-<B> Subir:</B> <A NAME="tex2html12402"
-  HREF="node520.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12396"
-  HREF="node527.html">Asociaciones Simples</A>
- &nbsp; <B>  <A NAME="tex2html12404"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12406"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12400"
+  HREF="node529.html">Introducción a Los Object</A>
+<B> Subir:</B> <A NAME="tex2html12394"
+  HREF="node375.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html12388"
+  HREF="node527.html">Building Backbone.js Apps With</A>
+ &nbsp; <B>  <A NAME="tex2html12396"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12398"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031680000000000000000">
-Asociaciones Through</A>
+<H1><A NAME="SECTION031600000000000000000"></A>
+<A NAME="chapter:datamapperysinatra"></A>
+<BR>
+DataMapper y Sinatra
 </H1>
 
 <P>
-<PRE>
-[~/rubytesting/database/datamapper/through]$ cat app.rb
-require 'data_mapper'
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/example.db")
-
-class Photo
-  include DataMapper::Resource
-
-  property :id, Serial
-
-  has n, :taggings
-  has n, :tags, :through =&gt; :taggings
-end
-
-class Tag
-  include DataMapper::Resource
-
-  property :id, Serial
-
-  has n, :taggings
-  has n, :photos, :through =&gt; :taggings
-end
-
-class Tagging
-  include DataMapper::Resource
-
-  belongs_to :tag,   :key =&gt; true
-  belongs_to :photo, :key =&gt; true
-end
-
-DataMapper.finalize
-
-require  'dm-migrations'
-
-DataMapper.auto_migrate!
-#DataMapper.auto_upgrade!
-</PRE>
-
-<P>
-<PRE>
-[1] pry(main)&gt; load 'app.rb'
-NameError: uninitialized constant Photo::DataMapper
-from app.rb:2:in `&lt;class:Photo&gt;'
-[2] pry(main)&gt; load 'app.rb'
- ~ (0.003772) PRAGMA table_info("photos")
- ~ (0.000014) PRAGMA table_info("tags")
- ~ (0.000008) PRAGMA table_info("taggings")
- ~ (0.000027) SELECT sqlite_version(*)
- ~ (0.000073) DROP TABLE IF EXISTS "photos"
- ~ (0.000009) PRAGMA table_info("photos")
- ~ (0.001200) CREATE TABLE "photos" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)
- ~ (0.000126) DROP TABLE IF EXISTS "tags"
- ~ (0.000025) PRAGMA table_info("tags")
- ~ (0.000993) CREATE TABLE "tags" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)
- ~ (0.000101) DROP TABLE IF EXISTS "taggings"
- ~ (0.000015) PRAGMA table_info("taggings")
- ~ (0.001372) CREATE TABLE "taggings" ("tag_id" INTEGER NOT NULL, "photo_id" INTEGER NOT NULL, PRIMARY KEY("tag_id", "photo_id"))
- ~ (0.000965) CREATE INDEX "index_taggings_tag" ON "taggings" ("tag_id")
- ~ (0.001084) CREATE INDEX "index_taggings_photo" ON "taggings" ("photo_id")
-=&gt; true
-</PRE>
-
-<P>
-<PRE>
-SQLite version 3.7.11 2012-03-20 11:35:50
-Enter ".help" for instructions
-Enter SQL statements terminated with a ";"
-sqlite&gt; .schema
-CREATE TABLE "photos" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT);
-CREATE TABLE "taggings" ("tag_id" INTEGER NOT NULL, "photo_id" INTEGER NOT NULL, PRIMARY KEY("tag_id", "photo_id"));
-CREATE TABLE "tags" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT);
-CREATE INDEX "index_taggings_photo" ON "taggings" ("photo_id");
-CREATE INDEX "index_taggings_tag" ON "taggings" ("tag_id");
-</PRE>
-
-<P>
-<PRE>
-[2] pry(main)&gt; ph = Photo.create
- ~ (0.002460) INSERT INTO "photos" DEFAULT VALUES
-=&gt; #&lt;Photo @id=1&gt;
-[4] pry(main)&gt; tg = Tag.create()
- ~ (0.002559) INSERT INTO "tags" DEFAULT VALUES
-=&gt; #&lt;Tag @id=1&gt;
-[5] pry(main)&gt; g = Tagging.create(:photo =&gt; ph, :tag =&gt; tg)
- ~ (0.002547) INSERT INTO "taggings" ("tag_id", "photo_id") VALUES (1, 1)
-=&gt; #&lt;Tagging @tag_id=1 @photo_id=1&gt;
-[7] pry(main)&gt; ph.tags
- ~ (0.000100) SELECT "tags"."id" FROM "tags" INNER JOIN "taggings" ON "tags"."id" = "taggings"."tag_id" INNER JOIN "photos" ON "taggings"."photo_id" = "photos"."id" WHERE "taggings"."photo_id" = 1 GROUP BY "tags"."id" ORDER BY "tags"."id"
-=&gt; [#&lt;Tag @id=1&gt;]
-[8] pry(main)&gt; tg.photos
- ~ (0.000080) SELECT "photos"."id" FROM "photos" INNER JOIN "taggings" ON "photos"."id" = "taggings"."photo_id" INNER JOIN "tags" ON "taggings"."tag_id" = "tags"."id" WHERE "taggings"."tag_id" = 1 GROUP BY "photos"."id" ORDER BY "photos"."id"
-=&gt; [#&lt;Photo @id=1&gt;]
-9] pry(main)&gt; tg2 = Tag.create(:photos =&gt; [ph]) 
- ~ (0.005787) INSERT INTO "tags" DEFAULT VALUES
- ~ (0.000534) SELECT "tag_id", "photo_id" FROM "taggings" WHERE ("photo_id" = 1 AND "tag_id" = 1) ORDER BY "tag_id", "photo_id" LIMIT 1
- ~ (0.000049) SELECT "tag_id", "photo_id" FROM "taggings" WHERE ("tag_id" = 2 AND "photo_id" = 1) ORDER BY "tag_id", "photo_id" LIMIT 1
- ~ (0.001444) INSERT INTO "taggings" ("tag_id", "photo_id") VALUES (2, 1)
-=&gt; #&lt;Tag @id=2&gt;
-[10] pry(main)&gt; ph2 = Photo.create(:tags =&gt; [tg, tg2])
- ~ (0.001175) INSERT INTO "photos" DEFAULT VALUES
- ~ (0.000056) SELECT "tag_id", "photo_id" FROM "taggings" WHERE ("tag_id" = 1 AND "photo_id" = 1) ORDER BY "tag_id", "photo_id" LIMIT 1
- ~ (0.000045) SELECT "tag_id", "photo_id" FROM "taggings" WHERE ("photo_id" = 2 AND "tag_id" = 1) ORDER BY "tag_id", "photo_id" LIMIT 1
- ~ (0.001047) INSERT INTO "taggings" ("tag_id", "photo_id") VALUES (1, 2)
- ~ (0.000079) SELECT "tag_id", "photo_id" FROM "taggings" WHERE ("photo_id" = 2 AND "tag_id" = 2) ORDER BY "tag_id", "photo_id" LIMIT 1
- ~ (0.001070) INSERT INTO "taggings" ("tag_id", "photo_id") VALUES (2, 2)
-=&gt; #&lt;Photo @id=2&gt;
-[11] pry(main)&gt; ph2.tags
-=&gt; [#&lt;Tag @id=1&gt;, #&lt;Tag @id=2&gt;]
-</PRE>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html12401"
+  HREF="node529.html">Introducción a Los Object Relational Mappers (ORM)</A>
+<LI><A NAME="tex2html12402"
+  HREF="node530.html">Introducción al Patrón DataMapper</A>
+<LI><A NAME="tex2html12403"
+  HREF="node531.html">Ejemplo Simple de uso de DataMapper: Agenda</A>
+<UL>
+<LI><A NAME="tex2html12404"
+  HREF="node531.html#SECTION031630010000000000000">DataMapper.setup</A>
+<LI><A NAME="tex2html12405"
+  HREF="node531.html#SECTION031630020000000000000">Modelos</A>
+<LI><A NAME="tex2html12406"
+  HREF="node531.html#SECTION031630030000000000000">Rutas</A>
+<LI><A NAME="tex2html12407"
+  HREF="node531.html#SECTION031630040000000000000">Vistas</A>
+<LI><A NAME="tex2html12408"
+  HREF="node531.html#SECTION031630050000000000000">Enlaces</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12409"
+  HREF="node532.html">Ejemplo de Uso de DataMapper: Canciones de Sinatra</A>
+<UL>
+<LI><A NAME="tex2html12410"
+  HREF="node532.html#SECTION031640010000000000000">Donde</A>
+<LI><A NAME="tex2html12411"
+  HREF="node532.html#SECTION031640020000000000000">Enlaces</A>
+<LI><A NAME="tex2html12412"
+  HREF="node532.html#SECTION031640030000000000000">La Clase Song</A>
+<LI><A NAME="tex2html12413"
+  HREF="node532.html#SECTION031640040000000000000">DataMapper.finalize</A>
+<LI><A NAME="tex2html12414"
+  HREF="node532.html#SECTION031640050000000000000">Mas código de Song.rb</A>
+<LI><A NAME="tex2html12415"
+  HREF="node532.html#SECTION031640060000000000000">Song.create</A>
+<LI><A NAME="tex2html12416"
+  HREF="node532.html#SECTION031640070000000000000">Una sesión con pry probando DataMapper</A>
+<LI><A NAME="tex2html12417"
+  HREF="node532.html#SECTION031640080000000000000">DataMapper.setup</A>
+<LI><A NAME="tex2html12418"
+  HREF="node532.html#SECTION031640090000000000000">Multiple Data-Store Connections</A>
+<LI><A NAME="tex2html12419"
+  HREF="node532.html#SECTION0316400100000000000000">El Objeto DataMapper::Adapters</A>
+<LI><A NAME="tex2html12420"
+  HREF="node532.html#SECTION0316400110000000000000">Creando las tablas con DataMapper.auto_migrate!</A>
+<LI><A NAME="tex2html12421"
+  HREF="node532.html#SECTION0316400120000000000000">DataMapper.auto_upgrade!</A>
+<LI><A NAME="tex2html12422"
+  HREF="node532.html#SECTION0316400130000000000000">Métodos de la Clase Mapeada</A>
+<LI><A NAME="tex2html12423"
+  HREF="node532.html#SECTION0316400140000000000000">El método create</A>
+<LI><A NAME="tex2html12424"
+  HREF="node532.html#SECTION0316400150000000000000">first_or_create</A>
+<LI><A NAME="tex2html12425"
+  HREF="node532.html#SECTION0316400160000000000000">Comprobando con sqlite3</A>
+<LI><A NAME="tex2html12426"
+  HREF="node532.html#SECTION0316400170000000000000">Búsquedas y Consultas</A>
+<LI><A NAME="tex2html12427"
+  HREF="node532.html#SECTION0316400180000000000000">Borrando</A>
+<LI><A NAME="tex2html12428"
+  HREF="node532.html#SECTION0316400190000000000000">Búsqueda con Condiciones</A>
+<LI><A NAME="tex2html12429"
+  HREF="node532.html#SECTION0316400200000000000000">Insertando SQL</A>
+<LI><A NAME="tex2html12430"
+  HREF="node532.html#SECTION0316400210000000000000">main.rb</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12431"
+  HREF="node533.html">Ejemplo de uso de Sinatra y DataMapper: Acortador de URLs</A>
+<LI><A NAME="tex2html12432"
+  HREF="node534.html">Configurando la Base de Datos en Heroku con DataMapper. Despliegue</A>
+<UL>
+<LI><A NAME="tex2html12433"
+  HREF="node534.html#SECTION031660010000000000000">Bundle: installing groups. General considerations</A>
+<LI><A NAME="tex2html12434"
+  HREF="node534.html#SECTION031660020000000000000">Recordando los pasos para el despliegue en Heroku</A>
+<LI><A NAME="tex2html12435"
+  HREF="node534.html#SECTION031660030000000000000">Creando/Modificando la base de datos en Heroku con heroku run console</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12436"
+  HREF="node535.html">Asociaciones Simples</A>
+<LI><A NAME="tex2html12437"
+  HREF="node536.html">Asociaciones Through</A>
+<LI><A NAME="tex2html12438"
+  HREF="node537.html">Práctica: Acortador de URLs</A>
+<UL>
+<LI><A NAME="tex2html12439"
+  HREF="node537.html#SECTION031690010000000000000">Otros Requisitos</A>
+<LI><A NAME="tex2html12440"
+  HREF="node537.html#SECTION031690020000000000000">Véase</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12441"
+  HREF="node538.html">Práctica: Estadísticas de Visitas al Acortador de URLs</A>
+<UL>
+<LI><A NAME="tex2html12442"
+  HREF="node538.html#SECTION0316100010000000000000">La Tabla Principal</A>
+<LI><A NAME="tex2html12443"
+  HREF="node538.html#SECTION0316100020000000000000">Obteniendo el País para una IP dada</A>
+<LI><A NAME="tex2html12444"
+  HREF="node538.html#SECTION0316100030000000000000">La Tabla Visit</A>
+<LI><A NAME="tex2html12445"
+  HREF="node538.html#SECTION0316100040000000000000">Averiguar la IP</A>
+<LI><A NAME="tex2html12446"
+  HREF="node538.html#SECTION0316100050000000000000">Gráficos con chartkick</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

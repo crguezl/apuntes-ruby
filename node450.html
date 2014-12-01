@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configuration / Configuración</TITLE>
-<META NAME="description" CONTENT="Configuration / Configuración">
+<TITLE>Downloads / Descargas / Attachments</TITLE>
+<META NAME="description" CONTENT="Downloads / Descargas / Attachments">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node451.html">
 <LINK REL="previous" HREF="node449.html">
-<LINK REL="up" HREF="node423.html">
+<LINK REL="up" HREF="node431.html">
 <LINK REL="next" HREF="node451.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11054"
+<A NAME="tex2html11111"
   HREF="node451.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11048"
-  HREF="node423.html">
+<A NAME="tex2html11105"
+  HREF="node431.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11042"
+<A NAME="tex2html11099"
   HREF="node449.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11050"
-  HREF="node841.html">
+<A NAME="tex2html11107"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11052"
-  HREF="node844.html">
+<A NAME="tex2html11109"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,81 +92,234 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11055"
-  HREF="node451.html">Configuring attack protection</A>
-<B> Subir:</B> <A NAME="tex2html11049"
-  HREF="node423.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11043"
-  HREF="node449.html">Redireccionamientos/Browser Redirect</A>
- &nbsp; <B>  <A NAME="tex2html11051"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11053"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11112"
+  HREF="node451.html">Uploads. Subida de Ficheros</A>
+<B> Subir:</B> <A NAME="tex2html11106"
+  HREF="node431.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11100"
+  HREF="node449.html">Sesiones y Cookies en</A>
+ &nbsp; <B>  <A NAME="tex2html11108"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11110"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033190000000000000000">
-Configuration / Configuración</A>
+<H1><A NAME="SECTION033110000000000000000">
+Downloads / Descargas / Attachments</A>
 </H1>
-Run once, at startup, in any environment:
+
+<P>
+
+<H4><A NAME="SECTION033110010000000000000">
+Usando attachment</A>
+</H4>
+  
+
+<P>
+There is a built-in <code>attachment</code> method
+that optionally takes a filename parameter. If the filename has
+an extension (<code>.jpg</code>, etc.) that extension 
+will be used to determine the <code>Content-Type</code> header for the response.
+
+<P>
+The evaluation of the route will provide the contents of the attachment.
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html1058"
+  HREF="http://rubydoc.info/github/sinatra/sinatra/Sinatra/Helpers#attachment-instance_method">Documentación de attachment</A>
+</LI>
+<LI><A NAME="tex2html1059"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L338-L348">Código de attachment</A>
+en GitHub
+</LI>
+<LI><A NAME="tex2html1060"
+  HREF="http://alfuken.tumblr.com/post/874428235/upload-and-download-files-in-sinatra">Upload and download files in Sinatra</A>
+Random Ruby Thoughts
+</LI>
+</OL>
 
 <P>
 <PRE>
-configure do
-  # setting one option
-  set :option, 'value'
+[~/sinatra/sinatra-download(master)]$ cat app.rb
+require 'sinatra'
 
-  # setting multiple options
-  set :a =&gt; 1, :b =&gt; 2
+before do 
+  content_type :txt
+end
 
-  # same as `set :option, true`
-  enable :option
-
-  # same as `set :option, false`
-  disable :option
-
-  # you can also have dynamic settings with blocks
-  set(:css_dir) { File.join(views, 'css') }
+get '/attachment?' do
+  attachment 'file.txt'
+  "Here's what will be sent downstream, in an attachment called 'file.txt'." 
 end
 </PRE>
-Run only when the environment (<code>RACK_ENV</code>
- environment variable) is set to :<code>production</code>:
+Cuando visitamos la página con el navegador se nos abre una ventana para la descarga de
+un fichero que será guardado (por defecto) como <code>file.txt</code>.
 
 <P>
+Los contenidos de ese fichero serán:
 <PRE>
-configure :production do
-  ...
-end
+[~/sinatra/sinatra-download(master)]$ cat ~/Downloads/file.txt 
+Here's what will be sent downstream, in an attachment called 'file.txt'.
 </PRE>
-Run when the environment is set to either <code>:production</code> or <code>:test</code>:
 
 <P>
-<PRE>
-configure :production, :test do
-  ...
-end
-</PRE>
-You can access those options via settings:
+
+<H4><A NAME="SECTION033110020000000000000">
+Usando send_file</A>
+</H4>
+  
 
 <P>
+Véase la documentación del módulo 
+<A NAME="tex2html1061"
+  HREF="http://sinatra.rubyforge.org/api/classes/Sinatra/Sinatra/Streaming.html#M000022"><TT>Sinatra::Streaming</TT></A>
+<P>
 <PRE>
-configure do
-  set :foo, 'bar'
-end
+[~/sinatra/sinatra-download(master)]$ cat sending_file.rb 
+require 'sinatra'
 
 get '/' do
-  settings.foo? # =&gt; true
-  settings.foo  # =&gt; 'bar'
-  ...
+   send_file 'foo.png', 
+              :type =&gt; 'img/png', 
+              :disposition =&gt; 'attachment', 
+              :filename =&gt;'tutu.png',
+              :stream =&gt; false
 end
 </PRE>
+
+<P>
+The options are:
+
+<P>
+
+<OL>
+<LI><code>filename</code>
+file name, in response, defaults to the real file name.
+</LI>
+<LI><code>last_modified</code>
+value for Last-Modified header, defaults to the file's <code>mtime</code>.
+</LI>
+<LI><code>type</code>
+content type to use, guessed from the file extension if missing.
+</LI>
+<LI><code>disposition</code>
+used for <code>Content-Disposition</code>, possible value: <code>nil</code> (default), <code>:attachment</code> and 
+<code>:inline</code>
+</LI>
+<LI><code>length</code>
+<code>Content-Length</code> header, defaults to file size.
+</LI>
+<LI><code>status</code>
+Status code to be send. 
+
+<P>
+Useful when sending a static file as an
+error page. 
+If supported by the Rack handler, other means than
+streaming from the Ruby process will be used. If you use this helper
+method, Sinatra will automatically handle range requests.
+</LI>
+</OL>
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html11113"
+  HREF="node450.html#SECTION033110010000000000000">Usando attachment</A>
+<LI><A NAME="tex2html11114"
+  HREF="node450.html#SECTION033110020000000000000">Usando send_file</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html11111"
+  HREF="node451.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html11105"
+  HREF="node431.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html11099"
+  HREF="node449.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html11107"
+  HREF="node849.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html11109"
+  HREF="node852.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html11112"
+  HREF="node451.html">Uploads. Subida de Ficheros</A>
+<B> Subir:</B> <A NAME="tex2html11106"
+  HREF="node431.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11100"
+  HREF="node449.html">Sesiones y Cookies en</A>
+ &nbsp; <B>  <A NAME="tex2html11108"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11110"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>rackup</TITLE>
-<META NAME="description" CONTENT="rackup">
+<TITLE>Cookies y Rack</TITLE>
+<META NAME="description" CONTENT="Cookies y Rack">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node396.html">
-<LINK REL="previous" HREF="node394.html">
-<LINK REL="up" HREF="node368.html">
+<LINK REL="previous" HREF="node391.html">
+<LINK REL="up" HREF="node376.html">
 <LINK REL="next" HREF="node396.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10123"
+<A NAME="tex2html10167"
   HREF="node396.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10117"
-  HREF="node368.html">
+<A NAME="tex2html10161"
+  HREF="node376.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10111"
+<A NAME="tex2html10155"
   HREF="node394.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10119"
-  HREF="node841.html">
+<A NAME="tex2html10163"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10121"
-  HREF="node844.html">
+<A NAME="tex2html10165"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,314 +92,502 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10124"
-  HREF="node396.html">Rack::Static</A>
-<B> Subir:</B> <A NAME="tex2html10118"
-  HREF="node368.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10112"
-  HREF="node394.html">La Estructura de una</A>
- &nbsp; <B>  <A NAME="tex2html10120"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10122"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10168"
+  HREF="node396.html">Gestión de Sesiones</A>
+<B> Subir:</B> <A NAME="tex2html10162"
+  HREF="node376.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10156"
+  HREF="node394.html">Ejemplo con POST</A>
+ &nbsp; <B>  <A NAME="tex2html10164"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10166"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031150000000000000000">
-rackup</A>
+<H1><A NAME="SECTION03180000000000000000"></A>
+<A NAME="section:cookies"></A>
+<BR>
+Cookies y Rack
 </H1>
 
 <P>
+Cookies may be used to maintain data related to the user during
+navigation, possibly across multiple visits.
 
-<H4><A NAME="SECTION031150010000000000000">
+<P>
+
+<H4><A NAME="SECTION03180010000000000000">
 Introducción</A>
 </H4>
   
 
 <OL>
-<LI>The <A NAME="tex2html923"
-  HREF="http://rack.rubyforge.org/doc/">Rack</A> gem gives you a 
-rackup command which lets you start your app on
-any supported application server. 
+<LI>A <A NAME="17687"></A><SPAN  CLASS="textbf">cookie</SPAN>,
+is a small piece of data sent from a website and stored in
+a user's web browser while the user is browsing that website. 
 
 <P>
 </LI>
-<LI>rackup is a useful tool for
-running Rack applications, which uses the <A NAME="tex2html924"
-  HREF="http://rack.rubyforge.org/doc/Rack/Builder.html">Rack::Builder</A> DSL to
-configure middleware and build up applications easily. 
+<LI>Every
+time the user loads the website, the browser sends the cookie back
+to the server to notify the website of the user's previous activity
+</LI>
+<LI>Cookies were designed to be a reliable mechanism for websites to
+remember stateful information (such as items in a shopping cart)
+or to record the user's browsing activity (including clicking
+particular buttons, logging in, or recording which pages were visited
+by the user as far back as months or years ago).
+</LI>
+<LI>A user's <A NAME="17689"></A><SPAN  CLASS="textbf">session cookie</SPAN>  (also known as an in-memory cookie or
+transient cookie) for a website exists in temporary memory only
+while the user is reading and navigating the website. 
+</LI>
+<LI>When an expiry
+date or validity interval is not set at cookie creation time, a
+session cookie is created. Web browsers normally delete session
+cookies when the user closes the browser
+</LI>
+<LI>A <A NAME="17691"></A><SPAN  CLASS="textbf">persistent cookie</SPAN> will outlast user sessions. If a persistent
+cookie has its  <TT>Max-Age</TT>  set to 1 year, then, during
+that year, the initial value set in that cookie would be sent back
+to the server every time the user visited the server. This could
+be used to record information such as how the user
+initially came to this website. For this reason, persistent cookies
+are also called <A NAME="17694"></A><SPAN  CLASS="textbf">tracking cookies</SPAN>
+</LI>
+<LI>A <A NAME="17696"></A><SPAN  CLASS="textbf">secure cookie</SPAN> has the <A NAME="17698"></A><SPAN  CLASS="textbf">secure attribute</SPAN> enabled and is only used
+via HTTPS, ensuring that the cookie is always encrypted when
+transmitting from client to server. This makes the cookie less
+likely to be exposed to cookie theft via eavesdropping.
+</LI>
+<LI><A NAME="17700"></A><SPAN  CLASS="textbf">First-party cookies</SPAN> are cookies that belong to the same domain that
+is shown in the browser's address bar (or that belong to the sub
+domain of the domain in the address bar). 
 
 <P>
 </LI>
-<LI>rackup
-automatically figures out the environment it is run in, and runs
-your application as FastCGI, CGI, or standalone with Mongrel or
-WEBrick, all from the same configuration.
-</LI>
-</OL>
-
-<P>
-De hecho este es todo el código del ejecutable 
-<A NAME="tex2html925"
-  HREF="https://github.com/rack/rack/blob/master/bin/rackup">rackup</A>
-<PRE>
-#!/usr/bin/env ruby
-
-require "rack"
-Rack::Server.start
-</PRE>
-
-<P>
-El método  <TT>start</TT> 
-starts a new rack server (like running rackup). This will parse <code>ARGV</code> and
-provide standard <code>ARGV</code> rackup options, defaulting to load <code>config.ru</code>.
-
-<P>
-Providing an option hash will prevent <code>ARGV</code> parsing and will not include
-any default options.
-
-<P>
-This method can be used to very easily launch a CGI application, for
-example:
-
-<P>
-<PRE>
-  Rack::Server.start(
-    :app =&gt; lambda do |e|
-      [200, {'Content-Type' =&gt; 'text/html'}, ['hello world']]
-    end,
-    :server =&gt; 'cgi'
-  )
-</PRE>
-
-<P>
-Further options available here are documented on <A NAME="tex2html926"
-  HREF="http://rack.rubyforge.org/doc/Rack/Server.html">Rack::Server</A><code>#initialize</code>
-(véase el código en 
-<A NAME="tex2html927"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/server.rb">Rack::Server</A>
-):
-<PRE>
-    def self.start(options = nil)
-      new(options).start
-    end
-</PRE>
-
-<P>
-como se ve, el código 
-de
-
-<A NAME="tex2html928"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/server.rb">Rack::Server</A>
-
-está en
-Github.
-
-<P>
-The Options of <code>start</code> and <code>new</code>  may include:
-
+<LI><A NAME="17702"></A><SPAN  CLASS="textbf">Third-party cookies</SPAN> are
+cookies that belong to domains different from the one shown in the
+address bar. 
+  
 <OL>
-<LI><code>:app</code>
-    a rack application to run (overrides :config)
+<LI>Web pages can feature content from third-party domains
+  (such as banner adverts), which opens up the potential for tracking
+  the user's browsing history. 
 </LI>
-<LI><code>:config</code>
-    a rackup configuration file path to load (.ru)
+<LI>Privacy setting options in most modern
+  browsers allow the blocking of third-party tracking cookies.
 </LI>
-<LI><code>:environment</code>
-    this selects the middleware that will be wrapped around
-    your application. Default options available are:
-    
-<OL>
-<LI>development: CommonLogger, ShowExceptions, and Lint
+<LI>As an example, suppose a user visits <code>www.example1.com</code>. 
 </LI>
-<LI>deployment: CommonLogger
+<LI>This web
+  site contains an advert from <code>ad.foxytracking.com</code>, which, when
+  downloaded, sets a cookie belonging to the advert's domain
+  (<code>ad.foxytracking.com</code>). 
 </LI>
-<LI>none: no extra middleware
-    
+<LI>Then, the user visits another website,
+  <code>www.example2.com</code>, which also contains an advert from 
+  <code>ad.foxytracking.com</code>,
+  and which also sets a cookie belonging to that domain
+  (<code>ad.foxytracking.com</code>). 
+</LI>
+<LI>Eventually, both of these cookies will be
+  sent to the advertiser when loading their ads or visiting their
+  website. 
+</LI>
+<LI>The advertiser can then use these cookies to build up a
+  browsing history of the user across all the websites that have ads
+  from this advertiser.
+  
 </LI>
 </OL>
-    note: when the server is a cgi server, CommonLogger is not included.
-</LI>
-<LI><code>:server</code>
-    choose a specific Rack::Handler, e.g. cgi, fcgi, webrick
-</LI>
-<LI><code>:daemonize</code>
-    if true, the server will daemonize itself (fork, detach, etc)
-</LI>
-<LI><code>:pid</code>
-    path to write a pid file after daemonize
-</LI>
-<LI><code>:Host</code>
-    the host address to bind to (used by supporting Rack::Handler)
-</LI>
-<LI><code>:Port</code>
-    the port to bind to (used by supporting Rack::Handler)
-</LI>
-<LI><code>:AccessLog</code>
-    webrick acess log options (or supporting Rack::Handler)
-</LI>
-<LI><code>:debug</code>
-    turn on debug output <code>($DEBUG = true)</code>
-</LI>
-<LI><code>:warn</code>
-    turn on warnings (<code>$-w = true</code>)
-</LI>
-<LI><code>:include</code>
-    add given paths to <code>$LOAD_PATH</code>
-</LI>
-<LI><code>:require</code>
-    require the given libraries
 </LI>
 </OL>
 
 <P>
 
-<H4><A NAME="SECTION031150020000000000000">
-Ejemplo de uso</A>
+<H4><A NAME="SECTION03180020000000000000">
+Propiedades de un cookie</A>
 </H4>
   
 
 <P>
-Si no se especifica, <code>rackup</code> busca un fichero con nombre <code>config.ru</code>.
+Un cookie tiene los siguientes atributos:
+
+<OL>
+<LI>nombre
+</LI>
+<LI>valor
+</LI>
+<LI>domain (dominio)
+</LI>
+<LI>path o camino
+</LI>
+<LI>secure / seguridad
+</LI>
+</OL>
+
+<P>
+Cuando ejecutamos este programa:
 <PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ cat config.ru 
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat study_cookie1.ru 
+run lambda { |e|
+  [ 200, 
+    { 'Content-Type' =&gt; 'text/html',
+      'Set-cookie'   =&gt; "id=123456\nname=jack\nphone=65452334"
+    }, 
+    [ 'hello world' ]
+  ]
+}
+</PRE>
+y hacemos <code>www.example.com</code> un alias de <code>127.0.0.1</code>:
+<PRE>
+[~]$ cat /etc/hosts
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1 localhost www.example.com
+</PRE>
+al visitar la página <code>www.example.com:9292</code> 
+y abrir las herramientas para desarrolladores 
+tenemos:
+
+<img src="cookies.png" />
+
+<P>
+Observemos que:
+
+<OL>
+<LI>Como no hemos establecido el tiempo de caducidad ( <TT>expires Max-Age</TT> ), los cookies son de sesión.
+</LI>
+<LI>Como no hemos establecido el dominio, los cookies son de dominio <code>www.example.com</code>.
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION03180030000000000000">
+Estableciendo <TT>expires</TT></A>
+</H4>
+  
+
+<P>
+Modifiquemos el ejemplo anterior para establecer una fecha de caducidad:
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat study_cookie2.ru 
+run lambda { |e|
+  t = Time.now.gmtime + 3*60
+  [ 200, 
+    { 'Content-Type' =&gt; 'text/html',
+      'Set-cookie'   =&gt; "chuchu=chachi;expires=#{t.strftime("%a, %d-%b-%Y %H:%M:%S GMT")}"
+    }, 
+    [ 'hello world' ]
+  ]
+}
+</PRE>
+
+<P>
+Al ejecutar este programa vemos que hemos establecido la caducidad. Obsérvese
+la diferencia entre GMT y el tiempo de Canarias.
+
+<P>
+
+<p>
+<img src="cookie_expires.png" width="70%"/>
+
+
+<P>
+
+<H4><A NAME="SECTION03180040000000000000">
+Estableciendo el atributo <TT>domain</TT> de una cookie</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>Establezcamos <code>domain</code> a <code>example.com</code>:
+<PRE>
+~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat study_cookie3.ru 
+run lambda { |e|
+  t = Time.now.gmtime + 3*60
+  [ 200, 
+    { 'Content-Type' =&gt; 'text/html',
+      'Set-cookie'   =&gt; "chuchu=chachi;expires=#{t.strftime("%a, %d-%b-%Y %H:%M:%S GMT")}" +
+                        ";domain=example.com"
+    }, 
+    [ 'hello world' ]
+  ]
+}
+</PRE>
+</LI>
+<LI>Manipulamos <code>/etc/hosts</code>:
+<PRE>
+[~]$ cat /etc/hosts
+127.0.0.1 localhost www.example.com test.example.com app.test
+</PRE>
+</LI>
+<LI>Ejecutamos el servidor y lo visitamos con el navegador en <code>www.example.com:9292</code>.
+</LI>
+<LI>A continuación arrancamos este segundo servidor en el puerto 8080:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-simple(master)]$ cat config.ru 
 require './myapp'
 run MyApp.new
 </PRE>
 
 <P>
-Esta es la aplicación:
 <PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ cat myapp.rb 
+[~/local/src/ruby/sinatra/rack/rack-simple(master)]$ cat myapp.rb 
+# my_app.rb
+#
 class MyApp
   def call env
     [200, {"Content-Type" =&gt; "text/html"}, ["Hello Rack Participants"]] 
   end
 end
 </PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ cat Rakefile 
-task :default =&gt; :server
-
-desc "run server"
-task :server do
-  sh "rackup"
-end
-
-desc "run client via curl"
-task :client do
-  sh "curl -v localhost:9292"
-end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031150030000000000000">
-Ejecución</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ rackup
-&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
-&gt;&gt; Maximum connections set to 1024
-&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
-</PRE>
-
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rackup/simple(master)]$ curl -v localhost:9292
-* About to connect() to localhost port 9292 (#0)
-*   Trying ::1... Connection refused
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET / HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
-&gt; Host: localhost:9292
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Type: text/html
-&lt; Transfer-Encoding: chunked
-&lt; Connection: close
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-* Closing connection #0
-Hello Rack Participants
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031150040000000000000">
-Opciones del ejecutable <TT>rackup</TT></A>
-</H4>
-  
-
-<OL>
-<LI>Véase <A NAME="tex2html929"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=rackup"><TT>rackup</TT></A>.
+</LI>
+<LI>y visitamos <code>test.example.com:8080</code> (que de nuevo es resuelto a <code>localhost</code>)
 </LI>
 </OL>
+La figura muestra que el cookie generado por <code>www.example.com:9292</code>
+es enviado a <code>test.example.com:8080</code>:
 
-<P>
-<PRE>
-[~]$ rackup --help
-Usage: rackup [ruby options] [rack options] [rackup config]
-
-Ruby options:
-  -e, --eval LINE          evaluate a LINE of code
-  -d, --debug              set debugging flags (set $DEBUG to true)
-  -w, --warn               turn warnings on for your script
-  -I, --include PATH       specify $LOAD_PATH (may be used more than once)
-  -r, --require LIBRARY    require the library, before executing your script
-
-Rack options:
-  -s, --server SERVER      serve using SERVER (webrick/mongrel)
-  -o, --host HOST          listen on HOST (default: 0.0.0.0)
-  -p, --port PORT          use PORT (default: 9292)
-  -O NAME[=VALUE],         pass VALUE to the server as option NAME. 
-                           If no VALUE, sets it to true. 
-                           Run 
-                           'rackup -s SERVER -h' 
-                           to get a list of options for SERVER
-      --option
-  -E, --env ENVIRONMENT    use ENVIRONMENT for defaults (default: development)
-  -D, --daemonize          run daemonized in the background
-  -P, --pid FILE           file to store PID (default: rack.pid)
-
-Common options:
-  -h, -?, --help           Show this message
-      --version            Show version
-</PRE>
+<img src="cookiewithdomain.png" />
 
 <P>
 
-<H4><A NAME="SECTION031150050000000000000">
-Especificación de Opciones en la primera línea</A>
+<H4><A NAME="SECTION03180050000000000000">
+El atributo <TT>path</TT></A>
 </H4>
   
 
-Si la primera línea de un fichero <code>config.ru</code> empieza por <code>\#</code> es tratada 
-como una línea de opciones permitiendo así que los argumentos de  <TT>rackup</TT> 
-se especifiquen en el fichero de configuración:
+<P>
+Si <code>path</code> es <code>/</code> entonces casa con todos las páginas en el dominio.
+Si <code>path</code> es <code>/foo</code> entonces casa con 
+<code>foobar</code> y <code>/foo/chuchu/toto.html</code>.
+
+<P>
+
+<H4><A NAME="SECTION03180060000000000000">
+El atributo <TT>secure</TT></A>
+</H4>
+  
+
+<P>
+Si se pone <code>secure</code> el cookie solo se envía si se usa  <TT>https</TT> 
+
+<P>
+
+<H4><A NAME="SECTION03180070000000000000">
+Envío de Cookies</A>
+</H4>
+  
+
+ As long as the URL requested is within the same domain and path
+ defined in the cookie (and all of the other restrictions - secure,
+  not expired, etc) hold, the cookie will be sent for
+ every request. The client will include a header field similar to this:
+<PRE>
+Cookie: name1 = value1 [;name2=value2]
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03180080000000000000">
+Establecer un cookie usando </A><A NAME="tex2html910"
+  HREF="http://rack.rubyforge.org/doc/Rack/Response.html">Rack::Response</A>
+</H4>
+  
+
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat hello_cookie.rb 
+require 'rack'
+
+class HelloWorld
+  def call env
+    response = Rack::Response.new("Hello world!")
+    response.status = 200
+    response.headers['Content-type'] = "text/plain"
+    response.set_cookie('asignatura', 'SYTW')
+    response.finish
+  end
+end
+
+Rack::Handler::WEBrick::run HelloWorld.new
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03180090000000000000">
+Obtener los valores de los cookies usando </A><A NAME="tex2html911"
+  HREF="http://rack.rubyforge.org/doc/Rack/Request.html">Rack::Request</A>
+</H4>
+  
+
+<P>
+Es posible acceder a los cookies con el objeto <A NAME="tex2html912"
+  HREF="http://rack.rubyforge.org/doc/Rack/Request.html">Rack::Request</A> mediante
+el método <code>cookies</code>.
+Vease la documentación de <A NAME="tex2html913"
+  HREF="http://rack.rubyforge.org/doc/Rack/Response.html">Rack::Response</A> y <A NAME="tex2html914"
+  HREF="http://rack.rubyforge.org/doc/Rack/Request.html">Rack::Request</A>.
 
 <P>
 <PRE>
-#\-w -p 8765
+[~/rack/rack-debugging(master)]$ cat hello_cookie.rb 
+require 'rack'
 
-use Rack::Reloader, 0
-use Rack::ContentLength
-
-app = proc do |env|
-  [200, {'content-Type' =&gt; 'text/plain' }, ['a']]
+class HelloWorld
+  def call env
+    req      = Rack::Request.new(env)
+    response = Rack::Response.new("Hello world! cookies = #{req.cookies.inspect}\n")
+    response.write("asignatura =&gt; #{req.cookies['asignatura']}") if req.cookies['asignatura']
+    response.status = 200
+    response['Content-type'] = "text/plain"
+    response.set_cookie('asignatura', 'SYTW')
+    response.finish
+  end
 end
 
-run app
+Rack::Handler::WEBrick::run HelloWorld.new
 </PRE>
+
+<P>
+
+<h3>Limpiamos las cookies</h3>
+<p>
+<img src="rackejemploconcookie1.png" width="70%"/>
+
+
+<P>
+
+<hr><p>
+<h3>Recargamos la página. El mensaje de
+la página se refiere a las cookies que acaban de llegar,
+mientras que el inspector nos avisa de que ya se ha establecido
+una cookie</h3>
+<p>
+<img src="rackejemploconcookie2.png" width="70%"/>
+
+
+<P>
+
+<hr><p>
+<h3>Recargamos de nuevo la página. 
+Ahora los dos están sicronizados</h3>
+<p>
+<img src="rackejemploconcookie3.png" width="70%"/>
+
+
+<P>
+
+<H4><A NAME="SECTION031800100000000000000">
+El código del método <TT>cookies</TT></A>
+</H4>
+  
+
+El método <code>cookies</code>
+retorna un hash:
+<PRE>
+# File lib/rack/request.rb, line 290
+def cookies
+  hash   = @env["rack.request.cookie_hash"] ||= {}
+  string = @env["HTTP_COOKIE"]
+
+  return hash if string == @env["rack.request.cookie_string"]
+  hash.clear
+
+  # According to RFC 2109:
+  #   If multiple cookies satisfy the criteria above, they are ordered in
+  #   the Cookie header such that those with more specific Path attributes
+  #   precede those with less specific.  Ordering with respect to other
+  #   attributes (e.g., Domain) is unspecified.
+  cookies = Utils.parse_query(string, ';,') { |s| Rack::Utils.unescape(s) rescue s }
+  cookies.each { |k,v| hash[k] = Array === v ? v.first : v }
+  @env["rack.request.cookie_string"] = string
+  hash
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031800110000000000000">
+Código de <TT>set_cookie</TT></A>
+</H4>
+  
+
+<P>
+<PRE>
+        # File lib/rack/response.rb, line 57
+57:     def set_cookie(key, value)
+58:       Utils.set_cookie_header!(header, key, value)
+59:     end
+</PRE>
+
+<P>
+Aquí <code>value</code> es un hash con claves <code>:domain</code>,
+<code>:path</code>, <code>:expires</code>,
+<code>:secure</code> y
+<code>:httponly</code>
+
+<P>
+
+<H4><A NAME="SECTION031800120000000000000">
+Código de <TT>delete_cookie</TT></A>
+</H4>
+  
+
+<P>
+<PRE>
+    # File lib/rack/response.rb, line 61
+61:     def delete_cookie(key, value={})
+62:       Utils.delete_cookie_header!(header, key, value)
+63:     end
+</PRE>
+Aquí <code>value</code> es un hash con claves <code>:domain</code>,
+<code>:path</code>, <code>:expires</code>,
+<code>:secure</code> y
+<code>:httponly</code>
+
+<P>
+
+<H4><A NAME="SECTION031800130000000000000">
+domains, periods, cookies and localhost</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>By design domain names must have at least two dots otherwise browser
+will say they are invalid.
+</LI>
+<LI>Only hosts within the specified domain can set a cookie for a domain
+</LI>
+<LI>domains must have at least two (2) or three (3) periods in them
+to prevent domains of the form: <code>.com</code>, <code>.edu</code>, and <code>va.us</code>. 
+</LI>
+<LI>Any
+domain that fails within one of the seven special top level domains
+<code>COM</code>, <code>EDU</code>, <code>NET</code>, <code>ORG</code>, <code>GOV</code>, <code>MIL</code>, and <code>INT</code>
+require two periods.
+</LI>
+<LI>Any other domain requires at least three. 
+</LI>
+<LI>On <code>localhost</code>, when we set a cookie on server side and specify the
+domain explicitly as <code>localhost</code> (or <code>.localhost</code>), the cookie does not
+seem to be accepted by some browsers.
+</LI>
+</OL>
 
 <P>
 <BR><HR>
@@ -409,35 +597,51 @@ run app
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html10125"
-  HREF="node395.html#SECTION031150010000000000000">Introducción</A>
-<LI><A NAME="tex2html10126"
-  HREF="node395.html#SECTION031150020000000000000">Ejemplo de uso</A>
-<LI><A NAME="tex2html10127"
-  HREF="node395.html#SECTION031150030000000000000">Ejecución</A>
-<LI><A NAME="tex2html10128"
-  HREF="node395.html#SECTION031150040000000000000">Opciones del ejecutable <TT>rackup</TT></A>
-<LI><A NAME="tex2html10129"
-  HREF="node395.html#SECTION031150050000000000000">Especificación de Opciones en la primera línea</A>
+<LI><A NAME="tex2html10169"
+  HREF="node395.html#SECTION03180010000000000000">Introducción</A>
+<LI><A NAME="tex2html10170"
+  HREF="node395.html#SECTION03180020000000000000">Propiedades de un cookie</A>
+<LI><A NAME="tex2html10171"
+  HREF="node395.html#SECTION03180030000000000000">Estableciendo <TT>expires</TT></A>
+<LI><A NAME="tex2html10172"
+  HREF="node395.html#SECTION03180040000000000000">Estableciendo el atributo <TT>domain</TT> de una cookie</A>
+<LI><A NAME="tex2html10173"
+  HREF="node395.html#SECTION03180050000000000000">El atributo <TT>path</TT></A>
+<LI><A NAME="tex2html10174"
+  HREF="node395.html#SECTION03180060000000000000">El atributo <TT>secure</TT></A>
+<LI><A NAME="tex2html10175"
+  HREF="node395.html#SECTION03180070000000000000">Envío de Cookies</A>
+<LI><A NAME="tex2html10176"
+  HREF="node395.html#SECTION03180080000000000000">Establecer un cookie usando Rack::Response</A>
+<LI><A NAME="tex2html10177"
+  HREF="node395.html#SECTION03180090000000000000">Obtener los valores de los cookies usando Rack::Request</A>
+<LI><A NAME="tex2html10178"
+  HREF="node395.html#SECTION031800100000000000000">El código del método <TT>cookies</TT></A>
+<LI><A NAME="tex2html10179"
+  HREF="node395.html#SECTION031800110000000000000">Código de <TT>set_cookie</TT></A>
+<LI><A NAME="tex2html10180"
+  HREF="node395.html#SECTION031800120000000000000">Código de <TT>delete_cookie</TT></A>
+<LI><A NAME="tex2html10181"
+  HREF="node395.html#SECTION031800130000000000000">domains, periods, cookies and localhost</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10123"
+<A NAME="tex2html10167"
   HREF="node396.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10117"
-  HREF="node368.html">
+<A NAME="tex2html10161"
+  HREF="node376.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10111"
+<A NAME="tex2html10155"
   HREF="node394.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10119"
-  HREF="node841.html">
+<A NAME="tex2html10163"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10121"
-  HREF="node844.html">
+<A NAME="tex2html10165"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -488,20 +692,20 @@ run app
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10124"
-  HREF="node396.html">Rack::Static</A>
-<B> Subir:</B> <A NAME="tex2html10118"
-  HREF="node368.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10112"
-  HREF="node394.html">La Estructura de una</A>
- &nbsp; <B>  <A NAME="tex2html10120"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10122"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10168"
+  HREF="node396.html">Gestión de Sesiones</A>
+<B> Subir:</B> <A NAME="tex2html10162"
+  HREF="node376.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10156"
+  HREF="node394.html">Ejemplo con POST</A>
+ &nbsp; <B>  <A NAME="tex2html10164"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10166"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

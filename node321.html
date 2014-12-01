@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Databases and other services</TITLE>
-<META NAME="description" CONTENT="Databases and other services">
+<TITLE>Envío de Formularios</TITLE>
+<META NAME="description" CONTENT="Envío de Formularios">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node322.html">
 <LINK REL="previous" HREF="node320.html">
-<LINK REL="up" HREF="node316.html">
+<LINK REL="up" HREF="node318.html">
 <LINK REL="next" HREF="node322.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8618"
+<A NAME="tex2html8642"
   HREF="node322.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8612"
-  HREF="node316.html">
+<A NAME="tex2html8636"
+  HREF="node318.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8606"
+<A NAME="tex2html8632"
   HREF="node320.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8614"
-  HREF="node841.html">
+<A NAME="tex2html8638"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8616"
-  HREF="node844.html">
+<A NAME="tex2html8640"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,150 +91,102 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8619"
-  HREF="node322.html">Travis en la Línea</A>
-<B> Subir:</B> <A NAME="tex2html8613"
-  HREF="node316.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html8607"
-  HREF="node320.html">Limites de Timepo/Build Timeouts</A>
- &nbsp; <B>  <A NAME="tex2html8615"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8617"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8643"
+  HREF="node322.html">Véase</A>
+<B> Subir:</B> <A NAME="tex2html8637"
+  HREF="node318.html">La API de Capybara</A>
+<B> Anterior:</B> <A NAME="tex2html8633"
+  HREF="node320.html">Clicks en Botones y</A>
+ &nbsp; <B>  <A NAME="tex2html8639"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8641"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021350000000000000000">
-Databases and other services</A>
-</H1>
+<H2><A NAME="SECTION021153000000000000000">
+Envío de Formularios</A>
+</H2>
 
 <P>
-See
-<A NAME="tex2html694"
-  HREF="http://about.travis-ci.org/docs/user/database-setup/">Databases and other services</A>
-<P>
-Some of the services available are:
-
-<OL>
-<LI>MySQL
-</LI>
-<LI>PostgreSQL
-</LI>
-<LI>MongoDB
-</LI>
-<LI>CouchDB
-</LI>
-<LI>Redis
-</LI>
-<LI>Riak
-</LI>
-<LI>RabbitMQ
-</LI>
-<LI>Memcached
-</LI>
-<LI>Cassandra
-</LI>
-<LI>Neo4J
-</LI>
-<LI>ElasticSearch
-</LI>
-<LI>Kestrel
-</LI>
-<LI>SQLite3
-</LI>
-</OL>
-Podemos ver una aplicación Sinatra en la que se usa Travis para CI
-en:
+Consideremos el siguiente fragmento de una vista HTML:
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ sed -ne '/@@index/,/^$/p'  check_form_server.rb 
+@@index
+  &lt;form id="myform" method="post" action="/"&gt;
+     &lt;label for "Forename"&gt;Forename&lt;/label&gt;
+     &lt;input type="text" name="Forename" value="" /&gt;&lt;br/&gt;
+     &lt;label for "Surname"&gt;Surname&lt;/label&gt;
+     &lt;input type="text" name="Surname" value="" /&gt;&lt;br/&gt;
+     &lt;input type="submit" value="Go" /&gt;
+  &lt;/form&gt;
+</PRE>
 
 <P>
-<A NAME="tex2html695"
-  HREF="http://www.sitepoint.com/build-sinatra-api-using-tdd-heroku-continuous-integration-travis/">Build a Sinatra API Using TDD, Heroku, and Continuous Integration with Travis</A>
-por Darren Jones,
-Published December 9, 2013
+Queremos rellenar los campos y enviarlos. El siguiente 
+código lo hace:
 
 <P>
+<PRE>
+~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat check_form_client.rb 
+require 'capybara'
+require 'capybara/poltergeist'
 
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html8618"
-  HREF="node322.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8612"
-  HREF="node316.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8606"
-  HREF="node320.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8614"
-  HREF="node841.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8616"
-  HREF="node844.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html8619"
-  HREF="node322.html">Travis en la Línea</A>
-<B> Subir:</B> <A NAME="tex2html8613"
-  HREF="node316.html">Integración Contínua: Travis</A>
-<B> Anterior:</B> <A NAME="tex2html8607"
-  HREF="node320.html">Limites de Timepo/Build Timeouts</A>
- &nbsp; <B>  <A NAME="tex2html8615"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8617"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+Capybara.default_driver = :poltergeist
+
+session = Capybara::Session.new(:poltergeist)
+session.visit "http://localhost:4567"
+
+session.instance_eval do
+  fill_in 'Forename', :with =&gt; 'Casiano'
+  fill_in 'Surname', :with =&gt; 'Rodríguez'
+  click_on 'Go'
+
+  puts body # dump the contents of the page
+  f = find('#Forename') # f is  a Capybara::Element object
+  puts "****\nForename = #{f.text}" 
+  s = find('#Surname')
+  puts "****\nSurname = #{s.text}"
+end
+</PRE>
+
+<P>
+Cuando se ejecuta <code>ruby check_form_client.rb</code>
+produce esta salida:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ rake formclient
+ruby check_form_client.rb
+&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;ul&gt;
+    &lt;li id="Forename"&gt; Casiano
+    &lt;/li&gt;&lt;li id="Surname"&gt; Rodríguez
+  &lt;/li&gt;&lt;/ul&gt;
+  &lt;a href="/"&gt;Go back&lt;/a&gt;
+
+
+
+
+&lt;/body&gt;&lt;/html&gt;
+****
+Forename = Casiano
+****
+Surname = Rodríguez
+</PRE>
+Véase el código  del servidor sinatra en 
+<A NAME="tex2html664"
+  HREF="https://github.com/crguezl/selenium-examples/blob/gh-pages/check_form_server.rb">crguezl/selenium-examples/blob/gh-pages/check_form_server.rb</A>
+<P>
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

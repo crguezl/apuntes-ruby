@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Colas</TITLE>
-<META NAME="description" CONTENT="Colas">
+<TITLE>DCell</TITLE>
+<META NAME="description" CONTENT="DCell">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node347.html">
 <LINK REL="previous" HREF="node345.html">
-<LINK REL="up" HREF="node341.html">
+<LINK REL="up" HREF="node345.html">
 <LINK REL="next" HREF="node347.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9036"
+<A NAME="tex2html9073"
   HREF="node347.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9030"
-  HREF="node341.html">
+<A NAME="tex2html9067"
+  HREF="node345.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9024"
+<A NAME="tex2html9063"
   HREF="node345.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9032"
-  HREF="node841.html">
+<A NAME="tex2html9069"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9034"
-  HREF="node844.html">
+<A NAME="tex2html9071"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,194 +91,193 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9037"
+<B> Siguiente:</B> <A NAME="tex2html9074"
   HREF="node347.html">El Problema de los</A>
-<B> Subir:</B> <A NAME="tex2html9031"
-  HREF="node341.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html9025"
-  HREF="node345.html">Un Servidor Multithreaded (and</A>
- &nbsp; <B>  <A NAME="tex2html9033"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9035"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Subir:</B> <A NAME="tex2html9068"
+  HREF="node345.html">Celluloid</A>
+<B> Anterior:</B> <A NAME="tex2html9064"
+  HREF="node345.html">Celluloid</A>
+ &nbsp; <B>  <A NAME="tex2html9070"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9072"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021850000000000000000">
-Colas</A>
-</H1>
+<H2><A NAME="SECTION021711000000000000000">
+DCell</A>
+</H2>
 
 <P>
+<BLOCKQUOTE>
+Objects can message objects transparently that live on other machines over the network, and you don't have to worry about the networking gunk, and you don't have to worry about finding them, and you don't have to worry about anything. It's just as if you messaged an object that's right next door.
+</BLOCKQUOTE>
+<P>
+<BLOCKQUOTE>
+<DIV ALIGN="RIGHT">Steve Jobs. 1995
 
-<H4><A NAME="SECTION021850010000000000000">
-Las Clases </A><A NAME="tex2html809"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A>y <A NAME="tex2html810"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/SizedQueue.html"><TT>SizedQueue</TT></A>
-</H4>
-  
-
-<OL>
-<LI>The standard <A NAME="tex2html811"
-  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A> library defines the <A NAME="tex2html812"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A> and <A NAME="tex2html813"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/SizedQueue.html"><TT>SizedQueue</TT></A> data
-structures specifically for concurrent programming. 
+</BLOCKQUOTE>
+DCell is a simple and easy way to build distributed applications
+in Ruby. Somewhat similar to DRb, DCell lets you easily expose Ruby
+objects as network services, and call them remotely just like you
+would any other Ruby object. However, unlike DRb all objects in the
+system are concurrent. You can create and register several available
+services on a given node, obtain handles to them, and easily pass
+these handles around the network just like any other objects.
 
 <P>
-</LI>
-<LI>They implement
-thread-safe FIFO queues and are intended for a producer/consumer
-model of programming. 
+DCell is a distributed extension to Celluloid, which provides
+concurrent objects for Ruby with many of the features of Erlang,
+such as the ability to supervise objects and restart them when they
+crash, and also link to other objects and receive event notifications
+of when they crash. This makes it easier to build robust, fault-tolerant
+distributed systems.
 
 <P>
-</LI>
-<LI>Under this model, one thread
-produces values of some sort and places them on a queue with the <code>enq</code> (enqueue) method or its synonym <code>push</code>. 
+DCell uses the 0MQ messaging protocol which provides a robust,
+fault-tolerant brokerless transport for asynchronous messages sent
+between nodes. DCell is built on top of the Celluloid::ZMQ library,
+which provides a Celluloid-oriented wrapper around the underlying
+ffi-rzmq library.
 
 <P>
-</LI>
-<LI>Another thread “consumes” these values, removing them from the queue with the <code>deq</code> (dequeue) method as needed. 
-(The <code>pop</code> and <code>shift</code> methods are synonyms for <code>deq</code>.)
-
-<P>
-</LI>
-<LI>The key features of <A NAME="tex2html814"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A> that make it suitable for concurrent
-programming is that the <code>deq</code> method blocks if the queue is
-empty and waits until the producer thread adds a value to the queue.
-
-<P>
-</LI>
-<LI>The <A NAME="tex2html815"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A> and <A NAME="tex2html816"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/SizedQueue.html"><TT>SizedQueue</TT></A> classes implement the same basic
-API, but the <A NAME="tex2html817"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/SizedQueue.html"><TT>SizedQueue</TT></A> variant has a maximum size.
-</LI>
-<LI>If the queue
-is already at its maximum size, then the method for adding a value
-to the queue will block until the consumer thread removes a value
-from the queue.
-</LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION021850020000000000000">
-Example: A Threaded Map-Reduce</A>
-</H4>
-  
-
-<P>
-
-<OL>
-<LI>We now define a method that combines a concurrent <code>map</code> with
-a concurrent <code>inject</code>. 
-
-<P>
-</LI>
-<LI>It creates a thread for each element
-of the enumerable collection and uses that thread to apply a mapping
-<A NAME="tex2html818"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A>. 
-
-<P>
-</LI>
-<LI>The value returned by that <A NAME="tex2html819"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> is enqueued on a <A NAME="tex2html820"
-  HREF="http://ruby-doc.org/stdlib-2.0.0/libdoc/thread/rdoc/Queue.html"><TT>Queue</TT></A>
-object. 
-
-<P>
-</LI>
-<LI>One final thread acts as a consumer; it removes values from
-the queue and passes them to the injection <A NAME="tex2html821"
-  HREF="http://ruby-doc.org/core-2.0.0/Proc.html"><TT>Proc</TT></A> as they become
-available.
-</LI>
-</OL>
-
-<P>
-Ejemplo de uso:
 <PRE>
-if $0 == __FILE__
-  a = if ARGV.empty? 
-        [-2,-1,0,1,2]
-      else
-        ARGV.map &amp;:to_f 
-      end
-  mapper = lambda {|x| x*x }               # Compute squares
-  injector = lambda {|total,x| total+x }   # Compute sum
-  result = a.conject(0, mapper, injector)  # =&gt; 10
-  puts result
-end
-</PRE>
+[~/ruby/celluloid]$ cat itchy.rb 
+#!/usr/bin/env ruby
+require 'dcell'
 
-<P>
-Código:
-<PRE>
-[~/ruby/threads(master)]$ cat conject.rb 
-require 'thread'
+DCell.start :id =&gt; "itchy", :addr =&gt; "tcp://127.0.0.1:9001"
 
-module Enumerable
-  # Concurrent inject: expects an initial value and two Procs
-  def conject(initial, mapper, injector)
-    # Use a Queue to pass values from mapping threads to injector thread
-    q = Queue.new   
-    count = 0                 # How many items?
-    each do |item|            # For each item
-      Thread.new do           # Create a new thread
-        q.enq(mapper[item])   # Map and enqueue mapped value
-      end
-      count += 1              # Count items
+class Itchy
+  include Celluloid
+
+  def initialize
+    puts "Ready for mayhem!"
+    @n = 0
+  end
+
+  def fight
+    @n = (@n % 6) + 1
+    if @n &lt;= 3
+      puts "Bite!"
+    else
+      puts "Fight!"
     end
-
-    t = Thread.new do         # Create injector thread
-      x = initial             # Start with specified initial value
-      while(count &gt; 0)        # Loop once for each item
-        x = injector[x,q.deq] # Dequeue value and inject
-        count -= 1            # Count down
-      end
-      x                       # Thread value is injected value
-    end
-
-    t.value   # Wait for injector thread and return its value
   end
 end
+
+Itchy.supervise_as :itchy
+sleep
+</PRE>
+To configure an individual DCell node, we need to give it a node
+ID and a 0MQ address to bind to. Node IDs look like domain names,
+and 0MQ addresses look like URLs that start with tcp:
+
+<P>
+<PRE>
+DCell.start :id =&gt; "itchy", :addr =&gt; "tcp://127.0.0.1:9001"
 </PRE>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+[~/ruby/celluloid]$ cat scratchy.rb 
+#!/usr/bin/env ruby
+require 'dcell'
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html9038"
-  HREF="node346.html#SECTION021850010000000000000">Las Clases <TT>Queue</TT>y <TT>SizedQueue</TT></A>
-<LI><A NAME="tex2html9039"
-  HREF="node346.html#SECTION021850020000000000000">Example: A Threaded Map-Reduce</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
+DCell.start :id =&gt; "scratchy", :addr =&gt; "tcp://127.0.0.1:9002"
+itchy_node = DCell::Node["itchy"]
+
+puts "Fighting itchy! (check itchy's output)"
+
+6.times do
+  itchy_node[:itchy].fight
+  sleep 1
+end
+</PRE>
+To create a cluster, we need to start another Ruby VM and connect
+it to the first VM. 
+
+<P>
+<PRE>
+DCell.start :id =&gt; "scratchy", :addr =&gt; "tcp://127.0.0.1:9002"
+itchy_node = DCell::Node["itchy"]
+</PRE>
+
+<P>
+Once you have a cluster of multiple nodes, you
+can bootstrap additional nodes into the cluster by pointing them
+at any node, and all nodes will gossip about the newly added node.
+
+<P>
+<PRE>
+[~/sinatra/sinatra-streaming/chat_with_streaming(master)]$ redis-server 
+[17773] 24 Nov 22:59:48.546 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+[17773] 24 Nov 22:59:48.549 * Max number of open files set to 10032
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 2.6.14 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in stand alone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 17773
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+[17773] 24 Nov 22:59:48.557 # Server started, Redis version 2.6.14
+[17773] 24 Nov 22:59:48.558 * The server is now ready to accept connections on port 6379
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/celluloid]$ ruby itchy.rb 
+Ready for mayhem!
+I, [2013-11-24T23:02:37.512066 #17781]  INFO -- : Connected to scratchy
+Bite!
+Bite!
+Bite!
+Fight!
+Fight!
+Fight!
+W, [2013-11-24T23:02:52.511423 #17781]  WARN -- : Communication with scratchy interrupted
+</PRE>
+
+<P>
+<PRE>
+[~/ruby/celluloid]$ ruby scratchy.rb 
+Fighting itchy! (check itchy's output)
+I, [2013-11-24T23:02:37.506941 #17813]  INFO -- : Connected to itchy
+D, [2013-11-24T23:02:43.580602 #17813] DEBUG -- : Terminating 10 actors...
+W, [2013-11-24T23:02:43.584986 #17813]  WARN -- : Terminating task: type=:call, meta={:method_name=&gt;:run}, status=:zmqwait
+[~/ruby/celluloid]$
+</PRE>
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9036"
+<A NAME="tex2html9073"
   HREF="node347.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9030"
-  HREF="node341.html">
+<A NAME="tex2html9067"
+  HREF="node345.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9024"
+<A NAME="tex2html9063"
   HREF="node345.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9032"
-  HREF="node841.html">
+<A NAME="tex2html9069"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9034"
-  HREF="node844.html">
+<A NAME="tex2html9071"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -330,20 +328,20 @@ end
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9037"
+<B> Siguiente:</B> <A NAME="tex2html9074"
   HREF="node347.html">El Problema de los</A>
-<B> Subir:</B> <A NAME="tex2html9031"
-  HREF="node341.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html9025"
-  HREF="node345.html">Un Servidor Multithreaded (and</A>
- &nbsp; <B>  <A NAME="tex2html9033"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9035"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Subir:</B> <A NAME="tex2html9068"
+  HREF="node345.html">Celluloid</A>
+<B> Anterior:</B> <A NAME="tex2html9064"
+  HREF="node345.html">Celluloid</A>
+ &nbsp; <B>  <A NAME="tex2html9070"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9072"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

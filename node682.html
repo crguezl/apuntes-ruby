@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Diferencias entre fetch y pull</TITLE>
-<META NAME="description" CONTENT="Diferencias entre fetch y pull">
+<TITLE>Transferencia de ficheros por sftp</TITLE>
+<META NAME="description" CONTENT="Transferencia de ficheros por sftp">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node683.html">
 <LINK REL="previous" HREF="node681.html">
-<LINK REL="up" HREF="node676.html">
+<LINK REL="up" HREF="node681.html">
 <LINK REL="next" HREF="node683.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15121"
+<A NAME="tex2html15168"
   HREF="node683.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15115"
-  HREF="node676.html">
+<A NAME="tex2html15162"
+  HREF="node681.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15109"
+<A NAME="tex2html15156"
   HREF="node681.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15117"
-  HREF="node841.html">
+<A NAME="tex2html15164"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15119"
-  HREF="node844.html">
+<A NAME="tex2html15166"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,93 +92,84 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15122"
-  HREF="node683.html">Mezclando Ficheros Específicos desde</A>
-<B> Subir:</B> <A NAME="tex2html15116"
-  HREF="node676.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html15110"
-  HREF="node681.html">Véase: Tutoriales de Git</A>
- &nbsp; <B>  <A NAME="tex2html15118"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15120"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15169"
+  HREF="node683.html">Copias de Seguridad con</A>
+<B> Subir:</B> <A NAME="tex2html15163"
+  HREF="node681.html">Copia Segura de un</A>
+<B> Anterior:</B> <A NAME="tex2html15157"
+  HREF="node681.html">Copia Segura de un</A>
+ &nbsp; <B>  <A NAME="tex2html15165"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15167"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06660000000000000000">
-Diferencias entre fetch y pull</A>
-</H1>
-Git was designed to support a distributed model with no need for a central
-repository (though you can certainly use one if you like.) Also git was
-designed so that the client and the "server"
-don't need to be online at the same time. 
+<H2><A NAME="SECTION065121000000000000000">
+Transferencia de ficheros por <TT>sftp</TT></A>
+</H2>
 
 <P>
-Git was designed so that people on an unreliable link could exchange
-code via email, even. 
+El protocolo <A NAME="28121"></A><SPAN  CLASS="textbf">SFTP</SPAN> no es el resultado de
+ejecutar <A NAME="28123"></A><SPAN  CLASS="textbf">FTP</SPAN> sobre SSH. Se trata de un nuevo protocolo
+para la transferencia segura de ficheros.
 
 <P>
-In order to support this model git maintains 
-a local repository with your
-code and also an additional local repository that mirrors the state of
-the remote repository. 
-By keeping a copy of the remote
-repository locally, git can figure out the changes needed even when the remote repository is not reachable. 
+Si se establece autentificación no interactiva con una máquina que provee
+un servicio SFTP es posible usar
+ <TT>sftp</TT>  en modo batch:
 
 <P>
-Later when you need to send the changes to someone else, git can transfer them as a set of
-changes from a point in time known to the remote repository.
+<PRE>
+pp2@mymachine:~/Lbook$ ssh-copy-id -i ~/.ssh/id_dsa.pub casiano@ftp.someplace.ull.es
+25
+Now try logging into the machine, with "ssh 'casiano@ftp.someplace.ull.es'", and check in:
+
+  .ssh/authorized_keys
+
+  to make sure we haven't added extra keys that you weren't expecting.
+</PRE>
 
 <P>
-
-<UL>
-<LI>The command <code>git fetch</code> is the command that says <I>bring my local copy of the remote repository up to date.</I> 
-</LI>
-<LI>The command <code>git pull</code> says "bring the changes in the remote repository where I keep my own
-code." 
-</LI>
-</UL>
+Ahora escribimos un guión para el cliente <A NAME="tex2html1620"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sftp"><TT>sftp</TT></A>:
 
 <P>
-Normally <code>git pull</code> does this by doing a <code>git fetch</code> to bring
-the local copy of the remote repository up to date, and then merging
-the changes into your own code repository and possibly your
-working copy.
+<PRE>
+pp2@nereida:~/Lbook$ cat -n instituto.sftp
+     1  cd asignas/asignas/PRGPAR2/perlexamples
+     2  lcd /home/pp2/public_html/perlexamples/
+     3  put *
+</PRE>
 
 <P>
-The take away is to keep in mind that there are often at least <SPAN  CLASS="textbf">three copies</SPAN> 
-of a project on your workstation. 
+La opción <code>-b</code> de <code>sftp</code> nos permite hacer la transferencia
+de forma automática:
 
-<UL>
-<LI>One copy is your own repository
-with your own commit history. 
-</LI>
-<LI>The second copy is your
-working copy where you are editing and building. 
-</LI>
-<LI>The third copy is your local "cached" copy of a remote repository.
-</LI>
-</UL>
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ sftp -b instituto.sftp casiano@ftp.instituto.ull.es &gt;/dev/null
+</PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15121"
+<A NAME="tex2html15168"
   HREF="node683.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15115"
-  HREF="node676.html">
+<A NAME="tex2html15162"
+  HREF="node681.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15109"
+<A NAME="tex2html15156"
   HREF="node681.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15117"
-  HREF="node841.html">
+<A NAME="tex2html15164"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15119"
-  HREF="node844.html">
+<A NAME="tex2html15166"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -229,20 +220,20 @@ working copy where you are editing and building.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15122"
-  HREF="node683.html">Mezclando Ficheros Específicos desde</A>
-<B> Subir:</B> <A NAME="tex2html15116"
-  HREF="node676.html">Git</A>
-<B> Anterior:</B> <A NAME="tex2html15110"
-  HREF="node681.html">Véase: Tutoriales de Git</A>
- &nbsp; <B>  <A NAME="tex2html15118"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15120"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15169"
+  HREF="node683.html">Copias de Seguridad con</A>
+<B> Subir:</B> <A NAME="tex2html15163"
+  HREF="node681.html">Copia Segura de un</A>
+<B> Anterior:</B> <A NAME="tex2html15157"
+  HREF="node681.html">Copia Segura de un</A>
+ &nbsp; <B>  <A NAME="tex2html15165"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15167"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

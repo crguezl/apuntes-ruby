@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Jerarquía de Ficheros y Directorios, Nombres y Requires</TITLE>
-<META NAME="description" CONTENT="Jerarquía de Ficheros y Directorios, Nombres y Requires">
+<TITLE>bundle show: searching</TITLE>
+<META NAME="description" CONTENT="bundle show: searching">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node720.html">
 <LINK REL="previous" HREF="node718.html">
-<LINK REL="up" HREF="node714.html">
+<LINK REL="up" HREF="node717.html">
 <LINK REL="next" HREF="node720.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15722"
+<A NAME="tex2html15736"
   HREF="node720.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15716"
-  HREF="node714.html">
+<A NAME="tex2html15730"
+  HREF="node717.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15710"
+<A NAME="tex2html15724"
   HREF="node718.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15718"
-  HREF="node841.html">
+<A NAME="tex2html15732"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15720"
-  HREF="node844.html">
+<A NAME="tex2html15734"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,101 +92,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15723"
-  HREF="node720.html">Gemas con Un Gran</A>
-<B> Subir:</B> <A NAME="tex2html15717"
-  HREF="node714.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15711"
-  HREF="node718.html">Dependencias de la Gema</A>
- &nbsp; <B>  <A NAME="tex2html15719"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15721"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15737"
+  HREF="node720.html">La opción PATH (:path)</A>
+<B> Subir:</B> <A NAME="tex2html15731"
+  HREF="node717.html">Bundler</A>
+<B> Anterior:</B> <A NAME="tex2html15725"
+  HREF="node718.html">bundle show: Que versión</A>
+ &nbsp; <B>  <A NAME="tex2html15733"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15735"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061150000000000000000"></A>
-<A NAME="subsection:nombresyrequires"></A>
-<BR>
-Jerarquía de Ficheros y Directorios, Nombres y Requires
+<H1><A NAME="SECTION061020000000000000000">
+bundle show: searching</A>
 </H1>
-<UL>
-<LI>How you name your files and where you
-put them can  improve the usability of your library by other
-developers. 
-
 <P>
-</LI>
-<LI>For instance, in a GitHub repository
-page <SPAN  CLASS="textbf">one can simply press <TT>t</TT> and start typing a filename, then look at
-the code for that file by pressing return</SPAN>. 
-
-<P>
-</LI>
-<LI>By creating sane, easily guessable filenames you are making it simple
-for others to read your code.
-</LI>
-</UL>
-<P>
-<I>In general, 
-<FONT COLOR="#0000ff"> you will have one class per file and one folder per module namespace</FONT>, so for instance:
-</I>
-<P>
-<UL>
-<LI><code>MyGem</code> becomes <code>lib/my_gem.rb</code> 
-</LI>
-<LI><code>MyGem::Widget</code> becomes <code>lib/my_gem/widget.rb</code>
-</LI>
-<LI><code>MyGem::Widgets::FooBar</code> becomes <code>lib/my_gem/widgets/foo_bar.rb</code>
-</LI>
-</UL>
-<P>
-<I><SPAN  CLASS="textbf">When a developer wants to use your library, they should be able to do
-so (in almost all cases) by making a single <TT>require</TT> statement that is
-identical to the gem name</SPAN>. 
-</I>
-<P>
-<I>That means that in the root file you need
-to make any additional require statements necessary for your gem to
-function. So if I have 
-a <code>MyGem</code> module, 
-a <code>MyGem::Widget</code> class, and a
-<code>MyGem::Widgets::FooBar</code> class, 
-the <code>lib/my_gem.rb</code> 
-file in my gem might
-look like this:
+<I>The show command still has one more trick up it's sleeve, though: 
+</I><PRE>
+bundle show --paths
+</PRE><I>
+Printing a list of paths may not sound terribly useful, but it makes it trivial to search through the source of every gem in your bundle. Want to know where ActionDispatch::RemoteIp is defined? It's a one-liner:
 </I>
 <P><PRE>
-require 'external_library' # require any external dependencies
-
-module MyGem # it is best to declare the base module at the top
-end
-
-require 'my_gem/version' # created by Bundler
-require 'my_gem/widget'
-require 'my_gem/widgets/foo_bar'
+$ grep ActionDispatch::RemoteIp `bundle show --paths`
 </PRE><I>
-By requiring all of the files necessary for your gem to run in the
-base file you make it easier for developers to use your library. 
+Whether you use grep, ack, or ag, it's very easy to set up a shell function that allows you to search the current bundle in just a few characters. Here's mine:
+</I>
+<P><PRE>
+function back () {
+ack "$@" `bundle show --paths`
+}
+</PRE><I>
+With that function, searching becomes even easier:
+</I>
+<P><PRE>
+$ back ActionDispatch::RemoteIp
+</PRE>
+<P>
+<I>Véase <A NAME="tex2html1702"
+  HREF="https://blog.engineyard.com/2013/bundler-hacking">Hack your bundle for fun and profit</A>
 </I>
 <P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15722"
+<A NAME="tex2html15736"
   HREF="node720.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15716"
-  HREF="node714.html">
+<A NAME="tex2html15730"
+  HREF="node717.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15710"
+<A NAME="tex2html15724"
   HREF="node718.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15718"
-  HREF="node841.html">
+<A NAME="tex2html15732"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15720"
-  HREF="node844.html">
+<A NAME="tex2html15734"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -237,20 +202,20 @@ base file you make it easier for developers to use your library.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15723"
-  HREF="node720.html">Gemas con Un Gran</A>
-<B> Subir:</B> <A NAME="tex2html15717"
-  HREF="node714.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15711"
-  HREF="node718.html">Dependencias de la Gema</A>
- &nbsp; <B>  <A NAME="tex2html15719"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15721"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15737"
+  HREF="node720.html">La opción PATH (:path)</A>
+<B> Subir:</B> <A NAME="tex2html15731"
+  HREF="node717.html">Bundler</A>
+<B> Anterior:</B> <A NAME="tex2html15725"
+  HREF="node718.html">bundle show: Que versión</A>
+ &nbsp; <B>  <A NAME="tex2html15733"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15735"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

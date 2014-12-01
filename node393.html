@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Redirección</TITLE>
-<META NAME="description" CONTENT="Redirección">
+<TITLE>Ejemplo Simple</TITLE>
+<META NAME="description" CONTENT="Ejemplo Simple">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node394.html">
 <LINK REL="previous" HREF="node392.html">
-<LINK REL="up" HREF="node368.html">
+<LINK REL="up" HREF="node391.html">
 <LINK REL="next" HREF="node394.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10095"
+<A NAME="tex2html10141"
   HREF="node394.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10089"
-  HREF="node368.html">
+<A NAME="tex2html10135"
+  HREF="node391.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10083"
+<A NAME="tex2html10129"
   HREF="node392.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10091"
-  HREF="node841.html">
+<A NAME="tex2html10137"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10093"
-  HREF="node844.html">
+<A NAME="tex2html10139"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,27 +92,25 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10096"
-  HREF="node394.html">La Estructura de una</A>
-<B> Subir:</B> <A NAME="tex2html10090"
-  HREF="node368.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10084"
-  HREF="node392.html">Ejemplo: Basic Authentication con</A>
- &nbsp; <B>  <A NAME="tex2html10092"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10094"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10142"
+  HREF="node394.html">Ejemplo con POST</A>
+<B> Subir:</B> <A NAME="tex2html10136"
+  HREF="node391.html">Rack::Response</A>
+<B> Anterior:</B> <A NAME="tex2html10130"
+  HREF="node392.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html10138"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10140"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031130000000000000000">
-Redirección</A>
-</H1>
-
-<P>
+<H2><A NAME="SECTION03172000000000000000">
+Ejemplo Simple</A>
+</H2>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat redirect.rb 
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat body_bytesize.rb 
 require 'rack'
 require 'thin'
 
@@ -120,26 +118,32 @@ app = lambda do |env|
   req = Rack::Request.new env
   res = Rack::Response.new
 
-  if req.path_info == '/redirect'
-    res.redirect('https://plus.google.com/u/0/')
+  body = "--------------- Header ------------------\n"
+
+  if req.path_info == '/hello'
+    body &lt;&lt; "hi "
+    name = req['name']
+    body &lt;&lt; name if name 
+    body &lt;&lt; "\n"
   else
-    res.write "You did not get redirected"
+    body &lt;&lt; "Instead of #{req.url} visit something like "+
+            "http://localhost:8080/hello?name=Casiano\n"
   end
+  res['Content-Type'] = 'text/plain'
+  res["Content-Length"] = body.bytesize.to_s
+  #res["Content-Length"] = Rack::Utils.bytesize(body).to_s
+  res.body = [ body ]
   res.finish
 end
 
-Rack::Server.start(
- :app =&gt; app,
- :Port =&gt; 9292,
- :server =&gt; 'thin'
-)
+Rack::Handler::Thin.run app
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

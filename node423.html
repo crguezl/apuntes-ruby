@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Fundamentos</TITLE>
-<META NAME="description" CONTENT="Fundamentos">
+<TITLE>Despliegue de una Aplicación Web en la ETSII</TITLE>
+<META NAME="description" CONTENT="Despliegue de una Aplicación Web en la ETSII">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node465.html">
-<LINK REL="previous" HREF="node419.html">
-<LINK REL="up" HREF="node367.html">
+<LINK REL="next" HREF="node424.html">
+<LINK REL="previous" HREF="node422.html">
+<LINK REL="up" HREF="node376.html">
 <LINK REL="next" HREF="node424.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10553"
+<A NAME="tex2html10620"
   HREF="node424.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10547"
-  HREF="node367.html">
+<A NAME="tex2html10614"
+  HREF="node376.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10541"
+<A NAME="tex2html10608"
   HREF="node422.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10549"
-  HREF="node841.html">
+<A NAME="tex2html10616"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10551"
-  HREF="node844.html">
+<A NAME="tex2html10618"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,248 +92,169 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10554"
-  HREF="node424.html">Ejemplo Simple de uso</A>
-<B> Subir:</B> <A NAME="tex2html10548"
-  HREF="node367.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html10542"
-  HREF="node422.html">Ejercicio: Instale la Documentación</A>
- &nbsp; <B>  <A NAME="tex2html10550"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10552"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10621"
+  HREF="node424.html">Práctica: Despliegue en Heroku</A>
+<B> Subir:</B> <A NAME="tex2html10615"
+  HREF="node376.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10609"
+  HREF="node422.html">Prácticas: Centro de Cálculo</A>
+ &nbsp; <B>  <A NAME="tex2html10617"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10619"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03300000000000000000">
-Fundamentos</A>
+<H1><A NAME="SECTION031300000000000000000">
+Despliegue de una Aplicación Web en la ETSII</A>
 </H1>
+Para desplegar una aplicación web usaremos <code>exthost2</code> (en 2013).
+
+<P>
+Veamos que puertos están libres usando  <TT>netstat</TT> :
+<PRE>
+casiano@exthost2:~$ netstat -an | less
+</PRE>
+o bien usamos  <TT>lsof</TT> : 
+<PRE>
+lsof -i | less
+</PRE>
+y después - si es necesario - terminamos el proceso que ya estuviera escuchando en el puerto
+<PRE>
+kill -9 PID
+</PRE>
+
+<P>
+Veamos una simple aplicación usando <code>rack</code>:
+<PRE>
+casiano@exthost2:~/src/ruby/simplewebapp$ cat hello.rb 
+require 'rack'
+
+app = lambda { |env| [200, {"Content-Type" =&gt; "text/plain"}, ["Hello. The time is #{Time.now}"]] }
+Rack::Handler::WEBrick.run app,:Port =&gt; 4567
+</PRE>
+La ejecutamos:
+<PRE>
+casiano@exthost2:~/src/ruby/simplewebapp$ ruby hello.rb 
+[2013-10-28 09:58:54] INFO  WEBrick 1.3.1
+[2013-10-28 09:58:54] INFO  ruby 1.9.3 (2011-10-30) [i686-linux]
+[2013-10-28 09:58:54] WARN  TCPServer Error: Address already in use - bind(2)
+[2013-10-28 09:58:54] INFO  WEBrick::HTTPServer#start: pid=16597 port=4567
+</PRE>
+Ya tenemos disponible la página en <code>exthost2</code> en el puerto correspondiente.
+
+<P>
+El acceso al servidor está limitado a
+la red de la ULL.
+
+<P>
+
+<H4><A NAME="SECTION031300010000000000000">
+Véase también</A>
+</H4>
+  
+
+<OL>
+<LI><I>Gemas instaladas en local</I> <A HREF="node792.html#section:gemasinstaladasenlocal">99.3</A>
+</LI>
+</OL>
+
+<P>
+
+<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html10555"
-  HREF="node424.html">Ejemplo Simple de uso de Sinatra</A>
-<UL>
-<LI><A NAME="tex2html10556"
-  HREF="node424.html#SECTION03310010000000000000">Donde</A>
-<LI><A NAME="tex2html10557"
-  HREF="node424.html#SECTION03310020000000000000">Código</A>
-<LI><A NAME="tex2html10558"
-  HREF="node424.html#SECTION03310030000000000000">Opciones de Ejecución</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10559"
-  HREF="node425.html">Rutas/Routes</A>
-<UL>
-<LI><A NAME="tex2html10560"
-  HREF="node425.html#SECTION03320010000000000000">Aplicacion</A>
-<LI><A NAME="tex2html10561"
-  HREF="node425.html#SECTION03320020000000000000">config.ru</A>
-<LI><A NAME="tex2html10562"
-  HREF="node425.html#SECTION03320030000000000000">Rakefile</A>
-<LI><A NAME="tex2html10563"
-  HREF="node425.html#SECTION03320040000000000000">Ejecución del servidor</A>
-<LI><A NAME="tex2html10564"
-  HREF="node425.html#SECTION03320050000000000000">Ejecución de los clientes</A>
-<LI><A NAME="tex2html10565"
-  HREF="node426.html">Verbos HTTP en Sinatra/Base</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10566"
-  HREF="node427.html">Ficheros Estáticos</A>
-<LI><A NAME="tex2html10567"
-  HREF="node428.html">Vistas</A>
-<UL>
-<LI><A NAME="tex2html10568"
-  HREF="node429.html">Templates Inline</A>
-<LI><A NAME="tex2html10569"
-  HREF="node430.html">Named Templates</A>
-<LI><A NAME="tex2html10570"
-  HREF="node431.html">Templates Externos</A>
-<LI><A NAME="tex2html10571"
-  HREF="node432.html">Templates Externos en Subcarpetas</A>
-<LI><A NAME="tex2html10572"
-  HREF="node433.html">Variables en las Vistas</A>
-<UL>
-<LI><A NAME="tex2html10573"
-  HREF="node433.html#SECTION03345010000000000000">Comunicación vía variables de instancia</A>
-</UL>
-<LI><A NAME="tex2html10574"
-  HREF="node434.html">Pasando variables a la vista explícitamente via un hash</A>
-<LI><A NAME="tex2html10575"
-  HREF="node435.html">Opciones pasadas a los Métodos de los Templates</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10576"
-  HREF="node436.html">Filtros</A>
-<UL>
-<LI><A NAME="tex2html10577"
-  HREF="node436.html#SECTION03350010000000000000">Before Filters</A>
-<LI><A NAME="tex2html10578"
-  HREF="node436.html#SECTION03350020000000000000">After Filters</A>
-<LI><A NAME="tex2html10579"
-  HREF="node436.html#SECTION03350030000000000000">Filters can take a Pattern</A>
-<LI><A NAME="tex2html10580"
-  HREF="node436.html#SECTION03350040000000000000">Filters can take a Condition</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10581"
-  HREF="node437.html">Manejo de Errores</A>
-<UL>
-<LI><A NAME="tex2html10582"
-  HREF="node437.html#SECTION03360010000000000000">not_found</A>
-<LI><A NAME="tex2html10583"
-  HREF="node437.html#SECTION03360020000000000000">error</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10584"
-  HREF="node438.html">The methods body, status and headers</A>
-<LI><A NAME="tex2html10585"
-  HREF="node439.html">Acceso al Objeto Request</A>
-<LI><A NAME="tex2html10586"
-  HREF="node440.html">Caching / Caches</A>
-<LI><A NAME="tex2html10587"
-  HREF="node441.html">Sesiones y Cookies en Sinatra</A>
-<UL>
-<LI><A NAME="tex2html10588"
-  HREF="node441.html#SECTION033100010000000000000">Introducción</A>
-<LI><A NAME="tex2html10589"
-  HREF="node441.html#SECTION033100020000000000000">Cookies</A>
-<LI><A NAME="tex2html10590"
-  HREF="node441.html#SECTION033100030000000000000">Ejemplo con Sesiones</A>
-<LI><A NAME="tex2html10591"
-  HREF="node441.html#SECTION033100040000000000000">Ejemplo con Cookies</A>
-<LI><A NAME="tex2html10592"
-  HREF="node441.html#SECTION033100050000000000000">Problemas</A>
-<LI><A NAME="tex2html10593"
-  HREF="node441.html#SECTION033100060000000000000">Véanse</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10594"
-  HREF="node442.html">Downloads / Descargas / Attachments</A>
-<UL>
-<LI><A NAME="tex2html10595"
-  HREF="node442.html#SECTION033110010000000000000">Usando attachment</A>
-<LI><A NAME="tex2html10596"
-  HREF="node442.html#SECTION033110020000000000000">Usando send_file</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10597"
-  HREF="node443.html">Uploads. Subida de Ficheros en Sinatra</A>
-<UL>
-<LI><A NAME="tex2html10598"
-  HREF="node443.html#SECTION033120010000000000000">Véase</A>
-<LI><A NAME="tex2html10599"
-  HREF="node443.html#SECTION033120020000000000000">Jerarquía de ficheros</A>
-<LI><A NAME="tex2html10600"
-  HREF="node443.html#SECTION033120030000000000000">upload.haml</A>
-<LI><A NAME="tex2html10601"
-  HREF="node443.html#SECTION033120040000000000000">app.rb</A>
-<LI><A NAME="tex2html10602"
-  HREF="node443.html#SECTION033120050000000000000">BEWARE!</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10603"
-  HREF="node444.html">halt</A>
-<LI><A NAME="tex2html10604"
-  HREF="node445.html">Passing a Request</A>
-<LI><A NAME="tex2html10605"
-  HREF="node446.html">Triggering Another Route: calling <TT>call</TT></A>
-<LI><A NAME="tex2html10606"
-  HREF="node447.html">Logging</A>
-<UL>
-<LI><A NAME="tex2html10607"
-  HREF="node447.html#SECTION033160010000000000000">Logging a stdout y a un fichero</A>
-<LI><A NAME="tex2html10608"
-  HREF="node447.html#SECTION033160020000000000000">Ejecución</A>
-<LI><A NAME="tex2html10609"
-  HREF="node447.html#SECTION033160030000000000000">Véase</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10610"
-  HREF="node448.html">Generating URLs</A>
-<LI><A NAME="tex2html10611"
-  HREF="node449.html">Redireccionamientos/Browser Redirect</A>
-<LI><A NAME="tex2html10612"
-  HREF="node450.html">Configuration / Configuración</A>
-<LI><A NAME="tex2html10613"
-  HREF="node451.html">Configuring attack protection</A>
-<LI><A NAME="tex2html10614"
-  HREF="node452.html">Settings disponibles/Available Settings</A>
-<LI><A NAME="tex2html10615"
-  HREF="node453.html">Environments</A>
-<LI><A NAME="tex2html10616"
-  HREF="node454.html">Correo</A>
-<LI><A NAME="tex2html10617"
-  HREF="node455.html">Ambito</A>
-<UL>
-<LI><A NAME="tex2html10618"
-  HREF="node455.html#SECTION033240010000000000000">Ámbito de Clase/Class Scope</A>
-<LI><A NAME="tex2html10619"
-  HREF="node455.html#SECTION033240020000000000000">Ámbito de Instancia/Instance Scope</A>
-<LI><A NAME="tex2html10620"
-  HREF="node455.html#SECTION033240030000000000000">Ejecución en el servidor</A>
-<LI><A NAME="tex2html10621"
-  HREF="node455.html#SECTION033240040000000000000">Ejecución en el cliente. Ruta: /define_route/juan</A>
+<LI><UL>
+<LI><UL>
 <LI><A NAME="tex2html10622"
-  HREF="node455.html#SECTION033240050000000000000">Ejecución en el cliente. Ruta: /juan</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10623"
-  HREF="node456.html">Sinatra Authentication</A>
-<UL>
-<LI><A NAME="tex2html10624"
-  HREF="node457.html">Autentificación Básica en Sinatra con Rack::Auth::Basic</A>
-<LI><A NAME="tex2html10625"
-  HREF="node458.html">Ejemplo con Warden</A>
-<UL>
-<LI><A NAME="tex2html10626"
-  HREF="node458.html#SECTION033252010000000000000">Donde</A>
-</UL>
-<LI><A NAME="tex2html10627"
-  HREF="node459.html">Referencias</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10628"
-  HREF="node460.html">Sinatra como Middleware</A>
-<LI><A NAME="tex2html10629"
-  HREF="node461.html">Práctica: Aplicación Web con Sinatra: Contar la Popularidad de Nuestros Amigos en Twitter</A>
-<LI><A NAME="tex2html10630"
-  HREF="node462.html">Práctica: TicTacToe</A>
-<UL>
-<LI><A NAME="tex2html10631"
-  HREF="node462.html#SECTION033280010000000000000">Referencias</A>
-<LI><A NAME="tex2html10632"
-  HREF="node462.html#SECTION033280020000000000000">Estructura</A>
-<LI><A NAME="tex2html10633"
-  HREF="node462.html#SECTION033280030000000000000">Rakefile</A>
-<LI><A NAME="tex2html10634"
-  HREF="node462.html#SECTION033280040000000000000">HAML</A>
-<LI><A NAME="tex2html10635"
-  HREF="node462.html#SECTION033280050000000000000">HTML generado</A>
-<LI><A NAME="tex2html10636"
-  HREF="node462.html#SECTION033280060000000000000">SASS</A>
-<LI><A NAME="tex2html10637"
-  HREF="node462.html#SECTION033280070000000000000">Procfile</A>
-<LI><A NAME="tex2html10638"
-  HREF="node462.html#SECTION033280080000000000000">Gemfile</A>
-<LI><A NAME="tex2html10639"
-  HREF="node462.html#SECTION033280090000000000000">La Aplicación</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html10640"
-  HREF="node463.html">Práctica: TicTacToe usando DataMapper</A>
-<LI><A NAME="tex2html10641"
-  HREF="node464.html">Práctica: Servicio de Syntax Highlighting</A>
-</UL>
+  HREF="node423.html#SECTION031300010000000000000">Véase también</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html10620"
+  HREF="node424.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html10614"
+  HREF="node376.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html10608"
+  HREF="node422.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html10616"
+  HREF="node849.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html10618"
+  HREF="node852.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html10621"
+  HREF="node424.html">Práctica: Despliegue en Heroku</A>
+<B> Subir:</B> <A NAME="tex2html10615"
+  HREF="node376.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10609"
+  HREF="node422.html">Prácticas: Centro de Cálculo</A>
+ &nbsp; <B>  <A NAME="tex2html10617"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10619"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

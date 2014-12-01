@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Capybara y Rack::Test</TITLE>
-<META NAME="description" CONTENT="Capybara y Rack::Test">
+<TITLE>Usando la Sesión Directamente</TITLE>
+<META NAME="description" CONTENT="Usando la Sesión Directamente">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node314.html">
+<LINK REL="next" HREF="node312.html">
 <LINK REL="previous" HREF="node310.html">
-<LINK REL="up" HREF="node308.html">
+<LINK REL="up" HREF="node310.html">
 <LINK REL="next" HREF="node312.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8419"
+<A NAME="tex2html8469"
   HREF="node312.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8413"
-  HREF="node308.html">
+<A NAME="tex2html8463"
+  HREF="node310.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8407"
+<A NAME="tex2html8457"
   HREF="node310.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8415"
-  HREF="node841.html">
+<A NAME="tex2html8465"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8417"
-  HREF="node844.html">
+<A NAME="tex2html8467"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,191 +92,330 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8420"
-  HREF="node312.html">Testeando una Aplicación Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html8414"
-  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
-<B> Anterior:</B> <A NAME="tex2html8408"
-  HREF="node310.html">Ejemplo de uso de</A>
- &nbsp; <B>  <A NAME="tex2html8416"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8418"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8470"
+  HREF="node312.html">Usando Capybara Directamente Incluyendo</A>
+<B> Subir:</B> <A NAME="tex2html8464"
+  HREF="node310.html">Usando Capybara Directamente</A>
+<B> Anterior:</B> <A NAME="tex2html8458"
+  HREF="node310.html">Usando Capybara Directamente</A>
+ &nbsp; <B>  <A NAME="tex2html8466"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8468"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-
-<H1><A NAME="SECTION021130000000000000000">
-Capybara y Rack::Test</A>
-</H1>
-
-<P>
-Rack::Test es una librería que implementa el protocolo Rack
-y que hace posible testear la pila completa de nuestra aplicación
-sin que tengamos que pagar la latencia de las comunicaciones HTTP
-ni el uso de navegadores reales.
-
-<P>
-Podemos usar su API para enviar una solicitud/request a nuestra aplicación.
-
-<P>
-Cuando nuestra aplicación responda, Rack::Test procesa la respuesta y nos permite
-cuestionarla.
-
-<P>
-Puede hacerlo porque implementa el protocolo Rack.
-La forma en la que lo hace es construyendo el hash de request y pasandolo a la aplicación
-tal y como la haría un servidor web, interpretando el hash de respuesta y 
-dejandonoslo disponible via su API.
-
-<P>
-Veamos un ejemplo de una aplicación que usa Rack::Test pero no Capybara para
-testear una sencilla aplicación Rack del tipo 
-
-<FONT COLOR="#0000ff"> Hello World</FONT> (Véase
-<A NAME="tex2html655"
-  HREF="https://github.com/crguezl/application_testing_with_capybara">https://github.com/crguezl/application_testing_with_capybara</A>):
-
-<P>
-<PRE>
-[~/application_testing_with_capybara/sinatra(master)]$ pwd -P
-/Users/casiano/local/src/ruby/testing_with_capybara/application_testing_with_capybara/sinatra
-[~/application_testing_with_capybara/sinatra(master)]$ cat test.rb 
-require 'bundler/setup'
-require 'rack'
-require "rack/test"
-require 'test/unit'
-
-class HelloWorld
-  def response
-    [200, {'Content-Length' =&gt; '11'}, ['Hello World']]
-  end
-end
-
-class HelloWorldApp
-  def self.call(env)
-    HelloWorld.new.response
-  end
-end
-
-
-class HelloWorldAppTest &lt; Test::Unit::TestCase
-  include Rack::Test::Methods
-
-  def app
-    HelloWorldApp
-  end
-
-  def test_redirect_logged_in_users_to_dashboard
-    get "/"
-
-    assert last_response.ok?
-    assert_equal last_response.body, 'Hello World'
-  end
-
-end
-</PRE>
-
-<P>
-Una vez instaladas las dependencias podemos ejecutar las pruebas:
-<PRE>
-[~/application_testing_with_capybara/sinatra(master)]$ ruby test.rb 
-Run options: 
-
-# Running tests:
-
-Finished tests in 0.028666s, 34.8845 tests/s, 69.7691 assertions/s.                
-1 tests, 2 assertions, 0 failures, 0 errors, 0 skips
-
-ruby -v: ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-darwin13.0]
-</PRE>
-
-<P>
-Aqui no ha habido ninguna comunicación externa, todo ocurre via software.
-
-<P>
-Rack::Test no tiene una  API para hacer click en los elementos,
-poner radio buttons, manejar forms, etc.
-
-<P>
-De lo que se ocupa es de relizar la transacción Rack imitando al servidor web.
-
-<P>
-Para que sirva de ejemplo, este es el 
-código del driver Capybara que traduce el evento
-click 
-(<A NAME="tex2html656"
-  HREF="https://github.com/jnicklas/capybara/blob/304e2fbfe1e54702eb65f2a3feda1c7b9b99ff36/lib/capybara/rack_test/node.rb">fichero capybara/rack_test/node.rb</A>)
-para que sea procesado por Rack::Test:
-
-<P>
-<PRE>
-  def click
-    if tag_name == 'a' &amp;&amp; !self[:href].nil?
-      method = self["data-method"] if driver.options[:respect_data_method]
-      method ||= :get
-      driver.follow(method, self[:href].to_s)
-    elsif (tag_name == 'input' and %w(submit image).include?(type)) or
-        ((tag_name == 'button') and type.nil? or type == "submit")
-      associated_form = form
-      Capybara::RackTest::Form.new(driver, associated_form).submit(self) if associated_form
-    end
-  end
-</PRE>
-
-<P>
-Capybara determina el tipo de elemento que esta siendo clickeado y después calcula
-si Rack::Test debe seguir el enlace o submitir el formulario.
-
-<P>
-<BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html8421"
-  HREF="node312.html">Testeando una Aplicación Sinatra</A>
-<UL>
-<LI><A NAME="tex2html8422"
-  HREF="node312.html#SECTION021131010000000000000">app.rb</A>
-<LI><A NAME="tex2html8423"
-  HREF="node312.html#SECTION021131020000000000000">Entrada</A>
-<LI><A NAME="tex2html8424"
-  HREF="node312.html#SECTION021131030000000000000">Plantilla para el Formulario. Template: form.erb</A>
-<LI><A NAME="tex2html8425"
-  HREF="node312.html#SECTION021131040000000000000">Plantilla/Template con los resultados: result.erb</A>
-<LI><A NAME="tex2html8426"
-  HREF="node312.html#SECTION021131050000000000000">Salida</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html8427"
-  HREF="node313.html">Testing con Rack::Test y Cucumber</A>
-<UL>
-<LI><A NAME="tex2html8428"
-  HREF="node313.html#SECTION021132010000000000000">Rakefile</A>
-<LI><A NAME="tex2html8429"
-  HREF="node313.html#SECTION021132020000000000000">Ejecución de las Pruebas</A>
-<LI><A NAME="tex2html8430"
-  HREF="node313.html#SECTION021132030000000000000">Desventajas de usar Rack::Test</A>
+<LI><UL>
+<LI><A NAME="tex2html8471"
+  HREF="node311.html#SECTION021121010000000000000">Donde</A>
+<LI><A NAME="tex2html8472"
+  HREF="node311.html#SECTION021121020000000000000">Ejemplo de Uso Directo de Capybara con <TT>Capybara::Session</TT></A>
+<LI><A NAME="tex2html8473"
+  HREF="node311.html#SECTION021121030000000000000">Capybara::Session</A>
+<LI><A NAME="tex2html8474"
+  HREF="node311.html#SECTION021121040000000000000">El método <TT>visit</TT></A>
+<LI><A NAME="tex2html8475"
+  HREF="node311.html#SECTION021121050000000000000">Capybara con Otros Drivers</A>
+<LI><A NAME="tex2html8476"
+  HREF="node311.html#SECTION021121060000000000000">Poltergeist</A>
+<LI><A NAME="tex2html8477"
+  HREF="node311.html#SECTION021121070000000000000">Gemfile usado en los Ejemplos</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION021121000000000000000">
+Usando la Sesión Directamente</A>
+</H2>
+
+<P>
+
+<H4><A NAME="SECTION021121010000000000000">
+Donde</A>
+</H4>
+  
+
+Véase
+<A NAME="tex2html653"
+  HREF="https://github.com/crguezl/selenium-examples">crguezl/selenium-examples</A>
+en GitHub.
+<PRE>
+[~/sinatra/sinatra-selenium/intro(master)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/sinatra-selenium/intro
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021121020000000000000">
+Ejemplo de Uso Directo de Capybara con <TT>Capybara::Session</TT></A>
+</H4>
+  
+
+<P>
+La forma mas simple de usar Capybara es instanciar 
+un objeto 
+<A NAME="tex2html654"
+  HREF="http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Session"><TT>Capybara::Session</TT></A>.
+A partir de ese momento es posible llamar a los métodos del
+DSL capybara sobre dicho objeto:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-selenium/intro(master)]$ cat -n hello_lpp.rb 
+     1  require 'capybara'
+     2  session = Capybara::Session.new(:selenium)
+     3  session.visit "http://nereida.deioc.ull.es/~lpp/perlexamples/"
+     4  
+     5  if session.has_content?("Apuntes de RUBY")
+     6    puts "All shiny, captain!"
+     7  else
+     8    puts ":( no tagline found, possibly something's broken"
+     9    exit(-1)
+    10  end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021121030000000000000">
+Capybara::Session</A>
+</H4>
+  
+
+<P>
+La clase <code>Session</code> representa la interacción
+de un único usuario con el sistema.
+
+<P>
+La <code>Session</code> puede utilizar cualquiera de los drivers subyacentes.
+
+<P>
+Para inicializar manualmente una sesión podemos hacer algo como esto:
+<PRE>
+session = Capybara::Session.new(:culerity, MyRackApp)
+</PRE>
+La aplicación que se pasa como segundo argumento es opcional.
+
+<P>
+Cuando se ejecuta Capybara contra una página externa como en 
+el ejemplo deberemos omitirla.
+
+<P>
+<PRE>
+session = Capybara::Session.new(:culerity)
+# Culerity is a gem that integrates Cucumber and Celerity 
+# (Celerity is a headless Java browser with JavaScript support)
+# in order to test your application's full stack 
+# including Javascript.
+session.visit('http://www.google.com')
+</PRE>
+<code>Session</code> provee métodos para controlar la navegación 
+en la página como:
+<code>visit</code>, <code>switch_to_window</code> etc.
+
+<P>
+Esto permite la interacción con la página:
+
+<P>
+<PRE>
+  session.fill_in('q', :with =&gt; 'Capybara')
+  session.click_button('Search')
+  expect(session).to have_content('Capybara')
+</PRE>
+
+<P>
+También delega algunos métodos a   la clase
+<A NAME="tex2html655"
+  HREF="http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Document">Capybara::Node::Document</A>, 
+que representa al documento HTML actual.
+
+<P>
+El código de delegación puede verse en el fichero
+<A NAME="tex2html656"
+  HREF="https://github.com/jnicklas/capybara/blob/master/lib/capybara/session.rb#L679-L702">lib/capybara/session.rb</A>
+de la distribución de Capybara:
+<PRE>
+    NODE_METHODS = [
+      :all, :first, :attach_file, :text, :check, :choose,
+      :click_link_or_button, :click_button, :click_link, ...
+    ]
+    # @api private
+    DOCUMENT_METHODS = [ :title, :assert_title, ... ]
+    ...
+
+    def document
+      @document ||= Capybara::Node::Document.new(self, driver)
+    end
+
+    NODE_METHODS.each do |method|
+      define_method method do |*args, &amp;block|
+        @touched = true
+        current_scope.send(method, *args, &amp;block)
+      end
+    end
+
+    DOCUMENT_METHODS.each do |method|
+      define_method method do |*args, &amp;block|
+        document.send(method, *args, &amp;block)
+      end
+    end
+
+    def inspect
+      %(#&lt;Capybara::Session&gt;)
+    end
+
+    def current_scope
+      scopes.last || document
+    end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021121040000000000000">
+El método <TT>visit</TT></A>
+</H4>
+  
+
+Una llamada <code>session.visit(url)</code>
+navega a la URL dada.
+
+<P>
+La URL puede ser relativa o absoluta.
+La conducta depende del driver.
+
+<P>
+<PRE>
+session.visit('/foo')
+session.visit('http://google.com')
+</PRE>
+For drivers which can run against an external application, such as the selenium driver giving an absolute URL will navigate to that page. 
+
+<P>
+This allows testing applications running on remote servers. For these drivers, setting <code>Capybara.app_host</code> will make the remote server the default. For example:
+
+<P>
+<PRE>
+Capybara.app_host = 'http://google.com'
+session.visit('/') # visits the google homepage
+</PRE>
+If <code>Capybara.always_include_port</code> is set to true and this session is running against a rack application, then the port that the rack application is running on will automatically be inserted into the URL. 
+
+<P>
+Supposing the app is running on port <code>4567</code>, doing something like:
+
+<P>
+<PRE>
+visit("http://google.com/test")
+</PRE>
+Will actually navigate to <code>google.com:4567/test</code>.
+
+<P>
+
+<H4><A NAME="SECTION021121050000000000000">
+Capybara con Otros Drivers</A>
+</H4>
+  
+
+Capybara viene con dos drivers: Rack::Test y Selenium WebDriver.
+No obstante Capybara permite añadir otros drivers via plugins.
+
+<P>
+Entre las alternativas se encuentran:
+
+<UL>
+<LI>Capybara WebKit
+</LI>
+<LI>Capybara Poltergeist
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION021121060000000000000">
+Poltergeist</A>
+</H4>
+  
+
+<P>
+Poltergeist is a <A NAME="13093"></A><SPAN  CLASS="textbf">headless browser</SPAN> driver for Capybara. You will need to
+install PhantomJS and make sure that <code>phantomjs</code> command is in your
+path first.
+
+<P>
+El siguiente Rakefile muestra como Instalar phantomjs en un Mac:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-selenium/intro(master)]$ cat Rakefile 
+desc "install phantomjs in a mac"
+task :phantom do
+  sh "brew update &amp;&amp; brew install phantomjs"
+end
+</PRE>
+
+<P>
+A headless browser is a web browser without a graphical user interface. In other words it is a browser, a piece of software, that access web pages but doesn’t show them to any human being. They’re
+actually used to provide the content of web pages to other programs.
+
+<P>
+Este es el mismo ejemplo anterior pero usando 
+<code>capybara/poltergeist</code>:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-selenium/intro(master)]$ cat -n hello_lpp_phantom.rb 
+     1  require 'capybara'
+     2  require 'capybara/poltergeist'
+     3  
+     4  session = Capybara::Session.new(:poltergeist)
+     5  
+     6  session.visit "http://nereida.deioc.ull.es/~lpp/perlexamples/"
+     7  
+     8  if session.has_content?("Apuntes de RUBY")
+     9    puts "All shiny, captain!"
+    10  else
+    11    puts ":( no tagline fonud, possibly something's broken"
+    12    exit(-1)
+    13  end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021121070000000000000">
+Gemfile usado en los Ejemplos</A>
+</H4>
+  
+
+<P>
+<PRE>
+[~/sinatra/sinatra-selenium/intro(master)]$ cat Gemfile
+source 'https://rubygems.org'
+
+gem 'capybara'
+gem 'poltergeist'
+</PRE>
+
+<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8419"
+<A NAME="tex2html8469"
   HREF="node312.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8413"
-  HREF="node308.html">
+<A NAME="tex2html8463"
+  HREF="node310.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8407"
+<A NAME="tex2html8457"
   HREF="node310.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8415"
-  HREF="node841.html">
+<A NAME="tex2html8465"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8417"
-  HREF="node844.html">
+<A NAME="tex2html8467"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -327,20 +466,20 @@ si Rack::Test debe seguir el enlace o submitir el formulario.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8420"
-  HREF="node312.html">Testeando una Aplicación Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html8414"
-  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
-<B> Anterior:</B> <A NAME="tex2html8408"
-  HREF="node310.html">Ejemplo de uso de</A>
- &nbsp; <B>  <A NAME="tex2html8416"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8418"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8470"
+  HREF="node312.html">Usando Capybara Directamente Incluyendo</A>
+<B> Subir:</B> <A NAME="tex2html8464"
+  HREF="node310.html">Usando Capybara Directamente</A>
+<B> Anterior:</B> <A NAME="tex2html8458"
+  HREF="node310.html">Usando Capybara Directamente</A>
+ &nbsp; <B>  <A NAME="tex2html8466"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8468"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

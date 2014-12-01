@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Building Backbone.js Apps With Ruby, Sinatra, MongoDB and Haml</TITLE>
-<META NAME="description" CONTENT="Building Backbone.js Apps With Ruby, Sinatra, MongoDB and Haml">
+<TITLE>Un Programa para Experimentar con las Expresiones Regulares Usando Ajax</TITLE>
+<META NAME="description" CONTENT="Un Programa para Experimentar con las Expresiones Regulares Usando Ajax">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node520.html">
 <LINK REL="previous" HREF="node518.html">
-<LINK REL="up" HREF="node367.html">
+<LINK REL="up" HREF="node518.html">
 <LINK REL="next" HREF="node520.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12206"
+<A NAME="tex2html12253"
   HREF="node520.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12200"
-  HREF="node367.html">
+<A NAME="tex2html12247"
+  HREF="node518.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12194"
+<A NAME="tex2html12241"
   HREF="node518.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12202"
-  HREF="node841.html">
+<A NAME="tex2html12249"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12204"
-  HREF="node844.html">
+<A NAME="tex2html12251"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,31 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12207"
-  HREF="node520.html">DataMapper y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12201"
-  HREF="node367.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html12195"
-  HREF="node518.html">MongoDB y Sinatra</A>
- &nbsp; <B>  <A NAME="tex2html12203"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12205"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12254"
+  HREF="node520.html">Un Ejemplo Simple</A>
+<B> Subir:</B> <A NAME="tex2html12248"
+  HREF="node518.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12242"
+  HREF="node518.html">Ajax in Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12250"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12252"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031500000000000000000">
-Building Backbone.js Apps With Ruby, Sinatra, MongoDB and Haml</A>
+<H1><A NAME="SECTION031210000000000000000">
+Un Programa para Experimentar con las Expresiones Regulares Usando Ajax</A>
 </H1>
-Véase
-<A NAME="tex2html1283"
-  HREF="http://addyosmani.com/blog/building-backbone-js-apps-with-ruby-sinatra-mongodb-and-haml/">Building Backbone.js Apps With Ruby, Sinatra, MongoDB and Haml</A>
+
+<P>
+<A NAME="tex2html1246"
+  HREF="https://gist.github.com/blazeeboy/9259204">regular expression testing playground with ruby and sinatra</A>
+<P>
+<PRE>
+[~/sinatra/regexp(master)]$ cat regex-tester.rb 
+require 'sinatra' # gem install sinatra --no-ri --no-rdoc
+set :port, 3000
+html = &lt;&lt;-EOT
+&lt;html&gt;&lt;head&gt;&lt;style&gt;
+#regex,#text{ width:100%; font-size:15px; display:block; margin-bottom:5px; }
+#text{ height: 200px; }
+span{ background:rgb(230,191,161); display:inline-block; border-radius:3px;}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+ 
+  &lt;input id="regex" placeholder="Regex"/&gt;
+  &lt;textarea id="text" placeholder="Text"&gt;&lt;/textarea&gt;
+  &lt;div id="result"&gt;&lt;/div&gt;
+ 
+  &lt;script src="http://code.jquery.com/jquery-1.11.0.min.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+  $('#regex,#text').keyup(function(){
+      $.get('/preview',{
+        reg:$('#regex').val(),
+        text:$('#text').val()
+      },function(r){
+        $('#result').html(r);
+      });
+  });
+  &lt;/script&gt;
+ 
+&lt;/body&gt;&lt;/html&gt;
+EOT
+ 
+get('/'){ html }
+get '/preview' do 
+  begin
+    params['text'].gsub(/(#{params['reg']})/,'&lt;span&gt;\1&lt;/span&gt;')
+  rescue
+    'Your regex is invalid'
+  end
+end
+</PRE>
+
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Testing con Rack::Test y Cucumber</TITLE>
-<META NAME="description" CONTENT="Testing con Rack::Test y Cucumber">
+<TITLE>Ejemplo de uso de Capybara, RSpec y Cucumber con una Aplicación Web Externa</TITLE>
+<META NAME="description" CONTENT="Ejemplo de uso de Capybara, RSpec y Cucumber con una Aplicación Web Externa">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="previous" HREF="node312.html">
-<LINK REL="up" HREF="node311.html">
+<LINK REL="next" HREF="node315.html">
+<LINK REL="previous" HREF="node310.html">
+<LINK REL="up" HREF="node308.html">
 <LINK REL="next" HREF="node314.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8460"
+<A NAME="tex2html8502"
   HREF="node314.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8454"
-  HREF="node311.html">
+<A NAME="tex2html8496"
+  HREF="node308.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8450"
+<A NAME="tex2html8490"
   HREF="node312.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8456"
-  HREF="node841.html">
+<A NAME="tex2html8498"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8458"
-  HREF="node844.html">
+<A NAME="tex2html8500"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,53 +92,43 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8461"
-  HREF="node314.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html8455"
-  HREF="node311.html">Capybara y Rack::Test</A>
-<B> Anterior:</B> <A NAME="tex2html8451"
-  HREF="node312.html">Testeando una Aplicación Sinatra</A>
- &nbsp; <B>  <A NAME="tex2html8457"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8459"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8503"
+  HREF="node314.html">Poltergeist</A>
+<B> Subir:</B> <A NAME="tex2html8497"
+  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
+<B> Anterior:</B> <A NAME="tex2html8491"
+  HREF="node312.html">Usando Capybara Directamente Incluyendo</A>
+ &nbsp; <B>  <A NAME="tex2html8499"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8501"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html8462"
-  HREF="node313.html#SECTION021132010000000000000">Rakefile</A>
-<LI><A NAME="tex2html8463"
-  HREF="node313.html#SECTION021132020000000000000">Ejecución de las Pruebas</A>
-<LI><A NAME="tex2html8464"
-  HREF="node313.html#SECTION021132030000000000000">Desventajas de usar Rack::Test</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION021132000000000000000">
-Testing con Rack::Test y Cucumber</A>
-</H2>
-Desde la perspectiva de Capybara, la interacción con nuestra aplicación Sinatra
-es la misma que la interacción con una aplicación remota.
+<H1><A NAME="SECTION021130000000000000000">
+Ejemplo de uso de Capybara, RSpec y Cucumber con una Aplicación Web Externa</A>
+</H1>
 
 <P>
-La única diferencia esta en el setup.
+Vamos a empezar testeando YouTube (no es que creamos que 
+le haga falta :-). Esto es posible por que las pruebas
+que haremos son de 
+<FONT COLOR="#ff0000"> aceptación</FONT>: se refieren al comportamiento 
+de la aplicación y por tanto no es necesario siquiera que
+tengamos su código fuente. Nos basta con tener la posibilidad
+de ejecutarla.
 
 <P>
-Vamos a usar Cucumber.  
+Para las pruebas usaremos Cucumber.
 
 <P>
-Cucumber es una herramienta para escribir <A NAME="13367"></A><SPAN  CLASS="textbf">acceptance tests</SPAN>.
+Cucumber es una herramienta para escribir <A NAME="13273"></A><SPAN  CLASS="textbf">acceptance tests</SPAN>.
 En la metodología TDD el stackholder/cliente en vez de pasarle los requisitos al equipo de desarrollo, colabora con los desarrolladores en la escritura de las pruebas
 que expresan el resultado que el quiere.
 
 <P>
-Es por eso que a este tipo de pruebas se las denominan <A NAME="13369"></A><SPAN  CLASS="textbf">acceptance tests</SPAN>:
+Es por eso que a este tipo de pruebas se las denominan <A NAME="13275"></A><SPAN  CLASS="textbf">acceptance tests</SPAN>:
 intentan capturar lo que el stackholder quiere.
 
 <P>
@@ -152,7 +143,7 @@ que construimos la cosa correcta</FONT>.
 
 <P>
 Cuando se usa Behaviour-Driven Development BDD  nos preocupamos
-de escribir los acceptance tests  como <A NAME="13373"></A><SPAN  CLASS="textbf">ejemplos</SPAN>/<A NAME="13375"></A><SPAN  CLASS="textbf">examples</SPAN>
+de escribir los acceptance tests  como <A NAME="13279"></A><SPAN  CLASS="textbf">ejemplos</SPAN>/<A NAME="13281"></A><SPAN  CLASS="textbf">examples</SPAN>
 que cualquiera pueda leer y entender.
 
 <P>
@@ -173,7 +164,7 @@ Feature: Filling a Book Review
 </PRE>
 
 <P>
-Nótese como las pruebas son especificadas como <A NAME="13377"></A><SPAN  CLASS="textbf">examples</SPAN>/ejemplos
+Nótese como las pruebas son especificadas como <A NAME="13283"></A><SPAN  CLASS="textbf">examples</SPAN>/ejemplos
 de como se debe conducir el sistema en un escenario concreto.
 
 <P>
@@ -182,9 +173,9 @@ de como se debe conducir el sistema en un escenario concreto.
 <LI>Cucumber es una herramienta para usar en la línea de comandos.
 </LI>
 <LI>Cuando la ejecutamos lee nuestras especificaciones en ficheros denominados
-<A NAME="13379"></A><SPAN  CLASS="textbf">features</SPAN>, 
-las examina para encontrar los <A NAME="13381"></A><SPAN  CLASS="textbf">escenarios</SPAN> a probar y
-corre los escenarios que son una lista de pasos/<A NAME="13383"></A><SPAN  CLASS="textbf">steps</SPAN> que Cucumber
+<A NAME="13285"></A><SPAN  CLASS="textbf">features</SPAN>, 
+las examina para encontrar los <A NAME="13287"></A><SPAN  CLASS="textbf">escenarios</SPAN> a probar y
+corre los escenarios que son una lista de pasos/<A NAME="13289"></A><SPAN  CLASS="textbf">steps</SPAN> que Cucumber
 debe trabajar. 
 </LI>
 </UL>
@@ -198,250 +189,221 @@ Cuando se usa cucumber lo primero es crear un fichero <code>features</code>
 en el que se guardan las pruebas.
 
 <P>
-Esta es la estructura de <code>features/chapter3/</code>:
-<PRE>
-[~/application_testing_with_capybara(master)]$ tree features/chapter3/
-features/chapter3/
-|-- sinatra.feature
-`-- steps
-    `-- sinatra.rb
+Este será el <A NAME="13291"></A><SPAN  CLASS="textbf">scenario</SPAN> para testear YouTube en el fichero
+<code>features/youtube_search.features</code>:
 
-1 directory, 2 files
+<P>
+<PRE>
+$ cat youtube_search.feature 
+Feature: Search for Videos on YouTube
+
+  Scenario: Search for Videos of Large Rodents
+    Given I am on the YouTube home page
+    When I search for "capybara"
+    Then videos of large rodents are returned
 </PRE>
 
 <P>
-Cada prueba Cucumber se denomina <A NAME="13385"></A><SPAN  CLASS="textbf">scenario</SPAN> y cada scenario
-contiene <A NAME="13387"></A><SPAN  CLASS="textbf">steps</SPAN> que le dicen a Cucumber que hay que hacer.
-
-<P>
-Este es el fichero <code>sinatra.feature</code>:
+Esta es nuestra jerarquía de ficheros:
 <PRE>
-[~/application_testing_with_capybara(master)]$ cat features/chapter3/sinatra.feature 
-Feature: Using Capybara and Rack-Test to Interact with Sinatra App
-
-  Scenario: Complete Book Review
-    Given I am on a book review site
-    When I submit a book review
-    Then I should see the saved details confirmed
+features/
+ |-- youtube_search.feature
+ |-- step_defs
+ |  `-- steps.rb
+ `-- support
+      `-- env.rb
 </PRE>
 
 <P>
-Las palabras clave 
- <TT>Feature</TT> ,  <TT>Scenario</TT> ,  <TT>Given</TT> ,  <TT>When</TT>  y  <TT>Then</TT> 
-son reservadas. El resto es texto. La sintáxis se denomina <A NAME="13394"></A><SPAN  CLASS="textbf">Gherkin</SPAN>.
-Un fichero Gherkin suele tener una estructura como esta:
-
-<P>
+Supuesto que tenemos un fichero <code>youtube_search.feature</code>
+pero no hemos escrito aún las <A NAME="13293"></A><SPAN  CLASS="textbf">step definitions</SPAN>,
+si ejecutamos <code>cucumber</code> obtenemos:
 <PRE>
- 1: Feature: Some terse yet descriptive text of what is desired
- 2:   Textual description of the business value of this feature
- 3:   Business rules that govern the scope of the feature
- 4:   Any additional information that will make the feature easier to understand
- 5: 
- 6:   Scenario: Some determinable business situation
- 7:     Given some precondition
- 8:       And some other precondition
- 9:      When some action by the actor
-10:       And some other action
-11:       And yet another action
-12:      Then some testable outcome is achieved
-13:       And something else we can check happens too
-14: 
-15:   Scenario: A different situation
-16:       ...
-</PRE>
+[~/sinatra/sinatra-capybara/youtube]$ cucumber 
+Feature: Search for Videos on YouTube
 
-<P>
-Es necesario implantar el significado de estos pasos.
-En nuestro caso los ponemos en <code>features/chapter3/steps/sinatra.rb</code>.
-Cucumber nos permite ponerle en cualquier subdirectorio 
-siempre que la extensión sea <code>.rb</code>.
+  Scenario: Search for Videos of Large Rodents # features/youtube_search.feature:3
+    Given I am on the YouTube home page        # features/youtube_search.feature:4
+    When I search for "capybara"               # features/youtube_search.feature:5
+    Then videos of large rodents are returned  # features/youtube_search.feature:6
 
-<P>
-Estos son los contenidos de <code>steps/sinatra.rb</code>:
-<PRE>
-[~/application_testing_with_capybara(master)]$ cat features/chapter3/steps/sinatra.rb 
-Given(/^I am on a book review site$/) do
-  visit('/form')
+1 scenario (1 undefined)
+3 steps (3 undefined)
+0m0.003s
+
+You can implement step definitions for undefined steps with these snippets:
+
+Given(/^I am on the YouTube home page$/) do
+  pending # express the regexp above with the code you wish you had
 end
 
-When(/^I submit a book review$/) do
-  fill_in 'name', :with =&gt; 'Matt'
-  fill_in 'title', :with =&gt; 'Catch 22'
-  fill_in 'review', :with =&gt; 'Alright I guess....'
-  select '20 - 50', :from =&gt; 'age'
-  click_on 'Submit'
+When(/^I search for "(.*?)"$/) do |arg1|
+  pending # express the regexp above with the code you wish you had
 end
 
-Then(/^I should see the saved details confirmed$/) do
-  page.should have_text 'You submitted the following on:'
-  expect(find('#name')).to have_text 'Matt'
-  expect(find('#age')).to have_text '20-50'
-  expect(find('#review')).to have_text 'Alright I guess....'
-  expect(find('#title')).to have_text 'Catch 22'
+Then(/^videos of large rodents are returned$/) do
+  pending # express the regexp above with the code you wish you had
 end
 </PRE>
+Copiamos y pegamos los fragmentos de código que nos aconseja Cucumber
+en nuestro fichero <code>features/step_defs/steps.rb</code>.
 
 <P>
-Cucumber falla un step si su definición genera una excepción (<code>raise</code>).
-
-<P>
-Junto con las features le damos a Cucumber un conjunto de 
-<FONT COLOR="#0000ff"> step definitions</FONT>
-como el anterior. 
-
-<P>
-En este fichero establecemos una correspondencia entre el lenguaje orientado al
-cliente y el código Ruby que debe llevar a cabo las acciones.
-
-<P>
-Es aquí donde interviene Capybara que nos provee 
-de un DSL para la automatización del navegador.
-
-<P>
-Esta jerarquía, desde las features hasta las librerías de 
-automatización como Capybara pueden ilustrarse así:
-<br/>
-<br/>
-<img src="cucumberstack.png" width="70%" />
-
-
-<P>
-El fichero <code>support/env.rb</code> gobierna la configuración:
+Ahora ejecutamos <code>cucumber</code> de nuevo:
 
 <P>
 <PRE>
-[~/application_testing_with_capybara(rack_version)]$ cat features/support/env.rb
-require 'bundler'
-Bundler.require
+~/sinatra/sinatra-capybara/youtube]$ tree
+.
+`-- features
+    |-- step_defs
+    |   `-- steps.rb
+    |-- support
+    |   `-- env.rb
+    `-- youtube_search.feature
+
+3 directories, 3 files
+</PRE>
+
+<P>
+<PRE>
+[~/sinatra/sinatra-capybara/youtube]$ cucumber 
+Feature: Search for Videos on YouTube
+
+  Scenario: Search for Videos of Large Rodents # features/youtube_search.feature:3
+    Given I am on the YouTube home page        # features/step_defs/steps.rb:1
+      TODO (Cucumber::Pending)
+      features/youtube_search.feature:4:in `Given I am on the YouTube home page'
+    When I search for "capybara"               # features/step_defs/steps.rb:5
+    Then videos of large rodents are returned  # features/step_defs/steps.rb:9
+
+1 scenario (1 pending)
+3 steps (2 skipped, 1 pending)
+0m0.003s
+</PRE>
+
+<P>
+Cucumber nos informa que los pasos están por implementar.
+
+<P>
+Ahora editamos <code>support/env.rb</code>:
+<PRE>
+[~/sinatra/sinatra-capybara/youtube]$ cat features/support/env.rb 
 require 'capybara/cucumber'
-require 'rspec/expectations'
-require_relative '../../sinatra/app'
 
-Capybara.default_driver = :rack_test 
-
-Capybara.app = BookReview #our Sinatra app
+Capybara.default_driver = :selenium
 </PRE>
-
-<UL>
-<LI>En este fichero establecemos el valor de <code>Capybara.app</code>
-a la clase de nuestra aplicación Sinatra (<code>BookReview</code>).
+Estamos usando Selenium WebDriver como herramienta 
+para la automatización del navegador.
 
 <P>
-En el caso de una aplicación sinatra clásica pondríamos:
+Completamos el fichero <code>features/step_defs/steps.rb</code>:
 <PRE>
-Capybara.app = Sinatra::Application
-</PRE>
+[~/sinatra/sinatra-capybara/youtube]$ cat features/step_defs/steps.rb 
+Given(/^I am on the YouTube home page$/) do
+  visit 'http://www.youtube.com'
+end
 
-<P>
-</LI>
-<LI>También establecemos <code>Capybara.default_driver</code> a <code>:rack_test</code>
-de manera que se use <code>Rack::Test</code> en vez de Selenium. De este modo 
-la ejecución será mucho mas rápida.
-</LI>
-<LI>Ademas indicamos que queremos trabajar con <code>capybara</code>, con <code>rspec</code>
-y cargamos nuestra aplicación para que pueda ser testeada:
-<PRE>
-require 'capybara/cucumber'
-require 'rspec/expectations'
-require_relative '../../sinatra/app'
-</PRE>
-</LI>
-<LI>La línea <code>Bundler.require</code>:
-<PRE>
-require 'bundler'
-Bundler.require
-</PRE>
-itera sobre cada gema en el <code>Gemfile</code> y hace un <code>require</code>
-de todas las gemas que no hayan sido explícitamente 
-desabilitadas con
-la opción <code>:require =&gt; false</code>. 
+When(/^I search for "(.*?)"$/) do |search_term|
+  fill_in 'search_query', :with =&gt; search_term
+  click_on 'search-btn'
+end
 
-<P>
-Es posible pasarle 
-una lista de grupos:
-<PRE>
-Bundler.require(:default, :development)
-</PRE>
-</LI>
-</UL>
-
-<P>
-
-<H4><A NAME="SECTION021132010000000000000">
-Rakefile</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/application_testing_with_capybara(master)]$ cat Rakefile 
-task :default =&gt; :rackfeatures
-task :rackfeatures do
-  sh "cucumber -r features features/chapter3/sinatra.feature "
+Then(/^videos of large rodents are returned$/) do
+  puts page.inspect
+  expect(page).to have_content 'Garibaldi'
 end
 </PRE>
+La llamada <code>fill_in 'search_query', :with =&gt; search_term</code>
+busca por un elemento del DOM que sea una text area o un text field 
+con un atributo <code>name</code>, <code>id</code> o <code>label</code>
+establecido a <code>search_query</code> y lo rellena con el 
+contenido de <code>search_term</code> (que es <code>capybara</code>). 
 
 <P>
+Mirando el fuente de la página de YouTube encontramos el correspondiente tag <code>input</code> con el atributo <code>name</code> a <code>search_query</code>:
+<PRE>
+&lt;input 
+  id="masthead-search-term" autocomplete="off" autofocus
+  class="search-term yt-uix-form-input-bidi" 
+  name="search_query" value=""
+  type="text" tabindex="1" title="Search"&gt;
+</PRE>
+Que tiene al lado el botón de búsqueda con 
+un <code>id</code> igual a <code>search-btn</code>:
+<PRE>
+&lt;button 
+  class="yt-uix-button yt-uix-button-size-default yt-uix-button-default search-btn-component search-button" 
+  type="submit" 
+  onclick="
+   if (_gel(&amp;#39;masthead-search-term&amp;#39;).value == &amp;#39;&amp;#39;) 
+     return false; 
+   _gel(&amp;#39;masthead-search&amp;#39;).submit(); 
+   return false;;
+   return true;
+  " 
+  id="search-btn" 
+  tabindex="2" 
+  dir="ltr"
+&gt;
+&lt;span class="yt-uix-button-content"&gt;Search &lt;/span&gt;
+</PRE>
 
-<H4><A NAME="SECTION021132020000000000000">
-Ejecución de las Pruebas</A>
-</H4>
-  
+<P>
+A partir de la información <code>search_query</code> Capybara es capaz de
+encontrar el elemento <code>&lt;input&gt;</code> del DOM y rellenarlo.
+
+<P>
+Cuando ejecutamos de nuevo 
+<code>cucumber</code> se abre Firefox que navega hasta
+YouTube y busca por <code>Capybara</code> comprobando 
+que la página de resultados
+contiene la palabra <code>Garibaldi</code> y 
+produciendo un informe como este:
 
 <P>
 <PRE>
-[~/application_testing_with_capybara(master)]$ rake
-cucumber -r features features/chapter3/sinatra.feature 
-Feature: Using Capybara and Rack-Test to Interact with Sinatra App
+[~/sinatra/sinatra-capybara/youtube]$ cucumber
+Feature: Search for Videos on YouTube
 
-  Scenario: Complete Book Review                  # features/chapter3/sinatra.feature:3
-    Given I am on a book review site              # features/chapter3/steps/sinatra.rb:1
-    When I submit a book review                   # features/chapter3/steps/sinatra.rb:5
-    Then I should see the saved details confirmed # features/chapter3/steps/sinatra.rb:13
+  Scenario: Search for Videos of Large Rodents # features/youtube_search.feature:3
+    Given I am on the YouTube home page        # features/step_defs/steps.rb:1
+    When I search for "capybara"               # features/step_defs/steps.rb:5
+    Then videos of large rodents are returned  # features/step_defs/steps.rb:10
+      #&lt;Capybara::Session&gt;
 
 1 scenario (1 passed)
 3 steps (3 passed)
-0m0.070s
+0m22.491s
 </PRE>
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H4><A NAME="SECTION021132030000000000000">
-Desventajas de usar Rack::Test</A>
-</H4>
-  
-
-<P>
-Hay al menos dos desventajas 
-
-<P>
-
-<UL>
-<LI>Rack::Test no es un navegador 
-</LI>
-<LI>Rack::Test no permite ejecutar código en el lado del cliente
-</LI>
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html8504"
+  HREF="node314.html">Poltergeist</A>
 </UL>
-
-<P>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8460"
+<A NAME="tex2html8502"
   HREF="node314.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8454"
-  HREF="node311.html">
+<A NAME="tex2html8496"
+  HREF="node308.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8450"
+<A NAME="tex2html8490"
   HREF="node312.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8456"
-  HREF="node841.html">
+<A NAME="tex2html8498"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8458"
-  HREF="node844.html">
+<A NAME="tex2html8500"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -492,20 +454,20 @@ Hay al menos dos desventajas
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8461"
-  HREF="node314.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html8455"
-  HREF="node311.html">Capybara y Rack::Test</A>
-<B> Anterior:</B> <A NAME="tex2html8451"
-  HREF="node312.html">Testeando una Aplicación Sinatra</A>
- &nbsp; <B>  <A NAME="tex2html8457"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8459"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8503"
+  HREF="node314.html">Poltergeist</A>
+<B> Subir:</B> <A NAME="tex2html8497"
+  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
+<B> Anterior:</B> <A NAME="tex2html8491"
+  HREF="node312.html">Usando Capybara Directamente Incluyendo</A>
+ &nbsp; <B>  <A NAME="tex2html8499"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8501"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

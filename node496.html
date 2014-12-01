@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Código en sinatra/base.rb: la clase Stream</TITLE>
-<META NAME="description" CONTENT="Código en sinatra/base.rb: la clase Stream">
+<TITLE>Chat Simple</TITLE>
+<META NAME="description" CONTENT="Chat Simple">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="previous" HREF="node494.html">
-<LINK REL="up" HREF="node477.html">
+<LINK REL="next" HREF="node497.html">
+<LINK REL="previous" HREF="node493.html">
+<LINK REL="up" HREF="node485.html">
 <LINK REL="next" HREF="node497.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11814"
+<A NAME="tex2html11878"
   HREF="node497.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11808"
-  HREF="node477.html">
+<A NAME="tex2html11872"
+  HREF="node485.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11804"
+<A NAME="tex2html11866"
   HREF="node495.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11810"
-  HREF="node841.html">
+<A NAME="tex2html11874"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11812"
-  HREF="node844.html">
+<A NAME="tex2html11876"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,116 +92,102 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11815"
-  HREF="node497.html">Web Sockets</A>
-<B> Subir:</B> <A NAME="tex2html11809"
-  HREF="node477.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11805"
-  HREF="node495.html">Deferred or streaming response</A>
- &nbsp; <B>  <A NAME="tex2html11811"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11813"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11879"
+  HREF="node497.html">Práctica: Chat con Mensajes</A>
+<B> Subir:</B> <A NAME="tex2html11873"
+  HREF="node485.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11867"
+  HREF="node495.html">Código Completo del Chat</A>
+ &nbsp; <B>  <A NAME="tex2html11875"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11877"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION038160000000000000000"></A>
-<A NAME="section:sinatrabasestream"></A>
-<BR>
-Código en <TT>sinatra/base.rb</TT>: la clase <TT>Stream</TT>
+<H1><A NAME="SECTION03890000000000000000">
+Chat Simple</A>
 </H1>
 
 <P>
-The close parameter specifies whether <code>Stream#close</code> should be called
-after the block has been executed. This is only relevant for evented
-servers like <code>Thin</code> or Rainbows.
 
-<P>
-
-<H4><A NAME="SECTION038160010000000000000">
-método stream</A>
+<H4><A NAME="SECTION03890010000000000000">
+Donde</A>
 </H4>
   
 
-<P>
-Fichero <code>sinatra/base.rb</code>:
-<PRE>
-  class Stream
-    ...
-    def stream(keep_open = false)
-      # Soporta el servidor callbacks asincronas? (webrick no, thin si)
-      scheduler = env['async.callback'] ? EventMachine : Stream
-      current   = @params.dup
-      body Stream.new(scheduler, keep_open) { |out| 
-        with_params(current) { yield(out) } # llamamos al bloque 
-      }
-    end
-    ...
-  end
+<UL>
+<LI><PRE>
+[~/sinatra-streaming/blazeeboychat(master)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/sinatra-streaming/blazeeboychat
+[~/sinatra-streaming/blazeeboychat(master)]$ git remote -v
+origin  git@github.com:crguezl/chat-blazee.git (fetch)
+origin  git@github.com:crguezl/chat-blazee.git (push)
 </PRE>
-Si <code>keep_open</code> es <code>true</code> el navegador se queda esperando datos y no
-ciera la conexión.
+</LI>
+<LI><A NAME="tex2html1192"
+  HREF="https://github.com/crguezl/chat-blazee">https://github.com/crguezl/chat-blazee</A>
+</LI>
+<LI><A NAME="tex2html1193"
+  HREF="https://gist.github.com/blazeeboy/9289678">https://gist.github.com/blazeeboy/9289678</A>
+</LI>
+</UL>
 
 <P>
-The <code>body</code> method set or retrieve the response body. 
 
-<P>
-When a block is given,
-evaluation is deferred until the body is read with <code>each</code>.
-
-<P>
-<PRE>
-    def body(value = nil, &amp;block)
-      if block_given?
-        def block.each; yield(call) end
-        response.body = block
-      elsif value
-        headers.delete 'Content-Length' unless request.head? || value.is_a?(Rack::File) || value.is_a?(Stream)
-        response.body = value
-      else
-        response.body
-      end
-    end
-</PRE>
-<H4><A NAME="SECTION038160020000000000000">
-initialize</A>
+<H4><A NAME="SECTION03890020000000000000">
+Código</A>
 </H4>
   
 
-<P>
 <PRE>
-class Stream
-      def self.schedule(*) yield end
-      def self.defer(*)    yield end
-
-      def initialize(scheduler = self.class, keep_open = false, &amp;back)
-        @back, @scheduler, @keep_open = 
-         back.to_proc, scheduler, keep_open
-        @callbacks, @closed = [], false
-      end
-  ...
+[~/sinatra-streaming/blazeeboychat(master)]$ cat chat.rb 
+require 'sinatra' # gem install sinatra --no-rdoc --no-ri
+set :port, 3000
+set :environment, :production
+ 
+html = &lt;&lt;-EOT
+&lt;html&gt;&lt;head&gt;&lt;style&gt;
+#text{width:100%; font-size: 15px; padding: 5px; display: block;}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+  &lt;input id="text" placeholder="Write then press Enter."/&gt;
+  &lt;div id="chat"&gt;&lt;/div&gt;
+  &lt;script src="http://code.jquery.com/jquery-1.11.0.min.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+  $('#text').keypress(function(e){
+    if( e.keyCode==13 ){
+      $.get('/send',{text:$('#text').val()});
+      $('#text').val('');
+    }
+  });
+  last = 0;
+  setInterval(function(){
+    $.get('/update',{last:last},
+      function(response){
+        last = $('&lt;p&gt;').html(response).find('span').data('last');
+        $('#chat').append(response);
+        });
+    },1000);
+  &lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;
+EOT
+ 
+chat = ['welcome..']
+get('/') { html }
+get '/send' do
+  chat &lt;&lt; "#{request.ip} : #{params['text']}"
+  nil
 end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION038160030000000000000">
-with_params</A>
-</H4>
-  
-
-<P>
-<PRE>
-  class Stream 
-    ...
-    def with_params(temp_params)
-      original, @params = @params, temp_params # save params
-      yield   # call the block
-    ensure
-      @params = original if original # recover params
-    end
+get '/update' do
+  updates = chat[params['last'].to_i..-1]
+  last = "&lt;span data-last=\"#{chat.size}\"&gt;&lt;/span&gt;"
+  if updates.size&gt;0
+  updates.join('&lt;/br&gt;') + "#{last}&lt;/br&gt;"
+  else
+    last
   end
+end
 </PRE>
 
 <P>
@@ -211,95 +198,16 @@ with_params</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html11816"
-  HREF="node496.html#SECTION038160010000000000000">método stream</A>
-<LI><A NAME="tex2html11817"
-  HREF="node496.html#SECTION038160020000000000000">initialize</A>
-<LI><A NAME="tex2html11818"
-  HREF="node496.html#SECTION038160030000000000000">with_params</A>
+<LI><A NAME="tex2html11880"
+  HREF="node496.html#SECTION03890010000000000000">Donde</A>
+<LI><A NAME="tex2html11881"
+  HREF="node496.html#SECTION03890020000000000000">Código</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html11814"
-  HREF="node497.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11808"
-  HREF="node477.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11804"
-  HREF="node495.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11810"
-  HREF="node841.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11812"
-  HREF="node844.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html11815"
-  HREF="node497.html">Web Sockets</A>
-<B> Subir:</B> <A NAME="tex2html11809"
-  HREF="node477.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11805"
-  HREF="node495.html">Deferred or streaming response</A>
- &nbsp; <B>  <A NAME="tex2html11811"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11813"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Bundler</TITLE>
-<META NAME="description" CONTENT="Bundler">
+<TITLE>RDoc y Rake</TITLE>
+<META NAME="description" CONTENT="RDoc y Rake">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node714.html">
-<LINK REL="previous" HREF="node698.html">
-<LINK REL="up" HREF="node638.html">
+<LINK REL="next" HREF="node710.html">
+<LINK REL="previous" HREF="node708.html">
+<LINK REL="up" HREF="node707.html">
 <LINK REL="next" HREF="node710.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15525"
+<A NAME="tex2html15593"
   HREF="node710.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15519"
-  HREF="node638.html">
+<A NAME="tex2html15587"
+  HREF="node707.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15513"
+<A NAME="tex2html15581"
   HREF="node708.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15521"
-  HREF="node841.html">
+<A NAME="tex2html15589"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15523"
-  HREF="node844.html">
+<A NAME="tex2html15591"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,51 +92,169 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15526"
-  HREF="node710.html">bundle show: Que versión</A>
-<B> Subir:</B> <A NAME="tex2html15520"
-  HREF="node638.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html15514"
-  HREF="node708.html">umlify</A>
- &nbsp; <B>  <A NAME="tex2html15522"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15524"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15594"
+  HREF="node710.html">Servidor de Documentación Local</A>
+<B> Subir:</B> <A NAME="tex2html15588"
+  HREF="node707.html">RDoc</A>
+<B> Anterior:</B> <A NAME="tex2html15582"
+  HREF="node708.html">Opciones</A>
+ &nbsp; <B>  <A NAME="tex2html15590"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15592"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061000000000000000000"></A>
-<A NAME="chapter:bundler"></A>
+<H2><A NAME="SECTION06912000000000000000">
+RDoc y Rake</A>
+</H2>
+
+<P>
+
+<OL>
+<LI>The <code>rdoc</code> command ships with Ruby and by default generates all <code>.rb</code> files in or below the current directory.  
+</LI>
+<LI>You probably want something like <code>rdoc lib</code> to just include your project’s main Ruby code.
+</LI>
+<LI>Integrate <A NAME="tex2html1676"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> into <A NAME="tex2html1677"
+  HREF="http://rake.rubyforge.org/"><TT>Rake</TT></A>.
+<A NAME="tex2html1678"
+  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> comes with
+<A NAME="tex2html1679"
+  HREF="http://rdoc.rubyforge.org/RDoc/Task.html">RDoc/Task</A>
+which can be configured for your project, so you can just run
+<code>rake rdoc</code>.
+Once generated, you can view the generated output at <code>doc/index.html</code>.
+The RDocTask will create the following targets:
+<PRE>
+:rdoc
+Main task for this RDOC task.
+:clobber_rdoc
+Delete all the rdoc files. This target is automatically added to the main clobber target.
+:rerdoc
+Rebuild the rdoc files from scratch, even if they are not out of date.
+</PRE>
+
+<P>
+Simple Example:
+<PRE>
+  require 'rdoc/task'
+
+  Rake::RDocTask.new do |rd|
+    rd.main = "README.rdoc"
+    rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+  end
+</PRE>
+You may wish to give the task a different name, such as if you are
+generating two sets of documentation. 
+
+<P>
+For instance, if you want to
+have a <A NAME="29550"></A><SPAN  CLASS="textbf">development set of documentation</SPAN> 
+including private methods:
+<PRE>
+  require 'rdoc/task'
+
+  Rake::RDocTask.new(:rdoc_dev) do |rd|
+    rd.main = "README.doc"
+    rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+    rd.options &lt;&lt; "--all"
+  end
+</PRE>
+The tasks would then be named <code>:rdoc_dev</code>, <code>:clobber_rdoc_dev</code>, and <code>:rerdoc_dev</code>.
+<PRE>
+[~/srcLPPruby/rdoc(master)]$ rake -T
+rake clobber_rdoc  # Remove RDoc HTML files
+rake rdoc          # Build RDoc HTML files
+rake rerdoc        # Rebuild RDoc HTML files
+</PRE>
+</LI>
+</OL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15593"
+  HREF="node710.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15587"
+  HREF="node707.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15581"
+  HREF="node708.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html15589"
+  HREF="node849.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html15591"
+  HREF="node852.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-Bundler
-</H1>
-In a nutshell, you'll be editing a file that describes what gems your
-project depends on and slightly modifying how you require those gems.
-
-<P>
-Repase la sección <I>Creando Gemas y Publicándolas en rubygems.org <A HREF="node714.html#section:gemas_con_bundler">90</A>.
-</I>
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html15527"
-  HREF="node710.html">bundle show: Que versión de una gema estamos usando</A>
-<LI><A NAME="tex2html15528"
-  HREF="node711.html">bundle show: searching</A>
-<LI><A NAME="tex2html15529"
-  HREF="node712.html">La opción <TT>PATH</TT> (<TT>:path</TT>) del método  gem</A>
-<LI><A NAME="tex2html15530"
-  HREF="node713.html">Véase</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+<B> Siguiente:</B> <A NAME="tex2html15594"
+  HREF="node710.html">Servidor de Documentación Local</A>
+<B> Subir:</B> <A NAME="tex2html15588"
+  HREF="node707.html">RDoc</A>
+<B> Anterior:</B> <A NAME="tex2html15582"
+  HREF="node708.html">Opciones</A>
+ &nbsp; <B>  <A NAME="tex2html15590"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15592"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

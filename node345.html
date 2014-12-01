@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Un Servidor Multithreaded (and a Client)</TITLE>
-<META NAME="description" CONTENT="Un Servidor Multithreaded (and a Client)">
+<TITLE>Celluloid</TITLE>
+<META NAME="description" CONTENT="Celluloid">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node346.html">
+<LINK REL="next" HREF="node347.html">
 <LINK REL="previous" HREF="node344.html">
-<LINK REL="up" HREF="node341.html">
+<LINK REL="up" HREF="node344.html">
 <LINK REL="next" HREF="node346.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9019"
+<A NAME="tex2html9060"
   HREF="node346.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9013"
-  HREF="node341.html">
+<A NAME="tex2html9054"
+  HREF="node344.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9007"
+<A NAME="tex2html9048"
   HREF="node344.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9015"
-  HREF="node841.html">
+<A NAME="tex2html9056"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9017"
-  HREF="node844.html">
+<A NAME="tex2html9058"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,194 +92,53 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9020"
-  HREF="node346.html">Colas</A>
-<B> Subir:</B> <A NAME="tex2html9014"
-  HREF="node341.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html9008"
-  HREF="node344.html">Exclusión Mutua y la</A>
- &nbsp; <B>  <A NAME="tex2html9016"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9018"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9061"
+  HREF="node346.html">DCell</A>
+<B> Subir:</B> <A NAME="tex2html9055"
+  HREF="node344.html">Actores</A>
+<B> Anterior:</B> <A NAME="tex2html9049"
+  HREF="node344.html">Actores</A>
+ &nbsp; <B>  <A NAME="tex2html9057"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9059"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021840000000000000000">
-Un Servidor Multithreaded (and a Client)</A>
+<H1><A NAME="SECTION021710000000000000000">
+Celluloid</A>
 </H1>
+Celluloid provides a simple and natural way to build fault-tolerant
+concurrent programs in Ruby. With Celluloid, you can build systems out
+of concurrent objects just as easily as you build sequential
+programs out of regular objects. 
 
 <P>
-An almost canonical use case for threads is for writing servers
-that can communicate with more than one client at a time.
+Much of the difficulty with building concurrent programs in Ruby arises
+because the object-oriented mechanisms for structuring code, such as
+classes and inheritance, are separate from the concurrency
+mechanisms, such as threads and locks. Celluloid combines these into a
+single structure, an active object running within a thread, called an
+"actor", or in Celluloid vernacular, a "cell".
 
 <P>
-<PRE>
-[~/ruby/threads(master)]$ cat simple_server.rb 
-require 'socket'
-
-# This method expects a socket connected to a client.
-# It reads lines from the client, reverses them and sends them back.
-# Multiple threads may run this method at the same time.
-def handle_client(c)
-  while true
-    input = c.gets.chop     # Read a line of input from the client
-    p "Received &lt;#{input}&gt;"
-    break if !input         # Exit if no more input
-    break if input=="quit"  # or if the client asks to.
-    yield c, input
-    c.flush                 # Force our output out
-  end
-  c.close                   # Close the client socket
-end
-
-port = ARGV.shift || 2000
-server = TCPServer.open(port) 
-p "listening in port #{port}"
-
-while true                    # Servers loop forever
-  client = server.accept      # Wait for a client to connect
-  p "new client: #{client}"
-  Thread.start(client) do |c| # Start a new thread 
-    handle_client(c) do |c, input|      # And handle the client on that thread
-      c.puts(input.reverse)   
-    end
-  end
-end
-</PRE>
+The Actor Model can be summarized as follows:
 
 <P>
 
 <OL>
-<LI>To write Internet servers, we use the <A NAME="tex2html795"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> class
+<LI>Actors communicate by sending messages
 </LI>
-<LI>In essence,
-a <A NAME="tex2html796"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> object is a factory for <A NAME="tex2html797"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> objects
+<LI>Every actor has a mailbox with a unique address. 
 </LI>
-<LI>Call <A NAME="tex2html798"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A><code>.open</code> to specify a port for your service and
-create a <A NAME="tex2html799"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> object
+<LI>If you have an actor's address, you can send it messages
 </LI>
-<LI>Next, call the <code>accept</code> method of the returned <A NAME="tex2html800"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPServer.html"><TT>TCPServer</TT></A> object
+<LI>Actors can create other actors, and when they do they know their address so they can send the newly-created actors messages
 </LI>
-<LI>This method waits until a
-client connects to the port you specified, and then returns a
-<A NAME="tex2html801"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> object that represents the connection to that client
-</LI>
-<LI>The call
-<code>Thread.start(client)</code>
-is basically the same as a call to <code>Thread.new</code>.
-</LI>
-<LI>Inside the thread we call the <code>handle_client</code> method, passing the socket
-as argument 
-</LI>
-<LI>The block that follows the invokation of
-<code>handle_client</code> specifies the behavior 
-of the server. 
-</LI>
-<LI>Un <A NAME="tex2html802"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> es un objeto <A NAME="tex2html803"
-  HREF="http://ruby-doc.org/core-2.0.0/IO.html"><TT>IO</TT></A>:
-<PRE>
-&gt;&gt; TCPSocket.ancestors
-=&gt; [TCPSocket, IPSocket, BasicSocket, IO, 
-    File::Constants, Enumerable, Object,  Kernel, BasicObject]
-</PRE>
+<LI>Actors can pass addresses (or handles) to themselves or other actors in messages
 </LI>
 </OL>
-
-<P>
-
-<H4><A NAME="SECTION021840010000000000000">
-El Cliente</A>
-</H4>
-  
-
-<P>
-To obtain a <A NAME="tex2html804"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A> instance use the <A NAME="tex2html805"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A><code>.open</code> class method, or with its synonym <A NAME="tex2html806"
-  HREF="http://ruby-doc.org/stdlib-2.1.0/libdoc/socket/rdoc/TCPSocket.html"><TT>TCPSocket</TT></A><code>.new</code>. 
-
-<P>
-Pass the name of the host to connect to as the first argument and the port as the second argument. 
-
-<P>
-The port should be an integer between 1 and 65535, specified as a <A NAME="tex2html807"
-  HREF="http://ruby-doc.org/core-2.0.0/Fixnum.html"><TT>Fixnum</TT></A> or <A NAME="tex2html808"
-  HREF="http://ruby-doc.org/core-2.0.0/String.html"><TT>String</TT></A> object. 
-
-<P>
-Different internet protocols use different ports. 
-
-<P>
-Web servers use port 80 by default, for example. 
-
-<P>
-You may also pass the name of an Internet service, such as <code>http</code>, as a string, in place of a port number, but this is not well documented and may be system dependent.
-
-<P>
-<PRE>
-[~/ruby/threads(master)]$ cat simple_client.rb 
-require 'socket'                # Sockets are in standard library
-
-host, port = 'localhost', '2000'
-
-s = TCPSocket.open(host, port)  # Open a socket to host and port
-words = ARGV
-words = [
-"amore, roma.", 
-"a man, a plan, a canal: panama.",
-"no 'x' in 'nixon.'",
-"dábale arroz a la zorra el abad"
-] unless words.length &gt; 0
-words.each do |x|
-  s.puts x 
-  line = s.gets             # Read lines from the socket
-  break if line.nil?
-  puts line.chop            # And print with platform line terminator
-end
-s.close                     # Close the socket when done
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021840020000000000000">
-ejecución del Servidor</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/ruby/threads(master)]$ ruby simple_server.rb 
-"listening in port 2000"
-"new client: #&lt;TCPSocket:0x007fd8fb8aee50&gt;"
-"Received &lt;amore, roma.&gt;"
-"Received &lt;a man, a plan, a canal: panama.&gt;"
-"Received &lt;no 'x' in 'nixon.'&gt;"
-"Received &lt;d\xC3\xA1bale arroz a la zorra el abad&gt;"
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021840030000000000000">
-Ejecución del Cliente</A>
-</H4>
-  
-
-<PRE>
-[~/ruby/threads(master)]$ ruby simple_client.rb 
-.amor ,eroma
-.amanap :lanac a ,nalp a ,nam a
-'.noxin' ni 'x' on
-</PRE>
 
 <P>
 <BR><HR>
@@ -287,33 +146,27 @@ Ejecución del Cliente</A>
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html9021"
-  HREF="node345.html#SECTION021840010000000000000">El Cliente</A>
-<LI><A NAME="tex2html9022"
-  HREF="node345.html#SECTION021840020000000000000">ejecución del Servidor</A>
-<LI><A NAME="tex2html9023"
-  HREF="node345.html#SECTION021840030000000000000">Ejecución del Cliente</A>
-</UL></UL></UL>
+<LI><A NAME="tex2html9062"
+  HREF="node346.html">DCell</A>
+</UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html9019"
+<A NAME="tex2html9060"
   HREF="node346.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9013"
-  HREF="node341.html">
+<A NAME="tex2html9054"
+  HREF="node344.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9007"
+<A NAME="tex2html9048"
   HREF="node344.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9015"
-  HREF="node841.html">
+<A NAME="tex2html9056"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9017"
-  HREF="node844.html">
+<A NAME="tex2html9058"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -364,20 +217,20 @@ Ejecución del Cliente</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9020"
-  HREF="node346.html">Colas</A>
-<B> Subir:</B> <A NAME="tex2html9014"
-  HREF="node341.html">Threads</A>
-<B> Anterior:</B> <A NAME="tex2html9008"
-  HREF="node344.html">Exclusión Mutua y la</A>
- &nbsp; <B>  <A NAME="tex2html9016"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9018"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html9061"
+  HREF="node346.html">DCell</A>
+<B> Subir:</B> <A NAME="tex2html9055"
+  HREF="node344.html">Actores</A>
+<B> Anterior:</B> <A NAME="tex2html9049"
+  HREF="node344.html">Actores</A>
+ &nbsp; <B>  <A NAME="tex2html9057"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9059"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>

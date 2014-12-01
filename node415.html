@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Despliegue de una Aplicación Web en la ETSII</TITLE>
-<META NAME="description" CONTENT="Despliegue de una Aplicación Web en la ETSII">
+<TITLE>Rack::URLMap</TITLE>
+<META NAME="description" CONTENT="Rack::URLMap">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node416.html">
 <LINK REL="previous" HREF="node414.html">
-<LINK REL="up" HREF="node368.html">
+<LINK REL="up" HREF="node376.html">
 <LINK REL="next" HREF="node416.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10441"
+<A NAME="tex2html10492"
   HREF="node416.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10435"
-  HREF="node368.html">
+<A NAME="tex2html10486"
+  HREF="node376.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10429"
+<A NAME="tex2html10480"
   HREF="node414.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10437"
-  HREF="node841.html">
+<A NAME="tex2html10488"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10439"
-  HREF="node844.html">
+<A NAME="tex2html10490"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,105 +92,133 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10442"
-  HREF="node416.html">Práctica: Despliegue en Heroku</A>
-<B> Subir:</B> <A NAME="tex2html10436"
-  HREF="node368.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10430"
-  HREF="node414.html">Prácticas: Centro de Cálculo</A>
- &nbsp; <B>  <A NAME="tex2html10438"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10440"
-  HREF="node844.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10493"
+  HREF="node416.html">El método run de</A>
+<B> Subir:</B> <A NAME="tex2html10487"
+  HREF="node376.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10481"
+  HREF="node414.html">Rack::Mount</A>
+ &nbsp; <B>  <A NAME="tex2html10489"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10491"
+  HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031300000000000000000">
-Despliegue de una Aplicación Web en la ETSII</A>
+<H1><A NAME="SECTION031240000000000000000"></A>
+<BR>
+<A NAME="tex2html991"
+  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A>
 </H1>
-Para desplegar una aplicación web usaremos <code>exthost2</code> (en 2013).
 
 <P>
-Veamos que puertos están libres usando  <TT>netstat</TT> :
+<A NAME="tex2html992"
+  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A> takes a hash mapping urls or paths to apps, and
+dispatches accordingly. Support for HTTP/1.1 host names exists if
+the URLs start with http:// or https://.
+
+<P>
+<A NAME="tex2html993"
+  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A> modifies the <code>SCRIPT_NAME</code> and 
+<code>PATH_INFO</code> such that the part
+relevant for dispatch is in the 
+<code>SCRIPT_NAME</code>, and the rest in the
+<code>PATH_INFO</code>. 
+This should be taken care of when you need to reconstruct
+the URL in order to create links.
+
+<P>
+<A NAME="tex2html994"
+  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A>  dispatches in such a way that the longest paths are
+tried first, since they are most specific.
+
+<P>
 <PRE>
-casiano@exthost2:~$ netstat -an | less
+[~/local/src/ruby/sinatra/rack/rack-urlmap(master)]$ cat config.ru 
+app1 = lambda { |e| [200, {}, ["one\n"]]}
+app2 = lambda { |e| [200, {}, ["two\n"]]}
+app3 = lambda { |e| [200, {}, ["one + two = three\n"]]}
+
+app = Rack::URLMap.new "/one" =&gt; app1, "/two" =&gt; app2, "/one/two" =&gt; app3
+
+run app
 </PRE>
-o bien usamos  <TT>lsof</TT> : 
+
+<P>
 <PRE>
-lsof -i | less
+[~/local/src/ruby/sinatra/rack/rack-urlmap(master)]$ cat Rakefile 
+desc "run the server"
+task :default do
+  sh "rackup"
+end
+
+desc "run the client with one"
+task :one do
+  sh %q{curl -v 'http://localhost:9292/one'}
+end
+
+desc "run the client with two"
+task :two do
+  sh %q{curl -v 'http://localhost:9292/two'}
+end
+
+desc "run the client with one/two"
+task :onetwo do
+  sh %q{curl -v 'http://localhost:9292/one/two'}
+end
 </PRE>
-y después - si es necesario - terminamos el proceso que ya estuviera escuchando en el puerto
+
+<P>
 <PRE>
-kill -9 PID
+[~/local/src/ruby/sinatra/rack/rack-urlmap]$ rake
+rackup
+&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+127.0.0.1 - - [17/Oct/2013 21:24:48] "GET /two HTTP/1.1" 200 - 0.0006
 </PRE>
 
 <P>
-Veamos una simple aplicación usando <code>rack</code>:
 <PRE>
-casiano@exthost2:~/src/ruby/simplewebapp$ cat hello.rb 
-require 'rack'
-
-app = lambda { |env| [200, {"Content-Type" =&gt; "text/plain"}, ["Hello. The time is #{Time.now}"]] }
-Rack::Handler::WEBrick.run app,:Port =&gt; 4567
+[~/local/src/ruby/sinatra/rack/rack-urlmap(master)]$ rake onetwo
+curl -v 'http://localhost:9292/one/two'
+* About to connect() to localhost port 9292 (#0)
+*   Trying ::1... Connection refused
+*   Trying 127.0.0.1... connected
+* Connected to localhost (127.0.0.1) port 9292 (#0)
+&gt; GET /one/two HTTP/1.1
+&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
+&gt; Host: localhost:9292
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Transfer-Encoding: chunked
+&lt; Connection: close
+&lt; Server: thin 1.5.1 codename Straight Razor
+&lt; 
+one + two = three
+* Closing connection #0
 </PRE>
-La ejecutamos:
-<PRE>
-casiano@exthost2:~/src/ruby/simplewebapp$ ruby hello.rb 
-[2013-10-28 09:58:54] INFO  WEBrick 1.3.1
-[2013-10-28 09:58:54] INFO  ruby 1.9.3 (2011-10-30) [i686-linux]
-[2013-10-28 09:58:54] WARN  TCPServer Error: Address already in use - bind(2)
-[2013-10-28 09:58:54] INFO  WEBrick::HTTPServer#start: pid=16597 port=4567
-</PRE>
-Ya tenemos disponible la página en <code>exthost2</code> en el puerto correspondiente.
 
 <P>
-El acceso al servidor está limitado a
-la red de la ULL.
-
-<P>
-
-<H4><A NAME="SECTION031300010000000000000">
-Véase también</A>
-</H4>
-  
-
-<OL>
-<LI><I>Gemas instaladas en local</I> <A HREF="node784.html#section:gemasinstaladasenlocal">99.3</A>
-</LI>
-</OL>
-
-<P>
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html10443"
-  HREF="node415.html#SECTION031300010000000000000">Véase también</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10441"
+<A NAME="tex2html10492"
   HREF="node416.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10435"
-  HREF="node368.html">
+<A NAME="tex2html10486"
+  HREF="node376.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10429"
+<A NAME="tex2html10480"
   HREF="node414.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10437"
-  HREF="node841.html">
+<A NAME="tex2html10488"
+  HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10439"
-  HREF="node844.html">
+<A NAME="tex2html10490"
+  HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -241,20 +269,20 @@ Véase también</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10442"
-  HREF="node416.html">Práctica: Despliegue en Heroku</A>
-<B> Subir:</B> <A NAME="tex2html10436"
-  HREF="node368.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10430"
-  HREF="node414.html">Prácticas: Centro de Cálculo</A>
- &nbsp; <B>  <A NAME="tex2html10438"
-  HREF="node841.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10440"
-  HREF="node844.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10493"
+  HREF="node416.html">El método run de</A>
+<B> Subir:</B> <A NAME="tex2html10487"
+  HREF="node376.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10481"
+  HREF="node414.html">Rack::Mount</A>
+ &nbsp; <B>  <A NAME="tex2html10489"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10491"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-11-28
+2014-12-01
 </ADDRESS>
 </BODY>
 </HTML>
