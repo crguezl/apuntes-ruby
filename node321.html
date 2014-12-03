@@ -27,19 +27,19 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8642"
+<A NAME="tex2html8663"
   HREF="node322.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8636"
+<A NAME="tex2html8657"
   HREF="node318.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8632"
+<A NAME="tex2html8653"
   HREF="node320.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8638"
+<A NAME="tex2html8659"
   HREF="node849.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8640"
+<A NAME="tex2html8661"
   HREF="node852.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
@@ -91,19 +91,48 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8643"
+<B> Siguiente:</B> <A NAME="tex2html8664"
   HREF="node322.html">Véase</A>
-<B> Subir:</B> <A NAME="tex2html8637"
+<B> Subir:</B> <A NAME="tex2html8658"
   HREF="node318.html">La API de Capybara</A>
-<B> Anterior:</B> <A NAME="tex2html8633"
+<B> Anterior:</B> <A NAME="tex2html8654"
   HREF="node320.html">Clicks en Botones y</A>
- &nbsp; <B>  <A NAME="tex2html8639"
+ &nbsp; <B>  <A NAME="tex2html8660"
   HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8641"
+ &nbsp; <B>  <A NAME="tex2html8662"
   HREF="node852.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html8665"
+  HREF="node321.html#SECTION021153010000000000000"><TT>fill_in ... :with ...</TT></A>
+<LI><A NAME="tex2html8666"
+  HREF="node321.html#SECTION021153020000000000000">Guardando un Screnshot</A>
+<LI><A NAME="tex2html8667"
+  HREF="node321.html#SECTION021153030000000000000">Algoritmo de Búsqueda de Capybara para <TT>fill_in</TT></A>
+</UL>
+<BR>
+<LI><A NAME="tex2html8668"
+  HREF="node321.html#SECTION021153100000000000000">Checkboxes y Radio Buttons</A>
+<UL>
+<LI><A NAME="tex2html8669"
+  HREF="node321.html#SECTION021153110000000000000">Guardando un Screenshot y Abriéndolo</A>
+<LI><A NAME="tex2html8670"
+  HREF="node321.html#SECTION021153120000000000000">Menus: seleccionado una opción en un <TT>select</TT></A>
+<LI><A NAME="tex2html8671"
+  HREF="node321.html#SECTION021153130000000000000">Selección del radio button</A>
+<LI><A NAME="tex2html8672"
+  HREF="node321.html#SECTION021153140000000000000">Checkbox</A>
+<LI><A NAME="tex2html8673"
+  HREF="node321.html#SECTION021153150000000000000">Cargando un Fichero /File Upload</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
 
 <H2><A NAME="SECTION021153000000000000000">
 Envío de Formularios</A>
@@ -124,12 +153,18 @@ Consideremos el siguiente fragmento de una vista HTML:
 </PRE>
 
 <P>
+
+<H4><A NAME="SECTION021153010000000000000">
+<TT>fill_in ... :with ...</TT></A>
+</H4>
+  
+
 Queremos rellenar los campos y enviarlos. El siguiente 
 código lo hace:
 
 <P>
 <PRE>
-~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat check_form_client.rb 
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat check_form_client.rb 
 require 'capybara'
 require 'capybara/poltergeist'
 
@@ -143,7 +178,7 @@ session.instance_eval do
   fill_in 'Surname', :with =&gt; 'Rodríguez'
   click_on 'Go'
 
-  puts body # dump the contents of the page
+  save_screenshot("formfilled.pdf")
   f = find('#Forename') # f is  a Capybara::Element object
   puts "****\nForename = #{f.text}" 
   s = find('#Surname')
@@ -159,34 +194,417 @@ produce esta salida:
 <PRE>
 [~/sinatra/sinatra-selenium/intro(gh-pages)]$ rake formclient
 ruby check_form_client.rb
-&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;head&gt;
-  &lt;meta charset="UTF-8"&gt;
-  &lt;title&gt;&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;ul&gt;
-    &lt;li id="Forename"&gt; Casiano
-    &lt;/li&gt;&lt;li id="Surname"&gt; Rodríguez
-  &lt;/li&gt;&lt;/ul&gt;
-  &lt;a href="/"&gt;Go back&lt;/a&gt;
-
-
-
-
-&lt;/body&gt;&lt;/html&gt;
 ****
 Forename = Casiano
 ****
 Surname = Rodríguez
 </PRE>
+
+<P>
+
+<H4><A NAME="SECTION021153020000000000000">
+Guardando un Screnshot</A>
+</H4>
+  
+
+<P>
+Además, la llamada a <code>save_screenshot</code> nos ha guardado un <code>pdf</code>
+con un screenshot de la página:
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ ls -ltr | tail -1
+-rw-r--r--  1 casiano  staff  13625  1 dic 13:35 formfilled.pdf
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ open formfilled.pdf
+</PRE>
 Véase el código  del servidor sinatra en 
 <A NAME="tex2html664"
   HREF="https://github.com/crguezl/selenium-examples/blob/gh-pages/check_form_server.rb">crguezl/selenium-examples/blob/gh-pages/check_form_server.rb</A>
 <P>
-<BR><HR>
+
+<H4><A NAME="SECTION021153030000000000000">
+Algoritmo de Búsqueda de Capybara para <TT>fill_in</TT></A>
+</H4>
+  
+
+<P>
+Para localizar campos que aceptan <code>input</code>, 
+ Capybara  utilizará:
+
+<OL>
+<LI>The <code>id</code> attribute of the input element
+</LI>
+<LI>The <code>name</code> attribute of the input element
+</LI>
+<LI>A related <code>label</code> element
+</LI>
+</OL>
+
+<P>
+
+<H3><A NAME="SECTION021153100000000000000">
+Checkboxes y Radio Buttons</A>
+</H3>
+
+<P>
+La API para manipular checkboxes y radio buttons es similar 
+a la de los text inputs.
+
+<P>
+La siguiente vista contiene algunas checkboxes y radio buttons:
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ sed -ne '/@@index/,/^$/p' check_radio_buttons_server.rb 
+@@index
+&lt;form id="myform" method="post" action="/" enctype="multipart/form-data"&gt;
+   &lt;label for="name1"&gt;User Forename&lt;/label&gt;
+   &lt;input id="name1" type="text" name="Forename" value="" /&gt;
+   &lt;label for="name2"&gt;User Surname&lt;/label&gt;
+   &lt;input id="name2" type="text" name="Surname" value="" /&gt;
+   &lt;p&gt;
+     &lt;label for="title"&gt;Title&lt;/label&gt;
+     &lt;select name="user_title" id="title"&gt;
+       &lt;option&gt;Mrs&lt;/option&gt;
+       &lt;option&gt;Mr&lt;/option&gt;
+       &lt;option&gt;Miss&lt;/option&gt;
+     &lt;/select&gt;
+   &lt;/p&gt;
+   &lt;p&gt;
+     &lt;label for="under_16"&gt;Under 16&lt;/label&gt;
+     &lt;input type="radio" name="age" value="under"
+            id="under_16" &gt;
+     &lt;label for="over_16"&gt;Over 16&lt;/label&gt;
+     &lt;input type="radio" name="age" value="over"
+            id="over_16"&gt;
+   &lt;/p&gt; 
+   &lt;p&gt;
+     &lt;label for="consent"&gt;Consent Given?&lt;/label&gt;
+     &lt;input type="checkbox" value="yes" name="consent_checkbox"
+                id="consent"/&gt;
+   &lt;/p&gt;
+   &lt;p&gt;
+     &lt;label for="form_image"&gt;Image (.png)&lt;/label&gt;
+     &lt;input type="file" name="image" id="form_image"/&gt;
+   &lt;/p&gt;
+   &lt;input type="submit" value="Go" /&gt;
+&lt;/form&gt;
+</PRE>
+
+<P>
+Esta es la forma en la que se ve:
+
+<P>
+
+<img src="capybararadiobuttons.png" size="70%" />
+
+
+<P>
+Este es el código para manipular el formulario con menus, radio buttons y checkboxes:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat check_radio_buttons_client.rb 
+require 'capybara'
+require 'capybara/poltergeist'
+
+Capybara.default_driver = :poltergeist
+
+session = Capybara::Session.new(:poltergeist)
+
+session.instance_eval do
+  visit "http://localhost:4567"
+  fill_in 'Forename', :with =&gt; 'Casiano'
+  fill_in 'Surname', :with =&gt; 'Rodríguez'
+  select 'Mr', :from =&gt; 'title' # id
+  choose "Over 16"              # text
+  check "consent"               # id
+  attach_file "form_image", "./bulb.png"
+  click_on 'Go'
+
+  # Save a screenshot of the page and open it for inspection.
+  save_and_open_screenshot("./formfilled.pdf")
+
+  f = find('#Forename') # f is  a Capybara::Element object
+  puts "#{f.text}" 
+  s = find('#Surname')
+  puts "#{s.text}"
+  puts "#{s.text}"
+  puts "#{find('#title').text}"
+  puts "#{find('#age').text}"
+  puts "#{find('#consent').text}"
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021153110000000000000">
+Guardando un Screenshot y Abriéndolo</A>
+</H4>
+  
+
+<P>
+La llamada <code>save_and_open_screenshot("./formfilled.pdf")</code>
+guarda un screenshot de la página y abre el fichero <code>.pdf</code>:
+
+<img src="checkradiobuttonsscreenshot.png" size="70%" />
+
+
+<P>
+
+<H4><A NAME="SECTION021153120000000000000">
+Menus: seleccionado una opción en un <TT>select</TT></A>
+</H4>
+  
+
+Para  seleccionar de un menú desplegable <code>&lt;select&gt;</code> 
+<PRE>
+     &lt;select name="user_title" id="title"&gt;
+       &lt;option&gt;Mrs&lt;/option&gt;
+       &lt;option&gt;Mr&lt;/option&gt;
+       &lt;option&gt;Miss&lt;/option&gt;
+     &lt;/select&gt;
+</PRE>
+usamos el método <code>select</code> 
+<PRE>
+  select 'Mr', :from =&gt; 'title' # id
+</PRE>
+Si  <code>:from</code> esta presente, <code>select</code> encuentra la caja 
+y la selecciona. En otro caso  encuentra una opción y la selecciona.
+Si el <code>select</code> es múltiple<A NAME="tex2html665"
+  HREF="footnode.html#foot13617"><SUP><SPAN CLASS="arabic">18</SPAN>.<SPAN CLASS="arabic">4</SPAN></SUP></A>, 
+se le puede llamar varias veces para que seleccione mas de una opción.
+
+<P>
+Como ocurren con los elementos <code>input</code>
+Capybara mira en las labels y en los atributos  <code>id</code> y <code>name</code>.
+
+<P>
+El valor a seleccionar (<code>Mr</code>)
+debe ser uno de los textos en la lista de hijos <code>option</code>:
+<PRE>
+ &lt;option&gt;Mrs&lt;/option&gt;
+ &lt;option&gt;Mr&lt;/option&gt;
+ &lt;option&gt;Miss&lt;/option&gt;
+</PRE>
+
+<P>
+Capybara dispone asimismo de un 
+método <code>unselect</code> que limpia la selección.
+
+<P>
+
+<H4><A NAME="SECTION021153130000000000000">
+Selección del radio button</A>
+</H4>
+  
+
+Para seleccionar un radio button 
+<PRE>
+     &lt;label for="under_16"&gt;Under 16&lt;/label&gt;
+     &lt;input type="radio" name="age" value="under"
+            id="under_16" &gt;
+     &lt;label for="over_16"&gt;Over 16&lt;/label&gt;
+     &lt;input type="radio" name="age" value="over"
+            id="over_16"&gt;
+</PRE>
+usamos <code>choose</code>
+<PRE>
+  choose "Over 16"              # text
+</PRE>
+La sintáxis es:
+<PRE>
+#choose(locator, options = {}) ⇒ Object
+</PRE>
+encuentra el radio button y lo marca. <code>locator</code> puede ser 
+<code>name</code>, <code>id</code> o el texto de la <code>label</code>.
+
+<P>
+Este es su código:
+<PRE>
+# File 'lib/capybara/node/actions.rb', line 68
+def choose(locator, options={})
+  find(:radio_button, locator, options).set(true)
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021153140000000000000">
+Checkbox</A>
+</H4>
+  
+
+<P>
+Para seleccionar la checkbox 
+<PRE>
+     &lt;label for="consent"&gt;Consent Given?&lt;/label&gt;
+     &lt;input type="checkbox" value="yes" name="consent_checkbox"
+                id="consent"/&gt;
+</PRE>
+usamos <code>check</code>:
+<PRE>
+  check "consent"               # id
+</PRE>
+The check box can be found via name, id or label text.
+
+<P>
+Exite un método inverso <code>uncheck</code>:
+<PRE>
+uncheck(locator, options = {})
+</PRE>
+Find a check box and mark uncheck it. 
+
+<P>
+<PRE>
+# File 'lib/capybara/node/actions.rb', line 94
+def uncheck(locator, options={})
+  find(:checkbox, locator, options).set(false)
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021153150000000000000">
+Cargando un Fichero /File Upload</A>
+</H4>
+  
+
+<P>
+Para cargar un fichero
+<PRE>
+   &lt;p&gt;
+     &lt;label for="form_image"&gt;Image (.png)&lt;/label&gt;
+     &lt;input type="file" name="image" id="form_image"/&gt;
+   &lt;/p&gt;
+</PRE>
+que es procesado en el servidor por esta ruta:
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ sed -ne '/^post/,/^$/p'  check_radio_buttons_server.rb 
+post '/' do
+  pp params
+  File.open("public/image.png", "w") do |f|
+    f.write(params['image'][:tempfile].read) if f.size &lt; (1 &lt;&lt; 16)
+  end
+  erb :result, :locals =&gt; { :params =&gt; params }
+end
+</PRE>
+La vista <code>result</code> muestra los resultados:
+<PRE>
+@@result
+  &lt;ul&gt;
+    &lt;li id="Forename"&gt; Forename: &lt;%= params[:Forename]%&gt; &lt;/li&gt;
+    &lt;li id="Surname"&gt; Surname: &lt;%= params[:Surname] %&gt; &lt;/li&gt;
+    &lt;li id="title"&gt; User title: &lt;%= params[:user_title] %&gt; &lt;/li&gt;
+    &lt;li id="age"&gt; Age (under/over 16): &lt;%= params[:age] %&gt; &lt;/li&gt;
+    &lt;li id="consent"&gt; Consent: &lt;%= params[:consent_checkbox] %&gt; &lt;/li&gt;
+    &lt;li id="image"&gt;&lt;img src="/image.png" /&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;a href="/"&gt;Go back&lt;/a&gt;
+</PRE>
+Recuerde que debe establecer el <code>enctype</code>
+en el elemento <code>form</code> a <code>multipart/form-data</code>, 
+sino obtendríamos el nombre del fichero
+en vez del objeto:
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ grep '&lt;form' check_radio_buttons_server.rb 
+&lt;form id="myform" method="post" action="/" enctype="multipart/form-data"&gt;
+</PRE>
+Para subir el fichero en capybara usamos <code>attach_file</code>:
+<PRE>
+attach_file "form_image", "./bulb.png"
+</PRE>
+The file field can be found via its name, id or label text.
+<PRE>
+# File 'lib/capybara/node/actions.rb'
+def attach_file(locator, path, options={})
+  Array(path).each do |p|
+    raise Capybara::FileNotFound, 
+         "cannot attach file, #{p} does not exist" unless 
+                                       File.exist?(p.to_s)
+  end
+  find(:file_field, locator, options).set(path)
+end
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html8663"
+  HREF="node322.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html8657"
+  HREF="node318.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html8653"
+  HREF="node320.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html8659"
+  HREF="node849.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html8661"
+  HREF="node852.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html8664"
+  HREF="node322.html">Véase</A>
+<B> Subir:</B> <A NAME="tex2html8658"
+  HREF="node318.html">La API de Capybara</A>
+<B> Anterior:</B> <A NAME="tex2html8654"
+  HREF="node320.html">Clicks en Botones y</A>
+ &nbsp; <B>  <A NAME="tex2html8660"
+  HREF="node849.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8662"
+  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-01
+2014-12-03
 </ADDRESS>
 </BODY>
 </HTML>
