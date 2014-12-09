@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Badges</TITLE>
-<META NAME="description" CONTENT="Badges">
+<TITLE>Controlando nuestras dependencias: bundle update, bundle outdated</TITLE>
+<META NAME="description" CONTENT="Controlando nuestras dependencias: bundle update, bundle outdated">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node740.html">
 <LINK REL="previous" HREF="node738.html">
-<LINK REL="up" HREF="node722.html">
+<LINK REL="up" HREF="node724.html">
 <LINK REL="next" HREF="node740.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16124"
+<A NAME="tex2html16159"
   HREF="node740.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16118"
-  HREF="node722.html">
+<A NAME="tex2html16153"
+  HREF="node724.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16112"
+<A NAME="tex2html16147"
   HREF="node738.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16120"
-  HREF="node849.html">
+<A NAME="tex2html16155"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16122"
-  HREF="node852.html">
+<A NAME="tex2html16157"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,78 +92,194 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16125"
-  HREF="node740.html">Preparando la Documentación</A>
-<B> Subir:</B> <A NAME="tex2html16119"
-  HREF="node722.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html16113"
-  HREF="node738.html">Local Git Repos</A>
- &nbsp; <B>  <A NAME="tex2html16121"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16123"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16160"
+  HREF="node740.html">Local Git Repos</A>
+<B> Subir:</B> <A NAME="tex2html16154"
+  HREF="node724.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html16148"
+  HREF="node738.html">Optimistic and Pessimistic Version</A>
+ &nbsp; <B>  <A NAME="tex2html16156"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16158"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0611170000000000000000">
-Badges</A>
+<H1><A NAME="SECTION0611150000000000000000"></A>
+<A NAME="section:controlandonuestrasdependencias"></A>
+<BR>
+Controlando nuestras dependencias: bundle update, bundle outdated
 </H1>
 <P>
-<I>You might have seen some nice green badges in your favorite GitHub repository, indicating whether the tests associated with the code passed or not. Adding these to the <code>README.md</code> 
-is straightforward enough:
-</I><PRE>
-[![Build Status](https://travis-ci.org/Integralist/Sinderella.png?branch=master)](https://travis-ci.org/Integralist/Sinderella) 
+<H4><A NAME="SECTION0611150010000000000000">
+bundle outdated, bundle update</A>
+</H4><I>
 
-[![Gem Version](https://badge.fury.io/rb/sinderella.png)](http://badge.fury.io/rb/sinderella)
-
-[![Coverage Status](https://coveralls.io/repos/Integralist/Sinderella/badge.png)](https://coveralls.io/r/Integralist/Sinderella)
-</PRE>
-<P>
-<I>
-<img src="bannerstraviscoverall.png" width="60%" />
+Run 
+<code>bundle outdated</code> to print a list of gems that could be upgraded. 
 </I>
 <P>
-<UL>
-<LI>The first badge is provided by Travis CI, which you can read more about in the 
-<A NAME="tex2html1735"
-  HREF="http://docs.travis-ci.com/user/status-images/">documentation</A>.
-
+<I>If you want to upgrade a specific gem, run 
+</I><PRE>
+bundle update GEM
+</PRE><I>
+or run 
+</I><PRE>
+bundle update
+</PRE><I>
+to update everything. After the update finishes,
+make sure all your tests pass before you commit your new 
+<code>Gemfile.lock</code>!
+</I>
 <P>
+<I><code>bundle update</code> won't just install gems - 
+
+<FONT COLOR="#ff0000"> it will try to upgrade every single gem in your bundle</FONT>. 
+That's usually a disaster unless you really meant to do it.
+</I>
+<P>
+<I>The <code>update</code> command is for when gems you use has been updated,
+and you want your bundle to have the newest version that your 
+<code>Gemfile</code>
+will allow
+</I>
+<P><PRE>
+[~/ruby/faye]$ bundle help outdated
+Usage:
+  bundle outdated [GEM]
+
+Options:
+      [--pre=Check for newer pre-release gems]                                       
+      [--source=Check against a specific source]                                     
+      [--local=Do not attempt to fetch gems remotely and use the gem cache instead]  
+      [--no-color=Disable colorization in output]                                    
+  -V, [--verbose=Enable verbose output mode]                                         
+
+Description:
+  Outdated lists the names and versions of gems that have a newer version
+  available in the given source.  Calling outdated with [GEM [GEM]]
+  will only check for newer versions of the given gems. Prerelease gems
+  are ignored by default. If your gems are up to date, Bundler will exit
+  with a status of 0. Otherwise, it will exit 1.
+</PRE>
+<P><PRE>
+[~/ruby/faye]$ ls -l Gemfile*
+-rw-r--r--  1 casiano  staff   267 15 nov 18:01 Gemfile
+-rw-r--r--  1 casiano  staff  2373 15 nov 18:02 Gemfile.lock
+[~/ruby/faye]$ bundle outdated
+Fetching gem metadata from https://rubygems.org/.........
+Fetching gem metadata from https://rubygems.org/..
+Resolving dependencies...
+
+Outdated gems included in the bundle:
+  * em-websocket (0.5.0 &gt; 0.3.8)
+  * rainbows (4.5.0 &gt; 4.4.3)
+</PRE>
+<P>
+<H4><A NAME="SECTION0611150020000000000000">
+Dependency Graph: bundle viz</A>
+</H4>
+<P>
+<I>Bundler uses your <code>Gemfile</code> 
+to create what is technically called a <A NAME="30715"></A><SPAN  CLASS="textbf">dependency graph</SPAN>, 
+where there are many gems that have various dependencies on eachother. 
+</I>
+<P>
+<I>It can be pretty cool to see that dependency graph drawn as a literal graph, and that's what the <code>bundle viz</code> command does. 
+</I>
+<P>
+<I>You need to install <code>GraphViz</code> and the <code>ruby-graphviz</code> gem:
+</I>
+<P><PRE>
+$ brew install graphviz # for mac os X. apt-get for Linux
+$ gem install ruby-graphviz
+$ bundle viz
+</PRE><I>
+Once you've done that, though, you get a pretty picture that's a lot of fun to look at. Here's the graph for a Gemfile:
+</I>
+<P>
+<I>
+<img src="gem_graph.png" width="100%" />
+<br/>
+En violeta las que forman parte del Gemfile.<br/>
+Los nodos cuadrados son entornos.<br />
+</I>
+<P>
+<H4><A NAME="SECTION0611150030000000000000">
+Gemnasium</A>
+</H4><I>
+
+<A NAME="parrafo:gemnasium"></A></I>
+<P>
+<I>Gemnasium 
+<A NAME="tex2html1737"
+  HREF="https://gemnasium.com">https://gemnasium.com</A>
+is a service that learns your gem dependencies, listens
+for new versions of those gems and notifies you when they’re released.
+</I>
+<P>
+<I>Gemnasium sends you an email whenever a new version is released for a gem that you use.
+You can turn off notifications for particular gems or for entire repositories,
+or  choose to receive them in a digest email on a daily or weekly basis.
+</I>
+<P>
+<I>Gemnasium represents the statuses of your dependencies with three colors:
+</I>
+<P>
+<OL>
+<LI>green =&gt; dependency is up to date with latest version available
 </LI>
-<LI>The second is provided by RubyGems. You’ll notice on your gem’s page a 
-<FONT COLOR="#0000ff"> badge</FONT> link, which provides the required code and format (in this case, in Markdown format).
-
-<P>
-
-<img src="rubygems_badge.png" width="60%" />
-
-<P>
+<LI>yellow =&gt; there is at least one newer stable version available
 </LI>
-<LI>The third is provided by Coveralls. When you visit your repository page in the Coveralls application, you’ll see a link to 
-<FONT COLOR="#0000ff"> README badge</FONT>; from there, you can select the relevant format.
-
-<img src="coveralls_badge.png" width="60%" />
-
+<LI>red =&gt; the dependency is behind a security fix or an important update (broken API, deprecation, …)
 </LI>
-</UL>
+</OL>
 <P>
+<I>Gemnasium looks the Gemfile.lock files. If your repository has one, Gemnasium will use it. They’re informational and easily parsed with a little help from Bundler.
+</I>
+<P>
+<I>Unfortunately, it’s not always wise to commit your Gemfile.lock. In those cases, Gemnasium looks for a Gemfile instead.
+</I>
+<P>
+<I>If all else fails, Gemnasium looks for a gemspec file in your repository’s root directory.
+</I>
+<P>
+<I>If any of these files exists, Gemnasium parses them to determine your repository’s gem dependencies.
+</I>
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html16161"
+  HREF="node739.html#SECTION0611150010000000000000">bundle outdated, bundle update</A>
+<LI><A NAME="tex2html16162"
+  HREF="node739.html#SECTION0611150020000000000000">Dependency Graph: bundle viz</A>
+<LI><A NAME="tex2html16163"
+  HREF="node739.html#SECTION0611150030000000000000">Gemnasium</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html16124"
+<A NAME="tex2html16159"
   HREF="node740.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16118"
-  HREF="node722.html">
+<A NAME="tex2html16153"
+  HREF="node724.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16112"
+<A NAME="tex2html16147"
   HREF="node738.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16120"
-  HREF="node849.html">
+<A NAME="tex2html16155"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16122"
-  HREF="node852.html">
+<A NAME="tex2html16157"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -214,20 +330,20 @@ is straightforward enough:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16125"
-  HREF="node740.html">Preparando la Documentación</A>
-<B> Subir:</B> <A NAME="tex2html16119"
-  HREF="node722.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html16113"
-  HREF="node738.html">Local Git Repos</A>
- &nbsp; <B>  <A NAME="tex2html16121"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16123"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html16160"
+  HREF="node740.html">Local Git Repos</A>
+<B> Subir:</B> <A NAME="tex2html16154"
+  HREF="node724.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html16148"
+  HREF="node738.html">Optimistic and Pessimistic Version</A>
+ &nbsp; <B>  <A NAME="tex2html16156"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16158"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

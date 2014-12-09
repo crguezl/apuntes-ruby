@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita</TITLE>
-<META NAME="description" CONTENT="Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita">
+<TITLE>ActiveRecord y Sinatra</TITLE>
+<META NAME="description" CONTENT="ActiveRecord y Sinatra">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node545.html">
 <LINK REL="previous" HREF="node541.html">
-<LINK REL="up" HREF="node540.html">
+<LINK REL="up" HREF="node377.html">
 <LINK REL="next" HREF="node543.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12707"
+<A NAME="tex2html12743"
   HREF="node543.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12701"
-  HREF="node540.html">
+<A NAME="tex2html12737"
+  HREF="node377.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12697"
+<A NAME="tex2html12731"
   HREF="node541.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12703"
-  HREF="node849.html">
+<A NAME="tex2html12739"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12705"
-  HREF="node852.html">
+<A NAME="tex2html12741"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,80 +92,102 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12708"
-  HREF="node543.html">Google Plus y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12702"
-  HREF="node540.html">ActiveRecord y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12698"
-  HREF="node541.html">Práctica: Servicio para Abreviar</A>
- &nbsp; <B>  <A NAME="tex2html12704"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12706"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12744"
+  HREF="node543.html">Práctica: Servicio para Abreviar</A>
+<B> Subir:</B> <A NAME="tex2html12738"
+  HREF="node377.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html12732"
+  HREF="node541.html">Sequel y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12740"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12742"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031820000000000000000"></A>
-   <A NAME="24351"></A>
-<BR>
-Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita
+<H1><A NAME="SECTION031800000000000000000">
+ActiveRecord y Sinatra</A>
 </H1>
-
+El siguiente texto esta tomado de la lista
+Sinatra Q&amp;A
+<A NAME="tex2html1336"
+  HREF="http://www.sinatrarb.com/faq.html#ar-migrations">How do I use ActiveRecord migrations?</A>
 <P>
-Añádale a la práctica 
-<A HREF="node541.html#sectionpractica:abreviarurl">48.1</A>
-la funcionalidad de mostrar el número de visitas y el número de visitas por país.
-
-<P>
-Puede usar para ello la API de <A NAME="tex2html1343"
-  HREF="http://www.hostip.info/">http://www.hostip.info/</A>:
-
-<P>
+To use ActiveRecord’s migrations with Sinatra (or other non-Rails
+project), add the following to your Rakefile:
 <PRE>
-  after :create, :set_country
-  
-  def set_country
-    xml = RestClient.get "http://api.hostip.info/get_xml.php?ip=#{ip}"  
-    self.country = XmlSimple.xml_in(xml.to_s, { 'ForceArray' =&gt; false })['featureMember']['Hostip']['countryAbbrev']
-    self.save
+namespace :db do
+  desc "Migrate the database"
+  task(:migrate =&gt; :environment) do
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
+    ActiveRecord::Migration.verbose = true
+    ActiveRecord::Migrator.migrate("db/migrate")
   end
+end
 </PRE>
+This assumes you have a task called <code>:environment</code> which loads your app’s
+environment (requires the right files, sets up the database connection,
+etc).
+
+<P>
+Now you can create a directory called <code>db/migrate</code> 
+and fill in your migrations. I usually call the first one 
+<code>001_init.rb</code>. (I prefer the old
+sequential method for numbering migrations vs. the datetime method used
+since Rails 2.1, but either will work.)
 
 <P>
 
 <UL>
-<LI>XMLSimple le puede ayudar a parsear el XML:
-<A NAME="tex2html1344"
-  HREF="http://xml-simple.rubyforge.org/">http://xml-simple.rubyforge.org/</A>
+<LI><A NAME="tex2html1337"
+  HREF="http://blog.revathskumar.com/2013/01/activerecord-migration-for-cuba-and-sinatra.html">ActiveRecord Migration for cuba and sinatra</A>
+por Revath S. Kumar
 </LI>
-<LI><A NAME="tex2html1345"
-  HREF="https://github.com/sausheong/tinyclone">https://github.com/sausheong/tinyclone</A>
+<LI><A NAME="tex2html1338"
+  HREF="http://exposinggotchas.blogspot.com.es/2011/02/activerecord-migrations-without-rails.html">ActiveRecord migrations without Rails</A>
+por Wes Bailey
 </LI>
-<LI>Véase la API de 
-<A NAME="tex2html1346"
-  HREF="http://www.hostip.info/">http://www.hostip.info/</A>
+<LI><A NAME="tex2html1339"
+  HREF="http://bytesofpi.com/post/23663592388/up-and-running-with-sinatra-and-activerecord">Up and Running with Sinatra and ActiveRecord</A>
+por Matt GaidicA
 </LI>
 </UL>
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html12745"
+  HREF="node543.html">Práctica: Servicio para Abreviar URLs</A>
+<UL>
+<LI><A NAME="tex2html12746"
+  HREF="node543.html#SECTION031810010000000000000">Véase</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12747"
+  HREF="node544.html">Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita</A>
+</UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12707"
+<A NAME="tex2html12743"
   HREF="node543.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12701"
-  HREF="node540.html">
+<A NAME="tex2html12737"
+  HREF="node377.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12697"
+<A NAME="tex2html12731"
   HREF="node541.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12703"
-  HREF="node849.html">
+<A NAME="tex2html12739"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12705"
-  HREF="node852.html">
+<A NAME="tex2html12741"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -215,20 +238,20 @@ Puede usar para ello la API de <A NAME="tex2html1343"
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12708"
-  HREF="node543.html">Google Plus y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12702"
-  HREF="node540.html">ActiveRecord y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12698"
-  HREF="node541.html">Práctica: Servicio para Abreviar</A>
- &nbsp; <B>  <A NAME="tex2html12704"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12706"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12744"
+  HREF="node543.html">Práctica: Servicio para Abreviar</A>
+<B> Subir:</B> <A NAME="tex2html12738"
+  HREF="node377.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html12732"
+  HREF="node541.html">Sequel y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12740"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12742"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Introducción al Patrón DataMapper</TITLE>
-<META NAME="description" CONTENT="Introducción al Patrón DataMapper">
+<TITLE>DataMapper y Sinatra</TITLE>
+<META NAME="description" CONTENT="DataMapper y Sinatra">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node531.html">
+<LINK REL="next" HREF="node541.html">
 <LINK REL="previous" HREF="node529.html">
-<LINK REL="up" HREF="node528.html">
+<LINK REL="up" HREF="node377.html">
 <LINK REL="next" HREF="node531.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12503"
+<A NAME="tex2html12495"
   HREF="node531.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12497"
-  HREF="node528.html">
+<A NAME="tex2html12489"
+  HREF="node377.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12491"
+<A NAME="tex2html12483"
   HREF="node529.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12499"
-  HREF="node849.html">
+<A NAME="tex2html12491"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12501"
-  HREF="node852.html">
+<A NAME="tex2html12493"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,173 +92,143 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12504"
-  HREF="node531.html">Ejemplo Simple de uso</A>
-<B> Subir:</B> <A NAME="tex2html12498"
-  HREF="node528.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12492"
-  HREF="node529.html">Introducción a Los Object</A>
- &nbsp; <B>  <A NAME="tex2html12500"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12502"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12496"
+  HREF="node531.html">Introducción a Los Object</A>
+<B> Subir:</B> <A NAME="tex2html12490"
+  HREF="node377.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html12484"
+  HREF="node529.html">Building Backbone.js Apps With</A>
+ &nbsp; <B>  <A NAME="tex2html12492"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12494"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031620000000000000000">
-Introducción al Patrón DataMapper</A>
-</H1>
-Martin Fowler 
-(<A NAME="tex2html1294"
-  HREF="http://martinfowler.com/eaaCatalog/index.html">Catalog of Patterns of Enterprise Application Architecture</A>):
-
-<P>
-<OL>
-<LI>Objects and relational databases have different mechanisms for structuring
-data. 
-</LI>
-<LI>Many parts of an object, such as collections and inheritance,
-aren't present in relational databases. 
-</LI>
-<LI>When you build an
-object model with a lot of business logic it's valuable to use these
-mechanisms (creo que se refiere a la herencia, etc.) 
-to better organize the data and the behavior that goes with
-it. 
-</LI>
-<LI>Doing so leads to variant schemas; that is, the object
-schema and the relational schema don't match up.
-</LI>
-<LI>You still need to transfer data between the two schemas, and this data
-transfer becomes a complexity in its own right. 
-</LI>
-<LI>If the in-memory objects
-know about the relational database structure, changes in
-one tend to ripple to the other.
-</LI>
-<LI>The <A NAME="23678"></A><SPAN  CLASS="textbf">Data Mapper</SPAN> is a layer of software that separates the in-memory
-objects from the database. 
-</LI>
-<LI><SPAN  CLASS="textbf">Its responsibility is to transfer data between
-the two and also to isolate them from each other</SPAN>
-</LI>
-<LI>With
-Data Mapper the in-memory objects needn't know even that there's a
-database present; they need no SQL interface code, and certainly no
-knowledge of the database schema. 
-</LI>
-<LI>(The database schema is always
-ignorant of the objects that use it.) 
-</LI>
-</OL>
-
-<P>
-
-<UL>
-<LI><A NAME="tex2html1295"
-  HREF="http://en.wikipedia.org/wiki/Data_mapper_pattern">DataMapper en la Wikipedia</A>
-</LI>
-<LI><A NAME="tex2html1296"
-  HREF="http://martinfowler.com/eaaCatalog/dataMapper.html">Martin Fowler: DataMapper</A>
-</LI>
-<LI><A NAME="tex2html1297"
-  HREF="https://github.com/crguezl/sinatra-datamapper-sample">Proyecto sinatra-datamapper-sample</A>
-en GitHub
-</LI>
-<LI>Documentación de <A NAME="tex2html1298"
-  HREF="http://datamapper.org/docs/">DataMapper</A>
-</LI>
-<LI><A NAME="tex2html1299"
-  HREF="http://recipes.sinatrarb.com/p/models/data_mapper">Sinatra Recipes: DataMapper</A>
-</LI>
-<LI><A NAME="tex2html1300"
-  HREF="http://sinatra-book.gittr.com/#datamapper">Sinatra Book: DataMapper</A>
-</LI>
-</UL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html12503"
-  HREF="node531.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12497"
-  HREF="node528.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12491"
-  HREF="node529.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12499"
-  HREF="node849.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12501"
-  HREF="node852.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
+<H1><A NAME="SECTION031600000000000000000"></A>
+<A NAME="chapter:datamapperysinatra"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12504"
-  HREF="node531.html">Ejemplo Simple de uso</A>
-<B> Subir:</B> <A NAME="tex2html12498"
-  HREF="node528.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12492"
-  HREF="node529.html">Introducción a Los Object</A>
- &nbsp; <B>  <A NAME="tex2html12500"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12502"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+DataMapper y Sinatra
+</H1>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html12497"
+  HREF="node531.html">Introducción a Los Object Relational Mappers (ORM)</A>
+<LI><A NAME="tex2html12498"
+  HREF="node532.html">Introducción al Patrón DataMapper</A>
+<LI><A NAME="tex2html12499"
+  HREF="node533.html">Ejemplo Simple de uso de DataMapper: Agenda</A>
+<UL>
+<LI><A NAME="tex2html12500"
+  HREF="node533.html#SECTION031630010000000000000">DataMapper.setup</A>
+<LI><A NAME="tex2html12501"
+  HREF="node533.html#SECTION031630020000000000000">Modelos</A>
+<LI><A NAME="tex2html12502"
+  HREF="node533.html#SECTION031630030000000000000">Rutas</A>
+<LI><A NAME="tex2html12503"
+  HREF="node533.html#SECTION031630040000000000000">Vistas</A>
+<LI><A NAME="tex2html12504"
+  HREF="node533.html#SECTION031630050000000000000">Enlaces</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12505"
+  HREF="node534.html">Ejemplo de Uso de DataMapper: Canciones de Sinatra</A>
+<UL>
+<LI><A NAME="tex2html12506"
+  HREF="node534.html#SECTION031640010000000000000">Donde</A>
+<LI><A NAME="tex2html12507"
+  HREF="node534.html#SECTION031640020000000000000">Enlaces</A>
+<LI><A NAME="tex2html12508"
+  HREF="node534.html#SECTION031640030000000000000">La Clase Song</A>
+<LI><A NAME="tex2html12509"
+  HREF="node534.html#SECTION031640040000000000000">DataMapper.finalize</A>
+<LI><A NAME="tex2html12510"
+  HREF="node534.html#SECTION031640050000000000000">Mas código de Song.rb</A>
+<LI><A NAME="tex2html12511"
+  HREF="node534.html#SECTION031640060000000000000">Song.create</A>
+<LI><A NAME="tex2html12512"
+  HREF="node534.html#SECTION031640070000000000000">Una sesión con pry probando DataMapper</A>
+<LI><A NAME="tex2html12513"
+  HREF="node534.html#SECTION031640080000000000000">DataMapper.setup</A>
+<LI><A NAME="tex2html12514"
+  HREF="node534.html#SECTION031640090000000000000">Multiple Data-Store Connections</A>
+<LI><A NAME="tex2html12515"
+  HREF="node534.html#SECTION0316400100000000000000">El Objeto DataMapper::Adapters</A>
+<LI><A NAME="tex2html12516"
+  HREF="node534.html#SECTION0316400110000000000000">Creando las tablas con DataMapper.auto_migrate!</A>
+<LI><A NAME="tex2html12517"
+  HREF="node534.html#SECTION0316400120000000000000">DataMapper.auto_upgrade!</A>
+<LI><A NAME="tex2html12518"
+  HREF="node534.html#SECTION0316400130000000000000">Métodos de la Clase Mapeada</A>
+<LI><A NAME="tex2html12519"
+  HREF="node534.html#SECTION0316400140000000000000">El método create</A>
+<LI><A NAME="tex2html12520"
+  HREF="node534.html#SECTION0316400150000000000000">first_or_create</A>
+<LI><A NAME="tex2html12521"
+  HREF="node534.html#SECTION0316400160000000000000">Comprobando con sqlite3</A>
+<LI><A NAME="tex2html12522"
+  HREF="node534.html#SECTION0316400170000000000000">Búsquedas y Consultas</A>
+<LI><A NAME="tex2html12523"
+  HREF="node534.html#SECTION0316400180000000000000">Borrando</A>
+<LI><A NAME="tex2html12524"
+  HREF="node534.html#SECTION0316400190000000000000">Búsqueda con Condiciones</A>
+<LI><A NAME="tex2html12525"
+  HREF="node534.html#SECTION0316400200000000000000">Insertando SQL</A>
+<LI><A NAME="tex2html12526"
+  HREF="node534.html#SECTION0316400210000000000000">main.rb</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12527"
+  HREF="node535.html">Ejemplo de uso de Sinatra y DataMapper: Acortador de URLs</A>
+<LI><A NAME="tex2html12528"
+  HREF="node536.html">Configurando la Base de Datos en Heroku con DataMapper. Despliegue</A>
+<UL>
+<LI><A NAME="tex2html12529"
+  HREF="node536.html#SECTION031660010000000000000">Bundle: installing groups. General considerations</A>
+<LI><A NAME="tex2html12530"
+  HREF="node536.html#SECTION031660020000000000000">Recordando los pasos para el despliegue en Heroku</A>
+<LI><A NAME="tex2html12531"
+  HREF="node536.html#SECTION031660030000000000000">Creando/Modificando la base de datos en Heroku con heroku run console</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12532"
+  HREF="node537.html">Asociaciones Simples</A>
+<LI><A NAME="tex2html12533"
+  HREF="node538.html">Asociaciones Through</A>
+<LI><A NAME="tex2html12534"
+  HREF="node539.html">Práctica: Acortador de URLs</A>
+<UL>
+<LI><A NAME="tex2html12535"
+  HREF="node539.html#SECTION031690010000000000000">Otros Requisitos</A>
+<LI><A NAME="tex2html12536"
+  HREF="node539.html#SECTION031690020000000000000">Véase</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12537"
+  HREF="node540.html">Práctica: Estadísticas de Visitas al Acortador de URLs</A>
+<UL>
+<LI><A NAME="tex2html12538"
+  HREF="node540.html#SECTION0316100010000000000000">La Tabla Principal</A>
+<LI><A NAME="tex2html12539"
+  HREF="node540.html#SECTION0316100020000000000000">Obteniendo el País para una IP dada</A>
+<LI><A NAME="tex2html12540"
+  HREF="node540.html#SECTION0316100030000000000000">La Tabla Visit</A>
+<LI><A NAME="tex2html12541"
+  HREF="node540.html#SECTION0316100040000000000000">Averiguar la IP</A>
+<LI><A NAME="tex2html12542"
+  HREF="node540.html#SECTION0316100050000000000000">Gráficos con chartkick</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

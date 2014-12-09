@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ruby y WebSockets: TCP for the Browser</TITLE>
-<META NAME="description" CONTENT="Ruby y WebSockets: TCP for the Browser">
+<TITLE>Negociación del protocolo WebSocket</TITLE>
+<META NAME="description" CONTENT="Negociación del protocolo WebSocket">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node511.html">
 <LINK REL="previous" HREF="node509.html">
-<LINK REL="up" HREF="node505.html">
+<LINK REL="up" HREF="node508.html">
 <LINK REL="next" HREF="node511.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12124"
+<A NAME="tex2html12162"
   HREF="node511.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12118"
-  HREF="node505.html">
+<A NAME="tex2html12156"
+  HREF="node508.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12112"
+<A NAME="tex2html12152"
   HREF="node509.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12120"
-  HREF="node849.html">
+<A NAME="tex2html12158"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12122"
-  HREF="node852.html">
+<A NAME="tex2html12160"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,226 +91,110 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12125"
-  HREF="node511.html">Una Aplicación Usando Websockets</A>
-<B> Subir:</B> <A NAME="tex2html12119"
-  HREF="node505.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html12113"
-  HREF="node509.html">websocket/rack</A>
- &nbsp; <B>  <A NAME="tex2html12121"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12123"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12163"
+  HREF="node511.html">websocket/rack</A>
+<B> Subir:</B> <A NAME="tex2html12157"
+  HREF="node508.html">WebSockets</A>
+<B> Anterior:</B> <A NAME="tex2html12153"
+  HREF="node509.html">Que es WebSocket y</A>
+ &nbsp; <B>  <A NAME="tex2html12159"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12161"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03930000000000000000">
-Ruby y WebSockets: TCP for the Browser</A>
-</H1>
+<H2><A NAME="SECTION03912000000000000000">
+Negociación del protocolo WebSocket</A>
+</H2>
 
 <P>
-Esta sección está sacada del blog de 
-<A NAME="tex2html1222"
-  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ilya Grigorik </A>.
+Para establecer una conexión WebSocket, el cliente manda una petición de
+negociación WebSocket, y el servidor manda una respuesta de negociación
+WebSocket, como se puede ver en el siguiente ejemplo:
 
 <P>
-WebSockets in HTML5 were designed from
-the ground up to be data agnostic (binary or text) with support for
-full-duplex communication. 
-
-<P>
-WebSockets are TCP for the web-browser.
-They require only a single connection,
-which translates into much better resource utilization for both the
-server and the client. 
-
-<P>
-Likewise, WebSockets are proxy and firewall
-aware, can operate over SSL and leverage the HTTP channel to
-accomplish all of the above - your existing load balancers, proxies
-and routers will work just fine.
-
-<P>
-
-<H4><A NAME="SECTION03930010000000000000">
-The Server</A>
-</H4>
+<TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
+Petición del navegador al servidor:
+GET /demo HTTP/1.1
+Host: example.com
+Connection: Upgrade
+Sec-WebSocket-Key2: 12998 5 Y3 1 .P00
+Sec-WebSocket-Protocol: sample
+Upgrade: WebSocket
+Sec-WebSocket-Key1: 4 @1 46546xW%0l 1 5
+Origin: http://example.com
+ 
+ ^n:ds[4U
+</PRE></TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
+ Respuesta del servidor:
+ HTTP/1.1 101 WebSocket Protocol Handshake
+ Upgrade: WebSocket
+ Connection: Upgrade
+ Sec-WebSocket-Origin: http://example.com
+ Sec-WebSocket-Location: ws://example.com/demo
+ Sec-WebSocket-Protocol: sample
   
+  8jKS'y:G*Co,Wxa-
+</PRE></TD>
+</TR>
+</TABLE>
 
 <P>
-<PRE>
-[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat server.rb
-require 'em-websocket'
-
-EventMachine::WebSocket.start(:host =&gt; "0.0.0.0", :port =&gt; 8080) do |ws|
-  ws.onopen    { ws.send "Hello Client!"}
-  ws.onmessage { |msg| ws.send "Pong: #{msg}" }
-  ws.onclose   { puts "WebSocket closed" }
-end
-</PRE>
+The WebSocket protocol was designed to work well with the existing
+Web infrastructure. As part of this design principle, the protocol
+specification defines that the WebSocket connection starts its
+life as an HTTP connection, guaranteeing full backwards compatibility
+with the pre-WebSocket world. 
 
 <P>
-
-<H4><A NAME="SECTION03930020000000000000">
-The Client</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ cat index.html 
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;script src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'&gt;&lt;/script&gt;
-    &lt;script&gt;
-      $(document).ready(function(){
-        function debug(str){ 
-          $("#debug").append("&lt;p&gt;"+str+"&lt;/p&gt;"); 
-        };
-
-        ws = new WebSocket("ws://www.example.com:8080/websocket");
-        ws.onmessage = function(evt) { 
-          $("#msg").append("&lt;p&gt;"+evt.data+"&lt;/p&gt;"); 
-        };
-        ws.onclose = function() { 
-          debug("socket closed"); 
-        };
-        ws.onopen = function() {
-          debug("connected...");
-          ws.send("hello server");
-        };
-      });
-    &lt;/script&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;div id="debug"&gt;&lt;/div&gt;
-    &lt;div id="msg"&gt;&lt;/div&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</PRE>
-You open up a WebSocket connection simply by calling the WebSocket constructor:
+The protocol switch from HTTP to WebSocket
+is referred to as a the WebSocket handshake.
 
 <P>
-<PRE>
-var connection = new WebSocket('ws://html5rocks.websocket.org/echo', ['soap', 'xmpp']);
-</PRE>
-Notice the <code>ws:</code>. This is the new URL schema for WebSocket connections.
-There is also <code>wss</code>: for secure WebSocket connection the same way
-https: is used for secure HTTP connections.
+Una vez establecida, las tramas WebSocket de datos pueden empezar
+a enviarse en ambos sentidos entre el cliente y el servidor en modo
+full-duplex. 
 
 <P>
-Attaching some event handlers immediately to the connection allows
-you to know when the connection is opened, received incoming messages,
-or there is an error.
+Las tramas de texto pueden ser enviadas en modo full-duplex
+también, en ambas direcciones al mismo tiempo. 
 
 <P>
-The second argument accepts optional subprotocols. It can be a
-string or an array of strings. Each string should represent a
-subprotocol name and server accepts only one of passed subprotocols
-in the array. Accepted subprotocol can be determined by accessing
-protocol property of WebSocket object.
-
-<P>
-<PRE>
-// When the connection is open, send some data to the server
-connection.onopen = function () {
-  connection.send('Ping'); // Send the message 'Ping' to the server
-};
-
-// Log errors
-connection.onerror = function (error) {
-  console.log('WebSocket Error ' + error);
-};
-
-// Log messages from the server
-connection.onmessage = function (e) {
-  console.log('Server: ' + e.data);
-};
-</PRE>
-As soon as we have a connection to the server (when the open event
-is fired) we can start sending data to the server using the send('your
-message') method on the connection object. It used to support only
-strings, but in the latest spec it now can send binary messages
-too. To send binary data, you can use either <code>Blob</code> or <code>ArrayBuffer</code>
-bject.
-
-<P>
-The server might send us messages at any time. Whenever this happens
-the <code>onmessage</code> callback fires. The callback receives an <code>event</code> object
-and the actual message is accessible via the <code>data</code> property.
-parrafoEjecución
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/websockets-tcp-for-the-browser(development)]$ ruby server.rb
-</PRE>
-
-<P>
-Cuando abrimos <code>index.html</code> con el navegador obtenemos una página como esta:
-<PRE>
-connected...
-
-Hello Client!
-
-Pong: hello server
-</PRE>
+Tramas de datos binarios no están soportadas todavía en el API. 
 
 <P>
 
-<H4><A NAME="SECTION03930030000000000000">
-Véase</A>
-</H4>
-  
-
-<OL>
+<UL>
 <LI><A NAME="tex2html1223"
-  HREF="http://www.igvita.com/2009/12/22/ruby-websockets-tcp-for-the-browser/">Ruby and WebSockets: TCP for the Browser</A>
+  HREF="http://www.websocket.org/aboutwebsocket.html">About HTML5 WebSockets</A>
+en 
+<A NAME="tex2html1224"
+  HREF="http://www.websocket.org">http://www.websocket.org</A>
 </LI>
-<LI><A NAME="tex2html1224"
-  HREF="http://www.html5rocks.com/en/tutorials/websockets/basics/">Introducing WebSockets: Bringing Sockets to the Web by Malte Ubl
-and Eiji Kitamura</A>
-2010
-</LI>
-<LI><A NAME="tex2html1225"
-  HREF="http://youtu.be/XVtEyilJD8M">Clean, simple websockets on Sinatra example
-by Austen Conrad Austen Conrad</A>
-YouTube
-</LI>
-</OL>
+</UL>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html12126"
-  HREF="node510.html#SECTION03930010000000000000">The Server</A>
-<LI><A NAME="tex2html12127"
-  HREF="node510.html#SECTION03930020000000000000">The Client</A>
-<LI><A NAME="tex2html12128"
-  HREF="node510.html#SECTION03930030000000000000">Véase</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12124"
+<A NAME="tex2html12162"
   HREF="node511.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12118"
-  HREF="node505.html">
+<A NAME="tex2html12156"
+  HREF="node508.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12112"
+<A NAME="tex2html12152"
   HREF="node509.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12120"
-  HREF="node849.html">
+<A NAME="tex2html12158"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12122"
-  HREF="node852.html">
+<A NAME="tex2html12160"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -362,20 +245,20 @@ YouTube
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12125"
-  HREF="node511.html">Una Aplicación Usando Websockets</A>
-<B> Subir:</B> <A NAME="tex2html12119"
-  HREF="node505.html">Web Sockets</A>
-<B> Anterior:</B> <A NAME="tex2html12113"
-  HREF="node509.html">websocket/rack</A>
- &nbsp; <B>  <A NAME="tex2html12121"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12123"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12163"
+  HREF="node511.html">websocket/rack</A>
+<B> Subir:</B> <A NAME="tex2html12157"
+  HREF="node508.html">WebSockets</A>
+<B> Anterior:</B> <A NAME="tex2html12153"
+  HREF="node509.html">Que es WebSocket y</A>
+ &nbsp; <B>  <A NAME="tex2html12159"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12161"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

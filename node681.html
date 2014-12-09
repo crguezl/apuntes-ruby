@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Copia Segura de un Fichero</TITLE>
-<META NAME="description" CONTENT="Copia Segura de un Fichero">
+<TITLE>Depuración/Debugging</TITLE>
+<META NAME="description" CONTENT="Depuración/Debugging">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node682.html">
 <LINK REL="previous" HREF="node680.html">
-<LINK REL="up" HREF="node669.html">
+<LINK REL="up" HREF="node671.html">
 <LINK REL="next" HREF="node682.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15171"
+<A NAME="tex2html15205"
   HREF="node682.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15165"
-  HREF="node669.html">
+<A NAME="tex2html15199"
+  HREF="node671.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15161"
+<A NAME="tex2html15193"
   HREF="node680.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15167"
-  HREF="node849.html">
+<A NAME="tex2html15201"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15169"
-  HREF="node852.html">
+<A NAME="tex2html15203"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,124 +92,158 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15172"
-  HREF="node682.html">Transferencia de ficheros por</A>
-<B> Subir:</B> <A NAME="tex2html15166"
-  HREF="node669.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html15162"
-  HREF="node680.html">Los Ficheros de Configuración</A>
- &nbsp; <B>  <A NAME="tex2html15168"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15170"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15206"
+  HREF="node682.html">Los Ficheros de Configuración</A>
+<B> Subir:</B> <A NAME="tex2html15200"
+  HREF="node671.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html15194"
+  HREF="node680.html">Consideraciones sobre la Seguridad</A>
+ &nbsp; <B>  <A NAME="tex2html15202"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15204"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION065120000000000000000">
-Copia Segura de un Fichero</A>
+<H1><A NAME="SECTION065100000000000000000">
+Depuración/Debugging</A>
 </H1>
 
 <P>
+La opción <code>-v</code> hace que los clientes <code>scp</code> y <code>ssh</code> proporcionen
+información de depuración. Observemos la siguiente copia remota:
 
-<H4><A NAME="SECTION065120010000000000000">
-Transferencia de Ficheros con <TT>scp</TT></A>
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ scp procesos.tex orion:
+procesos.tex                         100%  250KB 249.5KB/s   00:01
+</PRE>
+La opción <code>-v</code> nos informa de la existencia de un problema:
+
+<P>
+<PRE>
+pp2@nereida:~/Lbook$ scp -v procesos.tex orion:
+Executing: program /usr/bin/ssh host orion, user (unspecified), command scp -v -t .
+OpenSSH_4.3p2 Debian-9, OpenSSL 0.9.8c 05 Sep 2006
+debug1: Reading configuration data /home/pp2/.ssh/config
+debug1: Applying options for orion
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Applying options for *
+debug1: Connecting to orion [193.145.105.17] port 22.
+debug1: Connection established.
+debug1: identity file /home/pp2/.ssh/identity type -1
+debug1: identity file /home/pp2/.ssh/id_rsa type 1
+debug1: identity file /home/pp2/.ssh/id_dsa type 2
+debug1: Remote protocol version 2.0, remote software version OpenSSH_4.3p2 Debian-9
+debug1: match: OpenSSH_4.3p2 Debian-9 pat OpenSSH*
+debug1: Enabling compatibility mode for protocol 2.0
+debug1: Local version string SSH-2.0-OpenSSH_4.3p2 Debian-9
+debug1: An invalid name was supplied
+Configuration file does not specify default realm
+
+debug1: An invalid name was supplied
+A parameter was malformed
+Validation error
+
+debug1: An invalid name was supplied
+Configuration file does not specify default realm
+
+debug1: An invalid name was supplied
+A parameter was malformed
+Validation error
+
+debug1: SSH2_MSG_KEXINIT sent
+....................................................
+debug1: Transferred: stdin 0, stdout 0, stderr 0 bytes in 0.3 seconds
+debug1: Bytes per second: stdin 0.0, stdout 0.0, stderr 0.0
+debug1: Exit status 0
+</PRE>
+
+<P>
+Después de buscar en <code>Google</code> vemos
+cual es la causa del problema:
+
+<P>
+<BLOCKQUOTE>
+<I>What happens is that SSH will hang for a long period of time before
+providing a password prompt or performing key authentication. In either
+case the problem is the GSSAPI that is now being used by clients and
+not by most servers.
+</I>
+
+</BLOCKQUOTE>
+
+<P>
+La solución recomendada es desactivar <code>GSSAPIAuthentication</code>:
+<PRE>
+pp2@nereida:~/Lbook$ vi ~/.ssh/config
+pp2@nereida:~/Lbook$ grep -i gss ~/.ssh/config
+GSSAPIAuthentication no
+</PRE>
+Ejecutamos con <code>-v</code> de nuevo. El error ha desaparecido. La velocidad de transferencia
+a aumentado ligeramente:
+<PRE>
+pp2@nereida:~/Lbook$ scp procesos.tex orion:
+procesos.tex                              100%  253KB 252.9KB/s   00:00
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION065100010000000000000">
+Lista de Comprobaciones en Caso de Error</A>
 </H4>
   
 
 <P>
-El protocolo <A NAME="28261"></A><SPAN  CLASS="textbf">SCP</SPAN> implementa la transferencia de ficheros.
-El cliente se conecta a la máquina remota usando SSH y solicita la ejecución 
-de un programa servidor  (normalmente el mismo programa cliente <code>scp</code> es capaz de funcionar
-como servidor).
+
+<OL>
+<LI>Añada la opción <code>-v</code>  el número de veces que sea necesario
+</LI>
+<LI>Añada la opción de depuración al servidor; <code>/usr/sbin/sshd -d -p 2222</code>. 
+El número <code>2222</code> se refiere aquí al puerto.
+</LI>
+<LI>Observe el fichero de log del servicio SSH usando <A NAME="tex2html1618"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?tail"><TT>tail</TT></A>
+<code>-f</code>: 
+<code>tail -f /var/log/auth.log</code> ( en el servidor)
+</LI>
+<LI>Asegúrese que el agente se está ejecutando: <code>ps aux|grep ssh-agent</code>.  
+Si se está usando <code>keychain</code> asegúrese de que el agente, el PID y el socket
+están correctamente actualizados
+</LI>
+<LI>Asegúrese que su clave ha sido añadida al agente SSH.
+Use <code>ssh-add -l</code> para comprobarlo.  
+</LI>
+<LI>Compruebe los permisos en sus directorios <code>HOME</code>, <code>~/.ssh</code>
+y en el fichero <code>authorized_keys</code>. El servidor 
+rechazará el uso de claves públicas si 
+esta en modo <code>StrictModes on</code> si los permisos no son
+suficientemente restrictivos.
+</LI>
+</OL>
 
 <P>
-Para la subida de ficheros el cliente alimenta al servidor
-con los ficheros que deberán ser cargados, incluyendo opcionalmente los 
-atributos básicos como permisos y fechas.
-
 <P>
-Para las descargas el cliente envía una solicitud indicando los ficheros y directorios que
-deben ser descargados. 
-
-<P>
-Veamos un ejemplo:
-<PRE>
-nereida:~&gt; scp mm.c orion:/tmp/
-mm.c
-</PRE>
-La sintáxis de <A NAME="tex2html1621"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?scp"><TT>scp</TT></A>
-es:
-<PRE>
-scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file] 
-    [-l limit] [-o ssh_option] [-P port] [-S program]
-    [[user@]host1:]file1 ... [[user@]host2:]file2
-</PRE>
-Es posible copiar entre dos máquinas remotas  emitiendo
-la orden desde una tercera máquina:
-<PRE>
-portatil@user:/tmp$ scp europa:/tmp/prueba.batch nereida:/tmp/prueba.batch
-</PRE>
-Es posible usar comodines (wildcards), protegiéndolos de la shell local:
-<PRE>
-portatil@user:/tmp$ scp 'europa:/tmp/*.tex' nereida:/tmp/
-</PRE>
-Es posible copiar de dos máquinas remotas a una tercera:
-<PRE>
-pp2@europa:~/Lnet-parscp$ scp orion:Makefile.PL nereida:texput.log beowulf:
-pp2@europa:~/Lnet-parscp$ ssh beowulf ls -ltr | tail -2
--rw-r--r--  1 casiano casiano    615 mar 26 13:56 texput.log
--rw-r--r--  1 casiano casiano   1485 mar 26 13:56 Makefile.PL
-</PRE>
-Hemos copiado desde la máquina orion y desde la máquina nereida
-diferentes ficheros. La máquina <code>beowulf</code> es la máquina de destino
-a la que fueron transferidos.
-
-<P>
-La opción <code>-r</code> permite copiar subdirectorios.
-La opción <code>-p</code> permite preservar permisos.
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">10</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Establezca una conexión SSH:
+¿Que protocolo se esta usando en la conexión?
+¿Que identidad se esta usando?</I></DIV><P></P>
 
 <P>
 
-<H4><A NAME="SECTION065120020000000000000">
-Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
+<H4><A NAME="SECTION065100020000000000000">
+Véase también</A>
 </H4>
   
 
 <P>
-Un comando como este edita dos ficheros en sendos tabs:
 
-<P>
-<PRE>
-vi -p scp://orion/AUTOMATICBACKUPCHECKOUT /home/casiano/europabackup.log
-</PRE>
-
-<P>
-El primero es un fichero <code>~/AUTOMATICBACKUPCHECKOUT</code>
-en una máquina remota con nombre <code>orion</code>. El segundo
-es un fichero local. El editor <code>vim</code> emite el comando <code>scp</code> 
-apropiado para copiar el fichero remoto en un fichero temporal.
-
-<P>
-Durantre la edición, cada vez que salve el fichero
-<code>~/AUTOMATICBACKUPCHECKOUT</code> de <code>orion</code>, <code>vim</code>
-tasladará la orden <code>:w</code> en el comando <code>scp</code> adecuado:
-<PRE>
-:!scp -q '/tmp/v611122/1' 'orion:AUTOMATICBACKUPCHECKOUT'
-</PRE>
-
-<P>
-o bien podemos emitir una orden de edición de un nuevo fichero remoto:
-<PRE>
-:vsplit scp://casiano@some.machine.com/somefile.txt
-</PRE>
-
-<P>
-Es incluso posible ver los contenidos de un directorio:
-<PRE>
-:tabedit scp://orion/pp2/
-</PRE>
+<UL>
+<LI><A NAME="tex2html1619"
+  HREF="http://blog.codefront.net/2007/02/28/debugging-ssh-public-key-authentication-problems/">Debugging SSH public key authentication problems</A>
+</LI>
+</UL>
 
 <P>
 <BR><HR>
@@ -218,55 +253,29 @@ Es incluso posible ver los contenidos de un directorio:
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html15173"
-  HREF="node681.html#SECTION065120010000000000000">Transferencia de Ficheros con <TT>scp</TT></A>
-<LI><A NAME="tex2html15174"
-  HREF="node681.html#SECTION065120020000000000000">Edición de Ficheros Remotos con <TT>vim</TT> via <TT>scp</TT></A>
-</UL>
-</UL>
-<BR>
-<LI><A NAME="tex2html15175"
-  HREF="node682.html">Transferencia de ficheros por <TT>sftp</TT></A>
-<LI><A NAME="tex2html15176"
-  HREF="node683.html">Copias de Seguridad con <TT>rsync</TT></A>
-<UL>
-<LI><A NAME="tex2html15177"
-  HREF="node683.html#SECTION065122010000000000000">El Algoritmo</A>
-<LI><A NAME="tex2html15178"
-  HREF="node683.html#SECTION065122020000000000000">Mode de Uso</A>
-<LI><A NAME="tex2html15179"
-  HREF="node683.html#SECTION065122030000000000000">Los módulos <TT>File::Rsync</TT> y <TT>File::RsyncP</TT></A>
-<LI><A NAME="tex2html15180"
-  HREF="node683.html#SECTION065122040000000000000">Backups con <TT>rsync</TT> en un Medio Externo</A>
-<LI><A NAME="tex2html15181"
-  HREF="node683.html#SECTION065122050000000000000">El fichero <TT>/etc/fstab</TT></A>
-<LI><A NAME="tex2html15182"
-  HREF="node683.html#SECTION065122060000000000000">El Programa de Copia</A>
-<LI><A NAME="tex2html15183"
-  HREF="node683.html#SECTION065122070000000000000">Configuraciones SSH en <TT>.ssh/config</TT> y <TT>/etc/sshd_config</TT></A>
-<LI><A NAME="tex2html15184"
-  HREF="node683.html#SECTION065122080000000000000">El fichero de <TT>cron</TT></A>
-<LI><A NAME="tex2html15185"
-  HREF="node683.html#SECTION065122090000000000000">Comprobación de la Copia</A>
-</UL></UL>
+<LI><A NAME="tex2html15207"
+  HREF="node681.html#SECTION065100010000000000000">Lista de Comprobaciones en Caso de Error</A>
+<LI><A NAME="tex2html15208"
+  HREF="node681.html#SECTION065100020000000000000">Véase también</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15171"
+<A NAME="tex2html15205"
   HREF="node682.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15165"
-  HREF="node669.html">
+<A NAME="tex2html15199"
+  HREF="node671.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15161"
+<A NAME="tex2html15193"
   HREF="node680.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15167"
-  HREF="node849.html">
+<A NAME="tex2html15201"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15169"
-  HREF="node852.html">
+<A NAME="tex2html15203"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -317,20 +326,20 @@ Es incluso posible ver los contenidos de un directorio:
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15172"
-  HREF="node682.html">Transferencia de ficheros por</A>
-<B> Subir:</B> <A NAME="tex2html15166"
-  HREF="node669.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html15162"
-  HREF="node680.html">Los Ficheros de Configuración</A>
- &nbsp; <B>  <A NAME="tex2html15168"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15170"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15206"
+  HREF="node682.html">Los Ficheros de Configuración</A>
+<B> Subir:</B> <A NAME="tex2html15200"
+  HREF="node671.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html15194"
+  HREF="node680.html">Consideraciones sobre la Seguridad</A>
+ &nbsp; <B>  <A NAME="tex2html15202"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15204"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

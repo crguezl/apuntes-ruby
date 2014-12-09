@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>A simple demonstration of streaming Redis pub/sub data</TITLE>
-<META NAME="description" CONTENT="A simple demonstration of streaming Redis pub/sub data">
+<TITLE>Sinatra usando Streaming, Rack MiddleWare y map</TITLE>
+<META NAME="description" CONTENT="Sinatra usando Streaming, Rack MiddleWare y map">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node491.html">
 <LINK REL="previous" HREF="node489.html">
-<LINK REL="up" HREF="node485.html">
+<LINK REL="up" HREF="node487.html">
 <LINK REL="next" HREF="node491.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11811"
+<A NAME="tex2html11837"
   HREF="node491.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11805"
-  HREF="node485.html">
+<A NAME="tex2html11831"
+  HREF="node487.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11799"
+<A NAME="tex2html11825"
   HREF="node489.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11807"
-  HREF="node849.html">
+<A NAME="tex2html11833"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11809"
-  HREF="node852.html">
+<A NAME="tex2html11835"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,438 +92,135 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11812"
-  HREF="node491.html">Streaming y EventSource</A>
-<B> Subir:</B> <A NAME="tex2html11806"
-  HREF="node485.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11800"
-  HREF="node489.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html11808"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11810"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11838"
+  HREF="node491.html">Enlaces Relacionados</A>
+<B> Subir:</B> <A NAME="tex2html11832"
+  HREF="node487.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11826"
+  HREF="node489.html">Streaming y Valores de</A>
+ &nbsp; <B>  <A NAME="tex2html11834"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11836"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03850000000000000000">
-A simple demonstration of streaming Redis pub/sub data</A>
+<H1><A NAME="SECTION03830000000000000000">
+Sinatra usando Streaming, Rack MiddleWare y map</A>
 </H1>
-Véase:
 
-<OL>
-<LI><A NAME="tex2html1149"
-  HREF="https://github.com/gorsuch/sinatra-streaming-example">A simple demonstration of streaming Redis pub/sub data over HTTP via Sinatra's streaming capabilities.</A>
-</LI>
-<LI><A NAME="tex2html1150"
-  HREF="https://github.com/crguezl/sinatra-streaming-example">A simple demonstration of streaming Redis pub/sub data over HTTP via Sinatra's streaming capabilities.</A>
-forked version crguezl
-</LI>
-<LI>Véa el capítulo <I>Redis y Sinatra</I> <A HREF="node525.html#chapter:redisysinatra">43</A>
-</LI>
-<LI><A NAME="tex2html1151"
-  HREF="https://github.com/redis/redis-rb">redis</A>
-gem en GitHub
-</LI>
-<LI><A NAME="tex2html1152"
-  HREF="http://rubydoc.info/gems/redis/3.0.6/frames">redis</A>
-documentación de la gema
-</LI>
-<LI><A NAME="tex2html1153"
-  HREF="http://redis.io/topics/pubsub">Redis Pub/Sub</A>
-</LI>
-<LI><A NAME="tex2html1154"
-  HREF="http://rubydoc.info/gems/redis/3.0.6/Redis/Subscription">Redis::Subscription</A>:
-</LI>
-<LI><A NAME="tex2html1155"
-  HREF="https://addons.heroku.com/redistogo">Heroku addon Redis To Go</A>
-</LI>
-</OL>
+<P>
+Véase el código en 
+<A NAME="tex2html1148"
+  HREF="https://github.com/crguezl/sinatra_intro/blob/master/streaming/better_middleware_handling.rb">sinatra_intro/streaming/better_middleware_handling.rb</A>
+en GitHub.
+
+<P>
+Otro beneficio que obtenemos cuando usamos 
+<code>Sinatra::Streaming</code> (parte de
+<code>sinatra-contrib</code>) es que:
+
+<P>
+Blocks passed to <code>#map!</code> or 
+<code>#map</code> will actually be applied when streaming takes place (véase 
+<A NAME="tex2html1149"
+  HREF="http://www.sinatrarb.com/contrib/streaming.html">http://www.sinatrarb.com/contrib/streaming.html</A>):
 
 <P>
 
-<H4><A NAME="SECTION03850010000000000000">
-web.rb</A>
-</H4>
-  
+<img src="rack.jpeg">
 
+<P>
 <PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat web.rb
-require 'redis'
+[~/sinatra/sinatra-streaming/intro-streaming(master)]$ cat better_middleware_handling.rb 
+# http://www.sinatrarb.com/contrib/streaming.html
+
 require 'sinatra'
+require 'sinatra/streaming'
 
-configure do
-  redis_url = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
-  uri = URI.parse(redis_url)
-  set :redis, Redis.new(:host =&gt; uri.host, :port =&gt; uri.port, :password =&gt; uri.password)
-end
+class StupidMiddleware
+  def initialize(app) 
+    @app = app 
+  end
 
-get '/' do
-  "&lt;pre&gt;curl -v https://sinatra-streaming-example.herokuapp.com/stream&lt;/pre&gt;"
-end
-
-get '/stream' do
-  puts "connection made"
-
-  stream do |out|
-    settings.redis.subscribe 'time' do |on|
-      on.message do |channel, message|
-        out &lt;&lt; "#{message}\n"
-      end
-    end
+  def call(env)
+    status, headers, body = @app.call(env)
+    # Blocks passed to #map! or #map will actually be applied when streaming takes place
+    body.map! { |e| e.upcase }
+    [status, headers, body]
   end
 end
-</PRE>
-<A NAME="tex2html1156"
-  HREF="http://redis.com">Redis</A> is a key-value store; it supports lists, hashes, sets, and ordered sets.
 
-<P>
-El código 
-<PRE>
-  redis_url = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
-</PRE>
-decide si estamos en Heroku o no. Si estamos en Heroku deberemos haber instalado
-el <A NAME="tex2html1157"
-  HREF="https://addons.heroku.com/redistogo">Heroku addon Redis To Go</A>.
+use StupidMiddleware
 
-<P>
-La llamada:
-<PRE>
-  set :redis, Redis.new(:host =&gt; uri.host, :port =&gt; uri.port, :password =&gt; uri.password)
-</PRE>
-conecta con el servidor Redis.
-
-<P>
-The Redis class exports methods that are named identical to the
-commands they execute. The arguments these methods accept are often
-identical to the arguments specified on the Redis website.
-
-<P>
-In Redis,
-<code>SUBSCRIBE</code>, <code>UNSUBSCRIBE</code> and <code>PUBLISH</code> implement 
-the <A NAME="tex2html1158"
-  HREF="http://en.wikipedia.org/wiki/Publish/subscribe">Publish/Subscribe</A>
-messaging paradigm where 
-
-<OL>
-<LI>In the <A NAME="21733"></A><SPAN  CLASS="textbf">Publish/Subscribe</SPAN> pattern, senders (publishers) are not programmed to send their messages to
-specific receivers (subscribers). 
-</LI>
-<LI>Rather, published messages are
-characterized into channels, without knowledge of what (if any)
-subscribers there may be. 
-</LI>
-<LI>Subscribers express interest in one or
-more channels, and only receive messages that are of interest,
-without knowledge of what (if any) publishers there are. 
-</LI>
-<LI>This
-decoupling of publishers and subscribers can allow for greater
-scalability and a more dynamic network topology.
-</LI>
-</OL>
-For instance in order to subscribe to channels <code>foo</code> and <code>bar</code> the
-client issues a <code>SUBSCRIBE</code> providing the names of the channels:
-<PRE>
-SUBSCRIBE foo bar
-</PRE>
-
-<P>
-Messages sent by other clients to these channels will be pushed by
-Redis to all the subscribed clients.
-
-<P>
-A client subscribed to one or more channels should not issue commands,
-although it can subscribe and unsubscribe to and from other channels.
-
-<P>
-The reply of the <code>SUBSCRIBE</code> and <code>UNSUBSCRIBE</code> operations are sent in
-the form of messages, so that the client can just read a coherent
-stream of messages where the first element indicates the type of
-message.
-
-<P>
-El objeto <code>on</code> pasado al bloque está en la clase
-<A NAME="tex2html1159"
-  HREF="http://rubydoc.info/gems/redis/3.0.6/Redis/Subscription">Redis::Subscription</A>:
-<PRE>
-    settings.redis.subscribe 'time' do |on|
-      on.message do |channel, message|
-        out &lt;&lt; "#{message}\n"
-      end
-</PRE>
-el objeto <code>on</code> dispone del método <code>message</code> que 
-<FONT COLOR="#0000ff"> establece una callback
-que será ejecutada cada vez que se produzca un mensaje</FONT>.
-
-<P>
-
-<H4><A NAME="SECTION03850020000000000000">
-worker.rb</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat worker.rb 
-require 'uri'
-require 'redis'
-
-redis_url = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
-uri = URI.parse(redis_url)
-r = Redis.new(:host =&gt; uri.host, :port =&gt; uri.port, :password =&gt; uri.password)
-
-while true do
-  puts "publishing..."
-  r.publish "time", Time.now.utc
-  sleep 1  
+before do
+  content_type :html
 end
-</PRE>
 
-<P>
+song = %q{
+And now, the end is near 
+And so I face the final curtain 
+My friend, I'll say it clear 
+I'll state my case, of which I'm certain 
+I've lived a life that's full 
+I traveled each and ev'ry highway 
+And more, much more than this, I did it my way 
 
-<H4><A NAME="SECTION03850030000000000000">
-Procfile</A>
-</H4>
-  
+Regrets, I've had a few 
+But then again, too few to mention 
+I did what I had to do , I saw it through without exemption 
+I planned each charted course, each careful step along the highway 
+And more, much more than this, I did it my way 
 
-<PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat Procfile 
-web: bundle exec ruby web.rb -p $PORT
-worker: bundle exec ruby worker.rb
-</PRE>
-The <code>web</code> process type, describes to Heroku how to start the web application server.
+Yes, there were times, I'm sure you knew 
+When I bit off more than I could chew 
+And through it all, when there was doubt 
+I ate it up and spit it out 
+I faced it all and I stood tall and did it my way 
 
-<P>
-<A NAME="tex2html1160"
-  HREF="http://www.neilmiddleton.com/the-procfile-is-your-friend/">An interesting thing to mention here is that Heroku</A>
-only auto-launches
-the web process in your Procfile when deploying, whereas <code>foreman</code>
-launches everything. 
+I've loved, I've laughed and cried 
+I've had my fill, my share of losing 
+And now, as tears subside, I find it all so amusing 
+To think I did all that 
+And may I say, not in a shy way, 
+"Oh, no, oh, no, not me, I did it my way" 
 
-<P>
+For what is a man, what has he got? 
+If not himself, then he has naught 
+The right to say the things he feels and not the words of one who kneels 
+The record shows I took the blows and did it my way!
+}.split(/\n/)
 
-<H4><A NAME="SECTION03850040000000000000">
-Gemfile</A>
-</H4>
-  
+song.map! { |x| x.split(/\s+/) }
 
-<PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat Gemfile
-source 'https://rubygems.org'
+set :song, song
+set :colors, ["red", "blue", "black", "green", "yellow", "blueviolet" ]
 
-gem 'foreman'
-gem 'redis'
-gem 'sinatra'
-gem 'thin'
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03850050000000000000">
-Ejecución: Arranca el Servidor Redis</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ redis-server 
-[5604] 04 Dec 10:18:58.126 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
-[5604] 04 Dec 10:18:58.129 * Max number of open files set to 10032
-                _._                                                  
-           _.-``__ ''-._                                             
-      _.-``    `.  `_.  ''-._           Redis 2.6.14 (00000000/0) 64 bit
-  .-`` .-```.  ```\/    _.,_ ''-._                                   
- (    '      ,       .-`  | `,    )     Running in stand alone mode
- |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
- |    `-._   `._    /     _.-'    |     PID: 5604
-  `-._    `-._  `-./  _.-'    _.-'                                   
- |`-._`-._    `-.__.-'    _.-'_.-'|                                  
- |    `-._`-._        _.-'_.-'    |           http://redis.io        
-  `-._    `-._`-.__.-'_.-'    _.-'                                   
- |`-._`-._    `-.__.-'    _.-'_.-'|                                  
- |    `-._`-._        _.-'_.-'    |                                  
-  `-._    `-._`-.__.-'_.-'    _.-'                                   
-      `-._    `-.__.-'    _.-'                                       
-          `-._        _.-'                                           
-              `-.__.-'                                               
-
-[5604] 04 Dec 10:18:58.129 # Server started, Redis version 2.6.14
-[5604] 04 Dec 10:18:58.129 * The server is now ready to accept connections on port 6379
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03850060000000000000">
-Ejecución 2: Arranca la aplicación Sinatra y el Worker</A>
-</H4>
-  
-
-Obsérvese como <code>bundle exec foreman start</code> arranca tanto a <code>worker</code> como 
-a <code>web</code>:
-
-<P>
-<PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ bundle exec foreman start
-10:19:04 web.1     | started with pid 5606
-10:19:04 worker.1  | started with pid 5607
-10:19:05 worker.1  | publishing...
-10:19:06 web.1     | == Sinatra/1.3.0 has taken the stage on 5000 for development with backup from Thin
-10:19:06 web.1     | &gt;&gt; Thin web server (v1.2.11 codename Bat-Shit Crazy)
-10:19:06 web.1     | &gt;&gt; Maximum connections set to 1024
-10:19:06 web.1     | &gt;&gt; Listening on 0.0.0.0:5000, CTRL+C to stop
-10:19:06 worker.1  | publishing...
-10:19:07 worker.1  | publishing...
-10:19:08 worker.1  | publishing...
-..................................
-10:19:37 worker.1  | publishing...
-10:19:38 web.1     | connection made
-10:19:39 worker.1  | publishing...
-..................................
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03850070000000000000">
-Ejecución 3: Arranca un Cliente</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ curl -v http://localhost:5000/stream
-* Adding handle: conn: 0x7fc71280aa00
-* Adding handle: send: 0
-* Adding handle: recv: 0
-* Curl_addHandleToPipeline: length: 1
-* - Conn 0 (0x7fc71280aa00) send_pipe: 1, recv_pipe: 0
-* About to connect() to localhost port 5000 (#0)
-*   Trying 127.0.0.1...
-* Connected to localhost (127.0.0.1) port 5000 (#0)
-&gt; GET /stream HTTP/1.1
-&gt; User-Agent: curl/7.30.0
-&gt; Host: localhost:5000
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; X-Frame-Options: sameorigin
-&lt; X-XSS-Protection: 1; mode=block
-&lt; Content-Type: text/html;charset=utf-8
-&lt; Connection: close
-* Server thin 1.2.11 codename Bat-Shit Crazy is not blacklisted
-&lt; Server: thin 1.2.11 codename Bat-Shit Crazy
-&lt; 
-2013-12-04 13:24:13 UTC
-2013-12-04 13:24:14 UTC
-2013-12-04 13:24:15 UTC
-2013-12-04 13:24:16 UTC
-2013-12-04 13:24:17 UTC
-.......................
+get '/' do
+  color = 0
+  stream do |out|
+    out.puts '&lt;pre&gt;'
+    settings.song.each do |line|
+      line.each do |w|
+        out.print %Q{&lt;font color="#{settings.colors[color]}"&gt;#{w} &lt;/font&gt;}
+        color = (color+1) % settings.colors.size
+        sleep 0.02
+      end
+      out.puts "\n"
+      sleep 1
+   end
+   out.puts '&lt;/pre&gt;'
+   out.close
+  end
+end
 </PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html11813"
-  HREF="node490.html#SECTION03850010000000000000">web.rb</A>
-<LI><A NAME="tex2html11814"
-  HREF="node490.html#SECTION03850020000000000000">worker.rb</A>
-<LI><A NAME="tex2html11815"
-  HREF="node490.html#SECTION03850030000000000000">Procfile</A>
-<LI><A NAME="tex2html11816"
-  HREF="node490.html#SECTION03850040000000000000">Gemfile</A>
-<LI><A NAME="tex2html11817"
-  HREF="node490.html#SECTION03850050000000000000">Ejecución: Arranca el Servidor Redis</A>
-<LI><A NAME="tex2html11818"
-  HREF="node490.html#SECTION03850060000000000000">Ejecución 2: Arranca la aplicación Sinatra y el Worker</A>
-<LI><A NAME="tex2html11819"
-  HREF="node490.html#SECTION03850070000000000000">Ejecución 3: Arranca un Cliente</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html11811"
-  HREF="node491.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11805"
-  HREF="node485.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11799"
-  HREF="node489.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11807"
-  HREF="node849.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11809"
-  HREF="node852.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html11812"
-  HREF="node491.html">Streaming y EventSource</A>
-<B> Subir:</B> <A NAME="tex2html11806"
-  HREF="node485.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11800"
-  HREF="node489.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html11808"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11810"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

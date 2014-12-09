@@ -3,7 +3,7 @@
 
 
 $key = q/cite_metaprogramming/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:accediendoatwitter/;
@@ -11,7 +11,7 @@ $external_labels{$key} = "$URL/" . q|node48.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_GO4/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/item:busca_clase/;
@@ -23,7 +23,7 @@ $external_labels{$key} = "$URL/" . q|node170.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:rdoc/;
-$external_labels{$key} = "$URL/" . q|node706.html|; 
+$external_labels{$key} = "$URL/" . q|node708.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:marshalling/;
@@ -43,19 +43,19 @@ $external_labels{$key} = "$URL/" . q|node193.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_friedl/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:gitalias/;
-$external_labels{$key} = "$URL/" . q|node692.html|; 
+$external_labels{$key} = "$URL/" . q|node694.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:requestobject1/;
-$external_labels{$key} = "$URL/" . q|node409.html|; 
+$external_labels{$key} = "$URL/" . q|node411.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:ssh/;
-$external_labels{$key} = "$URL/" . q|node687.html|; 
+$external_labels{$key} = "$URL/" . q|node689.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:laclasefilter/;
@@ -63,7 +63,7 @@ $external_labels{$key} = "$URL/" . q|node156.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:twitter/;
-$external_labels{$key} = "$URL/" . q|node825.html|; 
+$external_labels{$key} = "$URL/" . q|node827.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:bloques/;
@@ -75,7 +75,7 @@ $external_labels{$key} = "$URL/" . q|node136.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/item:gemfile/;
-$external_labels{$key} = "$URL/" . q|node724.html|; 
+$external_labels{$key} = "$URL/" . q|node726.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:singinupinrubygems/;
@@ -83,11 +83,11 @@ $external_labels{$key} = "$URL/" . q|node696.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:ejemplodedatamapper/;
-$external_labels{$key} = "$URL/" . q|node532.html|; 
+$external_labels{$key} = "$URL/" . q|node534.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:thetravisgem/;
-$external_labels{$key} = "$URL/" . q|node330.html|; 
+$external_labels{$key} = "$URL/" . q|node332.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:programacionfuncional/;
@@ -95,7 +95,7 @@ $external_labels{$key} = "$URL/" . q|node163.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:http/;
-$external_labels{$key} = "$URL/" . q|node383.html|; 
+$external_labels{$key} = "$URL/" . q|node385.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:subrutinas/;
@@ -107,7 +107,7 @@ $external_labels{$key} = "$URL/" . q|node171.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/figure:javascriptnatives/;
-$external_labels{$key} = "$URL/" . q|node579.html|; 
+$external_labels{$key} = "$URL/" . q|node581.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/item:busca_eigenclass/;
@@ -119,19 +119,19 @@ $external_labels{$key} = "$URL/" . q|node80.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_PRP/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:hub/;
-$external_labels{$key} = "$URL/" . q|node696.html|; 
+$external_labels{$key} = "$URL/" . q|node698.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:estadisticaasvisitas/;
-$external_labels{$key} = "$URL/" . q|node538.html|; 
+$external_labels{$key} = "$URL/" . q|node540.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:rpscss/;
-$external_labels{$key} = "$URL/" . q|node408.html|; 
+$external_labels{$key} = "$URL/" . q|node410.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:enqueformalaslambdasdifieren/;
@@ -143,19 +143,19 @@ $external_labels{$key} = "$URL/" . q|node157.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/item:gemspec/;
-$external_labels{$key} = "$URL/" . q|node724.html|; 
+$external_labels{$key} = "$URL/" . q|node726.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/cite_Chacon:2009:PG:1618548/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:requestobject/;
-$external_labels{$key} = "$URL/" . q|node468.html|; 
+$external_labels{$key} = "$URL/" . q|node470.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/cite_robbins2013application/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:procsylambdas/;
@@ -163,7 +163,7 @@ $external_labels{$key} = "$URL/" . q|node148.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:padrino/;
-$external_labels{$key} = "$URL/" . q|node567.html|; 
+$external_labels{$key} = "$URL/" . q|node569.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:primerospasos/;
@@ -175,11 +175,11 @@ $external_labels{$key} = "$URL/" . q|node135.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/parrafo:procfile/;
-$external_labels{$key} = "$URL/" . q|node549.html|; 
+$external_labels{$key} = "$URL/" . q|node551.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:oauth/;
-$external_labels{$key} = "$URL/" . q|node758.html|; 
+$external_labels{$key} = "$URL/" . q|node760.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:memoizacion/;
@@ -187,7 +187,7 @@ $external_labels{$key} = "$URL/" . q|node167.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:travis/;
-$external_labels{$key} = "$URL/" . q|node324.html|; 
+$external_labels{$key} = "$URL/" . q|node326.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/bloqueslosultimos/;
@@ -195,15 +195,15 @@ $external_labels{$key} = "$URL/" . q|node147.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:ticatactoe/;
-$external_labels{$key} = "$URL/" . q|node470.html|; 
+$external_labels{$key} = "$URL/" . q|node472.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:raceconditionsrack/;
-$external_labels{$key} = "$URL/" . q|node397.html|; 
+$external_labels{$key} = "$URL/" . q|node399.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:twitterpopularity/;
-$external_labels{$key} = "$URL/" . q|node469.html|; 
+$external_labels{$key} = "$URL/" . q|node471.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/strangeerror:introconstantes/;
@@ -211,7 +211,7 @@ $external_labels{$key} = "$URL/" . q|node191.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:ssh/;
-$external_labels{$key} = "$URL/" . q|node669.html|; 
+$external_labels{$key} = "$URL/" . q|node671.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:prependmemoize/;
@@ -227,15 +227,15 @@ $external_labels{$key} = "$URL/" . q|node153.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/item:version/;
-$external_labels{$key} = "$URL/" . q|node724.html|; 
+$external_labels{$key} = "$URL/" . q|node726.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:metodosdepeticionhttp/;
-$external_labels{$key} = "$URL/" . q|node386.html|; 
+$external_labels{$key} = "$URL/" . q|node388.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:abreviadorurls/;
-$external_labels{$key} = "$URL/" . q|node533.html|; 
+$external_labels{$key} = "$URL/" . q|node535.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsub:tiposypatos/;
@@ -243,7 +243,7 @@ $external_labels{$key} = "$URL/" . q|node182.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:chat_con_mensajes_uno_uno/;
-$external_labels{$key} = "$URL/" . q|node497.html|; 
+$external_labels{$key} = "$URL/" . q|node499.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:DefiniciondeunaClaseSimple/;
@@ -271,7 +271,7 @@ $external_labels{$key} = "$URL/" . q|node203.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:othertestingtools/;
-$external_labels{$key} = "$URL/" . q|node323.html|; 
+$external_labels{$key} = "$URL/" . q|node325.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:programacioninperativa/;
@@ -279,11 +279,11 @@ $external_labels{$key} = "$URL/" . q|node10.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:rvm/;
-$external_labels{$key} = "$URL/" . q|node648.html|; 
+$external_labels{$key} = "$URL/" . q|node650.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:redisysinatra/;
-$external_labels{$key} = "$URL/" . q|node525.html|; 
+$external_labels{$key} = "$URL/" . q|node527.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/susubsection:utilizandoampersand/;
@@ -291,15 +291,15 @@ $external_labels{$key} = "$URL/" . q|node147.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/item:rakefile/;
-$external_labels{$key} = "$URL/" . q|node724.html|; 
+$external_labels{$key} = "$URL/" . q|node726.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/item:eventsource/;
-$external_labels{$key} = "$URL/" . q|node501.html|; 
+$external_labels{$key} = "$URL/" . q|node503.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:authentication/;
-$external_labels{$key} = "$URL/" . q|node464.html|; 
+$external_labels{$key} = "$URL/" . q|node466.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:regexpengine/;
@@ -311,7 +311,7 @@ $external_labels{$key} = "$URL/" . q|node247.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:travis/;
-$external_labels{$key} = "$URL/" . q|node325.html|; 
+$external_labels{$key} = "$URL/" . q|node327.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:clasesmutables/;
@@ -319,7 +319,7 @@ $external_labels{$key} = "$URL/" . q|node189.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/figure:rdoc1/;
-$external_labels{$key} = "$URL/" . q|node325.html|; 
+$external_labels{$key} = "$URL/" . q|node327.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/susubsection:extend/;
@@ -331,7 +331,7 @@ $external_labels{$key} = "$URL/" . q|node256.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_RPL/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:visibilidaddelosmetodos/;
@@ -343,19 +343,19 @@ $external_labels{$key} = "$URL/" . q|node233.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:unicode/;
-$external_labels{$key} = "$URL/" . q|node366.html|; 
+$external_labels{$key} = "$URL/" . q|node368.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:coveralls/;
-$external_labels{$key} = "$URL/" . q|node331.html|; 
+$external_labels{$key} = "$URL/" . q|node333.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:aplicacionesmodularessinatra/;
-$external_labels{$key} = "$URL/" . q|node478.html|; 
+$external_labels{$key} = "$URL/" . q|node480.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:authorizedkeys/;
-$external_labels{$key} = "$URL/" . q|node673.html|; 
+$external_labels{$key} = "$URL/" . q|node675.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:modulosespaciodenombresincluibles/;
@@ -371,11 +371,11 @@ $external_labels{$key} = "$URL/" . q|node35.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_RBP/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:cloud9/;
-$external_labels{$key} = "$URL/" . q|node750.html|; 
+$external_labels{$key} = "$URL/" . q|node752.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sectionpracica:gitandrake/;
@@ -383,7 +383,7 @@ $external_labels{$key} = "$URL/" . q|node283.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:rackandhaml/;
-$external_labels{$key} = "$URL/" . q|node407.html|; 
+$external_labels{$key} = "$URL/" . q|node409.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:postfijo/;
@@ -391,11 +391,11 @@ $external_labels{$key} = "$URL/" . q|node44.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:ramificaciones-en-git/;
-$external_labels{$key} = "$URL/" . q|node688.html|; 
+$external_labels{$key} = "$URL/" . q|node690.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:mergespecificfilesfromanbotherbranch/;
-$external_labels{$key} = "$URL/" . q|node691.html|; 
+$external_labels{$key} = "$URL/" . q|node693.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/parrafo:declaracionesdemetodosabstractos/;
@@ -411,7 +411,7 @@ $external_labels{$key} = "$URL/" . q|node292.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:chromedeveloper/;
-$external_labels{$key} = "$URL/" . q|node629.html|; 
+$external_labels{$key} = "$URL/" . q|node631.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:objetos/;
@@ -423,11 +423,11 @@ $external_labels{$key} = "$URL/" . q|node278.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:herokupostgres/;
-$external_labels{$key} = "$URL/" . q|node534.html|; 
+$external_labels{$key} = "$URL/" . q|node536.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:raketesttask/;
-$external_labels{$key} = "$URL/" . q|node704.html|; 
+$external_labels{$key} = "$URL/" . q|node706.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:c2f/;
@@ -435,7 +435,7 @@ $external_labels{$key} = "$URL/" . q|node38.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:tictactoedatamapper/;
-$external_labels{$key} = "$URL/" . q|node471.html|; 
+$external_labels{$key} = "$URL/" . q|node473.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:testunit/;
@@ -443,7 +443,7 @@ $external_labels{$key} = "$URL/" . q|node289.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:datamapperasociaciones/;
-$external_labels{$key} = "$URL/" . q|node535.html|; 
+$external_labels{$key} = "$URL/" . q|node537.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsubsection:extend/;
@@ -459,11 +459,11 @@ $external_labels{$key} = "$URL/" . q|node73.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/sectionpractica:abreviarurl/;
-$external_labels{$key} = "$URL/" . q|node541.html|; 
+$external_labels{$key} = "$URL/" . q|node543.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:sshfirsttime/;
-$external_labels{$key} = "$URL/" . q|node671.html|; 
+$external_labels{$key} = "$URL/" . q|node673.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:estructurasdedatos/;
@@ -483,7 +483,7 @@ $external_labels{$key} = "$URL/" . q|node179.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:bootstrap/;
-$external_labels{$key} = "$URL/" . q|node516.html|; 
+$external_labels{$key} = "$URL/" . q|node518.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:pry/;
@@ -499,7 +499,7 @@ $external_labels{$key} = "$URL/" . q|node228.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:threads/;
-$external_labels{$key} = "$URL/" . q|node349.html|; 
+$external_labels{$key} = "$URL/" . q|node351.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sectionpractica:DSL/;
@@ -507,7 +507,7 @@ $external_labels{$key} = "$URL/" . q|node281.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:chat_con_frames/;
-$external_labels{$key} = "$URL/" . q|node498.html|; 
+$external_labels{$key} = "$URL/" . q|node500.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:productodematrices/;
@@ -519,7 +519,7 @@ $external_labels{$key} = "$URL/" . q|node308.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:rspecconrack/;
-$external_labels{$key} = "$URL/" . q|node420.html|; 
+$external_labels{$key} = "$URL/" . q|node422.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:colisiones/;
@@ -547,11 +547,11 @@ $external_labels{$key} = "$URL/" . q|node75.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:despliegueenheroku/;
-$external_labels{$key} = "$URL/" . q|node548.html|; 
+$external_labels{$key} = "$URL/" . q|node550.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:cookies/;
-$external_labels{$key} = "$URL/" . q|node395.html|; 
+$external_labels{$key} = "$URL/" . q|node397.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:herenciayvariablesdelainstancia/;
@@ -571,23 +571,23 @@ $external_labels{$key} = "$URL/" . q|node200.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:chatutilizandostreaming/;
-$external_labels{$key} = "$URL/" . q|node493.html|; 
+$external_labels{$key} = "$URL/" . q|node496.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:correo/;
-$external_labels{$key} = "$URL/" . q|node462.html|; 
+$external_labels{$key} = "$URL/" . q|node464.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:sinatrabasestream/;
-$external_labels{$key} = "$URL/" . q|node504.html|; 
+$external_labels{$key} = "$URL/" . q|node506.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:websockets/;
-$external_labels{$key} = "$URL/" . q|node505.html|; 
+$external_labels{$key} = "$URL/" . q|node507.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/routes/;
-$external_labels{$key} = "$URL/" . q|node433.html|; 
+$external_labels{$key} = "$URL/" . q|node435.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:referenciasaobjetos/;
@@ -607,15 +607,15 @@ $external_labels{$key} = "$URL/" . q|node177.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:pry2/;
-$external_labels{$key} = "$URL/" . q|node701.html|; 
+$external_labels{$key} = "$URL/" . q|node703.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:rvm/;
-$external_labels{$key} = "$URL/" . q|node648.html|; 
+$external_labels{$key} = "$URL/" . q|node650.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:camping1png/;
-$external_labels{$key} = "$URL/" . q|node829.html|; 
+$external_labels{$key} = "$URL/" . q|node831.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:conjuntos/;
@@ -631,19 +631,19 @@ $external_labels{$key} = "$URL/" . q|node293.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:guard/;
-$external_labels{$key} = "$URL/" . q|node332.html|; 
+$external_labels{$key} = "$URL/" . q|node334.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:estructuradelagema/;
-$external_labels{$key} = "$URL/" . q|node724.html|; 
+$external_labels{$key} = "$URL/" . q|node726.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:datamapperysinatra/;
-$external_labels{$key} = "$URL/" . q|node528.html|; 
+$external_labels{$key} = "$URL/" . q|node530.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:automaticauthentication/;
-$external_labels{$key} = "$URL/" . q|node672.html|; 
+$external_labels{$key} = "$URL/" . q|node674.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:instanceevalyclasseval/;
@@ -651,7 +651,7 @@ $external_labels{$key} = "$URL/" . q|node247.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/cite_ER/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/parrafo:dslxmlprimeraversion/;
@@ -663,7 +663,7 @@ $external_labels{$key} = "$URL/" . q|node30.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/presentacion1415/;
-$external_labels{$key} = "$URL/" . q|node831.html|; 
+$external_labels{$key} = "$URL/" . q|node833.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:metodosfactoria/;
@@ -683,11 +683,11 @@ $external_labels{$key} = "$URL/" . q|node787.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:rest/;
-$external_labels{$key} = "$URL/" . q|node558.html|; 
+$external_labels{$key} = "$URL/" . q|node560.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:buildasinatraapiusingtddherokuandci/;
-$external_labels{$key} = "$URL/" . q|node481.html|; 
+$external_labels{$key} = "$URL/" . q|node483.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:creaciondeprocs/;
@@ -703,7 +703,7 @@ $external_labels{$key} = "$URL/" . q|node36.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:gemasinstaladasenlocal/;
-$external_labels{$key} = "$URL/" . q|node792.html|; 
+$external_labels{$key} = "$URL/" . q|node794.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:argumentosdeunmetodo/;
@@ -715,11 +715,11 @@ $external_labels{$key} = "$URL/" . q|node212.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:nombresyrequires/;
-$external_labels{$key} = "$URL/" . q|node727.html|; 
+$external_labels{$key} = "$URL/" . q|node729.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:websockets/;
-$external_labels{$key} = "$URL/" . q|node511.html|; 
+$external_labels{$key} = "$URL/" . q|node513.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:cargaysolicituddemodulos/;
@@ -731,19 +731,19 @@ $external_labels{$key} = "$URL/" . q|node276.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:jsfiddle/;
-$external_labels{$key} = "$URL/" . q|node793.html|; 
+$external_labels{$key} = "$URL/" . q|node795.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:sinatrachat/;
-$external_labels{$key} = "$URL/" . q|node498.html|; 
+$external_labels{$key} = "$URL/" . q|node500.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:sampleappwithsinatrarspeccapybaraandselenium/;
-$external_labels{$key} = "$URL/" . q|node483.html|; 
+$external_labels{$key} = "$URL/" . q|node485.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/cite_bastards/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:dandovaloresysuprimiendovariables/;
@@ -763,7 +763,7 @@ $external_labels{$key} = "$URL/" . q|node4.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:bootstrap/;
-$external_labels{$key} = "$URL/" . q|node641.html|; 
+$external_labels{$key} = "$URL/" . q|node643.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:unmetododeclase/;
@@ -771,7 +771,7 @@ $external_labels{$key} = "$URL/" . q|node190.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:sinatratesting/;
-$external_labels{$key} = "$URL/" . q|node479.html|; 
+$external_labels{$key} = "$URL/" . q|node481.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/parrafo:usodesettersenunmetodo/;
@@ -779,15 +779,15 @@ $external_labels{$key} = "$URL/" . q|node179.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:nodejs/;
-$external_labels{$key} = "$URL/" . q|node591.html|; 
+$external_labels{$key} = "$URL/" . q|node593.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:streaming/;
-$external_labels{$key} = "$URL/" . q|node485.html|; 
+$external_labels{$key} = "$URL/" . q|node487.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:rvmrc/;
-$external_labels{$key} = "$URL/" . q|node655.html|; 
+$external_labels{$key} = "$URL/" . q|node657.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sibsection:parametrospordefecto/;
@@ -795,7 +795,7 @@ $external_labels{$key} = "$URL/" . q|node142.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:sequelysinatra/;
-$external_labels{$key} = "$URL/" . q|node539.html|; 
+$external_labels{$key} = "$URL/" . q|node541.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsectio:tabladeoperadores/;
@@ -803,7 +803,7 @@ $external_labels{$key} = "$URL/" . q|node181.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/parrafo:gemnasium/;
-$external_labels{$key} = "$URL/" . q|node737.html|; 
+$external_labels{$key} = "$URL/" . q|node739.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/ejercicios:hashes/;
@@ -815,7 +815,7 @@ $external_labels{$key} = "$URL/" . q|node214.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:showoff/;
-$external_labels{$key} = "$URL/" . q|node807.html|; 
+$external_labels{$key} = "$URL/" . q|node809.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/figure:fibonacci/;
@@ -827,11 +827,11 @@ $external_labels{$key} = "$URL/" . q|node280.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/subsectionpruebasunitarias/;
-$external_labels{$key} = "$URL/" . q|node419.html|; 
+$external_labels{$key} = "$URL/" . q|node421.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:sass/;
-$external_labels{$key} = "$URL/" . q|node778.html|; 
+$external_labels{$key} = "$URL/" . q|node780.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:definiendooperadores/;
@@ -843,7 +843,7 @@ $external_labels{$key} = "$URL/" . q|node49.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:debugging/;
-$external_labels{$key} = "$URL/" . q|node698.html|; 
+$external_labels{$key} = "$URL/" . q|node700.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:bindings/;
@@ -851,15 +851,15 @@ $external_labels{$key} = "$URL/" . q|node246.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:callyapply/;
-$external_labels{$key} = "$URL/" . q|node583.html|; 
+$external_labels{$key} = "$URL/" . q|node585.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/cite_DPR/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:requestobject/;
-$external_labels{$key} = "$URL/" . q|node447.html|; 
+$external_labels{$key} = "$URL/" . q|node449.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:tdd/;
@@ -875,15 +875,15 @@ $external_labels{$key} = "$URL/" . q|node212.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:tictactoeajax/;
-$external_labels{$key} = "$URL/" . q|node524.html|; 
+$external_labels{$key} = "$URL/" . q|node526.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:rubygems/;
-$external_labels{$key} = "$URL/" . q|node665.html|; 
+$external_labels{$key} = "$URL/" . q|node667.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:jquerychat/;
-$external_labels{$key} = "$URL/" . q|node522.html|; 
+$external_labels{$key} = "$URL/" . q|node524.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:heredandometodos/;
@@ -891,7 +891,7 @@ $external_labels{$key} = "$URL/" . q|node199.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:acortadordeurls/;
-$external_labels{$key} = "$URL/" . q|node537.html|; 
+$external_labels{$key} = "$URL/" . q|node539.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:limitandoelnumerodeinstancias/;
@@ -911,31 +911,31 @@ $external_labels{$key} = "$URL/" . q|node230.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:rake/;
-$external_labels{$key} = "$URL/" . q|node702.html|; 
+$external_labels{$key} = "$URL/" . q|node704.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:gestiondesesiones/;
-$external_labels{$key} = "$URL/" . q|node396.html|; 
+$external_labels{$key} = "$URL/" . q|node398.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:depuracionsinatra/;
-$external_labels{$key} = "$URL/" . q|node547.html|; 
+$external_labels{$key} = "$URL/" . q|node549.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:gemas_con_bundler/;
-$external_labels{$key} = "$URL/" . q|node722.html|; 
+$external_labels{$key} = "$URL/" . q|node724.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/cite_aaltomwad/;
-$external_labels{$key} = "$URL/" . q|node853.html|; 
+$external_labels{$key} = "$URL/" . q|node855.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:bundler/;
-$external_labels{$key} = "$URL/" . q|node717.html|; 
+$external_labels{$key} = "$URL/" . q|node719.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:tstingfacil/;
-$external_labels{$key} = "$URL/" . q|node621.html|; 
+$external_labels{$key} = "$URL/" . q|node623.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:variablesdeclase/;
@@ -943,7 +943,7 @@ $external_labels{$key} = "$URL/" . q|node192.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/figure:camping2png/;
-$external_labels{$key} = "$URL/" . q|node829.html|; 
+$external_labels{$key} = "$URL/" . q|node831.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/sectionpractica:htmldsl/;
@@ -951,7 +951,7 @@ $external_labels{$key} = "$URL/" . q|node282.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:githubtutorial/;
-$external_labels{$key} = "$URL/" . q|node686.html|; 
+$external_labels{$key} = "$URL/" . q|node688.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:igualdad/;
@@ -963,15 +963,15 @@ $external_labels{$key} = "$URL/" . q|node39.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:git/;
-$external_labels{$key} = "$URL/" . q|node684.html|; 
+$external_labels{$key} = "$URL/" . q|node686.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:controlandonuestrasdependencias/;
-$external_labels{$key} = "$URL/" . q|node737.html|; 
+$external_labels{$key} = "$URL/" . q|node739.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:streaming/;
-$external_labels{$key} = "$URL/" . q|node485.html|; 
+$external_labels{$key} = "$URL/" . q|node487.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:la_busqueda_por_metodos/;
@@ -979,7 +979,7 @@ $external_labels{$key} = "$URL/" . q|node229.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/gitinstall/;
-$external_labels{$key} = "$URL/" . q|node685.html|; 
+$external_labels{$key} = "$URL/" . q|node687.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:averiguandolosdescendientesdeunaclase/;
@@ -987,7 +987,7 @@ $external_labels{$key} = "$URL/" . q|node207.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:rdoc/;
-$external_labels{$key} = "$URL/" . q|node707.html|; 
+$external_labels{$key} = "$URL/" . q|node709.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsubsection:predominancia_de_metodos_privados/;
@@ -995,7 +995,7 @@ $external_labels{$key} = "$URL/" . q|node201.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:basicauthentication/;
-$external_labels{$key} = "$URL/" . q|node465.html|; 
+$external_labels{$key} = "$URL/" . q|node467.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:opciones/;
@@ -1003,7 +1003,7 @@ $external_labels{$key} = "$URL/" . q|node306.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:ajax/;
-$external_labels{$key} = "$URL/" . q|node588.html|; 
+$external_labels{$key} = "$URL/" . q|node590.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/susection:marshallinglambdas/;
@@ -1023,7 +1023,7 @@ $external_labels{$key} = "$URL/" . q|node34.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:despliegueenherokurps/;
-$external_labels{$key} = "$URL/" . q|node424.html|; 
+$external_labels{$key} = "$URL/" . q|node426.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:rvmintro1/;
@@ -1043,11 +1043,11 @@ $external_labels{$key} = "$URL/" . q|node261.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/parrafo:travisbundlerargs/;
-$external_labels{$key} = "$URL/" . q|node325.html|; 
+$external_labels{$key} = "$URL/" . q|node327.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:rpsconsessionsypruebas/;
-$external_labels{$key} = "$URL/" . q|node421.html|; 
+$external_labels{$key} = "$URL/" . q|node423.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:delegacion/;
@@ -1055,11 +1055,11 @@ $external_labels{$key} = "$URL/" . q|node208.html|;
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:haml/;
-$external_labels{$key} = "$URL/" . q|node782.html|; 
+$external_labels{$key} = "$URL/" . q|node784.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/rubyenwindows/;
-$external_labels{$key} = "$URL/" . q|node647.html|; 
+$external_labels{$key} = "$URL/" . q|node649.html|; 
 $noresave{$key} = "$nosave";
 
 1;
@@ -1074,7 +1074,7 @@ $external_latex_labels{$key} = q|15.14|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:chat_con_frames/;
-$external_latex_labels{$key} = q|38.11|; 
+$external_latex_labels{$key} = q|38.6.7|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:productodematrices/;
@@ -1178,7 +1178,7 @@ $external_latex_labels{$key} = q|13.8|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:chatutilizandostreaming/;
-$external_latex_labels{$key} = q|38.8|; 
+$external_latex_labels{$key} = q|38.6.3|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:super/;
@@ -1194,7 +1194,7 @@ $external_latex_labels{$key} = q|13.5.8|;
 $noresave{$key} = "$nosave";
 
 $key = q/section:sinatrabasestream/;
-$external_latex_labels{$key} = q|38.16|; 
+$external_latex_labels{$key} = q|38.10|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:bloques/;
@@ -1458,7 +1458,7 @@ $external_latex_labels{$key} = q|13.4.6|;
 $noresave{$key} = "$nosave";
 
 $key = q/figure:sinatrachat/;
-$external_latex_labels{$key} = q|38.11|; 
+$external_latex_labels{$key} = q|38.6.7|; 
 $noresave{$key} = "$nosave";
 
 $key = q/practica:ticatactoe/;
@@ -1542,7 +1542,7 @@ $external_latex_labels{$key} = q|36|;
 $noresave{$key} = "$nosave";
 
 $key = q/practica:chat_con_mensajes_uno_uno/;
-$external_latex_labels{$key} = q|38.10|; 
+$external_latex_labels{$key} = q|38.6.6|; 
 $noresave{$key} = "$nosave";
 
 $key = q/chapter:nodejs/;

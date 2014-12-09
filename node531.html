@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo Simple de uso de DataMapper: Agenda</TITLE>
-<META NAME="description" CONTENT="Ejemplo Simple de uso de DataMapper: Agenda">
+<TITLE>Introducción a Los Object Relational Mappers (ORM)</TITLE>
+<META NAME="description" CONTENT="Introducción a Los Object Relational Mappers (ORM)">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node532.html">
 <LINK REL="previous" HREF="node530.html">
-<LINK REL="up" HREF="node528.html">
+<LINK REL="up" HREF="node530.html">
 <LINK REL="next" HREF="node532.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12517"
+<A NAME="tex2html12555"
   HREF="node532.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12511"
-  HREF="node528.html">
+<A NAME="tex2html12549"
+  HREF="node530.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12505"
+<A NAME="tex2html12543"
   HREF="node530.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12513"
-  HREF="node849.html">
+<A NAME="tex2html12551"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12515"
-  HREF="node852.html">
+<A NAME="tex2html12553"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,391 +92,97 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12518"
-  HREF="node532.html">Ejemplo de Uso de</A>
-<B> Subir:</B> <A NAME="tex2html12512"
-  HREF="node528.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12506"
-  HREF="node530.html">Introducción al Patrón DataMapper</A>
- &nbsp; <B>  <A NAME="tex2html12514"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12516"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12556"
+  HREF="node532.html">Introducción al Patrón DataMapper</A>
+<B> Subir:</B> <A NAME="tex2html12550"
+  HREF="node530.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12544"
+  HREF="node530.html">DataMapper y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12552"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12554"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031630000000000000000">
-Ejemplo Simple de uso de DataMapper: Agenda</A>
+<H1><A NAME="SECTION031610000000000000000">
+Introducción a Los Object Relational Mappers (ORM)</A>
 </H1>
 
-<UL>
-<LI><PRE>
-[~/sinatra/sinatra-datamapper/data_mapper_example_agenda(master)]$ pwd -P
-/Users/casiano/local/src/ruby/STW/data_mapper_example2
-[~/sinatra/sinatra-datamapper/data_mapper_example_agenda(master)]$ git remote -v
-origin  git@github.com:crguezl/datamapper_example.git (fetch)
-origin  git@github.com:crguezl/datamapper_example.git (push)
-</PRE>
-</LI>
-<LI><A NAME="tex2html1301"
-  HREF="https://github.com/crguezl/datamapper_example">Agenda en Sinatra usando DataMapper</A>
-</LI>
-</UL>
+<P>
+What is a Object Relational Mapper?
 
 <P>
-
-<H4><A NAME="SECTION031630010000000000000">
-DataMapper.setup</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-datamapper/data_mapper_example_agenda(master)]$ cat app.rb
-#!/usr/bin/env ruby
-require 'rubygems'
-require 'sinatra'
-require 'haml'
-require 'data_mapper'
-
-# full path!
-DataMapper.setup( :default, "sqlite3://#{Dir.pwd}/agenda.db" )
-</PRE>
+A simple answer is that you wrap your tables or stored procedures
+in classes in your programming language, so that instead of writing
+SQL statements to interact with your database, you use methods and
+properties of objects.
 
 <P>
-We must specify our database connection.
-
-<P>
-We need to make sure to do this before you use our models, 
-i.e. before we actually start accessing the database.
-
-<P>
-
-<H4><A NAME="SECTION031630020000000000000">
-Modelos</A>
-</H4>
-  
+In other words, instead of something like this:
 
 <P>
 <PRE>
-# Define the model
-class Contact
-  include DataMapper::Resource
-
-  property :id, Serial
-  property :firstname, String
-  property :lastname, String
-  property :email, String
-end
+  String sql = "SELECT ... FROM persons WHERE id = 10"
+  DbCommand cmd = new DbCommand(connection, sql);
+  Result res = cmd.Execute();
+  String name = res[0]["FIRST_NAME"];
 </PRE>
-
-<P>
-The <code>Contact</code> model is going to need to be persistent, so we'll
-<code>include DataMapper::Resource</code>. 
-
-<P>
-The convention with model names is to
-use the singular, not plural version.
+you do something like this:
 
 <P>
 <PRE>
-Module: DataMapper::Resource
-
-+ (Object) included(model) private
-</PRE>
-Makes sure a class gets all the methods when it includes Resource.
-
-<P>
-Inside your class, call the <code>property</code> method for each property
-you want to add. The only two required arguments are the <code>name</code>
-and <code>type</code>, everything else is optional.
-
-<P>
-<A NAME="23690"></A><SPAN  CLASS="textbf">Primary keys</SPAN> are not automatically created for you. 
-You MUST configure at least one key property on your
-data-store. 
-
-<P>
-More often than not, you'll want an <A NAME="23692"></A><SPAN  CLASS="textbf">auto-incrementing</SPAN> integer
-as a primary key, so DM has a shortcut:
-
-<P>
-<PRE>
-   property :id, Serial
+  Person p = Person.Get(10);
 </PRE>
 
 <P>
-<PRE>
-(Property) property(name, type, options = {})
-</PRE>
-Defines a Property on the Resource
+or similar code (lots of variations here). 
+The framework is what makes this code possible.
 
 <P>
-See the section
-<A NAME="tex2html1302"
-  HREF="http://datamapper.org/docs/properties.html">Properties</A>
-in datamapper.org.
-
-<P>
-<PRE>
-DataMapper.auto_upgrade!
-</PRE>
+Now, benefits:
 
 <P>
 
 <OL>
-<LI>This tries to make the schema match the model. 
+<LI>First of all, you hide the SQL away from your logic
+code
 </LI>
-<LI>It will <code>CREATE</code>
-new tables, and add columns to existing tables. 
+<LI>This has the benefit of allowing you to more easily support
+more database engines 
 </LI>
-<LI>It won't change any
-existing columns though (say, to add a <code>NOT NULL</code> constraint)
-and it doesn't drop any columns. 
+<LI>For instance, MS SQL Server and Oracle have
+different names on typical functions, and different ways to do
+calculations with dates.
+This difference can be put away from your
+logic code.
 </LI>
-<LI>Both these commands also can be
-used on an individual model (e.g. <code>Song.auto_migrate!</code>)
+<LI>Additionally, you can focus on writing the logic, instead of getting all the SQL right.
 </LI>
-</OL>
-
-<P>
-
-<H4><A NAME="SECTION031630030000000000000">
-Rutas</A>
-</H4>
-  
-
-<PRE>
-# Show list of contacts
-%w{/ /contacts/?}.each do |r|
-  get r do
-    haml :list, :locals =&gt; { :cs =&gt; Contact.all }
-  end
-end
-
-# Show form to create new contact
-get '/contacts/new' do
-  haml :form, :locals =&gt; {
-    :c =&gt; Contact.new,
-    :action =&gt; '/contacts/create'
-  }
-end
-
-# Create new contact
-post '/contacts/create' do
-  c = Contact.new
-  c.attributes = params
-  c.save
-
-  redirect("/contacts/#{c.id}")
-end
-
-# Show form to edit contact
-get '/contacts/:id/edit' do|id|
-  c = Contact.get(id)
-  haml :form, :locals =&gt; {
-    :c =&gt; c,
-    :action =&gt; "/contacts/#{c.id}/update"
-  }
-end
-
-# Show form to find a contact by firstname
-get '/contacts/findform' do
-  haml :findform, :locals =&gt; {
-    :action =&gt; "/contacts/find"
-  }
-end
-
-post '/contacts/find' do
-  puts "params = #{params}"
-  s = params.select { |k,v| v != '' }
-  #s[:order] = [ :lastname.desc]
-  s[:order] = [ :lastname.asc]
-  puts "selected #{s}"
-  cs = Contact.all(s)
-  puts cs
-  haml :list, :locals =&gt; { :cs =&gt; cs }
-end
-#
-# Edit a contact
-post '/contacts/:id/update' do|id|
-  puts "en /contacts/:id/update: params = #{params} id = #{id}"
-  c = Contact.get(id)
-  puts c.inspect
-  
-  puts "Fail while recording #{c}" unless c.update(
-      :firstname =&gt; params[:firstname], 
-      :lastname  =&gt; params[:lastname], 
-      :email     =&gt; params[:email])
-
-  redirect "/contacts/#{id}"
-end
-
-# Delete a contact
-post '/contacts/:id/destroy' do|id|
-  c = Contact.get(id)
-  c.destroy
-
-  redirect "/contacts/"
-end
-
-# View a contact
-# TODO: Put at bottom?
-get '/contacts/:id' do|id|
-  c = Contact.get(id)
-  haml :show, :locals =&gt; { :c =&gt; c }
-end
-
-__END__
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031630040000000000000">
-Vistas</A>
-</H4>
-  
-
-<P>
-<PRE>
-__END__
-@@ layout
-%html
-  %head
-    %title Agenda
-  %body
-    = yield
-    %a(href="/contacts/") Contact List
-    %a(href="/contacts/findform") Find Contact
-
-@@form
-%h1 Create a new contact
-%form(action="#{action}" method="POST")
-  %label(for="firstname") First Name
-  %input(type="text" name="firstname" value="#{c.firstname}")
-  %br
-
-  %label(for="lastname") Last Name
-  %input(type="text" name="lastname" value="#{c.lastname}")
-  %br
-
-  %label(for="email") Email
-  %input(type="text" name="email" value="#{c.email}")
-  %br
-
-  %input(type="submit")
-  %input(type="reset")
-  %br
-
-- unless c.id == 0
-  %form(action="/contacts/#{c.id}/destroy" method="POST")
-    %input(type="submit" value="Destroy")
-  
-@@show
-%table
-  %tr
-    %td First Name
-    %td= c.firstname
-  %tr
-    %td Last Name
-    %td= c.lastname
-  %tr
-    %td Email
-    %td= c.email
-%a(href="/contacts/#{c.id}/edit") Edit Contact
-
-@@list
-%h1 Contacts
-%a(href="/contacts/new") New Contact
-%table
-  - cs.each do|c|
-    %tr
-      %td= c.firstname
-      %td= c.lastname
-      %td= c.email
-      %td
-        %a(href="/contacts/#{c.id}") Show
-      %td
-        %a(href="/contacts/#{c.id}/edit") Edit
-
-@@findform
-%h1 Find a contact for firstname
-%form(action="#{action}" method="POST")
-  %label(for="firstname") First Name
-  %input(type="text" name="firstname" value="")
-  %br
-
-  %label(for="lastname") Last Name
-  %input(type="text" name="lastname" value="")
-  %br
-
-  %label(for="email") Email
-  %input(type="text" name="email" value="")
-  %br
-
-  %input(type="submit")
-  %input(type="reset")
-  %br
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION031630050000000000000">
-Enlaces</A>
-</H4>
-  
-
-<OL>
-<LI><A NAME="tex2html1303"
-  HREF="http://rubydoc.info/github/datamapper/dm-core/">Documentación del módulo DataMapper</A>
-en RubyDoc
-</LI>
-<LI><A NAME="tex2html1304"
-  HREF="https://github.com/crguezl/datamapper_example">https://github.com/crguezl/datamapper_example</A>
-</LI>
-<LI><A NAME="tex2html1305"
-  HREF="https://github.com/crguezl/datamapper-intro">https://github.com/crguezl/datamapper-intro</A>
-<P>
+<LI>The code will typically be more readable as well, since it doesn't
+contain all the plumbing necessary to talk to the database.
 </LI>
 </OL>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html12519"
-  HREF="node531.html#SECTION031630010000000000000">DataMapper.setup</A>
-<LI><A NAME="tex2html12520"
-  HREF="node531.html#SECTION031630020000000000000">Modelos</A>
-<LI><A NAME="tex2html12521"
-  HREF="node531.html#SECTION031630030000000000000">Rutas</A>
-<LI><A NAME="tex2html12522"
-  HREF="node531.html#SECTION031630040000000000000">Vistas</A>
-<LI><A NAME="tex2html12523"
-  HREF="node531.html#SECTION031630050000000000000">Enlaces</A>
-</UL></UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12517"
+<A NAME="tex2html12555"
   HREF="node532.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12511"
-  HREF="node528.html">
+<A NAME="tex2html12549"
+  HREF="node530.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12505"
+<A NAME="tex2html12543"
   HREF="node530.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12513"
-  HREF="node849.html">
+<A NAME="tex2html12551"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12515"
-  HREF="node852.html">
+<A NAME="tex2html12553"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -527,20 +233,20 @@ en RubyDoc
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12518"
-  HREF="node532.html">Ejemplo de Uso de</A>
-<B> Subir:</B> <A NAME="tex2html12512"
-  HREF="node528.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12506"
-  HREF="node530.html">Introducción al Patrón DataMapper</A>
- &nbsp; <B>  <A NAME="tex2html12514"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12516"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12556"
+  HREF="node532.html">Introducción al Patrón DataMapper</A>
+<B> Subir:</B> <A NAME="tex2html12550"
+  HREF="node530.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12544"
+  HREF="node530.html">DataMapper y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12552"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12554"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

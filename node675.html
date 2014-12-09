@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Agentes SSH</TITLE>
-<META NAME="description" CONTENT="Agentes SSH">
+<TITLE>El fichero authorized_keys</TITLE>
+<META NAME="description" CONTENT="El fichero authorized_keys">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node676.html">
 <LINK REL="previous" HREF="node674.html">
-<LINK REL="up" HREF="node669.html">
+<LINK REL="up" HREF="node671.html">
 <LINK REL="next" HREF="node676.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15066"
+<A NAME="tex2html15103"
   HREF="node676.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15060"
-  HREF="node669.html">
+<A NAME="tex2html15097"
+  HREF="node671.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15054"
+<A NAME="tex2html15091"
   HREF="node674.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15062"
-  HREF="node849.html">
+<A NAME="tex2html15099"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15064"
-  HREF="node852.html">
+<A NAME="tex2html15101"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,269 +92,204 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15067"
-  HREF="node676.html">Mejor un Sólo Agente</A>
-<B> Subir:</B> <A NAME="tex2html15061"
-  HREF="node669.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html15055"
-  HREF="node674.html">Deshabilitar la Asignación de</A>
- &nbsp; <B>  <A NAME="tex2html15063"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15065"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15104"
+  HREF="node676.html">Deshabilitar la Asignación de</A>
+<B> Subir:</B> <A NAME="tex2html15098"
+  HREF="node671.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html15092"
+  HREF="node674.html">Claves Pública y Privada:</A>
+ &nbsp; <B>  <A NAME="tex2html15100"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15102"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06560000000000000000">
-Agentes SSH</A>
+<H1><A NAME="SECTION06540000000000000000"></A>
+<A NAME="subsection:authorizedkeys"></A>
+<BR>
+El fichero <TT>authorized_keys</TT>
 </H1>
 
 <P>
-Un agente SSH es un programa que guarda de forma segura 
-las frases-clave asociadas con las claves privadas y responde a consultas 
-autentificadas de los clientes SSH.
-El agente recuerda la passphrase de manera que el usuario 
-no tenga que teclearla cada vez que la clave es usada.
-
-<P>
-El agente crea un socket en un subdirectorio de <code>/tmp</code> 
-en el que escucha las peticiones de conexión SSH.
-Cualquiera que tenga acceso a dicho socket puede acceder al agente. Los permisos
-unix para el socket son suficientemente restrictivos.
-
-<P>
-Los programas que se usan son  <TT>ssh-agent</TT>  y  <TT>ssh-add</TT> . 
-Utilizamos <A NAME="tex2html1576"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
-para añadir claves privadas a la cache del agente
-ssh. A partir de ese momento el cliente ssh no nos importunará
-solicitando la passphrase, comúnicandose con el agente 
-para superar el proceso de autentificación.
-El agente <code>ssh-agent</code> actúa como un daemon que permanece dando el
-servicio de autentificación a los clientes SSH.
+Cada línea del fichero SSH1  <TT>authorized_keys</TT>  
+(habitualmente en <code>~/.ssh/authorized_keys</code>) 
+contiene una clave pública. Tiene el siguiente formato:
+Cada entrada va en una sóla línea. Los campos se separan por comas.
+Las líneas en blanco y las que empiezan por <code>#</code> se ignoran.
 
 <P>
 
-<H4><A NAME="SECTION06560010000000000000">
-ssh-add</A>
-</H4>
-  
+<UL>
+<LI>Primero van las opciones, separadas por comas, por ejemplo:
 
-<P>
-El programa
-<code>ssh-add</code> permite añadir, listar y suprimir claves de la cache del agente:
-
-<P>
-<PRE>
-someone@localhost:~/.ssh$ ssh-add ~/.ssh/conpass
-Enter passphrase for /home/someone/.ssh/conpass: **********
-Identity added: /home/someone/.ssh/conpass (/home/someone/.ssh/conpass)
-someone@localhost:~/.ssh$ ssh-add -l
-2048 da:13:....:ee /home/someone/.ssh/conpass (RSA)
-</PRE>
-Una vez establecida la clave en el agente es posible conectarse sin necesidad
-de proporcionar la frase clave:
-
-<P>
-<PRE>
-someone@localhost:~/.kde/shutdown$ ssh remote.machine
-Linux remote.machine 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-Last login: Tue Mar 11 14:03:59 2008 from localhost.deioc.ull.es
-user@remote.machine:~$
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06560020000000000000">
-Arrancando un Agente SSH</A>
-</H4>
-  
-
-<P>
-Para arrancar el agente SSH se ejecuta el comando:
-<PRE>
-eval `ssh-agent`
-</PRE>
-Esto se hace asi porque el resultado retornado por <code>ssh-agent</code>
-es una cadena conteniendo un script <A NAME="tex2html1577"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?bash"><TT>bash</TT></A>. Este guión establece las variables de 
-entorno necesarias para que las futuras llamadas a clientes SSH 
-puedan encontrar al agente. Observe el resultado de una ejecución sin <code>eval</code> ni backticks:
-<PRE>
-$ ssh-agent
-SSH_AUTH_SOCK=/tmp/ssh-jaDVTd5583/agent.5583; export SSH_AUTH_SOCK;
-SSH_AGENT_PID=5584; export SSH_AGENT_PID;
-echo Agent pid 5584;
-</PRE>
-
-<P>
-La variable <code>SSH_AUTH_SOCK</code> contiene el camino al socket de dominio UNIX que será 
-utilizado por los clientes <code>ssh</code>, <code>scp</code>, etc. para comunicarse 
-con el agente.
-
-<P>
-El pid proporcionado en <code>SSH_AGENT_PID</code> nos permite eliminar al agente mediante <code>kill</code>. 
-Sin embargo una llamada a <code>kill</code> no elimina 
-las variables de entorno establecidas.
-La forma correcta de terminar el agente es usando la opción <code>-k</code>
-de <code>ssh-agent</code>:
-<PRE>
-pp2@localhost:~/Lbook$ eval `ssh-agent`
-Agent pid 5606
-pp2@localhost:~/Lbook$ env | grep -i ssh
-SSH_AGENT_PID=5606
-SSH_AUTH_SOCK=/tmp/ssh-ALUJyJ5605/agent.5605
-CVS_RSH=/usr/bin/ssh
-pp2@localhost:~/Lbook$ eval `ssh-agent -k`
-Agent pid 5606 killed
-pp2@localhost:~/Lbook$ env | grep -i ssh
-CVS_RSH=/usr/bin/ssh
-pp2@localhost:~/Lbook$
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06560030000000000000">
-El Protocolo</A>
-</H4>
-  
-
-<P>
-
-<OL>
-<LI>El usuario escribe el comando que da lugar a la conexión inicial y especifica el username asi como 
-la petición de usar una clave. El programa cliente envía el username y la petición de uso
-de  la clave.
-
-<P>
-</LI>
-<LI>El demonio de SSH mira en el fichero <code>authorized_keys</code> y
-construye un reto basado en esa clave y lo envía al cliente.
-
-<P>
-</LI>
-<LI>El cliente recibe el reto asociado con la clave y lo redirige al
-agente. Supongamos que la clave fué previamente cargada con <A NAME="tex2html1578"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh-add"><TT>ssh-add</TT></A>
-<P>
-</LI>
-<LI>El agente construye la respuesta y la devuelve al proceso <A NAME="tex2html1579"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
-el cual la envía al proceso <A NAME="tex2html1580"
+<UL>
+<LI><code>from="pattern-list"</code>
+El servidor <A NAME="tex2html1571"
   HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
-que escucha en el otro extremo.
-El cliente <A NAME="tex2html1581"
+puede limitar que máquinas pueden conectarse a la máquina usando wrappers TCP, pero 
+no a nivel de usuario. Utilizando esta opción es posible limitar las conexiones para una identidad a un conjunto especifico
+de máquinas. Los hosts se separan por comas y pueden contener comodines como <code>*</code> y <code>?</code>. Se pueden 
+rechazar hosts específicos prefijándolos con <code>!</code>. Por ejemplo:
+
+<P>
+<PRE>
+      from="!enemy.my_isp.net,*.my_isp.net,home.example.com"
+</PRE>
+
+<P>
+</LI>
+<LI><code>command="command"</code>
+</LI>
+<LI><code>environment="NAME=value"</code>
+Se usa si se quiere tener un entorno específico cuando se usa esta clave. Por ejemplo 
+podemos poner un <code>$PATH</code> restrictivo para que no pueda ejecutar ciertos comandos,
+cambiar <code>$HOME</code>, etc. 
+
+<P>
+Si se tiene varias personas accediendo via diferentes identidades a la misma cuenta - 
+usando tal vez un comando forzado - puede
+ser útil establecer la variable <code>$LOGNAME</code> de manera que identifique quién se conecta.
+</LI>
+<LI><code>nopty</code>
+</LI>
+</UL>
+Este campo es opcional. Su presencia se detecta 
+viendo si la línea comienza por un número o no
+</LI>
+<LI>La clave pública: bits, exponente y módulo
+</LI>
+<LI>Un comentario (<code>user@machine.domain.es</code> en el ejemplo que sigue)
+</LI>
+</UL>
+
+<P>
+Sigue un ejemplo. Primero generemos una pareja especial para esto:
+
+<P>
+<PRE>
+$ ssh-keygen -tdsa -C 'limited command to millo' -P '' -f ~/.ssh/limited_command
+$ ssh-copy-id -i ~/.ssh/limited_command.pub millo
+</PRE>
+Ahora podemos entrar a la máquina usando esa pareja con:
+<PRE>
+$ ssh -i ~/.ssh/limited_command millo
+Last login: Mon Apr 20 09:05:11 2009 from 192.168.100.242
+millo:~$ vi ~/.ssh/authorized_keys
+millo:~$
+</PRE>
+Editamos el fichero <code>~/.ssh/authorized_keys</code> y añadimos la opción comando
+<PRE>
+17 # Prueba de comando limitado
+18 command="ls" ssh-dss AAAAB3NzaC1kc3...= limited command to millo
+</PRE>
+
+<P>
+La presencia de la opción <code>command</code> permite dar acceso a nuestra cuenta a usuarios
+restringiendo el uso de los comandos que pueden utilizar.
+<PRE>
+tonga:~/.ssh$ ssh -i ~/.ssh/limited_command millo
+ADVENS_OF_SHERLOCK.html  cshrc       Imágenes  LSimple-Scope     
+asignas                  Desktop     LEyapp    machines.sample  
+autosave                 doc         Llhp      Makefile.PL     
+bidirwithnamedpipes.pl   Documentos  LPLdoc    Música         
+bin                      exrc        LPLsrc    myprofile     
+cat                      help        LPL-Tutu  Net-ParSCP.tar.gz 
+Connection to millo closed.
+</PRE>
+
+<P>
+Es posible obtener los argumentos escritos en la línea de comandos de la llamada 
+al cliente
+consultando la variable de entorno <code>SSH_ORIGINAL_COMMAND</code>.
+Existen otras variables de entorno que están definidas cuando
+se ejecuta una conexión (véase la sección <code>ENVIRONMENT</code> en la 
+página del manual de <A NAME="tex2html1572"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>)
+Para ilustrar el punto usaremos el siguiente programa 
+como comando forzado:
+<PRE>
+$ cat -n get_ssh_env
+ 1  #!/usr/bin/perl -w
+ 2  use strict;
+ 3
+ 4  my @keys = qw{
+ 5         SSH_ORIGINAL_COMMAND
+ 6         SSH_CONNECTION
+ 7         SSH_AUTH_SOCK
+ 8         SSH_TTY
+ 9         DISPLAY
+10         HOME
+11         LOGNAME
+12         MAIL PATH TZ USER
+13      };
+14  my ($args, $con, $sock, $tty,
+15      $display, $home, $logname, $mail, $path, $tz, $user
+16     ) = map { $ENV{$_} || '' } @keys;
+17
+18  print &lt;&lt; "INFO";
+19  args=&lt;$args&gt;
+20  con=&lt;$con&gt;
+21  sock=&lt;$sock&gt;
+22  tty=&lt;$tty&gt;
+23  display=&lt;$display&gt;
+24  home=&lt;$home&gt;
+25  logname=&lt;$logname&gt;
+26  mail=&lt;$mail&gt;
+27  path=&lt;$path&gt;
+28  tz=&lt;$tz&gt;
+29  user=&lt;$user&gt;
+30  INFO
+</PRE>
+Cuando se fuerza en <code>authorized_keys</code> y se ejecuta la conexión
+se obtiene:
+
+<P>
+<PRE>
+casiano@tonga:~$ ssh -i ~/.ssh/show_arguments millo chum cham chim
+args=&lt;chum cham chim&gt;
+con=&lt;XXX.XXX.XXX.XXX 55286 XXX.XXX.XXX.XXX 22&gt;
+sock=&lt;&gt;
+tty=&lt;&gt;
+display=&lt;localhost:11.0&gt;
+home=&lt;/home/casiano&gt;
+logname=&lt;casiano&gt;
+mail=&lt;/var/mail/casiano&gt;
+path=&lt;/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/soft/perl5lib/bin:/home/casiano/bin&gt;
+tz=&lt;&gt;
+user=&lt;casiano&gt;
+</PRE>
+
+<P>
+Si el administrador tiene configurada la opción <code>PermitUserEnvironment</code> de <A NAME="tex2html1573"
+  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd_config"><TT>sshd_config</TT></A>
+a <code>yes</code> (el valor por defecto es <code>no</code>), <A NAME="tex2html1574"
   HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh"><TT>ssh</TT></A>
-nunca ve la clave privada, lo que ve 
-es la respuesta. 
-
-<P>
-</LI>
-<LI>El servidor <A NAME="tex2html1582"
-  HREF="http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd"><TT>sshd</TT></A>
-valida la respuesta. Si es correcta permite 
-el acceso al sistema.
-
-<P>
-</LI>
-</OL>
-
-<P>
-<P>
-<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">6</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
-<I>Establezca claves con passphrase, instale un agente ssh y compruebe su buen
-funcionamiento.</I></DIV><P></P>
+leerá el fichero <code>~/.ssh/environment</code> (si existe)
+añadiendo al entorno líneas con el formato <code>VARNAME=value</code>.
 
 <P>
 
-<H4><A NAME="SECTION06560040000000000000">
-Bloqueando el acceso a un Agente</A>
-</H4>
-  
-
-<P>
-Es posible cerrar el acceso al agente usando la opción <code>-x</code> de <A NAME="tex2html1583"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
-<PRE>
-pp2@europa:~$ ssh-add -x
-Enter lock password:
-Again:
-Agent locked.
-pp2@europa:~$ ssh orion
-Enter passphrase for key '/home/pp2/.ssh/id_dsa': ********
-Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-Last login: Mon Apr 27 13:29:32 2009 from europa.deioc.ull.es
-casiano@orion:~$
-</PRE>
-
-<P>
-Para abrir el acceso al agente usaremos la opción <code>-X</code> de <A NAME="tex2html1584"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>:
-<PRE>
-pp2@europa:~$ ssh-add -X
-Enter lock password: ****************
-Agent unlocked.
-pp2@europa:~$
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06560050000000000000">
-Poniendo Fecha de Caducidad</A>
-</H4>
-  
-
-<P>
-La opción <code>-t lifetime</code> de <A NAME="tex2html1585"
-  HREF="http://manpages.debian.net/cgi-bin/man.cgi?query=ssh-add"><TT>ssh-add</TT></A>
-puede ser utilizada para 
-limitar el tiempo de caducidad de las identidades en un agente. El tiempo
-se expresará en segundos o bien de la forma <code>time[qualifier]</code>, donde
-<code>time</code> es un entero positivo y <code>qualifier</code> es:
-
-<P>
-<PRE>
-           nada    segundos
-           s | S   segundos
-           m | M   minutos
-           h | H   horas
-           d | D   dias
-           w | W   semanas
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06560060000000000000">
-Véase también</A>
+<H4><A NAME="SECTION06540010000000000000">
+Véase También</A>
 </H4>
   
 
 <P>
 
 <UL>
-<LI>Wikipedia <A NAME="tex2html1586"
-  HREF="http://en.wikipedia.org/wiki/Ssh-agent">Ssh-agent</A>
+<LI><A NAME="tex2html1575"
+  HREF="http://www.jms1.net/ssh.shtml">http://www.jms1.net/ssh.shtml</A>
 </LI>
-<LI><A NAME="tex2html1587"
-  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+<LI><A NAME="tex2html1576"
+  HREF="http://troy.jdmz.net/rsync/index.html">http://troy.jdmz.net/rsync/index.html</A>
 </LI>
-<LI><A NAME="tex2html1588"
-  HREF="http://mah.everybody.org/docs/ssh">Using ssh-agent with ssh</A>
+<LI><A NAME="tex2html1577"
+  HREF="http://www.hackinglinuxexposed.com/articles/20030109.html">http://www.hackinglinuxexposed.com/articles/20030109.html</A>
+</LI>
+<LI><A NAME="tex2html1578"
+  HREF="http://www.snailbook.com/faq/restricted-scp.auto.html">http://www.snailbook.com/faq/restricted-scp.auto.html</A>)
 </LI>
 </UL>
 
@@ -366,37 +301,27 @@ Véase también</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html15068"
-  HREF="node675.html#SECTION06560010000000000000">ssh-add</A>
-<LI><A NAME="tex2html15069"
-  HREF="node675.html#SECTION06560020000000000000">Arrancando un Agente SSH</A>
-<LI><A NAME="tex2html15070"
-  HREF="node675.html#SECTION06560030000000000000">El Protocolo</A>
-<LI><A NAME="tex2html15071"
-  HREF="node675.html#SECTION06560040000000000000">Bloqueando el acceso a un Agente</A>
-<LI><A NAME="tex2html15072"
-  HREF="node675.html#SECTION06560050000000000000">Poniendo Fecha de Caducidad</A>
-<LI><A NAME="tex2html15073"
-  HREF="node675.html#SECTION06560060000000000000">Véase también</A>
+<LI><A NAME="tex2html15105"
+  HREF="node675.html#SECTION06540010000000000000">Véase También</A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15066"
+<A NAME="tex2html15103"
   HREF="node676.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15060"
-  HREF="node669.html">
+<A NAME="tex2html15097"
+  HREF="node671.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15054"
+<A NAME="tex2html15091"
   HREF="node674.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15062"
-  HREF="node849.html">
+<A NAME="tex2html15099"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15064"
-  HREF="node852.html">
+<A NAME="tex2html15101"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -447,20 +372,20 @@ Véase también</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15067"
-  HREF="node676.html">Mejor un Sólo Agente</A>
-<B> Subir:</B> <A NAME="tex2html15061"
-  HREF="node669.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html15055"
-  HREF="node674.html">Deshabilitar la Asignación de</A>
- &nbsp; <B>  <A NAME="tex2html15063"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15065"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15104"
+  HREF="node676.html">Deshabilitar la Asignación de</A>
+<B> Subir:</B> <A NAME="tex2html15098"
+  HREF="node671.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html15092"
+  HREF="node674.html">Claves Pública y Privada:</A>
+ &nbsp; <B>  <A NAME="tex2html15100"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15102"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

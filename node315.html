@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Capybara y Rack::Test</TITLE>
-<META NAME="description" CONTENT="Capybara y Rack::Test">
+<TITLE>Poltergeist</TITLE>
+<META NAME="description" CONTENT="Poltergeist">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node318.html">
-<LINK REL="previous" HREF="node313.html">
-<LINK REL="up" HREF="node308.html">
+<LINK REL="previous" HREF="node314.html">
+<LINK REL="up" HREF="node314.html">
 <LINK REL="next" HREF="node316.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8541"
+<A NAME="tex2html8564"
   HREF="node316.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8535"
-  HREF="node308.html">
+<A NAME="tex2html8558"
+  HREF="node314.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8529"
+<A NAME="tex2html8554"
   HREF="node314.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8537"
-  HREF="node849.html">
+<A NAME="tex2html8560"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8539"
-  HREF="node852.html">
+<A NAME="tex2html8562"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,191 +91,94 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8542"
-  HREF="node316.html">Testeando una Aplicación Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html8536"
-  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
-<B> Anterior:</B> <A NAME="tex2html8530"
-  HREF="node314.html">Poltergeist</A>
- &nbsp; <B>  <A NAME="tex2html8538"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8540"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8565"
+  HREF="node316.html">Capybara y Rack::Test</A>
+<B> Subir:</B> <A NAME="tex2html8559"
+  HREF="node314.html">Ejemplo de uso de</A>
+<B> Anterior:</B> <A NAME="tex2html8555"
+  HREF="node314.html">Ejemplo de uso de</A>
+ &nbsp; <B>  <A NAME="tex2html8561"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8563"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021140000000000000000">
-Capybara y Rack::Test</A>
-</H1>
+<H2><A NAME="SECTION021131000000000000000">
+Poltergeist</A>
+</H2>
+Poltergeist es un driver para Capybara. 
 
 <P>
-Rack::Test es una librería que implementa el protocolo Rack
-y que hace posible testear la pila completa de nuestra aplicación
-sin que tengamos que pagar la latencia de las comunicaciones HTTP
-ni el uso de navegadores reales.
-
-<P>
-Podemos usar su API para enviar una solicitud/request a nuestra aplicación.
-
-<P>
-Cuando nuestra aplicación responda, Rack::Test procesa la respuesta y nos permite
-cuestionarla.
-
-<P>
-Puede hacerlo porque implementa el protocolo Rack.
-La forma en la que lo hace es construyendo el hash de request y pasandolo a la aplicación
-tal y como la haría un servidor web, interpretando el hash de respuesta y 
-dejandonoslo disponible via su API.
-
-<P>
-Veamos un ejemplo de una aplicación que usa Rack::Test pero no Capybara para
-testear una sencilla aplicación Rack del tipo 
-
-<FONT COLOR="#0000ff"> Hello World</FONT> (Véase
+Nos permite ejecutar pruebas Capybara con un navegador 
 <A NAME="tex2html659"
-  HREF="https://github.com/crguezl/application_testing_with_capybara">https://github.com/crguezl/application_testing_with_capybara</A>):
+  HREF="https://www.webkit.org/">WebKit </A><A NAME="tex2html658"
+  HREF="footnode.html#foot13286"><SUP><SPAN CLASS="arabic">18</SPAN>.<SPAN CLASS="arabic">1</SPAN></SUP></A>headless, 
+basado en PhantomJS.
 
 <P>
+Es posible ejectuar las pruebas del ejemplo anterior usando PhantomJS
+via Poltergeist cambiando el fichero 
+<code>features/support/env.rb</code>:
 <PRE>
-[~/application_testing_with_capybara/sinatra(master)]$ pwd -P
-/Users/casiano/local/src/ruby/testing_with_capybara/application_testing_with_capybara/sinatra
-[~/application_testing_with_capybara/sinatra(master)]$ cat test.rb 
-require 'bundler/setup'
-require 'rack'
-require "rack/test"
-require 'test/unit'
+[~/sinatra/sinatra-capybara/youtube(poltergeist)]$ cat features/support/env.rb 
+require 'capybara/cucumber'
+require 'capybara/poltergeist'
 
-class HelloWorld
-  def response
-    [200, {'Content-Length' =&gt; '11'}, ['Hello World']]
-  end
+#Capybara.default_driver = :selenium
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app, :js_errors =&gt; false)
 end
-
-class HelloWorldApp
-  def self.call(env)
-    HelloWorld.new.response
-  end
-end
-
-
-class HelloWorldAppTest &lt; Test::Unit::TestCase
-  include Rack::Test::Methods
-
-  def app
-    HelloWorldApp
-  end
-
-  def test_redirect_logged_in_users_to_dashboard
-    get "/"
-
-    assert last_response.ok?
-    assert_equal last_response.body, 'Hello World'
-  end
-
-end
+Capybara.default_driver = :poltergeist
+#Capybara.javascript_driver = :webkit
 </PRE>
 
 <P>
-Una vez instaladas las dependencias podemos ejecutar las pruebas:
+Es necesario poner el atributo <code>:js_errors =&gt; false</code> para evitar
+que los errores que se producen en JavaScript se propagen al código Ruby
+y causen que las pruebas se detengan.
+
+<P>
+Sigue una ejecución:
 <PRE>
-[~/application_testing_with_capybara/sinatra(master)]$ ruby test.rb 
-Run options: 
+[~/sinatra/sinatra-capybara/youtube(poltergeist)]$ rake
+cucumber
+Feature: Search for Videos on YouTube
 
-# Running tests:
+  Scenario: Search for Videos of Large Rodents # features/youtube_search.feature:3
+Refused to display document because display forbidden by X-Frame-Options.
 
-Finished tests in 0.028666s, 34.8845 tests/s, 69.7691 assertions/s.                
-1 tests, 2 assertions, 0 failures, 0 errors, 0 skips
+    Given I am on the YouTube home page        # features/step_defs/steps.rb:1
+Unsafe JavaScript attempt to access frame with URL about:blank from frame with URL file:///Users/casiano/.rvm/gems/ruby-2.1.2/gems/poltergeist-1.5.1/lib/capybara/poltergeist/client/compiled/main.js. Domains, protocols and ports must match.
 
-ruby -v: ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-darwin13.0]
+    When I search for "capybara"               # features/step_defs/steps.rb:5
+    Then videos of large rodents are returned  # features/step_defs/steps.rb:10
+      #&lt;Capybara::Session&gt;
+
+1 scenario (1 passed)
+3 steps (3 passed)
+0m6.230s
 </PRE>
 
 <P>
-Aqui no ha habido ninguna comunicación externa, todo ocurre via software.
-
-<P>
-Rack::Test no tiene una  API para hacer click en los elementos,
-poner radio buttons, manejar forms, etc.
-
-<P>
-De lo que se ocupa es de relizar la transacción Rack imitando al servidor web.
-
-<P>
-Para que sirva de ejemplo, este es el 
-código del driver Capybara que traduce el evento
-click 
-(<A NAME="tex2html660"
-  HREF="https://github.com/jnicklas/capybara/blob/304e2fbfe1e54702eb65f2a3feda1c7b9b99ff36/lib/capybara/rack_test/node.rb">fichero capybara/rack_test/node.rb</A>)
-para que sea procesado por Rack::Test:
-
-<P>
-<PRE>
-  def click
-    if tag_name == 'a' &amp;&amp; !self[:href].nil?
-      method = self["data-method"] if driver.options[:respect_data_method]
-      method ||= :get
-      driver.follow(method, self[:href].to_s)
-    elsif (tag_name == 'input' and %w(submit image).include?(type)) or
-        ((tag_name == 'button') and type.nil? or type == "submit")
-      associated_form = form
-      Capybara::RackTest::Form.new(driver, associated_form).submit(self) if associated_form
-    end
-  end
-</PRE>
-
-<P>
-Capybara determina el tipo de elemento que esta siendo clickeado y después calcula
-si Rack::Test debe seguir el enlace o submitir el formulario.
-
-<P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html8543"
-  HREF="node316.html">Testeando una Aplicación Sinatra</A>
-<UL>
-<LI><A NAME="tex2html8544"
-  HREF="node316.html#SECTION021141010000000000000">app.rb</A>
-<LI><A NAME="tex2html8545"
-  HREF="node316.html#SECTION021141020000000000000">Entrada</A>
-<LI><A NAME="tex2html8546"
-  HREF="node316.html#SECTION021141030000000000000">Plantilla para el Formulario. Template: form.erb</A>
-<LI><A NAME="tex2html8547"
-  HREF="node316.html#SECTION021141040000000000000">Plantilla/Template con los resultados: result.erb</A>
-<LI><A NAME="tex2html8548"
-  HREF="node316.html#SECTION021141050000000000000">Salida</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html8549"
-  HREF="node317.html">Testing con Rack::Test y Cucumber</A>
-<UL>
-<LI><A NAME="tex2html8550"
-  HREF="node317.html#SECTION021142010000000000000">Rakefile</A>
-<LI><A NAME="tex2html8551"
-  HREF="node317.html#SECTION021142020000000000000">Ejecución de las Pruebas</A>
-<LI><A NAME="tex2html8552"
-  HREF="node317.html#SECTION021142030000000000000">Desventajas de usar Rack::Test</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8541"
+<A NAME="tex2html8564"
   HREF="node316.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8535"
-  HREF="node308.html">
+<A NAME="tex2html8558"
+  HREF="node314.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8529"
+<A NAME="tex2html8554"
   HREF="node314.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8537"
-  HREF="node849.html">
+<A NAME="tex2html8560"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8539"
-  HREF="node852.html">
+<A NAME="tex2html8562"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -327,20 +229,20 @@ si Rack::Test debe seguir el enlace o submitir el formulario.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8542"
-  HREF="node316.html">Testeando una Aplicación Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html8536"
-  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
-<B> Anterior:</B> <A NAME="tex2html8530"
-  HREF="node314.html">Poltergeist</A>
- &nbsp; <B>  <A NAME="tex2html8538"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8540"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8565"
+  HREF="node316.html">Capybara y Rack::Test</A>
+<B> Subir:</B> <A NAME="tex2html8559"
+  HREF="node314.html">Ejemplo de uso de</A>
+<B> Anterior:</B> <A NAME="tex2html8555"
+  HREF="node314.html">Ejemplo de uso de</A>
+ &nbsp; <B>  <A NAME="tex2html8561"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8563"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

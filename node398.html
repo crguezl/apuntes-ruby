@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo Simple Combinando Rack::Request, Rack::Response y Middleware (Lobster)</TITLE>
-<META NAME="description" CONTENT="Ejemplo Simple Combinando Rack::Request, Rack::Response y Middleware (Lobster)">
+<TITLE>Gestión de Sesiones</TITLE>
+<META NAME="description" CONTENT="Gestión de Sesiones">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node399.html">
-<LINK REL="previous" HREF="node396.html">
-<LINK REL="up" HREF="node376.html">
+<LINK REL="next" HREF="node400.html">
+<LINK REL="previous" HREF="node397.html">
+<LINK REL="up" HREF="node378.html">
 <LINK REL="next" HREF="node399.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10254"
+<A NAME="tex2html10278"
   HREF="node399.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10248"
-  HREF="node376.html">
+<A NAME="tex2html10272"
+  HREF="node378.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10242"
+<A NAME="tex2html10266"
   HREF="node397.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10250"
-  HREF="node849.html">
+<A NAME="tex2html10274"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10252"
-  HREF="node852.html">
+<A NAME="tex2html10276"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,225 +92,278 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10255"
-  HREF="node399.html">Práctica: Accediendo a Twitter</A>
-<B> Subir:</B> <A NAME="tex2html10249"
-  HREF="node376.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10243"
-  HREF="node397.html">Ejercicio: Race Conditions. Concurrencia</A>
- &nbsp; <B>  <A NAME="tex2html10251"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10253"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10279"
+  HREF="node399.html">Ejercicio: Race Conditions. Concurrencia</A>
+<B> Subir:</B> <A NAME="tex2html10273"
+  HREF="node378.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10267"
+  HREF="node397.html">Cookies y Rack</A>
+ &nbsp; <B>  <A NAME="tex2html10275"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10277"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031100000000000000000">
-Ejemplo Simple Combinando Rack::Request, Rack::Response y Middleware (Lobster)</A>
+<H1><A NAME="SECTION03190000000000000000"></A>
+<A NAME="section:gestiondesesiones"></A>
+<BR>
+Gestión de Sesiones
 </H1>
 
 <P>
-Este código se encuentra en
-<A NAME="tex2html921"
-  HREF="https://github.com/crguezl/rack-lobster">https://github.com/crguezl/rack-lobster</A>
-<P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ cat lobster.rb 
-require 'rack/request'
-require 'rack/response'
 
-module Rack
-  class Lobster
-    LobsterString = "a lobster"
-
-    def call(env)
-      req = Request.new(env)
-
-      req.env.keys.sort.each { |x| puts "#{x} =&gt; #{req.env[x]}" }
-
-      if req.GET["flip"] == "left"
-        lobster = LobsterString.reverse
-        href = "?flip=right"
-      elsif req.GET["flip"] == "crash"
-        raise "Lobster crashed"
-      else
-        lobster = LobsterString
-        href = "?flip=left"
-      end
-
-      res = Response.new
-      res.write &lt;&lt;-"EOS"
-      &lt;title&gt;Lobstericious!&lt;/title&gt;
-      &lt;pre&gt;
-      #{lobster}
-      &lt;/pre&gt;
-      &lt;p&gt;&lt;a href='#{href}'&gt;flip!&lt;/a&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;a href='?flip=crash'&gt;crash!&lt;/a&gt;&lt;/p&gt;
-      EOS
-      res.finish
-    end
-  end
-end
-
-if $0 == __FILE__
-  require 'rack'
-  require 'rack/showexceptions'
-  Rack::Server.start(
-    :app =&gt; Rack::ShowExceptions.new(
-              Rack::Lint.new(
-                Rack::Lobster.new)), 
-    :Port =&gt; 9292,
-    :server =&gt; 'thin'
-  )
-end
-</PRE>
+<H4><A NAME="SECTION03190010000000000000">
+Introducción</A>
+</H4>
+  
 
 <P>
-Véase:
 
 <OL>
-<LI><A NAME="tex2html922"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/showexceptions.rb">rack/lib/rack/showexceptions.rb</A>
-<P>
-(Rack::ShowExceptions catches all exceptions raised from the app it
-wraps.  It shows a useful backtrace with the sourcefile and
-clickable context, the whole Rack environment and the request
-data.
+<LI>Hypertext Transfer Protocol (HTTP) is stateless: a client computer
+running a web browser must establish a new Transmission Control
+Protocol (TCP) network connection to the web server with each new
+HTTP GET or POST request. 
 
 <P>
-Be careful when you use this on public-facing sites as it could
-reveal information helpful to attackers)
 </LI>
-<LI><A NAME="tex2html923"
-  HREF="https://github.com/rack/rack/blob/master/lib/rack/lint.rb">rack/lib/rack/lint.rb</A>
-en GitHub
+<LI>The web server, therefore, cannot rely
+on an established TCP network connection for longer than a single
+HTTP GET or POST operation. 
 
 <P>
-(Rack::Lint validates your application and the requests and
- responses according to the Rack spec)
+</LI>
+<LI><A NAME="18064"></A><SPAN  CLASS="textbf">Session management</SPAN> is the technique
+used by the web developer to make the stateless HTTP protocol support
+session state. 
+
+<P>
+</LI>
+<LI>For example, once a user has been authenticated to
+the web server, the user's next HTTP request (GET or POST) should
+not cause the web server to ask for the user's account and password
+again. 
+
+<P>
+</LI>
+<LI>The session information is stored on the web server using the 
+<A NAME="18066"></A><SPAN  CLASS="textbf">session identifier</SPAN>
+generated as a result of the first (sometimes
+the first authenticated) request from the end user running a web
+browser. 
+
+<P>
+</LI>
+<LI>The "storage" of Session IDs and the associated session
+data (user name, account number, etc.) on the web server is
+accomplished using a variety of techniques including, but not limited
+to, local memory, flat files, and databases.
+
+<P>
+</LI>
+<LI>A <A NAME="18068"></A><SPAN  CLASS="textbf">session token</SPAN> 
+<FONT COLOR="#0000ff"> is a unique identifier that is generated and sent
+from a server to a client to identify the current interaction
+session</FONT>. 
+
+<P>
+</LI>
+<LI>The client usually stores and sends the token as an HTTP
+cookie and/or sends it as a parameter in GET or POST queries. The
+reason to use session tokens is that the client only has to handle
+the identifier—all session data is stored on the server (usually
+in a database, to which the client does not have direct access)
+linked to that identifier. 
 </LI>
 </OL>
-Tanto Rack::ShowExceptions como Rack::Lint disponen de un método <code>call</code> que recibe una variable <code>env</code> describiendo el entorno CGI.
-Esto es, se trata de aplicaciones que siguen el protocolo Rack.
-Así este código:
+
+<P>
+
+<H4><A NAME="SECTION03190020000000000000">
+Uso de Cookies para el manejo de sesiones</A>
+</H4>
+  
+
+<P>
+
+<OL>
+<LI>Allowing users to log into a website is a frequent use of
+    cookies. 
+</LI>
+<LI>A web server typically sends a cookie containing a unique 
+    <A NAME="18076"></A><SPAN  CLASS="textbf">session identifier</SPAN>. 
+</LI>
+<LI>The web browser will send back that session identifier
+   with each subsequent request and 
+<FONT COLOR="#0000ff"> related items are stored
+   associated with this unique session identifier</FONT>.
+</LI>
+<LI>Typically the web server will first send a cookie
+    containing a unique session identifier. Users then submit their
+    credentials and the web application authenticates the session
+    and allows the user access to services.
+</LI>
+<LI>Applications today usually store the gathered information
+    in a database on the server side, rather than storing them 
+    in cookies
+  
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION03190030000000000000">
+Ejemplo</A>
+</H4>
+  
+
+<P>
+<A NAME="tex2html920"
+  HREF="http://rack.rubyforge.org/doc/Rack/Session/Cookie.html">Rack::Session::Cookie</A> proporciona un sencillo sistema para gestionar
+sesiones basado en cookies.
+
+<P>
+
+<OL>
+<LI>La <code>session</code> es un cookie que contiene un
+hash almacenado mediante marshalling codificado en base64.
+</LI>
+<LI>Por defecto el nombre del cookie es <code>rack.session</code> pero puede ser 
+modificado mediante el atributo <code>:key</code>.
+</LI>
+<LI>Dándole un valor a <code>secret_key</code> se garantiza que es comprobada 
+la integridad de los datos de la cookie
+</LI>
+<LI>Para acceder dentro de nuestro programa
+a la sesión accedemos al hash <code>env["rack.session"]</code> o bien
+<code>env["key-value"]</code> si hemos especificado el atributo
+<code>:key</code>
+</LI>
+</OL>
+
+<P>
+Sigue un ejemplo:
 <PRE>
-  Rack::Server.start(
-    :app =&gt; Rack::ShowExceptions.new(
-              Rack::Lint.new(
-                Rack::Lobster.new)), 
-    :Port =&gt; 9292,
-    :server =&gt; 'thin'
-  )
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat configapp.ru 
+require 'pp'
+require './myapp'
+
+use Rack::Session::Cookie, 
+      :key =&gt; 'rack.session', 
+      :domain =&gt; 'example.com',
+      :secret =&gt; 'some_secret'
+
+run MyApp.new
 </PRE>
 
 <P>
-construye una nueva objeto/aplicación Rack que es la composición
-de los tres Racks.
-
-<P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ cat Rakefile 
-desc "run the server"
-task :default do
-  sh "ruby lobster.rb"
-end
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat myapp.rb 
+class MyApp
 
-desc "run the client flip left"
-task :left do
-  sh %q{curl -v 'http://localhost:9292?flip=left'}
-end
+  def set_env(env)
+    @env = env
+    @session = env['rack.session']
+  end
 
-desc "run the client flip right"
-task :right do
-  sh %q{curl -v 'http://localhost:9292?flip=right'}
-end
+  def some_key 
+    return @session['some_key'].to_i if @session['some_key']
+    @session['some_key'] = 0
+  end
 
-desc "run the client. Generate exception"
-task :crash do
-  sh %q{curl -v 'http://localhost:9292/?flip=crash'}
+  def some_key=(value)
+    @session['some_key'] = value
+  end
+
+  def call(env)
+    set_env(env)
+    res = Rack::Response.new
+    req = Rack::Request.new env
+
+    self.some_key = self.some_key + 1 if req.path == '/'
+
+    res.write("some_key = #{@session['some_key']}\n")
+
+    res.finish
+  end
+
 end
 </PRE>
 
 <P>
-<PRE>
-[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ rake left
-curl -v 'http://localhost:9292?flip=left'
-* About to connect() to localhost port 9292 (#0)
-*   Trying ::1... Connection refused
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET /?flip=left HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
-&gt; Host: localhost:9292
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Length: 168
-&lt; Connection: keep-alive
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-      &lt;title&gt;Lobstericious!&lt;/title&gt;
-      &lt;pre&gt;
-      retsbol a
-      &lt;/pre&gt;
-      &lt;p&gt;&lt;a href='?flip=right'&gt;flip!&lt;/a&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;a href='?flip=crash'&gt;crash!&lt;/a&gt;&lt;/p&gt;
-* Connection #0 to host localhost left intact
-* Closing connection #0
-</PRE>
+Hagamos la prueba conectándonos a <code>www.example.com</code>. Para ello
+edtiamos <code>/etc/hosts</code> para que <code>localhost</code> apunte a
+<code>www.example.com</code>:
 
 <P>
 <PRE>
-[~/local/src/ruby/sinatra/rack/rack-lobster(master)]$ rake right
-curl -v 'http://localhost:9292?flip=right'
-* About to connect() to localhost port 9292 (#0)
-*   Trying ::1... Connection refused
-*   Trying 127.0.0.1... connected
-* Connected to localhost (127.0.0.1) port 9292 (#0)
-&gt; GET /?flip=right HTTP/1.1
-&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
-&gt; Host: localhost:9292
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; Content-Length: 167
-&lt; Connection: keep-alive
-&lt; Server: thin 1.5.1 codename Straight Razor
-&lt; 
-      &lt;title&gt;Lobstericious!&lt;/title&gt;
-      &lt;pre&gt;
-      a lobster
-      &lt;/pre&gt;
-      &lt;p&gt;&lt;a href='?flip=left'&gt;flip!&lt;/a&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;a href='?flip=crash'&gt;crash!&lt;/a&gt;&lt;/p&gt;
-* Connection #0 to host localhost left intact
-* Closing connection #0
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ cat /etc/hosts
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1 localhost www.example.com
+...
 </PRE>
 
 <P>
-
-<img src="rackcrash.png" width="50%" />
-
+Arrancamos el servidor:
 
 <P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-session-cookie(master)]$ rackup  configapp.ru 
+&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+</PRE>
+
+<P>
+Y visitamos <code>www.example.com</code> con nuestro navegador:
+
+<img src="rack_session_example.png" />
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html10280"
+  HREF="node398.html#SECTION03190010000000000000">Introducción</A>
+<LI><A NAME="tex2html10281"
+  HREF="node398.html#SECTION03190020000000000000">Uso de Cookies para el manejo de sesiones</A>
+<LI><A NAME="tex2html10282"
+  HREF="node398.html#SECTION03190030000000000000">Ejemplo</A>
+</UL>
+</UL>
+<BR>
+<LI><A NAME="tex2html10283"
+  HREF="node399.html">Ejercicio: Race Conditions. Concurrencia</A>
+</UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10254"
+<A NAME="tex2html10278"
   HREF="node399.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10248"
-  HREF="node376.html">
+<A NAME="tex2html10272"
+  HREF="node378.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10242"
+<A NAME="tex2html10266"
   HREF="node397.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10250"
-  HREF="node849.html">
+<A NAME="tex2html10274"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10252"
-  HREF="node852.html">
+<A NAME="tex2html10276"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -361,20 +414,20 @@ curl -v 'http://localhost:9292?flip=right'
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10255"
-  HREF="node399.html">Práctica: Accediendo a Twitter</A>
-<B> Subir:</B> <A NAME="tex2html10249"
-  HREF="node376.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10243"
-  HREF="node397.html">Ejercicio: Race Conditions. Concurrencia</A>
- &nbsp; <B>  <A NAME="tex2html10251"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10253"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10279"
+  HREF="node399.html">Ejercicio: Race Conditions. Concurrencia</A>
+<B> Subir:</B> <A NAME="tex2html10273"
+  HREF="node378.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10267"
+  HREF="node397.html">Cookies y Rack</A>
+ &nbsp; <B>  <A NAME="tex2html10275"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10277"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

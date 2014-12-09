@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Camping</TITLE>
-<META NAME="description" CONTENT="Camping">
+<TITLE>ostruct</TITLE>
+<META NAME="description" CONTENT="ostruct">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node830.html">
 <LINK REL="previous" HREF="node828.html">
-<LINK REL="up" HREF="node646.html">
+<LINK REL="up" HREF="node648.html">
 <LINK REL="next" HREF="node830.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html17488"
+<A NAME="tex2html17528"
   HREF="node830.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html17482"
-  HREF="node646.html">
+<A NAME="tex2html17522"
+  HREF="node648.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html17478"
+<A NAME="tex2html17516"
   HREF="node828.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html17484"
-  HREF="node849.html">
+<A NAME="tex2html17524"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html17486"
-  HREF="node852.html">
+<A NAME="tex2html17526"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,83 +92,82 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html17489"
-  HREF="node830.html">BITÁCORA DE LPP</A>
-<B> Subir:</B> <A NAME="tex2html17483"
-  HREF="node646.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html17479"
-  HREF="node828.html">flickr</A>
- &nbsp; <B>  <A NAME="tex2html17485"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html17487"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html17529"
+  HREF="node830.html">flickr</A>
+<B> Subir:</B> <A NAME="tex2html17523"
+  HREF="node648.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html17517"
+  HREF="node828.html">Ruport</A>
+ &nbsp; <B>  <A NAME="tex2html17525"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html17527"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION063700000000000000000">
-Camping</A>
+<H1><A NAME="SECTION063500000000000000000">
+ostruct</A>
 </H1><PRE>
-MacBookdeCasiano:~ casiano$ sudo gem install camping
-Password:
-Successfully installed camping-2.1.467
-1 gem installed
-Installing ri documentation for camping-2.1.467...
-Installing RDoc documentation for camping-2.1.467...
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n ostruct.rb 
+     1  require 'ostruct'
+     2  
+     3  alu = OpenStruct.new
+     4  alu.nombre = "Jose"
+     5  alu.apellidos = "Rodriguez Quintero"
+     6  alu.edad = 97
+     7  alu.calificacion = 10
+     8  
+     9  puts alu
 </PRE>
 <P><PRE>
-MacBookdeCasiano:~ casiano$ gem which camping
-(checking gem camping-2.1.467 for camping)
-/Library/Ruby/Gems/1.8/gems/camping-2.1.467/lib/camping.rb
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ ruby ostruct.rb 
+#&lt;OpenStruct nombre="Jose", apellidos="Rodriguez Quintero", edad=97, calificacion=10&gt;
 </PRE>
 <P><PRE>
-MacBookdeCasiano:chapter8ReflectionandMetaprogramming casiano$ camping nuts.rb 
-** Starting Mongrel on 0.0.0.0:3301
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ cat -n my_ostruct.rb 
+     1  class MyOpenStruct
+     2    def initialize(h = {})
+     3      @attrs = h
+     4    end
+     5  
+     6    def method_missing(name, *args)
+     7      attr = name.to_s
+     8      if attr =~ /=$/
+     9        @attrs[attr.chop] = args[0]
+    10      else
+    11        @attrs[attr]
+    12      end
+    13    end
+    14  
+    15    def to_s
+    16      self.inspect
+    17    end
+    18  end
+    19  
+    20  alu = MyOpenStruct.new
+    21  alu.nombre = "Jose"
+    22  alu.apellidos = "Rodriguez Quintero"
+    23  alu.edad = 97
+    24  alu.calificacion =  10
+    25  
+    26  puts alu.nombre
+    27  puts alu.edad
+    28  puts alu.calificacion
+    29  puts alu
 </PRE>
-<P>
-<DIV ALIGN="CENTER"><A NAME="figure:camping1png"></A><A NAME="33341"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
-Visitando la página (1)</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.5]chapter8/camping1.png
-
-</DIV></TD></TR>
-</TABLE>
-</DIV>
-<P>
-<I>Añadimos este código a <code>nuts.rb</code>:
-</I><PRE>
- module Nuts::Controllers
-    class Index &lt; R '/'
-      def get
-        Time.now.to_s
-      end
-    end
-  end
+<P><PRE>
+~/rubytesting/TheRubyProgrammingLanguage/chapter8ReflectionandMetaprogramming$ ruby my_ostruct.rb 
+Jose
+97
+10
+#&lt;MyOpenStruct:0x10016a408 @attrs={"nombre"=&gt;"Jose", "calificacion"=&gt;10, "edad"=&gt;97, "apellidos"=&gt;"Rodriguez Quintero"}&gt;
 </PRE>
-<P>
-<I>y lo ejecutamos de nuevo:
-</I>
-<DIV ALIGN="CENTER"><A NAME="figure:camping2png"></A><A NAME="33350"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura:</STRONG>
-Visitando la página (2)</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.5]chapter8/camping2.png
-
-</DIV></TD></TR>
-</TABLE>
-</DIV>
-<P>
-<I></I>
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Las Carpetas Usadas Como Módulos</TITLE>
-<META NAME="description" CONTENT="Las Carpetas Usadas Como Módulos">
+<TITLE>Especificación de Ficheros Conteniendo Módulos</TITLE>
+<META NAME="description" CONTENT="Especificación de Ficheros Conteniendo Módulos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node605.html">
 <LINK REL="previous" HREF="node603.html">
-<LINK REL="up" HREF="node599.html">
+<LINK REL="up" HREF="node601.html">
 <LINK REL="next" HREF="node605.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13771"
+<A NAME="tex2html13809"
   HREF="node605.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13765"
-  HREF="node599.html">
+<A NAME="tex2html13803"
+  HREF="node601.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13759"
+<A NAME="tex2html13797"
   HREF="node603.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13767"
-  HREF="node849.html">
+<A NAME="tex2html13805"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13769"
-  HREF="node852.html">
+<A NAME="tex2html13807"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,75 +92,53 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13772"
-  HREF="node605.html">Caching</A>
-<B> Subir:</B> <A NAME="tex2html13766"
-  HREF="node599.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html13760"
-  HREF="node603.html">Carga desde Carpetas node_modules</A>
- &nbsp; <B>  <A NAME="tex2html13768"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13770"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13810"
+  HREF="node605.html">Carga desde Carpetas node_modules</A>
+<B> Subir:</B> <A NAME="tex2html13804"
+  HREF="node601.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13798"
+  HREF="node603.html">Ciclos</A>
+ &nbsp; <B>  <A NAME="tex2html13806"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13808"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04685000000000000000">
-Las Carpetas Usadas Como Módulos</A>
+<H2><A NAME="SECTION04683000000000000000">
+Especificación de Ficheros Conteniendo Módulos</A>
 </H2>
-It is convenient to organize programs and libraries into self-contained
-directories, and then provide a single entry point to that library. 
-
-<P>
-There
-are a few ways in which a folder may be passed to <code>require()</code> as an
-argument.
 
 <P>
 
 <OL>
-<LI>The first is to create a <code>package.json</code> file in the root of the
-folder, which specifies a <code>main</code> module. 
-An example <code>package.json</code> file
-might look like this:
-
-<P>
-<PRE>
-{ "name" : "some-library",
-  "main" : "./lib/some-library.js" }
-</PRE>
-
-<P>
-If this was in a folder at 
-<code>./some-library</code>, then <code>require('./some-library')</code> would attempt
-to load <code>./some-library/lib/some-library.js</code>.
-
-<P>
-This is the extent of Node's awareness of <code>package.json</code> files.
+<LI>If the exact filename is not found, then node will attempt to
+load the required filename with the added extension of <code>.js</code>,
+<code>.json</code>, and then <code>.node</code>.
 
 <P>
 </LI>
-<LI>If there is no <code>package.json</code> 
-file present in the directory, then node will
-attempt to load an 
-<code>index.js</code> or
-<code>index.node</code> 
-file out of that directory. 
+<LI><code>.js</code> files are interpreted as JavaScript text files, and <code>.json</code> files are parsed as JSON text files. <code>.node</code> files are interpreted as compiled addon modules 
 
 <P>
-For
-example, if there was no 
-<code>package.json</code> file in the above example, then
-<code>require('./some-library')</code> would attempt to load:
+</LI>
+<LI>A module prefixed with <code>'/'</code> is an absolute path to the file. For example,
+<code>require('/home/marco/foo.js')</code> will load the file at <code>/home/marco/foo.js</code>.
 
 <P>
-<PRE>
-./some-library/index.js
-./some-library/index.node
-</PRE>
+</LI>
+<LI>A module prefixed with <code>'./'</code> is relative to the file calling require(). 
 
 <P>
+</LI>
+<LI>Without a leading verb|'/'| or <code>'./'</code> to indicate a file, the module is either a 
+<A NAME="26251"></A><SPAN  CLASS="textbf">core module</SPAN> or is loaded from a <code>node_modules</code> folder.
+
+<P>
+</LI>
+<LI>If the given path does not exist, <code>require()</code> 
+will throw an Error with its code property set to <code>MODULE_NOT_FOUND</code>.
 </LI>
 </OL>
 
@@ -168,20 +146,20 @@ example, if there was no
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13771"
+<A NAME="tex2html13809"
   HREF="node605.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13765"
-  HREF="node599.html">
+<A NAME="tex2html13803"
+  HREF="node601.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13759"
+<A NAME="tex2html13797"
   HREF="node603.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13767"
-  HREF="node849.html">
+<A NAME="tex2html13805"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13769"
-  HREF="node852.html">
+<A NAME="tex2html13807"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -232,20 +210,20 @@ example, if there was no
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13772"
-  HREF="node605.html">Caching</A>
-<B> Subir:</B> <A NAME="tex2html13766"
-  HREF="node599.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html13760"
-  HREF="node603.html">Carga desde Carpetas node_modules</A>
- &nbsp; <B>  <A NAME="tex2html13768"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13770"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13810"
+  HREF="node605.html">Carga desde Carpetas node_modules</A>
+<B> Subir:</B> <A NAME="tex2html13804"
+  HREF="node601.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13798"
+  HREF="node603.html">Ciclos</A>
+ &nbsp; <B>  <A NAME="tex2html13806"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13808"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

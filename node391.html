@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Rack::Response</TITLE>
-<META NAME="description" CONTENT="Rack::Response">
+<TITLE>Conexión sin Parámetros</TITLE>
+<META NAME="description" CONTENT="Conexión sin Parámetros">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node395.html">
-<LINK REL="previous" HREF="node388.html">
-<LINK REL="up" HREF="node376.html">
+<LINK REL="next" HREF="node392.html">
+<LINK REL="previous" HREF="node390.html">
+<LINK REL="up" HREF="node390.html">
 <LINK REL="next" HREF="node392.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10140"
+<A NAME="tex2html10162"
   HREF="node392.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10134"
-  HREF="node376.html">
+<A NAME="tex2html10156"
+  HREF="node390.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10128"
+<A NAME="tex2html10150"
   HREF="node390.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10136"
-  HREF="node849.html">
+<A NAME="tex2html10158"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10138"
-  HREF="node852.html">
+<A NAME="tex2html10160"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,42 +92,130 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10141"
-  HREF="node392.html">Introducción</A>
-<B> Subir:</B> <A NAME="tex2html10135"
-  HREF="node376.html">Rack, un Webserver Ruby</A>
-<B> Anterior:</B> <A NAME="tex2html10129"
-  HREF="node390.html">Conexión con Parámetros</A>
- &nbsp; <B>  <A NAME="tex2html10137"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10139"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10163"
+  HREF="node392.html">Conexión con Parámetros</A>
+<B> Subir:</B> <A NAME="tex2html10157"
+  HREF="node390.html">Rack::Request y Depuración con</A>
+<B> Anterior:</B> <A NAME="tex2html10151"
+  HREF="node390.html">Rack::Request y Depuración con</A>
+ &nbsp; <B>  <A NAME="tex2html10159"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10161"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03170000000000000000">
-Rack::Response</A>
-</H1>
+<H2><A NAME="SECTION03161000000000000000">
+Conexión sin Parámetros</A>
+</H2>
+
+<P>
+Partimos del mismo código fuente que en la sección  anterior:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging]$ cat hello.rb 
+require 'rack'
+require 'pry-debugger'
+
+class HelloWorld
+  def call env
+    binding.pry
+    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world"]]
+  end
+end
+</PRE>
+
+<P>
+Arranquemos un servidor dentro de <code>pry</code>:
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging]$ pry
+[1] pry(main)&gt; require './hello'
+=&gt; true
+[2] pry(main)&gt; Rack::Handler::WEBrick::run HelloWorld.new
+[2013-09-23 13:10:42] INFO  WEBrick 1.3.1
+[2013-09-23 13:10:42] INFO  ruby 1.9.3 (2013-02-22) [x86_64-darwin11.4.2]
+[2013-09-23 13:10:42] INFO  WEBrick::HTTPServer#start: pid=10395 port=8080
+</PRE>
+
+<P>
+Si visitamos la página:
+<PRE>
+$ curl -v localhost:8080/jkdfkdjg
+</PRE>
+
+<P>
+Esto hace que se alcance el break:
+<PRE>
+From: /Users/casiano/local/src/ruby/sinatra/rack/rack-debugging/hello.rb @ line 6 HelloWorld#call:
+
+    5: def call env
+ =&gt; 6:   binding.pry
+    7:   [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world"]]
+    8: end
+</PRE>
+Ahora creamos un objeto
+<A NAME="tex2html909"
+  HREF="http://rack.rubyforge.org/doc/Rack/Request.html">Rack::Request</A>:
+
+<P>
+<PRE>
+[3] pry(#&lt;HelloWorld&gt;)&gt; req = Rack::Request.new(env)
+=&gt; #&lt;Rack::Request:0x007fbba4ff3298
+ @env=
+  {"GATEWAY_INTERFACE"=&gt;"CGI/1.1",
+   "PATH_INFO"=&gt;"/jkdfkdjg",
+   "QUERY_STRING"=&gt;"",
+   "REMOTE_ADDR"=&gt;"::1",
+   "REMOTE_HOST"=&gt;"localhost",
+   "REQUEST_METHOD"=&gt;"GET",
+   "REQUEST_URI"=&gt;"http://localhost:8080/jkdfkdjg",
+   "SCRIPT_NAME"=&gt;"",
+   "SERVER_NAME"=&gt;"localhost",
+   "SERVER_PORT"=&gt;"8080",
+   "SERVER_PROTOCOL"=&gt;"HTTP/1.1",
+   "SERVER_SOFTWARE"=&gt;"WEBrick/1.3.1 (Ruby/1.9.3/2013-02-22)",
+   "HTTP_USER_AGENT"=&gt;
+    "curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5",
+   "HTTP_HOST"=&gt;"localhost:8080",
+   "HTTP_ACCEPT"=&gt;"*/*",
+   "rack.version"=&gt;[1, 2],
+   "rack.input"=&gt;#&lt;StringIO:0x007fbba4e74980&gt;,
+   "rack.errors"=&gt;#&lt;IO:&lt;STDERR&gt;&gt;,
+   "rack.multithread"=&gt;true,
+   "rack.multiprocess"=&gt;false,
+   "rack.run_once"=&gt;false,
+   "rack.url_scheme"=&gt;"http",
+   "HTTP_VERSION"=&gt;"HTTP/1.1",
+   "REQUEST_PATH"=&gt;"/jkdfkdjg"}&gt;
+</PRE>
+Este objeto <A NAME="tex2html910"
+  HREF="http://rack.rubyforge.org/doc/Rack/Request.html">Rack::Request</A> tiene métodos para informarnos del 
+<A NAME="tex2html911"
+  HREF="http://rack.rubyforge.org/doc/Rack/Request.html">Rack::Request</A>:
+<PRE>
+[4] pry(#&lt;HelloWorld&gt;)&gt; req.get?
+=&gt; true
+[5] pry(#&lt;HelloWorld&gt;)&gt; req.post?
+=&gt; false
+[7] pry(#&lt;HelloWorld&gt;)&gt; req.port
+=&gt; 8080
+[12] pry(#&lt;HelloWorld&gt;)&gt; req.host()
+=&gt; "localhost"
+[13] pry(#&lt;HelloWorld&gt;)&gt; req.host_with_port()
+=&gt; "localhost:8080"
+[15] pry(#&lt;HelloWorld&gt;)&gt; req.path()
+=&gt; "/jkdfkdjg"
+[18] pry(#&lt;HelloWorld&gt;)&gt; req.url()
+=&gt; "http://localhost:8080/jkdfkdjg"
+[19] pry(#&lt;HelloWorld&gt;)&gt; req.user_agent
+=&gt; "curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5"
+</PRE>
 
 <P>
 <BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html10142"
-  HREF="node392.html">Introducción</A>
-<LI><A NAME="tex2html10143"
-  HREF="node393.html">Ejemplo Simple</A>
-<LI><A NAME="tex2html10144"
-  HREF="node394.html">Ejemplo con <TT>POST</TT></A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

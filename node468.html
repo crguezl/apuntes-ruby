@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Sinatra como Middleware</TITLE>
-<META NAME="description" CONTENT="Sinatra como Middleware">
+<TITLE>Ejemplo con Warden</TITLE>
+<META NAME="description" CONTENT="Ejemplo con Warden">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node469.html">
-<LINK REL="previous" HREF="node464.html">
-<LINK REL="up" HREF="node431.html">
+<LINK REL="previous" HREF="node467.html">
+<LINK REL="up" HREF="node466.html">
 <LINK REL="next" HREF="node469.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11411"
+<A NAME="tex2html11438"
   HREF="node469.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11405"
-  HREF="node431.html">
+<A NAME="tex2html11432"
+  HREF="node466.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11399"
+<A NAME="tex2html11426"
   HREF="node467.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11407"
-  HREF="node849.html">
+<A NAME="tex2html11434"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11409"
-  HREF="node852.html">
+<A NAME="tex2html11436"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,217 +92,57 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11412"
-  HREF="node469.html">Práctica: Aplicación Web con</A>
-<B> Subir:</B> <A NAME="tex2html11406"
-  HREF="node431.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11400"
-  HREF="node467.html">Referencias</A>
- &nbsp; <B>  <A NAME="tex2html11408"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11410"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11439"
+  HREF="node469.html">Referencias</A>
+<B> Subir:</B> <A NAME="tex2html11433"
+  HREF="node466.html">Sinatra Authentication</A>
+<B> Anterior:</B> <A NAME="tex2html11427"
+  HREF="node467.html">Autentificación Básica en Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html11435"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11437"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H1><A NAME="SECTION033260000000000000000">
-Sinatra como Middleware</A>
-</H1>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><A NAME="tex2html11440"
+  HREF="node468.html#SECTION033252010000000000000">Donde</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H2><A NAME="SECTION033252000000000000000">
+Ejemplo con Warden</A>
+</H2>
 
 <P>
-Not only is Sinatra able to use other Rack middleware, any Sinatra
-application can in turn be added in front of any Rack endpoint as
-middleware itself. 
 
-<P>
-This endpoint could be another Sinatra application,
-or any other Rack-based application (Rails/Ramaze/Camping/…):
+<H4><A NAME="SECTION033252010000000000000">
+Donde</A>
+</H4>
+  
 
-<P>
-
-<OL>
-<LI>When a request comes in, all <code>before</code> filters are triggered
+<UL>
+<LI><A NAME="tex2html1079"
+  HREF="https://github.com/crguezl/sinatra-warden-example">https://github.com/crguezl/sinatra-warden-example</A>
 </LI>
-<LI>Then, if a route matches, the corresponding block will be executed
-</LI>
-<LI>If no route matches, the request is handed off to the wrapped application
-</LI>
-<LI>The <code>after</code> filters are executed after we've got a response back from the
-route or  the wrapped app
-</LI>
-</OL>
-Thus, our Sinatra app is a middleware.
-
-<P>
-
-<DIV ALIGN="CENTER"><A NAME="figure:requestobject"></A><A NAME="20120"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura 33.2:</STRONG>
-La pila Rack</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.6]sinatra/rack_stack.png
-
-</DIV></TD></TR>
-</TABLE>
-</DIV>
-
-<P>
-<PRE>
-[~/sinatra/sinatra-as-middleware]$ cat app.rb
-require 'sinatra/base'
-require 'haml'
-require 'pp'
-
-class LoginScreen &lt; Sinatra::Base
-  enable :sessions
-  enable :inline_templates
-
-  get('/login') { haml :login }
-
-  post('/login') do
-    if params[:name] == 'admin' &amp;&amp; params[:password] == 'admin'
-      puts "params = "
-      pp params
-      session['user_name'] = params[:name]
-      redirect '/'
-    else
-      redirect '/login'
-    end
-  end
-end
-
-class MyApp &lt; Sinatra::Base
-  enable :inline_templates
-  # middleware will run before filters
-  use LoginScreen
-
-  before do
-    unless session['user_name']
-      halt haml :denied
-    end
-  end
-
-  get('/') do
-    haml :cheer, :locals =&gt; { :name =&gt; session['user_name'] }
-  end
-
-  run!
-end
-
-__END__
-
-@@ layout
-!!!
-%html
-  %head
-    %title Sinatra as Middleware
-  %body
-    %h1 Sinatra as Middleware
-    = yield
-
-@@ login
-%form{:action=&gt;'/login', :method=&gt;'post'}
-  %label{:for=&gt;'name'} Name
-  %input#name{:type=&gt;"text",     :name=&gt;"name", :autofocus =&gt; true }
-  %br
-  %label{:for=&gt;'password'} Password
-  %input#password{:type=&gt;"password", :name=&gt;"password"}
-  %br
-  %button#go{:type=&gt;"submit",  :name=&gt;"submit", :value=&gt;"submit"} Click me!
-
-@@ cheer
-%h1
-  Hello #{name}
-  %br
-
-@@ denied
-%h1 
-  Access denied, please 
-  %a{:href=&gt;'/login'}login.
+<LI><PRE>
+[~/sinatra/sinatra-warden-example(master)]$ pwd -P
+/Users/casiano/local/src/ruby/sinatra/sinatra-warden-example
 </PRE>
+</LI>
+</UL>
 
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html11411"
-  HREF="node469.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11405"
-  HREF="node431.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11399"
-  HREF="node467.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11407"
-  HREF="node849.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11409"
-  HREF="node852.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html11412"
-  HREF="node469.html">Práctica: Aplicación Web con</A>
-<B> Subir:</B> <A NAME="tex2html11406"
-  HREF="node431.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11400"
-  HREF="node467.html">Referencias</A>
- &nbsp; <B>  <A NAME="tex2html11408"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11410"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<P>
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

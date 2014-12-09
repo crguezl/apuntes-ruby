@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Testeando una Aplicación Sinatra</TITLE>
-<META NAME="description" CONTENT="Testeando una Aplicación Sinatra">
+<TITLE>Capybara y Rack::Test</TITLE>
+<META NAME="description" CONTENT="Capybara y Rack::Test">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node317.html">
-<LINK REL="previous" HREF="node315.html">
-<LINK REL="up" HREF="node315.html">
+<LINK REL="next" HREF="node319.html">
+<LINK REL="previous" HREF="node314.html">
+<LINK REL="up" HREF="node308.html">
 <LINK REL="next" HREF="node317.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8565"
+<A NAME="tex2html8578"
   HREF="node317.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8559"
-  HREF="node315.html">
+<A NAME="tex2html8572"
+  HREF="node308.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8553"
+<A NAME="tex2html8566"
   HREF="node315.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8561"
-  HREF="node849.html">
+<A NAME="tex2html8574"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8563"
-  HREF="node852.html">
+<A NAME="tex2html8576"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,216 +92,191 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8566"
-  HREF="node317.html">Testing con Rack::Test y</A>
-<B> Subir:</B> <A NAME="tex2html8560"
-  HREF="node315.html">Capybara y Rack::Test</A>
-<B> Anterior:</B> <A NAME="tex2html8554"
-  HREF="node315.html">Capybara y Rack::Test</A>
- &nbsp; <B>  <A NAME="tex2html8562"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8564"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8579"
+  HREF="node317.html">Testeando una Aplicación Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html8573"
+  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
+<B> Anterior:</B> <A NAME="tex2html8567"
+  HREF="node315.html">Poltergeist</A>
+ &nbsp; <B>  <A NAME="tex2html8575"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8577"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION021140000000000000000">
+Capybara y Rack::Test</A>
+</H1>
+
+<P>
+Rack::Test es una librería que implementa el protocolo Rack
+y que hace posible testear la pila completa de nuestra aplicación
+sin que tengamos que pagar la latencia de las comunicaciones HTTP
+ni el uso de navegadores reales.
+
+<P>
+Podemos usar su API para enviar una solicitud/request a nuestra aplicación.
+
+<P>
+Cuando nuestra aplicación responda, Rack::Test procesa la respuesta y nos permite
+cuestionarla.
+
+<P>
+Puede hacerlo porque implementa el protocolo Rack.
+La forma en la que lo hace es construyendo el hash de request y pasandolo a la aplicación
+tal y como la haría un servidor web, interpretando el hash de respuesta y 
+dejandonoslo disponible via su API.
+
+<P>
+Veamos un ejemplo de una aplicación que usa Rack::Test pero no Capybara para
+testear una sencilla aplicación Rack del tipo 
+
+<FONT COLOR="#0000ff"> Hello World</FONT> (Véase
+<A NAME="tex2html660"
+  HREF="https://github.com/crguezl/application_testing_with_capybara">https://github.com/crguezl/application_testing_with_capybara</A>):
+
+<P>
+<PRE>
+[~/application_testing_with_capybara/sinatra(master)]$ pwd -P
+/Users/casiano/local/src/ruby/testing_with_capybara/application_testing_with_capybara/sinatra
+[~/application_testing_with_capybara/sinatra(master)]$ cat test.rb 
+require 'bundler/setup'
+require 'rack'
+require "rack/test"
+require 'test/unit'
+
+class HelloWorld
+  def response
+    [200, {'Content-Length' =&gt; '11'}, ['Hello World']]
+  end
+end
+
+class HelloWorldApp
+  def self.call(env)
+    HelloWorld.new.response
+  end
+end
+
+
+class HelloWorldAppTest &lt; Test::Unit::TestCase
+  include Rack::Test::Methods
+
+  def app
+    HelloWorldApp
+  end
+
+  def test_redirect_logged_in_users_to_dashboard
+    get "/"
+
+    assert last_response.ok?
+    assert_equal last_response.body, 'Hello World'
+  end
+
+end
+</PRE>
+
+<P>
+Una vez instaladas las dependencias podemos ejecutar las pruebas:
+<PRE>
+[~/application_testing_with_capybara/sinatra(master)]$ ruby test.rb 
+Run options: 
+
+# Running tests:
+
+Finished tests in 0.028666s, 34.8845 tests/s, 69.7691 assertions/s.                
+1 tests, 2 assertions, 0 failures, 0 errors, 0 skips
+
+ruby -v: ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-darwin13.0]
+</PRE>
+
+<P>
+Aqui no ha habido ninguna comunicación externa, todo ocurre via software.
+
+<P>
+Rack::Test no tiene una  API para hacer click en los elementos,
+poner radio buttons, manejar forms, etc.
+
+<P>
+De lo que se ocupa es de relizar la transacción Rack imitando al servidor web.
+
+<P>
+Para que sirva de ejemplo, este es el 
+código del driver Capybara que traduce el evento
+click 
+(<A NAME="tex2html661"
+  HREF="https://github.com/jnicklas/capybara/blob/304e2fbfe1e54702eb65f2a3feda1c7b9b99ff36/lib/capybara/rack_test/node.rb">fichero capybara/rack_test/node.rb</A>)
+para que sea procesado por Rack::Test:
+
+<P>
+<PRE>
+  def click
+    if tag_name == 'a' &amp;&amp; !self[:href].nil?
+      method = self["data-method"] if driver.options[:respect_data_method]
+      method ||= :get
+      driver.follow(method, self[:href].to_s)
+    elsif (tag_name == 'input' and %w(submit image).include?(type)) or
+        ((tag_name == 'button') and type.nil? or type == "submit")
+      associated_form = form
+      Capybara::RackTest::Form.new(driver, associated_form).submit(self) if associated_form
+    end
+  end
+</PRE>
+
+<P>
+Capybara determina el tipo de elemento que esta siendo clickeado y después calcula
+si Rack::Test debe seguir el enlace o submitir el formulario.
+
+<P>
+<BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html8567"
-  HREF="node316.html#SECTION021141010000000000000">app.rb</A>
-<LI><A NAME="tex2html8568"
-  HREF="node316.html#SECTION021141020000000000000">Entrada</A>
-<LI><A NAME="tex2html8569"
-  HREF="node316.html#SECTION021141030000000000000">Plantilla para el Formulario. Template: form.erb</A>
-<LI><A NAME="tex2html8570"
-  HREF="node316.html#SECTION021141040000000000000">Plantilla/Template con los resultados: result.erb</A>
-<LI><A NAME="tex2html8571"
-  HREF="node316.html#SECTION021141050000000000000">Salida</A>
+<LI><A NAME="tex2html8580"
+  HREF="node317.html">Testeando una Aplicación Sinatra</A>
+<UL>
+<LI><A NAME="tex2html8581"
+  HREF="node317.html#SECTION021141010000000000000">app.rb</A>
+<LI><A NAME="tex2html8582"
+  HREF="node317.html#SECTION021141020000000000000">Entrada</A>
+<LI><A NAME="tex2html8583"
+  HREF="node317.html#SECTION021141030000000000000">Plantilla para el Formulario. Template: form.erb</A>
+<LI><A NAME="tex2html8584"
+  HREF="node317.html#SECTION021141040000000000000">Plantilla/Template con los resultados: result.erb</A>
+<LI><A NAME="tex2html8585"
+  HREF="node317.html#SECTION021141050000000000000">Salida</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html8586"
+  HREF="node318.html">Testing con Rack::Test y Cucumber</A>
+<UL>
+<LI><A NAME="tex2html8587"
+  HREF="node318.html#SECTION021142010000000000000">Rakefile</A>
+<LI><A NAME="tex2html8588"
+  HREF="node318.html#SECTION021142020000000000000">Ejecución de las Pruebas</A>
+<LI><A NAME="tex2html8589"
+  HREF="node318.html#SECTION021142030000000000000">Desventajas de usar Rack::Test</A>
 </UL></UL>
 <!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION021141000000000000000">
-Testeando una Aplicación Sinatra</A>
-</H2>
-Consideremos la siguiente aplicación Sinatra que permite
-submitir una revisión de un libro
-y que retorna los datos enviados. No se ha implementado persistencia.
-
-<P>
-
-<H4><A NAME="SECTION021141010000000000000">
-app.rb</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/application_testing_with_capybara/sinatra(master)]$ cat app.rb 
-require 'bundler/setup'
-require 'sinatra'
-
-class BookReview &lt; Sinatra::Base
-
-  get '/form' do
-    erb :form
-  end
-
-  post '/submit' do
-    @name = params[:name]
-    @title = params[:title] 
-    @review = params[:review]
-    @age = params[:age]
-    erb :result
-  end
-
-end
-
-#only run if invoked from command line - otherwise leave to Capybara
-BookReview.run! if __FILE__ == $0
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021141020000000000000">
-Entrada</A>
-</H4>
-  
-
-<P>
-
-<img src="bookreviewssinatra.png" size="70%" />
-
-
-<P>
-
-<H4><A NAME="SECTION021141030000000000000">
-Plantilla para el Formulario. Template: form.erb</A>
-</H4>
-  
-
-<P>
-<PRE>
-[~/application_testing_with_capybara/sinatra(master)]$ cat views/form.erb 
-&lt;link rel="stylesheet" href="css/form.css"&gt;
-&lt;form action="/submit" method="post"&gt;
-  &lt;header id="header" class="info"&gt;
-    &lt;h2&gt;Book Reviews&lt;/h2&gt;
-    &lt;div&gt;Review the last book you purchased...&lt;/div&gt;
-  &lt;/header&gt;
-  &lt;ul&gt;
-    &lt;li&gt;
-    &lt;label for="name"&gt;
-      Your Name
-    &lt;/label&gt;
-    &lt;input type="text" id="name" name="name" maxlegth="255"&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-    &lt;label class="desc" for="age"&gt;
-      Age Range
-    &lt;/label&gt;
-    &lt;div&gt;
-      &lt;select id="age" name="age"&gt; 
-        &lt;option value="-" selected="selected"&gt;
-        &lt;/option&gt;
-        &lt;option value="&lt;20" &gt;
-        Under 20
-        &lt;/option&gt;
-        &lt;option value="20-50" &gt;
-        20 - 50 
-        &lt;/option&gt;
-        &lt;option value="50+" &gt;
-        Over 50
-        &lt;/option&gt;
-      &lt;/select&gt;
-    &lt;/div&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-    &lt;label for="book_title"&gt;
-      Book Title
-    &lt;/label&gt;
-    &lt;input type="text" id="book_title" name="title" maxlegth="255"&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-    &lt;label for="review"&gt;
-      Your Review...
-    &lt;/label&gt;
-    &lt;textarea id="review" name="review" rows="10" cols="50"&gt;&lt;/textarea&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-    &lt;input type="submit" value="Submit"/&gt;
-    &lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/form&gt;
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021141040000000000000">
-Plantilla/Template con los resultados: result.erb</A>
-</H4>
-  
-
-Hay otro template ERB utilizado para mostrar la revisión:
-<PRE>
-[~/application_testing_with_capybara/sinatra(master)]$ cat views/result.erb 
-&lt;div class="saved_review"&gt;
-&lt;p&gt;You submitted the following on: &lt;%= Time.new.strftime("%Y-%m-%d %H:%M:%S") %&gt; &lt;/p&gt;
-  &lt;ul&gt;
-    &lt;li&gt;
-    &lt;p id="name"&gt;Name: &lt;%= @name %&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-    &lt;p id="age"&gt;Age: &lt;%= @age %&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-    &lt;p id="title"&gt;Book Title: &lt;%= @title %&gt;&lt;/p&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-    &lt;p id="review"&gt;Book Review: &lt;%= @review %&gt;&lt;/p&gt;
-    &lt;/li&gt;
-  &lt;/ul&gt;
-  &lt;a href="/form"&gt;Submit another review...&lt;/a&gt;
-&lt;/div&gt;
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION021141050000000000000">
-Salida</A>
-</H4>
-  
-
-<P>
-
-<img src="subimttedreview.png" size="70%" />
-
-
-<P>
-Veamos ahora como hacer las pruebas para esta aplicación usando 
-Capybara.
-
-<P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8565"
+<A NAME="tex2html8578"
   HREF="node317.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8559"
-  HREF="node315.html">
+<A NAME="tex2html8572"
+  HREF="node308.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8553"
+<A NAME="tex2html8566"
   HREF="node315.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8561"
-  HREF="node849.html">
+<A NAME="tex2html8574"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8563"
-  HREF="node852.html">
+<A NAME="tex2html8576"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -352,20 +327,20 @@ Capybara.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8566"
-  HREF="node317.html">Testing con Rack::Test y</A>
-<B> Subir:</B> <A NAME="tex2html8560"
-  HREF="node315.html">Capybara y Rack::Test</A>
-<B> Anterior:</B> <A NAME="tex2html8554"
-  HREF="node315.html">Capybara y Rack::Test</A>
- &nbsp; <B>  <A NAME="tex2html8562"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8564"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8579"
+  HREF="node317.html">Testeando una Aplicación Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html8573"
+  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
+<B> Anterior:</B> <A NAME="tex2html8567"
+  HREF="node315.html">Poltergeist</A>
+ &nbsp; <B>  <A NAME="tex2html8575"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8577"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

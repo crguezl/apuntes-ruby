@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Chat con Mensajes Individuales</TITLE>
-<META NAME="description" CONTENT="Práctica: Chat con Mensajes Individuales">
+<TITLE>Código Completo del Chat</TITLE>
+<META NAME="description" CONTENT="Código Completo del Chat">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node498.html">
 <LINK REL="previous" HREF="node496.html">
-<LINK REL="up" HREF="node485.html">
+<LINK REL="up" HREF="node493.html">
 <LINK REL="next" HREF="node498.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11924"
+<A NAME="tex2html11962"
   HREF="node498.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11918"
-  HREF="node485.html">
+<A NAME="tex2html11956"
+  HREF="node493.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11912"
+<A NAME="tex2html11950"
   HREF="node496.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11920"
-  HREF="node849.html">
+<A NAME="tex2html11958"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11922"
-  HREF="node852.html">
+<A NAME="tex2html11960"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,41 +92,91 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11925"
-  HREF="node498.html">Práctica: Chat con Estilo</A>
-<B> Subir:</B> <A NAME="tex2html11919"
-  HREF="node485.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11913"
-  HREF="node496.html">Chat Simple</A>
- &nbsp; <B>  <A NAME="tex2html11921"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11923"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11963"
+  HREF="node498.html">Chat Simple</A>
+<B> Subir:</B> <A NAME="tex2html11957"
+  HREF="node493.html">Comet y Server Sent-Events</A>
+<B> Anterior:</B> <A NAME="tex2html11951"
+  HREF="node496.html">Chat Utilizando Streaming y</A>
+ &nbsp; <B>  <A NAME="tex2html11959"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11961"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION038100000000000000000"></A>
-   <A NAME="21830"></A>
-  
-<A NAME="practica:chat_con_mensajes_uno_uno"></A>
-<BR>
-Práctica: Chat con Mensajes Individuales
-</H1>
-Mejore el chat utilizando streaming y <A NAME="21831"></A><SPAN  CLASS="textbf">server sent events</SPAN> descrito en la sección
-<A HREF="node493.html#section:chatutilizandostreaming">38.8</A> para que:
+<H2><A NAME="SECTION03864000000000000000">
+Código Completo del Chat</A>
+</H2>
+<PRE>
+[17:51][~/srcSTW/streaming/chat_with_streaming(master)]$ cat chat.rb 
+# coding: utf-8
+require 'sinatra'
+set server: 'thin', connections: []
 
-<UL>
-<LI>Si el usuario escribe en su caja <code>/nickname: mensaje</code> ese <code>mensaje</code> sólo se entregue 
-al usuario <code>nickname</code>
-</LI>
-</UL>
+get '/' do
+  halt erb(:login) unless params[:user]
+  erb :chat, locals: { user: params[:user].gsub(/\W/, '') }
+end
+
+get '/stream', provides: 'text/event-stream' do
+  stream :keep_open do |out|
+    settings.connections &lt;&lt; out
+    out.callback { settings.connections.delete(out) }
+  end
+end
+
+post '/' do
+  settings.connections.each { |out| out &lt;&lt; "data: #{params[:msg]}\n\n" }
+  204 # response without entity body
+end
+
+__END__
+
+@@ layout
+&lt;html&gt;
+  &lt;head&gt; 
+    &lt;title&gt;Super Simple Chat with Sinatra&lt;/title&gt; 
+    &lt;meta charset="utf-8" /&gt;
+    &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"&gt;&lt;/script&gt; 
+  &lt;/head&gt; 
+  &lt;body&gt;&lt;%= yield %&gt;&lt;/body&gt;
+&lt;/html&gt;
+
+@@ login
+&lt;form action='/'&gt;
+  &lt;label for='user'&gt;User Name:&lt;/label&gt;
+  &lt;input name='user' value='' /&gt;
+  &lt;input type='submit' value="GO!" /&gt;
+&lt;/form&gt;
+
+@@ chat
+&lt;pre id='chat'&gt;&lt;/pre&gt;
+
+&lt;script&gt;
+  // reading
+  var es = new EventSource('/stream');
+  es.onmessage = function(e) { $('#chat').append(e.data + "\n") };
+
+  // writing
+  $("form").live("submit", function(e) {
+    $.post('/', {msg: "&lt;%= user %&gt;: " + $('#msg').val()});
+    $('#msg').val(''); $('#msg').focus();
+    e.preventDefault();
+  });
+&lt;/script&gt;
+
+&lt;form&gt;
+  &lt;input id='msg' placeholder='type message here...' /&gt;
+&lt;/form&gt;[
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

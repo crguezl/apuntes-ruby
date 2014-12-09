@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>herramientas para el Control de la Calidad</TITLE>
-<META NAME="description" CONTENT="herramientas para el Control de la Calidad">
+<TITLE>Random bouncy particles using ruby Gosu games library</TITLE>
+<META NAME="description" CONTENT="Random bouncy particles using ruby Gosu games library">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node365.html">
 <LINK REL="previous" HREF="node361.html">
-<LINK REL="up" HREF="node25.html">
+<LINK REL="up" HREF="node358.html">
 <LINK REL="next" HREF="node363.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9363"
+<A NAME="tex2html9387"
   HREF="node363.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9357"
-  HREF="node25.html">
+<A NAME="tex2html9381"
+  HREF="node358.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9351"
+<A NAME="tex2html9377"
   HREF="node361.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9359"
-  HREF="node849.html">
+<A NAME="tex2html9383"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9361"
-  HREF="node852.html">
+<A NAME="tex2html9385"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,45 +91,114 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9364"
-  HREF="node363.html">Lints: rubcop y reek</A>
-<B> Subir:</B> <A NAME="tex2html9358"
-  HREF="node25.html">EL LENGUAJE DE PROGRAMACIÓN</A>
-<B> Anterior:</B> <A NAME="tex2html9352"
-  HREF="node361.html">Shoes</A>
- &nbsp; <B>  <A NAME="tex2html9360"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9362"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9388"
+  HREF="node363.html">Shoes</A>
+<B> Subir:</B> <A NAME="tex2html9382"
+  HREF="node358.html">Juegos con Gosu</A>
+<B> Anterior:</B> <A NAME="tex2html9378"
+  HREF="node361.html">Starfighter</A>
+ &nbsp; <B>  <A NAME="tex2html9384"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9386"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION022100000000000000000">
-herramientas para el Control de la Calidad</A>
+<H1><A NAME="SECTION021940000000000000000">
+Random bouncy particles using ruby Gosu games library</A>
 </H1>
+<A NAME="tex2html854"
+  HREF="https://gist.github.com/blazeeboy/9463030">Random bouncy particles using ruby Gosu games library</A>
+<P>
+
+<H4><A NAME="SECTION021940010000000000000">
+Donde</A>
+</H4>
+  
+
+<PRE>
+[~/src/ruby/rubytesting/gosu]$ pwd -P
+/Users/casiano/local/src/ruby/rubytesting/gosu
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION021940020000000000000">
+Código</A>
+</H4>
+  
+
+<PRE>
+[~/src/ruby/rubytesting/gosu]$ cat bouncing.rb 
+require 'gosu'
+$width, $height = 200, 200
+$number_of_particles = 200
+
+class Quad
+  def initialize
+    @pos = {x:rand($width), y:rand($width)}
+    @vel = { x:(rand(5)+1)*[1,-1].sample, y:(rand(5)+1)*[1,-1].sample }
+    @size = rand(4)*[1,-1].sample
+    @color = [  Gosu::Color::GRAY, Gosu::Color::WHITE,
+                Gosu::Color::AQUA, Gosu::Color::RED,
+                Gosu::Color::GREEN, Gosu::Color::BLUE,
+                Gosu::Color::YELLOW, Gosu::Color::FUCHSIA,
+                Gosu::Color::CYAN ].sample
+  end
+  def update
+    @vel[:x] = @vel[:x] * -1 if @pos[:x] &lt;= 0 or @pos[:x] &gt;= $width
+    @vel[:y] = @vel[:y] * -1 if @pos[:y] &lt;= 0 or @pos[:y] &gt;= $height
+    @pos[:x] += @vel[:x]
+    @pos[:y] += @vel[:y] 
+  end
+  def draw win
+    win.draw_quad @pos[:x]-@size, @pos[:y]-@size, @color,
+                  @pos[:x]+@size, @pos[:y]-@size, @color,
+                  @pos[:x]+@size, @pos[:y]+@size, @color,
+                  @pos[:x]-@size, @pos[:y]+@size, @color
+  end
+end
+
+class GameWindow &lt; Gosu::Window
+  def initialize
+    super $width, $height, false
+    self.caption = "Quads"
+    @quads = []
+    $number_of_particles.times { @quads &lt;&lt; Quad.new }
+  end
+  def update
+    @quads.each {|q| q.update }
+  end
+  def draw
+    color = Gosu::Color::WHITE
+    draw_quad 0, 0, color, $width, 0, color, $width, $height, color, 0, $height, color
+    @quads.each { |q| q.draw self }
+  end
+end
+
+window = GameWindow.new
+window.show
+</PRE>
+
+<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html9365"
-  HREF="node363.html">Lints: rubcop y reek</A>
-<UL>
-<LI><A NAME="tex2html9366"
-  HREF="node363.html#SECTION022110010000000000000">Rubocop</A>
-<LI><A NAME="tex2html9367"
-  HREF="node363.html#SECTION022110020000000000000">Code Smells: reek</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html9368"
-  HREF="node364.html">Véase</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html9389"
+  HREF="node362.html#SECTION021940010000000000000">Donde</A>
+<LI><A NAME="tex2html9390"
+  HREF="node362.html#SECTION021940020000000000000">Código</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>MacOS homebrew Package Manager</TITLE>
-<META NAME="description" CONTENT="MacOS homebrew Package Manager">
+<TITLE>Google+ Sign-In for server-side apps</TITLE>
+<META NAME="description" CONTENT="Google+ Sign-In for server-side apps">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node777.html">
-<LINK REL="previous" HREF="node758.html">
-<LINK REL="up" HREF="node646.html">
+<LINK REL="previous" HREF="node775.html">
+<LINK REL="up" HREF="node760.html">
 <LINK REL="next" HREF="node777.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16702"
+<A NAME="tex2html16742"
   HREF="node777.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16696"
-  HREF="node646.html">
+<A NAME="tex2html16736"
+  HREF="node760.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16690"
+<A NAME="tex2html16730"
   HREF="node775.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16698"
-  HREF="node849.html">
+<A NAME="tex2html16738"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16700"
-  HREF="node852.html">
+<A NAME="tex2html16740"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,200 +92,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16703"
-  HREF="node777.html">PostgreSQL</A>
-<B> Subir:</B> <A NAME="tex2html16697"
-  HREF="node646.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html16691"
-  HREF="node775.html">Authentication using the Google</A>
- &nbsp; <B>  <A NAME="tex2html16699"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16701"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16743"
+  HREF="node777.html">Authentication using the Google</A>
+<B> Subir:</B> <A NAME="tex2html16737"
+  HREF="node760.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html16731"
+  HREF="node775.html">Google + API for</A>
+ &nbsp; <B>  <A NAME="tex2html16739"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16741"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061500000000000000000">
-MacOS homebrew Package Manager</A>
-</H1><I>
- 
-  </I>
-<H4><A NAME="SECTION061500010000000000000">
-Homebrew installs packages to their own directory</A>
-</H4>
+<H1><A NAME="SECTION0614130000000000000000">
+Google+ Sign-In for server-side apps</A>
+</H1>
 <P>
-<I>Homebrew installs the stuff you need that Apple didn’t.
-</I>
-<P><PRE>
-$ brew install wget
-</PRE><I>
-Homebrew installs packages to their own directory and then symlinks their files into <code>/usr/local</code>.
-</I>
-<P><PRE>
-$ cd /usr/local
-$ find Cellar
-Cellar/wget/1.12
-Cellar/wget/1.12/bin/wget
-Cellar/wget/1.12/share/man/man1/wget.1
-</PRE>
-<P><PRE>
-$ ls -l bin
-bin/wget -&gt; ../Cellar/wget/1.12/bin/wget
-</PRE>
-<P>
-<I>Homebrew won’t install files outside its prefix, and you can place
-a Homebrew installation wherever you like.
+<I>To take advantage of all of the benefits of Google+ Sign-In you must
+use a hybrid server-side flow where a user authorizes your app on the
+client side using the JavaScript API client and you send a
+special one-time authorization code to your server. 
 </I>
 <P>
-<H4><A NAME="SECTION061500020000000000000">
-Create your own Homebrew packages</A>
-</H4>
-<P>
-<I>Trivially create your own Homebrew packages.
-</I>
-<P><PRE>
-$ brew create http://foo.com/bar-1.0.tgz
-Created /usr/local/Library/Formula/bar.rb
-</PRE><I>
-It's all git and ruby underneath, so hack away with the knowledge
-that you can easily revert your modifications and merge upstream
-updates.
-</I>
-<P><PRE>
-$ brew edit wget # opens in $EDITOR!
-</PRE><I>
-Homebrew formulae are simple Ruby scripts:
-</I>
-<P><PRE>
-require 'formula'
-
-class Wget &lt; Formula
-  homepage 'http://www.gnu.org/wget/'
-  url 'http://ftp.gnu.org/wget-1.12.tar.gz'
-  md5 '308a5476fc096a8a525d07279a6f6aa3'
-
-  def install
-    system "./configure --prefix=#{prefix}"
-    system 'make install'
-  end
-end
-</PRE><I>
-Homebrew complements OS X. Install your gems with gem, and their
-dependencies with brew.
+<I>Your server exchanges this one-time-use code to acquire its own access and
+refresh tokens from Google for the server to be able to make its own API
+calls, which can be done while the user is offline. 
 </I>
 <P>
-<H4><A NAME="SECTION061500030000000000000">
-Comandos</A>
-</H4>
-<P><PRE>
-[~/local/src/ruby/sinatra/jump-start-sinatra]$ brew --help
-Example usage:
-  brew [info | home | options ] [FORMULA...]
-  brew install FORMULA...
-  brew uninstall FORMULA...
-  brew search [foo]
-  brew list [FORMULA...]
-  brew update
-  brew upgrade [FORMULA...]
-
-Troubleshooting:
-  brew doctor
-  brew install -vd FORMULA
-  brew [--env | --config]
-
-Brewing:
-  brew create [URL [--no-fetch]]
-  brew edit [FORMULA...]
-  open https://github.com/mxcl/homebrew/wiki/Formula-Cookbook
-
-Further help:
-  man brew
-  brew home
-</PRE>
-<P>
-<H4><A NAME="SECTION061500040000000000000">
-HOMEBREW_GITHUB_API_TOKEN</A>
-</H4>
-<P>
-<I>A personal GitHub API Access token, which
-you can create at 
-<A NAME="tex2html1840"
-  HREF="https://github.com/settings/applications">https://github.com/settings/applications</A>.
-If set,
-GitHub will allow you a greater number of API requests. See
-<A NAME="tex2html1841"
-  HREF="http://developer.github.com/v3/#rate-limiting">http://developer.github.com/v3/#rate-limiting</A>
-for more information.
+<I>This one-time code flow has security advantages over both a pure
+server-side flow and over sending access tokens to your server.
 </I>
 <P>
-<I>Homebrew uses the GitHub API for features such as <code>brew search</code>.
-</I>
-<P><PRE>
-$ brew search postgress
-Error: GitHub Server Error
-You may want to create an API token: https://github.com/settings/applications
-and then set HOMEBREW_GITHUB_API_TOKEN.
-</PRE><I>
-Vete a la página y crea el token.
-Luego añade una línea como esta en tu <code>.bashrc</code>:
-</I><PRE>
-$ export HOMEBREW_GITHUB_API_TOKEN fx0001111111111111111111111eeeeeeeeeeeee
-$ brew search postgress
-No formula found for "postgress". Searching open pull requests...
-</PRE>
-<P>
-<H4><A NAME="SECTION061500050000000000000">
-Véase</A>
-</H4>
-<P>
-<OL>
-<LI><A NAME="tex2html1842"
-  HREF="https://github.com/mxcl/homebrew/blob/master/Library/Contributions/manpages/brew.1.md">brew(1) - The missing package manager for OS X</A>
-</LI>
-<LI><A NAME="tex2html1843"
-  HREF="http://mac.tutsplus.com/tutorials/terminal/homebrew-demystified-os-xs-ultimate-package-manager/">Homebrew Demystified: OS X’s Ultimate Package Manager</A>
-</LI>
-</OL><I>
+<I>
+<FONT COLOR="#ff0000"> The Google+ Sign-In server-side flow differs from the  <A NAME="tex2html1841"
+  HREF="http://oauth.net/">OAuth</A>
+ 2.0
+for Web server applications flow.</FONT>
 </I>
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
-
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html16704"
-  HREF="node776.html#SECTION061500010000000000000">Homebrew installs packages to their own directory</A>
-<LI><A NAME="tex2html16705"
-  HREF="node776.html#SECTION061500020000000000000">Create your own Homebrew packages</A>
-<LI><A NAME="tex2html16706"
-  HREF="node776.html#SECTION061500030000000000000">Comandos</A>
-<LI><A NAME="tex2html16707"
-  HREF="node776.html#SECTION061500040000000000000">HOMEBREW_GITHUB_API_TOKEN</A>
-<LI><A NAME="tex2html16708"
-  HREF="node776.html#SECTION061500050000000000000">Véase</A>
-</UL></UL></UL></UL>
-<!--End of Table of Child-Links-->
-
+<I>
+<img src="server_side_code_flow.png" />
+</I>
+<P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html16702"
+<A NAME="tex2html16742"
   HREF="node777.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16696"
-  HREF="node646.html">
+<A NAME="tex2html16736"
+  HREF="node760.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16690"
+<A NAME="tex2html16730"
   HREF="node775.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16698"
-  HREF="node849.html">
+<A NAME="tex2html16738"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16700"
-  HREF="node852.html">
+<A NAME="tex2html16740"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -336,20 +202,20 @@ Véase</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16703"
-  HREF="node777.html">PostgreSQL</A>
-<B> Subir:</B> <A NAME="tex2html16697"
-  HREF="node646.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html16691"
-  HREF="node775.html">Authentication using the Google</A>
- &nbsp; <B>  <A NAME="tex2html16699"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16701"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html16743"
+  HREF="node777.html">Authentication using the Google</A>
+<B> Subir:</B> <A NAME="tex2html16737"
+  HREF="node760.html">OAuth</A>
+<B> Anterior:</B> <A NAME="tex2html16731"
+  HREF="node775.html">Google + API for</A>
+ &nbsp; <B>  <A NAME="tex2html16739"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16741"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

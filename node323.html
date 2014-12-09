@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Pruebas. Other Testing tools</TITLE>
-<META NAME="description" CONTENT="Pruebas. Other Testing tools">
+<TITLE>Buscadores/Finders, Ámbito/Scope y Coincidencias/Matches Múltiples</TITLE>
+<META NAME="description" CONTENT="Buscadores/Finders, Ámbito/Scope y Coincidencias/Matches Múltiples">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node324.html">
-<LINK REL="previous" HREF="node308.html">
-<LINK REL="up" HREF="node25.html">
+<LINK REL="previous" HREF="node319.html">
+<LINK REL="up" HREF="node308.html">
 <LINK REL="next" HREF="node324.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html8698"
+<A NAME="tex2html8723"
   HREF="node324.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8692"
-  HREF="node25.html">
+<A NAME="tex2html8717"
+  HREF="node308.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8686"
+<A NAME="tex2html8711"
   HREF="node322.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8694"
-  HREF="node849.html">
+<A NAME="tex2html8719"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8696"
-  HREF="node852.html">
+<A NAME="tex2html8721"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,60 +92,290 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8699"
-  HREF="node324.html">Integración Contínua: Travis</A>
-<B> Subir:</B> <A NAME="tex2html8693"
-  HREF="node25.html">EL LENGUAJE DE PROGRAMACIÓN</A>
-<B> Anterior:</B> <A NAME="tex2html8687"
-  HREF="node322.html">Véase</A>
- &nbsp; <B>  <A NAME="tex2html8695"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8697"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html8724"
+  HREF="node324.html">Véase</A>
+<B> Subir:</B> <A NAME="tex2html8718"
+  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
+<B> Anterior:</B> <A NAME="tex2html8712"
+  HREF="node322.html">Envío de Formularios</A>
+ &nbsp; <B>  <A NAME="tex2html8720"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8722"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021200000000000000000"></A>
-<A NAME="chapter:othertestingtools"></A>
-<BR>
-Pruebas. Other Testing tools
+<H1><A NAME="SECTION021160000000000000000">
+Buscadores/Finders, Ámbito/Scope y Coincidencias/Matches Múltiples</A>
 </H1>
-See
-<A NAME="tex2html672"
-  HREF="http://www.saasbook.info/courses">SAASBOOK. Questions specific to CS 169.1x/CS 169.2x</A>
-<P>
-
-<H4><A NAME="SECTION021200010000000000000">
-Why are you using Ruby and Rails rather than a more popular language like Java or Python?</A>
-</H4>
-  
 
 <P>
-We believe it is critical to teach the importance of testing, of communicating with nontechnical customers, and of using all methods at your disposal to create code that is modular and reusable.  Our
-colleagues in the SaaS industry strongly support these goals.
-The Ruby/Rails ecosystem has by far the most developed tools for unit
-and functional testing (rspec), integration testing (capybara),
-acceptance testing and customer communication (cucumber), as well
-as great tools for code analysis both quantitative (flog, simplecov,
-saikuro) and qualitative (reek, flay).  And Ruby, as a language,
-includes a number of mechanisms that make it easier to architect your
-code for reuse (including higher order functions, internal iterators
-using yield(), mix-ins, and metaprogramming).
+Capybara está construido sobre un conjunto de bloques básicos.
+Estos bloques básicos consisten en expresiones XPath que se usan
+para encontrar cosas en la página para a continuación delegar la acción 
+correspondiente en el driver subyacente.
 
 <P>
+La mayor parte del tiempo usaremos los métodos 
+de alto nivel, pero hay ocasiones en las que debemos 
+recurrir a estos <A NAME="13803"></A><SPAN  CLASS="textbf">finders</SPAN> para lograr nuestro 
+propósito.
+
+<P>
+Consideremos esta página web:
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat click.html 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Click Examples&lt;/title&gt;
+    &lt;script&gt;
+      window.onload = function() {
+        var myanchor = document.getElementById("myanchor");
+        var mydiv = document.getElementById("mydiv");
+        var mybutton = document.getElementById("mybutton");
+
+        myanchor.onclick = function() {
+          alert("anchor has been clicked");
+        };
+
+        mydiv.onclick = function() {
+          alert("div has been clicked");
+        };
+
+        mybutton.onclick = function() {
+          alert("button has been clicked");
+        };
+      };
+    &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="main"&gt;
+      &lt;div class="section"&gt;
+        &lt;a id="myanchor" title="myanchortitle" href="#"&gt;Click this Anchor&lt;/a&gt;
+        &lt;div id="mydiv" title="mydivtitle"&gt;Click This Div&lt;/div&gt;
+        &lt;input id="mybutton" type="button" value="Click This Button" title="mybuttontitle"/&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+
+<P>
+Cuando se cliquea en el <code>div</code>
+<PRE>
+        &lt;div id="mydiv" title="mydivtitle"&gt;Click This Div&lt;/div&gt;
+</PRE>
+se emite un mensaje de alerta.
+
+<P>
+Para automatizar este click haremos uso del método <code>find</code>.
+
+<P>
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat find_and_click.rb 
+visit '/'
+find('#mydiv').click
+accept_alert
+</PRE>
+<code>find('#mydiv')</code> retorna un 
+<A NAME="tex2html667"
+  HREF="http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Element">Capybara::Node::Element</A>
+sobre el cual se invoca la acción.
+
+<P>
+Un <code>Element</code> representa un elemento de la página.
+Es posible interactuar con los contenidos de este elelemnto
+en la misma forma que con un documento:
+
+<P>
+<PRE>
+session = Capybara::Session.new(:rack_test, my_app)
+
+bar = session.find('#bar')              # from Capybara::Node::Finders
+bar.select('Baz', :from =&gt; 'Quox')      # from Capybara::Node::Actions
+</PRE>
+Los <code>Element</code> también tienen atributos HTML:
+
+<P>
+<PRE>
+bar.value
+bar.text
+bar[:title]
+</PRE>
+
+<P>
+Para probar este HTML vamos a usar nuestro script genérico <code>testinglocals.rb</code>:
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ ./testinglocalhtml.rb click.html find_and_click.rb
+</PRE>
+
+<P>
+Casi todo el resto de métodos de busqueda se construyen a partir
+de este (Véase la clase
+<A NAME="tex2html668"
+  HREF="http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Finders">Capybara::Node::Finders</A>
+):
 
 <UL>
-<LI><A NAME="tex2html673"
-  HREF="https://github.com/troessner/reek">Reek is a tool that examines Ruby classes, modules and methods and reports any code smells it finds</A>.
+<LI><code>find_field</code>: This finder searches for form fields by the related label
+element, or the name/id attribute
+<PRE>
+# File 'lib/capybara/node/finders.rb'
+def find_field(locator, options={})
+  find(:field, locator, options)
+end
+</PRE>
 </LI>
-<LI><A NAME="tex2html674"
-  HREF="https://github.com/colszowka/simplecov">Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites</A>
+<LI><code>field_labeled</code>: This finder is the same as <code>find_field</code>
 </LI>
-<LI><A NAME="tex2html675"
-  HREF="http://lkdjiin.github.io/coco/">Code coverage for ruby 1.9.3, 2.0 and 2.1</A>
+<LI><code>find_link</code>: This finder finds an anchor or an image link using the text, id, or img alt attribute
+</LI>
+<LI><code>find_button</code>: This finder finds a button by the id, name, or value attribute
+</LI>
+<LI><code>find_by_id</code>: This finder finds any element by the id attribute
+</LI>
+<LI><code>first([kind], locator, options)</code>:
+Find the first element on the page matching the given selector and options, or nil if no element matches.
+
+<P>
+<PRE>
+# File 'lib/capybara/node/finders.rb'
+def first(*args)
+  all(*args).first
+end
+</PRE>
+
+<P>
 </LI>
 </UL>
+
+<P>
+
+<H3><A NAME="SECTION021160100000000000000">
+Múltiples Coincidencias/Multiple Matches</A>
+</H3>
+
+<P>
+Supongamos que estamos comprobando algunas búsquedas de resultados 
+que son añadidos dinámicamente a la página:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-selenium/intro(gh-pages)]$ cat multiple.html 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Multiple Match Examples&lt;/title&gt;
+    &lt;style&gt;
+      .result {
+        height: 30px;
+        width: 100px;
+        background-color: green;
+        margin-bottom: 10px;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="main"&gt;
+      &lt;h1&gt;Search Results&lt;/h1&gt;
+      &lt;ul class="section"&gt;
+        &lt;li id="res1" class="result"&gt;Match 1&lt;/li&gt;
+        &lt;li id="res2" class="result"&gt;Match 2&lt;/li&gt;
+        &lt;li id="res3" class="result"&gt;Match 3&lt;/li&gt;
+        &lt;li id="res4" class="result"&gt;Match 4&lt;/li&gt;
+        &lt;li id="res5" class="result"&gt;Match 5&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</PRE>
+
+<P>
+Una posible solución es iterar sobre los elementos de la clase <code>.result</code>
+usando el método <code>all</code>:
+<PRE>
+$ cat multiple.rb
+RSpec.configure do |config| # avoid warning
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+end
+visit '/'
+all('.result').each_with_index do |elem, idx|
+   elem.text.should == "Match #{idx + 1}"
+end
+</PRE>
+Cuando se ejecuta 
+<PRE>
+$ ./testinglocalhtml.rb multiple.html multiple.rb p
+$
+</PRE>
+no produce fallos.
+
+<P>
+
+<H3><A NAME="SECTION021160200000000000000">
+Visibilidad</A>
+</H3>
+La visibilidad de un elemento afecta a la forma en la que Capybara 
+lo localiza en el DOM. Capybara dispone de un atributo global que
+se usa para determinar si se prueban o no 
+elementos escondidos (por ejemplo usando propiedades CSS como
+<code>display: none</code> o <code>visibility: hidden</code>:
+<PRE>
+Capybara.ignore_hidden_elements = true
+</PRE>
+el valor por defecto es <code>true</code>.
+
+<P>
+
+<H3><A NAME="SECTION021160300000000000000">
+Ambito</A>
+</H3>
+Una opción cuando se intenta encontrar contenido que 
+nos fácil de identificar unívocamente es restríngir
+la consulta a una sección de la página.
+
+<P>
+Capybara provee el método <code>within</code> que permite 
+consultas con ámbito.
+
+<P>
+<PRE>
+#within(*find_args) ⇒ Object
+#within(a_node) ⇒ Object
+</PRE>
+Executes the given block within the context of a node. <code>within</code> takes the same options as <code>find</code>, as well as a block. For the duration of the block, any command to Capybara will be handled as though it were scoped to the given element.
+
+<P>
+<PRE>
+within(:xpath, '//div[@id="delivery-address"]') do
+  fill_in('Street', :with =&gt; '12 Main Street')
+end
+</PRE>
+Just as with <code>find</code>, if multiple elements match the selector given to <code>within</code>, an error will be raised, and just as with <code>find</code>, this behaviour can be controlled through the <code>:match</code> and <code>:exact</code> options.
+
+<P>
+It is possible to omit the first parameter, in that case, the selector is assumed to be of the type set in <code>Capybara.default_selector</code>.
+
+<P>
+<PRE>
+within('div#delivery-address') do
+  fill_in('Street', :with =&gt; '12 Main Street')
+end
+</PRE>
+Note that a lot of uses of <code>within</code> can be replaced more succinctly with chaining:
+
+<P>
+<PRE>
+find('div#delivery-address').fill_in('Street', :with =&gt; '12 Main Street')
+</PRE>
+Raises:
+(<code>Capybara::ElementNotFound</code>) — If the scope can't be found before time expires
 
 <P>
 <BR><HR>
@@ -154,29 +384,31 @@ using yield(), mix-ins, and metaprogramming).
 
 <UL CLASS="ChildLinks">
 <LI><UL>
-<LI><UL>
-<LI><UL>
-<LI><A NAME="tex2html8700"
-  HREF="node323.html#SECTION021200010000000000000">Why are you using Ruby and Rails rather than a more popular language like Java or Python?</A>
-</UL></UL></UL></UL>
+<LI><A NAME="tex2html8725"
+  HREF="node323.html#SECTION021160100000000000000">Múltiples Coincidencias/Multiple Matches</A>
+<LI><A NAME="tex2html8726"
+  HREF="node323.html#SECTION021160200000000000000">Visibilidad</A>
+<LI><A NAME="tex2html8727"
+  HREF="node323.html#SECTION021160300000000000000">Ambito</A>
+</UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html8698"
+<A NAME="tex2html8723"
   HREF="node324.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html8692"
-  HREF="node25.html">
+<A NAME="tex2html8717"
+  HREF="node308.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html8686"
+<A NAME="tex2html8711"
   HREF="node322.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html8694"
-  HREF="node849.html">
+<A NAME="tex2html8719"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html8696"
-  HREF="node852.html">
+<A NAME="tex2html8721"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -227,20 +459,20 @@ using yield(), mix-ins, and metaprogramming).
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html8699"
-  HREF="node324.html">Integración Contínua: Travis</A>
-<B> Subir:</B> <A NAME="tex2html8693"
-  HREF="node25.html">EL LENGUAJE DE PROGRAMACIÓN</A>
-<B> Anterior:</B> <A NAME="tex2html8687"
-  HREF="node322.html">Véase</A>
- &nbsp; <B>  <A NAME="tex2html8695"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html8697"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html8724"
+  HREF="node324.html">Véase</A>
+<B> Subir:</B> <A NAME="tex2html8718"
+  HREF="node308.html">Pruebas. Capybara y Cucumber</A>
+<B> Anterior:</B> <A NAME="tex2html8712"
+  HREF="node322.html">Envío de Formularios</A>
+ &nbsp; <B>  <A NAME="tex2html8720"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html8722"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Asynchronous responses in Rack</TITLE>
-<META NAME="description" CONTENT="Asynchronous responses in Rack">
+<TITLE>Embedding Sinatra within EventMachine</TITLE>
+<META NAME="description" CONTENT="Embedding Sinatra within EventMachine">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node504.html">
-<LINK REL="previous" HREF="node501.html">
-<LINK REL="up" HREF="node485.html">
+<LINK REL="next" HREF="node503.html">
+<LINK REL="previous" HREF="node493.html">
+<LINK REL="up" HREF="node487.html">
 <LINK REL="next" HREF="node503.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11998"
+<A NAME="tex2html12032"
   HREF="node503.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11992"
-  HREF="node485.html">
+<A NAME="tex2html12026"
+  HREF="node487.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11986"
+<A NAME="tex2html12020"
   HREF="node501.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11994"
-  HREF="node849.html">
+<A NAME="tex2html12028"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11996"
-  HREF="node852.html">
+<A NAME="tex2html12030"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,83 +92,215 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11999"
-  HREF="node503.html">Deferred or streaming response</A>
-<B> Subir:</B> <A NAME="tex2html11993"
-  HREF="node485.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11987"
-  HREF="node501.html">Ejemplo de Server Sent</A>
- &nbsp; <B>  <A NAME="tex2html11995"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11997"
-  HREF="node852.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12033"
+  HREF="node503.html">Ejemplo de Server Sent</A>
+<B> Subir:</B> <A NAME="tex2html12027"
+  HREF="node487.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html12021"
+  HREF="node501.html">Práctica: Chat con TicTacToe</A>
+ &nbsp; <B>  <A NAME="tex2html12029"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12031"
+  HREF="node854.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION038150000000000000000">
-Asynchronous responses in Rack</A>
+<H1><A NAME="SECTION03870000000000000000">
+Embedding Sinatra within EventMachine</A>
 </H1>
 
 <P>
-<A NAME="tex2html1218"
-  HREF="http://polycrystal.org/2012/04/15/asynchronous_responses_in_rack.html">Asynchronous responses in Rack</A>
-<P>
-With the Rack  synchronous interface protocol, the entire body must
-be prepared immediately, or be otherwise quickly available, for
-example by reading from file. A response that must be waited upon
-will tie up the process or thread executing the HTTP request. In a
-multi-process Rack server such as Unicorn, this will block the
-entire worker process, making in unavailable to server other requests.
+Véase 
+<A NAME="tex2html1201"
+  HREF="http://recipes.sinatrarb.com/p/embed/event-machine">Sinatra Recipes. Embedding Sinatra within EventMachine</A>.
 
 <P>
-Some Rack servers provide an alternate interface that allows the
-request to be suspended, unblocking the worker. At some later time,
-the request may be resumed, and the response sent to the client.
+<A NAME="tex2html1202"
+  HREF="ihttps://github.com/eventmachine/eventmachine">Event::Machine</A> is a very useful tool and sometimes you need to add a
+web-interface on top of it. Yes, EM does support this out of the
+box, but it can be ugly and hard to work with. Why not use something
+that everyone already knows and loves like Sinatra?
 
 <P>
-While there is not yet an async interface in the Rack specification,
-several Rack servers have implemented 
-<A NAME="tex2html1219"
-  HREF="https://github.com/raggi/thin/blob/async_for_rack/example/async_app.ru">James Tucker's async scheme.</A>
-<P>
-Rather than returning <code>[status, headers, body]</code>, the app returns a
-status of <code>-1</code>, or throws the symbol <code>:async</code>. 
+Below is a (working) code-sample for running a simple HelloWorld
+Sinatra app within <A NAME="tex2html1203"
+  HREF="http://eventmachine.rubyforge.org/">Event::Machine</A>. I've also provided a simple example
+of deferring tasks within your Sinatra call.
 
 <P>
-The server provides
-<code>env['async.callback']</code> 
-which the app saves and later calls with the
-usual <code>[status, headers, body]</code> 
-to send the response.
-
-<P>
-Note: returning a status of <code>-1</code> is illegal as far as <code>Rack::Lint</code> is
-concerned. <code>throw :async</code> is not flagged as an <code>error</code>.
 <PRE>
-class AsyncApp
-  def call(env)
-    Thread.new do
-      sleep 5  # simulate waiting for some event
-      response = [200, {'Content-Type' =&gt; 'text/plain'}, ['Hello, World!']]
-      env['async.callback'].call response
+[~/sinatra/sinatra-eventmachine]$ cat em-sinatra-test.rb 
+require 'eventmachine'
+require 'sinatra/base'
+require 'thin'
+
+
+# This example shows you how to embed Sinatra into your EventMachine
+# application. This is very useful if you're application needs some
+# sort of API interface and you don't want to use EM's provided
+# web-server.
+
+def run(opts)
+
+  # Start he reactor
+  EM.run do
+
+    # define some defaults for our app
+    server  = opts[:server] || 'thin'
+    host    = opts[:host]   || '0.0.0.0'
+    port    = opts[:port]   || '8181'
+    web_app = opts[:app]
+
+    # create a base-mapping that our application will set at. If I
+    # have the following routes:
+    dispatch = Rack::Builder.app do
+      map '/' do
+        run web_app
+      end
     end
-    
-    [-1, {}, []]  # or throw :async
+
+    # NOTE that we have to use an EM-compatible web-server. There
+    # might be more, but these are some that are currently available.
+    unless ['thin', 'hatetepe', 'goliath'].include? server
+      raise "Need an EM webserver, but #{server} isn't"
+    end
+
+    # Start the web server. Note that you are free to run other tasks
+    # within your EM instance.
+    Rack::Server.start({
+      app:    dispatch,
+      server: server,
+      Host:   host,
+      Port:   port
+    })
   end
 end
+
+# Our simple hello-world app
+class HelloApp &lt; Sinatra::Base
+  # threaded - False: Will take requests on the reactor thread
+  #            True:  Will queue request for background thread
+  configure do
+    set :threaded, false
+  end
+
+  # Request runs on the reactor thread (with threaded set to false)
+  get '/hello' do
+    'Hello World'
+  end
+
+  # Request runs on the reactor thread (with threaded set to false)
+  # and returns immediately. The deferred task does not delay the
+  # response from the web-service.
+  get '/delayed-hello' do
+    EM.defer do
+      sleep 5
+    end
+    'I\'m doing work in the background, but I am still free to take requests'
+  end
+end
+
+# start the application
+run app: HelloApp.new
 </PRE>
 
 <P>
-In the example above, the request is suspended, nothing is sent
-back to the client, the connection remains open, and the client
-waits for a response. 
+You can run this simply with the command:
 
 <P>
-The app returns the special status, and the
-worker process is able to handle more HTTP requests (i.e. it is not
-blocked). Later, inside the thread, the full response is prepared
-and sent to the client.
+<PRE>
+ruby em-sinatra-test.rb   # em-sinatra-test.rb is the filename of the above-code
+</PRE>
+You should also be able to test that it is working correctly with the following <code>ab</code> 
+command:
+
+<P>
+<PRE>
+ab -c 10 -n 100 http://localhost:8181/delayed-hello
+</PRE>
+<A NAME="21975"></A><SPAN  CLASS="textbf">ApacheBench</SPAN> ( <TT>ab</TT> ) is a single-threaded command line
+computer program for measuring the performance of HTTP web servers.
+Originally designed to test the Apache HTTP Server, it is generic
+enough to test any web server (Véase 
+<A NAME="tex2html1204"
+  HREF="http://httpd.apache.org/docs/2.2/programs/ab.html">http://httpd.apache.org/docs/2.2/programs/ab.html</A>).
+
+<P>
+If this finishes in <code>zero point something</code> seconds, then you have
+successfully setup Sinatra to run within EM and you are taking
+requests on the event-loop and deferring tasks to the background.
+
+<P>
+If it takes any longer than that, then you are most likely taking
+requests in the background which means when the EM queue fills up,
+you can't process your sinatra requests (not a good thing!). Make
+sure that you have threaded set to false and then try again.
+
+<P>
+Here is an execution:
+<PRE>
+[~/sinatra/sinatra-eventmachine]$ ab -c 10 -n 100 http://localhost:8181/delayed-hello
+This is ApacheBench, Version 2.3 &lt;$Revision: 655654 $&gt;
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient).....done
+
+
+Server Software:        thin
+Server Hostname:        localhost
+Server Port:            8181
+
+Document Path:          /delayed-hello
+Document Length:        70 bytes
+
+Concurrency Level:      10
+Time taken for tests:   0.096 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Total transferred:      30300 bytes
+HTML transferred:       7000 bytes
+Requests per second:    1043.96 [#/sec] (mean)
+Time per request:       9.579 [ms] (mean)
+Time per request:       0.958 [ms] (mean, across all concurrent requests)
+Transfer rate:          308.91 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       1
+Processing:     2    9  11.6      5      44
+Waiting:        1    8  11.7      5      43
+Total:          2    9  11.6      6      44
+
+Percentage of the requests served within a certain time (ms)
+  50%      6
+  66%      6
+  75%      7
+  80%      7
+  90%     44
+  95%     44
+  98%     44
+  99%     44
+ 100%     44 (longest request)
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION03870010000000000000">
+Véase</A>
+</H4>
+  
+
+<OL>
+<LI><A NAME="tex2html1205"
+  HREF="http://polycrystal.org/2012/04/15/asynchronous_responses_in_rack.html">Asynchronous responses in Rack</A>
+por 
+<A NAME="tex2html1206"
+  HREF="http://polycrystal.org/authors/pat/">Patrick</A>
+</LI>
+</OL>
 
 <P>
 <BR><HR>
@@ -176,27 +308,29 @@ and sent to the client.
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html12000"
-  HREF="node503.html">Deferred or streaming response bodies</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html12034"
+  HREF="node502.html#SECTION03870010000000000000">Véase</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11998"
+<A NAME="tex2html12032"
   HREF="node503.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11992"
-  HREF="node485.html">
+<A NAME="tex2html12026"
+  HREF="node487.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11986"
+<A NAME="tex2html12020"
   HREF="node501.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11994"
-  HREF="node849.html">
+<A NAME="tex2html12028"
+  HREF="node851.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11996"
-  HREF="node852.html">
+<A NAME="tex2html12030"
+  HREF="node854.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -247,20 +381,20 @@ and sent to the client.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11999"
-  HREF="node503.html">Deferred or streaming response</A>
-<B> Subir:</B> <A NAME="tex2html11993"
-  HREF="node485.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11987"
-  HREF="node501.html">Ejemplo de Server Sent</A>
- &nbsp; <B>  <A NAME="tex2html11995"
-  HREF="node849.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11997"
-  HREF="node852.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12033"
+  HREF="node503.html">Ejemplo de Server Sent</A>
+<B> Subir:</B> <A NAME="tex2html12027"
+  HREF="node487.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html12021"
+  HREF="node501.html">Práctica: Chat con TicTacToe</A>
+ &nbsp; <B>  <A NAME="tex2html12029"
+  HREF="node851.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12031"
+  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-03
+2014-12-09
 </ADDRESS>
 </BODY>
 </HTML>
