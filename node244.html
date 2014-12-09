@@ -109,8 +109,7 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <UL CLASS="ChildLinks">
 <LI><A NAME="tex2html7409"
-  HREF="node244.html#SECTION02812100000000000000"><TT>Class</TT>.new, <TT>Module</TT>.new, <TT>define_method</TT>
-y Ambitos</A>
+  HREF="node244.html#SECTION02812100000000000000">Ambitos y los métodos <TT>Class</TT>.new, <TT>Module</TT>.new, <TT>define_method</TT></A>
 </UL>
 <!--End of Table of Child-Links-->
 <HR>
@@ -174,8 +173,8 @@ es utilizado como nombre de la clase
 
 <P>
 </LI>
-<LI>Si fuera asignado a una
-variable, el método <A NAME="11159"></A><A NAME="tex2html495"
+<LI>Si la clase o módulo fuera asignado a una
+variable (como en la línea 22), el método <A NAME="11159"></A><A NAME="tex2html495"
   HREF="http://ruby-doc.org/core-2.0.0/Method.html#method-i-to_s"><TT>to_s</TT></A>
 devolvería algo del estilo
 <code>#&lt;Class:0x10016a868&gt;</code> y <A NAME="11163"></A><A NAME="tex2html496"
@@ -188,11 +187,10 @@ devolvería <code>nil</code>.
 
 <H3><A NAME="SECTION02812100000000000000"></A><A NAME="11173"></A>
 <BR>
-<A NAME="tex2html497"
+Ambitos y los métodos <A NAME="tex2html497"
   HREF="http://ruby-doc.org/core-2.0.0/Class.html"><TT>Class</TT></A>.new, <A NAME="tex2html498"
   HREF="http://ruby-doc.org/core-2.0.0/Module.html"><TT>Module</TT></A>.new, <A NAME="tex2html499"
   HREF="http://ruby-doc.org/core-2.0.0/Module.html#method-i-define_method"><TT>define_method</TT></A>
-y Ambitos
 </H3>
 
 <P>
@@ -205,7 +203,8 @@ del módulo <A NAME="tex2html501"
 a las variables locales visibles en un punto.
 </LI>
 <LI>Algunos lenguajes permiten a un <A NAME="11184"></A><SPAN  CLASS="textbf">ámbito</SPAN> interno ver las variables
-de un ámbito mas externo. Este tipo de visibilidad no ocurre en Ruby
+de un ámbito mas externo. Este tipo de visibilidad no ocurre en general 
+en Ruby
 </LI>
 <LI>Hay tres puntos en los que un programa abandona el ámbito previo y
 abre un nuevo ámbito (<A NAME="11186"></A><SPAN  CLASS="textbf">scope gates</SPAN> en al terminología del libro <SPAN  CLASS="textbf">Metaprogramming Ruby</SPAN>
@@ -223,7 +222,7 @@ abre un nuevo ámbito (<A NAME="11186"></A><SPAN  CLASS="textbf">scope gates</SP
 </LI>
 <LI>Las variables globales son visibles desde cualquier ámbito
 </LI>
-<LI>las variables de instancia son visibles desde cualquier punto en el que 
+<LI>Las variables de instancia son visibles desde cualquier punto en el que 
 <code>self</code> se refiere al mismo objeto
 </LI>
 </OL>
@@ -231,7 +230,24 @@ abre un nuevo ámbito (<A NAME="11186"></A><SPAN  CLASS="textbf">scope gates</SP
 <P>
 
     <pre>
-
+  v1 = 1                  
+  
+  class Tutu
+    v2 = 2                
+    puts "%2d"%(__LINE__.to_s)+' '+local_variables.inspect # [:v2]
+  
+    def my_method
+      v3 = 3
+      puts "%2d"%__LINE__.to_s+' '+local_variables.inspect # [:v3]
+    end
+  
+    puts "%2d"%__LINE__.to_s+' '+local_variables.inspect   # [:v2] 
+  end
+  
+  obj = Tutu.new
+  obj.my_method        
+  obj.my_method        
+  puts "%2d"%__LINE__.to_s+' '+local_variables.inspect     # [:v1, :obj]
     </pre>
 
 <P>
@@ -248,7 +264,24 @@ reescritura del programa anterior cambia la visibilidad:
 <P>
 
     <pre>
-
+  v1 = 1                  
+  
+  Tutu = Class.new do
+    v2 = 2                
+    puts "%2d"%(__LINE__.to_s)+' '+local_variables.inspect  # [:v2, :v1, :obj]
+  
+    define_method :my_method  do
+      v3 = 3
+      puts "%2d"%__LINE__.to_s+' '+local_variables.inspect  # [:v3, :v2, :v1, :obj]
+    end
+  
+    puts "%2d"%__LINE__.to_s+' '+local_variables.inspect    # [:v2, :v1, :obj]
+  end
+  
+  obj = Tutu.new
+  obj.my_method        
+  obj.my_method        
+  puts "%2d"%__LINE__.to_s+' '+local_variables.inspect       # [:v1, :obj]
     </pre>
 
 <P>
