@@ -32,5 +32,11 @@ $cached_env_img{$key} = q|<IMG
  SRC="|."$dir".q|img3.png"
  ALT="$ (x_1,y_1) + (x_2, y_2) = (x_1 + y_1, x_2+y_2)$">|; 
 
+$key = q/>=;MSF=1.6;LFS=11;AAT/;
+$cached_env_img{$key} = q|<IMG
+ WIDTH="32" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="|."$dir".q|img6.png"
+ ALT="$ &gt;=$">|; 
+
 1;
 

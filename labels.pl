@@ -178,6 +178,10 @@ $key = q/parrafo:procfile/;
 $external_labels{$key} = "$URL/" . q|node551.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/chapter:reflexionymetaprogramcion/;
+$external_labels{$key} = "$URL/" . q|node241.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/chapter:oauth/;
 $external_labels{$key} = "$URL/" . q|node760.html|; 
 $noresave{$key} = "$nosave";
@@ -1421,6 +1425,10 @@ $key = q/parrafo:procfile/;
 $external_latex_labels{$key} = q|52.1|; 
 $noresave{$key} = "$nosave";
 
+$key = q/chapter:reflexionymetaprogramcion/;
+$external_latex_labels{$key} = q|15|; 
+$noresave{$key} = "$nosave";
+
 $key = q/subsection:nombresyrequires/;
 $external_latex_labels{$key} = q|90.5|; 
 $noresave{$key} = "$nosave";
@@ -1581,12 +1589,12 @@ $key = q/subsection:argumentosdebloque/;
 $external_latex_labels{$key} = q|13.4.6|; 
 $noresave{$key} = "$nosave";
 
-$key = q/chapter:sequelysinatra/;
-$external_latex_labels{$key} = q|47|; 
-$noresave{$key} = "$nosave";
-
 $key = q/sibsection:parametrospordefecto/;
 $external_latex_labels{$key} = q|13.4.1|; 
+$noresave{$key} = "$nosave";
+
+$key = q/chapter:sequelysinatra/;
+$external_latex_labels{$key} = q|47|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsectio:tabladeoperadores/;
