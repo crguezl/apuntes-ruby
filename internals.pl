@@ -306,6 +306,10 @@ $key = q/section:authentication/;
 $ref_files{$key} = "$dir".q|node466.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/section:metodos/;
+$ref_files{$key} = "$dir".q|node251.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/practica:regexpengine/;
 $ref_files{$key} = "$dir".q|node172.html|; 
 $noresave{$key} = "$nosave";
@@ -946,6 +950,14 @@ $key = q/subsection:variablesdeclase/;
 $ref_files{$key} = "$dir".q|node192.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/section:creandometodosdinamicamente/;
+$ref_files{$key} = "$dir".q|node271.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/section:tiposclasesymodulos/;
+$ref_files{$key} = "$dir".q|node242.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/figure:camping2png/;
 $ref_files{$key} = "$dir".q|node831.html|; 
 $noresave{$key} = "$nosave";
@@ -1016,6 +1028,10 @@ $noresave{$key} = "$nosave";
 
 $key = q/section:ejecuciondeunprogramaruby/;
 $ref_files{$key} = "$dir".q|node33.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/section:evaluandostringsybloques/;
+$ref_files{$key} = "$dir".q|node245.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:igualdaddepuntos/;

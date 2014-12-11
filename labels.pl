@@ -306,6 +306,10 @@ $key = q/section:authentication/;
 $external_labels{$key} = "$URL/" . q|node466.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/section:metodos/;
+$external_labels{$key} = "$URL/" . q|node251.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/practica:regexpengine/;
 $external_labels{$key} = "$URL/" . q|node172.html|; 
 $noresave{$key} = "$nosave";
@@ -946,6 +950,14 @@ $key = q/subsection:variablesdeclase/;
 $external_labels{$key} = "$URL/" . q|node192.html|; 
 $noresave{$key} = "$nosave";
 
+$key = q/section:creandometodosdinamicamente/;
+$external_labels{$key} = "$URL/" . q|node271.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/section:tiposclasesymodulos/;
+$external_labels{$key} = "$URL/" . q|node242.html|; 
+$noresave{$key} = "$nosave";
+
 $key = q/figure:camping2png/;
 $external_labels{$key} = "$URL/" . q|node831.html|; 
 $noresave{$key} = "$nosave";
@@ -1016,6 +1028,10 @@ $noresave{$key} = "$nosave";
 
 $key = q/section:ejecuciondeunprogramaruby/;
 $external_labels{$key} = "$URL/" . q|node33.html|; 
+$noresave{$key} = "$nosave";
+
+$key = q/section:evaluandostringsybloques/;
+$external_labels{$key} = "$URL/" . q|node245.html|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:igualdaddepuntos/;
@@ -1649,6 +1665,10 @@ $key = q/section:authentication/;
 $external_latex_labels{$key} = q|33.25|; 
 $noresave{$key} = "$nosave";
 
+$key = q/section:metodos/;
+$external_latex_labels{$key} = q|15.4|; 
+$noresave{$key} = "$nosave";
+
 $key = q/practica:regexpengine/;
 $external_latex_labels{$key} = q|13.12|; 
 $noresave{$key} = "$nosave";
@@ -1849,6 +1869,14 @@ $key = q/section:mergespecificfilesfromanbotherbranch/;
 $external_latex_labels{$key} = q|85.7|; 
 $noresave{$key} = "$nosave";
 
+$key = q/section:creandometodosdinamicamente/;
+$external_latex_labels{$key} = q|15.10|; 
+$noresave{$key} = "$nosave";
+
+$key = q/section:tiposclasesymodulos/;
+$external_latex_labels{$key} = q|15.1|; 
+$noresave{$key} = "$nosave";
+
 $key = q/subsection:accesoalosatributos/;
 $external_latex_labels{$key} = q|14.1.5|; 
 $noresave{$key} = "$nosave";
@@ -1871,10 +1899,6 @@ $noresave{$key} = "$nosave";
 
 $key = q/section:chromedeveloper/;
 $external_latex_labels{$key} = q|71.3|; 
-$noresave{$key} = "$nosave";
-
-$key = q/figure:formulario/;
-$external_latex_labels{$key} = q|15.12.3|; 
 $noresave{$key} = "$nosave";
 
 $key = q/section:objetos/;
@@ -1979,6 +2003,10 @@ $noresave{$key} = "$nosave";
 
 $key = q/sectionpractica:abreviarurl/;
 $external_latex_labels{$key} = q|48.1|; 
+$noresave{$key} = "$nosave";
+
+$key = q/section:evaluandostringsybloques/;
+$external_latex_labels{$key} = q|15.2|; 
 $noresave{$key} = "$nosave";
 
 $key = q/subsection:sshfirsttime/;
