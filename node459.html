@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Redireccionamientos/Browser Redirect</TITLE>
-<META NAME="description" CONTENT="Redireccionamientos/Browser Redirect">
+<TITLE>Passing a Request</TITLE>
+<META NAME="description" CONTENT="Passing a Request">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node460.html">
 <LINK REL="previous" HREF="node458.html">
-<LINK REL="up" HREF="node433.html">
+<LINK REL="up" HREF="node437.html">
 <LINK REL="next" HREF="node460.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11303"
+<A NAME="tex2html11346"
   HREF="node460.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11297"
-  HREF="node433.html">
+<A NAME="tex2html11340"
+  HREF="node437.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11291"
+<A NAME="tex2html11334"
   HREF="node458.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11299"
-  HREF="node851.html">
+<A NAME="tex2html11342"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11301"
-  HREF="node854.html">
+<A NAME="tex2html11344"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,80 +92,50 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11304"
-  HREF="node460.html">Configuration / Configuración</A>
-<B> Subir:</B> <A NAME="tex2html11298"
-  HREF="node433.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11292"
-  HREF="node458.html">Generating URLs</A>
- &nbsp; <B>  <A NAME="tex2html11300"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11302"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11347"
+  HREF="node460.html">Triggering Another Route: calling</A>
+<B> Subir:</B> <A NAME="tex2html11341"
+  HREF="node437.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11335"
+  HREF="node458.html">halt</A>
+ &nbsp; <B>  <A NAME="tex2html11343"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11345"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033180000000000000000">
-Redireccionamientos/Browser Redirect</A>
+<H1><A NAME="SECTION033140000000000000000">
+Passing a Request</A>
 </H1>
-
-<P>
-You can trigger a browser redirect with the <code>redirect</code> helper method:
-
-<P>
-<PRE>
-get '/foo' do
-  redirect to('/bar')
-end
-</PRE>
-Any additional parameters are handled like arguments passed to <code>halt</code>:
+When we want to pass processing 
+to the next matching route we use
+<code>pass</code>:
 
 <P>
 <PRE>
-redirect to('/bar'), 303
-redirect 'http://google.com', 'wrong place, buddy'
+get '/guess/:who' do
+  pass unless params[:who] == 'Frank'
+  'You got me!'
+end
+
+get '/guess/*' do
+  'You missed!'
+end
 </PRE>
-You can also easily <code>redirect</code> back to the page the user came from with <code>redirect back</code>:
+The route block is immediately exited and control continues with
+the next matching route. 
 
 <P>
-<PRE>
-get '/foo' do
-  "&lt;a href='/bar'&gt;do something&lt;/a&gt;"
-end
-
-get '/bar' do
-  do_something
-  redirect back
-end
-</PRE>
-To pass arguments with a <code>redirect</code>, either add them to the query:
-
-<P>
-<PRE>
-redirect to('/bar?sum=42')
-</PRE>
-Or use a session:
-
-<P>
-<PRE>
-enable :sessions
-
-get '/foo' do
-  session[:secret] = 'foo'
-  redirect to('/bar')
-end
-
-get '/bar' do
-  session[:secret]
-end
-</PRE>
+If no matching route is found, a 404 is
+returned.
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

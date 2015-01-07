@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo Simple</TITLE>
-<META NAME="description" CONTENT="Ejemplo Simple">
+<TITLE>ActiveRecord y Sinatra</TITLE>
+<META NAME="description" CONTENT="ActiveRecord y Sinatra">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node549.html">
 <LINK REL="previous" HREF="node545.html">
-<LINK REL="up" HREF="node545.html">
+<LINK REL="up" HREF="node380.html">
 <LINK REL="next" HREF="node547.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12800"
+<A NAME="tex2html12845"
   HREF="node547.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12794"
-  HREF="node545.html">
+<A NAME="tex2html12839"
+  HREF="node380.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12790"
+<A NAME="tex2html12833"
   HREF="node545.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12796"
-  HREF="node851.html">
+<A NAME="tex2html12841"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12798"
-  HREF="node854.html">
+<A NAME="tex2html12843"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,115 +92,166 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12801"
-  HREF="node547.html">Las Manos en la</A>
-<B> Subir:</B> <A NAME="tex2html12795"
-  HREF="node545.html">Google Plus y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12791"
-  HREF="node545.html">Google Plus y Sinatra</A>
- &nbsp; <B>  <A NAME="tex2html12797"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12799"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12846"
+  HREF="node547.html">Práctica: Servicio para Abreviar</A>
+<B> Subir:</B> <A NAME="tex2html12840"
+  HREF="node380.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html12834"
+  HREF="node545.html">Sequel y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12842"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12844"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031910000000000000000">
-Ejemplo Simple</A>
+<H1><A NAME="SECTION031800000000000000000">
+ActiveRecord y Sinatra</A>
 </H1>
-
+El siguiente texto esta tomado de la lista
+Sinatra Q&amp;A
+<A NAME="tex2html1347"
+  HREF="http://www.sinatrarb.com/faq.html#ar-migrations">How do I use ActiveRecord migrations?</A>
 <P>
-Véase
-<A NAME="tex2html1350"
-  HREF="https://github.com/crguezl/sinatra-google-plus-simple">https://github.com/crguezl/sinatra-google-plus-simple</A>
+To use ActiveRecord’s migrations with Sinatra (or other non-Rails
+project), add the following to your Rakefile:
 <PRE>
-[~/src/ruby/sinatra/sinatra-google-plus(master)]$ tree
-.
-|--- Gemfile
-|--- Gemfile.lock
-|--- README.md
-|--- clientID.txt
-|--- config.yml
-|--- config.yml.example
-|--- public
-|   |--- images
-|   |   `--- favicon.ico
-|   |--- javascript
-|   `--- stylesheets
-|       `--- style.css
-|--- sinatragplus.rb
-`--- views
-    |--- 404.erb
-    |--- 500.erb
-    |--- index.erb
-    |--- layout.erb
-    `--- show.erb
-
-5 directories, 14 files
-</PRE>
-
-<P>
-<PRE>
-[~/src/ruby/sinatra/sinatra-google-plus(master)]$ cat sinatragplus.rb 
-# sinatragplus.rb
-require 'sinatra'
-require "sinatra/config_file"
-require 'google_plus'
-
-config_file 'config.yml'
-
-
-error do
-  erb :'500'
-end
-
-#class
-class GPlus
-  def initialize(apikey, gid)
-    @apikey = apikey
-    @gid = gid
-    get_info
+namespace :db do
+  desc "Migrate the database"
+  task(:migrate =&gt; :environment) do
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
+    ActiveRecord::Migration.verbose = true
+    ActiveRecord::Migrator.migrate("db/migrate")
   end
-
-  attr_reader :row0, :row1, :row2, :logo
-  private
-    #Get info about specific G+ ID
-    def get_info
-      begin
-        GooglePlus.api_key = @apikey
-        person = GooglePlus::Person.get(@gid.to_i)
-        @row0 = person.display_name
-        @row1 = person.list_activities.items
-        @row2 = person.url
-        properties = person.attributes
-        puts properties.class
-        puts properties['image'].class
-        @logo = properties['image']['url']
-        properties.each { |key, value| puts "%-20s %20s" % [key, value] }
-      rescue Exception =&gt; msg  
-        # display the system generated error message  
-        puts msg  
-      end  
-    end
-end
- 
-# Display Google+ details
-get '/' do
-  @key = settings.key
-  @user = settings.user
-  @gplus = GPlus.new(@key, @user)
-  erb :show
 end
 </PRE>
+This assumes you have a task called <code>:environment</code> which loads your app’s
+environment (requires the right files, sets up the database connection,
+etc).
 
 <P>
+Now you can create a directory called <code>db/migrate</code> 
+and fill in your migrations. I usually call the first one 
+<code>001_init.rb</code>. (I prefer the old
+sequential method for numbering migrations vs. the datetime method used
+since Rails 2.1, but either will work.)
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1348"
+  HREF="http://blog.revathskumar.com/2013/01/activerecord-migration-for-cuba-and-sinatra.html">ActiveRecord Migration for cuba and sinatra</A>
+por Revath S. Kumar
+</LI>
+<LI><A NAME="tex2html1349"
+  HREF="http://exposinggotchas.blogspot.com.es/2011/02/activerecord-migrations-without-rails.html">ActiveRecord migrations without Rails</A>
+por Wes Bailey
+</LI>
+<LI><A NAME="tex2html1350"
+  HREF="http://bytesofpi.com/post/23663592388/up-and-running-with-sinatra-and-activerecord">Up and Running with Sinatra and ActiveRecord</A>
+por Matt GaidicA
+</LI>
+</UL>
 
 <P>
 <BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><A NAME="tex2html12847"
+  HREF="node547.html">Práctica: Servicio para Abreviar URLs</A>
+<UL>
+<LI><A NAME="tex2html12848"
+  HREF="node547.html#SECTION031810010000000000000">Véase</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html12849"
+  HREF="node548.html">Práctica: Servicio para Abreviar URLs Teniendo en Cuenta el País de Visita</A>
+</UL>
+<!--End of Table of Child-Links-->
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12845"
+  HREF="node547.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12839"
+  HREF="node380.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12833"
+  HREF="node545.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html12841"
+  HREF="node858.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html12843"
+  HREF="node861.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html12846"
+  HREF="node547.html">Práctica: Servicio para Abreviar</A>
+<B> Subir:</B> <A NAME="tex2html12840"
+  HREF="node380.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html12834"
+  HREF="node545.html">Sequel y Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12842"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12844"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

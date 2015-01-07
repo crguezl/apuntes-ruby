@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ejemplo</TITLE>
-<META NAME="description" CONTENT="Ejemplo">
+<TITLE>Rake::TestTask</TITLE>
+<META NAME="description" CONTENT="Rake::TestTask">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node714.html">
 <LINK REL="previous" HREF="node712.html">
-<LINK REL="up" HREF="node709.html">
+<LINK REL="up" HREF="node711.html">
 <LINK REL="next" HREF="node714.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15717"
+<A NAME="tex2html15743"
   HREF="node714.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15711"
-  HREF="node709.html">
+<A NAME="tex2html15737"
+  HREF="node711.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15705"
+<A NAME="tex2html15731"
   HREF="node712.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15713"
-  HREF="node851.html">
+<A NAME="tex2html15739"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15715"
-  HREF="node854.html">
+<A NAME="tex2html15741"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,53 +92,121 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15718"
-  HREF="node714.html">Buenas Normas de Documentación</A>
-<B> Subir:</B> <A NAME="tex2html15712"
-  HREF="node709.html">RDoc</A>
-<B> Anterior:</B> <A NAME="tex2html15706"
-  HREF="node712.html">Servidor de Documentación Local</A>
- &nbsp; <B>  <A NAME="tex2html15714"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15716"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15744"
+  HREF="node714.html">Enlaces</A>
+<B> Subir:</B> <A NAME="tex2html15738"
+  HREF="node711.html">Rake</A>
+<B> Anterior:</B> <A NAME="tex2html15732"
+  HREF="node712.html">Argumentos en una Tarea</A>
+ &nbsp; <B>  <A NAME="tex2html15740"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15742"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<UL CLASS="ChildLinks">
-<LI><UL>
-<LI><A NAME="tex2html15719"
-  HREF="node713.html#SECTION06914010000000000000">Donde</A>
-<LI><A NAME="tex2html15720"
-  HREF="node713.html#SECTION06914020000000000000">example.rb</A>
-<LI><A NAME="tex2html15721"
-  HREF="node713.html#SECTION06914030000000000000">HTML generado</A>
-<LI><A NAME="tex2html15722"
-  HREF="node713.html#SECTION06914040000000000000">Mostrando la docuemntación con pry</A>
-</UL></UL>
-<!--End of Table of Child-Links-->
-<HR>
-
-<H2><A NAME="SECTION06914000000000000000">
-Ejemplo</A>
-</H2>
+<H1><A NAME="SECTION06820000000000000000"></A>
+<A NAME="section:raketesttask"></A>
+<BR>
+Rake::TestTask
+</H1>
+La clase <A NAME="tex2html1690"
+  HREF="http://rake.rubyforge.org/classes/Rake/TestTask.html">Rake::TestTask</A>
+nos permite crear una tarea que ejecuta un conjunto de pruebas;
+<PRE>
+  Rake::TestTask.new do |t|
+    t.libs &lt;&lt; "test"
+    t.test_files = FileList['test/test*.rb']
+    t.verbose = true
+  end
+</PRE>
+Si se llama a <code>rake</code> con la opción <code>TEST=filename</code> entonces sólo se ejecutará esa prueba.
 
 <P>
-A typical small Ruby program commented using <A NAME="tex2html1689"
-  HREF="https://github.com/rdoc/rdoc"><TT>RDoc</TT></A> might be as
-follows. You can see the formatted result in 
-<A NAME="tex2html1690"
-  HREF="http://rdoc.sourceforge.net/doc/files/EXAMPLE_rb.html">EXAMPLE.rb</A>
-and 
-<A NAME="tex2html1691"
-  HREF="http://rdoc.sourceforge.net/doc/classes/Anagram.html">Anagram</A>.
+Si se invoca con la opción <code>TESTOPTS=options</code>, las opciones se pasarán  a <code>Test::Unit</code>.
+Ejemplos:
+<PRE>
+  rake test                           # run tests normally
+  rake test TEST=just_one_file.rb     # run just one test file.
+  rake test TESTOPTS="-v"             # run in verbose mode
+</PRE>
+
+<P>
+Sigue otro ejemplo:
+
+<P>
+<PRE>
+MacBookdeJohn:htmlRB john$ cat Rakefile 
+$:.unshift 'lib/'
+require 'rake/testtask'
+
+# rake test TEST=just_one_file.rb     # run just one test file.
+# rake test TESTOPTS="-v"             # run in verbose mode
+Rake::TestTask.new do |t|
+  # t.libs: List of directories to be added to $LOAD_PATH. (default is ‘lib’)
+  t.libs &lt;&lt; "test" 
+  t.pattern = 'test/tc*.rb' # or t.test_files = FileList['test/tc*.rb'] 
+  t.warning = true
+  t.verbose = true # verbose test output. (default is false)
+end
+</PRE>
+
+<P>
+Ejecuciones:
+<PRE>
+MacBookdeJohn:htmlRB john$ ls -ltr test/
+total 16
+-rw-r--r--  1 john  staff   835 29 nov 12:27 tc_01_smoke.rb
+-rw-r--r--  1 john  staff  1023  9 dic 11:35 tc_02_smoke.rb
+MacBookdeJohn:htmlRB john$ rake test
+(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" 
+./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
+Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
+Started
+...
+Finished in 0.001125 seconds.
+
+3 tests, 7 assertions, 0 failures, 0 errors
+</PRE>
+Con la opción <code>TESTOPTS="-v"</code> la salida es mas detallada:
+
+<P>
+<PRE>
+MacBookdeJohn:htmlRB john$ rake test TESTOPTS="-v" 
+(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "test/tc_01_smoke.rb" "test/tc_02_smoke.rb" -v
+./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
+Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
+Started
+test_attr(TestHTML): .
+test_attr2(TestHTML): .
+test_simplepage(TestHTML): .
+
+Finished in 0.000844 seconds.
+
+3 tests, 7 assertions, 0 failures, 0 errors
+</PRE>
+Ejecución de un solo programa de prueba:
+
+<P>
+<PRE>
+MacBookdeJohn:htmlRB john$ rake test TEST=tc_02_smoke.rb
+(in /Users/john/Dropbox/src/projects-ull-john/ruby/htmlRB)
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby -w -I"lib:test" "/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader.rb" "tc_02_smoke.rb" 
+./lib/html.rb:40: warning: `&amp;' interpreted as argument prefix
+Loaded suite /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/rake/rake_test_loader
+Started
+..
+Finished in 0.000623 seconds.
+
+2 tests, 6 assertions, 0 failures, 0 errors
+</PRE>
 
 <P>
 
-<H4><A NAME="SECTION06914010000000000000">
+<H4><A NAME="SECTION06820010000000000000">
 Donde</A>
 </H4>
   
@@ -146,133 +214,48 @@ Donde</A>
 <P>
 
 <UL>
-<LI>En el repositorio
-<A NAME="tex2html1692"
-  HREF="https://github.com/crguezl/rdoc-example">https://github.com/crguezl/rdoc-example</A>
-puede encontrar los fuentes.
+<LI><A NAME="tex2html1691"
+  HREF="https://github.com/crguezl/html-method_missing-example/tree/master/test">Este ejemplo en gitHub</A>
 </LI>
 <LI><PRE>
-[~/srcLPPruby/rdoc(master)]$ pwd -P
-/Users/casiano/local/src/ruby/LPP/rdoc
+[~/rubytesting/htmlRB(master)]$ pwd -P
+/Users/casiano/local/src/ruby/rubytesting/htmlRB
+[~/rubytesting/htmlRB(master)]$ git remote -v
+origin  git@github.com:crguezl/html-method_missing-example.git (fetch)
+origin  git@github.com:crguezl/html-method_missing-example.git (push)
 </PRE>
 </LI>
 </UL>
 
 <P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<H4><A NAME="SECTION06914020000000000000">
-example.rb</A>
-</H4>
-  
-
-<PRE>
-       # The program takes an initial word or phrase from
-       # the command line (or in the absence of a
-       # parameter from the first line of standard
-       # input).  In then reads successive words or
-       # phrases from standard input and reports whether
-       # they are angrams of the first word.
-       #
-       # Author::    Dave Thomas  (mailto:dave@x.y)
-       # Copyright:: Copyright (c) 2002 The Pragmatic Programmers, LLC
-       # License::   Distributes under the same terms as Ruby
-
-       # This class holds the letters in the original
-       # word or phrase. The is_anagram? method allows us
-       # to test if subsequent words or phrases are
-       # anagrams of the original.
-       class Anagram
-
-         # Remember the letters in the initial word
-         def initialize(text)
-           @initial_letters = letters_of(text)
-         end
-         # Test to see if a new word contains the same
-         # letters as the original
-         def is_anagram?(text)
-           @initial_letters == letters_of(text)
-         end
-
-         # Determine the letters in a word or phrase
-         #
-         # * all letters are converted to lower case
-         # * anything not a letter is stripped out
-         # * the letters are converted into an array
-         # * the array is sorted
-         # * the letters are joined back into a string
-         def letters_of(text)
-           text.downcase.delete('^a-z').split('').sort.join
-         end
-       end
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION06914030000000000000">
-HTML generado</A>
-</H4>
-  
-
-<P>
-
-<UL>
-<LI>
-<img src="rdoc.png" width="80%" />
-
-</LI>
-<LI>
-<img src="rdocexample1.png" width="80%" />
-
-</LI>
-<LI>
-<img src="rdocexample2.png" width="80%" />
-
-</LI>
-</UL>
-
-<P>
-
-<H4><A NAME="SECTION06914040000000000000">
-Mostrando la docuemntación con pry</A>
-</H4>
-  
-
-<P>
-<PRE>
-[1] pry(main)&gt; require './example'
-=&gt; true
-[2] pry(main)&gt; a = Anagram.new('foobar')
-=&gt; #&lt;Anagram:0x007fd6d318f1a8 @initial_letters="abfoor"&gt;
-[3] pry(main)&gt; show-doc a.is_anagram?
-
-From: /Users/casiano/local/src/ruby/LPP/rdoc/example.rb @ line 22:
-Owner: Anagram
-Visibility: public
-Signature: is_anagram?(text)
-Number of lines: 2
-
-Test to see if a new word contains the same
-letters as the original
-</PRE>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html15745"
+  HREF="node713.html#SECTION06820010000000000000">Donde</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15717"
+<A NAME="tex2html15743"
   HREF="node714.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15711"
-  HREF="node709.html">
+<A NAME="tex2html15737"
+  HREF="node711.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15705"
+<A NAME="tex2html15731"
   HREF="node712.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15713"
-  HREF="node851.html">
+<A NAME="tex2html15739"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15715"
-  HREF="node854.html">
+<A NAME="tex2html15741"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -323,20 +306,20 @@ letters as the original
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15718"
-  HREF="node714.html">Buenas Normas de Documentación</A>
-<B> Subir:</B> <A NAME="tex2html15712"
-  HREF="node709.html">RDoc</A>
-<B> Anterior:</B> <A NAME="tex2html15706"
-  HREF="node712.html">Servidor de Documentación Local</A>
- &nbsp; <B>  <A NAME="tex2html15714"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15716"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15744"
+  HREF="node714.html">Enlaces</A>
+<B> Subir:</B> <A NAME="tex2html15738"
+  HREF="node711.html">Rake</A>
+<B> Anterior:</B> <A NAME="tex2html15732"
+  HREF="node712.html">Argumentos en una Tarea</A>
+ &nbsp; <B>  <A NAME="tex2html15740"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15742"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

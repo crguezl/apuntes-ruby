@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Sequel y Sinatra</TITLE>
-<META NAME="description" CONTENT="Sequel y Sinatra">
+<TITLE>Asociaciones Simples</TITLE>
+<META NAME="description" CONTENT="Asociaciones Simples">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node542.html">
-<LINK REL="previous" HREF="node530.html">
-<LINK REL="up" HREF="node377.html">
+<LINK REL="previous" HREF="node540.html">
+<LINK REL="up" HREF="node534.html">
 <LINK REL="next" HREF="node542.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12729"
+<A NAME="tex2html12770"
   HREF="node542.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12723"
-  HREF="node377.html">
+<A NAME="tex2html12764"
+  HREF="node534.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12717"
+<A NAME="tex2html12758"
   HREF="node540.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12725"
-  HREF="node851.html">
+<A NAME="tex2html12766"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12727"
-  HREF="node854.html">
+<A NAME="tex2html12768"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,39 +92,344 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12730"
-  HREF="node542.html">ActiveRecord y Sinatra</A>
-<B> Subir:</B> <A NAME="tex2html12724"
-  HREF="node377.html">SINATRA</A>
-<B> Anterior:</B> <A NAME="tex2html12718"
-  HREF="node540.html">Práctica: Estadísticas de Visitas</A>
- &nbsp; <B>  <A NAME="tex2html12726"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12728"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12771"
+  HREF="node542.html">Asociaciones Through</A>
+<B> Subir:</B> <A NAME="tex2html12765"
+  HREF="node534.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12759"
+  HREF="node540.html">Configurando la Base de</A>
+ &nbsp; <B>  <A NAME="tex2html12767"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12769"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031700000000000000000"></A>
-<A NAME="chapter:sequelysinatra"></A>
+<H1><A NAME="SECTION031670000000000000000"></A>
+<A NAME="section:datamapperasociaciones"></A>
 <BR>
-Sequel y Sinatra
+Asociaciones Simples
 </H1>
 
 <P>
 
-<OL>
-<LI><A NAME="tex2html1335"
-  HREF="http://sequel.jeremyevans.net/rdoc/files/README_rdoc.html">README (tutorial)</A>
-</LI>
-</OL>
+<UL>
+<LI>Associations are a way of declaring relationships between models,
+for example a blog <code>Post "has many" Comments</code>, or a 
+<code>Comment belongs to</code> a <code>Post</code>. 
 
 <P>
-<BR><HR>
+</LI>
+<LI>Associations add a series of methods to your models which allow you to
+create relationships and retrieve related models along with a few other
+useful features. 
+
+<P>
+</LI>
+<LI>Which records are related to which are determined by
+their <A NAME="24189"></A><SPAN  CLASS="textbf">foreign keys</SPAN> (<A NAME="24191"></A><SPAN  CLASS="textbf">cláves foráneas</SPAN>).
+</LI>
+</UL>
+
+<P>
+The types of associations currently in <A NAME="tex2html1333"
+  HREF="http://datamapper.org/docs/"><TT>DataMapper</TT></A> are:
+
+<P>
+<PRE>
+has n  
+has 1 
+belongs_to 
+has n, :things, :through =&gt; Resource   
+has n, :things, :through =&gt; :model
+</PRE>
+
+<P>
+Este código se encuentra en:
+<A NAME="tex2html1334"
+  HREF="https://gist.github.com/crguezl/5c0c088790418690763d">app.rb</A>
+<P>
+<PRE>
+[~/rubytesting/database/datamapper/two(master)]$ cat app.rb 
+require 'data_mapper'
+
+DataMapper::Logger.new($stdout, :debug)
+DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/example.db")
+
+class Post
+  include DataMapper::Resource
+
+  property :id, Serial
+  property :text, Text
+
+  has n, :comments
+end
+
+class Comment
+  include DataMapper::Resource
+
+  property :id,     Serial
+  property :text, Text
+
+  belongs_to :post  # defaults to :required =&gt; true
+
+end
+
+DataMapper.finalize
+
+require  'dm-migrations'
+
+#DataMapper.auto_migrate!
+DataMapper.auto_upgrade!
+</PRE>
+The <code>belongs_to</code> method accepts a few options.
+
+<P>
+
+<UL>
+<LI><code>belongs_to</code> relationships will be <code>required</code> by default 
+
+<P>
+You can make the parent resource optional by passing 
+ <code>:required =&gt; false</code>
+ as an option to <code>belongs_to</code>.
+
+<P>
+</LI>
+<LI>If the relationship makes up (part of) the key of a model, you can tell
+<A NAME="tex2html1335"
+  HREF="http://datamapper.org/docs/"><TT>DataMapper</TT></A> to include it as part of the primary key by adding 
+the <code>:key =&gt; true</code> option.
+</LI>
+</UL>
+
+<P>
+Arrancamos <A NAME="tex2html1336"
+  HREF="http://pryrepl.org/"><TT>Pry</TT></A>  
+<PRE>
+[~/rubytesting/database/datamapper/two]$ pry
+</PRE>
+y cargamos <code>./app.rb</code>
+<PRE>
+[1] pry(main)&gt; load './app.rb'
+ ~ (0.000397) PRAGMA table_info("posts")
+ ~ (0.000019) SELECT sqlite_version(*)
+ ~ (0.001237) CREATE TABLE "posts" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "text" TEXT)
+ ~ (0.000011) PRAGMA table_info("comments")
+ ~ (0.000986) CREATE TABLE "comments" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "text" TEXT, "post_id" INTEGER NOT NULL)
+ ~ (0.000964) CREATE INDEX "index_comments_post" ON "comments" ("post_id")
+=&gt; true
+</PRE>
+Este es el esquema de la base de datos creada a partir de las clases
+<code>Post</code> y <code>Comment</code>:
+<PRE>
+[~/rubytesting/database/datamapper/two(master)]$ sqlite3 example.db 
+SQLite version 3.7.11 2012-03-20 11:35:50
+Enter ".help" for instructions
+Enter SQL statements terminated with a ";"
+sqlite&gt; .schema
+CREATE TABLE "comments" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                         "text" TEXT, 
+                         "post_id" INTEGER NOT NULL);
+CREATE TABLE "posts" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+                      "text" TEXT);
+CREATE INDEX "index_comments_post" ON "comments" ("post_id");
+</PRE>
+
+<P>
+Ahora podemos crear  un objeto <code>Post</code>:
+<PRE>
+[2] pry(main)&gt; pp = Post.create(:text =&gt; 'hello world!')
+ ~ (0.000888) INSERT INTO "posts" ("text") VALUES ('hello world!')
+=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
+</PRE>
+Sus <code>comments</code> están vacíos:
+<PRE>
+[3] pry(main)&gt; pp.comments
+ ~ (0.000051) SELECT "id", "post_id" FROM "comments" WHERE "post_id" = 1 ORDER BY "id"
+=&gt; []
+</PRE>
+
+<P>
+Adding resources to a relationship, can
+be done in different ways. 
+
+<UL>
+<LI><PRE>
+[2] pry(main)&gt; co = Comment.new(:text =&gt; "Nice greeting!")
+=&gt; #&lt;Comment @id=nil @text="Nice greeting!" @post_id=nil&gt;
+[3] pry(main)&gt; pp = Post.create(:text =&gt; 'hello world!')
+ ~ (0.001294) INSERT INTO "posts" ("text") VALUES ('hello world!')
+ =&gt; #&lt;Post @id=1 @text="hello world!"&gt;
+[4] pry(main)&gt; co.post=pp
+ =&gt; #&lt;Post @id=1 @text="hello world!"&gt;
+[5] pry(main)&gt; co.save
+~ (0.002974) INSERT INTO "comments" ("text", "post_id") VALUES ('Nice greeting!', 1)
+=&gt; true
+[7] pry(main)&gt; pp.comments
+~ (0.000074) SELECT "id", "post_id" FROM "comments" WHERE "post_id" = 1 ORDER BY "id"
+=&gt; [#&lt;Comment @id=1 @text=&lt;not loaded&gt; @post_id=1&gt;]
+[8] pry(main)&gt; pp.comments[0].text
+ ~ (0.000193) SELECT "id", "text" FROM "comments" WHERE "id" = 1 ORDER BY "id"
+ =&gt; "Nice greeting!"
+</PRE>
+</LI>
+<LI><code>belongs_to</code> relationships will be <code>required</code> by default 
+
+<P>
+We can make the parent resource optional by passing 
+ <code>:required =&gt; false</code>
+ as an option to <code>belongs_to</code>.
+
+<P>
+<PRE>
+[12] pry(main)&gt; c2 = Comment.create(:text =&gt; 'silly comment')
+=&gt; #&lt;Comment @id=nil @text="silly comment" @post_id=nil&gt;
+[13] pry(main)&gt; c2.save
+=&gt; false
+[14] pry(main)&gt; c2.post = pp
+=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
+[15] pry(main)&gt; c2.save
+ ~ (0.001910) INSERT INTO "comments" ("text", "post_id") VALUES ('silly comment', 1)
+ =&gt; true
+</PRE>
+</LI>
+<LI><PRE>
+[6] pry(main)&gt; pp.comments.push(Comment.create(:text =&gt; "Nice greeting!"))
+=&gt; [#&lt;Comment @id=nil @text="Nice greeting!" @post_id=1&gt;]
+[4] pry(main)&gt; pp
+=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
+[5] pry(main)&gt; pp.comments
+=&gt; [#&lt;Comment @id=nil @text="Nice greeting!" @post_id=1&gt;]
+</PRE>
+Esto no ha guardado <code>pp</code> en la base de datos. Ha sido modificado en memoria.
+Tampoco se ha guardado en la base de datos el objeto comentario.
+<PRE>
+[7] pry(main)&gt; pp.save
+ ~ (0.002523) INSERT INTO "comments" ("text", "post_id") VALUES ('Nice greeting!', 1)
+=&gt; true
+</PRE>
+Ahora las tablas contienen:
+<PRE>
+sqlite&gt; select * from posts;
+1|hello world!
+sqlite&gt; select * from comments;
+1|Nice greeting!|1
+</PRE>
+</LI>
+<LI><PRE>
+[8] pry(main)&gt; c2 = Comment.create(:text =&gt; "Do we know each other?")
+=&gt; #&lt;Comment @id=nil @text="Do we know each other?" @post_id=nil&gt;
+[9] pry(main)&gt; c2.post= pp
+=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
+[10] pry(main)&gt; c2
+=&gt; #&lt;Comment @id=nil @text="Do we know each other?" @post_id=1&gt;
+[11] pry(main)&gt; c2.save
+ ~ (0.007430) INSERT INTO "comments" ("text", "post_id") VALUES ('Do we know each other?', 1)
+=&gt; true
+[12] pry(main)&gt; pp.comments
+=&gt; [#&lt;Comment @id=1 @text="Nice greeting!" @post_id=1&gt;]
+</PRE>
+
+<P>
+<PRE>
+[16] pry(main)&gt; aa = Post.all
+ ~ (0.000065) SELECT "id" FROM "posts" ORDER BY "id"
+=&gt; [#&lt;Post @id=1 @text=&lt;not loaded&gt;&gt;]
+[17] pry(main)&gt; aa[0].text
+ ~ (0.000052) SELECT "id", "text" FROM "posts" WHERE "id" = 1 ORDER BY "id"
+=&gt; "hello world!"
+[20] pry(main)&gt; aa[0].comments
+ ~ (0.000052) SELECT "id", "post_id" FROM "comments" WHERE "post_id" = 1 ORDER BY "id"
+=&gt; [#&lt;Comment @id=1 @text=&lt;not loaded&gt; @post_id=1&gt;, 
+    #&lt;Comment @id=2 @text=&lt;not loaded&gt; @post_id=1&gt;]
+</PRE>
+</LI>
+</UL>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html12770"
+  HREF="node542.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html12764"
+  HREF="node534.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html12758"
+  HREF="node540.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html12766"
+  HREF="node858.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html12768"
+  HREF="node861.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html12771"
+  HREF="node542.html">Asociaciones Through</A>
+<B> Subir:</B> <A NAME="tex2html12765"
+  HREF="node534.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12759"
+  HREF="node540.html">Configurando la Base de</A>
+ &nbsp; <B>  <A NAME="tex2html12767"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12769"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

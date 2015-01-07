@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Generadores</TITLE>
-<META NAME="description" CONTENT="Generadores">
+<TITLE>Sinatra::Flash</TITLE>
+<META NAME="description" CONTENT="Sinatra::Flash">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node572.html">
 <LINK REL="previous" HREF="node570.html">
-<LINK REL="up" HREF="node569.html">
+<LINK REL="up" HREF="node380.html">
 <LINK REL="next" HREF="node572.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13241"
+<A NAME="tex2html13282"
   HREF="node572.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13235"
-  HREF="node569.html">
+<A NAME="tex2html13276"
+  HREF="node380.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13229"
+<A NAME="tex2html13270"
   HREF="node570.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13237"
-  HREF="node851.html">
+<A NAME="tex2html13278"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13239"
-  HREF="node854.html">
+<A NAME="tex2html13280"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,286 +92,104 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13242"
-  HREF="node572.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html13236"
-  HREF="node569.html">Padrino</A>
-<B> Anterior:</B> <A NAME="tex2html13230"
-  HREF="node570.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html13238"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13240"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13283"
+  HREF="node572.html">Alternativas a Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html13277"
+  HREF="node380.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html13271"
+  HREF="node570.html">Sinatra + Sprockets +</A>
+ &nbsp; <B>  <A NAME="tex2html13279"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13281"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION032820000000000000000">
-Generadores</A>
+<H1><A NAME="SECTION032600000000000000000">
+Sinatra::Flash</A>
 </H1>
+<A NAME="tex2html1410"
+  HREF="https://github.com/SFEley/sinatra-flash">Sinatra::Flash</A>
+is an extension that lets you store information between
+requests. 
 
 <P>
-The usage for the project generator is quite simple:
+Often, when an application processes a request, it will redirect
+to another URL upon finishing, which generates another request. 
 
 <P>
-<PRE>
-$ padrino g project &lt;the_app_name&gt; &lt;/path/to/create/app&gt; --&lt;component-name&gt; &lt;value&gt;
-</PRE>
-The simplest possible command to generate a base application would be:
+This
+means that any information from the previous request is lost (due to the
+stateless nature of HTTP). 
 
 <P>
-<PRE>
-$ padrino g project demo_project
-</PRE>
+<A NAME="tex2html1411"
+  HREF="https://github.com/SFEley/sinatra-flash">Sinatra::Flash</A>
+overcomes this by providing
+access to the 
+<FONT COLOR="#ff0000"> flash</FONT>—a hash-like object that stores temporary values
+such as error messages so that they can be retrieved later—usually
+on the next request. 
 
 <P>
-Esto crea un <code>config.ru</code> como este:
-<PRE>
-  1 #!/usr/bin/env rackup
-  2 
-  3 require File.expand_path("../config/boot.rb", __FILE__)
-  4 
-  5 run Padrino.application
-</PRE>
-El fichero <code>boot.rb</code> contiene:
-<PRE>
-  1 PADRINO_ENV  = ENV['PADRINO_ENV'] ||= ENV['RACK_ENV'] ||= 'development'  unless defined?(PADRINO_ENV)
-  2 PADRINO_ROOT = File.expand_path('../..', __FILE__) unless defined?(PADRINO_ROOT)
-  3 
-  4 require 'rubygems' unless defined?(Gem)
-  5 require 'bundler/setup'
-  6 Bundler.require(:default, PADRINO_ENV)
-  7 
-  8 Padrino.before_load do
-  9 end
- 10 
- 11 Padrino.after_load do
- 12 end
- 13 
- 14 Padrino.load!
-</PRE>
-La que parece ser la aplicación contiene este código:
-<PRE>
-[~/srcpadrino/demo_project]$ cat app/app.rb 
-module DemoProject
-  class App &lt; Padrino::Application
-    register Padrino::Rendering
-    register Padrino::Mailer
-    register Padrino::Helpers
+It also removes the information once it’s been
+used. 
 
-    enable :sessions
+<P>
+All this can be achieved via sessions (and that’s exactly how
+<A NAME="tex2html1412"
+  HREF="https://github.com/SFEley/sinatra-flash">Sinatra::Flash</A>
+does it), but 
+<A NAME="tex2html1413"
+  HREF="https://github.com/SFEley/sinatra-flash">Sinatra::Flash</A>
+is easy to implement and
+provides a number of helper methods.
 
-  end
+<P>
+
+<H4><A NAME="SECTION032600010000000000000">
+Ejemplo</A>
+</H4>
+  
+
+<PRE>
+[~/sinatra/sinatra-flash]$ cat app.rb 
+require 'sinatra'
+require 'sinatra/flash'
+
+enable :sessions
+
+get '/blah' do
+  # This message won't be seen until the NEXT Web request that accesses the flash collection
+  flash[:blah] = "You were feeling blah at #{Time.now}."
+
+  # Accessing the flash displays messages set from the LAST request
+  "Feeling blah again? That's too bad. #{flash[:blah]}"
+end
+
+get '/pum' do
+  # This message won't be seen until the NEXT Web request that accesses the flash collection
+  flash[:pum] = "You were feeling pum at #{Time.now}."
+
+  # Accessing the flash displays messages set from the LAST request
+  "Feeling pum again? That's too bad. #{flash[:pum]}"
 end
 </PRE>
-You can also define specific components to be used:
-
-<P>
-<PRE>
-$ padrino g project demo_project -t rspec -e haml -m rr -s jquery -d datamapper -c sass
-</PRE>
-You can also instruct the generator to skip a certain component to avoid using one at all (or to use your own):
-
-<P>
-<PRE>
-$ padrino g project demo_project --test none --renderer none
-</PRE>
-You can also specify an alternate name for your core application using the <code>--app</code> option:
-
-<P>
-<PRE>
-$ padrino g project demo_project --app alternate_app_name # alias -n
-</PRE>
-The generator uses the <code>bundler</code> gem to resolve any application
-dependencies when the application is newly created. The necessary
-<code>bundler</code> command can be executed automatically through the generator
-with:
-
-<P>
-<PRE>
-$ padrino g project demo_project --run_bundler # alias -b
-</PRE>
-or this can be done manually through executing command 
-<code>bundle install</code>
-in the terminal at the root of the generated application.
-
-<P>
-For more examples of using the project generator in common cases, check out the 
-<A NAME="tex2html1401"
-  HREF="http://www.padrinorb.com/guides/basic-projects">Basic Projects</A>
-guide.
-
-<P>
-The generator framework within Padrino is extensible and additional
-components and tools can be added easily.
-
-<P>
-This would be achieved through forking our project and reading
-through the code in <code>lib/generators/project.rb</code> and the setup
-instructions inside the relevant files within <code>lib/generators/components/</code>.
 
 <P>
 
-<H4><A NAME="SECTION032820010000000000000">
-configuration options</A>
+<H4><A NAME="SECTION032600020000000000000">
+Gemfile</A>
 </H4>
   
 
-<P>
-The project generator has several available configuration options:
-
-<P>
-<TABLE CELLPADDING=3 BORDER="1">
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>Options</code></TD>
-<TD ALIGN="LEFT">Default</TD>
-<TD ALIGN="LEFT">Aliases</TD>
-<TD ALIGN="LEFT">Description</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>bundle</code></TD>
-<TD ALIGN="LEFT">false</TD>
-<TD ALIGN="LEFT">-b</TD>
-<TD ALIGN="LEFT">execute bundlerer dependencies installation</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>root</code></TD>
-<TD ALIGN="LEFT">.</TD>
-<TD ALIGN="LEFT">-r</TD>
-<TD ALIGN="LEFT">the root destination path forward the project</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>dev</code></TD>
-<TD ALIGN="LEFT">false</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">use edge version from local git checkout</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>app</code></TD>
-<TD ALIGN="LEFT">nil</TD>
-<TD ALIGN="LEFT">-n</TD>
-<TD ALIGN="LEFT">specify app name different from the project name</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>tiny</code></TD>
-<TD ALIGN="LEFT">false</TD>
-<TD ALIGN="LEFT">-i</TD>
-<TD ALIGN="LEFT">generate tiny project skeleton</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57><code>adapter</code></TD>
-<TD ALIGN="LEFT">sqlite</TD>
-<TD ALIGN="LEFT">-a</TD>
-<TD ALIGN="LEFT">specify orrm db adapter (mysql, sqlite, postgres)</TD>
-</TR>
-</TABLE>
-
-<P>
-The available components and their default options are listed below:
-
-<P>
-<TABLE CELLPADDING=3 BORDER="1">
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>Component</TD>
-<TD ALIGN="LEFT">Default</TD>
-<TD ALIGN="LEFT">Aliases</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>Options</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>orm</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-d</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>mongoid, activerecord,below minirecord, datamapper, couchrest, mongomatic, mongomapper, ohm, ripple, sequel</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>test</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-t</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>bacon, shoulda, cucumber, testspec, riot, rspec, minitest</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>script</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-s</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>prototype, rightjs,            jquery, mootools, extcore, dojo</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>renderer</TD>
-<TD ALIGN="LEFT">slim</TD>
-<TD ALIGN="LEFT">-e</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>erb, erubis, haml,       slim, liquid</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>stylesheet</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-c</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>sass, less, scss, compass</TD>
-</TR>
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=57>mock</TD>
-<TD ALIGN="LEFT">none</TD>
-<TD ALIGN="LEFT">-m</TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=340>rr, mocha</TD>
-</TR>
-</TABLE>
-Note: Be careful with your naming when using generators and do not
-have your project name, or any models or controllers overlap. Avoid
-naming your app <code>Posts</code> and then your controller or subapp
-with the same name. 
-
-<P>
-
-<H4><A NAME="SECTION032820020000000000000">
-Some examples</A>
-</H4>
-  
-
-<P>
-Generate a project with a different application name from the project path
-
-<P>
 <PRE>
-padrino g my_project -n blog
-</PRE>
-this will generate the project at path <code>my_project/</code> but the applications name will be <code>Blog</code>.
-<PRE>
-  1 module MyProject
-  2   class Blog &lt; Padrino::Application
-  3     register Padrino::Rendering
-  4     register Padrino::Mailer
-  5     register Padrino::Helpers
-  6 
-  7     enable :sessions
-  8 
-  9   end
- 10 end
-</PRE>
+[~/sinatra/sinatra-flash]$ cat Gemfile
+source 'https://rubygems.org'
 
-<P>
-Generate a project with mongoid and run bundler after
-
-<P>
-<PRE>
-padrino g project your_project -d mongoid -b
-</PRE>
-Generate a project with riot test and rr mocking
-
-<P>
-<PRE>
-padrino g project your_project -t riot -m rr
-</PRE>
-Generate a project with sequel with mysql
-
-<P>
-<PRE>
-padrino g project your_project -d sequel -a mysql
-</PRE>
-Generate a tiny project skeleton
-
-<P>
-<PRE>
-padrino g project your_project --tiny
-</PRE>
-Choose a root for your project
-
-<P>
-<PRE>
-padrino g project your_project -r /usr/local/padrino
-</PRE>
-This will create a new padrino project in <code>/usr/local/padrino/your_project/</code>
-
-<P>
-Use Padrino from a git cloned repository
-
-<P>
-<PRE>
-padrino g project your_project [--dev] # Use padrino from a git checkout
+gem 'sinatra'
+gem 'sinatra-flash'
 </PRE>
 
 <P>
@@ -382,29 +200,30 @@ padrino g project your_project [--dev] # Use padrino from a git checkout
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html13243"
-  HREF="node571.html#SECTION032820010000000000000">configuration options</A>
-<LI><A NAME="tex2html13244"
-  HREF="node571.html#SECTION032820020000000000000">Some examples</A>
-</UL></UL></UL>
+<LI><UL>
+<LI><A NAME="tex2html13284"
+  HREF="node571.html#SECTION032600010000000000000">Ejemplo</A>
+<LI><A NAME="tex2html13285"
+  HREF="node571.html#SECTION032600020000000000000">Gemfile</A>
+</UL></UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13241"
+<A NAME="tex2html13282"
   HREF="node572.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13235"
-  HREF="node569.html">
+<A NAME="tex2html13276"
+  HREF="node380.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13229"
+<A NAME="tex2html13270"
   HREF="node570.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13237"
-  HREF="node851.html">
+<A NAME="tex2html13278"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13239"
-  HREF="node854.html">
+<A NAME="tex2html13280"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -455,20 +274,20 @@ padrino g project your_project [--dev] # Use padrino from a git checkout
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13242"
-  HREF="node572.html">Enlaces</A>
-<B> Subir:</B> <A NAME="tex2html13236"
-  HREF="node569.html">Padrino</A>
-<B> Anterior:</B> <A NAME="tex2html13230"
-  HREF="node570.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html13238"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13240"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13283"
+  HREF="node572.html">Alternativas a Sinatra</A>
+<B> Subir:</B> <A NAME="tex2html13277"
+  HREF="node380.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html13271"
+  HREF="node570.html">Sinatra + Sprockets +</A>
+ &nbsp; <B>  <A NAME="tex2html13279"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13281"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

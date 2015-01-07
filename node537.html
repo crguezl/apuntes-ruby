@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Asociaciones Simples</TITLE>
-<META NAME="description" CONTENT="Asociaciones Simples">
+<TITLE>Ejemplo Simple de uso de DataMapper: Agenda</TITLE>
+<META NAME="description" CONTENT="Ejemplo Simple de uso de DataMapper: Agenda">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node538.html">
 <LINK REL="previous" HREF="node536.html">
-<LINK REL="up" HREF="node530.html">
+<LINK REL="up" HREF="node534.html">
 <LINK REL="next" HREF="node538.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12668"
+<A NAME="tex2html12685"
   HREF="node538.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12662"
-  HREF="node530.html">
+<A NAME="tex2html12679"
+  HREF="node534.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12656"
+<A NAME="tex2html12673"
   HREF="node536.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12664"
-  HREF="node851.html">
+<A NAME="tex2html12681"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12666"
-  HREF="node854.html">
+<A NAME="tex2html12683"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,280 +92,391 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12669"
-  HREF="node538.html">Asociaciones Through</A>
-<B> Subir:</B> <A NAME="tex2html12663"
-  HREF="node530.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12657"
-  HREF="node536.html">Configurando la Base de</A>
- &nbsp; <B>  <A NAME="tex2html12665"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12667"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12686"
+  HREF="node538.html">Ejemplo de Uso de</A>
+<B> Subir:</B> <A NAME="tex2html12680"
+  HREF="node534.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12674"
+  HREF="node536.html">Introducción al Patrón DataMapper</A>
+ &nbsp; <B>  <A NAME="tex2html12682"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12684"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031670000000000000000"></A>
-<A NAME="section:datamapperasociaciones"></A>
-<BR>
-Asociaciones Simples
+<H1><A NAME="SECTION031630000000000000000">
+Ejemplo Simple de uso de DataMapper: Agenda</A>
 </H1>
 
-<P>
-
 <UL>
-<LI>Associations are a way of declaring relationships between models,
-for example a blog <code>Post "has many" Comments</code>, or a 
-<code>Comment belongs to</code> a <code>Post</code>. 
-
-<P>
+<LI><PRE>
+[~/sinatra/sinatra-datamapper/data_mapper_example_agenda(master)]$ pwd -P
+/Users/casiano/local/src/ruby/STW/data_mapper_example2
+[~/sinatra/sinatra-datamapper/data_mapper_example_agenda(master)]$ git remote -v
+origin  git@github.com:crguezl/datamapper_example.git (fetch)
+origin  git@github.com:crguezl/datamapper_example.git (push)
+</PRE>
 </LI>
-<LI>Associations add a series of methods to your models which allow you to
-create relationships and retrieve related models along with a few other
-useful features. 
-
-<P>
-</LI>
-<LI>Which records are related to which are determined by
-their <A NAME="23990"></A><SPAN  CLASS="textbf">foreign keys</SPAN> (<A NAME="23992"></A><SPAN  CLASS="textbf">cláves foráneas</SPAN>).
+<LI><A NAME="tex2html1315"
+  HREF="https://github.com/crguezl/datamapper_example">Agenda en Sinatra usando DataMapper</A>
 </LI>
 </UL>
 
 <P>
-The types of associations currently in <A NAME="tex2html1322"
-  HREF="http://datamapper.org/docs/"><TT>DataMapper</TT></A> are:
 
-<P>
+<H4><A NAME="SECTION031630010000000000000">
+DataMapper.setup</A>
+</H4>
+  
+
 <PRE>
-has n  
-has 1 
-belongs_to 
-has n, :things, :through =&gt; Resource   
-has n, :things, :through =&gt; :model
+[~/sinatra/sinatra-datamapper/data_mapper_example_agenda(master)]$ cat app.rb
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'sinatra'
+require 'haml'
+require 'data_mapper'
+
+# full path!
+DataMapper.setup( :default, "sqlite3://#{Dir.pwd}/agenda.db" )
 </PRE>
 
 <P>
-Este código se encuentra en:
-<A NAME="tex2html1323"
-  HREF="https://gist.github.com/crguezl/5c0c088790418690763d">app.rb</A>
+We must specify our database connection.
+
+<P>
+We need to make sure to do this before you use our models, 
+i.e. before we actually start accessing the database.
+
+<P>
+
+<H4><A NAME="SECTION031630020000000000000">
+Modelos</A>
+</H4>
+  
+
 <P>
 <PRE>
-[~/rubytesting/database/datamapper/two(master)]$ cat app.rb 
-require 'data_mapper'
-
-DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/example.db")
-
-class Post
+# Define the model
+class Contact
   include DataMapper::Resource
 
   property :id, Serial
-  property :text, Text
-
-  has n, :comments
+  property :firstname, String
+  property :lastname, String
+  property :email, String
 end
+</PRE>
 
-class Comment
-  include DataMapper::Resource
+<P>
+The <code>Contact</code> model is going to need to be persistent, so we'll
+<code>include DataMapper::Resource</code>. 
 
-  property :id,     Serial
-  property :text, Text
+<P>
+The convention with model names is to
+use the singular, not plural version.
 
-  belongs_to :post  # defaults to :required =&gt; true
+<P>
+<PRE>
+Module: DataMapper::Resource
 
-end
++ (Object) included(model) private
+</PRE>
+Makes sure a class gets all the methods when it includes Resource.
 
-DataMapper.finalize
+<P>
+Inside your class, call the <code>property</code> method for each property
+you want to add. The only two required arguments are the <code>name</code>
+and <code>type</code>, everything else is optional.
 
-require  'dm-migrations'
+<P>
+<A NAME="24051"></A><SPAN  CLASS="textbf">Primary keys</SPAN> are not automatically created for you. 
+You MUST configure at least one key property on your
+data-store. 
 
-#DataMapper.auto_migrate!
+<P>
+More often than not, you'll want an <A NAME="24053"></A><SPAN  CLASS="textbf">auto-incrementing</SPAN> integer
+as a primary key, so DM has a shortcut:
+
+<P>
+<PRE>
+   property :id, Serial
+</PRE>
+
+<P>
+<PRE>
+(Property) property(name, type, options = {})
+</PRE>
+Defines a Property on the Resource
+
+<P>
+See the section
+<A NAME="tex2html1316"
+  HREF="http://datamapper.org/docs/properties.html">Properties</A>
+in datamapper.org.
+
+<P>
+<PRE>
 DataMapper.auto_upgrade!
 </PRE>
-The <code>belongs_to</code> method accepts a few options.
 
 <P>
 
-<UL>
-<LI><code>belongs_to</code> relationships will be <code>required</code> by default 
+<OL>
+<LI>This tries to make the schema match the model. 
+</LI>
+<LI>It will <code>CREATE</code>
+new tables, and add columns to existing tables. 
+</LI>
+<LI>It won't change any
+existing columns though (say, to add a <code>NOT NULL</code> constraint)
+and it doesn't drop any columns. 
+</LI>
+<LI>Both these commands also can be
+used on an individual model (e.g. <code>Song.auto_migrate!</code>)
+</LI>
+</OL>
 
 <P>
-You can make the parent resource optional by passing 
- <code>:required =&gt; false</code>
- as an option to <code>belongs_to</code>.
 
+<H4><A NAME="SECTION031630030000000000000">
+Rutas</A>
+</H4>
+  
+
+<PRE>
+# Show list of contacts
+%w{/ /contacts/?}.each do |r|
+  get r do
+    haml :list, :locals =&gt; { :cs =&gt; Contact.all }
+  end
+end
+
+# Show form to create new contact
+get '/contacts/new' do
+  haml :form, :locals =&gt; {
+    :c =&gt; Contact.new,
+    :action =&gt; '/contacts/create'
+  }
+end
+
+# Create new contact
+post '/contacts/create' do
+  c = Contact.new
+  c.attributes = params
+  c.save
+
+  redirect("/contacts/#{c.id}")
+end
+
+# Show form to edit contact
+get '/contacts/:id/edit' do|id|
+  c = Contact.get(id)
+  haml :form, :locals =&gt; {
+    :c =&gt; c,
+    :action =&gt; "/contacts/#{c.id}/update"
+  }
+end
+
+# Show form to find a contact by firstname
+get '/contacts/findform' do
+  haml :findform, :locals =&gt; {
+    :action =&gt; "/contacts/find"
+  }
+end
+
+post '/contacts/find' do
+  puts "params = #{params}"
+  s = params.select { |k,v| v != '' }
+  #s[:order] = [ :lastname.desc]
+  s[:order] = [ :lastname.asc]
+  puts "selected #{s}"
+  cs = Contact.all(s)
+  puts cs
+  haml :list, :locals =&gt; { :cs =&gt; cs }
+end
+#
+# Edit a contact
+post '/contacts/:id/update' do|id|
+  puts "en /contacts/:id/update: params = #{params} id = #{id}"
+  c = Contact.get(id)
+  puts c.inspect
+  
+  puts "Fail while recording #{c}" unless c.update(
+      :firstname =&gt; params[:firstname], 
+      :lastname  =&gt; params[:lastname], 
+      :email     =&gt; params[:email])
+
+  redirect "/contacts/#{id}"
+end
+
+# Delete a contact
+post '/contacts/:id/destroy' do|id|
+  c = Contact.get(id)
+  c.destroy
+
+  redirect "/contacts/"
+end
+
+# View a contact
+# TODO: Put at bottom?
+get '/contacts/:id' do|id|
+  c = Contact.get(id)
+  haml :show, :locals =&gt; { :c =&gt; c }
+end
+
+__END__
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031630040000000000000">
+Vistas</A>
+</H4>
+  
+
+<P>
+<PRE>
+__END__
+@@ layout
+%html
+  %head
+    %title Agenda
+  %body
+    = yield
+    %a(href="/contacts/") Contact List
+    %a(href="/contacts/findform") Find Contact
+
+@@form
+%h1 Create a new contact
+%form(action="#{action}" method="POST")
+  %label(for="firstname") First Name
+  %input(type="text" name="firstname" value="#{c.firstname}")
+  %br
+
+  %label(for="lastname") Last Name
+  %input(type="text" name="lastname" value="#{c.lastname}")
+  %br
+
+  %label(for="email") Email
+  %input(type="text" name="email" value="#{c.email}")
+  %br
+
+  %input(type="submit")
+  %input(type="reset")
+  %br
+
+- unless c.id == 0
+  %form(action="/contacts/#{c.id}/destroy" method="POST")
+    %input(type="submit" value="Destroy")
+  
+@@show
+%table
+  %tr
+    %td First Name
+    %td= c.firstname
+  %tr
+    %td Last Name
+    %td= c.lastname
+  %tr
+    %td Email
+    %td= c.email
+%a(href="/contacts/#{c.id}/edit") Edit Contact
+
+@@list
+%h1 Contacts
+%a(href="/contacts/new") New Contact
+%table
+  - cs.each do|c|
+    %tr
+      %td= c.firstname
+      %td= c.lastname
+      %td= c.email
+      %td
+        %a(href="/contacts/#{c.id}") Show
+      %td
+        %a(href="/contacts/#{c.id}/edit") Edit
+
+@@findform
+%h1 Find a contact for firstname
+%form(action="#{action}" method="POST")
+  %label(for="firstname") First Name
+  %input(type="text" name="firstname" value="")
+  %br
+
+  %label(for="lastname") Last Name
+  %input(type="text" name="lastname" value="")
+  %br
+
+  %label(for="email") Email
+  %input(type="text" name="email" value="")
+  %br
+
+  %input(type="submit")
+  %input(type="reset")
+  %br
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION031630050000000000000">
+Enlaces</A>
+</H4>
+  
+
+<OL>
+<LI><A NAME="tex2html1317"
+  HREF="http://rubydoc.info/github/datamapper/dm-core/">Documentación del módulo DataMapper</A>
+en RubyDoc
+</LI>
+<LI><A NAME="tex2html1318"
+  HREF="https://github.com/crguezl/datamapper_example">https://github.com/crguezl/datamapper_example</A>
+</LI>
+<LI><A NAME="tex2html1319"
+  HREF="https://github.com/crguezl/datamapper-intro">https://github.com/crguezl/datamapper-intro</A>
 <P>
 </LI>
-<LI>If the relationship makes up (part of) the key of a model, you can tell
-<A NAME="tex2html1324"
-  HREF="http://datamapper.org/docs/"><TT>DataMapper</TT></A> to include it as part of the primary key by adding 
-the <code>:key =&gt; true</code> option.
-</LI>
-</UL>
+</OL>
 
 <P>
-Arrancamos <A NAME="tex2html1325"
-  HREF="http://pryrepl.org/"><TT>Pry</TT></A>  
-<PRE>
-[~/rubytesting/database/datamapper/two]$ pry
-</PRE>
-y cargamos <code>./app.rb</code>
-<PRE>
-[1] pry(main)&gt; load './app.rb'
- ~ (0.000397) PRAGMA table_info("posts")
- ~ (0.000019) SELECT sqlite_version(*)
- ~ (0.001237) CREATE TABLE "posts" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "text" TEXT)
- ~ (0.000011) PRAGMA table_info("comments")
- ~ (0.000986) CREATE TABLE "comments" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "text" TEXT, "post_id" INTEGER NOT NULL)
- ~ (0.000964) CREATE INDEX "index_comments_post" ON "comments" ("post_id")
-=&gt; true
-</PRE>
-Este es el esquema de la base de datos creada a partir de las clases
-<code>Post</code> y <code>Comment</code>:
-<PRE>
-[~/rubytesting/database/datamapper/two(master)]$ sqlite3 example.db 
-SQLite version 3.7.11 2012-03-20 11:35:50
-Enter ".help" for instructions
-Enter SQL statements terminated with a ";"
-sqlite&gt; .schema
-CREATE TABLE "comments" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-                         "text" TEXT, 
-                         "post_id" INTEGER NOT NULL);
-CREATE TABLE "posts" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-                      "text" TEXT);
-CREATE INDEX "index_comments_post" ON "comments" ("post_id");
-</PRE>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
-<P>
-Ahora podemos crear  un objeto <code>Post</code>:
-<PRE>
-[2] pry(main)&gt; pp = Post.create(:text =&gt; 'hello world!')
- ~ (0.000888) INSERT INTO "posts" ("text") VALUES ('hello world!')
-=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-</PRE>
-Sus <code>comments</code> están vacíos:
-<PRE>
-[3] pry(main)&gt; pp.comments
- ~ (0.000051) SELECT "id", "post_id" FROM "comments" WHERE "post_id" = 1 ORDER BY "id"
-=&gt; []
-</PRE>
-
-<P>
-Adding resources to a relationship, can
-be done in different ways. 
-
-<UL>
-<LI><PRE>
-[2] pry(main)&gt; co = Comment.new(:text =&gt; "Nice greeting!")
-=&gt; #&lt;Comment @id=nil @text="Nice greeting!" @post_id=nil&gt;
-[3] pry(main)&gt; pp = Post.create(:text =&gt; 'hello world!')
- ~ (0.001294) INSERT INTO "posts" ("text") VALUES ('hello world!')
- =&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[4] pry(main)&gt; co.post=pp
- =&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[5] pry(main)&gt; co.save
-~ (0.002974) INSERT INTO "comments" ("text", "post_id") VALUES ('Nice greeting!', 1)
-=&gt; true
-[7] pry(main)&gt; pp.comments
-~ (0.000074) SELECT "id", "post_id" FROM "comments" WHERE "post_id" = 1 ORDER BY "id"
-=&gt; [#&lt;Comment @id=1 @text=&lt;not loaded&gt; @post_id=1&gt;]
-[8] pry(main)&gt; pp.comments[0].text
- ~ (0.000193) SELECT "id", "text" FROM "comments" WHERE "id" = 1 ORDER BY "id"
- =&gt; "Nice greeting!"
-</PRE>
-</LI>
-<LI><code>belongs_to</code> relationships will be <code>required</code> by default 
-
-<P>
-We can make the parent resource optional by passing 
- <code>:required =&gt; false</code>
- as an option to <code>belongs_to</code>.
-
-<P>
-<PRE>
-[12] pry(main)&gt; c2 = Comment.create(:text =&gt; 'silly comment')
-=&gt; #&lt;Comment @id=nil @text="silly comment" @post_id=nil&gt;
-[13] pry(main)&gt; c2.save
-=&gt; false
-[14] pry(main)&gt; c2.post = pp
-=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[15] pry(main)&gt; c2.save
- ~ (0.001910) INSERT INTO "comments" ("text", "post_id") VALUES ('silly comment', 1)
- =&gt; true
-</PRE>
-</LI>
-<LI><PRE>
-[6] pry(main)&gt; pp.comments.push(Comment.create(:text =&gt; "Nice greeting!"))
-=&gt; [#&lt;Comment @id=nil @text="Nice greeting!" @post_id=1&gt;]
-[4] pry(main)&gt; pp
-=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[5] pry(main)&gt; pp.comments
-=&gt; [#&lt;Comment @id=nil @text="Nice greeting!" @post_id=1&gt;]
-</PRE>
-Esto no ha guardado <code>pp</code> en la base de datos. Ha sido modificado en memoria.
-Tampoco se ha guardado en la base de datos el objeto comentario.
-<PRE>
-[7] pry(main)&gt; pp.save
- ~ (0.002523) INSERT INTO "comments" ("text", "post_id") VALUES ('Nice greeting!', 1)
-=&gt; true
-</PRE>
-Ahora las tablas contienen:
-<PRE>
-sqlite&gt; select * from posts;
-1|hello world!
-sqlite&gt; select * from comments;
-1|Nice greeting!|1
-</PRE>
-</LI>
-<LI><PRE>
-[8] pry(main)&gt; c2 = Comment.create(:text =&gt; "Do we know each other?")
-=&gt; #&lt;Comment @id=nil @text="Do we know each other?" @post_id=nil&gt;
-[9] pry(main)&gt; c2.post= pp
-=&gt; #&lt;Post @id=1 @text="hello world!"&gt;
-[10] pry(main)&gt; c2
-=&gt; #&lt;Comment @id=nil @text="Do we know each other?" @post_id=1&gt;
-[11] pry(main)&gt; c2.save
- ~ (0.007430) INSERT INTO "comments" ("text", "post_id") VALUES ('Do we know each other?', 1)
-=&gt; true
-[12] pry(main)&gt; pp.comments
-=&gt; [#&lt;Comment @id=1 @text="Nice greeting!" @post_id=1&gt;]
-</PRE>
-
-<P>
-<PRE>
-[16] pry(main)&gt; aa = Post.all
- ~ (0.000065) SELECT "id" FROM "posts" ORDER BY "id"
-=&gt; [#&lt;Post @id=1 @text=&lt;not loaded&gt;&gt;]
-[17] pry(main)&gt; aa[0].text
- ~ (0.000052) SELECT "id", "text" FROM "posts" WHERE "id" = 1 ORDER BY "id"
-=&gt; "hello world!"
-[20] pry(main)&gt; aa[0].comments
- ~ (0.000052) SELECT "id", "post_id" FROM "comments" WHERE "post_id" = 1 ORDER BY "id"
-=&gt; [#&lt;Comment @id=1 @text=&lt;not loaded&gt; @post_id=1&gt;, 
-    #&lt;Comment @id=2 @text=&lt;not loaded&gt; @post_id=1&gt;]
-</PRE>
-</LI>
-</UL>
-
-<P>
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html12687"
+  HREF="node537.html#SECTION031630010000000000000">DataMapper.setup</A>
+<LI><A NAME="tex2html12688"
+  HREF="node537.html#SECTION031630020000000000000">Modelos</A>
+<LI><A NAME="tex2html12689"
+  HREF="node537.html#SECTION031630030000000000000">Rutas</A>
+<LI><A NAME="tex2html12690"
+  HREF="node537.html#SECTION031630040000000000000">Vistas</A>
+<LI><A NAME="tex2html12691"
+  HREF="node537.html#SECTION031630050000000000000">Enlaces</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12668"
+<A NAME="tex2html12685"
   HREF="node538.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12662"
-  HREF="node530.html">
+<A NAME="tex2html12679"
+  HREF="node534.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12656"
+<A NAME="tex2html12673"
   HREF="node536.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12664"
-  HREF="node851.html">
+<A NAME="tex2html12681"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12666"
-  HREF="node854.html">
+<A NAME="tex2html12683"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -416,20 +527,20 @@ sqlite&gt; select * from comments;
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12669"
-  HREF="node538.html">Asociaciones Through</A>
-<B> Subir:</B> <A NAME="tex2html12663"
-  HREF="node530.html">DataMapper y Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12657"
-  HREF="node536.html">Configurando la Base de</A>
- &nbsp; <B>  <A NAME="tex2html12665"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12667"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12686"
+  HREF="node538.html">Ejemplo de Uso de</A>
+<B> Subir:</B> <A NAME="tex2html12680"
+  HREF="node534.html">DataMapper y Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12674"
+  HREF="node536.html">Introducción al Patrón DataMapper</A>
+ &nbsp; <B>  <A NAME="tex2html12682"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12684"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

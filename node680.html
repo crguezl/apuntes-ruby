@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Consideraciones sobre la Seguridad del Uso de Agentes</TITLE>
-<META NAME="description" CONTENT="Consideraciones sobre la Seguridad del Uso de Agentes">
+<TITLE>Conexión SSH a Una máquina por Primera Vez</TITLE>
+<META NAME="description" CONTENT="Conexión SSH a Una máquina por Primera Vez">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node681.html">
 <LINK REL="previous" HREF="node679.html">
-<LINK REL="up" HREF="node671.html">
+<LINK REL="up" HREF="node678.html">
 <LINK REL="next" HREF="node681.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15191"
+<A NAME="tex2html15208"
   HREF="node681.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15185"
-  HREF="node671.html">
+<A NAME="tex2html15202"
+  HREF="node678.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15179"
+<A NAME="tex2html15196"
   HREF="node679.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15187"
-  HREF="node851.html">
+<A NAME="tex2html15204"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15189"
-  HREF="node854.html">
+<A NAME="tex2html15206"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,166 +92,254 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15192"
-  HREF="node681.html">Depuración/Debugging</A>
-<B> Subir:</B> <A NAME="tex2html15186"
-  HREF="node671.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html15180"
-  HREF="node679.html">Redireccionado al Agente SSH</A>
- &nbsp; <B>  <A NAME="tex2html15188"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15190"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15209"
+  HREF="node681.html">Claves Pública y Privada:</A>
+<B> Subir:</B> <A NAME="tex2html15203"
+  HREF="node678.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html15197"
+  HREF="node679.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html15205"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15207"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06590000000000000000">
-Consideraciones sobre la Seguridad del Uso de Agentes</A>
+<H1><A NAME="SECTION06520000000000000000"></A>
+<A NAME="subsection:sshfirsttime"></A>
+<BR>
+Conexión SSH a Una máquina por Primera Vez
 </H1>
 
 <P>
-El uso de agentes previene que la passphrase o la clave 
-tengan que viajar por la red y nos proteje contra el róbo de la clave.
-
-<P>
-Sin embargo, existe la posibilidad de que alguien tenga 
-acceso al socket usado por el agente. Cualquiera que pueda
-leer/escribir en ese socket tiene la posibilidad de suplantarnos.
-En particular el administrador de un sistema tiene siempre 
-esa posibilidad. 
-
-<P>
-Supongamos que el usuario <code>casiano</code> tiene acceso a dos máquinas:
-<code>orion</code> y <code>beowulf</code> a las que accede desde <code>europa</code>. 
-Supongamos que el administrador de <code>orion</code> es malicioso e intenta
-obtener acceso a las máquinas  de sus usuarios. Supongamos que tanto
-<code>europa</code> como <code>beowulf</code> son máquinas fiables. 
-Asumimos también que la máquina <code>beowulf</code> contiene información 
-importante y es un servidor que el usuario <code>casiano</code> tiene en su casa.
-
-<P>
-La sesión que sigue muestra como el malvado administrador de <code>orion</code>
-puede secuestrar al agente utilizado por <code>casiano</code> para obtener acceso
-a <code>beowulf</code>:
+SSH utiliza cifrado de clave pública para autentificar
+la máquina remota y permitir a la máquina remota la
+autentificación del usuario.
 
 <P>
 
-<OL>
-<LI>Supongamos que cierto usuario <code>casiano</code> abre una conexión SSH
-con <code>orion</code> desde la máquina 
-<code>europa</code>, utilizando <A NAME="28356"></A><SPAN  CLASS="textbf">agent forwarding</SPAN>
+<H4><A NAME="SECTION06520010000000000000">
+El Fichero <TT>.ssh/known_hosts</TT></A>
+</H4>
+  
+
+<P>
+En SSH1 y OpenSSH las claves de máquinas se mantienen en <code>etc/ssh_knownhosts</code>
+y en el directorio del usuario <code>~/.ssh/known_hosts</code>.
+Es posible cambiar la ubicación de estos ficheros
+usando  en el fichero de configuración <code>~/.ssh/config</code>
+la opción <code>UserKnownHostsFile</code>.
+
+<P>
+Al establecer por primera vez una conexión con  <TT>ssh</TT>  o  <TT>sftp</TT> 
+se nos avisa de la posibilidad de que la máquina no sea quien aparenta:
 
 <P>
 <PRE>
-casiano@europa:~$ ps -fA | grep ssh-agent
-casiano   7618     1  0 Apr28 ?        00:00:00 /usr/bin/ssh-agent -s
-casiano  16288 16223  0 Apr29 ?        00:00:00 /usr/bin/ssh-agent x-session-manager
-casiano  16970 13271  0 17:25 pts/31   00:00:00 grep ssh-agent
-pp2      28048     1  0 May02 ?        00:00:00 ssh-agent
-casiano@europa:~$ ssh-add -l
-1024 49:Xc:eX:bX:Xa:ea:eX:XX:fc:aX:eX:Xb:XX:cX:da:XX /home/casiano/.ssh/id_dsa (DSA)
-1024 56:XX:XX:dX:XX:eX:ca:XX:Xd:Xf:Xb:XX:Xd:fX:Xc:XX /home/casiano/.ssh/orionbackupidentity (DSA)
-casiano@europa:~$ ssh -A orion
-Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+nereida:~&gt; sftp user@machine.ull.es
+Connecting to machine.ull.es...
+The authenticity of host 'machine.ull.es (193.312.112.190)' can't be established.
+RSA key fingerprint is a4:1e:f1:35:0d:b1:6c:7d:5c:3e:86:ef:4c:17:8a:a9.
+Are you sure you want to continue connecting (yes/no)? yes
 </PRE>
-Posteriormente el usuario se conecta a una tercera máquina <code>beowulf</code>
-desde su sesión en <code>orion</code>:
+Si respondemos <code>yes</code> la conexión continúa:
 <PRE>
-casiano@orion:~$                                                   
-casiano@orion:~$ ssh beowulf
-Linux beowulf 2.6.15-1-686-smp #2 SMP Mon Mar 6 15:34:50 UTC 2006 i686
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-No mail.
-Last login: Mon May  4 17:44:35 2009 from orion.pcg.ull.es
-casiano@beowulf:~$
+Warning: Permanently added 'machine.ull.es' (RSA) to the list of known hosts.
+user@machine.ull.es's password:
+sftp&gt; bye
 </PRE>
+
+<P>
+
+<H4><A NAME="SECTION06520020000000000000">
+Algoritmo de Autentificación de las Máquinas</A>
+</H4>
+  
+
+<P>
+Esta precaución se toma por si el adversario subvierte el servidor de nombre
+para que <code>machine.ull.es</code> sea resuelta a su máquina. A continuación puede
+hacer un forward de la conexión solicitada a la verdadera máquina <code>machine.ull.es</code>.
+Este es un caso de <A NAME="28298"></A><SPAN  CLASS="textbf">man-in-the-middle-attack</SPAN>.
+
+<P>
+
+<UL>
+<LI>Cuando un cliente SSH hace una conexión cada una de las máquinas
+prueba su identidad a la otra utilizando criptografía de clave 
+pública. 
 </LI>
-<LI>En otra sesión en <code>orion</code> el malvado administrador busca por sockets de agentes en <code>/tmp</code>:
-<PRE>
-root@orion:~# ls -ltr /tmp/ssh*
-total 0
-srwxr-xr-x 1 casiano casiano 0 2009-05-04 17:35 agent.7932
-root@orion:~# ls -ldtr /tmp/ssh*
-drwx------ 2 casiano casiano 4096 2009-05-04 17:35 /tmp/ssh-jrQQgf7932
-</PRE>
-El root puede ver que el usuario <code>casiano</code> tiene un agente arrancado.
-
-<P>
-En el caso del agente, la opción <TT>-a</TT> de <TT>ssh-agent</TT>
-permite definir un lugar alternativo para el socket Unix a usar:
-<PRE>
-lusasoft@LusaSoft:~$ eval `ssh-agent -a myagentsocket`
-Agent pid 6475
-lusasoft@LusaSoft:~$ ls -ltrd my*
-srw------- 1 lusasoft lusasoft 0 2009-05-02 08:56 myagentsocket
-</PRE>
-esta opción sin embargo no afecta al socket creado por el daemon en <code>orion</code>
-
-<P>
+<LI>Cada servidor SSH dispone de un único ID secreto que se 
+denomina <A NAME="28300"></A><SPAN  CLASS="textbf">host key</SPAN> que utiliza para identificarse ante los 
+clientes. 
 </LI>
-<LI><P>
-El malvado administrador vigila lo que hace el usuario casiano:
-<PRE>
-root@orion:~# ps -fu casiano
-UID        PID  PPID  C STIME TTY          TIME CMD
-casiano   7682  7680  0 17:16 ?        00:00:00 sshd: casiano@pts/1
-casiano   7683  7682  0 17:16 pts/1    00:00:00 -bash
-casiano   7932  7930  0 17:35 ?        00:00:00 sshd: casiano@pts/0
-casiano   7933  7932  0 17:35 pts/0    00:00:00 -bash
-casiano   7939  7933  0 17:35 pts/0    00:00:00 ssh beowulf
-</PRE>
-Ummmmhhh... tiene una conexión ssh a una máquina llamada <code>beowulf</code>? 
-demasiado breve para ser el nombre real de una máquina. 
-Debe estar definida en su fichero de configuración.
+<LI>La primera vez que nos conectamos a una máquina remota
+el cliente obtiene y almacena la parte pública de la <I>host key</I> 
+en su fichero <code>~/.ssh/known_hosts</code>.
 </LI>
-<LI>Bueno, el root decide usar el socket de casiano:
-<PRE>
-root@orion:~# export SSH_AUTH_SOCK=/tmp/ssh-jrQQgf7932/agent.7932
-</PRE>
+<LI>Cada vez que nos conectamos con esa máquina el cliente comprueba
+la identidad del servidor remoto utilizando su correspondiente
+clave pública.
 </LI>
-<LI><P>
-El administrador malvado ya puede conectarse. Usará el fichero de configuración de <code>casiano</code> (opción <code>-F</code>)
-para que la conexión ocurra según la configuración de ese usuario (por supuesto, antes comprueba que
-existe tal configuración):
+</UL>
+
+<P>
+El cliente  <TT>ssh</TT>  mantiene en <code>~/.ssh/known_hosts</code>
+una base de datos conteniendo las máquinas a las que el usuario
+se ha conectado. Cualquier nuevo hosts es añadido al fichero 
+del usuario:
 
 <P>
 <PRE>
-root@orion:~# ssh -F ~casiano/.ssh/config casiano@beowulf
-casiano@beowulf:~$
+nereida:~&gt; grep 'machine.ull.es' ~/.ssh/known_hosts
+machine.ull.es ssh-rsa KEY.....
 </PRE>
 
 <P>
-El administrador de orion ha conseguido acceso a una máquina
-en la que no tenía cuenta. Ahora podría proceder a instalar una autentificación automática
-en la cuenta de caiano en beowulf, de modo que le permita posteriores visitas.
-</LI>
-</OL>
+
+<H4><A NAME="SECTION06520030000000000000">
+Borrando una Entrada de <TT>.ssh/known_hosts</TT></A>
+</H4>
+  
 
 <P>
+Si la relación entre la IP de la máquina y su nombre cambian <code>ssh</code> nos avisa.
+Si confiamos en el cambio podemos borrar
+la entrada en el fichero <code>~/.ssh/known_hosts</code>. De otro
+modo <code>ssh</code> se negará a efectuar la conexión.
+Podemos borrarla manualmente o con el comando:
+<PRE>
+casiano@cc116:~$ ssh-keygen -R rala
+/home/casiano/.ssh/known_hosts updated.
+Original contents retained as /home/casiano/.ssh/known_hosts.old
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06520040000000000000">
+Hashing</A>
+</H4>
+  
+
+<P>
+Supongamos que el atacante ha descubierto nuestra clave y ha entrado
+en nuestro servidor: ahora puede hacer <code>cat ~/.ssh/known_hosts</code>
+y deducir que otros servidores solemos visitar.
+Es incluso probable que la clave sea la misma o que tengamos
+un sistema de autentificación sin passphrase.
+
+<P>
+Si se quiere proteger el fichero  <TT>known_hosts</TT>  se puede usar la opción <code>-H</code>
+de  <TT>ssh-keygen</TT> :
+<PRE>
+casiano@cc116:~/.ssh$ ssh-keygen -H
+/home/casiano/.ssh/known_hosts updated.
+Original contents retained as /home/casiano/.ssh/known_hosts.old
+WARNING: /home/casiano/.ssh/known_hosts.old contains unhashed entries
+Delete this file to ensure privacy of hostnames
+</PRE>
+
+<P>
+Este comando reemplaza los nombres de los servidores y las direcciones con representaciones
+hash. Estas versiones hash pueden ser usadas por <code>ssh</code> pero son ilegibles
+para un humano. Es posible usar un fichero con una combinacion de entradas hash y 
+entradas legibles.
+
+<P>
+La opción  <TT>HashKnownHosts</TT>  permite en los ficheros de configuración
+permite indicarle a <code>ssh</code> que debe hacer hashing sobre los nombres y 
+las direcciones en <code>~/.ssh/known_hosts</code>. 
+Esto no afecta a las ya existentens en el fichero.
+
+<P>
+Es posible asociar varios nombres/direcciones con la misma clave
+(o repetirlas):
+
+<P>
+<PRE>
+foo1,foo,192.168.1.1,192.168.1.10 ssh-rsa AAAAB3Nsomething[...]
+foo2,foo,192.168.1.2,192.168.1.10 ssh-rsa AAAAB3Nsomethingelse[...]
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06520050000000000000">
+Búsqueda de Entradas Hash</A>
+</H4>
+  
+
+<P>
+Es posible encontrar las entradas en un fichero hash con la opción <code>-F</code>
+
+<P>
+<PRE>
+casiano@cc116:~/.ssh$ ssh-keygen -F millo
+# Host millo found: line 10 type RSA
+|1|BXG98oZImAlC02AQMAmuDb0jadQ=...
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION06520060000000000000">
+Ejercicios con <TT>known_hosts</TT></A>
+</H4>
+  
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">1</SPAN></B> &nbsp; 
+<I>Elimine una entrada en el fichero si existe e intente la conexión ¿que ocurre?</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">2</SPAN></B> &nbsp; 
+<I>Pase a modo hashed su fichero</I></DIV><P></P>
+
+<P>
+<P>
+<DIV><B>Ejercicio  <SPAN CLASS="arabic">84</SPAN>.<SPAN CLASS="arabic">2</SPAN>.<SPAN CLASS="arabic">3</SPAN></B> &nbsp; 
+<I>Busque por una entrada en el fichero hashed</I></DIV><P></P>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html15210"
+  HREF="node680.html#SECTION06520010000000000000">El Fichero <TT>.ssh/known_hosts</TT></A>
+<LI><A NAME="tex2html15211"
+  HREF="node680.html#SECTION06520020000000000000">Algoritmo de Autentificación de las Máquinas</A>
+<LI><A NAME="tex2html15212"
+  HREF="node680.html#SECTION06520030000000000000">Borrando una Entrada de <TT>.ssh/known_hosts</TT></A>
+<LI><A NAME="tex2html15213"
+  HREF="node680.html#SECTION06520040000000000000">Hashing</A>
+<LI><A NAME="tex2html15214"
+  HREF="node680.html#SECTION06520050000000000000">Búsqueda de Entradas Hash</A>
+<LI><A NAME="tex2html15215"
+  HREF="node680.html#SECTION06520060000000000000">Ejercicios con <TT>known_hosts</TT></A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15191"
+<A NAME="tex2html15208"
   HREF="node681.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15185"
-  HREF="node671.html">
+<A NAME="tex2html15202"
+  HREF="node678.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15179"
+<A NAME="tex2html15196"
   HREF="node679.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15187"
-  HREF="node851.html">
+<A NAME="tex2html15204"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15189"
-  HREF="node854.html">
+<A NAME="tex2html15206"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -302,20 +390,20 @@ en la cuenta de caiano en beowulf, de modo que le permita posteriores visitas.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15192"
-  HREF="node681.html">Depuración/Debugging</A>
-<B> Subir:</B> <A NAME="tex2html15186"
-  HREF="node671.html">ssh</A>
-<B> Anterior:</B> <A NAME="tex2html15180"
-  HREF="node679.html">Redireccionado al Agente SSH</A>
- &nbsp; <B>  <A NAME="tex2html15188"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15190"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15209"
+  HREF="node681.html">Claves Pública y Privada:</A>
+<B> Subir:</B> <A NAME="tex2html15203"
+  HREF="node678.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html15197"
+  HREF="node679.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html15205"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15207"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>gem yank: Retirando una Versión de una Gema de RubyGems.org</TITLE>
-<META NAME="description" CONTENT="gem yank: Retirando una Versión de una Gema de RubyGems.org">
+<TITLE>Dependencias de la Gema</TITLE>
+<META NAME="description" CONTENT="Dependencias de la Gema">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node736.html">
 <LINK REL="previous" HREF="node734.html">
-<LINK REL="up" HREF="node724.html">
+<LINK REL="up" HREF="node731.html">
 <LINK REL="next" HREF="node736.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16093"
+<A NAME="tex2html16130"
   HREF="node736.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16087"
-  HREF="node724.html">
+<A NAME="tex2html16124"
+  HREF="node731.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16081"
+<A NAME="tex2html16118"
   HREF="node734.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16089"
-  HREF="node851.html">
+<A NAME="tex2html16126"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16091"
-  HREF="node854.html">
+<A NAME="tex2html16128"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,95 +92,95 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16094"
-  HREF="node736.html">Semantic Versioning</A>
-<B> Subir:</B> <A NAME="tex2html16088"
-  HREF="node724.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html16082"
-  HREF="node734.html">gem cert: Gem Security</A>
- &nbsp; <B>  <A NAME="tex2html16090"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16092"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16131"
+  HREF="node736.html">Jerarquía de Ficheros y</A>
+<B> Subir:</B> <A NAME="tex2html16125"
+  HREF="node731.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html16119"
+  HREF="node734.html">Underscores and Dashes</A>
+ &nbsp; <B>  <A NAME="tex2html16127"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16129"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION0611110000000000000000">
-gem yank: Retirando una Versión de una Gema de RubyGems.org</A>
-</H1>
+<H1><A NAME="SECTION061140000000000000000">
+Dependencias de la Gema</A>
+</H1><I>
+Nearly all gems are going to have dependencies upon other libraries that
+they require in order to function. These dependencies are explicitly
+declared in the gemspec so that when a gem is installed, all of the gems
+that are needed to run that gem can automatically be installed with it.
+</I>
 <P>
-<I>You can't push the same gem version twice. 
-Yanking just marks a particular version as <SPAN  CLASS="textbf">'invalid'</SPAN>:
+<I>There are two types of gem dependencies, <A NAME="30802"></A><SPAN  CLASS="textbf">runtime dependencies</SPAN> and
+<A NAME="30804"></A><SPAN  CLASS="textbf">development dependencies</SPAN>. 
+</I>
+<P>
+<UL>
+<LI>
+<FONT COLOR="#0000ff"> Runtime dependencies</FONT> are libraries that
+your gem needs in order to function. For example, if you built a Rails
+extension, you would need to add Rails to the runtime dependencies of
+your project. 
+
+<P>
+</LI>
+<LI>
+<FONT COLOR="#0000ff"> Development dependencies</FONT>, on the other hand, are gems
+that are only needed by people who are going to contribute to the
+code of the gem. 
+
+<P>
+</LI>
+<LI>Gems are, by default, installed only with the runtime
+dependencies. This avoids cluttering up an environment with development
+dependencies if they aren't needed.
+</LI>
+</UL>
+<P>
+<I>Adding dependencies to your <code>gemspec</code> is extremely simple; all you need
+to do is add a line to the <code>gemspec</code> file for each dependency:
 </I>
 <P><PRE>
-$ gem list tictactoe -ra
-*** REMOTE GEMS ***
-tic-tac.toe (0.3.4, 0.3.3, 0.3.2, 0.3.1)
+# -*- encoding: utf-8 -*-
+require File.expand_path('../lib/my_gem/version', __FILE__)
 
-gem yank tic-tac-toe -v0.3.4
-</PRE><I>
-Veamos la página de ayuda:
-</I><PRE>
-[~/ruby_quiz/tictactoe/solutions/eduardo_segredo(john)]$ gem help yank
-Usage: gem yank GEM -v VERSION [-p PLATFORM] [--undo] [--key KEY_NAME] [options]
+Gem::Specification.new do |gem|
+  # ...
 
-  Options:
-    -v, --version VERSION            Specify version of gem to remove
-        --platform PLATFORM          Specify the platform of gem to remove
-        --undo
-    -k, --key KEY_NAME               Use API key from your gem credentials file
-
-
-  Common Options:
-    -h, --help                       Get help on this command
-    -V, --[no-]verbose               Set the verbose level of output
-    -q, --quiet                      Silence commands
-        --config-file FILE           Use this config file instead of default
-        --backtrace                  Show stack backtrace on errors
-        --debug                      Turn on Ruby debugging
-
-
-  Arguments:
-    GEM       name of gem
-
-  Summary:
-    Remove a specific gem version release from RubyGems.org
-
-  Description:
-    Remove a specific gem version release from RubyGems.org
+  gem.add_dependency 'rails'
+  gem.add_development_dependency 'rspec', '~&gt; 2.7'
+end
 </PRE>
 <P>
-<I>In previous versions we had to install <code>gemcutter</code>.
-It will add global <code>yank</code> command for <A NAME="tex2html1728"
-  HREF="https://rubygems.org/"><TT>RubyGems</TT></A>.
+<I>In addition to specifying the gem name of a dependency, you can also
+specify a version of the gem to get even more specific. 
+Rubygems will default to the latest version if no specific version is required.
 </I>
 <P><PRE>
-$ rvm rubygems latest
-$ gem update --system
-$ gem install gemcutter
-</PRE><I>
-It seems that the current version of <A NAME="tex2html1729"
-  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> 
-already includes <code>yank</code>.
-</I>
+git add . 
+git commit -m "Initial Import"
+</PRE>
 <P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html16093"
+<A NAME="tex2html16130"
   HREF="node736.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16087"
-  HREF="node724.html">
+<A NAME="tex2html16124"
+  HREF="node731.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16081"
+<A NAME="tex2html16118"
   HREF="node734.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16089"
-  HREF="node851.html">
+<A NAME="tex2html16126"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16091"
-  HREF="node854.html">
+<A NAME="tex2html16128"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -231,20 +231,20 @@ already includes <code>yank</code>.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16094"
-  HREF="node736.html">Semantic Versioning</A>
-<B> Subir:</B> <A NAME="tex2html16088"
-  HREF="node724.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html16082"
-  HREF="node734.html">gem cert: Gem Security</A>
- &nbsp; <B>  <A NAME="tex2html16090"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16092"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html16131"
+  HREF="node736.html">Jerarquía de Ficheros y</A>
+<B> Subir:</B> <A NAME="tex2html16125"
+  HREF="node731.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html16119"
+  HREF="node734.html">Underscores and Dashes</A>
+ &nbsp; <B>  <A NAME="tex2html16127"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16129"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

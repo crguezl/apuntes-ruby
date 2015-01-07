@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Presentación</TITLE>
-<META NAME="description" CONTENT="Presentación">
+<TITLE>Perpetuity</TITLE>
+<META NAME="description" CONTENT="Perpetuity">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node843.html">
+<LINK REL="next" HREF="node834.html">
 <LINK REL="previous" HREF="node832.html">
-<LINK REL="up" HREF="node832.html">
+<LINK REL="up" HREF="node655.html">
 <LINK REL="next" HREF="node834.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html17600"
+<A NAME="tex2html17626"
   HREF="node834.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html17594"
-  HREF="node832.html">
+<A NAME="tex2html17620"
+  HREF="node655.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html17588"
+<A NAME="tex2html17614"
   HREF="node832.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html17596"
-  HREF="node851.html">
+<A NAME="tex2html17622"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html17598"
-  HREF="node854.html">
+<A NAME="tex2html17624"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,55 +92,283 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html17601"
-  HREF="node834.html">Informaci&#243;n General</A>
-<B> Subir:</B> <A NAME="tex2html17595"
-  HREF="node832.html">BITÁCORA DE LPP</A>
-<B> Anterior:</B> <A NAME="tex2html17589"
-  HREF="node832.html">BITÁCORA DE LPP</A>
- &nbsp; <B>  <A NAME="tex2html17597"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html17599"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html17627"
+  HREF="node834.html">twitter</A>
+<B> Subir:</B> <A NAME="tex2html17621"
+  HREF="node655.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html17615"
+  HREF="node832.html">DataMapper</A>
+ &nbsp; <B>  <A NAME="tex2html17623"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html17625"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION07100000000000000000"></A>
-<A NAME="presentacion1415"></A>
-<BR>
-Presentación
-</H1><I>
+<H1><A NAME="SECTION063200000000000000000">
+Perpetuity</A>
+</H1>
+<P>
+<I>Perpetuity is a simple Ruby object persistence layer that attempts to
+follow Martin Fowler's Data Mapper pattern, allowing you to use plain-old
+Ruby objects in your Ruby apps in order to decouple your
+domain logic from the database as well as speed up your tests. 
 </I>
+<P>
+<I>There is no need for your model classes to inherit from another class
+or even include a mix-in.
+</I>
+<P>
+<I>Your objects will hopefully eventually be able to be persisted into whichever database you like. 
+</I>
+<P>
+<UL>
+<LI><A NAME="tex2html1949"
+  HREF="http://www.verious.com/code/jgaskins/perpetuity/">jgaskins / perpetuity Jamie Gaskins February 01, 2013</A>
+</LI>
+<LI>YouTube
+<A NAME="tex2html1950"
+  HREF="http://youtu.be/vlsz3W1WGVE">Perpetuity: Ruby gem for Data Mapper persistence
+by Jamie Gaskins</A>
+</LI>
+</UL>
+<P>
+<H4><A NAME="SECTION063200010000000000000">
+Servidor/Daemon/mongod</A>
+</H4>
+<P><PRE>
+[~/rubytesting/perpetuity]$ mongod -vvvv
+all output going to: /usr/local/var/log/mongodb/mongo.log
+</PRE>
+<P>
+<H4><A NAME="SECTION063200020000000000000">
+Gemfile</A>
+</H4><PRE>
+[~/rubytesting/perpetuity]$ cat Gemfile
+source 'https://rubygems.org'
+
+gem 'perpetuity-postgres'
+gem 'perpetuity-mongodb', '1.0.0.beta'
+</PRE>
+<P>
+<H4><A NAME="SECTION063200030000000000000">
+Salvando Objetos</A>
+</H4><PRE>
+[~/rubytesting/perpetuity]$ cat app.rb 
+require 'perpetuity'
+require 'perpetuity/mongodb'
+
+Perpetuity.data_source :mongodb, 'my_perpetuity_database'
+
+#Perpetuity.configure do 
+#  data_source :mongodb 
+#end
+
+
+class Article
+  attr_accessor :title, :body
+  def to_s 
+    "title: #{@title}\nbody: #{body}\n"
+  end
+end
+
+Perpetuity.generate_mapper_for Article do
+  attribute :title
+  attribute :body
+end
+
+article = Article.new
+article.title = 'New Article'
+article.body = 'This is an article.'
+
+Perpetuity[Article].insert article
+
+puts article
+</PRE>
+<P>
+<H4><A NAME="SECTION063200040000000000000">
+Recuperando Objetos</A>
+</H4><PRE>
+[~/rubytesting/perpetuity]$ cat app_load.rb 
+require 'perpetuity'
+require 'perpetuity/mongodb'
+require 'pp'
+
+Perpetuity.data_source :mongodb, 'my_perpetuity_database'
+
+class Article
+  attr_accessor :title, :body
+  def to_s 
+    "title: #{@title}\nbody: #{body}\n"
+  end
+end
+
+Perpetuity.generate_mapper_for Article do
+  attribute :title
+  attribute :body
+end
+
+articles = Perpetuity[Article].all
+articles.each do |article| # This is when the DB gets hit
+  puts article
+end
+</PRE>
+<P>
+<H4><A NAME="SECTION063200050000000000000">
+Ejecución</A>
+</H4>
+<P><PRE>
+[~/rubytesting/perpetuity]$  ruby app_load.rb 
+title: New Article
+body: This is an article.
+title: New Article
+body: This is an article.
+[~/rubytesting/perpetuity]$  ruby app.rb 
+title: New Article
+body: This is an article.
+[~/rubytesting/perpetuity]$  ruby app_load.rb 
+title: New Article
+body: This is an article.
+title: New Article
+body: This is an article.
+title: New Article
+body: This is an article.
+</PRE>
+<P>
+<H4><A NAME="SECTION063200060000000000000">
+Consola mongo</A>
+</H4><PRE>
+[~/rubytesting/perpetuity]$ mongo
+MongoDB shell version: 2.4.8
+connecting to: test
+Server has startup warnings: 
+Sat Mar 15 14:59:07.435 [initandlisten] 
+Sat Mar 15 14:59:07.435 [initandlisten] ** WARNING: soft rlimits too low. Number of files is 256, should be at least 1000
+&gt; show dbs
+dict_dev        0.203125GB
+local   0.078125GB
+my_perpetuity_database  0.203125GB
+sinatra-example-dev     0.203125GB
+spatialapp      0.203125GB
+test    0.203125GB
+&gt; use my_perpetuity_database
+switched to db my_perpetuity_database
+&gt; show collections
+Article
+system.indexes
+&gt; db.Article.find()
+{ "title" : "New Article", "body" : "This is an article.", "_id" : ObjectId("53246ee6a11460aefd000001") }
+{ "title" : "New Article", "body" : "This is an article.", "_id" : ObjectId("532472dba114602208000001") }
+{ "title" : "New Article", "body" : "This is an article.", "_id" : ObjectId("53247498a11460d527000001") }
+{ "title" : "New Article", "body" : "This is an article.", "_id" : ObjectId("532476f3a114603149000001") }
+{ "title" : "New Article", "body" : "This is an article.", "_id" : ObjectId("53247756a11460257d000001") }
+{ "title" : "New Article", "body" : "This is an article.", "_id" : ObjectId("532480afa1146012f5000001") }
+</PRE>
+<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html17602"
-  HREF="node834.html">Informaci&#243;n General</A>
-<LI><A NAME="tex2html17603"
-  HREF="node835.html">Profesores</A>
-<LI><A NAME="tex2html17604"
-  HREF="node836.html">Matrícula</A>
-<LI><A NAME="tex2html17605"
-  HREF="node837.html">Contexto</A>
-<LI><A NAME="tex2html17606"
-  HREF="node838.html">Horarios</A>
-<LI><A NAME="tex2html17607"
-  HREF="node839.html">Ejercicio: Hágase miembro de la comunidad google+ ULL-ETSII-GRADO-LPP-14-15</A>
-<LI><A NAME="tex2html17608"
-  HREF="node840.html">Programa de Teoría</A>
-<LI><A NAME="tex2html17609"
-  HREF="node841.html">Programa de Pr&#225;cticas</A>
-<LI><A NAME="tex2html17610"
-  HREF="node842.html">Evaluación</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html17628"
+  HREF="node833.html#SECTION063200010000000000000">Servidor/Daemon/mongod</A>
+<LI><A NAME="tex2html17629"
+  HREF="node833.html#SECTION063200020000000000000">Gemfile</A>
+<LI><A NAME="tex2html17630"
+  HREF="node833.html#SECTION063200030000000000000">Salvando Objetos</A>
+<LI><A NAME="tex2html17631"
+  HREF="node833.html#SECTION063200040000000000000">Recuperando Objetos</A>
+<LI><A NAME="tex2html17632"
+  HREF="node833.html#SECTION063200050000000000000">Ejecución</A>
+<LI><A NAME="tex2html17633"
+  HREF="node833.html#SECTION063200060000000000000">Consola mongo</A>
+</UL></UL></UL></UL>
 <!--End of Table of Child-Links-->
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html17626"
+  HREF="node834.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html17620"
+  HREF="node655.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html17614"
+  HREF="node832.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html17622"
+  HREF="node858.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html17624"
+  HREF="node861.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html17627"
+  HREF="node834.html">twitter</A>
+<B> Subir:</B> <A NAME="tex2html17621"
+  HREF="node655.html">HERRAMIENTAS</A>
+<B> Anterior:</B> <A NAME="tex2html17615"
+  HREF="node832.html">DataMapper</A>
+ &nbsp; <B>  <A NAME="tex2html17623"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html17625"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

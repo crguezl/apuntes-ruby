@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>A simple demonstration of streaming Redis pub/sub data</TITLE>
-<META NAME="description" CONTENT="A simple demonstration of streaming Redis pub/sub data">
+<TITLE>Introducción</TITLE>
+<META NAME="description" CONTENT="Introducción">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node493.html">
 <LINK REL="previous" HREF="node491.html">
-<LINK REL="up" HREF="node487.html">
+<LINK REL="up" HREF="node491.html">
 <LINK REL="next" HREF="node493.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11865"
+<A NAME="tex2html11906"
   HREF="node493.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11859"
-  HREF="node487.html">
+<A NAME="tex2html11900"
+  HREF="node491.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11853"
+<A NAME="tex2html11894"
   HREF="node491.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11861"
-  HREF="node851.html">
+<A NAME="tex2html11902"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11863"
-  HREF="node854.html">
+<A NAME="tex2html11904"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,332 +92,474 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11866"
-  HREF="node493.html">Comet y Server Sent-Events</A>
-<B> Subir:</B> <A NAME="tex2html11860"
-  HREF="node487.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11854"
-  HREF="node491.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html11862"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11864"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11907"
+  HREF="node493.html">Streaming y Valores de</A>
+<B> Subir:</B> <A NAME="tex2html11901"
+  HREF="node491.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11895"
+  HREF="node491.html">Streaming</A>
+ &nbsp; <B>  <A NAME="tex2html11903"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11905"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03850000000000000000">
-A simple demonstration of streaming Redis pub/sub data</A>
+<H1><A NAME="SECTION03810000000000000000">
+Introducción</A>
 </H1>
-Véase:
+En Sinatra 1.3 se introdujo el stream helper. 
+El stream object imita a un objeto IO.
+
+<P>
 
 <OL>
-<LI><A NAME="tex2html1152"
-  HREF="https://github.com/gorsuch/sinatra-streaming-example">A simple demonstration of streaming Redis pub/sub data over HTTP via Sinatra's streaming capabilities.</A>
+<LI><A NAME="tex2html1141"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L427-L437">Código del método stream</A>
 </LI>
-<LI><A NAME="tex2html1153"
-  HREF="https://github.com/crguezl/sinatra-streaming-example">A simple demonstration of streaming Redis pub/sub data over HTTP via Sinatra's streaming capabilities.</A>
-forked version crguezl
-</LI>
-<LI>Véa el capítulo <I>Redis y Sinatra</I> <A HREF="node527.html#chapter:redisysinatra">43</A>
-</LI>
-<LI><A NAME="tex2html1154"
-  HREF="https://github.com/redis/redis-rb">redis</A>
-gem en GitHub
-</LI>
-<LI><A NAME="tex2html1155"
-  HREF="http://rubydoc.info/gems/redis/3.0.6/frames">redis</A>
-documentación de la gema
-</LI>
-<LI><A NAME="tex2html1156"
-  HREF="http://redis.io/topics/pubsub">Redis Pub/Sub</A>
-</LI>
-<LI><A NAME="tex2html1157"
-  HREF="http://rubydoc.info/gems/redis/3.0.6/Redis/Subscription">Redis::Subscription</A>:
-</LI>
-<LI><A NAME="tex2html1158"
-  HREF="https://addons.heroku.com/redistogo">Heroku addon Redis To Go</A>
+<LI><A NAME="tex2html1142"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L383-L425">Class Stream code</A>: Class of the response body in case you use <code>#stream</code>
 </LI>
 </OL>
 
 <P>
+En ocasiones queremos empezar a enviar datos mientras se esta generando aún el cuerpo de la 
+respuesta.
+Puede que incluso queramos mantener el envío hasta que el cliente cierra la conexión.
 
-<H4><A NAME="SECTION03850010000000000000">
-web.rb</A>
-</H4>
-  
+<P>
+Para eso podemos usar el <code>stream</code> helper:
 
+<P>
 <PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat web.rb
-require 'redis'
+[~/sinatra/sinatra-streaming/intro-streaming(master)]$ cat legendary.rb 
 require 'sinatra'
 
-configure do
-  redis_url = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
-  uri = URI.parse(redis_url)
-  set :redis, Redis.new(:host =&gt; uri.host, :port =&gt; uri.port, :password =&gt; uri.password)
+before do
+ content_type 'text/plain'
 end
 
 get '/' do
-  "&lt;pre&gt;curl -v https://sinatra-streaming-example.herokuapp.com/stream&lt;/pre&gt;"
-end
-
-get '/stream' do
-  puts "connection made"
-
   stream do |out|
-    settings.redis.subscribe 'time' do |on|
-      on.message do |channel, message|
-        out &lt;&lt; "#{message}\n"
-      end
-    end
+    out &lt;&lt; "It's gonna be legen -\n"
+    sleep 0.5
+    out &lt;&lt; " (wait for it) \n"
+    sleep 1
+    out &lt;&lt; "- dary!\n"
   end
 end
 </PRE>
-<A NAME="tex2html1159"
-  HREF="http://redis.com">Redis</A> is a key-value store; it supports lists, hashes, sets, and ordered sets.
 
 <P>
-El código 
-<PRE>
-  redis_url = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
-</PRE>
-decide si estamos en Heroku o no. Si estamos en Heroku deberemos haber instalado
-el <A NAME="tex2html1160"
-  HREF="https://addons.heroku.com/redistogo">Heroku addon Redis To Go</A>.
+El objeto <code>out</code> que el método <code>stream</code> pasa al bloque
+es un objeto de la clase
+<A NAME="tex2html1143"
+  HREF="http://www.rubydoc.info/github/sinatra/sinatra/Sinatra/Helpers/Stream">Sinatra::Helpers::Stream</A>.
 
 <P>
-La llamada:
-<PRE>
-  set :redis, Redis.new(:host =&gt; uri.host, :port =&gt; uri.port, :password =&gt; uri.password)
-</PRE>
-conecta con el servidor Redis.
+Este objeto representa el cuerpo de la respuesta en el caso en que se use <code>stream</code>.
 
 <P>
-The Redis class exports methods that are named identical to the
-commands they execute. The arguments these methods accept are often
-identical to the arguments specified on the Redis website.
-
-<P>
-In Redis,
-<code>SUBSCRIBE</code>, <code>UNSUBSCRIBE</code> and <code>PUBLISH</code> implement 
-the <A NAME="tex2html1161"
-  HREF="http://en.wikipedia.org/wiki/Publish/subscribe">Publish/Subscribe</A>
-messaging paradigm where 
-
-<OL>
-<LI>In the <A NAME="21907"></A><SPAN  CLASS="textbf">Publish/Subscribe</SPAN> pattern, senders (publishers) are not programmed to send their messages to
-specific receivers (subscribers). 
-</LI>
-<LI>Rather, published messages are
-characterized into channels, without knowledge of what (if any)
-subscribers there may be. 
-</LI>
-<LI>Subscribers express interest in one or
-more channels, and only receive messages that are of interest,
-without knowledge of what (if any) publishers there are. 
-</LI>
-<LI>This
-decoupling of publishers and subscribers can allow for greater
-scalability and a more dynamic network topology.
-</LI>
-</OL>
-For instance in order to subscribe to channels <code>foo</code> and <code>bar</code> the
-client issues a <code>SUBSCRIBE</code> providing the names of the channels:
-<PRE>
-SUBSCRIBE foo bar
-</PRE>
-
-<P>
-Messages sent by other clients to these channels will be pushed by
-Redis to all the subscribed clients.
-
-<P>
-A client subscribed to one or more channels should not issue commands,
-although it can subscribe and unsubscribe to and from other channels.
-
-<P>
-The reply of the <code>SUBSCRIBE</code> and <code>UNSUBSCRIBE</code> operations are sent in
-the form of messages, so that the client can just read a coherent
-stream of messages where the first element indicates the type of
-message.
-
-<P>
-El objeto <code>on</code> pasado al bloque está en la clase
-<A NAME="tex2html1162"
-  HREF="http://rubydoc.info/gems/redis/3.0.6/Redis/Subscription">Redis::Subscription</A>:
-<PRE>
-    settings.redis.subscribe 'time' do |on|
-      on.message do |channel, message|
-        out &lt;&lt; "#{message}\n"
-      end
-</PRE>
-el objeto <code>on</code> dispone del método <code>message</code> que 
-<FONT COLOR="#0000ff"> establece una callback
-que será ejecutada cada vez que se produzca un mensaje</FONT>.
+El método <code>stream</code> 
+permite enviar datos al cliente
+incluso cuando el cuerpo del cliente no ha sido generado completamente.
 
 <P>
 
-<H4><A NAME="SECTION03850020000000000000">
-worker.rb</A>
+<H4><A NAME="SECTION03810010000000000000">
+Utilidades del Streaming</A>
 </H4>
   
 
+<P>
+Esto nos permite implementar 
+
+<UL>
+<LI>streaming APIs,
+</LI>
+<LI><A NAME="tex2html1144"
+  HREF="http://en.wikipedia.org/wiki/Server-sent_events">Server Sent Events</A>.
+Server-sent events es una tecnología que proporciona notificaciones push desde el servidor a un 
+navegador cliente en forma de eventos DOM
+</LI>
+<LI>y que 
+puede ser usada como base para <A NAME="tex2html1145"
+  HREF="http://en.wikipedia.org/wiki/WebSocket">WebSockets</A>. WebSocket es una tecnología que proporciona un canal de comunicación bidireccional y full-duplex sobre un único socket TCP. Está diseñada para ser implementada en navegadores y servidores web, pero puede utilizarse por cualquier aplicación cliente/servidor.
+</LI>
+<LI>Puede también ser utilizada para incrementar el throughput si parte pero no todo el contenido depende
+de un recurso que es lento.
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION03810020000000000000">
+Dependencia del Servidor</A>
+</H4>
+  
+
+<P>
+Nótese que la conducta de streaming, en particular
+el número de solicitudes concurrentes, 
+depende en gran medida del servidor web
+que sirve la aplicación.
+
+<P>
+
+<UL>
+<LI>Algunos servidores como <A NAME="tex2html1146"
+  HREF="http://naupacto.com/rubydoc/guiaWEBrick/index.html"><TT>Webrick</TT></A> no soportan streaming. En tal caso el cuerpo es 
+envíado en una tacada.
+</LI>
+<LI><A NAME="tex2html1147"
+  HREF="http://ruby.about.com/od/sinatra/a/sinatra5.htm"><TT>Shotgun</TT></A> tampoco soporta streaming
+</LI>
+</UL>
+
+<P>
+
+<H4><A NAME="SECTION03810030000000000000">
+<TT>Sinatra::Streaming</TT></A>
+</H4>
+  
+
+<OL>
+<LI>Sinatra 1.3 introduced the stream helper. 
+</LI>
+<LI>The addon provided by the gem
+<code>sinatra-contrib</code> improves the
+streaming API by making the stream object immitate an <code>IO</code> object,
+making the body play nicer
+with middleware unaware of streaming.
+</LI>
+</OL>
+
+<P>
+This is useful when passing the stream object to a library expecting an <A NAME="tex2html1148"
+  HREF="http://ruby-doc.org/core-2.0.0/IO.html"><TT>IO</TT></A> or <A NAME="tex2html1149"
+  HREF="http://ruby-doc.org/core-2.0.0/StringIO.html"><TT>StringIO</TT></A> object.
+
+<P>
 <PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat worker.rb 
-require 'uri'
-require 'redis'
+06:31][~/srcSTW/streaming/upandrunning_streaming]$ cat -n simple.rb 
+     1  # http://www.sinatrarb.com/contrib/streaming.html
+     2  # $ gem install sinatra-contrib
+     3  require 'sinatra'
+     4  require 'sinatra/streaming'
+     5  set server: 'thin'
+     6  #set server: 'unicorn'
+     7  
+     8  get '/' do
+     9    stream do |out|
+    10      puts out.methods
+    11      out.puts "Hello World!", "How are you?"
+    12      out.write "Written #{out.pos} bytes so far!\n"
+    13      out.putc(65) unless out.closed?
+    14      out.flush
+    15    end
+    16  end
+</PRE>
+<code>out</code> es un objeto 
+<A NAME="tex2html1150"
+  HREF="http://rubydoc.info/github/sinatra/sinatra/Sinatra/Helpers/Stream">Sinatra::Helpers::Stream</A>.
 
-redis_url = ENV["REDISTOGO_URL"] || "redis://localhost:6379"
-uri = URI.parse(redis_url)
-r = Redis.new(:host =&gt; uri.host, :port =&gt; uri.port, :password =&gt; uri.password)
+<P>
 
-while true do
-  puts "publishing..."
-  r.publish "time", Time.now.utc
-  sleep 1  
+<H4><A NAME="SECTION03810040000000000000">
+sinatra/streaming en Aplicaciones Modulares</A>
+</H4>
+  
+
+<P>
+Use the top-level <code>helpers</code> method to introduce
+the methods in the module  <code>Sinatra::Streaming</code>
+for use in route handlers and templates:
+
+<P>
+<PRE>
+require "sinatra/base"
+require "sinatra/streaming"
+
+class MyApp &lt; Sinatra::Base
+  helpers Sinatra::Streaming
 end
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION03850030000000000000">
-Procfile</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat Procfile 
-web: bundle exec ruby web.rb -p $PORT
-worker: bundle exec ruby worker.rb
-</PRE>
-The <code>web</code> process type, describes to Heroku how to start the web application server.
-
-<P>
-<A NAME="tex2html1163"
-  HREF="http://www.neilmiddleton.com/the-procfile-is-your-friend/">An interesting thing to mention here is that Heroku</A>
-only auto-launches
-the web process in your Procfile when deploying, whereas <code>foreman</code>
-launches everything. 
-
-<P>
-
-<H4><A NAME="SECTION03850040000000000000">
-Gemfile</A>
-</H4>
-  
-
-<PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ cat Gemfile
-source 'https://rubygems.org'
-
-gem 'foreman'
-gem 'redis'
-gem 'sinatra'
-gem 'thin'
-</PRE>
-
-<P>
-
-<H4><A NAME="SECTION03850050000000000000">
-Ejecución: Arranca el Servidor Redis</A>
+<H4><A NAME="SECTION03810050000000000000">
+Manteniendo la Conexión Abierta: <TT>keep_open</TT></A>
 </H4>
   
 
 <P>
-<PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ redis-server 
-[5604] 04 Dec 10:18:58.126 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
-[5604] 04 Dec 10:18:58.129 * Max number of open files set to 10032
-                _._                                                  
-           _.-``__ ''-._                                             
-      _.-``    `.  `_.  ''-._           Redis 2.6.14 (00000000/0) 64 bit
-  .-`` .-```.  ```\/    _.,_ ''-._                                   
- (    '      ,       .-`  | `,    )     Running in stand alone mode
- |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
- |    `-._   `._    /     _.-'    |     PID: 5604
-  `-._    `-._  `-./  _.-'    _.-'                                   
- |`-._`-._    `-.__.-'    _.-'_.-'|                                  
- |    `-._`-._        _.-'_.-'    |           http://redis.io        
-  `-._    `-._`-.__.-'_.-'    _.-'                                   
- |`-._`-._    `-.__.-'    _.-'_.-'|                                  
- |    `-._`-._        _.-'_.-'    |                                  
-  `-._    `-._`-.__.-'_.-'    _.-'                                   
-      `-._    `-.__.-'    _.-'                                       
-          `-._        _.-'                                           
-              `-.__.-'                                               
 
-[5604] 04 Dec 10:18:58.129 # Server started, Redis version 2.6.14
-[5604] 04 Dec 10:18:58.129 * The server is now ready to accept connections on port 6379
+<UL>
+<LI>Si en el método <code>stream</code> 
+el parámetro opcional <code>keep_open</code> se pone a <code>true</code> 
+<code>close</code> no será llamado al finalizar el bloque,
+permitiendo su cierre en un punto posterior del flujo de 
+ejecución.
+
+<P>
+</LI>
+<LI>Esto sólo funciona en  <A NAME="22078"></A><SPAN  CLASS="textbf">evented servers</SPAN> 
+
+<P>
+Broadly speaking, there are two ways to handle concurrent requests
+to a server: 
+
+<OL>
+<LI><A NAME="22080"></A><SPAN  CLASS="textbf">Threaded servers</SPAN> use multiple concurrently-executing
+threads that each handle one client request,
+</LI>
+<LI><A NAME="22082"></A><SPAN  CLASS="textbf">Evented servers</SPAN>
+run a single event loop that handles events for all connected
+clients
+</LI>
+<LI>Thin y Rainbows son ejemplos de servidores que pueden funcionar como <A NAME="22084"></A><SPAN  CLASS="textbf">evented servers</SPAN>. 
+(Otros servidores quizá cerrarán el stream)
+</LI>
+</OL>
+</LI>
+</UL>
+
+<P>
+El siguiente ejemplo muestra como mantener una conexión persitente, abierta para enviar
+mensajes de broadcast a unos suscriptores:
+
+<P>
+<PRE>
+[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ cat a_simple_streaming_example.rb 
+require 'sinatra'
+
+before do
+  content_type :txt
+end
+
+set server: 'thin', connections: []
+
+get '/consume' do
+  stream(:keep_open) do |out|
+    # store connection for later on
+    settings.connections &lt;&lt; out
+    logger.warn "connections.length = #{settings.connections.length}"
+
+    # remove connection when closed properly
+    out.callback do 
+      logger.warn "connection closed. out = #{out}"
+      settings.connections.delete(out) 
+      logger.warn "connections.length = #{settings.connections.length}"
+    end
+
+    # remove connection when due to an error
+    out.errback do
+      logger.warn "we just lost  connection!. out = #{out}"
+      settings.connections.delete(out)
+      logger.warn "connections.length = #{settings.connections.length}"
+    end
+  end # stream
+end
+
+get '/produce/:message' do
+  settings.connections.each do |out|
+    out &lt;&lt; "#{Time.now} -&gt; #{params[:message]}" &lt;&lt; "\n"
+  end
+
+  "Sent #{params[:message]} to all clients."
+end
+</PRE>
+Para usar este ejemplo utilizaremos este <code>Rakefile</code>:
+<PRE>
+[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ cat Rakefile 
+task :default =&gt; :server
+
+desc "run the server for the stream(:keep_open) example"
+task :server do
+  sh "ruby a_simple_streaming_example.rb"
+end
+
+desc "visit with browser 'localhost:4567/consume'"
+task :consume do
+  sh "open http://localhost:4567/consume"
+end
+
+desc "send messages to the consumer"
+task :produce do
+ (1..10).each do |i|
+   sh "sleep 1; curl http://localhost:4567/produce/#{i}%0D"
+ end
+end
+
+desc "start both consumer and producer"
+task :all =&gt; [ :consume, :produce ]
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION03850060000000000000">
-Ejecución 2: Arranca la aplicación Sinatra y el Worker</A>
-</H4>
-  
+<OL>
+<LI>Primero arrancamos el servidor. Obsérvese que el servidor usado es <code>thin</code>.
+<PRE>
+[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ rake server
+ruby a_simple_streaming_example.rb
+== Sinatra/1.4.4 has taken the stage on 4567 for development with backup from Thin
+Thin web server (v1.6.1 codename Death Proof)
+Maximum connections set to 1024
+Listening on localhost:4567, CTRL+C to stop
+</PRE>
+</LI>
+<LI>Después visitamos con un navegador la página 
+<code>localhost:4567/consume</code>. 
+<PRE>
+[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ rake consume
+open http://localhost:4567/consume
+</PRE>
+Esto abre (en MacOS X) un navegador que queda a la espera del
+servidor de que la ruta de producción genere algún contenido
+</LI>
+<LI>Si se desea abra alguna otra página de navegación privada (nueva ventana de incógnito en Chrome)
+en la misma URL <code>localhost:4567/consume</code>
+</LI>
+<LI>Arranquemos el productor:
+<PRE>
+[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ rake produce
+sleep 1; curl http://localhost:4567/produce/1%0D
+ to all clients.sleep 1; curl http://localhost:4567/produce/2%0D
+ to all clients.sleep 1; curl http://localhost:4567/produce/3%0D
+ to all clients.sleep 1; curl http://localhost:4567/produce/4%0D
+ to all clients.sleep 1; curl http://localhost:4567/produce/5%0D
+ to all clients.sleep 1; curl http://localhost:4567/produce/6%0D
+ to all clients.sleep 1; curl http://localhost:4567/produce/7%0D
+ to all clients.sleep 1; curl http://localhost:4567/produce/8%0D
+ to all clients.sleep 1; curl http://localhost:4567/produce/9%0D
+ to all clients.sleep 1; curl http://localhost:4567/produce/10%0D
+ to all clients.
+</PRE>
+</LI>
+<LI>Esto hace que en (los) navegadores/clientes que estaban 
+vistando  <code>localhost:4567/consume</code> aparezca algo parecido a esto:
+<PRE>
+2013-11-22 22:42:24 +0000 -&gt; 1
+2013-11-22 22:42:25 +0000 -&gt; 2
+2013-11-22 22:42:26 +0000 -&gt; 3
+2013-11-22 22:42:27 +0000 -&gt; 4
+2013-11-22 22:42:28 +0000 -&gt; 5
+2013-11-22 22:42:29 +0000 -&gt; 6
+2013-11-22 22:42:30 +0000 -&gt; 7
+2013-11-22 22:42:31 +0000 -&gt; 8
+2013-11-22 22:42:32 +0000 -&gt; 9
+2013-11-22 22:42:33 +0000 -&gt; 10
+</PRE>
+</LI>
+</OL>
 
-Obsérvese como <code>bundle exec foreman start</code> arranca tanto a <code>worker</code> como 
-a <code>web</code>:
+<P>
+En la consola del servidor aparecerá algo 
+parecido a esto:
+<PRE>
+[~/sinatra/sinatra-streaming/upandrunning-streaming(master)]$ rake
+ruby a_simple_streaming_example.rb
+== Sinatra/1.4.4 has taken the stage on 4567 for development with backup from Thin
+Thin web server (v1.6.1 codename Death Proof)
+Maximum connections set to 1024
+Listening on localhost:4567, CTRL+C to stop
+W, [2013-11-22T22:46:17.132773 #21927]  WARN -- : connections.length = 1
+W, [2013-11-22T22:47:16.655453 #21927]  WARN -- : connection closed. out = #&lt;Sinatra::Helpers::Stream:0x007ff10a9ed7b8&gt;
+W, [2013-11-22T22:47:16.655557 #21927]  WARN -- : connections.length = 0
+W, [2013-11-22T22:47:16.655620 #21927]  WARN -- : we just lost  connection!. out = #&lt;Sinatra::Helpers::Stream:0x007ff10a9ed7b8&gt;
+W, [2013-11-22T22:47:16.655677 #21927]  WARN -- : connections.length = 0
+127.0.0.1 - - [22/Nov/2013 22:47:16] "GET /consume HTTP/1.1" 200 - 59.5292
+127.0.0.1 - - [22/Nov/2013 22:50:32] "GET /produce/1%0D HTTP/1.1" 200 23 0.0009
+127.0.0.1 - - [22/Nov/2013 22:50:33] "GET /produce/2%0D HTTP/1.1" 200 23 0.0008
+127.0.0.1 - - [22/Nov/2013 22:50:34] "GET /produce/3%0D HTTP/1.1" 200 23 0.0009
+127.0.0.1 - - [22/Nov/2013 22:50:35] "GET /produce/4%0D HTTP/1.1" 200 23 0.0008
+127.0.0.1 - - [22/Nov/2013 22:50:36] "GET /produce/5%0D HTTP/1.1" 200 23 0.0009
+127.0.0.1 - - [22/Nov/2013 22:50:37] "GET /produce/6%0D HTTP/1.1" 200 23 0.0009
+127.0.0.1 - - [22/Nov/2013 22:50:38] "GET /produce/7%0D HTTP/1.1" 200 23 0.0009
+127.0.0.1 - - [22/Nov/2013 22:50:39] "GET /produce/8%0D HTTP/1.1" 200 23 0.0007
+127.0.0.1 - - [22/Nov/2013 22:50:40] "GET /produce/9%0D HTTP/1.1" 200 23 0.0006
+127.0.0.1 - - [22/Nov/2013 22:50:41] "GET /produce/10%0D HTTP/1.1" 200 24 0.0009
+</PRE>
+
+<P>
+El objeto <code>out</code> 
+de la clase 
+<A NAME="tex2html1151"
+  HREF="http://rubydoc.info/github/sinatra/sinatra/Sinatra/Helpers/Stream">Sinatra::Helpers::Stream</A>.
+dispone de los métodos 
+<A NAME="tex2html1152"
+  HREF="http://www.rubydoc.info/github/sinatra/sinatra/Sinatra/Helpers/Stream#callback-instance_method"><TT>#callback</TT></A><code>(&amp;block) =&gt; Object</code>
+y <code>errback</code> (parece que <code>errback</code> es un alias de <code>callback</code>).
 
 <P>
 <PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ bundle exec foreman start
-10:19:04 web.1     | started with pid 5606
-10:19:04 worker.1  | started with pid 5607
-10:19:05 worker.1  | publishing...
-10:19:06 web.1     | == Sinatra/1.3.0 has taken the stage on 5000 for development with backup from Thin
-10:19:06 web.1     | &gt;&gt; Thin web server (v1.2.11 codename Bat-Shit Crazy)
-10:19:06 web.1     | &gt;&gt; Maximum connections set to 1024
-10:19:06 web.1     | &gt;&gt; Listening on 0.0.0.0:5000, CTRL+C to stop
-10:19:06 worker.1  | publishing...
-10:19:07 worker.1  | publishing...
-10:19:08 worker.1  | publishing...
-..................................
-10:19:37 worker.1  | publishing...
-10:19:38 web.1     | connection made
-10:19:39 worker.1  | publishing...
-..................................
+# File 'lib/sinatra/base.rb'
+
+def callback(&amp;block)
+  return yield if @closed
+  @callbacks &lt;&lt; block
+end
 </PRE>
 
 <P>
 
-<H4><A NAME="SECTION03850070000000000000">
-Ejecución 3: Arranca un Cliente</A>
-</H4>
-  
+<OL>
+<LI>Por debajo este ejemplo usa
+<A NAME="tex2html1153"
+  HREF="ihttps://github.com/eventmachine/eventmachine">Event::Machine</A>.
+</LI>
+<LI><A NAME="tex2html1154"
+  HREF="ihttps://github.com/eventmachine/eventmachine">Event::Machine</A> 
+is a library for Ruby, C++, and Java programs. 
+</LI>
+<LI>It provides event-driven I/O using the <A NAME="tex2html1155"
+  HREF="http://en.wikipedia.org/wiki/Reactor_pattern">Reactor pattern</A>. 
 
+<OL>
+<LI>The <A NAME="22092"></A><SPAN  CLASS="textbf">reactor design pattern</SPAN> is an event handling pattern for
+handling service requests delivered concurrently to a service handler
+by one or more inputs.
+</LI>
+<LI>The service handler then demultiplexes the incoming requests and
+dispatches them synchronously to the associated request handlers.
+</LI>
+</OL>
+</LI>
+<LI>El módulo
+<A NAME="tex2html1156"
+  HREF="http://eventmachine.rubyforge.org/EventMachine/Deferrable.html">Module: EventMachine::Deferrable</A>
+provee  métodos <code>(Object) callback(&amp;block)</code>.
+y <code>(Object) errback(&amp;block)</code> 
+
+<OL>
+<LI>El método <code>(Object) callback(&amp;block)</code>
+specifies a block to be executed if and when the Deferrable object receives a status of <code>:succeeded</code>.
 <PRE>
-[~/sinatra/sinatra-streaming/sinatra-streaming-example(master)]$ curl -v http://localhost:5000/stream
-* Adding handle: conn: 0x7fc71280aa00
-* Adding handle: send: 0
-* Adding handle: recv: 0
-* Curl_addHandleToPipeline: length: 1
-* - Conn 0 (0x7fc71280aa00) send_pipe: 1, recv_pipe: 0
-* About to connect() to localhost port 5000 (#0)
-*   Trying 127.0.0.1...
-* Connected to localhost (127.0.0.1) port 5000 (#0)
-&gt; GET /stream HTTP/1.1
-&gt; User-Agent: curl/7.30.0
-&gt; Host: localhost:5000
-&gt; Accept: */*
-&gt; 
-&lt; HTTP/1.1 200 OK
-&lt; X-Frame-Options: sameorigin
-&lt; X-XSS-Protection: 1; mode=block
-&lt; Content-Type: text/html;charset=utf-8
-&lt; Connection: close
-* Server thin 1.2.11 codename Bat-Shit Crazy is not blacklisted
-&lt; Server: thin 1.2.11 codename Bat-Shit Crazy
-&lt; 
-2013-12-04 13:24:13 UTC
-2013-12-04 13:24:14 UTC
-2013-12-04 13:24:15 UTC
-2013-12-04 13:24:16 UTC
-2013-12-04 13:24:17 UTC
-.......................
+    out.callback do 
+      logger.warn "connection closed. out = #{out}"
+      settings.connections.delete(out) 
+      logger.warn "connections.length = #{settings.connections.length}"
+    end
 </PRE>
+</LI>
+<LI>El método <code>(Object) errback(&amp;block)</code> 
+specifies a block to be executed if and when the Deferrable object receives
+a status of <code>:failed</code>.
+<PRE>
+    out.errback do
+      logger.warn "we just lost  connection!. out = #{out}"
+      settings.connections.delete(out)
+      logger.warn "connections.length = #{settings.connections.length}"
+    end
+</PRE>
+</LI>
+<LI><A NAME="tex2html1157"
+  HREF="ihttps://github.com/eventmachine/eventmachine">Event::Machine</A> (EM) adds two different formalisms for lightweight concurrency to the Ruby programmer’s toolbox: spawned processes and <A NAME="22096"></A><SPAN  CLASS="textbf">deferrables</SPAN>.
+</LI>
+</OL>
+</LI>
+</OL>
 
 <P>
 <BR><HR>
@@ -427,39 +569,35 @@ Ejecución 3: Arranca un Cliente</A>
 <UL CLASS="ChildLinks">
 <LI><UL>
 <LI><UL>
-<LI><A NAME="tex2html11867"
-  HREF="node492.html#SECTION03850010000000000000">web.rb</A>
-<LI><A NAME="tex2html11868"
-  HREF="node492.html#SECTION03850020000000000000">worker.rb</A>
-<LI><A NAME="tex2html11869"
-  HREF="node492.html#SECTION03850030000000000000">Procfile</A>
-<LI><A NAME="tex2html11870"
-  HREF="node492.html#SECTION03850040000000000000">Gemfile</A>
-<LI><A NAME="tex2html11871"
-  HREF="node492.html#SECTION03850050000000000000">Ejecución: Arranca el Servidor Redis</A>
-<LI><A NAME="tex2html11872"
-  HREF="node492.html#SECTION03850060000000000000">Ejecución 2: Arranca la aplicación Sinatra y el Worker</A>
-<LI><A NAME="tex2html11873"
-  HREF="node492.html#SECTION03850070000000000000">Ejecución 3: Arranca un Cliente</A>
+<LI><A NAME="tex2html11908"
+  HREF="node492.html#SECTION03810010000000000000">Utilidades del Streaming</A>
+<LI><A NAME="tex2html11909"
+  HREF="node492.html#SECTION03810020000000000000">Dependencia del Servidor</A>
+<LI><A NAME="tex2html11910"
+  HREF="node492.html#SECTION03810030000000000000"><TT>Sinatra::Streaming</TT></A>
+<LI><A NAME="tex2html11911"
+  HREF="node492.html#SECTION03810040000000000000">sinatra/streaming en Aplicaciones Modulares</A>
+<LI><A NAME="tex2html11912"
+  HREF="node492.html#SECTION03810050000000000000">Manteniendo la Conexión Abierta: <TT>keep_open</TT></A>
 </UL></UL></UL>
 <!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11865"
+<A NAME="tex2html11906"
   HREF="node493.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11859"
-  HREF="node487.html">
+<A NAME="tex2html11900"
+  HREF="node491.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11853"
+<A NAME="tex2html11894"
   HREF="node491.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11861"
-  HREF="node851.html">
+<A NAME="tex2html11902"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11863"
-  HREF="node854.html">
+<A NAME="tex2html11904"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -510,20 +648,20 @@ Ejecución 3: Arranca un Cliente</A>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11866"
-  HREF="node493.html">Comet y Server Sent-Events</A>
-<B> Subir:</B> <A NAME="tex2html11860"
-  HREF="node487.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11854"
-  HREF="node491.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html11862"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11864"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11907"
+  HREF="node493.html">Streaming y Valores de</A>
+<B> Subir:</B> <A NAME="tex2html11901"
+  HREF="node491.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html11895"
+  HREF="node491.html">Streaming</A>
+ &nbsp; <B>  <A NAME="tex2html11903"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11905"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

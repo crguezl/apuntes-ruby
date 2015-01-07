@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Como Crear tu Propio Módulo en Node.js</TITLE>
-<META NAME="description" CONTENT="Como Crear tu Propio Módulo en Node.js">
+<TITLE>Ciclos</TITLE>
+<META NAME="description" CONTENT="Ciclos">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node615.html">
-<LINK REL="previous" HREF="node601.html">
-<LINK REL="up" HREF="node593.html">
+<LINK REL="next" HREF="node611.html">
+<LINK REL="previous" HREF="node609.html">
+<LINK REL="up" HREF="node608.html">
 <LINK REL="next" HREF="node611.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13896"
+<A NAME="tex2html13942"
   HREF="node611.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13890"
-  HREF="node593.html">
+<A NAME="tex2html13936"
+  HREF="node608.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13884"
+<A NAME="tex2html13930"
   HREF="node609.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13892"
-  HREF="node851.html">
+<A NAME="tex2html13938"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13894"
-  HREF="node854.html">
+<A NAME="tex2html13940"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,44 +92,160 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13897"
-  HREF="node611.html">Introducción</A>
-<B> Subir:</B> <A NAME="tex2html13891"
-  HREF="node593.html">JavaScript en el Lado</A>
-<B> Anterior:</B> <A NAME="tex2html13885"
-  HREF="node609.html">Algoritmo de Búsqueda Ejecutado</A>
- &nbsp; <B>  <A NAME="tex2html13893"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13895"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13943"
+  HREF="node611.html">Especificación de Ficheros Conteniendo</A>
+<B> Subir:</B> <A NAME="tex2html13937"
+  HREF="node608.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13931"
+  HREF="node609.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html13939"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13941"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04690000000000000000">
-Como Crear tu Propio Módulo en Node.js</A>
-</H1>
+<H2><A NAME="SECTION04682000000000000000">
+Ciclos</A>
+</H2>
 
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<PRE>
+[~/javascript/node.js/creating_modules/cycles(master)]$ cat a.js
+console.log('a starting');
+exports.done = false;
+var b = require('./b.js');
+console.log('in a, b.done = %j', b.done);
+exports.done = true;
+console.log('a done');
+</PRE>
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html13898"
-  HREF="node611.html">Introducción</A>
-<LI><A NAME="tex2html13899"
-  HREF="node612.html">Un Fichero <TT>package.json</TT></A>
-<LI><A NAME="tex2html13900"
-  HREF="node613.html">README y otros documentos</A>
-<LI><A NAME="tex2html13901"
-  HREF="node614.html">Véase También</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+<P>
+<PRE>
+[~/javascript/node.js/creating_modules/cycles(master)]$ cat b.js
+console.log('b starting');
+exports.done = false;
+var a = require('./a.js');
+console.log('in b, a.done = %j', a.done);
+exports.done = true;
+console.log('b done');
+</PRE>
+
+<P>
+<PRE>
+[~/javascript/node.js/creating_modules/cycles(master)]$ cat main.js
+console.log('main starting');
+var a = require('./a.js');
+var b = require('./b.js');
+console.log('in main, a.done=%j, b.done=%j', a.done, b.done);
+</PRE>
+When <code>main.js</code> loads <code>a.js</code>, then <code>a.js</code> in turn loads
+<code>b.js</code>. At that point, <code>b.js</code> tries to load <code>a.js</code>. In
+order to prevent an infinite loop an unfinished copy of the <code>a.js</code>
+exports object is returned to the <code>b.js</code> module. <code>b.js</code> then
+finishes loading, and its exports object is provided to the <code>a.js</code>
+module.
+
+<P>
+By the time <code>main.js</code> has loaded both modules, they're both finished. The
+output of this program would thus be:
+
+<P>
+<PRE>
+[~/javascript/node.js/creating_modules/cycles(master)]$ node main.js 
+main starting
+a starting
+b starting
+in b, a.done = false
+b done
+in a, b.done = true
+a done
+in main, a.done=true, b.done=true
+</PRE>
+
+<P>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html13942"
+  HREF="node611.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html13936"
+  HREF="node608.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html13930"
+  HREF="node609.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html13938"
+  HREF="node858.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html13940"
+  HREF="node861.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html13943"
+  HREF="node611.html">Especificación de Ficheros Conteniendo</A>
+<B> Subir:</B> <A NAME="tex2html13937"
+  HREF="node608.html">Modulos</A>
+<B> Anterior:</B> <A NAME="tex2html13931"
+  HREF="node609.html">Introducción</A>
+ &nbsp; <B>  <A NAME="tex2html13939"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13941"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

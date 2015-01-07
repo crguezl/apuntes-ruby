@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Negociación del protocolo WebSocket</TITLE>
-<META NAME="description" CONTENT="Negociación del protocolo WebSocket">
+<TITLE>Código en sinatra/base.rb: la clase Stream</TITLE>
+<META NAME="description" CONTENT="Código en sinatra/base.rb: la clase Stream">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="previous" HREF="node509.html">
-<LINK REL="up" HREF="node508.html">
+<LINK REL="previous" HREF="node508.html">
+<LINK REL="up" HREF="node491.html">
 <LINK REL="next" HREF="node511.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12162"
+<A NAME="tex2html12191"
   HREF="node511.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12156"
-  HREF="node508.html">
+<A NAME="tex2html12185"
+  HREF="node491.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12152"
+<A NAME="tex2html12181"
   HREF="node509.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12158"
-  HREF="node851.html">
+<A NAME="tex2html12187"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12160"
-  HREF="node854.html">
+<A NAME="tex2html12189"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,110 +91,151 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12163"
-  HREF="node511.html">websocket/rack</A>
-<B> Subir:</B> <A NAME="tex2html12157"
-  HREF="node508.html">WebSockets</A>
-<B> Anterior:</B> <A NAME="tex2html12153"
-  HREF="node509.html">Que es WebSocket y</A>
- &nbsp; <B>  <A NAME="tex2html12159"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12161"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12192"
+  HREF="node511.html">Web Sockets</A>
+<B> Subir:</B> <A NAME="tex2html12186"
+  HREF="node491.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html12182"
+  HREF="node509.html">Deferred or streaming response</A>
+ &nbsp; <B>  <A NAME="tex2html12188"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12190"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03912000000000000000">
-Negociación del protocolo WebSocket</A>
-</H2>
+<H1><A NAME="SECTION038100000000000000000"></A>
+<A NAME="section:sinatrabasestream"></A>
+<BR>
+Código en <TT>sinatra/base.rb</TT>: la clase <TT>Stream</TT>
+</H1>
 
 <P>
-Para establecer una conexión WebSocket, el cliente manda una petición de
-negociación WebSocket, y el servidor manda una respuesta de negociación
-WebSocket, como se puede ver en el siguiente ejemplo:
+The close parameter specifies whether <code>Stream#close</code> should be called
+after the block has been executed. This is only relevant for evented
+servers like <code>Thin</code> or Rainbows.
 
 <P>
-<TABLE CELLPADDING=3 BORDER="1">
-<TR><TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
-Petición del navegador al servidor:
-GET /demo HTTP/1.1
-Host: example.com
-Connection: Upgrade
-Sec-WebSocket-Key2: 12998 5 Y3 1 .P00
-Sec-WebSocket-Protocol: sample
-Upgrade: WebSocket
-Sec-WebSocket-Key1: 4 @1 46546xW%0l 1 5
-Origin: http://example.com
- 
- ^n:ds[4U
-</PRE></TD>
-<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=170><PRE>
- Respuesta del servidor:
- HTTP/1.1 101 WebSocket Protocol Handshake
- Upgrade: WebSocket
- Connection: Upgrade
- Sec-WebSocket-Origin: http://example.com
- Sec-WebSocket-Location: ws://example.com/demo
- Sec-WebSocket-Protocol: sample
+
+<H4><A NAME="SECTION038100010000000000000">
+método stream</A>
+</H4>
   
-  8jKS'y:G*Co,Wxa-
-</PRE></TD>
-</TR>
-</TABLE>
 
 <P>
-The WebSocket protocol was designed to work well with the existing
-Web infrastructure. As part of this design principle, the protocol
-specification defines that the WebSocket connection starts its
-life as an HTTP connection, guaranteeing full backwards compatibility
-with the pre-WebSocket world. 
+Fichero <code>sinatra/base.rb</code>:
+<PRE>
+  class Stream
+    ...
+    def stream(keep_open = false)
+      # Soporta el servidor callbacks asincronas? (webrick no, thin si)
+      scheduler = env['async.callback'] ? EventMachine : Stream
+      current   = @params.dup
+      body Stream.new(scheduler, keep_open) { |out| 
+        with_params(current) { yield(out) } # llamamos al bloque 
+      }
+    end
+    ...
+  end
+</PRE>
+Si <code>keep_open</code> es <code>true</code> el navegador se queda esperando datos y no
+ciera la conexión.
 
 <P>
-The protocol switch from HTTP to WebSocket
-is referred to as a the WebSocket handshake.
+The <code>body</code> method set or retrieve the response body. 
 
 <P>
-Una vez establecida, las tramas WebSocket de datos pueden empezar
-a enviarse en ambos sentidos entre el cliente y el servidor en modo
-full-duplex. 
+When a block is given,
+evaluation is deferred until the body is read with <code>each</code>.
 
 <P>
-Las tramas de texto pueden ser enviadas en modo full-duplex
-también, en ambas direcciones al mismo tiempo. 
+<PRE>
+    def body(value = nil, &amp;block)
+      if block_given?
+        def block.each; yield(call) end
+        response.body = block
+      elsif value
+        headers.delete 'Content-Length' unless request.head? || value.is_a?(Rack::File) || value.is_a?(Stream)
+        response.body = value
+      else
+        response.body
+      end
+    end
+</PRE>
+<H4><A NAME="SECTION038100020000000000000">
+initialize</A>
+</H4>
+  
 
 <P>
-Tramas de datos binarios no están soportadas todavía en el API. 
+<PRE>
+class Stream
+      def self.schedule(*) yield end
+      def self.defer(*)    yield end
+
+      def initialize(scheduler = self.class, keep_open = false, &amp;back)
+        @back, @scheduler, @keep_open = 
+         back.to_proc, scheduler, keep_open
+        @callbacks, @closed = [], false
+      end
+  ...
+end
+</PRE>
 
 <P>
 
-<UL>
-<LI><A NAME="tex2html1223"
-  HREF="http://www.websocket.org/aboutwebsocket.html">About HTML5 WebSockets</A>
-en 
-<A NAME="tex2html1224"
-  HREF="http://www.websocket.org">http://www.websocket.org</A>
-</LI>
-</UL>
+<H4><A NAME="SECTION038100030000000000000">
+with_params</A>
+</H4>
+  
 
 <P>
+<PRE>
+  class Stream 
+    ...
+    def with_params(temp_params)
+      original, @params = @params, temp_params # save params
+      yield   # call the block
+    ensure
+      @params = original if original # recover params
+    end
+  end
+</PRE>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html12193"
+  HREF="node510.html#SECTION038100010000000000000">método stream</A>
+<LI><A NAME="tex2html12194"
+  HREF="node510.html#SECTION038100020000000000000">initialize</A>
+<LI><A NAME="tex2html12195"
+  HREF="node510.html#SECTION038100030000000000000">with_params</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12162"
+<A NAME="tex2html12191"
   HREF="node511.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12156"
-  HREF="node508.html">
+<A NAME="tex2html12185"
+  HREF="node491.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12152"
+<A NAME="tex2html12181"
   HREF="node509.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12158"
-  HREF="node851.html">
+<A NAME="tex2html12187"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12160"
-  HREF="node854.html">
+<A NAME="tex2html12189"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -245,20 +286,20 @@ en
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12163"
-  HREF="node511.html">websocket/rack</A>
-<B> Subir:</B> <A NAME="tex2html12157"
-  HREF="node508.html">WebSockets</A>
-<B> Anterior:</B> <A NAME="tex2html12153"
-  HREF="node509.html">Que es WebSocket y</A>
- &nbsp; <B>  <A NAME="tex2html12159"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12161"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12192"
+  HREF="node511.html">Web Sockets</A>
+<B> Subir:</B> <A NAME="tex2html12186"
+  HREF="node491.html">Streaming</A>
+<B> Anterior:</B> <A NAME="tex2html12182"
+  HREF="node509.html">Deferred or streaming response</A>
+ &nbsp; <B>  <A NAME="tex2html12188"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12190"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

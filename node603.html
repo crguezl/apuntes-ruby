@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Ciclos</TITLE>
-<META NAME="description" CONTENT="Ciclos">
+<TITLE>Usando REPL desde un programa</TITLE>
+<META NAME="description" CONTENT="Usando REPL desde un programa">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node604.html">
 <LINK REL="previous" HREF="node602.html">
-<LINK REL="up" HREF="node601.html">
+<LINK REL="up" HREF="node600.html">
 <LINK REL="next" HREF="node604.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13795"
+<A NAME="tex2html13831"
   HREF="node604.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13789"
-  HREF="node601.html">
+<A NAME="tex2html13825"
+  HREF="node600.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13783"
+<A NAME="tex2html13819"
   HREF="node602.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13791"
-  HREF="node851.html">
+<A NAME="tex2html13827"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13793"
-  HREF="node854.html">
+<A NAME="tex2html13829"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,96 +92,136 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13796"
-  HREF="node604.html">Especificación de Ficheros Conteniendo</A>
-<B> Subir:</B> <A NAME="tex2html13790"
-  HREF="node601.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html13784"
-  HREF="node602.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html13792"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13794"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13832"
+  HREF="node604.html">Usando REPL via un</A>
+<B> Subir:</B> <A NAME="tex2html13826"
+  HREF="node600.html">JavaScript en el Lado</A>
+<B> Anterior:</B> <A NAME="tex2html13820"
+  HREF="node602.html">Primeros Pasos. Un Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html13828"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13830"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION04682000000000000000">
-Ciclos</A>
-</H2>
+<H1><A NAME="SECTION04630000000000000000">
+Usando REPL desde un programa</A>
+</H1>
+
+<P>
+Es posible crear un bucle REPL en cualquier punto de nuestro programa - quizá para depurarlo.
+Para ello usamos la función 
+ <TT>repl.start</TT> .
+Esta función retorna una instancia REPLServer. Acepta como argumento un objeto
+<code>options</code> que toma los siguientes valores:
+
+<P>
+
+<OL>
+<LI><code>prompt</code> - the prompt and stream for all I/O. Defaults to &gt; .
+</LI>
+<LI><code>input</code> - the readable stream to listen to. Defaults to process.stdin.
+</LI>
+<LI><code>output</code> - the writable stream to write readline data to. Defaults to process.stdout.
+</LI>
+<LI><code>terminal</code> - pass true if the stream should be treated
+like a TTY, and have ANSI/VT100 escape codes written to it. Defaults
+to checking isTTY on the output stream upon instantiation.
+</LI>
+<LI><code>eval</code> - function that will be used to eval each given
+line. Defaults to an async wrapper for eval(). 
+</LI>
+<LI><code>useColors</code> - a boolean which specifies whether or not
+the writer function should output colors. If a different writer
+function is set then this does nothing. Defaults to the repl's
+terminal value.
+</LI>
+<LI><code>useGlobal</code> - if set to true, then the repl will use the
+global object, instead of running scripts in a separate context.
+Defaults to false.
+</LI>
+<LI><code>ignoreUndefined</code> - if set to true, then the repl will
+not output the return value of command if it's undefined. Defaults
+to false.
+</LI>
+<LI><code>writer</code> - the function to invoke for each command that
+gets evaluated which returns the formatting (including coloring)
+to display. Defaults to util.inspect.
+</LI>
+</OL>
 
 <P>
 <PRE>
-[~/javascript/node.js/creating_modules/cycles(master)]$ cat a.js
-console.log('a starting');
-exports.done = false;
-var b = require('./b.js');
-console.log('in a, b.done = %j', b.done);
-exports.done = true;
-console.log('a done');
+[~/Dropbox/src/javascript/node.js/repl(master)]$ cat repl.js 
+var repl = require("repl");
+
+connections = 0;
+
+repl.start({
+  prompt: "node via stdin&gt; ",
+  input: process.stdin,
+  output: process.stdout
+});
 </PRE>
 
 <P>
 <PRE>
-[~/javascript/node.js/creating_modules/cycles(master)]$ cat b.js
-console.log('b starting');
-exports.done = false;
-var a = require('./a.js');
-console.log('in b, a.done = %j', a.done);
-exports.done = true;
-console.log('b done');
+[~/Dropbox/src/javascript/node.js/repl(master)]$ node repl.js 
+node via stdin&gt; 2+3
+5
+node via stdin&gt; .exit
 </PRE>
 
 <P>
+el bucle REPL proporciona acceso a las variables de ámbito global. Es posible
+hacer explícitamente visible una variable al REPL asignándosela al
+<code>context</code> asociado con el
+REPLServer. Por ejemplo:
+
+<P>
 <PRE>
-[~/javascript/node.js/creating_modules/cycles(master)]$ cat main.js
-console.log('main starting');
-var a = require('./a.js');
-var b = require('./b.js');
-console.log('in main, a.done=%j, b.done=%j', a.done, b.done);
+[~/Dropbox/src/javascript/node.js/repl(master)]$ cat repl2.js 
+var repl = require("repl");
+
+z = 4
+repl.start({
+  prompt: "node via stdin&gt; ",
+  input: process.stdin,
+  output: process.stdout
+}).context.m = "message";
 </PRE>
-When <code>main.js</code> loads <code>a.js</code>, then <code>a.js</code> in turn loads
-<code>b.js</code>. At that point, <code>b.js</code> tries to load <code>a.js</code>. In
-order to prevent an infinite loop an unfinished copy of the <code>a.js</code>
-exports object is returned to the <code>b.js</code> module. <code>b.js</code> then
-finishes loading, and its exports object is provided to the <code>a.js</code>
-module.
-
-<P>
-By the time <code>main.js</code> has loaded both modules, they're both finished. The
-output of this program would thus be:
+Las variables en el objeto <code>context</code> se ven como locales 
+al  REPL:
 
 <P>
 <PRE>
-[~/javascript/node.js/creating_modules/cycles(master)]$ node main.js 
-main starting
-a starting
-b starting
-in b, a.done = false
-b done
-in a, b.done = true
-a done
-in main, a.done=true, b.done=true
+[~/Dropbox/src/javascript/node.js/repl(master)]$ node repl2.js 
+node via stdin&gt; z
+4
+node via stdin&gt; m
+'message'
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html13795"
+<A NAME="tex2html13831"
   HREF="node604.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13789"
-  HREF="node601.html">
+<A NAME="tex2html13825"
+  HREF="node600.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13783"
+<A NAME="tex2html13819"
   HREF="node602.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13791"
-  HREF="node851.html">
+<A NAME="tex2html13827"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13793"
-  HREF="node854.html">
+<A NAME="tex2html13829"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -232,20 +272,20 @@ in main, a.done=true, b.done=true
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13796"
-  HREF="node604.html">Especificación de Ficheros Conteniendo</A>
-<B> Subir:</B> <A NAME="tex2html13790"
-  HREF="node601.html">Modulos</A>
-<B> Anterior:</B> <A NAME="tex2html13784"
-  HREF="node602.html">Introducción</A>
- &nbsp; <B>  <A NAME="tex2html13792"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13794"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html13832"
+  HREF="node604.html">Usando REPL via un</A>
+<B> Subir:</B> <A NAME="tex2html13826"
+  HREF="node600.html">JavaScript en el Lado</A>
+<B> Anterior:</B> <A NAME="tex2html13820"
+  HREF="node602.html">Primeros Pasos. Un Ejemplo</A>
+ &nbsp; <B>  <A NAME="tex2html13828"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13830"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

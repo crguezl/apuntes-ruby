@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Dependencias de la Gema</TITLE>
-<META NAME="description" CONTENT="Dependencias de la Gema">
+<TITLE>bundle show: searching</TITLE>
+<META NAME="description" CONTENT="bundle show: searching">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node729.html">
 <LINK REL="previous" HREF="node727.html">
-<LINK REL="up" HREF="node724.html">
+<LINK REL="up" HREF="node726.html">
 <LINK REL="next" HREF="node729.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15983"
+<A NAME="tex2html15979"
   HREF="node729.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15977"
-  HREF="node724.html">
+<A NAME="tex2html15973"
+  HREF="node726.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15971"
+<A NAME="tex2html15967"
   HREF="node727.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15979"
-  HREF="node851.html">
+<A NAME="tex2html15975"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15981"
-  HREF="node854.html">
+<A NAME="tex2html15977"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,95 +92,66 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15984"
-  HREF="node729.html">Jerarquía de Ficheros y</A>
-<B> Subir:</B> <A NAME="tex2html15978"
-  HREF="node724.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15972"
-  HREF="node727.html">Underscores and Dashes</A>
- &nbsp; <B>  <A NAME="tex2html15980"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15982"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15980"
+  HREF="node729.html">La opción PATH (:path)</A>
+<B> Subir:</B> <A NAME="tex2html15974"
+  HREF="node726.html">Bundler</A>
+<B> Anterior:</B> <A NAME="tex2html15968"
+  HREF="node727.html">bundle show: Que versión</A>
+ &nbsp; <B>  <A NAME="tex2html15976"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15978"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061140000000000000000">
-Dependencias de la Gema</A>
-</H1><I>
-Nearly all gems are going to have dependencies upon other libraries that
-they require in order to function. These dependencies are explicitly
-declared in the gemspec so that when a gem is installed, all of the gems
-that are needed to run that gem can automatically be installed with it.
-</I>
+<H1><A NAME="SECTION061020000000000000000">
+bundle show: searching</A>
+</H1>
 <P>
-<I>There are two types of gem dependencies, <A NAME="30568"></A><SPAN  CLASS="textbf">runtime dependencies</SPAN> and
-<A NAME="30570"></A><SPAN  CLASS="textbf">development dependencies</SPAN>. 
-</I>
-<P>
-<UL>
-<LI>
-<FONT COLOR="#0000ff"> Runtime dependencies</FONT> are libraries that
-your gem needs in order to function. For example, if you built a Rails
-extension, you would need to add Rails to the runtime dependencies of
-your project. 
-
-<P>
-</LI>
-<LI>
-<FONT COLOR="#0000ff"> Development dependencies</FONT>, on the other hand, are gems
-that are only needed by people who are going to contribute to the
-code of the gem. 
-
-<P>
-</LI>
-<LI>Gems are, by default, installed only with the runtime
-dependencies. This avoids cluttering up an environment with development
-dependencies if they aren't needed.
-</LI>
-</UL>
-<P>
-<I>Adding dependencies to your <code>gemspec</code> is extremely simple; all you need
-to do is add a line to the <code>gemspec</code> file for each dependency:
+<I>The show command still has one more trick up it's sleeve, though: 
+</I><PRE>
+bundle show --paths
+</PRE><I>
+Printing a list of paths may not sound terribly useful, but it makes it trivial to search through the source of every gem in your bundle. Want to know where ActionDispatch::RemoteIp is defined? It's a one-liner:
 </I>
 <P><PRE>
-# -*- encoding: utf-8 -*-
-require File.expand_path('../lib/my_gem/version', __FILE__)
-
-Gem::Specification.new do |gem|
-  # ...
-
-  gem.add_dependency 'rails'
-  gem.add_development_dependency 'rspec', '~&gt; 2.7'
-end
-</PRE>
-<P>
-<I>In addition to specifying the gem name of a dependency, you can also
-specify a version of the gem to get even more specific. 
-Rubygems will default to the latest version if no specific version is required.
+$ grep ActionDispatch::RemoteIp `bundle show --paths`
+</PRE><I>
+Whether you use grep, ack, or ag, it's very easy to set up a shell function that allows you to search the current bundle in just a few characters. Here's mine:
 </I>
 <P><PRE>
-git add . 
-git commit -m "Initial Import"
+function back () {
+ack "$@" `bundle show --paths`
+}
+</PRE><I>
+With that function, searching becomes even easier:
+</I>
+<P><PRE>
+$ back ActionDispatch::RemoteIp
 </PRE>
+<P>
+<I>Véase <A NAME="tex2html1726"
+  HREF="https://blog.engineyard.com/2013/bundler-hacking">Hack your bundle for fun and profit</A>
+</I>
 <P>
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html15983"
+<A NAME="tex2html15979"
   HREF="node729.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15977"
-  HREF="node724.html">
+<A NAME="tex2html15973"
+  HREF="node726.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15971"
+<A NAME="tex2html15967"
   HREF="node727.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15979"
-  HREF="node851.html">
+<A NAME="tex2html15975"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15981"
-  HREF="node854.html">
+<A NAME="tex2html15977"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -231,20 +202,20 @@ git commit -m "Initial Import"
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15984"
-  HREF="node729.html">Jerarquía de Ficheros y</A>
-<B> Subir:</B> <A NAME="tex2html15978"
-  HREF="node724.html">Creando Gemas y Publicándolas</A>
-<B> Anterior:</B> <A NAME="tex2html15972"
-  HREF="node727.html">Underscores and Dashes</A>
- &nbsp; <B>  <A NAME="tex2html15980"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15982"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html15980"
+  HREF="node729.html">La opción PATH (:path)</A>
+<B> Subir:</B> <A NAME="tex2html15974"
+  HREF="node726.html">Bundler</A>
+<B> Anterior:</B> <A NAME="tex2html15968"
+  HREF="node727.html">bundle show: Que versión</A>
+ &nbsp; <B>  <A NAME="tex2html15976"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15978"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

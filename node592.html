@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>JSOn y JSONP: When ajax calls are in a different domain from the server.</TITLE>
-<META NAME="description" CONTENT="JSOn y JSONP: When ajax calls are in a different domain from the server.">
+<TITLE>Los Métodos call y apply</TITLE>
+<META NAME="description" CONTENT="Los Métodos call y apply">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,27 +20,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="previous" HREF="node591.html">
-<LINK REL="up" HREF="node590.html">
+<LINK REL="up" HREF="node591.html">
 <LINK REL="next" HREF="node593.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html13600"
+<A NAME="tex2html13651"
   HREF="node593.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html13594"
-  HREF="node590.html">
+<A NAME="tex2html13645"
+  HREF="node591.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html13590"
+<A NAME="tex2html13641"
   HREF="node591.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html13596"
-  HREF="node851.html">
+<A NAME="tex2html13647"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html13598"
-  HREF="node854.html">
+<A NAME="tex2html13649"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,41 +91,90 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html13601"
-  HREF="node593.html">JavaScript en el Lado</A>
-<B> Subir:</B> <A NAME="tex2html13595"
-  HREF="node590.html">Ajax</A>
-<B> Anterior:</B> <A NAME="tex2html13591"
-  HREF="node591.html">Enlaces y Bibliografía</A>
- &nbsp; <B>  <A NAME="tex2html13597"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html13599"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html13652"
+  HREF="node593.html">Programación Funcional</A>
+<B> Subir:</B> <A NAME="tex2html13646"
+  HREF="node591.html">Funciones</A>
+<B> Anterior:</B> <A NAME="tex2html13642"
+  HREF="node591.html">Funciones</A>
+ &nbsp; <B>  <A NAME="tex2html13648"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html13650"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION04520000000000000000">
-JSOn y JSONP: When ajax calls are in a different domain from the server.</A>
-</H1>
-<A NAME="tex2html1419"
-  HREF="http://json-jsonp-tutorial.craic.com/index.html">JSON versus JSONP Tutorial</A>
-y
-<A NAME="tex2html1420"
-  HREF="https://github.com/craic/json_jsonp_tutorial">https://github.com/craic/json_jsonp_tutorial</A>
+<H2><A NAME="SECTION04301000000000000000"></A>
+<A NAME="subsection:callyapply"></A>
+<BR>
+Los Métodos <TT>call</TT> y <TT>apply</TT>
+</H2>
+Los métodos  <TT>call</TT>  y  <TT>apply</TT>  nos permiten
+invocar una función como si fuera un método de algún otro 
+objeto.
+
+<P>
 <PRE>
-[~/sinatra/sinatra-json_jsonp(master)]$ pwd -P
-/Users/casiano/local/src/ruby/sinatra/sinatra-json_jsonp
-[~/sinatra/sinatra-json_jsonp(master)]$ git remote -v
-origin  git@github.com:craic/json_jsonp_tutorial.git (fetch)
-origin  git@github.com:craic/json_jsonp_tutorial.git (push)
+[~/Dropbox/src/javascript/learning]$ cat call.js 
+var Bob = {
+  name: "Bob",
+  greet: function() {
+    console.log("Hi, I'm " + this.name);
+  }
+}
+ 
+var Alice = {
+  name: "Alice",
+};
+
+Bob.greet.call(Alice);
 </PRE>
+
+<P>
+<PRE>
+[~/Dropbox/src/javascript/learning]$ node call.js
+Hi, I'm Alice
+</PRE>
+
+<P>
+
+<OL>
+<LI><A NAME="tex2html1436"
+  HREF="http://odetocode.com/blogs/scott/archive/2007/07/05/function-apply-and-function-call-in-javascript.aspx">Function.apply and Function.call in JavaScript</A>
+<PRE>
+&gt; function f() { console.log(this.x); }
+undefined
+&gt; f.toString()
+'function f() { console.log(this.x); }'
+&gt; z = { x : 99 }
+{ x: 99 }
+&gt; f.call(z)
+99
+undefined
+&gt;
+</PRE>
+</LI>
+<LI><PRE>
+&gt; o  = { x : 15 }
+{ x: 15 }
+&gt; function f(m) { console.log(m+" "+this.x); }
+undefined
+&gt; f("invoking f")
+invoking f 10
+undefined
+&gt; f.call(o, "invoking f via call");
+invoking f via call 15
+undefined
+</PRE>
+</LI>
+</OL>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

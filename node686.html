@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Git</TITLE>
-<META NAME="description" CONTENT="Git">
+<TITLE>Redireccionado al Agente SSH</TITLE>
+<META NAME="description" CONTENT="Redireccionado al Agente SSH">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node700.html">
-<LINK REL="previous" HREF="node671.html">
-<LINK REL="up" HREF="node648.html">
+<LINK REL="next" HREF="node687.html">
+<LINK REL="previous" HREF="node685.html">
+<LINK REL="up" HREF="node678.html">
 <LINK REL="next" HREF="node687.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html15299"
+<A NAME="tex2html15323"
   HREF="node687.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html15293"
-  HREF="node648.html">
+<A NAME="tex2html15317"
+  HREF="node678.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html15287"
+<A NAME="tex2html15311"
   HREF="node685.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html15295"
-  HREF="node851.html">
+<A NAME="tex2html15319"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html15297"
-  HREF="node854.html">
+<A NAME="tex2html15321"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,65 +92,241 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html15300"
-  HREF="node687.html">Instalar Git</A>
-<B> Subir:</B> <A NAME="tex2html15294"
-  HREF="node648.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html15288"
-  HREF="node685.html">Copias de Seguridad con</A>
- &nbsp; <B>  <A NAME="tex2html15296"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html15298"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html15324"
+  HREF="node687.html">Consideraciones sobre la Seguridad</A>
+<B> Subir:</B> <A NAME="tex2html15318"
+  HREF="node678.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html15312"
+  HREF="node685.html">Mejor un Sólo Agente</A>
+ &nbsp; <B>  <A NAME="tex2html15320"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15322"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION06600000000000000000"></A>
-<A NAME="chapter:git"></A>
-<BR>
-Git
+<H1><A NAME="SECTION06580000000000000000">
+Redireccionado al Agente SSH</A>
 </H1>
+
+<P>
+El mismo agente SSH puede servir los retos producidos por conexiones SSH indirectas, es decir conexiones SSH arrancadas desde una conexión SSH.
+La idea general es que el reto producido por el servidor SSH será redirigido via los servidores intermedios hasta el agente en la máquina
+local. El reto será resuelto por este último y la solución emprenderá el camino de vuelta hasta el último servidor en la lista de saltos.
+
+<P>
+Para habilitar <A NAME="28580"></A><SPAN  CLASS="textbf">Agent forwarding</SPAN> 
+usamos la opción <code>-A</code>.
+
+<P>
+<PRE>
+  desktop$ ssh -A user@remotehost
+</PRE>
+
+<P>
+Si se quiere habilitar agent-forwarding desde el fichero de configuración
+pondremos <code>ForwardAgent yes</code> en la correspondiente
+entrada para ese host en <code>~/.ssh/config</code>:
+
+<P>
+<PRE>
+  $ cat ~/.ssh/config
+  Host shellserver
+    ForwardAgent yes
+  
+  Host management-server
+    ForwardAgent yes
+  
+  Host *
+    ForwardAgent no
+</PRE>
+
+<P>
+Obsérvese la presencia de la sección restrictiva <code>Host *</code>
+en el fichero de configuración.
+
+<P>
+Veamos un ejemplo:
+
+<P>
+
+<OL>
+<LI>El cliente <code>ssh</code> conecta con el servidor SSH remoto, se produce la autentificación via el agente
+que previamente ha sido cargado  con la identidad.  Se le solicita al servidor agent-forwarding.
+
+<P>
+<PRE>
+lusasoft@LusaSoft:~$ ssh -A orion
+Linux orion 2.6.8-2-686 #1 Tue Aug 16 13:22:48 UTC 2005 i686 GNU/Linux
+</PRE>
+El servidor crea un socket en <code>/tmp/ssh-XXXXXXX/agent.#####</code> y 
+inicializa la variable <code>SSH_AUTH_SOCK</code>.
+El  daemon SSH abre nuestra shell y comenzamos a trabajar en el servidor.
+
+<P>
+<PRE>
+Last login: Fri May  1 10:21:38 2009 from 85.155.13.48.dyn.user.ono.com
+casiano@orion:~$ env | grep -i SSH
+SSH_CLIENT=85.155.13.48 35107 22
+SSH_TTY=/dev/pts/3
+SSH_AUTH_SOCK=/tmp/ssh-ngwpX26103/agent.26103
+SSH_CONNECTION=85.155.13.48 35107 193.145.105.17 22
+casiano@orion:~$ ls -lR /tmp/ssh-ngwpX26103/agent.26103
+srwxr-xr-x 1 casiano casiano 0 2009-05-01 10:53 /tmp/ssh-ngwpX26103/agent.26103
+</PRE>
+En la máquina en la que estamos no existen ningunas identidades operativas:
+<PRE>
+casiano@orion:~$ ls -ltra .ssh
+total 60
+-rw-rw-r--  1 casiano casiano   505 2009-03-30 08:53 config
+-rw-r--r--  1 casiano casiano  4960 2009-04-04 11:43 known_hosts
+-rw-------  1 casiano casiano  6466 2009-04-04 11:43 authorized_keys
+drwx------  2 casiano casiano  4096 2009-05-01 10:19 .
+drwxr-x--x 50 casiano casiano 12288 2009-05-01 11:13 ..
+</PRE>
+</LI>
+<LI>Ahora decidimos conectarnos en orion via <code>ssh</code> a otra máquina <code>europa</code>. El cliente
+<code>ssh</code> observa la presencia de la variable
+<code>SSH_AUTH_SOCK</code> y se conecta al socket. El cliente le indica 
+al servidor que quiere usar la misma clave que se ha usado
+para esta conexión.
+
+<P>
+<PRE>
+casiano@orion:~$ ssh europa
+Linux europa 2.6.24-23-generic #1 SMP Wed Apr 1 21:43:24 UTC 2009 x86_64
+casiano@europa:~$
+</PRE>
+Vemos que hemos entrado sin necesidad de introducir una clave por teclado.
+La clave pública de la identidad que reside en la máquina inicial
+ha sido instalada también en <code>europa</code>. ¿Que ha ocurrido?
+
+<P>
+El servidor en <code>europa</code> prepara el reto y se lo envía al cliente. 
+El cliente en <code>orion</code> recibe el reto y se lo pasa a su servidor el cual actúa 
+- desde el punto de vista del cliente - como si fuera un agente.
+El servidro <code>sshd</code> en <code>orion</code> mueve el reto al cliente de la primera conexión.
+Este primer cliente se lo pasa al agente inicial que es quien conoce
+la clave privada. La solución es preparada por el agente.
+Ahora la solución recorre el camino de vuelta.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H4><A NAME="SECTION06580010000000000000">
+Véase También</A>
+</H4>
+  
+
+<P>
+
+<UL>
+<LI><A NAME="tex2html1635"
+  HREF="http://www.securityfocus.com/infocus/1812">ssh and ssh-agent</A>
+por Brian Hatch
+</LI>
+<LI><A NAME="tex2html1636"
+  HREF="http://unixwiz.net/techtips/ssh-agent-forwarding.html">Steve Friedl's Unixwiz.net Tech Tips An Illustrated Guide to SSH Agent Forwarding</A>
+</LI>
+</UL>
+
+<P>
 <BR><HR>
 <!--Table of Child-Links-->
 <A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
 
 <UL CLASS="ChildLinks">
-<LI><A NAME="tex2html15301"
-  HREF="node687.html">Instalar Git</A>
-<LI><A NAME="tex2html15302"
-  HREF="node688.html">Introducción al uso de Git con GitHub en GitHub</A>
-<LI><A NAME="tex2html15303"
-  HREF="node689.html">Un poco de SSH</A>
-<LI><A NAME="tex2html15304"
-  HREF="node690.html">Ramificaciones en Git</A>
-<LI><A NAME="tex2html15305"
-  HREF="node691.html">Véase: Tutoriales de Git</A>
-<LI><A NAME="tex2html15306"
-  HREF="node692.html">Diferencias entre fetch y pull</A>
-<LI><A NAME="tex2html15307"
-  HREF="node693.html">Mezclando Ficheros Específicos desde otra Rama</A>
-<LI><A NAME="tex2html15308"
-  HREF="node694.html">Configuración y Algunos alias</A>
-<UL>
-<LI><A NAME="tex2html15309"
-  HREF="node695.html">Alias lg</A>
-<LI><A NAME="tex2html15310"
-  HREF="node696.html">Auto-completado</A>
-<LI><A NAME="tex2html15311"
-  HREF="node697.html">Poner la rama en el prompt de la shell</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html15312"
-  HREF="node698.html">Hub</A>
-<LI><A NAME="tex2html15313"
-  HREF="node699.html">Vim y Git. FuGitive: a Git wrapper so awesome, it should be illegal</A>
-</UL>
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html15325"
+  HREF="node686.html#SECTION06580010000000000000">Véase También</A>
+</UL></UL></UL>
 <!--End of Table of Child-Links-->
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html15323"
+  HREF="node687.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html15317"
+  HREF="node678.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html15311"
+  HREF="node685.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html15319"
+  HREF="node858.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html15321"
+  HREF="node861.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html15324"
+  HREF="node687.html">Consideraciones sobre la Seguridad</A>
+<B> Subir:</B> <A NAME="tex2html15318"
+  HREF="node678.html">ssh</A>
+<B> Anterior:</B> <A NAME="tex2html15312"
+  HREF="node685.html">Mejor un Sólo Agente</A>
+ &nbsp; <B>  <A NAME="tex2html15320"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html15322"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

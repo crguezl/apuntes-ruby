@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Acceso al Objeto Request</TITLE>
-<META NAME="description" CONTENT="Acceso al Objeto Request">
+<TITLE>Opciones pasadas a los Métodos de los Templates</TITLE>
+<META NAME="description" CONTENT="Opciones pasadas a los Métodos de los Templates">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node450.html">
 <LINK REL="previous" HREF="node448.html">
-<LINK REL="up" HREF="node433.html">
+<LINK REL="up" HREF="node442.html">
 <LINK REL="next" HREF="node450.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11147"
+<A NAME="tex2html11186"
   HREF="node450.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11141"
-  HREF="node433.html">
+<A NAME="tex2html11180"
+  HREF="node442.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11135"
+<A NAME="tex2html11176"
   HREF="node448.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11143"
-  HREF="node851.html">
+<A NAME="tex2html11182"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11145"
-  HREF="node854.html">
+<A NAME="tex2html11184"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,69 +91,164 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11148"
-  HREF="node450.html">Caching / Caches</A>
-<B> Subir:</B> <A NAME="tex2html11142"
-  HREF="node433.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11136"
-  HREF="node448.html">The methods body, status</A>
- &nbsp; <B>  <A NAME="tex2html11144"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11146"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11187"
+  HREF="node450.html">Filtros</A>
+<B> Subir:</B> <A NAME="tex2html11181"
+  HREF="node442.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html11177"
+  HREF="node448.html">Pasando variables a la</A>
+ &nbsp; <B>  <A NAME="tex2html11183"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11185"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03380000000000000000"></A>
-<A NAME="section:requestobject"></A>
-<BR>
-Acceso al Objeto Request
-</H1>
-El objeto que representa la solicitud <I>the request object</I>
-es un hash con información de la solicitud: quien hizo la petición, 
-que versión de HTTP usar, etc.
+<H2><A NAME="SECTION03347000000000000000">
+Opciones pasadas a los Métodos de los Templates</A>
+</H2>
 
 <P>
-El objeto que representa la solicitud 
-puede ser accedido desde el nivel de solicitud:
-filtros, rutas y manejadores de error.
+Options passed to the render method override options set via <code>set</code>.
 
 <P>
-Véase <A NAME="tex2html1057"
-  HREF="https://github.com/crguezl/sinatra_intro/blob/master/accesing_the_request_object.rb">https://github.com/crguezl/sinatra_intro/blob/master/accesing_the_request_object.rb</A>
+Available Options:
+
 <P>
 
-<DIV ALIGN="CENTER"><A NAME="figure:requestobject"></A><A NAME="19642"></A>
-<TABLE>
-<CAPTION ALIGN="BOTTOM"><STRONG>Figura 33.1:</STRONG>
-El Objeto Request</CAPTION>
-<TR><TD>
-<DIV ALIGN="CENTER">
-[scale=0.6]sinatra/request_object.png
+<OL>
+<LI><code>locals</code>
 
-</DIV></TD></TR>
-</TABLE>
-</DIV>
+<P>
+List of locals passed to the document. Handy with partials. Example: 
+<PRE>
+erb "&lt;%= foo %&gt;", :locals =&gt; {:foo =&gt; "bar"}
+</PRE>
+</LI>
+<LI><code>default_encoding</code>
+
+<P>
+String encoding to use if uncertain. Defaults to 
+<PRE>
+settings.default_encoding.
+</PRE>
+
+<P>
+</LI>
+<LI><code>views</code>
+
+<P>
+Views folder to load templates from. Defaults to <code>settings.views</code>.
+
+<P>
+</LI>
+<LI><code>layout</code>
+
+<P>
+Whether to use a layout (true or false), if it's a Symbol, specifies what template to use. Example: 
+<PRE>
+erb :index, :layout =&gt; !request.xhr?
+</PRE>
+
+<P>
+</LI>
+<LI><code>content_type</code>
+
+<P>
+Content-Type the template produces, default depends on template language.
+
+<P>
+</LI>
+<LI><code>scope</code>
+
+<P>
+Scope to render template under. 
+
+<P>
+Defaults to the application instance. 
+
+<P>
+If you change this, instance variables and helper methods will not be available.
+
+<P>
+</LI>
+<LI><code>layout_engine</code>
+
+<P>
+Template engine to use for rendering the layout. 
+
+<P>
+Useful for languages
+that do not support layouts otherwise. 
+
+<P>
+Defaults to the engine used
+for the template. Example: 
+
+<P>
+<PRE>
+set :rdoc, :layout_engine =&gt; :erb
+</PRE>
+
+<P>
+</LI>
+<LI><code>layout_options</code>
+
+<P>
+Special options only used for rendering the layout. Example: 
+
+<P>
+<PRE>
+set :rdoc, :layout_options =&gt; { :views =&gt; 'views/layouts' }
+</PRE>
+
+<P>
+</LI>
+<LI>Templates are assumed to be located directly under the <code>./views</code> directory. 
+
+<P>
+To use a different views directory: 
+
+<P>
+<PRE>
+set :views, settings.root + '/templates'
+</PRE>
+
+<P>
+</LI>
+<LI>One important thing to remember is that you always have to reference
+templates with symbols, even if they’re in a subdirectory (in this
+case, use: 
+<code>:'subdir/template'</code> 
+or 
+<code>'subdir/template'.to_sym</code>). 
+
+<P>
+You
+must use a symbol because otherwise rendering methods will render
+any strings passed to them directly.
+</LI>
+</OL>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11147"
+<A NAME="tex2html11186"
   HREF="node450.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11141"
-  HREF="node433.html">
+<A NAME="tex2html11180"
+  HREF="node442.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11135"
+<A NAME="tex2html11176"
   HREF="node448.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11143"
-  HREF="node851.html">
+<A NAME="tex2html11182"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11145"
-  HREF="node854.html">
+<A NAME="tex2html11184"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -205,20 +299,20 @@ El Objeto Request</CAPTION>
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11148"
-  HREF="node450.html">Caching / Caches</A>
-<B> Subir:</B> <A NAME="tex2html11142"
-  HREF="node433.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11136"
-  HREF="node448.html">The methods body, status</A>
- &nbsp; <B>  <A NAME="tex2html11144"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11146"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11187"
+  HREF="node450.html">Filtros</A>
+<B> Subir:</B> <A NAME="tex2html11181"
+  HREF="node442.html">Vistas</A>
+<B> Anterior:</B> <A NAME="tex2html11177"
+  HREF="node448.html">Pasando variables a la</A>
+ &nbsp; <B>  <A NAME="tex2html11183"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11185"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

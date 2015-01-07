@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Named Templates</TITLE>
-<META NAME="description" CONTENT="Named Templates">
+<TITLE>Verbos HTTP en Sinatra/Base</TITLE>
+<META NAME="description" CONTENT="Verbos HTTP en Sinatra/Base">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node441.html">
 <LINK REL="previous" HREF="node439.html">
-<LINK REL="up" HREF="node438.html">
+<LINK REL="up" HREF="node439.html">
 <LINK REL="next" HREF="node441.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11016"
+<A NAME="tex2html11053"
   HREF="node441.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11010"
-  HREF="node438.html">
+<A NAME="tex2html11047"
+  HREF="node439.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11004"
+<A NAME="tex2html11043"
   HREF="node439.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11012"
-  HREF="node851.html">
+<A NAME="tex2html11049"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11014"
-  HREF="node854.html">
+<A NAME="tex2html11051"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,56 +91,69 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11017"
-  HREF="node441.html">Templates Externos</A>
-<B> Subir:</B> <A NAME="tex2html11011"
-  HREF="node438.html">Vistas</A>
-<B> Anterior:</B> <A NAME="tex2html11005"
-  HREF="node439.html">Templates Inline</A>
- &nbsp; <B>  <A NAME="tex2html11013"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11015"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11054"
+  HREF="node441.html">Ficheros Estáticos</A>
+<B> Subir:</B> <A NAME="tex2html11048"
+  HREF="node439.html">Rutas/Routes</A>
+<B> Anterior:</B> <A NAME="tex2html11044"
+  HREF="node439.html">Rutas/Routes</A>
+ &nbsp; <B>  <A NAME="tex2html11050"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11052"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03342000000000000000">
-Named Templates</A>
+<H2><A NAME="SECTION03321000000000000000">
+Verbos HTTP en Sinatra/Base</A>
 </H2>
-Templates may also be defined using the top-level <code>template</code> method:
 
 <P>
+<A NAME="tex2html1061"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L1351">Método <TT>get</TT></A>
 <PRE>
-template :layout do
-  "%html\n  =yield\n"
-end
+      def get(path, opts = {}, &amp;block)
+        conditions = @conditions.dup
+        route('GET', path, opts, &amp;block)
 
-template :index do
-  '%div.title Hello World!'
-end
-
-get '/' do
-  haml :index
-end
+        @conditions = conditions
+        route('HEAD', path, opts, &amp;block)
+      end
 </PRE>
-If a template named <code>layout</code> exists, it will be used each time a template is rendered. 
-
-<P>
-You can individually disable layouts by passing <code>:layout =&gt; false</code> or disable them by default via <code>set :haml, :layout =&gt; false</code>:
 
 <P>
 <PRE>
-get '/' do
-  haml :index, :layout =&gt; !request.xhr?
-end
+      def put(path, opts = {}, &amp;bk)     route 'PUT',     path, opts, &amp;bk end
+      def post(path, opts = {}, &amp;bk)    route 'POST',    path, opts, &amp;bk end
+      def delete(path, opts = {}, &amp;bk)  route 'DELETE',  path, opts, &amp;bk end
+      def head(path, opts = {}, &amp;bk)    route 'HEAD',    path, opts, &amp;bk end
+      def options(path, opts = {}, &amp;bk) route 'OPTIONS', path, opts, &amp;bk end
+      def patch(path, opts = {}, &amp;bk)   route 'PATCH',   path, opts, &amp;bk end
+      def link(path, opts = {}, &amp;bk)    route 'LINK',    path, opts, &amp;bk end
+      def unlink(path, opts = {}, &amp;bk)  route 'UNLINK',  path, opts, &amp;bk end
+</PRE>
+
+<P>
+<A NAME="tex2html1062"
+  HREF="https://github.com/sinatra/sinatra/blob/master/lib/sinatra/base.rb#L1563">Método <TT>route</TT></A>
+<PRE>
+      def route(verb, path, options = {}, &amp;block)
+        # Because of self.options.host
+        host_name(options.delete(:host)) if options.key?(:host)
+        enable :empty_path_info if path == "" and empty_path_info.nil?
+        signature = compile!(verb, path, block, options)
+        (@routes[verb] ||= []) &lt;&lt; signature
+        invoke_hook(:route_added, verb, path, block)
+        signature
+      end
 </PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

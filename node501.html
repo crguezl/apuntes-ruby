@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Chat con TicTacToe</TITLE>
-<META NAME="description" CONTENT="Práctica: Chat con TicTacToe">
+<TITLE>Código Completo del Chat</TITLE>
+<META NAME="description" CONTENT="Código Completo del Chat">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,28 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
+<LINK REL="next" HREF="node502.html">
 <LINK REL="previous" HREF="node500.html">
-<LINK REL="up" HREF="node493.html">
+<LINK REL="up" HREF="node497.html">
 <LINK REL="next" HREF="node502.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12018"
+<A NAME="tex2html12064"
   HREF="node502.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12012"
-  HREF="node493.html">
+<A NAME="tex2html12058"
+  HREF="node497.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12008"
+<A NAME="tex2html12052"
   HREF="node500.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12014"
-  HREF="node851.html">
+<A NAME="tex2html12060"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12016"
-  HREF="node854.html">
+<A NAME="tex2html12062"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -91,134 +92,91 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12019"
-  HREF="node502.html">Embedding Sinatra within EventMachine</A>
-<B> Subir:</B> <A NAME="tex2html12013"
-  HREF="node493.html">Comet y Server Sent-Events</A>
-<B> Anterior:</B> <A NAME="tex2html12009"
-  HREF="node500.html">Práctica: Chat con Estilo</A>
- &nbsp; <B>  <A NAME="tex2html12015"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12017"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12065"
+  HREF="node502.html">Chat Simple</A>
+<B> Subir:</B> <A NAME="tex2html12059"
+  HREF="node497.html">Comet y Server Sent-Events</A>
+<B> Anterior:</B> <A NAME="tex2html12053"
+  HREF="node500.html">Chat Utilizando Streaming y</A>
+ &nbsp; <B>  <A NAME="tex2html12061"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12063"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03868000000000000000"></A>
-   <A NAME="22010"></A>
-<BR>
-Práctica: Chat con TicTacToe
+<H2><A NAME="SECTION03864000000000000000">
+Código Completo del Chat</A>
 </H2>
-  
-Modifique la práctica anterior añadiendo un nuevo contenedor en la vista 
-con el tablero del tictactoe.
+<PRE>
+[17:51][~/srcSTW/streaming/chat_with_streaming(master)]$ cat chat.rb 
+# coding: utf-8
+require 'sinatra'
+set server: 'thin', connections: []
+
+get '/' do
+  halt erb(:login) unless params[:user]
+  erb :chat, locals: { user: params[:user].gsub(/\W/, '') }
+end
+
+get '/stream', provides: 'text/event-stream' do
+  stream :keep_open do |out|
+    settings.connections &lt;&lt; out
+    out.callback { settings.connections.delete(out) }
+  end
+end
+
+post '/' do
+  settings.connections.each { |out| out &lt;&lt; "data: #{params[:msg]}\n\n" }
+  204 # response without entity body
+end
+
+__END__
+
+@@ layout
+&lt;html&gt;
+  &lt;head&gt; 
+    &lt;title&gt;Super Simple Chat with Sinatra&lt;/title&gt; 
+    &lt;meta charset="utf-8" /&gt;
+    &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"&gt;&lt;/script&gt; 
+  &lt;/head&gt; 
+  &lt;body&gt;&lt;%= yield %&gt;&lt;/body&gt;
+&lt;/html&gt;
+
+@@ login
+&lt;form action='/'&gt;
+  &lt;label for='user'&gt;User Name:&lt;/label&gt;
+  &lt;input name='user' value='' /&gt;
+  &lt;input type='submit' value="GO!" /&gt;
+&lt;/form&gt;
+
+@@ chat
+&lt;pre id='chat'&gt;&lt;/pre&gt;
+
+&lt;script&gt;
+  // reading
+  var es = new EventSource('/stream');
+  es.onmessage = function(e) { $('#chat').append(e.data + "\n") };
+
+  // writing
+  $("form").live("submit", function(e) {
+    $.post('/', {msg: "&lt;%= user %&gt;: " + $('#msg').val()});
+    $('#msg').val(''); $('#msg').focus();
+    e.preventDefault();
+  });
+&lt;/script&gt;
+
+&lt;form&gt;
+  &lt;input id='msg' placeholder='type message here...' /&gt;
+&lt;/form&gt;[
+</PRE>
 
 <P>
-
-<OL>
-<LI>Los usuarios tiene dos estados <code>jugando</code> (en rojo)
-o libres (en <code>verde</code>).
-
-<P>
-</LI>
-<LI>Al cliquear en un usuario libre elegimos jugar con él. 
-Se le mostrará a este la opción de aceptar o rechazar
-la oferta. 
-
-<P>
-</LI>
-<LI>Si acepta se comenzará con el juego a dos del tictactoe
-actualizando el estado de estos usuarios.
-
-<P>
-</LI>
-<LI>Al finalizar la partida los jugadores pasan al estado de libres
-</LI>
-</OL>
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html12018"
-  HREF="node502.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12012"
-  HREF="node493.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12008"
-  HREF="node500.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12014"
-  HREF="node851.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12016"
-  HREF="node854.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html12019"
-  HREF="node502.html">Embedding Sinatra within EventMachine</A>
-<B> Subir:</B> <A NAME="tex2html12013"
-  HREF="node493.html">Comet y Server Sent-Events</A>
-<B> Anterior:</B> <A NAME="tex2html12009"
-  HREF="node500.html">Práctica: Chat con Estilo</A>
- &nbsp; <B>  <A NAME="tex2html12015"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12017"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Sinatra usando Streaming, Rack MiddleWare y map</TITLE>
-<META NAME="description" CONTENT="Sinatra usando Streaming, Rack MiddleWare y map">
+<TITLE>CoffeeScript y Sinatra</TITLE>
+<META NAME="description" CONTENT="CoffeeScript y Sinatra">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -20,28 +20,28 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
 <LINK REL="next" HREF="node491.html">
-<LINK REL="previous" HREF="node489.html">
-<LINK REL="up" HREF="node487.html">
+<LINK REL="previous" HREF="node485.html">
+<LINK REL="up" HREF="node380.html">
 <LINK REL="next" HREF="node491.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11837"
+<A NAME="tex2html11832"
   HREF="node491.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11831"
-  HREF="node487.html">
+<A NAME="tex2html11826"
+  HREF="node380.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11825"
+<A NAME="tex2html11820"
   HREF="node489.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11833"
-  HREF="node851.html">
+<A NAME="tex2html11828"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11835"
-  HREF="node854.html">
+<A NAME="tex2html11830"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,135 +92,60 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11838"
-  HREF="node491.html">Enlaces Relacionados</A>
-<B> Subir:</B> <A NAME="tex2html11832"
-  HREF="node487.html">Streaming</A>
-<B> Anterior:</B> <A NAME="tex2html11826"
-  HREF="node489.html">Streaming y Valores de</A>
- &nbsp; <B>  <A NAME="tex2html11834"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11836"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11833"
+  HREF="node491.html">Streaming</A>
+<B> Subir:</B> <A NAME="tex2html11827"
+  HREF="node380.html">SINATRA</A>
+<B> Anterior:</B> <A NAME="tex2html11821"
+  HREF="node489.html">Sample app with Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html11829"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11831"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION03830000000000000000">
-Sinatra usando Streaming, Rack MiddleWare y map</A>
+<H1><A NAME="SECTION03700000000000000000">
+CoffeeScript y Sinatra</A>
 </H1>
 
 <P>
-Véase el código en 
-<A NAME="tex2html1148"
-  HREF="https://github.com/crguezl/sinatra_intro/blob/master/streaming/better_middleware_handling.rb">sinatra_intro/streaming/better_middleware_handling.rb</A>
-en GitHub.
-
-<P>
-Otro beneficio que obtenemos cuando usamos 
-<code>Sinatra::Streaming</code> (parte de
-<code>sinatra-contrib</code>) es que:
-
-<P>
-Blocks passed to <code>#map!</code> or 
-<code>#map</code> will actually be applied when streaming takes place (véase 
-<A NAME="tex2html1149"
-  HREF="http://www.sinatrarb.com/contrib/streaming.html">http://www.sinatrarb.com/contrib/streaming.html</A>):
-
-<P>
-
-<img src="rack.jpeg">
+<PRE>
+[~/Dropbox/src/ruby/sinatra/sinatra-coffeescript]$ tree
+.
+|-- app.rb
+`-- views
+    `-- application.coffee
+</PRE>
 
 <P>
 <PRE>
-[~/sinatra/sinatra-streaming/intro-streaming(master)]$ cat better_middleware_handling.rb 
-# http://www.sinatrarb.com/contrib/streaming.html
-
+1 directory, 2 files
+[~/Dropbox/src/ruby/sinatra/sinatra-coffeescript]$ cat app.rb 
+## You'll need to require coffee-script in your app
 require 'sinatra'
-require 'sinatra/streaming'
+require 'coffee-script'
 
-class StupidMiddleware
-  def initialize(app) 
-    @app = app 
-  end
-
-  def call(env)
-    status, headers, body = @app.call(env)
-    # Blocks passed to #map! or #map will actually be applied when streaming takes place
-    body.map! { |e| e.upcase }
-    [status, headers, body]
-  end
-end
-
-use StupidMiddleware
-
-before do
-  content_type :html
-end
-
-song = %q{
-And now, the end is near 
-And so I face the final curtain 
-My friend, I'll say it clear 
-I'll state my case, of which I'm certain 
-I've lived a life that's full 
-I traveled each and ev'ry highway 
-And more, much more than this, I did it my way 
-
-Regrets, I've had a few 
-But then again, too few to mention 
-I did what I had to do , I saw it through without exemption 
-I planned each charted course, each careful step along the highway 
-And more, much more than this, I did it my way 
-
-Yes, there were times, I'm sure you knew 
-When I bit off more than I could chew 
-And through it all, when there was doubt 
-I ate it up and spit it out 
-I faced it all and I stood tall and did it my way 
-
-I've loved, I've laughed and cried 
-I've had my fill, my share of losing 
-And now, as tears subside, I find it all so amusing 
-To think I did all that 
-And may I say, not in a shy way, 
-"Oh, no, oh, no, not me, I did it my way" 
-
-For what is a man, what has he got? 
-If not himself, then he has naught 
-The right to say the things he feels and not the words of one who kneels 
-The record shows I took the blows and did it my way!
-}.split(/\n/)
-
-song.map! { |x| x.split(/\s+/) }
-
-set :song, song
-set :colors, ["red", "blue", "black", "green", "yellow", "blueviolet" ]
-
-get '/' do
-  color = 0
-  stream do |out|
-    out.puts '&lt;pre&gt;'
-    settings.song.each do |line|
-      line.each do |w|
-        out.print %Q{&lt;font color="#{settings.colors[color]}"&gt;#{w} &lt;/font&gt;}
-        color = (color+1) % settings.colors.size
-        sleep 0.02
-      end
-      out.puts "\n"
-      sleep 1
-   end
-   out.puts '&lt;/pre&gt;'
-   out.close
-  end
+get '/application.js' do
+  x = coffee :application
+  "&lt;script&gt;#{x}&lt;/script&gt;"
 end
 </PRE>
+
+<P>
+<PRE>
+[~/Dropbox/src/ruby/sinatra/sinatra-coffeescript]$ cat views/application.coffee 
+alert "hello world!"
+</PRE>
+
+<P>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

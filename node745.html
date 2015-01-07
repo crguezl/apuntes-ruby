@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Herramientas para la Programacion en Pares</TITLE>
-<META NAME="description" CONTENT="Herramientas para la Programacion en Pares">
+<TITLE>Optimistic and Pessimistic Version Constraint</TITLE>
+<META NAME="description" CONTENT="Optimistic and Pessimistic Version Constraint">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,29 +19,29 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node752.html">
-<LINK REL="previous" HREF="node724.html">
-<LINK REL="up" HREF="node648.html">
+<LINK REL="next" HREF="node746.html">
+<LINK REL="previous" HREF="node744.html">
+<LINK REL="up" HREF="node731.html">
 <LINK REL="next" HREF="node746.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html16243"
+<A NAME="tex2html16292"
   HREF="node746.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html16237"
-  HREF="node648.html">
+<A NAME="tex2html16286"
+  HREF="node731.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html16231"
+<A NAME="tex2html16280"
   HREF="node744.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html16239"
-  HREF="node851.html">
+<A NAME="tex2html16288"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html16241"
-  HREF="node854.html">
+<A NAME="tex2html16290"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,53 +92,219 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html16244"
-  HREF="node746.html">Introduction to Pair Programing</A>
-<B> Subir:</B> <A NAME="tex2html16238"
-  HREF="node648.html">HERRAMIENTAS</A>
-<B> Anterior:</B> <A NAME="tex2html16232"
-  HREF="node744.html">Enlaces Relacionados</A>
- &nbsp; <B>  <A NAME="tex2html16240"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html16242"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html16293"
+  HREF="node746.html">Controlando nuestras dependencias: bundle</A>
+<B> Subir:</B> <A NAME="tex2html16287"
+  HREF="node731.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html16281"
+  HREF="node744.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html16289"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16291"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION061200000000000000000">
-Herramientas para la Programacion en Pares</A>
-</H1>
+<H1><A NAME="SECTION0611140000000000000000">
+Optimistic and Pessimistic Version Constraint</A>
+</H1><I>
+If your gem properly follows <A NAME="30966"></A><SPAN  CLASS="textbf">semantic versioning</SPAN> with its versioning
+scheme, then other Ruby developers can take advantage of this when
+choosing a version constraint to lock down your gem in their
+application.
+</I>
 <P>
-<BR><HR>
-<!--Table of Child-Links-->
-<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+<I>Let’s say the following releases of a gem exist:
+</I>
+<P><PRE>
+Version 2.1.0 — Baseline
+Version 2.2.0 — Introduced some new (backward compatible) features.
+Version 2.2.1 — Removed some bugs
+Version 2.2.2 — Streamlined your code
+Version 2.3.0 — More new features (but still backwards compatible).
+Version 3.0.0 — Reworked the interface. Code written to version 2.x might not work.
+</PRE><I>
+Someone who wants to use your gem has determined that 
+</I>
+<OL>
+<LI>version 2.2.0
+works with their software, 
+</LI>
+<LI>but version 2.1.0 doesn’t have a feature
+they need. 
+</LI>
+<LI>Adding a dependency in a gem (or a Gemfile from Bundler)
+might look like:
 
-<UL CLASS="ChildLinks">
-<LI><A NAME="tex2html16245"
-  HREF="node746.html">Introduction to Pair Programing</A>
-<UL>
-<LI><A NAME="tex2html16246"
-  HREF="node747.html">Remote pair programming</A>
-</UL>
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  '&gt;= 2.2.0'
+</PRE>
+or 
+<PRE>
+# bundler
+gem 'library', '&gt;= 2.2.0'
+</PRE>
+This is an <A NAME="30968"></A><SPAN  CLASS="textbf">optimistic version constraint</SPAN>. 
+
+<P>
+It’s saying that all
+changes from <code>2.x</code> on will work with my software, 
+but for version
+<code>3.0.0</code> this may not be true.
+
+<P>
+</LI>
+<LI>The alternative here is to use <A NAME="30970"></A><SPAN  CLASS="textbf">pessimistic version constraint</SPAN>. 
+
+<P>
+This explicitly excludes the version that might break your code.
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  ['&gt;= 2.2.0', '&lt; 3.0']
+</PRE>
+or
+
+<P>
+<PRE>
+# bundler
+gem 'library', '&gt;= 2.2.0', '&lt; 3.0'
+</PRE>
+</LI>
+<LI><A NAME="tex2html1755"
+  HREF="https://rubygems.org/"><TT>RubyGems</TT></A> provides a shortcut for this, commonly known as the <A NAME="30975"></A><SPAN  CLASS="textbf">twiddle-wakka</SPAN>:
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library',
+  '~&gt; 2.2'
+</PRE>
+
+<P>
+<PRE>
+# bundler
+gem 'library', '~&gt; 2.2'
+</PRE>
+Notice that we dropped the <code>PATCH</code> level of the version number. 
+
+<P>
+</LI>
+<LI>Had
+we said <code>~&gt; 2.2.0</code>, that would have been equivalent to 
+<code>['&gt;= 2.2.0', '&lt; 2.3.0']</code>.
+
+<P>
+</LI>
+<LI>If you want to allow use of newer <A NAME="30977"></A><SPAN  CLASS="textbf">backwards-compatible versions</SPAN><A NAME="tex2html1754"
+  HREF="footnode.html#foot30536"><SUP><SPAN CLASS="arabic">90</SPAN>.<SPAN CLASS="arabic">2</SPAN></SUP></A> but
+need a specific bug fix you can use a compound requirement:
+
+<P>
+<PRE>
+# gemspec
+spec.add_runtime_dependency 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+</PRE>
+
+<P>
+<PRE>
+# bundler
+gem 'library', '~&gt; 2.2', '&gt;= 2.2.1'
+</PRE>
+</LI>
+<LI>The important note to take home here is to be aware others will be
+using your gems, so guard yourself from potential bugs/failures in
+future releases by using <code>~&gt;</code> instead of <code>&gt;=</code> 
+if at all possible.
+</LI>
+</OL>
+<P>
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html16292"
+  HREF="node746.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html16286"
+  HREF="node731.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html16280"
+  HREF="node744.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html16288"
+  HREF="node858.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html16290"
+  HREF="node861.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<LI><A NAME="tex2html16247"
-  HREF="node748.html">tmux</A>
-<UL>
-<LI><A NAME="tex2html16248"
-  HREF="node749.html">Utilidades para Pair Programming con tmux</A>
-</UL>
-<BR>
-<LI><A NAME="tex2html16249"
-  HREF="node750.html">MadEye</A>
-<LI><A NAME="tex2html16250"
-  HREF="node751.html">Screenhero</A>
-</UL>
-<!--End of Table of Child-Links-->
-<BR><HR>
+<B> Siguiente:</B> <A NAME="tex2html16293"
+  HREF="node746.html">Controlando nuestras dependencias: bundle</A>
+<B> Subir:</B> <A NAME="tex2html16287"
+  HREF="node731.html">Creando Gemas y Publicándolas</A>
+<B> Anterior:</B> <A NAME="tex2html16281"
+  HREF="node744.html">Declaring dependencies: Runtime vs.</A>
+ &nbsp; <B>  <A NAME="tex2html16289"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html16291"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

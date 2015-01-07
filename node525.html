@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Chat Usando Ajax y jQuery</TITLE>
-<META NAME="description" CONTENT="Práctica: Chat Usando Ajax y jQuery">
+<TITLE>Un Programa para Experimentar con las Expresiones Regulares Usando Ajax</TITLE>
+<META NAME="description" CONTENT="Un Programa para Experimentar con las Expresiones Regulares Usando Ajax">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node526.html">
 <LINK REL="previous" HREF="node524.html">
-<LINK REL="up" HREF="node520.html">
+<LINK REL="up" HREF="node524.html">
 <LINK REL="next" HREF="node526.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12427"
+<A NAME="tex2html12451"
   HREF="node526.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12421"
-  HREF="node520.html">
+<A NAME="tex2html12445"
+  HREF="node524.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12415"
+<A NAME="tex2html12439"
   HREF="node524.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12423"
-  HREF="node851.html">
+<A NAME="tex2html12447"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12425"
-  HREF="node854.html">
+<A NAME="tex2html12449"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,187 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12428"
-  HREF="node526.html">Práctica: TicTactoe Usando Ajax</A>
-<B> Subir:</B> <A NAME="tex2html12422"
-  HREF="node520.html">Ajax in Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12416"
-  HREF="node524.html">Un Chat con Ajax</A>
- &nbsp; <B>  <A NAME="tex2html12424"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12426"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12452"
+  HREF="node526.html">Un Ejemplo Simple</A>
+<B> Subir:</B> <A NAME="tex2html12446"
+  HREF="node524.html">Ajax in Sinatra</A>
+<B> Anterior:</B> <A NAME="tex2html12440"
+  HREF="node524.html">Ajax in Sinatra</A>
+ &nbsp; <B>  <A NAME="tex2html12448"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12450"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION031250000000000000000"></A>
-   <A NAME="23241"></A>
-<BR>
-Práctica: Chat Usando Ajax y jQuery
+<H1><A NAME="SECTION031210000000000000000">
+Un Programa para Experimentar con las Expresiones Regulares Usando Ajax</A>
 </H1>
-  
-Modifique el chat visto en la sección 
-<I>Un Chat con Ajax y JQuery</I> <A HREF="node524.html#section:jquerychat">42.4</A>
-para que:
 
 <P>
-
-<UL>
-<LI>Deberán registrarse los usuarios
+<A NAME="tex2html1262"
+  HREF="https://gist.github.com/blazeeboy/9259204">regular expression testing playground with ruby and sinatra</A>
+<P>
+<PRE>
+[~/sinatra/regexp(master)]$ cat regex-tester.rb 
+require 'sinatra' # gem install sinatra --no-ri --no-rdoc
+set :port, 3000
+html = &lt;&lt;-EOT
+&lt;html&gt;&lt;head&gt;&lt;style&gt;
+#regex,#text{ width:100%; font-size:15px; display:block; margin-bottom:5px; }
+#text{ height: 200px; }
+span{ background:rgb(230,191,161); display:inline-block; border-radius:3px;}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+ 
+  &lt;input id="regex" placeholder="Regex"/&gt;
+  &lt;textarea id="text" placeholder="Text"&gt;&lt;/textarea&gt;
+  &lt;div id="result"&gt;&lt;/div&gt;
+ 
+  &lt;script src="http://code.jquery.com/jquery-1.11.0.min.js"&gt;&lt;/script&gt;
+  &lt;script&gt;
+  $('#regex,#text').keyup(function(){
+      $.get('/preview',{
+        reg:$('#regex').val(),
+        text:$('#text').val()
+      },function(r){
+        $('#result').html(r);
+      });
+  });
+  &lt;/script&gt;
+ 
+&lt;/body&gt;&lt;/html&gt;
+EOT
+ 
+get('/'){ html }
+get '/preview' do 
+  begin
+    params['text'].gsub(/(#{params['reg']})/,'&lt;span&gt;\1&lt;/span&gt;')
+  rescue
+    'Your regex is invalid'
+  end
+end
+</PRE>
 
 <P>
-
-<img src="chatajaxwelcome.png" width="40%"/>
-
-<P>
-</LI>
-<LI>Si el nombre del usuario esta tomado se señalara el error y se le pedirá que cambie de nombre
-
-<P>
-
-<img src="chatajaxnametaken.png" width="40%"/>
-</LI>
-<LI>Una vez en el chat:
-  
-<UL>
-<LI>En un contenedor aparecen los nombres de usuario
-</LI>
-<LI>En otro los mensajes
-</LI>
-<LI>En un tercero con un botón <code>send</code> la entrada para el siguiente mensaje
-  del usuario
-  
-</LI>
-</UL>
-
-<P>
-
-<img src="chatajax.png" width="40%"/>
-
-<P>
-</LI>
-<LI>Escriba las pruebas. Use Selenium
-</LI>
-<LI>Despliegue las pruebas en Travis
-</LI>
-<LI>Haga un análisis de cubrimiento usando Coveralls
-Repase la sección <I>Coveralls: Análisis de Cubrimiento</I>
-<A HREF="node333.html#section:coveralls">20.7</A>
-</LI>
-<LI>Despliegue en Heroku
-</LI>
-</UL>
-
-<P>
-Estos enlaces pueden ser de ayuda:
-
-<P>
-</I>
-<OL>
-<LI><I>Un Chat con Ajax y JQuery</I> <A HREF="node524.html#section:jquerychat">42.4</A>
-</LI>
-<LI><A NAME="tex2html1272"
-  HREF="https://github.com/crguezl/chat-blazee">Código del chat en GitHub</A>
-</LI>
-<LI><I>BootStrap <A HREF="node643.html#section:bootstrap">76.1</A>
-</LI>
-<LI><I>Integración Contínua: Travis</I> <A HREF="node326.html#chapter:travis">20</A>
-</LI>
-<LI>Build a Sinatra API Using TDD, Heroku, and Continuous Integration with Travis <A HREF="node483.html#subsection:buildasinatraapiusingtddherokuandci">36.0.2</A>
-</LI>
-<LI><I>Sample app with Sinatra Rspec Capybara and Selenium</I> <A HREF="node485.html#subsection:sampleappwithsinatrarspeccapybaraandselenium">36.0.4</A>
-</LI>
-<LI><I>Capybara</I> <A HREF="node308.html#chapter:capybara">18</A>
-</LI>
-<LI><I>Coveralls: Análisis de Cubrimiento</I> <A HREF="node333.html#section:coveralls">20.7</A>
-</LI>
-<LI><I>Ajax</I> <A HREF="node590.html#chapter:ajax">64</A>
-</LI>
-</OL> 
-
-<P>
-
-<DIV CLASS="navigation"><HR>
-<!--Navigation Panel-->
-<A NAME="tex2html12427"
-  HREF="node526.html">
-<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12421"
-  HREF="node520.html">
-<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12415"
-  HREF="node524.html">
-<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12423"
-  HREF="node851.html">
-<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12425"
-  HREF="node854.html">
-<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
-  HREF="http://tinyurl.com/lpp1415"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="LPP moodle"></A><A NAME="tex2html30"
-  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
-  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
- SRC="moodleLHPlogo.jpeg"
- ALT="SYTW moodle"></A><A NAME="tex2html31"
-  HREF="perlexamples.pdf"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="gv.jpeg"
- ALT="pdf"></A><A NAME="tex2html32"
-  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
-  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
- SRC="lupa.gif"
- ALT="ruby gems"></A><A NAME="tex2html33"
-  HREF="http://www.ruby-doc.org/"><IMG
-  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
- SRC="perlonion.jpeg"
- ALT="perldoc"></A><A NAME="tex2html34"
-  HREF="http://www.github.com"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="google-code-project-hosting.jpeg"
- ALT="github"></A><A NAME="tex2html35"
-  HREF="http://rubylearning.com/blog/"><IMG
-  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
- SRC="perl6.jpg"
- ALT="blogs"></A><A NAME="tex2html36"
-  HREF="http://www.google.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ggoogle.gif"
- ALT="google"></A><A NAME="tex2html37"
-  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="etsii.png"
- ALT="etsii"></A><A NAME="tex2html38"
-  HREF="http://www.ull.es/"><IMG
-  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
- SRC="ull.gif"
- ALT="ull"></A><A NAME="tex2html39"
-  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
-  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
-  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
- SRC="logopcgull.gif"
- ALT="ull-etsii-grado-stw-1314"></A>
-<BR>
-<B> Siguiente:</B> <A NAME="tex2html12428"
-  HREF="node526.html">Práctica: TicTactoe Usando Ajax</A>
-<B> Subir:</B> <A NAME="tex2html12422"
-  HREF="node520.html">Ajax in Sinatra</A>
-<B> Anterior:</B> <A NAME="tex2html12416"
-  HREF="node524.html">Un Chat con Ajax</A>
- &nbsp; <B>  <A NAME="tex2html12424"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12426"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
-<!--End of Navigation Panel-->
+<BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

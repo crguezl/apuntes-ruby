@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Práctica: Rock, Paper, Scissors: Debugging</TITLE>
-<META NAME="description" CONTENT="Práctica: Rock, Paper, Scissors: Debugging">
+<TITLE>La Estructura de una Aplicación Rack: Ejemplo de Middleware</TITLE>
+<META NAME="description" CONTENT="La Estructura de una Aplicación Rack: Ejemplo de Middleware">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node409.html">
 <LINK REL="previous" HREF="node407.html">
-<LINK REL="up" HREF="node407.html">
+<LINK REL="up" HREF="node381.html">
 <LINK REL="next" HREF="node409.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10444"
+<A NAME="tex2html10472"
   HREF="node409.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10438"
-  HREF="node407.html">
+<A NAME="tex2html10466"
+  HREF="node381.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10432"
+<A NAME="tex2html10460"
   HREF="node407.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10440"
-  HREF="node851.html">
+<A NAME="tex2html10468"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10442"
-  HREF="node854.html">
+<A NAME="tex2html10470"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,40 +92,73 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10445"
-  HREF="node409.html">Práctica: Añadir Template Haml</A>
-<B> Subir:</B> <A NAME="tex2html10439"
-  HREF="node407.html">Un Ejemplo Simple: Piedra,</A>
-<B> Anterior:</B> <A NAME="tex2html10433"
-  HREF="node407.html">Un Ejemplo Simple: Piedra,</A>
- &nbsp; <B>  <A NAME="tex2html10441"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10443"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10473"
+  HREF="node409.html">rackup</A>
+<B> Subir:</B> <A NAME="tex2html10467"
+  HREF="node381.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10461"
+  HREF="node407.html">Redirección</A>
+ &nbsp; <B>  <A NAME="tex2html10469"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10471"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION031171000000000000000"></A>
-   <A NAME="18273"></A>
-<BR>
-Práctica: Rock, Paper, Scissors: Debugging
-</H2>
-  
-Implemente el ejemplo anterior Rock, Paper, Scissors y ejecútelo con 
-un depurador.
-Lea la sección <I>Depurando una Ejecución con Ruby</I> <A HREF="node549.html#section:depuracionsinatra">51.1</A>.
+<H1><A NAME="SECTION031140000000000000000">
+La Estructura de una Aplicación Rack: Ejemplo de Middleware</A>
+</H1>
 
 <P>
-Instale la gema <code>debugger</code>.
-Llame al método <code>debugger</code> en el punto en el que quiere detener la ejecución para inspeccionar el estado del programa.
-Arranque el servidor y en el navegador visite la página.
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat middlefoo.rb 
+require 'rack'
+
+class MiddleFoo
+  
+  def initialize(app)
+    @app = app
+  end
+
+  def call env
+    # Podemos modificar el request (env) aqui
+    env['chuchu'] = 'SYTW'
+    status, headers, body = @app.call(env)
+    # Podemos modificar la respuesta aqui
+    newbody = body.map(&amp;:upcase)
+    [status, headers, newbody]
+  end
+end
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-debugging(master)]$ cat hello_middle.rb 
+require 'rack'
+require './middlefoo'
+
+class HelloWorld
+  def call env
+    [200, {"Content-Type" =&gt; "text/plain"}, ["Hello world\nchuchu=#{env['chuchu']}\n"]]
+  end
+end
+
+Rack::Handler::WEBrick::run MiddleFoo.new(HelloWorld.new)
+</PRE>
+
+<P>
+Cuando ejecutamos el programa produce la salida:
+<PRE>
+HELLO WORLD
+CHUCHU=SYTW
+</PRE>
 
 <P>
 <BR><HR>
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

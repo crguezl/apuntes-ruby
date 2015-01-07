@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Que es WebSocket y para que sirve</TITLE>
-<META NAME="description" CONTENT="Que es WebSocket y para que sirve">
+<TITLE>Deferred or streaming response bodies</TITLE>
+<META NAME="description" CONTENT="Deferred or streaming response bodies">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -19,7 +19,6 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="STYLESHEET" HREF="mystyle.css">
 
-<LINK REL="next" HREF="node510.html">
 <LINK REL="previous" HREF="node508.html">
 <LINK REL="up" HREF="node508.html">
 <LINK REL="next" HREF="node510.html">
@@ -28,20 +27,20 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html12150"
+<A NAME="tex2html12179"
   HREF="node510.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12144"
+<A NAME="tex2html12173"
   HREF="node508.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12138"
+<A NAME="tex2html12169"
   HREF="node508.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12146"
-  HREF="node851.html">
+<A NAME="tex2html12175"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12148"
-  HREF="node854.html">
+<A NAME="tex2html12177"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,110 +91,109 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12151"
-  HREF="node510.html">Negociación del protocolo WebSocket</A>
-<B> Subir:</B> <A NAME="tex2html12145"
-  HREF="node508.html">WebSockets</A>
-<B> Anterior:</B> <A NAME="tex2html12139"
-  HREF="node508.html">WebSockets</A>
- &nbsp; <B>  <A NAME="tex2html12147"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12149"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html12180"
+  HREF="node510.html">Código en sinatra/base.rb: la</A>
+<B> Subir:</B> <A NAME="tex2html12174"
+  HREF="node508.html">Asynchronous responses in Rack</A>
+<B> Anterior:</B> <A NAME="tex2html12170"
+  HREF="node508.html">Asynchronous responses in Rack</A>
+ &nbsp; <B>  <A NAME="tex2html12176"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12178"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION03911000000000000000"></A>
-<A NAME="22659"></A>
-<BR>
-Que es WebSocket y para que sirve
-</H2><SPAN  CLASS="textbf">WebSocket</SPAN> es una tecnología que proporciona un canal de comunicación
-bidireccional y full-duplex sobre un único socket TCP. Está diseñada
-para ser implementada en navegadores y servidores web, pero
-puede utilizarse por cualquier aplicación cliente/servidor. 
+<H2><A NAME="SECTION03891000000000000000">
+Deferred or streaming response bodies</A>
+</H2>
 
 <P>
-The <A NAME="22661"></A><SPAN  CLASS="textbf">WebSocket</SPAN> specification—developed as part of the HTML5
-initiative—introduced the <A NAME="22663"></A><SPAN  CLASS="textbf">WebSocket JavaScript interface</SPAN>, which defines
-a full-duplex single socket connection over which messages can be sent
-between client and server. 
+The example shows a one-shot request, wait, response cycle. But it
+is possible to have multiple wait, response segments to allow the
+headers to be sent to the client immediately, or the body to trickle
+in slowly without blocking the worker process. 
 
 <P>
-The WebSocket standard simplifies much of
-the complexity around bi-directional web communication and connection
-management.  
+Async Rack servers,
+when <code>env['async.callback']</code> is called, send the status and headers
+to the client and then begin iterating through each part of the
+body with <code>#each</code>. 
 
 <P>
-One of the more unique features WebSockets provide is <SPAN  CLASS="textbf">its
-ability to traverse firewalls and proxies</SPAN>, a problem area for many
-applications. 
+After the last body part the server must decide
+if the connection to the client should be closed (entire body has
+been provided) or if it should remain open (body parts will be
+provided later). The details of this decision are implementation-specific.
+For now, assume the connection is not closed. To send additional
+body parts, <code>env['async.callback']</code> may not be called a second time
+since the status code and headers have already been sent to the
+client and can not be changed. The app takes advantage of the
+server's iteration through the body with <code>#each:</code> 
 
 <P>
-Comet-style applications typically employ long-polling
-as a rudimentary line of defense against firewalls and proxies.
+the server calls
+<code>body.each(&amp;block)</code>, 
+and the trick is to save <code>&amp;block</code> for later use.
+This turns the iteration inside-out: rather than the sever iterating
+through a body, the app takes control to send each part of the body
+itself.
+<PRE>
+class DeferredBody
+  def each(&amp;block)
+    # normally we'd yield each part of the body, but since
+    # it isn't available yet, we save &amp;block for later
+    @server_block = block
+  end
 
-<P>
-The
-technique is effective, but is not well suited for applications that
-have sub-500 millisecond latency or high throughput requirements.
+  def send(data)
+    # calling the saved &amp;block has the same effect as
+    # if we had yielded to it
+    @server_block.call data
+  end
+end
 
-<P>
-Plugin-based technologies such as Adobe Flash, also provide some
-level of socket support, but have long been burdened with the very
-proxy and firewall traversal problems that WebSockets now resolve.
+class AsyncApp
+  def call(env)
+    Thread.new do
+      sleep 5  # simulate waiting for some event
+      body = DeferredBody.new
+      response = [200, {'Content-Type' =&gt; 'text/plain'}, body]
+      env['async.callback'].call response
 
-<P>
-A WebSocket <SPAN  CLASS="textbf">detects the presence of a proxy server and automatically
-sets up a tunnel to pass through the proxy.</SPAN> 
-
-<P>
-The tunnel is established by
-issuing an HTTP CONNECT statement to the proxy server, which requests
-for the proxy server to open a TCP/IP connection to a specific host
-and port. 
-
-<P>
-Once the tunnel is set up, communication can flow unimpeded
-through the proxy. 
-
-<P>
-Since HTTP/S works in a similar fashion, secure
-WebSockets over SSL can leverage the same HTTP CONNECT technique. 
-
-<P>
-Note
-that WebSockets are just beginning to be supported by modern browsers
-(Chrome now supports WebSockets natively). 
-
-<P>
-However, backward-compatible
-implementations that enable today's browsers to take advantage of this
-emerging technology are available.
-
-<P>
-En el lado del cliente, WebSocket está ya implementado en Mozilla
-Firefox 8, Google Chrome 4 y Safari 5, así como la versión móvil de
-Safari en el iOS 4.2.1
+      # at this point, the server may send the status and headers,
+      # but the body was empty
+      
+      body.send 'Hello, '
+      sleep 5
+      body.send 'World'
+    end
+    
+    [-1, {}, []]  # or throw :async
+  end
+end
+</PRE>
+Note that the above won't quite work because we haven't signaled to the server that the body will be deferred and streamed in part by part.
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html12150"
+<A NAME="tex2html12179"
   HREF="node510.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html12144"
+<A NAME="tex2html12173"
   HREF="node508.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html12138"
+<A NAME="tex2html12169"
   HREF="node508.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html12146"
-  HREF="node851.html">
+<A NAME="tex2html12175"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html12148"
-  HREF="node854.html">
+<A NAME="tex2html12177"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -246,20 +244,20 @@ Safari en el iOS 4.2.1
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html12151"
-  HREF="node510.html">Negociación del protocolo WebSocket</A>
-<B> Subir:</B> <A NAME="tex2html12145"
-  HREF="node508.html">WebSockets</A>
-<B> Anterior:</B> <A NAME="tex2html12139"
-  HREF="node508.html">WebSockets</A>
- &nbsp; <B>  <A NAME="tex2html12147"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html12149"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html12180"
+  HREF="node510.html">Código en sinatra/base.rb: la</A>
+<B> Subir:</B> <A NAME="tex2html12174"
+  HREF="node508.html">Asynchronous responses in Rack</A>
+<B> Anterior:</B> <A NAME="tex2html12170"
+  HREF="node508.html">Asynchronous responses in Rack</A>
+ &nbsp; <B>  <A NAME="tex2html12176"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html12178"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

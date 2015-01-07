@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Pruebas Unitarias</TITLE>
-<META NAME="description" CONTENT="Pruebas Unitarias">
+<TITLE>Rack::URLMap</TITLE>
+<META NAME="description" CONTENT="Rack::URLMap">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node422.html">
 <LINK REL="previous" HREF="node420.html">
-<LINK REL="up" HREF="node420.html">
+<LINK REL="up" HREF="node381.html">
 <LINK REL="next" HREF="node422.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html10642"
+<A NAME="tex2html10676"
   HREF="node422.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10636"
-  HREF="node420.html">
+<A NAME="tex2html10670"
+  HREF="node381.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10630"
+<A NAME="tex2html10664"
   HREF="node420.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10638"
-  HREF="node851.html">
+<A NAME="tex2html10672"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10640"
-  HREF="node854.html">
+<A NAME="tex2html10674"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,257 +92,133 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10643"
-  HREF="node422.html">Rspec con Rack</A>
-<B> Subir:</B> <A NAME="tex2html10637"
-  HREF="node420.html">Pruebas/Testing</A>
-<B> Anterior:</B> <A NAME="tex2html10631"
-  HREF="node420.html">Pruebas/Testing</A>
- &nbsp; <B>  <A NAME="tex2html10639"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10641"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html10677"
+  HREF="node422.html">El método run de</A>
+<B> Subir:</B> <A NAME="tex2html10671"
+  HREF="node381.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10665"
+  HREF="node420.html">Rack::Mount</A>
+ &nbsp; <B>  <A NAME="tex2html10673"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10675"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H2><A NAME="SECTION031271000000000000000"></A>
-<A NAME="subsectionpruebasunitarias"></A>
+<H1><A NAME="SECTION031240000000000000000"></A>
 <BR>
-Pruebas Unitarias
-</H2>
-
-<P>
-
-<OL>
-<LI>Los fuentes de este ejemplo están en
 <A NAME="tex2html1005"
-  HREF="https://github.com/crguezl/rack-unit-test">https://github.com/crguezl/rack-unit-test</A>
-</LI>
-<LI>Fuentes en GitHub de Rack::Test:
+  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A>
+</H1>
+
+<P>
 <A NAME="tex2html1006"
-  HREF="https://github.com/brynary/rack-test">https://github.com/brynary/rack-test</A>
-</LI>
-</OL>
+  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A> takes a hash mapping urls or paths to apps, and
+dispatches accordingly. Support for HTTP/1.1 host names exists if
+the URLs start with http:// or https://.
 
 <P>
-<PRE>
-[~/rack/rack-unit-test(master)]$ cat rack_hello_world.rb 
-# my_app.rb
-#
-require 'rack'
-
-class MyApp
-  def call env
-    [200, {"Content-Type" =&gt; "text/html"}, ["Hello"]] 
-  end
-end
-</PRE>
-
-<P>
-<PRE>
-[~/rack/rack-unit-test(master)]$ cat test_hello_world.rb 
-require "test/unit"
-require "rack/test"
-require './rack_hello_world'
-
-class AppTest &lt; Test::Unit::TestCase
-  include Rack::Test::Methods
-
-  def app
-    Rack::Builder.new do
-      run MyApp.new
-    end.to_app
-  end
-
-  def test_index
-    get "/"
-    #puts last_response.inspect
-    assert last_response.ok?
-  end
-
-  def test_body
-    get "/"
-    assert_equal last_response.body,  'Hello', "body must be hello"
-  end
-end
-</PRE>
-
-<OL>
-<LI>The 
 <A NAME="tex2html1007"
-  HREF="http://rdoc.info/github/brynary/rack-test/master/Rack/Test/Methods">Rack::Test::Methods</A>
-module serves as the primary integration point for using
-<code>Rack::Test</code> in a testing environment. 
+  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A> modifies the <code>SCRIPT_NAME</code> and 
+<code>PATH_INFO</code> such that the part
+relevant for dispatch is in the 
+<code>SCRIPT_NAME</code>, and the rest in the
+<code>PATH_INFO</code>. 
+This should be taken care of when you need to reconstruct
+the URL in order to create links.
 
 <P>
-It depends on an <code>app</code> method
-being defined in the same context, 
-<PRE>
-  def app
-    Rack::Builder.new do
-      run MyApp.new
-    end.to_app
-  end
-</PRE>
-
-<P>
-and provides the <code>Rack::Test</code> API
-methods (see 
 <A NAME="tex2html1008"
-  HREF="http://rubydoc.info/github/brynary/rack-test/Rack/Test/Session">Rack::Test::Session</A>
-for their documentation).
-</LI>
-<LI>The <code>get</code> method issue a <code>GET</code> request for the given URI.
-Stores the issues request object in <code>#last_request</code> and the app's response in 
-<code>#last_response</code> (whose class is 
-<A NAME="tex2html1009"
-  HREF="http://rack.rubyforge.org/doc/Rack/MockResponse.html">Rack::MockResponse</A>) . 
-
-<P>
-Yield <code>#last_response</code> to a block if given.
-<PRE>
-  def test_index
-    get "/"
-    assert last_response.ok?
-  end
-</PRE>
-
-<P>
-</LI>
-<LI>Otros métodos que se pueden usar son:
-
-<OL>
-<LI><code>(Object) basic_authorize(username, password) (also: #authorize)</code>
-Set the username and password for <code>HTTP</code> Basic authorization, to be included in subsequent requests in the <code>HTTP_AUTHORIZATION</code> header.
-</LI>
-<LI><code>(Object) delete(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>DELETE</code> request for the given URI.
-</LI>
-<LI><code>(Object) digest_authorize(username, password)</code>
-Set the username and password for <code>HTTP</code> Digest authorization, to be included in subsequent requests in the <code>HTTP_AUTHORIZATION</code> header.
-</LI>
-<LI><code>(Object) env(name, value)</code>
-Set an env var to be included on all subsequent requests through the session.
-</LI>
-<LI><code>(Object) follow_redirect!</code>
-Rack::Test will not follow any redirects automatically.
-</LI>
-<LI><code>(Object) get(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>GET</code> request for the given <code>URI</code> with the given params and Rack environment.
-</LI>
-<LI><code>(Object) head(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>HEAD</code> request for the given URI.
-</LI>
-<LI><code>(Object) header(name, value)</code>
-Set a header to be included on all subsequent requests through the session.
-</LI>
-<LI><code>(Session) initialize(mock_session) constructor</code>
-Creates a Rack::Test::Session for a given Rack app or Rack::MockSession.
-</LI>
-<LI><code>(Object) options(uri, params = {}, env = {}, &amp;block)</code>
-Issue an <code>OPTIONS</code> request for the given URI.
-</LI>
-<LI><code>(Object) patch(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>PATCH</code> request for the given URI.
-</LI>
-<LI><code>(Object) post(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>POST</code> request for the given URI.
-</LI>
-<LI><code>(Object) put(uri, params = {}, env = {}, &amp;block)</code>
-Issue a <code>PUT</code> request for the given URI.
-</LI>
-<LI><code>(Object) request(uri, env = {}, &amp;block)</code>
-Issue a request to the Rack app for the given <code>URI</code> and optional Rack environment.
-</LI>
-</OL>
-
-<P>
-</LI>
-<LI>The <code>#last_response</code> object has methods:
-<PRE>
-          =~(other) body() empty?() match(other)
-</PRE>
-and attributes:
-<PRE>
-errors          [RW]
-original_headers[R]
-Headers
-</PRE>
-</LI>
-<LI>Si se usan middleware adicionales es necesario especificarlo 
-en <code>app</code>:
-<PRE>
-  def app 
-    Rack::Builder.new do
-      use(Rack::Session::Cookie, {:key =&gt; 'rack session',·
-                                  #:domain =&gt; 'localhost',
-                                  #:path =&gt; '/', #:expire_after =&gt; 2592000,·
-                                  :secret =&gt; 'change_me'})
-      run RockPaperScissors::App.new
-    end.to_app
-  end
-</PRE>
-</LI>
-<LI>El método 
-<code>last_response.body</code>
-returns the last response received in the session. Raises an error
-if no requests have been sent yet.
-</LI>
-</OL>
+  HREF="http://rack.rubyforge.org/doc/Rack/URLMap.html">Rack::URLMap</A>  dispatches in such a way that the longest paths are
+tried first, since they are most specific.
 
 <P>
 <PRE>
-[~/rack/rack-unit-test(master)]$ cat Rakefile 
-task :default =&gt; :test
-desc "run the tests"
-task :test do
-  sh "ruby test_hello_world.rb"
+[~/local/src/ruby/sinatra/rack/rack-urlmap(master)]$ cat config.ru 
+app1 = lambda { |e| [200, {}, ["one\n"]]}
+app2 = lambda { |e| [200, {}, ["two\n"]]}
+app3 = lambda { |e| [200, {}, ["one + two = three\n"]]}
+
+app = Rack::URLMap.new "/one" =&gt; app1, "/two" =&gt; app2, "/one/two" =&gt; app3
+
+run app
+</PRE>
+
+<P>
+<PRE>
+[~/local/src/ruby/sinatra/rack/rack-urlmap(master)]$ cat Rakefile 
+desc "run the server"
+task :default do
+  sh "rackup"
+end
+
+desc "run the client with one"
+task :one do
+  sh %q{curl -v 'http://localhost:9292/one'}
+end
+
+desc "run the client with two"
+task :two do
+  sh %q{curl -v 'http://localhost:9292/two'}
+end
+
+desc "run the client with one/two"
+task :onetwo do
+  sh %q{curl -v 'http://localhost:9292/one/two'}
 end
 </PRE>
 
 <P>
 <PRE>
-[~/rack/rack-unit-test(master)]$ cat Gemfile
-source 'https://rubygems.org'
-
-gem 'rack'
-gem 'rack-test'
+[~/local/src/ruby/sinatra/rack/rack-urlmap]$ rake
+rackup
+&gt;&gt; Thin web server (v1.5.1 codename Straight Razor)
+&gt;&gt; Maximum connections set to 1024
+&gt;&gt; Listening on 0.0.0.0:9292, CTRL+C to stop
+127.0.0.1 - - [17/Oct/2013 21:24:48] "GET /two HTTP/1.1" 200 - 0.0006
 </PRE>
 
 <P>
 <PRE>
-[~/rack/rack-unit-test(master)]$ rake
-ruby test_hello_world.rb
-Run options: 
-
-# Running tests:
-
-..
-
-Finished tests in 0.015253s, 131.1217 tests/s, 131.1217 assertions/s.
-
-2 tests, 2 assertions, 0 failures, 0 errors, 0 skips
+[~/local/src/ruby/sinatra/rack/rack-urlmap(master)]$ rake onetwo
+curl -v 'http://localhost:9292/one/two'
+* About to connect() to localhost port 9292 (#0)
+*   Trying ::1... Connection refused
+*   Trying 127.0.0.1... connected
+* Connected to localhost (127.0.0.1) port 9292 (#0)
+&gt; GET /one/two HTTP/1.1
+&gt; User-Agent: curl/7.21.4 (universal-apple-darwin11.0) libcurl/7.21.4 OpenSSL/0.9.8y zlib/1.2.5
+&gt; Host: localhost:9292
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Transfer-Encoding: chunked
+&lt; Connection: close
+&lt; Server: thin 1.5.1 codename Straight Razor
+&lt; 
+one + two = three
+* Closing connection #0
 </PRE>
 
 <P>
 
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html10642"
+<A NAME="tex2html10676"
   HREF="node422.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html10636"
-  HREF="node420.html">
+<A NAME="tex2html10670"
+  HREF="node381.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html10630"
+<A NAME="tex2html10664"
   HREF="node420.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html10638"
-  HREF="node851.html">
+<A NAME="tex2html10672"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html10640"
-  HREF="node854.html">
+<A NAME="tex2html10674"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -393,20 +269,20 @@ Finished tests in 0.015253s, 131.1217 tests/s, 131.1217 assertions/s.
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html10643"
-  HREF="node422.html">Rspec con Rack</A>
-<B> Subir:</B> <A NAME="tex2html10637"
-  HREF="node420.html">Pruebas/Testing</A>
-<B> Anterior:</B> <A NAME="tex2html10631"
-  HREF="node420.html">Pruebas/Testing</A>
- &nbsp; <B>  <A NAME="tex2html10639"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html10641"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html10677"
+  HREF="node422.html">El método run de</A>
+<B> Subir:</B> <A NAME="tex2html10671"
+  HREF="node381.html">Rack, un Webserver Ruby</A>
+<B> Anterior:</B> <A NAME="tex2html10665"
+  HREF="node420.html">Rack::Mount</A>
+ &nbsp; <B>  <A NAME="tex2html10673"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html10675"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

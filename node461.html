@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Configuring attack protection</TITLE>
-<META NAME="description" CONTENT="Configuring attack protection">
+<TITLE>Logging</TITLE>
+<META NAME="description" CONTENT="Logging">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node462.html">
 <LINK REL="previous" HREF="node460.html">
-<LINK REL="up" HREF="node433.html">
+<LINK REL="up" HREF="node437.html">
 <LINK REL="next" HREF="node462.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html11331"
+<A NAME="tex2html11374"
   HREF="node462.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11325"
-  HREF="node433.html">
+<A NAME="tex2html11368"
+  HREF="node437.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11319"
+<A NAME="tex2html11362"
   HREF="node460.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11327"
-  HREF="node851.html">
+<A NAME="tex2html11370"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11329"
-  HREF="node854.html">
+<A NAME="tex2html11372"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,87 +92,206 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11332"
-  HREF="node462.html">Settings disponibles/Available Settings</A>
-<B> Subir:</B> <A NAME="tex2html11326"
-  HREF="node433.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11320"
-  HREF="node460.html">Configuration / Configuración</A>
- &nbsp; <B>  <A NAME="tex2html11328"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11330"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html11375"
+  HREF="node462.html">Generating URLs</A>
+<B> Subir:</B> <A NAME="tex2html11369"
+  HREF="node437.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11363"
+  HREF="node460.html">Triggering Another Route: calling</A>
+ &nbsp; <B>  <A NAME="tex2html11371"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11373"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION033200000000000000000">
-Configuring attack protection</A>
+<H1><A NAME="SECTION033160000000000000000">
+Logging</A>
 </H1>
-Sinatra is using <A NAME="tex2html1075"
-  HREF="http://rubydoc.info/gems/rack-protection/">Rack::Protection</A>
-to defend your application against common, opportunistic attacks.
+In the request scope, the <code>logger</code> helper exposes a <code>Logger</code> instance:
 
 <P>
+<PRE>
+get '/' do
+  logger.info "loading data"
+  # ...
+end
+</PRE>
 
 <OL>
-<LI>You can easily disable this behavior (which will open up your
-application to tons of common vulnerabilities):
+<LI>This <code>logger</code> will automatically take your Rack handler’s <code>logging</code> settings into account
+</LI>
+<LI>If <code>logging</code> is disabled, this method will return a dummy object, so you do not have to worry in your routes and filters about it
+</LI>
+</OL>
 
 <P>
-<code>disable :protection</code>
-</LI>
-<LI>To skip a single defense layer, set protection to an options hash:
+Note that <code>logging</code> is only enabled for <code>Sinatra::Application</code>
+ by default, so if you inherit from , you probably want to enable it yourself:
 
 <P>
 <PRE>
-set :protection, :except =&gt; :path_traversal
+class MyApp &lt; Sinatra::Base
+  configure :production, :development do
+    enable :logging
+  end
+end
 </PRE>
+
+<OL>
+<LI>To avoid any <code>logging</code> middleware to be set up, set the <code>logging</code> setting to <code>nil</code>
 </LI>
-<LI>You can also hand in an array in order to disable a list of protections:
-
-<P>
-<PRE>
-set :protection, :except =&gt; [:path_traversal, :session_hijacking]
-</PRE>
+<LI>However, keep in mind that <code>logger</code> will in that case return <code>nil</code>
 </LI>
-<LI>By default, Sinatra will only set up session based protection if
-<code>:sessions</code> has been enabled. 
-
-<P>
-Sometimes you want to set up sessions
-on your own, though. 
-
-<P>
-In that case you can get it to set up session
-based protections by passing the <code>:session option</code>:
-
-<P>
-<PRE>
-use Rack::Session::Pool
-set :protection, :session =&gt; true
-</PRE>
+<LI>A common use case is when you want to set your own <code>logger</code>.
+Sinatra will use whatever it will find in <code>env['rack.logger']</code>
 </LI>
 </OL>
 
 <P>
 
+<H4><A NAME="SECTION033160010000000000000">
+Logging a stdout y a un fichero</A>
+</H4>
+  
+
+<P>
+Véase 
+<A NAME="tex2html1083"
+  HREF="http://recipes.sinatrarb.com/p/middleware/rack_commonlogger">Rack::CommonLogger</A>
+en Sinatra Recipes.
+
+<P>
+Sinatra has logging support, but it's nearly impossible to log to a file and to the stdout (like Rails does).
+
+<P>
+However, there is a little trick you can use to log to stdout and to a file:
+
+<P>
+<PRE>
+require 'sinatra'
+
+configure do
+  # logging is enabled by default in classic style applications,
+  # so `enable :logging` is not needed
+  file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a+')
+  file.sync = true
+  use Rack::CommonLogger, file
+end
+
+get '/' do
+  'Hello World'
+end
+</PRE>
+You can use the same configuration for modular style applications,
+but you have to <code>enable :logging first</code>:
+
+<P>
+<PRE>
+require 'sinatra/base'
+
+class SomeApp &lt; Sinatra::Base
+  configure do
+    enable :logging
+    file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a+')
+    file.sync = true
+    use Rack::CommonLogger, file
+  end
+
+  get '/' do
+    'Hello World'
+  end
+
+  run!
+end
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION033160020000000000000">
+Ejecución</A>
+</H4>
+  
+
+<PRE>
+~/sinatra/sinatra-logging]$ tree
+.
+|-- app.rb
+`-- log
+
+1 directory, 1 file
+[~/sinatra/sinatra-logging]$ ruby app.rb 
+== Sinatra/1.4.4 has taken the stage on 4567 for development with backup from Thin
+Thin web server (v1.6.1 codename Death Proof)
+Maximum connections set to 1024
+Listening on localhost:4567, CTRL+C to stop
+</PRE>
+Consola después de visitar la página:
+<PRE>
+127.0.0.1 - - [19/Nov/2013 14:53:06] "GET / HTTP/1.1" 200 11 0.0041
+</PRE>
+
+<P>
+Fichero después de visitar la página:
+<PRE>
+[~/sinatra/sinatra-logging]$ cat log/development.log 
+127.0.0.1 - - [19/Nov/2013 14:53:06] "GET / HTTP/1.1" 200 11 0.0038
+</PRE>
+
+<P>
+
+<H4><A NAME="SECTION033160030000000000000">
+Véase</A>
+</H4>
+  
+
+<OL>
+<LI>el código en GitHub de 
+<A NAME="tex2html1084"
+  HREF="https://github.com/rack/rack/blob/master/lib/rack/commonlogger.rb">Rack::CommonLogger</A>
+</LI>
+<LI>Logging in Sinatra. StackOverflow.
+<A NAME="tex2html1085"
+  HREF="http://stackoverflow.com/questions/5995854/logging-in-sinatra/5995932#5995932">Destination is set by  changing 
+</A>
+<code>env['rack.errors']</code>.  Konstantin Haase May 13 '11 at 21:18'
+</LI>
+</OL>
+
+<P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsecciones</STRONG></A>
+
+<UL CLASS="ChildLinks">
+<LI><UL>
+<LI><UL>
+<LI><A NAME="tex2html11376"
+  HREF="node461.html#SECTION033160010000000000000">Logging a stdout y a un fichero</A>
+<LI><A NAME="tex2html11377"
+  HREF="node461.html#SECTION033160020000000000000">Ejecución</A>
+<LI><A NAME="tex2html11378"
+  HREF="node461.html#SECTION033160030000000000000">Véase</A>
+</UL></UL></UL>
+<!--End of Table of Child-Links-->
+
 <DIV CLASS="navigation"><HR>
 <!--Navigation Panel-->
-<A NAME="tex2html11331"
+<A NAME="tex2html11374"
   HREF="node462.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html11325"
-  HREF="node433.html">
+<A NAME="tex2html11368"
+  HREF="node437.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html11319"
+<A NAME="tex2html11362"
   HREF="node460.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html11327"
-  HREF="node851.html">
+<A NAME="tex2html11370"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html11329"
-  HREF="node854.html">
+<A NAME="tex2html11372"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -223,20 +342,20 @@ set :protection, :session =&gt; true
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html11332"
-  HREF="node462.html">Settings disponibles/Available Settings</A>
-<B> Subir:</B> <A NAME="tex2html11326"
-  HREF="node433.html">Fundamentos</A>
-<B> Anterior:</B> <A NAME="tex2html11320"
-  HREF="node460.html">Configuration / Configuración</A>
- &nbsp; <B>  <A NAME="tex2html11328"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html11330"
-  HREF="node854.html">&#205;ndice de Materias</A></B> </DIV>
+<B> Siguiente:</B> <A NAME="tex2html11375"
+  HREF="node462.html">Generating URLs</A>
+<B> Subir:</B> <A NAME="tex2html11369"
+  HREF="node437.html">Fundamentos</A>
+<B> Anterior:</B> <A NAME="tex2html11363"
+  HREF="node460.html">Triggering Another Route: calling</A>
+ &nbsp; <B>  <A NAME="tex2html11371"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html11373"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
 <!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>

@@ -7,8 +7,8 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>Enlaces</TITLE>
-<META NAME="description" CONTENT="Enlaces">
+<TITLE>Condition Variables/Variables Condición</TITLE>
+<META NAME="description" CONTENT="Condition Variables/Variables Condición">
 <META NAME="keywords" CONTENT="perlexamples">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
@@ -21,27 +21,27 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 
 <LINK REL="next" HREF="node360.html">
 <LINK REL="previous" HREF="node358.html">
-<LINK REL="up" HREF="node358.html">
+<LINK REL="up" HREF="node351.html">
 <LINK REL="next" HREF="node360.html">
 </HEAD>
 
 <BODY >
 
 <DIV CLASS="navigation"><!--Navigation Panel-->
-<A NAME="tex2html9347"
+<A NAME="tex2html9381"
   HREF="node360.html">
 <IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
-<A NAME="tex2html9341"
-  HREF="node358.html">
+<A NAME="tex2html9375"
+  HREF="node351.html">
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
-<A NAME="tex2html9335"
+<A NAME="tex2html9369"
   HREF="node358.html">
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
-<A NAME="tex2html9343"
-  HREF="node851.html">
+<A NAME="tex2html9377"
+  HREF="node858.html">
 <IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
-<A NAME="tex2html9345"
-  HREF="node854.html">
+<A NAME="tex2html9379"
+  HREF="node861.html">
 <IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
   HREF="http://tinyurl.com/lpp1415"><IMG
   WIDTH="50" ALIGN="BOTTOM" BORDER="0"
@@ -92,60 +92,171 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
  SRC="logopcgull.gif"
  ALT="ull-etsii-grado-stw-1314"></A>
 <BR>
-<B> Siguiente:</B> <A NAME="tex2html9348"
-  HREF="node360.html">El Juego de la</A>
-<B> Subir:</B> <A NAME="tex2html9342"
-  HREF="node358.html">Juegos con Gosu</A>
-<B> Anterior:</B> <A NAME="tex2html9336"
-  HREF="node358.html">Juegos con Gosu</A>
- &nbsp; <B>  <A NAME="tex2html9344"
-  HREF="node851.html">&#205;ndice General</A></B> 
- &nbsp; <B>  <A NAME="tex2html9346"
-  HREF="node854.html">&#205;ndice de Materias</A></B> 
+<B> Siguiente:</B> <A NAME="tex2html9382"
+  HREF="node360.html">El Problema de los</A>
+<B> Subir:</B> <A NAME="tex2html9376"
+  HREF="node351.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html9370"
+  HREF="node358.html">Colas</A>
+ &nbsp; <B>  <A NAME="tex2html9378"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9380"
+  HREF="node861.html">&#205;ndice de Materias</A></B> 
 <BR>
 <BR></DIV>
 <!--End of Navigation Panel-->
 
-<H1><A NAME="SECTION021910000000000000000">
-Enlaces</A>
+<H1><A NAME="SECTION021860000000000000000">
+Condition Variables/Variables Condición</A>
 </H1>
 
+<P>
+A <A NAME="15854"></A><SPAN  CLASS="textbf">condition variable</SPAN> is a controlled way of communicating an event (or a condition) between two threads. 
+
+<P>
+One thread can wait on the condition, and the other can signal it. 
+
+<P>
+The <A NAME="tex2html840"
+  HREF="http://ruby-doc.org/core-2.0.0/Thread.html"><TT>Thread</TT></A> library extends
+threads with 
+<A NAME="tex2html841"
+  HREF="http://docs.ruby-lang.org/en/2.1.0/ConditionVariable.html">condition variables. </A>
+<P>
+A condition variable is basically a container
+of threads that are waiting on a certain condition. 
+
+<P>
+Condition variables provide a kind of notification system among threads.
+
+<P>
+Without condition variables, but only mutexes, threads would need to
+poll the variable to determine when it reached a certain state.
+
+<P>
+The example shows a simple use of a condition variable. We'll
+make the global variable count a shared resource that two threads
+increment and create the mutex <code>count_mutex</code> to
+protect it. 
+
+<P>
+We'll use the <code>count_threshold_cv</code> condition variable to represent an 
+event 
+<FONT COLOR="#0000ff"> the count variable's reaching a defined threshold value</FONT>, 
+<code>WATCH_COUNT</code>.     
+
+<P>
+The main routine creates two threads. 
+
+<P>
+Each of these threads runs the <code>inc_count</code> routine. 
+
+<P>
+The <code>inc_count</code> routine 
+
 <OL>
-<LI><A NAME="tex2html842"
-  HREF="http://www.libgosu.org/">gosu</A>
+<LI>locks <code>count_mutex</code>, 
 </LI>
-<LI><A NAME="tex2html843"
-  HREF="https://github.com/jlnr/gosu">gosu en github</A>
+<LI>increments <code>count</code>, 
 </LI>
-<LI><A NAME="tex2html844"
-  HREF="https://github.com/jlnr/gosu/tree/master/examples">ejemplos usando gosu</A>
+<LI>reads <code>count</code> in a print statement, and tests
+        for the threshold value. 
 </LI>
-<LI><A NAME="tex2html845"
-  HREF="http://ruby4kids.com/ruby4kids">RubyforKids</A>
+<LI>If <code>count</code> has reached its threshold value, 
+<code>inc_count</code>  emits a signal to notify the thread that's waiting for this particular event. 
 </LI>
-<LI><A NAME="tex2html846"
-  HREF="http://ruby4kids.com/ruby4kids/public/web_page/14">RubyforKids screencasts</A>
+<LI>Before exiting, <code>inc_count</code> releases the mutex. 
+
+<P>
 </LI>
-<LI><A NAME="tex2html847"
-  HREF="http://ruby4kids.com/ruby4kids/public/web_page/17">RubyforKids en Español</A>
-</LI>
-<LI><A NAME="tex2html848"
-  HREF="http://www.alexrothenberg.com/2011/11/14/programming-with-kids.html">Programming with kids Español</A>
-</LI>
-<LI><A NAME="tex2html849"
-  HREF="https://github.com/PhilCK/Falling-Blocks">Juego del Tetris usando Gosu</A>
-</LI>
-<LI><A NAME="tex2html850"
-  HREF="https://github.com/masonhale/Starfighter-Gosu-Tutorial">Variante del Tutorial del star fighter</A>
-con disparos, estrellas cayendo y música
+<LI>We'll create a third thread to run the <code>watch_count</code> task. 
+The <code>watch_count</code> routine waits for <code>inc_count</code> to signal our 
+<code>count_threshold_cv</code> condition variable.
 </LI>
 </OL>
 
 <P>
-<BR><HR>
+
+<DIV CLASS="navigation"><HR>
+<!--Navigation Panel-->
+<A NAME="tex2html9381"
+  HREF="node360.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html9375"
+  HREF="node351.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html9369"
+  HREF="node358.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html9377"
+  HREF="node858.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A> 
+<A NAME="tex2html9379"
+  HREF="node861.html">
+<IMG WIDTH="43" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="index" SRC="index.png"></A> <A NAME="tex2html29"
+  HREF="http://tinyurl.com/lpp1415"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="LPP moodle"></A><A NAME="tex2html30"
+  HREF="https://campusvirtual.ull.es/1415/course/view.php?id=5678"><IMG
+  WIDTH="50" ALIGN="BOTTOM" BORDER="0"
+ SRC="moodleLHPlogo.jpeg"
+ ALT="SYTW moodle"></A><A NAME="tex2html31"
+  HREF="perlexamples.pdf"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="gv.jpeg"
+ ALT="pdf"></A><A NAME="tex2html32"
+  HREF="https://dl.dropbox.com/u/14539152/LPP/LPPbook/index.html"><IMG
+  WIDTH="60" ALIGN="BOTTOM" BORDER="0"
+ SRC="lupa.gif"
+ ALT="ruby gems"></A><A NAME="tex2html33"
+  HREF="http://www.ruby-doc.org/"><IMG
+  WIDTH="30" ALIGN="BOTTOM" BORDER="0"
+ SRC="perlonion.jpeg"
+ ALT="perldoc"></A><A NAME="tex2html34"
+  HREF="http://www.github.com"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="google-code-project-hosting.jpeg"
+ ALT="github"></A><A NAME="tex2html35"
+  HREF="http://rubylearning.com/blog/"><IMG
+  WIDTH="27" ALIGN="BOTTOM" BORDER="0"
+ SRC="perl6.jpg"
+ ALT="blogs"></A><A NAME="tex2html36"
+  HREF="http://www.google.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ggoogle.gif"
+ ALT="google"></A><A NAME="tex2html37"
+  HREF="http://www.ull.es/view/centros/etsii/Inicio/es"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="etsii.png"
+ ALT="etsii"></A><A NAME="tex2html38"
+  HREF="http://www.ull.es/"><IMG
+  WIDTH="35" ALIGN="BOTTOM" BORDER="0"
+ SRC="ull.gif"
+ ALT="ull"></A><A NAME="tex2html39"
+  HREF="https://plus.google.com/u/0/communities/115470806071217401678"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-lpp-1314"></A><A NAME="tex2html40"
+  HREF="https://plus.google.com/u/0/communities/109091480492072495700"><IMG
+  WIDTH="32" ALIGN="BOTTOM" BORDER="0"
+ SRC="logopcgull.gif"
+ ALT="ull-etsii-grado-stw-1314"></A>
+<BR>
+<B> Siguiente:</B> <A NAME="tex2html9382"
+  HREF="node360.html">El Problema de los</A>
+<B> Subir:</B> <A NAME="tex2html9376"
+  HREF="node351.html">Threads</A>
+<B> Anterior:</B> <A NAME="tex2html9370"
+  HREF="node358.html">Colas</A>
+ &nbsp; <B>  <A NAME="tex2html9378"
+  HREF="node858.html">&#205;ndice General</A></B> 
+ &nbsp; <B>  <A NAME="tex2html9380"
+  HREF="node861.html">&#205;ndice de Materias</A></B> </DIV>
+<!--End of Navigation Panel-->
 <ADDRESS>
 Casiano Rodriguez León
-2014-12-11
+2015-01-07
 </ADDRESS>
 </BODY>
 </HTML>
